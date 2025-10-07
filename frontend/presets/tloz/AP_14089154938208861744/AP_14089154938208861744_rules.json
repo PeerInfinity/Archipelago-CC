@@ -23914,63 +23914,13 @@
     }
   },
   "item_groups": {
-    "1": {
-      "weapons": [
-        "White Sword",
-        "Magical Sword",
-        "Sword",
-        "Magical Rod",
-        "Red Candle"
-      ],
-      "swords": [
-        "Sword",
-        "White Sword",
-        "Magical Sword"
-      ],
-      "candles": [
-        "Red Candle",
-        "Candle"
-      ],
-      "arrows": [
-        "Silver Arrow",
-        "Arrow"
-      ],
-      "Everything": [
-        "Recorder",
-        "Book of Magic",
-        "Magical Sword",
-        "Magical Shield",
-        "Water of Life (Red)",
-        "Triforce Fragment",
-        "Clock",
-        "Five Rupees",
-        "Sword",
-        "Silver Arrow",
-        "Food",
-        "Magical Boomerang",
-        "Bow",
-        "White Sword",
-        "Boomerang",
-        "Recovery Heart",
-        "Rupee",
-        "Water of Life (Blue)",
-        "Red Ring",
-        "Magical Rod",
-        "Red Candle",
-        "Small Key",
-        "Magical Key",
-        "Blue Ring",
-        "Letter",
-        "Bomb",
-        "Candle",
-        "Heart Container",
-        "Fairy",
-        "Arrow",
-        "Stepladder",
-        "Power Bracelet",
-        "Raft"
-      ]
-    }
+    "1": [
+      "Everything",
+      "arrows",
+      "candles",
+      "swords",
+      "weapons"
+    ]
   },
   "itempool_counts": {
     "1": {

@@ -1363,25 +1363,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Right Difficulty Switch",
-        "Left Difficulty Switch",
-        "Slow Grundle",
-        "White Key",
-        "nothing",
-        "Black Key",
-        "Yellow Key",
-        "Magnet",
-        "Freeincarnate",
-        "Bridge",
-        "Slow Rhindle",
-        "Sword",
-        "Chalice",
-        "Revive Dragons",
-        "Slow Yorgle"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

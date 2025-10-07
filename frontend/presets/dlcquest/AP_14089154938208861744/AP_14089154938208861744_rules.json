@@ -2691,61 +2691,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "DLC Quest: Progressive Weapon",
-        "Gun Pack",
-        "Really Big Sword Pack",
-        "Parallax Pack",
-        "The Zombie Pack",
-        "Loading Screen",
-        "Canadian Dialog Pack",
-        "Removed Ads Pack",
-        "Sword",
-        "Gun",
-        "Humble Indie Bindle",
-        "Animation Pack",
-        "Map Pack",
-        "Finish the Fight Pack",
-        "Checkpoint Pack",
-        "Increased HP Pack",
-        "Live Freemium or Die: Coin Piece",
-        "Pet Pack",
-        "Sexy Outfits Pack",
-        "Wall Jump Pack",
-        "Top Hat Pack",
-        "High Definition Next Gen Pack",
-        "Box of Various Supplies",
-        "Temporary Spike",
-        "Audio Pack",
-        "Armor for your Horse Pack",
-        "Death of Comedy Pack",
-        "Name Change Pack",
-        "Big Sword Pack",
-        "Night Map Pack",
-        "Harmless Plants Pack",
-        "Double Jump Pack",
-        "Cut Content Pack",
-        "Wooden Sword",
-        "DLC Quest: Coin Bundle",
-        "Health Bar Pack",
-        "Live Freemium or Die: Coin Bundle",
-        "Zombie Sheep",
-        "Season Pass",
-        "Particles Pack",
-        "Day One Patch Pack",
-        "Live Freemium or Die: Progressive Weapon",
-        "Psychological Warfare Pack",
-        "Pickaxe",
-        "DLC NPC Pack",
-        "Incredibly Important Pack",
-        "Movement Pack",
-        "Time is Money Pack",
-        "DLC Quest: Coin Piece",
-        "Unfathomable Sword Pack",
-        "Pause Menu Pack"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

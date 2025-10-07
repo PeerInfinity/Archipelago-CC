@@ -2269,7 +2269,7 @@
         ],
         "advancement": false,
         "priority": false,
-        "useful": false,
+        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
@@ -2297,7 +2297,7 @@
         ],
         "advancement": false,
         "priority": false,
-        "useful": false,
+        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
@@ -2502,37 +2502,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Pencil",
-        "Text",
-        "Brush",
-        "Additional Palette Color",
-        "Progressive Color Depth (Green)",
-        "Rectangle",
-        "Clear Image Trap",
-        "Polygon",
-        "Progressive Canvas Width",
-        "Airbrush",
-        "Fill With Color",
-        "Rounded Rectangle",
-        "Free-Form Select",
-        "Undo Trap",
-        "Line",
-        "Progressive Color Depth (Red)",
-        "Invert Colors Trap",
-        "Flip Horizontal Trap",
-        "Progressive Canvas Height",
-        "Magnifier",
-        "Flip Vertical Trap",
-        "Pick Color",
-        "Curve",
-        "Select",
-        "Progressive Color Depth (Blue)",
-        "Eraser/Color Eraser",
-        "Ellipse"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

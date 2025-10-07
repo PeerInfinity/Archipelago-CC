@@ -17,7 +17,7 @@ class Celeste64GameExportHandler(BaseGameExportHandler):
     def preprocess_world_data(self, world, export_data: Dict[str, Any], player: int) -> None:
         """
         Export Celeste 64 specific data, particularly the logic mappings.
-        
+
         Args:
             world: The world object for this player
             export_data: The export data dictionary being built
@@ -26,25 +26,29 @@ class Celeste64GameExportHandler(BaseGameExportHandler):
         try:
             # Import the Rules module to get the logic mappings
             from worlds.celeste64 import Rules
-            
-            # Export the location logic mappings
-            export_data['location_standard_moves_logic'] = self._convert_logic_mapping(
+
+            # Ensure settings dict exists
+            if 'settings' not in export_data:
+                export_data['settings'] = {}
+
+            # Export the location logic mappings to settings
+            export_data['settings']['location_standard_moves_logic'] = self._convert_logic_mapping(
                 Rules.location_standard_moves_logic
             )
-            export_data['location_hard_moves_logic'] = self._convert_logic_mapping(
+            export_data['settings']['location_hard_moves_logic'] = self._convert_logic_mapping(
                 Rules.location_hard_moves_logic
             )
-            
-            # Export the region connection logic mappings
-            export_data['region_standard_moves_logic'] = self._convert_region_logic_mapping(
+
+            # Export the region connection logic mappings to settings
+            export_data['settings']['region_standard_moves_logic'] = self._convert_region_logic_mapping(
                 Rules.region_standard_moves_logic
             )
-            export_data['region_hard_moves_logic'] = self._convert_region_logic_mapping(
+            export_data['settings']['region_hard_moves_logic'] = self._convert_region_logic_mapping(
                 Rules.region_hard_moves_logic
             )
-            
+
             logger.info(f"Successfully exported Celeste 64 logic mappings for player {player}")
-            
+
         except Exception as e:
             logger.warning(f"Could not export Celeste 64 logic mappings: {e}")
     

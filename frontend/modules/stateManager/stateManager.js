@@ -3841,11 +3841,6 @@ export class StateManager {
       // Game-specific information
       game_info: this.gameInfo,
       settings: this.rules?.settings,
-      // Game-specific logic mappings (for Celeste 64 and other games that use them)
-      location_standard_moves_logic: this.rules?.location_standard_moves_logic,
-      location_hard_moves_logic: this.rules?.location_hard_moves_logic,
-      region_standard_moves_logic: this.rules?.region_standard_moves_logic,
-      region_hard_moves_logic: this.rules?.region_hard_moves_logic,
       // ID mappings
       locationNameToId: this.locationNameToId,
       itemNameToId: this.itemNameToId,

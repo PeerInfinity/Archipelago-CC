@@ -13232,39 +13232,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Red Switch Palace",
-        "Progressive Powerup",
-        "Special Zone Clear",
-        "Stun Trap",
-        "Yellow Switch Palace",
-        "Swim",
-        "50 coins",
-        "Run",
-        "1-Up Mushroom",
-        "Spin Jump",
-        "1 coin",
-        "Green Switch Palace",
-        "Timer Trap",
-        "The Princess",
-        "Ice Trap",
-        "Carry",
-        "Climb",
-        "P-Switch",
-        "Yoshi",
-        "Blue Switch Palace",
-        "Super Star Activate",
-        "5 coins",
-        "Thwimp Trap",
-        "P-Balloon",
-        "Boss Token",
-        "Literature Trap",
-        "Reverse Trap",
-        "10 coins",
-        "Yoshi Egg"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

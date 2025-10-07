@@ -2587,37 +2587,12 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Helpers": [
-        "Starting Turner",
-        "Task Advance",
-        "Starting Paint Can"
-      ],
-      "Targets": [
-        "Hazard Bumper",
-        "Booster Bumper",
-        "Treasure Bumper"
-      ],
-      "Traps": [
-        "Spinner Trap",
-        "Killer Trap",
-        "Rainbow Trap"
-      ],
-      "Everything": [
-        "Booster Bumper",
-        "Treasure Bumper",
-        "Rainbow Trap",
-        "Killer Trap",
-        "Starting Turner",
-        "Task Advance",
-        "Hazard Bumper",
-        "Starting Paint Can",
-        "Nothing",
-        "Score Bonus",
-        "Spinner Trap",
-        "Reserved"
-      ]
-    }
+    "1": [
+      "Everything",
+      "Helpers",
+      "Targets",
+      "Traps"
+    ]
   },
   "itempool_counts": {
     "1": {

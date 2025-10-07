@@ -14335,106 +14335,14 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Notes": [
-        "Key of Strength",
-        "Key of Love",
-        "Key of Hope",
-        "Key of Symbiosis",
-        "Key of Courage",
-        "Key of Chaos"
-      ],
-      "Keys": [
-        "Key of Strength",
-        "Key of Love",
-        "Key of Hope",
-        "Key of Symbiosis",
-        "Key of Courage",
-        "Key of Chaos"
-      ],
-      "Crest": [
-        "Sun Crest",
-        "Moon Crest"
-      ],
-      "Phobe": [
-        "Pyro",
-        "Acro",
-        "Claustro",
-        "Necro"
-      ],
-      "Phobekin": [
-        "Pyro",
-        "Acro",
-        "Claustro",
-        "Necro"
-      ],
-      "Everything": [
-        "Pyro",
-        "Lightfoot Tabi",
-        "Key of Chaos",
-        "Path of Resilience",
-        "Scurubu Figurine",
-        "Claustro",
-        "Centered Mind",
-        "Windmill Shuriken",
-        "Acro",
-        "Rope Dart",
-        "Key of Hope",
-        "Key of Strength",
-        "Money Wrench",
-        "Ountarde Figurine",
-        "Kusari Jacket",
-        "Focused Power Sense",
-        "Key of Love",
-        "Karuta Plates",
-        "Green Kappa Figurine",
-        "Demon King Figurine",
-        "Aerobatics Warrior",
-        "Jumping Quillshroom Figurine",
-        "Time Shard (10)",
-        "Power Sense",
-        "Energy Shuriken",
-        "Blue Kappa Figurine",
-        "Demon Hive Figurine",
-        "Second Wind",
-        "Prepared Mind",
-        "Quillshroom Figurine",
-        "Teleport Trap",
-        "Key of Courage",
-        "Queen of Quills Figurine",
-        "Key of Symbiosis",
-        "Serendipitous Minds",
-        "Prophecy Trap",
-        "Time Shard (50)",
-        "Meditation",
-        "Demon's Bane",
-        "Wallaxer Figurine",
-        "Strike of the Ninja",
-        "Ruxxtin's Amulet",
-        "Rejuvenative Spirit",
-        "Power Thistle",
-        "Time Shard (500)",
-        "Candle",
-        "Time Shard",
-        "Serendipitous Bodies",
-        "Jumping Scurubu Figurine",
-        "Devil's Due",
-        "Moon Crest",
-        "Sun Crest",
-        "Magic Firefly",
-        "Seashell",
-        "Red Kappa Figurine",
-        "Time Shard (300)",
-        "Time Shard (100)",
-        "Time Sense",
-        "Power Seal",
-        "Wingsuit",
-        "Currents Master",
-        "Demon King Crown",
-        "Barmath'azel Figurine",
-        "Necro"
-      ]
-    }
+    "1": [
+      "Crest",
+      "Everything",
+      "Keys",
+      "Notes",
+      "Phobe",
+      "Phobekin"
+    ]
   },
   "itempool_counts": {
     "1": {

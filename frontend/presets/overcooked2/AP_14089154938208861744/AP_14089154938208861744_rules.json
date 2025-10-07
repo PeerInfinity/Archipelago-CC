@@ -8494,55 +8494,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Progressive Dash",
-        "Burn Leniency",
-        "Control Stick Batteries",
-        "Coal Bucket",
-        "Kevin-7",
-        "Purple Ramp",
-        "Wok Wheels",
-        "Faster Condiment/Drink Switch",
-        "Clean Dishes",
-        "Pink Ramp",
-        "Curse Emote",
-        "Dish Scrubber",
-        "Cooking Emote",
-        "Washing Up Emote",
-        "Calmer Unbread",
-        "Coin Purse",
-        "Progressive Throw/Catch",
-        "Serving Emote",
-        "Order Lookahead",
-        "Fire Extinguisher",
-        "Sharp Knife",
-        "Spare Plate",
-        "Red Ramp",
-        "Bonus Star",
-        "Guest Patience",
-        "Faster Respawn Time",
-        "Kevin-4",
-        "Preparing Emote",
-        "Ramp Button",
-        "Lightweight Backpack",
-        "Larger Tip Jar",
-        "Kevin-8",
-        "Ok Emote",
-        "Blue Ramp",
-        "Dark Green Ramp",
-        "Emote Wheel",
-        "Kevin-2",
-        "Wood",
-        "Bellows",
-        "Kevin-6",
-        "Yellow Ramp",
-        "Kevin-3",
-        "Kevin-5",
-        "Kevin-1",
-        "Green Ramp"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

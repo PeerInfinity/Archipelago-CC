@@ -721,20 +721,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "df-3",
-        "3eqtri",
-        "ax-1cn",
-        "2cn",
-        "oveq1i",
-        "df-4",
-        "eqtr4i",
-        "oveq2i",
-        "addassi",
-        "df-2"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

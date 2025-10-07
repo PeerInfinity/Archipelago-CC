@@ -1875,7 +1875,7 @@
           "Everything",
           "Stages"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -2161,58 +2161,12 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Weapons": [
-        "Leaf Shield",
-        "Air Shooter",
-        "Quick Boomerang",
-        "Crash Bomber",
-        "Atomic Fire",
-        "Metal Blade",
-        "Time Stopper",
-        "Bubble Lead"
-      ],
-      "Stages": [
-        "Heat Man Access Codes",
-        "Bubble Man Access Codes",
-        "Air Man Access Codes",
-        "Flash Man Access Codes",
-        "Wood Man Access Codes",
-        "Crash Man Access Codes",
-        "Metal Man Access Codes",
-        "Quick Man Access Codes"
-      ],
-      "Items": [
-        "Item 3 - Bouncy",
-        "Item 2 - Rocket",
-        "Item 1 - Propeller"
-      ],
-      "Everything": [
-        "Item 1 - Propeller",
-        "Leaf Shield",
-        "Air Shooter",
-        "Item 2 - Rocket",
-        "Bubble Man Access Codes",
-        "Weapon Energy (L)",
-        "Crash Man Access Codes",
-        "Health Energy (L)",
-        "Time Stopper",
-        "Metal Man Access Codes",
-        "E-Tank",
-        "1-Up",
-        "Quick Boomerang",
-        "Crash Bomber",
-        "Heat Man Access Codes",
-        "Atomic Fire",
-        "Air Man Access Codes",
-        "Flash Man Access Codes",
-        "Wood Man Access Codes",
-        "Item 3 - Bouncy",
-        "Metal Blade",
-        "Bubble Lead",
-        "Quick Man Access Codes"
-      ]
-    }
+    "1": [
+      "Everything",
+      "Items",
+      "Stages",
+      "Weapons"
+    ]
   },
   "itempool_counts": {
     "1": {

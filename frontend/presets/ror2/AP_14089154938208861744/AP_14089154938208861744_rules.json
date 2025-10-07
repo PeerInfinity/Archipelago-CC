@@ -6915,7 +6915,7 @@
           "Environments",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "priority": false,
         "useful": false,
         "trap": false,
@@ -7314,119 +7314,14 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Stages": [
-        "Stage 2",
-        "Stage 3",
-        "Progressive Stage",
-        "Stage 1",
-        "Stage 4"
-      ],
-      "Environments": [
-        "Void Fields",
-        "Verdant Falls",
-        "Siren's Call",
-        "Siphoned Forest",
-        "Aphelian Sanctuary",
-        "Rallypoint Delta",
-        "Hidden Realm: Bulwark's Ambry",
-        "Titanic Plains",
-        "Hidden Realm: A Moment, Whole",
-        "The Planetarium",
-        "Sundered Grove",
-        "Titanic Plains (2)",
-        "Wetland Aspect",
-        "Commencement",
-        "Distant Roost",
-        "Void Locus",
-        "Scorched Acres",
-        "Hidden Realm: Gilded Coast",
-        "Hidden Realm: A Moment, Fractured",
-        "Distant Roost (2)",
-        "Abyssal Depths",
-        "Sky Meadow",
-        "Hidden Realm: Bazaar Between Time",
-        "Sulfur Pools",
-        "Abandoned Aqueduct"
-      ],
-      "Upgrades": [
-        "Item Scrap, Red",
-        "Boss Item",
-        "Common Item",
-        "Legendary Item",
-        "Item Scrap, White",
-        "Item Scrap, Yellow",
-        "Void Item",
-        "Equipment",
-        "Item Scrap, Green",
-        "Uncommon Item"
-      ],
-      "Fillers": [
-        "1000 Exp",
-        "Money",
-        "Lunar Coin"
-      ],
-      "Traps": [
-        "Lunar Item",
-        "Combat Trap",
-        "Teleport Trap",
-        "Time Warp Trap",
-        "Mountain Trap"
-      ],
-      "Everything": [
-        "Item Scrap, Red",
-        "Void Fields",
-        "Siren's Call",
-        "Lunar Coin",
-        "Siphoned Forest",
-        "Stage 3",
-        "Rallypoint Delta",
-        "Hidden Realm: Bulwark's Ambry",
-        "Titanic Plains",
-        "Beads of Fealty",
-        "Combat Trap",
-        "Hidden Realm: A Moment, Whole",
-        "Teleport Trap",
-        "Wetland Aspect",
-        "Commencement",
-        "Distant Roost",
-        "Distant Roost (2)",
-        "Boss Item",
-        "Equipment",
-        "Sky Meadow",
-        "Money",
-        "Uncommon Item",
-        "Stage 4",
-        "1000 Exp",
-        "Dio's Best Friend",
-        "Stage 1",
-        "Verdant Falls",
-        "Item Scrap, White",
-        "Time Warp Trap",
-        "Mountain Trap",
-        "Aphelian Sanctuary",
-        "The Planetarium",
-        "Void Item",
-        "Sundered Grove",
-        "Radar Scanner",
-        "Titanic Plains (2)",
-        "Stage 2",
-        "Progressive Stage",
-        "Void Locus",
-        "Scorched Acres",
-        "Common Item",
-        "Legendary Item",
-        "Item Scrap, Yellow",
-        "Hidden Realm: Gilded Coast",
-        "Hidden Realm: A Moment, Fractured",
-        "Lunar Item",
-        "Abyssal Depths",
-        "Hidden Realm: Bazaar Between Time",
-        "Sulfur Pools",
-        "Item Scrap, Green",
-        "Abandoned Aqueduct"
-      ]
-    }
+    "1": [
+      "Environments",
+      "Everything",
+      "Fillers",
+      "Stages",
+      "Traps",
+      "Upgrades"
+    ]
   },
   "itempool_counts": {
     "1": {
@@ -7475,8 +7370,8 @@
   },
   "starting_items": {
     "1": [
-      "Distant Roost",
-      "Dio's Best Friend"
+      "Dio's Best Friend",
+      "Distant Roost"
     ]
   },
   "settings": {

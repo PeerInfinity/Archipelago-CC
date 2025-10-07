@@ -1070,25 +1070,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Creamed Mixture",
-        "Softened Butter",
-        "Basic Dough",
-        "Mixing Bowls",
-        "Shaped Cookies",
-        "Measured Flour",
-        "Prepared Sheets",
-        "Butter Sugar Base",
-        "Baked Cookies",
-        "Flour Mixture",
-        "Egg Mixture",
-        "Preheated Oven",
-        "Measuring Tools",
-        "Cookie Dough",
-        "Electric Mixer"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

@@ -1239,41 +1239,60 @@ export class TestSpoilerUI {
 
         this.log(
           'info',
-          `Preparing StateManager for sphere ${context.sphere_number} by applying log inventory.`
+          `Preparing StateManager for sphere ${context.sphere_number}.`
         );
 
         try {
-          // 1. Reset StateManager's inventory and checked locations for a clean slate for this sphere.
-          await stateManager.clearStateAndReset();
-          this.log('debug', 'StateManager state cleared for sphere.');
-
-          // 2. Apply the inventory from the log to the StateManager worker.
-          await stateManager.beginBatchUpdate(true);
-          this.log(
-            'debug',
-            'Beginning batch update for inventory application.'
-          );
-          if (Object.keys(inventory_from_log).length > 0) {
-            for (const [itemName, count] of Object.entries(
-              inventory_from_log
-            )) {
-              if (count > 0) {
-                // Ensure we only add items with a positive count
-                this.log(
-                  'debug',
-                  `Adding item via StateManager: ${itemName}, count: ${count}`
-                );
-                await stateManager.addItemToInventory(itemName, count);
-              }
-            }
+          // Only clear state for sphere 0
+          if (context.sphere_number === 0) {
+            await stateManager.clearStateAndReset();
+            this.log('debug', 'StateManager state cleared for sphere 0.');
           } else {
-            this.log(
-              'debug',
-              'Inventory from log is empty. No items to add to StateManager.'
-            );
+            this.log('debug', `Keeping accumulated state for sphere ${context.sphere_number}.`);
           }
-          await stateManager.commitBatchUpdate();
-          this.log('debug', 'Committed batch update for inventory.');
+
+          // Check locations from current sphere to mark them as checked
+          // NOTE: We pass addItems=false because checkLocation can't properly handle
+          // progressive items (they get skipped by progression_mapping logic).
+          // We'll add the resolved items from the sphere log instead.
+          const locationsToCheck = sphereData.locations || [];
+          if (locationsToCheck.length > 0) {
+            this.log('info', `Checking ${locationsToCheck.length} locations from sphere ${context.sphere_number}: ${locationsToCheck.join(', ')}`);
+
+            for (const locationName of locationsToCheck) {
+              // Check location WITHOUT adding items (addItems=false)
+              await stateManager.checkLocation(locationName, false);
+            }
+          }
+
+          // Calculate delta inventory (items to add)
+          // The sphere log contains ACCUMULATED inventory, but we need to add only NEW items
+          // to avoid duplicates. We calculate the delta from the previous inventory.
+          const deltaInventory = {};
+          for (const [itemName, newCount] of Object.entries(inventory_from_log)) {
+            const previousCount = this.previousInventory?.[itemName] || 0;
+            const delta = newCount - previousCount;
+            if (delta > 0) {
+              deltaInventory[itemName] = delta;
+            }
+          }
+
+          // Add delta items (the new items from this sphere)
+          // NOTE: These are resolved progressive items from the sphere log, not raw location items
+          if (Object.keys(deltaInventory).length > 0) {
+            await stateManager.beginBatchUpdate(true);
+            this.log('debug', `Beginning batch update for sphere ${context.sphere_number} delta inventory.`);
+
+            for (const [itemName, count] of Object.entries(deltaInventory)) {
+              this.log('debug', `Adding delta item: ${itemName}, count: ${count}`);
+              await stateManager.addItemToInventory(itemName, count);
+            }
+
+            await stateManager.commitBatchUpdate();
+            this.log('debug', `Committed batch update for sphere ${context.sphere_number} delta inventory.`);
+          } else {
+            this.log('debug', `Sphere ${context.sphere_number} has no delta items to add.`);
+          }
 
           // 4. Ping worker to ensure all commands are processed and state is stable.
           await stateManager.pingWorker(
@@ -1428,29 +1447,19 @@ export class TestSpoilerUI {
               );
             }
 
-            // Check if location contains an item and add it
-            // The item an item is at a location is part of static data, not dynamic state.
-            const itemAtLocation = locDef.item; // Assuming item name is directly on locDef.item or locDef.item.name
+            // Log what item is at this location (for debugging)
+            const itemAtLocation = locDef.item;
             const itemName =
               typeof itemAtLocation === 'object'
                 ? itemAtLocation.name
                 : itemAtLocation;
 
-            if (itemName && !isChecked) {
-              this.log(
-                'info',
-                `Found item "${itemName}" at "${locName}". Adding to inventory.`
-              );
-              // addItemToInventory is an async command now
-              await stateManager.addItemToInventory(itemName);
-              // No direct boolean return to check; assume success or rely on stateManager:stateChanged event if needed for confirmation
-              this.log(
-                'info',
-                `Item "${itemName}" sent to be added to inventory.`
-              );
+            if (itemName) {
+              this.log('info', `Location "${locName}" contains item: "${itemName}"`);
             }
 
             // Mark location as checked (async command)
+            // checkLocation will automatically add the item to inventory (addItems=true by default)
             await stateManager.checkLocation(locName);
             this.log('info', `Location "${locName}" marked as checked.`);
           }

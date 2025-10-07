@@ -62,11 +62,11 @@ export const helperFunctions = {
   location_rule(state, playerId, locationName, staticData) {
     // Get the appropriate logic mapping based on difficulty
     const logicDifficulty = staticData?.settings?.logic_difficulty || 'standard';
-    const logicMappingKey = logicDifficulty === 'standard' ? 
+    const logicMappingKey = logicDifficulty === 'standard' ?
       'location_standard_moves_logic' : 'location_hard_moves_logic';
-    
-    // Try to get the logic mapping from staticData
-    const activeLogicMapping = staticData?.[logicMappingKey] || {};
+
+    // Try to get the logic mapping from staticData.settings
+    const activeLogicMapping = staticData?.settings?.[logicMappingKey] || {};
     
     // If location has no requirements, it's accessible
     if (!activeLogicMapping[locationName]) {
@@ -107,11 +107,11 @@ export const helperFunctions = {
   region_connection_rule(state, playerId, fromRegion, toRegion, staticData) {
     // Get the appropriate logic mapping based on difficulty
     const logicDifficulty = staticData?.settings?.logic_difficulty || 'standard';
-    const logicMappingKey = logicDifficulty === 'standard' ? 
+    const logicMappingKey = logicDifficulty === 'standard' ?
       'region_standard_moves_logic' : 'region_hard_moves_logic';
-    
-    // Try to get the logic mapping from staticData
-    const activeRegionLogicMapping = staticData?.[logicMappingKey] || {};
+
+    // Try to get the logic mapping from staticData.settings
+    const activeRegionLogicMapping = staticData?.settings?.[logicMappingKey] || {};
     
     // Create the connection tuple key
     const connectionKey = `${fromRegion},${toRegion}`;

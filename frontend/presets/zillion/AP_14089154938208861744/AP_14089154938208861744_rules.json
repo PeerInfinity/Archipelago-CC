@@ -8573,22 +8573,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "JJ",
-        "Red ID Card",
-        "Champ",
-        "Opa-Opa",
-        "Apple",
-        "Scope",
-        "Floppy Disk",
-        "ID Card",
-        "Zillion",
-        "Empty",
-        "Win",
-        "Bread"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

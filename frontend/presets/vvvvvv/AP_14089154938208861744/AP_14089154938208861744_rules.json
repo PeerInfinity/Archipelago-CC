@@ -1188,30 +1188,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Trinket 01",
-        "Trinket 13",
-        "Trinket 07",
-        "Trinket 12",
-        "Trinket 08",
-        "Trinket 06",
-        "Trinket 17",
-        "Trinket 20",
-        "Trinket 18",
-        "Trinket 16",
-        "Trinket 02",
-        "Trinket 04",
-        "Trinket 09",
-        "Trinket 19",
-        "Trinket 11",
-        "Trinket 14",
-        "Trinket 15",
-        "Trinket 05",
-        "Trinket 03",
-        "Trinket 10"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

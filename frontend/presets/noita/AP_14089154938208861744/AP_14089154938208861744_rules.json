@@ -4413,89 +4413,17 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Traps": [
-        "Trap"
-      ],
-      "Pickups": [
-        "Spell Refresher",
-        "Extra Max HP"
-      ],
-      "Items": [
-        "Greed Die",
-        "Powder Pouch",
-        "S\u00e4dekivi",
-        "Random Potion",
-        "Broken Wand",
-        "Refreshing Gourd",
-        "Kammi",
-        "Secret Potion",
-        "Chaos Die"
-      ],
-      "Gold": [
-        "Gold (200)",
-        "Gold (1000)"
-      ],
-      "Wands": [
-        "Wand (Tier 5)",
-        "Wand (Tier 4)",
-        "Wand (Tier 1)",
-        "Wand (Tier 6)",
-        "Wand (Tier 3)",
-        "Wand (Tier 2)",
-        "Kantele"
-      ],
-      "Perks": [
-        "Melee Immunity Perk",
-        "Spatial Awareness Perk",
-        "Tinker with Wands Everywhere Perk",
-        "Explosion Immunity Perk",
-        "Electricity Immunity Perk",
-        "Toxic Immunity Perk",
-        "All-Seeing Eye Perk",
-        "Fire Immunity Perk"
-      ],
-      "Repeatable Perks": [
-        "Extra Life Perk"
-      ],
-      "Orbs": [
-        "Orb"
-      ],
-      "Everything": [
-        "Orb",
-        "Melee Immunity Perk",
-        "Powder Pouch",
-        "Greed Die",
-        "Spell Refresher",
-        "Spatial Awareness Perk",
-        "Random Potion",
-        "Toxic Immunity Perk",
-        "Wand (Tier 2)",
-        "Wand (Tier 4)",
-        "S\u00e4dekivi",
-        "Gold (1000)",
-        "Explosion Immunity Perk",
-        "Extra Life Perk",
-        "Secret Potion",
-        "Wand (Tier 5)",
-        "Gold (200)",
-        "Wand (Tier 6)",
-        "Kantele",
-        "Electricity Immunity Perk",
-        "Broken Wand",
-        "All-Seeing Eye Perk",
-        "Refreshing Gourd",
-        "Chaos Die",
-        "Trap",
-        "Kammi",
-        "Tinker with Wands Everywhere Perk",
-        "Potion",
-        "Wand (Tier 1)",
-        "Fire Immunity Perk",
-        "Wand (Tier 3)",
-        "Extra Max HP"
-      ]
-    }
+    "1": [
+      "Everything",
+      "Gold",
+      "Items",
+      "Orbs",
+      "Perks",
+      "Pickups",
+      "Repeatable Perks",
+      "Traps",
+      "Wands"
+    ]
   },
   "itempool_counts": {
     "1": {

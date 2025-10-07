@@ -10148,7 +10148,7 @@
         ],
         "advancement": false,
         "priority": false,
-        "useful": false,
+        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
@@ -10791,98 +10791,15 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Burger": [
-        "Relic (Burger Cushion)",
-        "Relic (Burger Patty)"
-      ],
-      "Train": [
-        "Relic (Train)",
-        "Relic (Mountain Set)"
-      ],
-      "UFO": [
-        "Relic (Tin-foil Hat Cow)",
-        "Relic (Cool Cow)",
-        "Relic (UFO)",
-        "Relic (Cow)"
-      ],
-      "Crayon": [
-        "Relic (Green Crayon)",
-        "Relic (Crayon Box)",
-        "Relic (Red Crayon)",
-        "Relic (Blue Crayon)"
-      ],
-      "Cake": [
-        "Relic (Cake Stand)",
-        "Relic (Chocolate Cake)",
-        "Relic (Chocolate Cake Slice)",
-        "Relic (Shortcake)"
-      ],
-      "Necklace": [
-        "Relic (Necklace Bust)",
-        "Relic (Necklace)"
-      ],
-      "Everything": [
-        "Relic (Chocolate Cake Slice)",
-        "Progressive Painting Unlock",
-        "Metro Ticket - Blue",
-        "Yarn",
-        "Relic (Cow)",
-        "Snatcher's Contract - Queen Vanessa's Manor",
-        "Relic (Cool Cow)",
-        "Badge Pin",
-        "Relic (UFO)",
-        "Dweller Mask",
-        "25 Pons",
-        "Health Pon",
-        "Metro Ticket - Green",
-        "Parade Trap",
-        "Relic (Chocolate Cake)",
-        "Zipline Unlock - The Windmill Path",
-        "Relic (Burger Cushion)",
-        "Ice Hat",
-        "50 Pons",
-        "Relic (Crayon Box)",
-        "Snatcher's Contract - Mail Delivery Service",
-        "Relic (Blue Crayon)",
-        "Snatcher's Contract - The Subcon Well",
-        "Relic (Cake Stand)",
-        "Scooter Badge",
-        "Zipline Unlock - The Lava Cake Path",
-        "Relic (Shortcake)",
-        "Relic (Green Crayon)",
-        "Brewing Hat",
-        "Relic (Train)",
-        "Zipline Unlock - The Twilight Bell Path",
-        "Relic (Necklace)",
-        "Projectile Badge",
-        "100 Pons",
-        "Relic (Tin-foil Hat Cow)",
-        "Laser Trap",
-        "Relic (Necklace Bust)",
-        "Relic (Mountain Set)",
-        "Metro Ticket - Yellow",
-        "Sprint Hat",
-        "Baby Trap",
-        "Hover Badge",
-        "Item Magnet Badge",
-        "Relic (Red Crayon)",
-        "Random Cosmetic",
-        "Snatcher's Contract - Toilet of Doom",
-        "Zipline Unlock - The Birdhouse Path",
-        "Compass Badge",
-        "Fast Hatter Badge",
-        "One-Hit Hero Badge",
-        "Relic (Burger Patty)",
-        "No Bonk Badge",
-        "Umbrella",
-        "Time Stop Hat",
-        "Hookshot Badge",
-        "Time Piece",
-        "Metro Ticket - Pink",
-        "Camera Badge"
-      ]
-    }
+    "1": [
+      "Burger",
+      "Cake",
+      "Crayon",
+      "Everything",
+      "Necklace",
+      "Train",
+      "UFO"
+    ]
   },
   "itempool_counts": {
     "1": {

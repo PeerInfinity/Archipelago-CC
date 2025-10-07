@@ -3349,52 +3349,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Stunted Wolf Card",
-        "Mrs. Bomb's Remote",
-        "Wardrobe Key",
-        "Caged Wolf Card",
-        "Ant Cards",
-        "Dagger",
-        "Bee Figurine",
-        "Ourobot Card",
-        "Camera Replica",
-        "Squirrel Totem Head",
-        "Inspectometer Battery",
-        "Pile Of Meat",
-        "Film Roll",
-        "Epitaph Pieces",
-        "Skink Card",
-        "Ring",
-        "Extra Candle",
-        "Ancient Obol",
-        "Quill",
-        "Oil Painting's Clover Plant",
-        "Lonely Wizbot Card",
-        "Greater Smoke",
-        "Angler Hook",
-        "Bone Lord Holo Key",
-        "Epitaph Piece",
-        "Drowned Soul Card",
-        "Bone Lord Horn",
-        "Monocle",
-        "Gems Module",
-        "Holo Pelt",
-        "Currency",
-        "Bone Lord Femur",
-        "Salmon Card",
-        "Great Kraken Card",
-        "Dock's Clover Plant",
-        "Nano Armor Generator",
-        "Card Pack",
-        "Magnificus Eye",
-        "Extra Battery",
-        "Mycologists Holo Key",
-        "Fishbot Card",
-        "Stinkbug Card"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

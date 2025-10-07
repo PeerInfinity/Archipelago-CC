@@ -39655,34 +39655,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Super Missile",
-        "Charge Beam",
-        "Nothing",
-        "Power Bomb",
-        "Grappling Beam",
-        "Generic",
-        "Hi-Jump Boots",
-        "Plasma Beam",
-        "Space Jump",
-        "Screw Attack",
-        "Wave Beam",
-        "Bomb",
-        "Spring Ball",
-        "Reserve Tank",
-        "Varia Suit",
-        "Speed Booster",
-        "Spazer",
-        "Ice Beam",
-        "Morph Ball",
-        "No Energy",
-        "Missile",
-        "Gravity Suit",
-        "Energy Tank",
-        "X-Ray Scope"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

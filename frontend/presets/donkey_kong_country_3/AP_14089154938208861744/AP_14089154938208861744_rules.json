@@ -6466,18 +6466,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Donkey Kong",
-        "Bonus Coin",
-        "Bear Coin",
-        "Banana Bird",
-        "Progressive Boat Upgrade",
-        "DK Coin",
-        "Krematoa Cog",
-        "1-Up Balloon"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

@@ -876,13 +876,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Map Bombs",
-        "Map Width",
-        "Map Height"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

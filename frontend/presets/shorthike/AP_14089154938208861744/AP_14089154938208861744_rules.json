@@ -3442,65 +3442,11 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Coins": [
-        "13 Coins",
-        "18 Coins",
-        "7 Coins",
-        "15 Coins",
-        "27 Coins",
-        "32 Coins",
-        "25 Coins",
-        "50 Coins",
-        "21 Coins",
-        "33 Coins"
-      ],
-      "Maps": [
-        "In Her Shadow Map",
-        "The King Map",
-        "The Treasure of Sid Beach Map",
-        "A Stormy View Map"
-      ],
-      "Everything": [
-        "Running Shoes",
-        "Baseball Cap",
-        "Seashell",
-        "15 Coins",
-        "Bait",
-        "25 Coins",
-        "The King Map",
-        "Fishing Journal",
-        "Camping Permit",
-        "Compass",
-        "Motorboat Key",
-        "Pickaxe",
-        "Headband",
-        "7 Coins",
-        "18 Coins",
-        "13 Coins",
-        "In Her Shadow Map",
-        "Progressive Fishing Rod",
-        "Medal",
-        "Walkie Talkie",
-        "21 Coins",
-        "Shell Necklace",
-        "Toy Shovel",
-        "32 Coins",
-        "27 Coins",
-        "Stick",
-        "Sunhat",
-        "Wristwatch",
-        "Golden Feather",
-        "The Treasure of Sid Beach Map",
-        "Provincial Park Hat",
-        "Shovel",
-        "50 Coins",
-        "Bucket",
-        "A Stormy View Map",
-        "Silver Feather",
-        "33 Coins"
-      ]
-    }
+    "1": [
+      "Coins",
+      "Everything",
+      "Maps"
+    ]
   },
   "itempool_counts": {
     "1": {

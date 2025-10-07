@@ -3959,40 +3959,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Ring of Elf",
-        "Wingboots",
-        "Poison",
-        "Progressive Armor",
-        "Fire",
-        "Black Onyx",
-        "Key King",
-        "Progressive Sword",
-        "Deluge",
-        "Key Ace",
-        "Hourglass",
-        "Thunder",
-        "Magical Rod",
-        "Pendant",
-        "Tilte",
-        "Glove",
-        "Red Potion",
-        "Death",
-        "Key Queen",
-        "Ring of Dworf",
-        "Unlock Wingboots",
-        "Spring Elixir",
-        "Ring of Ruby",
-        "Ointment",
-        "Key Joker",
-        "Key Jack",
-        "Elixir",
-        "Progressive Shield",
-        "Demons Ring",
-        "Mattock"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

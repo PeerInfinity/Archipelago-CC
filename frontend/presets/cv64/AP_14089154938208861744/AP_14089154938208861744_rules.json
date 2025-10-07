@@ -6859,54 +6859,11 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Bomb": [
-        "Mandragora",
-        "Magical Nitro"
-      ],
-      "Ingredient": [
-        "Mandragora",
-        "Magical Nitro"
-      ],
-      "Everything": [
-        "PowerUp",
-        "Axe",
-        "Magical Nitro",
-        "Science Key1",
-        "Storeroom Key",
-        "Cross",
-        "Science Key3",
-        "Garden Key",
-        "Roast chicken",
-        "Healing kit",
-        "PermaUp",
-        "Chamber Key",
-        "Clocktower Key2",
-        "Knife",
-        "Ice Trap",
-        "Special2",
-        "Left Tower Key",
-        "Moon card",
-        "Holy water",
-        "100 GOLD",
-        "Purifying",
-        "Special1",
-        "Red jewel(L)",
-        "Cure ampoule",
-        "Copper Key",
-        "Sun card",
-        "Red jewel(S)",
-        "Execution Key",
-        "500 GOLD",
-        "Roast beef",
-        "Archives Key",
-        "Clocktower Key3",
-        "Science Key2",
-        "Mandragora",
-        "Clocktower Key1",
-        "300 GOLD"
-      ]
-    }
+    "1": [
+      "Bomb",
+      "Everything",
+      "Ingredient"
+    ]
   },
   "itempool_counts": {
     "1": {

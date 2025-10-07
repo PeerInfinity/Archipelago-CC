@@ -32636,52 +32636,11 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Copy Ability": [
-        "Parasol",
-        "Ice",
-        "Stone",
-        "Cutter",
-        "Clean",
-        "Burning",
-        "Spark",
-        "Needle"
-      ],
-      "Animal Friend": [
-        "Kine",
-        "Pitch",
-        "Coo",
-        "Rick",
-        "Nago",
-        "ChuChu"
-      ],
-      "Everything": [
-        "Kine",
-        "Coo",
-        "Cutter",
-        "Big Star",
-        "Little Star",
-        "1-Up",
-        "Clean",
-        "Eject Ability",
-        "ChuChu",
-        "Slowness",
-        "Parasol",
-        "Ice",
-        "Maxim Tomato",
-        "Stone",
-        "Gooey Bag",
-        "Invincible Candy",
-        "Medium Star",
-        "Burning",
-        "Pitch",
-        "Heart Star",
-        "Rick",
-        "Spark",
-        "Nago",
-        "Needle"
-      ]
-    }
+    "1": [
+      "Animal Friend",
+      "Copy Ability",
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

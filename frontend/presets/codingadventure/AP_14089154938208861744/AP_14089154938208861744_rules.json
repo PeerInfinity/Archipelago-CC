@@ -3285,61 +3285,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Express",
-        "Vue",
-        "Integration Tests",
-        "Server Basics",
-        "HTML",
-        "CORS",
-        "Docker",
-        "Algorithms",
-        "State Management",
-        "Deployment Complete",
-        "Security Complete",
-        "File I/O",
-        "Design Systems",
-        "Static Website Complete",
-        "React",
-        "CI/CD",
-        "NoSQL",
-        "Interactive App Complete",
-        "Git",
-        "JavaScript Basics",
-        "Horizontal Scaling",
-        "Package Managers",
-        "Django",
-        "Domain",
-        "Scaling Complete",
-        "REST APIs",
-        "Database Basics",
-        "Authentication",
-        "HTTP Basics",
-        "Sessions",
-        "DOM Manipulation",
-        "Accessibility",
-        "Database Integration",
-        "Full-Stack Complete",
-        "SQL",
-        "CDN",
-        "Responsive Design",
-        "CSS",
-        "Caching",
-        "UI/UX",
-        "Query Optimization",
-        "DevOps",
-        "Performance",
-        "Command Line",
-        "HTTPS",
-        "Flask",
-        "Cloud Provider",
-        "Unit Tests",
-        "Testing",
-        "Frontend Framework",
-        "JWT"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

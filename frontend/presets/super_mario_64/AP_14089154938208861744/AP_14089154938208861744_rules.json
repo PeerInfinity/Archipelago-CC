@@ -5569,39 +5569,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Side Flip",
-        "Wall Kick",
-        "Wing Cap",
-        "Cannon Unlock TTM",
-        "Cannon Unlock RR",
-        "Cannon Unlock CCM",
-        "Ground Pound",
-        "Cannon Unlock WDW",
-        "Vanish Cap",
-        "Cannon Unlock BoB",
-        "Second Floor Key",
-        "Dive",
-        "Long Jump",
-        "1Up Mushroom",
-        "Double Jump",
-        "Backflip",
-        "Cannon Unlock SSL",
-        "Cannon Unlock WF",
-        "Cannon Unlock JRB",
-        "Kick",
-        "Climb",
-        "Power Star",
-        "Ledge Grab",
-        "Cannon Unlock SL",
-        "Metal Cap",
-        "Triple Jump",
-        "Basement Key",
-        "Cannon Unlock THI",
-        "Progressive Key"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

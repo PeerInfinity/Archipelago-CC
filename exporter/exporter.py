@@ -1038,13 +1038,12 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
 
     return items_data
 
-def process_item_groups(multiworld, player: int) -> Dict[str, List[str]]:
+def process_item_groups(multiworld, player: int) -> List[str]:
     """Get item groups for this player."""
     world = multiworld.worlds[player]
     if hasattr(world, 'item_name_groups'):
-        # Return the full mapping of group names to their member items
-        return {group_name: list(items) for group_name, items in world.item_name_groups.items()}
-    return {}
+        return sorted(world.item_name_groups.keys())
+    return []
 
 def process_progression_mapping(multiworld, player: int) -> Dict[str, Any]:
     """Extract progression item mapping data using the game handler."""

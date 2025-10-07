@@ -3280,41 +3280,9 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Everything": [
-        "Spearman",
-        "Golem",
-        "Turtle",
-        "Harpoon Ship",
-        "Harpy",
-        "Final Walls",
-        "Wagon",
-        "Eastern Bridges",
-        "Knight",
-        "Heavensong Commanders",
-        "Archer",
-        "Balloon",
-        "Outlaw Commanders",
-        "Ballista",
-        "Commander Defense Boost",
-        "Thief",
-        "Felheim Commanders",
-        "Final Bridges",
-        "Requiem Commanders",
-        "Income Boost",
-        "Cherrystone Commanders",
-        "Dragon",
-        "Barge",
-        "Witch",
-        "Floran Commanders",
-        "Merfolk",
-        "Southern Walls",
-        "Mage",
-        "Rifleman",
-        "Warship",
-        "Final Sickle"
-      ]
-    }
+    "1": [
+      "Everything"
+    ]
   },
   "itempool_counts": {
     "1": {

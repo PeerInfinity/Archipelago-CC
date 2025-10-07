@@ -64,8 +64,8 @@ export const helperFunctions = {
     const logicMappingKey = logicDifficulty === 'standard' ?
       'location_standard_moves_logic' : 'location_hard_moves_logic';
 
-    // Try to get the logic mapping from staticData
-    const activeLogicMapping = staticData?.[logicMappingKey] || {};
+    // Try to get the logic mapping from staticData.settings
+    const activeLogicMapping = staticData?.settings?.[logicMappingKey] || {};
 
     // If location has no requirements, it's accessible
     if (!activeLogicMapping[locationName]) {
@@ -107,8 +107,8 @@ export const helperFunctions = {
     const logicMappingKey = logicDifficulty === 'standard' ?
       'region_standard_moves_logic' : 'region_hard_moves_logic';
 
-    // Try to get the logic mapping from staticData
-    const activeRegionLogicMapping = staticData?.[logicMappingKey] || {};
+    // Try to get the logic mapping from staticData.settings
+    const activeRegionLogicMapping = staticData?.settings?.[logicMappingKey] || {};
 
     // Extract regions from tuple argument
     const [fromRegion, toRegion] = regionTuple || [];

@@ -1759,58 +1759,14 @@
     }
   },
   "item_groups": {
-    "1": {
-      "Weapons": [
-        "Powered Blaster",
-        "Flamethrower",
-        "Ice Spreadshot",
-        "Volt Laser"
-      ],
-      "Upgrades": [
-        "Special Extension",
-        "Faster Reload",
-        "Life Extension",
-        "Clip Extension"
-      ],
-      "Keys": [
-        "Cave Key",
-        "Arctic Key",
-        "Volcanic Key",
-        "Swamp Key"
-      ],
-      "Filler": [
-        "Quick-fire Mode",
-        "Active Camouflage",
-        "Full Heal"
-      ],
-      "Traps": [
-        "Ninja Trap",
-        "Shake Trap",
-        "Ice Trap"
-      ],
-      "Everything": [
-        "Powered Blaster",
-        "Flamethrower",
-        "Full Heal",
-        "Clip Extension",
-        "Shake Trap",
-        "Life Extension",
-        "Special Extension",
-        "Arctic Key",
-        "Volcanic Key",
-        "Jacket",
-        "Ice Trap",
-        "Faster Reload",
-        "Volt Laser",
-        "Cave Key",
-        "Active Camouflage",
-        "System Power",
-        "Quick-fire Mode",
-        "Ice Spreadshot",
-        "Swamp Key",
-        "Ninja Trap"
-      ]
-    }
+    "1": [
+      "Everything",
+      "Filler",
+      "Keys",
+      "Traps",
+      "Upgrades",
+      "Weapons"
+    ]
   },
   "itempool_counts": {
     "1": {

@@ -1,10 +1,10 @@
 # Archipelago Template Test Results Chart
 
-**Generated:** 2025-10-06 09:07:18
+**Generated:** 2025-10-06 16:27:24
 
 **Source Data Created:** 2025-08-22T09:54:44.358796
 
-**Source Data Last Updated:** 2025-10-06T09:07:18.636480
+**Source Data Last Updated:** 2025-10-06T16:27:24.205020
 
 **Script Version:** 1.0.0
 
@@ -48,7 +48,7 @@
 | Jak and Daxter: The Precursor Legacy | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Kingdom Hearts | ❌ Failed seed 1 | 0 | 0 | 11.1 | 🔴 0.0% | ✅ | ✅ |
 | Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 0.2 | 12.1 | 🟠 1.7% | ✅ | ⚫ |
-| Kirby's Dream Land 3 | ❌ Failed seed 1 | 0 | 0.7 | 11.1 | 🟠 6.3% | ✅ | ⚫ |
+| Kirby's Dream Land 3 | ❌ Failed seed 1 | 0 | 0.9 | 11.1 | 🟠 8.1% | ✅ | ⚫ |
 | Landstalker - The Treasures of King Nole | ❌ Failed seed 1 | 49 | 0.1 | 9.1 | 🟠 1.1% | ⚫ | ⚫ |
 | Lingo | ❌ Failed seed 1 | 0 | 0 | 4.1 | 🔴 0.0% | ✅ | ⚫ |
 | Links Awakening DX | ❌ Failed seed 1 | 0 | 0 | 14.1 | 🔴 0.0% | ⚫ | ⚫ |

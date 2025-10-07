@@ -2882,65 +2882,14 @@
     }
   },
   "item_groups": {
-    "1": {
-      "PSI Keys": [
-        "PSI Key 2",
-        "PSI Key 1",
-        "PSI Key 3"
-      ],
-      "Upgrades": [
-        "Reflect Shield upgrade",
-        "Circuit Refill upgrade",
-        "Circuit Charge upgrade"
-      ],
-      "Artifacts": [
-        "Map",
-        "Crystal Efficiency",
-        "Shield Boost",
-        "Crystal Gatherer",
-        "Ethereal Monocle",
-        "Portable Compass",
-        "Dodge Enhancer",
-        "Circuit Booster",
-        "Metabolism"
-      ],
-      "Important Artifacts": [
-        "Metabolism",
-        "Shield Boost",
-        "Dodge Enhancer",
-        "Circuit Booster"
-      ],
-      "Crystals": [
-        "Crystals x1000",
-        "Crystals x2000",
-        "Crystals x500"
-      ],
-      "Everything": [
-        "Crystal Gatherer",
-        "Cursed Seal",
-        "Crystals x500",
-        "Ethereal Monocle",
-        "Circuit Charge upgrade",
-        "Portable Compass",
-        "Crystals x1000",
-        "Agate Knife",
-        "Evolution Trap",
-        "Dodge Enhancer",
-        "Circuit Booster",
-        "Metabolism",
-        "Reflect Shield upgrade",
-        "PSI Key 2",
-        "PSI Key 3",
-        "Map",
-        "Crystal Efficiency",
-        "Shield Boost",
-        "Circuit Refill upgrade",
-        "Nothing",
-        "Crystals x2000",
-        "PSI Key 1",
-        "Extra Life"
-      ]
-    }
+    "1": [
+      "Artifacts",
+      "Crystals",
+      "Everything",
+      "Important Artifacts",
+      "PSI Keys",
+      "Upgrades"
+    ]
   },
   "itempool_counts": {
     "1": {
