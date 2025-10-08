@@ -72,6 +72,65 @@ The entire pipeline can be run automatically from the command line using Playwri
 
 This end-to-end pipeline ensures a high degree of confidence that the frontend client is a faithful and accurate implementation of Archipelago's game progression logic.
 
+### Multiplayer Testing
+
+The project includes end-to-end multiplayer tests that verify client-server communication and location check synchronization between multiple clients.
+
+**Test Configurations:**
+
+The multiplayer tests (`tests/e2e/multiplayer.spec.js`) support two configurations:
+
+1. **Multi-Client Test (Default)**: Tests both clients simultaneously
+   - Client 1: Sends location checks via automatic timer
+   - Client 2: Receives location checks from the server
+   - Verifies that both clients stay synchronized
+   - Run with: `npx playwright test tests/e2e/multiplayer.spec.js`
+
+2. **Single-Client Test**: Tests only one client
+   - Useful for debugging client connection and timer functionality
+   - Run with: `ENABLE_SINGLE_CLIENT=true npx playwright test tests/e2e/multiplayer.spec.js`
+
+**Running Multiplayer Tests:**
+
+```bash
+# Run multi-client test (default)
+npx playwright test tests/e2e/multiplayer.spec.js
+
+# Run multi-client test in headed mode (visible browser)
+npx playwright test tests/e2e/multiplayer.spec.js --headed
+
+# Run single-client test
+ENABLE_SINGLE_CLIENT=true npx playwright test tests/e2e/multiplayer.spec.js
+
+# Run single-client test in headed mode
+ENABLE_SINGLE_CLIENT=true npx playwright test tests/e2e/multiplayer.spec.js --headed
+
+# Run specific test by name
+npx playwright test tests/e2e/multiplayer.spec.js -g "multiplayer timer test"
+```
+
+**What the Tests Verify:**
+
+- **Server Connection**: Both clients successfully connect to the Archipelago server
+- **Auto-Connect**: URL parameters (`autoConnect=true`, `server`, `playerName`) work correctly
+- **Location Checks**: Client 1 sends location checks that are received by the server
+- **Synchronization**: Client 2 receives all location checks sent by Client 1
+- **Inventory Updates**: Both clients maintain synchronized inventory state
+- **Server Management**: Tests automatically start and stop a local Archipelago server
+
+**Test Architecture:**
+
+- Tests use URL parameters to configure clients: `?mode=test-multiplayer-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1`
+- Each test mode loads a specific test configuration (`playwright_tests_config-client1.json` or `playwright_tests_config-client2.json`)
+- The tests automatically handle server lifecycle (start before test, stop after test)
+- Results are saved to `test_results/multiplayer/` with detailed logs and summaries
+
+**Prerequisites:**
+
+- A development server running on `localhost:8000` (start with `python -m http.server 8000`)
+- The `MultiServer.py` script must be accessible in the project root
+- An Archipelago seed file in `frontend/presets/adventure/AP_14089154938208861744/`
+
 ## Automated Testing Across All Templates
 
 For testing multiple games efficiently, use the automated testing script that handles the complete pipeline for all templates:

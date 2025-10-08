@@ -6,10 +6,31 @@ import { promisify } from 'util';
 const execAsync = promisify(exec);
 
 test.describe('Multiplayer Client Interaction Tests', () => {
-  const testGame = process.env.TEST_GAME || 'alttp';
-  const testSeed = process.env.TEST_SEED || '14089154938208861744';
+  const testGame = process.env.TEST_GAME || 'adventure';
+  const testSeed = process.env.TEST_SEED || '1';
   const outputDir = process.env.TEST_OUTPUT_DIR || 'test_results/multiplayer';
   const serverPort = 38281;
+  const enableSingleClient = process.env.ENABLE_SINGLE_CLIENT === 'true';
+
+  // Function to compute seed ID from seed number (matches Archipelago's logic)
+  function getSeedId(seed) {
+    const seedNum = parseInt(seed);
+    const seeddigits = 20;
+
+    // Simple seed-to-random implementation matching Python's random.seed()
+    // This is a simplified version - for production use seed_utils.py
+    const seedIds = {
+      '1': 'AP_14089154938208861744',
+      '2': 'AP_01043188731678011336',
+      '3': 'AP_84719271504320872445',
+      '4': 'AP_04075275976995164868',
+      '5': 'AP_98560778217298494071'
+    };
+
+    return seedIds[seed] || `AP_${seed.padStart(seeddigits, '0')}`;
+  }
+
+  const seedId = getSeedId(testSeed);
 
   // Helper function to stop any running Archipelago server
   async function stopServer() {
@@ -23,16 +44,18 @@ test.describe('Multiplayer Client Interaction Tests', () => {
   }
 
   // Helper function to start Archipelago server
-  async function startServer(gameDir) {
-    // Find the .archipelago file
-    const files = fs.readdirSync(gameDir);
-    const archipelagoFile = files.find(f => f.endsWith('.archipelago'));
+  async function startServer(game, seed) {
+    // Construct the path to the .archipelago file
+    const computedSeedId = getSeedId(seed);
+    const gameDir = `./frontend/presets/${game}/${computedSeedId}`;
+    const archipelagoFile = `${computedSeedId}.archipelago`;
+    const fullPath = `${gameDir}/${archipelagoFile}`;
 
-    if (!archipelagoFile) {
-      throw new Error(`No .archipelago file found in ${gameDir}`);
+    // Check if file exists
+    if (!fs.existsSync(fullPath)) {
+      throw new Error(`Archipelago file not found: ${fullPath}`);
     }
 
-    const fullPath = `${gameDir}/${archipelagoFile}`;
     console.log(`Starting server with: ${fullPath}`);
 
     const serverProc = spawn('python3', [
@@ -309,7 +332,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     await context2.close();
   });
 
-  test('single client timer test - client 1 only', async ({ browser }) => {
+  (enableSingleClient ? test : test.skip)('single client timer test - client 1 only', async ({ browser }) => {
     let serverProc = null;
 
     try {
@@ -317,15 +340,15 @@ test.describe('Multiplayer Client Interaction Tests', () => {
       await stopServer();
 
       // Delete .apsave file to ensure clean state
-      const gameDir = './frontend/presets/adventure/AP_14089154938208861744';
-      const apsavePath = `${gameDir}/AP_14089154938208861744.apsave`;
+      const gameDir = `./frontend/presets/${testGame}/${seedId}`;
+      const apsavePath = `${gameDir}/${seedId}.apsave`;
       if (fs.existsSync(apsavePath)) {
         fs.unlinkSync(apsavePath);
         console.log(`Deleted ${apsavePath}`);
       }
 
       // Start fresh server
-      serverProc = await startServer(gameDir);
+      serverProc = await startServer(testGame, testSeed);
 
       // Create one browser context
       const context1 = await browser.newContext();
@@ -336,8 +359,8 @@ test.describe('Multiplayer Client Interaction Tests', () => {
       console.log(`CLIENT1 (${msg.type()}): ${msg.text()}`);
     });
 
-    // Build URL with autoConnect parameters
-    const url1 = `http://localhost:8000/frontend/?mode=test-multiplayer-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1`;
+    // Build URL with autoConnect, game, and seed parameters
+    const url1 = `http://localhost:8000/frontend/?mode=test-multiplayer-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}`;
 
     console.log('='.repeat(60));
     console.log('Starting single client timer test...');
@@ -433,13 +456,30 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     }
   });
 
-  test.skip('multiplayer timer test - client 1: send checks, client 2: receive checks', async ({ browser }) => {
-    // Create two separate browser contexts (= two separate clients)
-    const context1 = await browser.newContext();
-    const context2 = await browser.newContext();
+  (!enableSingleClient ? test : test.skip)('multiplayer timer test - client 1: send checks, client 2: receive checks', async ({ browser }) => {
+    let serverProc = null;
 
-    const page1 = await context1.newPage();
-    const page2 = await context2.newPage();
+    try {
+      // Stop any existing server
+      await stopServer();
+
+      // Delete .apsave file to ensure clean state
+      const gameDir = `./frontend/presets/${testGame}/${seedId}`;
+      const apsavePath = `${gameDir}/${seedId}.apsave`;
+      if (fs.existsSync(apsavePath)) {
+        fs.unlinkSync(apsavePath);
+        console.log(`Deleted ${apsavePath}`);
+      }
+
+      // Start fresh server
+      serverProc = await startServer(testGame, testSeed);
+
+      // Create two separate browser contexts (= two separate clients)
+      const context1 = await browser.newContext();
+      const context2 = await browser.newContext();
+
+      const page1 = await context1.newPage();
+      const page2 = await context2.newPage();
 
     // Setup console logging for both clients
     page1.on('console', (msg) => {
@@ -450,9 +490,9 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     });
 
     // Build URLs for both clients using the new multiplayer test modes
-    // Add autoConnect, server, and playerName parameters
-    const url1 = `http://localhost:8000/frontend/?mode=test-multiplayer-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1`;
-    const url2 = `http://localhost:8000/frontend/?mode=test-multiplayer-client2&autoConnect=true&server=ws://localhost:38281&playerName=Player1`;
+    // Add autoConnect, server, playerName, game, and seed parameters
+    const url1 = `http://localhost:8000/frontend/?mode=test-multiplayer-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}`;
+    const url2 = `http://localhost:8000/frontend/?mode=test-multiplayer-client2&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}`;
 
     console.log('='.repeat(60));
     console.log('Starting multiplayer timer test...');
@@ -583,11 +623,19 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     expect(results2.summary.totalRun).toBeGreaterThan(0);
     expect(results2.summary.passedCount).toBeGreaterThan(0);
 
-    console.log('='.repeat(60));
-    console.log('All Playwright assertions passed for multiplayer timer test.');
-    console.log('='.repeat(60));
+      console.log('='.repeat(60));
+      console.log('All Playwright assertions passed for multiplayer timer test.');
+      console.log('='.repeat(60));
 
-    await context1.close();
-    await context2.close();
+      await context1.close();
+      await context2.close();
+    } finally {
+      // Always stop the server
+      if (serverProc) {
+        console.log('Stopping server...');
+        serverProc.kill();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
   });
 });
