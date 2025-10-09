@@ -3125,12 +3125,18 @@ export class StateManager {
    * Helper function to add items to canonical inventory
    */
   _addItemToInventory(itemName, count = 1) {
-    // Skip virtual progression counter items (they're managed automatically by progression_mapping)
+    // Skip virtual progression counter items with type="additive" (e.g., "rep" in Bomb Rush Cyberfunk)
+    // These are managed automatically by progression_mapping when their component items are added
+    // DO NOT skip level-based progressive items (e.g., "Progressive Sword") - those should be added normally
     if (this.progressionMapping && itemName in this.progressionMapping) {
-      this._logDebug(
-        `[StateManager] Skipping virtual progression item "${itemName}" - it's managed by progression_mapping`
-      );
-      return;
+      const mapping = this.progressionMapping[itemName];
+      if (mapping && mapping.type === 'additive') {
+        this._logDebug(
+          `[StateManager] Skipping additive progression counter "${itemName}" - it's managed by progression_mapping`
+        );
+        return;
+      }
+      // If it's not additive (e.g., level-based like Progressive Sword), continue to add it normally
     }
 
     // Canonical format: plain object

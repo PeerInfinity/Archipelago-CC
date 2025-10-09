@@ -1251,52 +1251,48 @@ export class TestSpoilerUI {
             this.log('debug', `Keeping accumulated state for sphere ${context.sphere_number}.`);
           }
 
-          // Check locations from current sphere to mark them as checked
-          // NOTE: We pass addItems=false because checkLocation can't properly handle
-          // progressive items (they get skipped by progression_mapping logic).
-          // We'll add the resolved items from the sphere log instead.
+          // Check locations from current sphere one-by-one, allowing natural item acquisition
+          // NOTE: We now use addItems=true (default) to let checkLocation naturally add items.
+          // Progressive items are automatically resolved by the has() function in game logic.
           const locationsToCheck = sphereData.locations || [];
           if (locationsToCheck.length > 0) {
-            this.log('info', `Checking ${locationsToCheck.length} locations from sphere ${context.sphere_number}: ${locationsToCheck.join(', ')}`);
+            this.log('info', `Checking ${locationsToCheck.length} locations from sphere ${context.sphere_number}`);
+
+            // Get initial snapshot once for location definitions (for logging)
+            const initialSnapshot = await stateManager.getFullSnapshot();
 
             for (const locationName of locationsToCheck) {
-              // Check location WITHOUT adding items (addItems=false)
-              await stateManager.checkLocation(locationName, false);
-            }
-          }
+              // Get location definition to see what item we're about to receive (for logging)
+              const locationDef = initialSnapshot.locations?.[locationName];
+              const itemName = locationDef?.item?.name;
 
-          // Calculate delta inventory (items to add)
-          // The sphere log contains ACCUMULATED inventory, but we need to add only NEW items
-          // to avoid duplicates. We calculate the delta from the previous inventory.
-          const deltaInventory = {};
-          for (const [itemName, newCount] of Object.entries(inventory_from_log)) {
-            const previousCount = this.previousInventory?.[itemName] || 0;
-            const delta = newCount - previousCount;
-            if (delta > 0) {
-              deltaInventory[itemName] = delta;
-            }
-          }
+              if (itemName) {
+                this.log('debug', `  Checking "${locationName}" (contains: ${itemName})`);
+              } else {
+                this.log('debug', `  Checking "${locationName}" (no item or event)`);
+              }
 
-          // Add delta items (the new items from this sphere)
-          // NOTE: These are resolved progressive items from the sphere log, not raw location items
-          if (Object.keys(deltaInventory).length > 0) {
-            await stateManager.beginBatchUpdate(true);
-            this.log('debug', `Beginning batch update for sphere ${context.sphere_number} delta inventory.`);
-
-            for (const [itemName, count] of Object.entries(deltaInventory)) {
-              this.log('debug', `Adding delta item: ${itemName}, count: ${count}`);
-              await stateManager.addItemToInventory(itemName, count);
+              // Check location WITH items (addItems=true is default, so we omit the parameter)
+              // This naturally adds the item (e.g., "Progressive Sword") to inventory
+              await stateManager.checkLocation(locationName);
             }
 
-            await stateManager.commitBatchUpdate();
-            this.log('debug', `Committed batch update for sphere ${context.sphere_number} delta inventory.`);
-          } else {
-            this.log('debug', `Sphere ${context.sphere_number} has no delta items to add.`);
+            this.log('info', `Completed checking ${locationsToCheck.length} locations for sphere ${context.sphere_number}`);
           }
 
-          // 4. Ping worker to ensure all commands are processed and state is stable.
+          // TODO: Add inventory comparison in the future
+          // Currently we only compare location accessibility, not inventory contents.
+          // To add inventory comparison, we need to resolve progressive items:
+          //   - StateManager inventory uses base names: {"Progressive Sword": 2}
+          //   - Sphere log uses resolved names: {"Fighter Sword": 1, "Master Sword": 1}
+          // Options:
+          //   1. Implement resolution function to compare these correctly
+          //   2. Enhance sphere log format to include both resolved and unresolved items
+          //   3. Use progression_mapping to convert StateManager inventory to resolved form
+
+          // Ping worker to ensure all commands are processed and state is stable.
           await stateManager.pingWorker(
-            `spoiler_sphere_${context.sphere_number}_inventory_applied`,
+            `spoiler_sphere_${context.sphere_number}_locations_checked`,
             60000  // Increased timeout to 60 seconds to handle complex rule evaluation
           );
           this.log(
@@ -1304,12 +1300,12 @@ export class TestSpoilerUI {
             'Ping successful. StateManager ready for comparison.'
           );
 
-          // 5. Get the fresh snapshot from the worker.
+          // Get the fresh snapshot from the worker.
           const freshSnapshot = await stateManager.getFullSnapshot();
           if (!freshSnapshot) {
             this.log(
               'error',
-              'Failed to retrieve a fresh snapshot from StateManager after inventory update.'
+              'Failed to retrieve a fresh snapshot from StateManager after checking locations.'
             );
             allChecksPassed = false;
             break;
@@ -1324,15 +1320,15 @@ export class TestSpoilerUI {
             freshSnapshot
           );
 
-          // 6. Compare using the fresh snapshot.
+          // Compare using the fresh snapshot.
           const locationComparisonResult = await this.compareAccessibleLocations(
             accessible_from_log, // This is an array of location names
             freshSnapshot, // The authoritative snapshot from the worker
             this.playerId, // Pass player ID for context in comparison
             context // Original context for logging
           );
-          
-          // 7. Compare accessible regions using the fresh snapshot.
+
+          // Compare accessible regions using the fresh snapshot.
           const regionComparisonResult = await this.compareAccessibleRegions(
             accessible_regions_from_log, // This is an array of region names
             freshSnapshot, // The authoritative snapshot from the worker
