@@ -1663,11 +1663,11 @@ export class TestSpoilerUI {
           typeof context === 'string' ? context : JSON.stringify(context),
         logAccessibleSet: Array.from(logAccessibleSet),
         stateAccessibleSet: Array.from(stateAccessibleSet),
-        workerSnapshotInventoryUsed: currentWorkerSnapshot.prog_items
-          ? currentWorkerSnapshot.prog_items[playerId]
+        workerSnapshotInventoryUsed: currentWorkerSnapshot.inventory
+          ? currentWorkerSnapshot.inventory
           : 'N/A',
       });
-      
+
       // ADDED: Store detailed mismatch information for result aggregation
       this.currentMismatchDetails = {
         context: typeof context === 'string' ? context : JSON.stringify(context),
@@ -1675,8 +1675,8 @@ export class TestSpoilerUI {
         extraInState: extraInState,
         logAccessibleCount: logAccessibleSet.size,
         stateAccessibleCount: stateAccessibleSet.size,
-        inventoryUsed: currentWorkerSnapshot.prog_items
-          ? currentWorkerSnapshot.prog_items[playerId]
+        inventoryUsed: currentWorkerSnapshot.inventory
+          ? currentWorkerSnapshot.inventory
           : null,
       };
       
@@ -1827,8 +1827,8 @@ export class TestSpoilerUI {
           typeof context === 'string' ? context : JSON.stringify(context),
         logAccessibleSet: Array.from(logAccessibleSet),
         stateAccessibleSet: Array.from(stateAccessibleSet),
-        workerSnapshotInventoryUsed: currentWorkerSnapshot.prog_items
-          ? currentWorkerSnapshot.prog_items[playerId]
+        workerSnapshotInventoryUsed: currentWorkerSnapshot.inventory
+          ? currentWorkerSnapshot.inventory
           : 'N/A',
       });
       
@@ -2257,8 +2257,8 @@ export class TestSpoilerUI {
     
     // First, log some general context about the state
     this.log('info', `[CONTEXT] Current snapshot overview:`);
-    if (currentWorkerSnapshot.prog_items && currentWorkerSnapshot.prog_items[this.playerId]) {
-      const inventory = currentWorkerSnapshot.prog_items[this.playerId];
+    if (currentWorkerSnapshot.inventory) {
+      const inventory = currentWorkerSnapshot.inventory;
       const itemCount = Object.keys(inventory).length;
       const totalItems = Object.values(inventory).reduce((sum, count) => sum + count, 0);
       this.log('info', `  Player ${this.playerId} inventory: ${itemCount} unique items, ${totalItems} total items`);
@@ -2366,8 +2366,8 @@ export class TestSpoilerUI {
     this.log('info', `[CONTEXT] Currently accessible regions (${accessibleRegions.length}): ${accessibleRegions.slice(0, 10).join(', ')}${accessibleRegions.length > 10 ? '...' : ''}`);
     
     // Log player inventory for context
-    if (currentWorkerSnapshot.prog_items && currentWorkerSnapshot.prog_items[playerId]) {
-      const inventory = currentWorkerSnapshot.prog_items[playerId];
+    if (currentWorkerSnapshot.inventory) {
+      const inventory = currentWorkerSnapshot.inventory;
       const itemCount = Object.keys(inventory).length;
       const totalItems = Object.values(inventory).reduce((sum, count) => sum + count, 0);
       this.log('info', `[CONTEXT] Player ${playerId} inventory: ${itemCount} unique items, ${totalItems} total items`);
