@@ -128,8 +128,7 @@ class CvCotMGameExportHandler(BaseGameExportHandler):
                     ],
                     'locations': [],
                     'time_passes': True,
-                    'provides_chest_count': True,
-                    'region_rules': []
+                    'provides_chest_count': True
                 }
                 
                 # Add entrance to Catacomb from Menu
@@ -171,9 +170,7 @@ class CvCotMGameExportHandler(BaseGameExportHandler):
                         region_data['time_passes'] = True
                     if 'provides_chest_count' not in region_data:
                         region_data['provides_chest_count'] = True
-                    if 'region_rules' not in region_data:
-                        region_data['region_rules'] = []
-                    
+
                     formatted_regions[region_name] = region_data
             
             # Return regions nested under player '1' (expected format)

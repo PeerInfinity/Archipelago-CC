@@ -2481,19 +2481,6 @@ export class StateManager {
         log('info', '  No incoming paths found.');
       }
 
-      // Check region's own rules if any
-      if (region.region_rules && region.region_rules.length > 0) {
-        log(
-          'info',
-          `\n${regionName} has ${region.region_rules.length} region rules:`
-        );
-        region.region_rules.forEach((rule, i) => {
-          const ruleResult = this.evaluateRuleFromEngine(rule);
-          log('info', `- Rule #${i + 1}: ${ruleResult ? 'PASSES' : 'FAILS'}`);
-          this.debugRuleEvaluation(rule);
-        });
-      }
-
       // Check path from stateManager
       const path = this.getPathToRegion(regionName);
       if (path && path.length > 0) {

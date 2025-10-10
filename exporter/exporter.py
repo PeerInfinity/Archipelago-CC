@@ -525,77 +525,6 @@ def process_regions(multiworld, player: int, game_handler=None) -> tuple:
         # Default: convert to string
         return str(type_obj)
 
-    def get_entrance_spoiler_data(entrance_or_exit, multiworld, player, game_name):
-        """
-        Parse spoiler data to determine entrance direction and connection info.
-        Returns tuple of (randomization_type, reverse_name, direction).
-        
-        Supports multiple games with different spoiler formats:
-        - ALTTP: Uses spoiler.entrances with direction='both' 
-        - The Messenger: Uses spoiler.entrances with direction='both' (same format as ALTTP)
-        """
-        if not hasattr(multiworld, 'spoiler') or not multiworld.spoiler:
-            return (getattr(entrance_or_exit, 'randomization_type', 1), None, None)
-        
-        entrance_name = getattr(entrance_or_exit, 'name', None)
-        if not entrance_name:
-            return (getattr(entrance_or_exit, 'randomization_type', 1), None, None)
-        
-        try:
-            if hasattr(multiworld.spoiler, 'entrances') and multiworld.spoiler.entrances:
-                spoiler_entries = multiworld.spoiler.entrances
-                
-                # Search through all spoiler entries to find this entrance
-                for spoiler_key, spoiler_entry in spoiler_entries.items():
-                    # Extract player from the spoiler key tuple - format is ('entrance_name', 'direction', player)
-                    try:
-                        # Parse the string representation of the tuple to extract player info
-                        if isinstance(spoiler_key, str) and spoiler_key.startswith("(") and spoiler_key.endswith(")"):
-                            # Extract the third element (player) from the tuple string
-                            key_parts = spoiler_key.strip("()").split("', ")
-                            if len(key_parts) >= 3:
-                                spoiler_player = int(key_parts[2].strip("'"))
-                                if spoiler_player != player:
-                                    continue
-                    except (ValueError, IndexError):
-                        # If we can't parse the player from the key, skip player filtering
-                        pass
-                        
-                    entrance_field = spoiler_entry.get('entrance')
-                    exit_field = spoiler_entry.get('exit')
-                    direction = spoiler_entry.get('direction')
-                    
-                    # Check if this entrance matches the entrance field
-                    if entrance_field == entrance_name:
-                        if direction == 'both':
-                            return (2, exit_field, 'both')  # TWO_WAY
-                        elif direction == 'entrance':
-                            return (1, None, 'entrance')  # ONE_WAY entrance
-                        elif direction == 'exit':
-                            return (1, None, 'exit')  # ONE_WAY exit
-                    
-                    # Check if this entrance matches the exit field
-                    elif exit_field == entrance_name:
-                        if direction == 'both':
-                            return (2, entrance_field, 'both')  # TWO_WAY
-                        elif direction == 'entrance':
-                            # This entrance is the destination of an entrance->exit connection
-                            # From the destination's perspective, it receives connections but doesn't provide direction info
-                            return (1, None, 'entrance')  # ONE_WAY entrance destination
-                        elif direction == 'exit':
-                            # This entrance is the destination of an exit->entrance connection
-                            # From the destination's perspective, it receives connections 
-                            return (1, None, 'exit')  # ONE_WAY exit destination
-            
-            # Fallback: Use the randomization_type from the entrance object itself
-            randomization_type = getattr(entrance_or_exit, 'randomization_type', 1)
-            if randomization_type == 2:
-                pass  # TWO_WAY entrance from object, but no spoiler reverse data
-            return (randomization_type, None, None)
-                
-        except Exception as e:
-            return (getattr(entrance_or_exit, 'randomization_type', 1), None, None)
-
 
     try:
         regions_data = {}
@@ -685,13 +614,9 @@ def process_regions(multiworld, player: int, game_handler=None) -> tuple:
                 region_data = {
                     'name': getattr(region, 'name', 'Unknown'),
                     'type': extract_type_value(getattr(region, 'type', 'Region')),
-                    'player': getattr(region, 'player', player),
                     'entrances': [],
                     'exits': [],
-                    'locations': [],
-                    'time_passes': getattr(region, 'time_passes', True),
-                    'provides_chest_count': getattr(region, 'provides_chest_count', True),
-                    'region_rules': []
+                    'locations': []
                 }
                 
                 # Add game-specific region attributes from the handler
@@ -755,22 +680,11 @@ def process_regions(multiworld, player: int, game_handler=None) -> tuple:
                                 elif expanded_rule and game_handler and hasattr(game_handler, 'postprocess_rule'):
                                     expanded_rule = game_handler.postprocess_rule(expanded_rule)
                             
-                            # Get spoiler-aware entrance data for all games with entrance randomization
-                            game_name = multiworld.game[player]
-                            spoiler_randomization_type, spoiler_reverse, spoiler_direction = get_entrance_spoiler_data(entrance, multiworld, player, game_name)
-                            final_reverse = spoiler_reverse if spoiler_reverse else (getattr(entrance.reverse, 'name', None) if hasattr(entrance, 'reverse') else None)
-                            final_randomization_type = spoiler_randomization_type
-                            
                             entrance_data = {
                                 'name': entrance_name,
                                 'parent_region': getattr(entrance.parent_region, 'name', None) if hasattr(entrance, 'parent_region') else None,
                                 'access_rule': expanded_rule,
                                 'connected_region': getattr(entrance.connected_region, 'name', None) if hasattr(entrance, 'connected_region') else None,
-                                'reverse': final_reverse,
-                                'assumed': getattr(entrance, 'assumed', False),
-                                'randomization_type': final_randomization_type,
-                                'direction': spoiler_direction,
-                                'type': getattr(entrance, 'type', 'Entrance'),
                             }
                             region_data['entrances'].append(entrance_data)
                         except Exception as e:
@@ -809,20 +723,10 @@ def process_regions(multiworld, player: int, game_handler=None) -> tuple:
                                     elif expanded_rule and game_handler and hasattr(game_handler, 'postprocess_rule'):
                                         expanded_rule = game_handler.postprocess_rule(expanded_rule)
                             
-                            # Get spoiler-aware exit data for all games with entrance randomization
-                            game_name = multiworld.game[player]
-                            spoiler_randomization_type, spoiler_reverse, spoiler_direction = get_entrance_spoiler_data(exit, multiworld, player, game_name)
-                            final_reverse = spoiler_reverse if spoiler_reverse else (getattr(exit.reverse, 'name', None) if hasattr(exit, 'reverse') else None)
-                            final_randomization_type = spoiler_randomization_type
-                            
                             exit_data = {
                                 'name': exit_name,
                                 'connected_region': getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None,
                                 'access_rule': expanded_rule,
-                                'reverse': final_reverse,
-                                'randomization_type': final_randomization_type,
-                                'direction': spoiler_direction,
-                                'type': getattr(exit, 'type', 'Exit'),
                             }
                             region_data['exits'].append(exit_data)
                         except Exception as e:
@@ -871,8 +775,6 @@ def process_regions(multiworld, player: int, game_handler=None) -> tuple:
                                 'id': location_name_to_id.get(location_name, None),  # Add location ID from mapping
                                 'access_rule': access_rule_result,
                                 'item_rule': item_rule_result,
-                                'progress_type': extract_type_value(getattr(location, 'progress_type', None)),
-                                'locked': getattr(location, 'locked', False),
                                 'item': None
                             }
 
@@ -896,24 +798,6 @@ def process_regions(multiworld, player: int, game_handler=None) -> tuple:
                             region_data['locations'].append(location_data)
                         except Exception as e:
                             logger.error(f"Error processing location {getattr(location, 'name', 'Unknown')}: {str(e)}")
-
-                # Process region rules
-                if hasattr(region, 'region_rules'):
-                    for i, rule in enumerate(region.region_rules):
-                        try:
-                            # Construct a target name for region rules
-                            rule_target_name = f"{region.name} Rule {i+1}"
-                            expanded_rule = safe_expand_rule(
-                                game_handler,
-                                rule,
-                                rule_target_name,
-                                target_type='RegionRule',
-                                world=world
-                            )
-                            if expanded_rule:
-                                region_data['region_rules'].append(expanded_rule)
-                        except Exception as e:
-                            logger.error(f"Error processing region rule: {str(e)}")
 
                 regions_data[region.name] = region_data
 
