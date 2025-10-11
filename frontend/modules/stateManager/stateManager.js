@@ -381,7 +381,7 @@ export class StateManager {
 
     // Remove all event items from inventory and uncheck their locations
     for (const itemName in this.itemData) {
-      if (this.itemData[itemName]?.event || this.itemData[itemName]?.type === 'Event' || this.itemData[itemName]?.type === 'Crystal') {
+      if (this.itemData[itemName]?.event || this.itemData[itemName]?.id === 0 || this.itemData[itemName]?.id === null) {
         if (this.inventory[itemName] > 0) {
           this._logDebug(`[StateManager] Clearing event item: ${itemName}`);
           this.inventory[itemName] = 0;
@@ -797,8 +797,7 @@ export class StateManager {
           this.originalLocationOrder.push(descriptiveName);
 
           if (
-            locationObjectForArray.item &&
-            (locationObjectForArray.item.type === 'Event' || locationObjectForArray.item.type === 'Crystal')
+            locationDataItem.id === 0 || locationDataItem.id === null || locationDataItem.id === undefined
           ) {
             this.eventLocations.set(
               locationObjectForArray.name,
@@ -1883,8 +1882,8 @@ export class StateManager {
           // Skip event items
           if (
             this.inventory.itemData[itemName]?.event ||
-            this.inventory.itemData[itemName]?.type === 'Event' ||
-            this.inventory.itemData[itemName]?.type === 'Crystal'
+            this.inventory.itemData[itemName]?.id === 0 ||
+            this.inventory.itemData[itemName]?.id === null
           ) {
             return;
           }
@@ -1907,8 +1906,8 @@ export class StateManager {
               itemName.includes('Bottle') && excludedItems.includes('AnyBottle')
             ) &&
             !this.inventory.itemData[itemName].event &&
-            this.inventory.itemData[itemName].type !== 'Event' &&
-            this.inventory.itemData[itemName].type !== 'Crystal'
+            this.inventory.itemData[itemName].id !== 0 &&
+            this.inventory.itemData[itemName].id !== null
           ) {
             this.addItemToInventory(itemName);
           }
@@ -3723,8 +3722,8 @@ export class StateManager {
           if (excludedItems.includes(item)) continue;
           if (
             this.itemData[item]?.event ||
-            this.itemData[item]?.type === 'Event' ||
-            this.itemData[item]?.type === 'Crystal'
+            this.itemData[item]?.id === 0 ||
+            this.itemData[item]?.id === null
           )
             continue; // Skip event items from pool for test setup
 
@@ -3746,8 +3745,8 @@ export class StateManager {
           if (excludedItems.includes(itemName)) continue;
           if (
             this.itemData[itemName]?.event ||
-            this.itemData[itemName]?.type === 'Event' ||
-            this.itemData[itemName]?.type === 'Crystal'
+            this.itemData[itemName]?.id === 0 ||
+            this.itemData[itemName]?.id === null
           )
             continue;
           itemsForTest[itemName] = (itemsForTest[itemName] || 0) + 1;
