@@ -196,7 +196,9 @@ export function createStateSnapshotInterface(
       return totalCount;
     },
     countGroup: (groupName) => {
-      if (!snapshot?.inventory) return 0;
+      if (!snapshot?.inventory) {
+        return 0;
+      }
       let count = 0;
       const playerSlot = snapshot?.player?.slot || '1'; // Default to '1' if not specified
 
@@ -205,14 +207,17 @@ export function createStateSnapshotInterface(
 
       if (Array.isArray(playerItemGroups)) {
         // ALTTP uses array of group names
-        // This logic assumes staticData.items is available and structured per player
-        const playerItemsData = staticData.items && staticData.items[playerSlot];
+        // This logic assumes staticData.itemsByPlayer is available and structured per player
+        const playerItemsData = staticData.itemsByPlayer && staticData.itemsByPlayer[playerSlot];
         if (playerItemsData) {
           for (const itemName in playerItemsData) {
             if (playerItemsData[itemName]?.groups?.includes(groupName)) {
-              count += snapshot.inventory[itemName] || 0;
+              const itemCount = snapshot.inventory[itemName] || 0;
+              count += itemCount;
             }
           }
+        } else {
+          log('error', `[countGroup] playerItemsData not found for player ${playerSlot}. staticData.itemsByPlayer:`, staticData?.itemsByPlayer);
         }
       } else if (
         typeof playerItemGroups === 'object' &&

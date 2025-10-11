@@ -3278,7 +3278,8 @@ export class StateManager {
       for (const itemName in this.itemData) {
         const itemInfo = this.itemData[itemName];
         if (itemInfo?.groups?.includes(groupName)) {
-          count += this.inventory[itemName] || 0;
+          const itemCount = this.inventory[itemName] || 0;
+          count += itemCount;
         }
       }
     }
@@ -3889,7 +3890,8 @@ export class StateManager {
       regions: this.regions,
       exits: this.exits,
       dungeons: this.dungeons,
-      items: {[String(this.playerSlot)]: this.itemData},  // Provide items indexed by player slot for stateInterface
+      items: this.itemData,  // Direct access for UI components
+      itemsByPlayer: {[String(this.playerSlot)]: this.itemData},  // Provide items indexed by player slot for stateInterface
       itemData: this.itemData,  // Keep for backwards compatibility
       groups: this.groupData,
       groupData: this.groupData,

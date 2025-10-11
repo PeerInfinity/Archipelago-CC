@@ -204,9 +204,9 @@ export function createStateSnapshotInterface(
 
       if (Array.isArray(playerItemGroups)) {
         // ALTTP uses array of group names
-        // This logic assumes staticData.items is available and structured per player
+        // This logic assumes staticData.itemsByPlayer is available and structured per player
         const playerItemsData =
-          staticData.items && staticData.items[playerSlot];
+          staticData.itemsByPlayer && staticData.itemsByPlayer[playerSlot];
         if (playerItemsData) {
           for (const itemName in playerItemsData) {
             if (playerItemsData[itemName]?.groups?.includes(groupName)) {

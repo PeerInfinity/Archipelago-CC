@@ -530,6 +530,7 @@ class GeneralOptions(Group):
     skip_preset_copy_if_rules_identical: bool = False
     save_sphere_log: bool = False
     verbose_sphere_log: bool = False
+    extend_sphere_log_to_all_locations: bool = False
     log_fractional_sphere_details: bool = True
     log_integer_sphere_details: bool = False
     update_frontend_presets: bool = False

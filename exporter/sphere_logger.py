@@ -204,6 +204,7 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
     log_fractional_sphere_details = settings.general_options.log_fractional_sphere_details
     log_integer_sphere_details = settings.general_options.log_integer_sphere_details
     verbose_sphere_log = settings.general_options.verbose_sphere_log
+    extend_sphere_log_to_all_locations = settings.general_options.extend_sphere_log_to_all_locations
 
     # Reset state trackers at the start
     _previous_fractional_state = None
@@ -234,7 +235,10 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
     try:
         # Main implementation with logging
         multiworld = spoiler.multiworld
-        prog_locations = {location for location in multiworld.get_filled_locations() if location.item.advancement}
+        if extend_sphere_log_to_all_locations:
+            prog_locations = set(multiworld.get_filled_locations())
+        else:
+            prog_locations = {location for location in multiworld.get_filled_locations() if location.item.advancement}
         state_cache: List[Optional[CollectionState]] = [None]
         # collection_spheres will be redefined later for the final pass
         initial_collection_spheres: List[Set["Location"]] = []
@@ -260,18 +264,19 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
         
         # Pruning phase
         restore_later: Dict["Location", "Item"] = {}
-        for num, sphere in reversed(tuple(enumerate(initial_collection_spheres))):
-            to_delete: Set["Location"] = set()
-            for location in sphere:
-                old_item = location.item
-                location.item = None
-                if multiworld.can_beat_game(state_cache[num]):
-                    to_delete.add(location)
-                    restore_later[location] = old_item
-                else:
-                    location.item = old_item
-            sphere -= to_delete
-            initial_collection_spheres[num] = sphere
+        if not extend_sphere_log_to_all_locations:
+            for num, sphere in reversed(tuple(enumerate(initial_collection_spheres))):
+                to_delete: Set["Location"] = set()
+                for location in sphere:
+                    old_item = location.item
+                    location.item = None
+                    if multiworld.can_beat_game(state_cache[num]):
+                        to_delete.add(location)
+                        restore_later[location] = old_item
+                    else:
+                        location.item = old_item
+                sphere -= to_delete
+                initial_collection_spheres[num] = sphere
 
         # Precollected items phase
         # NOTE: Pruning of precollected items is disabled to ensure the sphere log matches starting_items

@@ -32,8 +32,12 @@ export function has(snapshot, staticData, itemName) {
 
   // Check progressive items
   if (staticData && staticData.progressionMapping) {
+    // Get player-specific progression mapping (progression_mapping is organized by player slot)
+    const playerSlot = snapshot?.player?.slot || '1';
+    const playerProgressionMapping = staticData.progressionMapping[playerSlot] || staticData.progressionMapping;
+
     // Check if this item is provided by any progressive item
-    for (const [progressiveBase, progression] of Object.entries(staticData.progressionMapping)) {
+    for (const [progressiveBase, progression] of Object.entries(playerProgressionMapping)) {
       const baseCount = snapshot.inventory[progressiveBase] || 0;
       if (baseCount > 0 && progression && progression.items) {
         // Check each upgrade in the progression
@@ -63,14 +67,18 @@ export function has(snapshot, staticData, itemName) {
 export function count(snapshot, staticData, itemName) {
   if (!snapshot.inventory) return 0;
 
+  // Get player-specific progression mapping (progression_mapping is organized by player slot)
+  const playerSlot = snapshot?.player?.slot || '1';
+  const playerProgressionMapping = staticData?.progressionMapping?.[playerSlot] || staticData?.progressionMapping;
+
   // If the item itself is a base progressive item, return its direct count
-  if (staticData && staticData.progressionMapping && staticData.progressionMapping[itemName]) {
+  if (playerProgressionMapping && playerProgressionMapping[itemName]) {
     return snapshot.inventory[itemName] || 0;
   }
 
   // Check if itemName is a specific tier of any progressive item we hold
-  if (staticData && staticData.progressionMapping) {
-    for (const [progressiveBase, progression] of Object.entries(staticData.progressionMapping)) {
+  if (playerProgressionMapping) {
+    for (const [progressiveBase, progression] of Object.entries(playerProgressionMapping)) {
       const baseCount = snapshot.inventory[progressiveBase] || 0;
       if (baseCount > 0 && progression && progression.items) {
         // Check each upgrade in the progression
@@ -777,18 +785,25 @@ export function can_revival_fairy_shop(snapshot, staticData, itemName) {
 export function countGroup(snapshot, staticData, itemName) {
   // Count items in a specific group (e.g., "Bottles", "Crystals")
   const groupName = itemName;
-  
-  if (!staticData || !staticData.groupData || !staticData.groupData[groupName]) {
-    return 0;
-  }
-  
-  const groupItems = staticData.groupData[groupName];
+
+  if (!snapshot?.inventory) return 0;
+
+  // Get player-specific item data
+  const playerSlot = snapshot?.player?.slot || '1';
+  const itemsData = staticData?.itemsByPlayer?.[playerSlot] || staticData?.itemData || staticData?.items?.[playerSlot];
+
+  if (!itemsData) return 0;
+
   let totalCount = 0;
-  
-  for (const itemName of groupItems) {
-    totalCount += count(snapshot, staticData, itemName);
+
+  // Iterate through all items and check if they belong to the requested group
+  for (const itemKey in itemsData) {
+    const itemInfo = itemsData[itemKey];
+    if (itemInfo?.groups?.includes(groupName)) {
+      totalCount += count(snapshot, staticData, itemKey);
+    }
   }
-  
+
   return totalCount;
 }
 
