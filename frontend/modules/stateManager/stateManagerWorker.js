@@ -780,7 +780,7 @@ async function handleMessage(message) {
                   return;
 
                 const itemDef = allItemData ? allItemData[itemName] : null;
-                if (itemDef && (itemDef.event || itemDef.type === 'Event'))
+                if (itemDef && (itemDef.event || itemDef.type === 'Event' || itemDef.type === 'Crystal'))
                   return; // Skip event items
 
                 for (let i = 0; i < count; i++) {
@@ -801,7 +801,7 @@ async function handleMessage(message) {
                   return;
 
                 const itemDef = allItemData[itemName];
-                if (itemDef && (itemDef.event || itemDef.type === 'Event'))
+                if (itemDef && (itemDef.event || itemDef.type === 'Event' || itemDef.type === 'Crystal'))
                   return; // Skip event items
                 stateManagerInstance.addItemToInventory(itemName); // Now respects batch mode
               });

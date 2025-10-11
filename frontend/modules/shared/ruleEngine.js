@@ -425,13 +425,13 @@ export const evaluateRule = (rule, context, depth = 0) => {
             // Dynamically resolve the parent region from the context
             if (context.getStaticData && context.getStaticData().regions) {
               const regions = context.getStaticData().regions;
-              
+
               // Try direct lookup first
               if (regions[baseObject.parent_region_name]) {
                 return regions[baseObject.parent_region_name];
               }
-              
-              // Try player-specific lookup  
+
+              // Try player-specific lookup
               const playerId = context.playerId || context.getPlayerSlot?.() || '1';
               if (regions[playerId] && regions[playerId][baseObject.parent_region_name]) {
                 return regions[playerId][baseObject.parent_region_name];
@@ -441,36 +441,45 @@ export const evaluateRule = (rule, context, depth = 0) => {
           }
 
           // Special handling for boss attribute - redirect to bosses["None"] if bosses exists
-          if (rule.attr === 'boss' && !baseObject.boss && baseObject.bosses) {
-            // Use the new bosses format - default to "None" entry
-            return baseObject.bosses["None"] || Object.values(baseObject.bosses)[0];
+          if (rule.attr === 'boss') {
+            const hasBoss = baseObject.boss !== undefined;
+            const hasBosses = baseObject.bosses !== undefined;
+
+            if (!hasBoss && hasBosses) {
+              // Use the new bosses format - default to "None" entry
+              return baseObject.bosses["None"] || Object.values(baseObject.bosses)[0];
+            }
           }
           
           // Special handling for dungeon attribute - resolve string to actual dungeon object
-          if (rule.attr === 'dungeon' && baseObject.dungeon) {
-            const dungeonValue = baseObject.dungeon;
-            
-            if (typeof dungeonValue === 'string') {
-              // Look up the actual dungeon object from staticData
-              const dungeonName = dungeonValue;
-              const playerId = context.playerId || context.getPlayerSlot?.() || '1';
-              const dungeons = context.dungeons || context.getAllDungeons?.() || context.staticData?.dungeons;
-              
-              if (dungeons) {
-                // Try player-specific dungeon first
-                if (dungeons[playerId] && dungeons[playerId][dungeonName]) {
-                  return dungeons[playerId][dungeonName];
+          if (rule.attr === 'dungeon') {
+            const hasDungeon = baseObject.dungeon !== undefined;
+
+            if (hasDungeon) {
+              const dungeonValue = baseObject.dungeon;
+
+              if (typeof dungeonValue === 'string') {
+                // Look up the actual dungeon object from staticData
+                const dungeonName = dungeonValue;
+                const playerId = context.playerId || context.getPlayerSlot?.() || '1';
+                const dungeons = context.dungeons || context.getAllDungeons?.() || context.staticData?.dungeons;
+
+                if (dungeons) {
+                  // Try player-specific dungeon first
+                  if (dungeons[playerId] && dungeons[playerId][dungeonName]) {
+                    return dungeons[playerId][dungeonName];
+                  }
+                  // Fallback to direct dungeon lookup if not nested by player
+                  if (dungeons[dungeonName]) {
+                    return dungeons[dungeonName];
+                  }
                 }
-                // Fallback to direct dungeon lookup if not nested by player
-                if (dungeons[dungeonName]) {
-                  return dungeons[dungeonName];
-                }
+                // If we couldn't resolve, return the string (fallback)
+                return dungeonName;
               }
-              // If we couldn't resolve, return the string (fallback)
-              return dungeonName;
+              // Already an object, return as-is
+              return dungeonValue;
             }
-            // Already an object, return as-is
-            return dungeonValue;
           }
 
           // First try direct property access
@@ -636,34 +645,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
               depth + 1
             );
 
-            // Debug the chain resolution step by step
-            log('debug', '[evaluateRule] Boss defeat chain resolution:', {
-              hasLocation: !!context.currentLocation,
-              locationName: context.currentLocation?.name,
-              bossObjectResult: bossObject,
-              bossObjectType: typeof bossObject,
-              hasBossDefeatRule: !!(bossObject && bossObject.defeat_rule),
-              functionChain: extractFunctionChain(rule.function.object),
-            });
-
             if (bossObject && bossObject.defeat_rule) {
-              // Use the boss's defeat_rule instead of trying to call can_defeat
-              log(
-                'debug',
-                '[evaluateRule] Redirecting boss.can_defeat to boss.defeat_rule',
-                {
-                  boss: bossObject.name,
-                  defeatRule: bossObject.defeat_rule,
-                }
-              );
               result = evaluateRule(bossObject.defeat_rule, context, depth + 1);
               break;
             } else {
-              //log('warn', '[evaluateRule] Boss object missing defeat_rule', {
-              //  bossObject,
-              //  functionObject: rule.function.object,
-              //  contextCurrentLocation: context.currentLocation?.name,
-              //});
               result = undefined;
               break;
             }

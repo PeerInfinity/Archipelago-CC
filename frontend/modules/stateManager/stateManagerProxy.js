@@ -522,10 +522,13 @@ export class StateManagerProxy {
           message.queryId
         );
       } else {
+        // This is a real problem - the ping timed out, meaning the worker is slow
+        // or overloaded. The test is proceeding with a potentially stale snapshot.
         log(
           'warn',
-          '[StateManagerProxy] Received pingResponse for unknown queryId:',
-          message.queryId
+          '[StateManagerProxy] Ping timed out - received response for unknown queryId:',
+          message.queryId,
+          'This means the worker response is arriving late and the snapshot may be stale!'
         );
       }
     } else {
@@ -994,9 +997,15 @@ export class StateManagerProxy {
 
   terminateWorker() {
     if (this.worker) {
+      // Clear all pending queries and their timeouts before terminating
+      this.pendingQueries.forEach(({ timeoutId }) => {
+        if (timeoutId) clearTimeout(timeoutId);
+      });
+      this.pendingQueries.clear();
+
       this.worker.terminate();
       this.worker = null;
-      log('info', '[StateManagerProxy] Worker terminated.');
+      log('info', '[StateManagerProxy] Worker terminated and pending queries cleared.');
     }
   }
 

@@ -75,7 +75,7 @@ export function createStateSnapshotInterface(
                   return {
                     ...foundLoc,
                     region: regionNameKey,
-                    parent_region: regionNameKey,
+                    parent_region_name: regionNameKey,
                   };
                 }
               }
@@ -196,17 +196,17 @@ export function createStateSnapshotInterface(
       return totalCount;
     },
     countGroup: (groupName) => {
-      if (!staticData?.groups || !snapshot?.inventory) return 0;
+      if (!snapshot?.inventory) return 0;
       let count = 0;
       const playerSlot = snapshot?.player?.slot || '1'; // Default to '1' if not specified
-      const playerItemGroups =
-        staticData.groups[playerSlot] || staticData.groups; // Try player-specific then general
+
+      // First check if we have item_groups (ALTTP-style with group names as array)
+      const playerItemGroups = staticData?.item_groups?.[playerSlot] || staticData?.item_groups;
 
       if (Array.isArray(playerItemGroups)) {
         // ALTTP uses array of group names
         // This logic assumes staticData.items is available and structured per player
-        const playerItemsData =
-          staticData.items && staticData.items[playerSlot];
+        const playerItemsData = staticData.items && staticData.items[playerSlot];
         if (playerItemsData) {
           for (const itemName in playerItemsData) {
             if (playerItemsData[itemName]?.groups?.includes(groupName)) {
@@ -219,9 +219,21 @@ export function createStateSnapshotInterface(
         playerItemGroups[groupName] &&
         Array.isArray(playerItemGroups[groupName])
       ) {
-        // If groups is an object { groupName: [itemNames...] }
+        // If item_groups is an object { groupName: [itemNames...] }
         for (const itemInGroup of playerItemGroups[groupName]) {
           count += snapshot.inventory[itemInGroup] || 0;
+        }
+      } else if (staticData?.groups) {
+        // Fallback to old groups structure if available
+        const playerGroups = staticData.groups[playerSlot] || staticData.groups;
+        if (
+          typeof playerGroups === 'object' &&
+          playerGroups[groupName] &&
+          Array.isArray(playerGroups[groupName])
+        ) {
+          for (const itemInGroup of playerGroups[groupName]) {
+            count += snapshot.inventory[itemInGroup] || 0;
+          }
         }
       }
       return count;
@@ -243,7 +255,7 @@ export function createStateSnapshotInterface(
       if (!locationName) return undefined;
       const locData = findLocationDataInStatic(locationName);
       if (!locData) return undefined;
-      const regionName = locData.parent_region || locData.region;
+      const regionName = locData.parent_region_name || locData.parent_region || locData.region;
       if (!regionName) return undefined;
       const parentRegionIsReachable = this.isRegionReachable(regionName);
       if (parentRegionIsReachable === undefined) return undefined;

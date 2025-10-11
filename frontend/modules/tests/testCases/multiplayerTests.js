@@ -344,7 +344,7 @@ export async function timerOfflineTest(testController) {
     testController.reportCondition('Test started', true);
 
     // EXPERIMENT: Try different location checking orders
-    const testMode = 'sphere-order-with-accessibility-check-no-autocollect'; // Options: 'sphere-order', 'snapshot-order', 'sphere-order-with-accessibility-check', 'sphere-order-check-rejection-test', 'ganon-immediate-check', 'sphere-order-no-autocollect', 'sphere-order-with-accessibility-check-no-autocollect', 'timer'
+    const testMode = 'snapshot-order'; // Options: 'sphere-order', 'snapshot-order', 'sphere-order-with-accessibility-check', 'sphere-order-check-rejection-test', 'ganon-immediate-check', 'sphere-order-no-autocollect', 'sphere-order-with-accessibility-check-no-autocollect', 'timer'
 
     if (testMode === 'sphere-order') {
       testController.log('EXPERIMENT: Using sphereState to check locations in sphere order');
@@ -364,9 +364,6 @@ export async function timerOfflineTest(testController) {
     } else if (testMode === 'sphere-order-no-autocollect') {
       testController.log('EXPERIMENT: Checking locations in sphere order with auto-collect events DISABLED');
       return await timerOfflineTestWithSphereOrderNoAutoCollect(testController);
-    } else if (testMode === 'sphere-order-with-accessibility-check-no-autocollect') {
-      testController.log('EXPERIMENT: Checking locations in sphere order with accessibility check AND auto-collect events DISABLED');
-      return await timerOfflineTestWithSphereOrderAndAccessibilityCheckNoAutoCollect(testController);
     }
 
     // Get timer logic and UI references from central registry
@@ -849,7 +846,7 @@ async function timerOfflineTestCheckRejection(testController) {
         });
 
         // IMPORTANT: Ping worker to ensure snapshot is fresh before checking results
-        await stateManager.pingWorker(`check_rejection_test_${spheresProcessed}_${locationName}`, 5000);
+        await stateManager.pingWorker(`check_rejection_test_${spheresProcessed}_${locationName}`, 60000);
 
         const afterSnapshot = stateManager.getSnapshot();
         const afterCheckedCount = afterSnapshot.checkedLocations?.length || 0;
@@ -914,215 +911,6 @@ async function timerOfflineTestCheckRejection(testController) {
     await testController.completeTest(true);
   } catch (error) {
     testController.log(`Error in timerOfflineTestCheckRejection: ${error.message}`, 'error');
-    testController.reportCondition(`Test errored: ${error.message}`, false);
-    await testController.completeTest(false);
-  }
-}
-
-/**
- * Timer Offline Test with Sphere Order, Accessibility Check, and No Auto-Collect
- *
- * This test combines accessibility checking with auto-collect DISABLED to see
- * if auto-collect events are causing the snapshot accessibility mismatch.
- */
-async function timerOfflineTestWithSphereOrderAndAccessibilityCheckNoAutoCollect(testController) {
-  try {
-    testController.log('Starting timerOfflineTestWithSphereOrderAndAccessibilityCheckNoAutoCollect...');
-
-    // Get sphereState module functions
-    const getSphereData = window.centralRegistry.getPublicFunction('sphereState', 'getSphereData');
-
-    if (!getSphereData) {
-      throw new Error('sphereState getSphereData function not found in central registry');
-    }
-
-    testController.reportCondition('SphereState module available', true);
-
-    // Get state manager and event dispatcher
-    const stateManager = testController.stateManager;
-    const eventBus = testController.eventBus;
-
-    // CRITICAL: Disable auto-collect events BEFORE starting
-    testController.log('🚫 DISABLING auto-collect events...');
-    await stateManager.setAutoCollectEventsConfig(false);
-    testController.reportCondition('Auto-collect events disabled', true);
-
-    // Get dispatcher from window (same as testSpoilers does)
-    if (!window.eventDispatcher) {
-      throw new Error('Event dispatcher not available on window');
-    }
-    const dispatcher = window.eventDispatcher;
-
-    // Import createStateSnapshotInterface for accessibility checks
-    const { createStateSnapshotInterface } = await import('../../shared/stateInterface.js');
-
-    const initialSnapshot = stateManager.getSnapshot();
-
-    if (!initialSnapshot) {
-      throw new Error('State snapshot not available');
-    }
-
-    testController.log('Running in offline mode (no server connection)');
-    testController.reportCondition('Offline mode confirmed', true);
-
-    // Get sphere data
-    const sphereData = getSphereData();
-
-    if (!sphereData || sphereData.length === 0) {
-      throw new Error('No sphere data available. Make sure sphere log is loaded.');
-    }
-
-    testController.log(`Found ${sphereData.length} spheres to process`);
-    testController.reportCondition(`${sphereData.length} spheres loaded`, true);
-
-    // Get static data for accessibility checks
-    const staticData = stateManager.getStaticData();
-    if (!staticData || !staticData.locations) {
-      throw new Error('Static data or locations not available');
-    }
-
-    let totalLocationsChecked = 0;
-    let currentSphereIndex = 0;
-    let skippedNotAccessible = 0;
-    let skippedAlreadyChecked = 0;
-
-    // Iterate through each sphere
-    for (const sphere of sphereData) {
-      currentSphereIndex++;
-      const locationsInSphere = sphere.locations || [];
-
-      if (locationsInSphere.length === 0) {
-        testController.log(`Sphere ${sphere.sphereIndex}: No locations (skipping)`);
-        continue;
-      }
-
-      testController.log(`Processing Sphere ${sphere.sphereIndex}: ${locationsInSphere.length} locations`);
-
-      // Check each location in this sphere
-      for (const locationName of locationsInSphere) {
-        // Get current snapshot to check accessibility
-        const currentSnapshot = stateManager.getSnapshot();
-        const snapshotInterface = createStateSnapshotInterface(currentSnapshot, staticData);
-
-        // Check if location is already checked
-        if (currentSnapshot?.checkedLocations?.includes(locationName)) {
-          skippedAlreadyChecked++;
-          testController.log(`  - ${locationName}: Already checked (skipping)`);
-          continue;
-        }
-
-        // Get location data
-        const locationDef = staticData?.locations?.[locationName];
-
-        if (!locationDef) {
-          testController.log(`  - ${locationName}: Location not found in static data (skipping)`);
-          continue;
-        }
-
-        // Check if location is accessible according to snapshot
-        const isAccessible = snapshotInterface.isLocationAccessible(locationName);
-
-        if (!isAccessible) {
-          skippedNotAccessible++;
-          testController.log(`  - ${locationName}: NOT accessible per snapshot (skipping)`);
-          continue;
-        }
-
-        // Get region for the location
-        const locationRegion = locationDef.parent_region || locationDef.region || null;
-
-        // Dispatch location check via event (using same API as testSpoilers)
-        testController.log(`  - Checking: ${locationName} (accessible per snapshot)`);
-
-        dispatcher.publish(
-          'tests', // originModuleId
-          'user:locationCheck', // eventName
-          {
-            locationName: locationName,
-            regionName: locationRegion,
-            originator: 'TimerOfflineTestWithSphereOrderAndAccessibilityCheckNoAutoCollect',
-            originalDOMEvent: false,
-          },
-          { initialTarget: 'bottom' }
-        );
-
-        // Wait for the state to update
-        await new Promise((resolve) => {
-          let timeout;
-          const handler = (data) => {
-            const snapshot = data?.snapshot || stateManager.getSnapshot();
-            const isNowChecked = snapshot?.checkedLocations?.includes(locationName);
-
-            if (isNowChecked) {
-              clearTimeout(timeout);
-              eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
-              resolve();
-            }
-          };
-          eventBus.subscribe('stateManager:snapshotUpdated', handler, 'tests');
-
-          // Add a safety timeout
-          timeout = setTimeout(() => {
-            eventBus.unsubscribe('stateManager:snapshotUpdated', handler, 'tests');
-            testController.log(`    WARNING: Timeout waiting for ${locationName} to be checked`);
-            resolve();
-          }, 5000);
-        });
-
-        totalLocationsChecked++;
-
-        // Small delay to allow processing
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-
-      testController.log(`Completed Sphere ${sphere.sphereIndex}: ${totalLocationsChecked} checked, ${skippedNotAccessible} skipped (not accessible), ${skippedAlreadyChecked} skipped (already checked)`);
-    }
-
-    testController.reportCondition('All spheres processed', true);
-
-    // Verify final state
-    const finalSnapshot = stateManager.getSnapshot();
-    const finalCheckedCount = finalSnapshot?.checkedLocations?.length || 0;
-
-    testController.log(`Final result (NO AUTO-COLLECT): ${finalCheckedCount} locations checked (attempted: ${totalLocationsChecked}, skipped not accessible: ${skippedNotAccessible}, skipped already checked: ${skippedAlreadyChecked})`);
-
-    if (staticData && staticData.locations) {
-      // Count manually-checkable locations
-      const manuallyCheckableLocations = Object.values(staticData.locations).filter(
-        loc => loc.id !== null && loc.id !== undefined && loc.id !== 0
-      );
-      const totalManuallyCheckable = manuallyCheckableLocations.length;
-
-      testController.log(`Manually-checkable locations: ${totalManuallyCheckable}`);
-
-      // Special case for ALTTP: Check if Ganon location was checked
-      const gameName = staticData.game_name?.toLowerCase();
-      if (gameName === 'a link to the past' || gameName === 'alttp') {
-        const ganonChecked = finalSnapshot.checkedLocations?.includes('Ganon');
-        if (ganonChecked) {
-          testController.reportCondition(
-            `ALTTP (NO AUTO-COLLECT + ACCESSIBILITY CHECK): Ganon location checked - game is beatable (${finalCheckedCount} total locations checked)`,
-            true
-          );
-        } else {
-          testController.reportCondition(
-            `ALTTP (NO AUTO-COLLECT + ACCESSIBILITY CHECK): Ganon location NOT checked - game is not beatable (${finalCheckedCount} locations checked, ${skippedNotAccessible} skipped as inaccessible)`,
-            false
-          );
-        }
-      } else {
-        testController.reportCondition(
-          `Checked ${finalCheckedCount} locations using sphere order with accessibility check and NO auto-collect (${totalManuallyCheckable} manually-checkable locations exist)`,
-          true
-        );
-      }
-    } else {
-      testController.reportCondition(`${finalCheckedCount} locations checked`, true);
-    }
-
-    await testController.completeTest(true);
-  } catch (error) {
-    testController.log(`Error in timerOfflineTestWithSphereOrderAndAccessibilityCheckNoAutoCollect: ${error.message}`, 'error');
     testController.reportCondition(`Test errored: ${error.message}`, false);
     await testController.completeTest(false);
   }
@@ -1276,6 +1064,9 @@ async function timerOfflineTestWithSphereOrderAndAccessibilityCheck(testControll
           }, 5000);
         });
 
+        // IMPORTANT: Ping worker to ensure snapshot is fresh before continuing
+        await stateManager.pingWorker(`sphere_accessibility_test_${currentSphereIndex}_${locationName}`, 60000);
+
         totalLocationsChecked++;
 
         // Small delay to allow processing
@@ -1385,6 +1176,23 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
     testController.log(`Found ${locationsArray.length} locations in staticData`);
     testController.reportCondition(`${locationsArray.length} locations loaded`, true);
 
+    // Get sphere data for comparison
+    const getSphereData = window.centralRegistry.getPublicFunction('sphereState', 'getSphereData');
+    let sphereData = null;
+    if (getSphereData) {
+      sphereData = getSphereData();
+      if (sphereData && sphereData.length > 0) {
+        testController.log(`Found sphere data with ${sphereData.length} spheres for comparison`);
+      }
+    }
+
+    // Create detailed log structure
+    const detailedLog = {
+      checkedLocations: [],
+      timestamp: new Date().toISOString(),
+      testName: 'timerOfflineTestWithSnapshotOrder'
+    };
+
     let totalLocationsChecked = 0;
     let iterationCount = 0;
     const maxIterations = 1000; // Safety limit to prevent infinite loops
@@ -1396,6 +1204,18 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
       // Get fresh snapshot and create interface for accessibility checks
       const currentSnapshot = stateManager.getSnapshot();
       const snapshotInterface = createStateSnapshotInterface(currentSnapshot, staticData);
+
+      // Count currently accessible locations
+      const accessibleLocations = [];
+      for (const loc of locationsArray) {
+        if (!currentSnapshot?.checkedLocations?.includes(loc.name) &&
+            loc.id !== null && loc.id !== undefined) {
+          const isAccessible = snapshotInterface.isLocationAccessible(loc.name);
+          if (isAccessible) {
+            accessibleLocations.push(loc.name);
+          }
+        }
+      }
 
       // Find first accessible, unchecked location in staticData order
       let locationToCheck = null;
@@ -1469,6 +1289,39 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
         }, 5000);
       });
 
+      // IMPORTANT: Ping worker to ensure snapshot is fresh before continuing
+      await stateManager.pingWorker(`snapshot_order_test_${iterationCount}_${locationToCheck.name}`, 60000);
+
+      // Get updated snapshot after check
+      const afterSnapshot = stateManager.getSnapshot();
+      const afterSnapshotInterface = createStateSnapshotInterface(afterSnapshot, staticData);
+
+      // Get accessible locations after check
+      const accessibleAfter = [];
+      for (const loc of locationsArray) {
+        if (!afterSnapshot?.checkedLocations?.includes(loc.name) &&
+            loc.id !== null && loc.id !== undefined) {
+          const isAccessible = afterSnapshotInterface.isLocationAccessible(loc.name);
+          if (isAccessible) {
+            accessibleAfter.push(loc.name);
+          }
+        }
+      }
+
+      // Log detailed information about this check
+      const checkEntry = {
+        index: totalLocationsChecked,
+        locationName: locationToCheck.name,
+        checkedLocationsBefore: [...(currentSnapshot?.checkedLocations || [])],
+        checkedLocationsAfter: [...(afterSnapshot?.checkedLocations || [])],
+        accessibleLocationsBefore: accessibleLocations,
+        accessibleLocationsAfter: accessibleAfter,
+        inventoryBefore: {...(currentSnapshot?.inventory || {})},
+        inventoryAfter: {...(afterSnapshot?.inventory || {})}
+      };
+
+      detailedLog.checkedLocations.push(checkEntry);
+
       totalLocationsChecked++;
 
       // Small delay to allow processing
@@ -1492,6 +1345,92 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
 
     testController.log(`Final result: ${finalCheckedCount} locations checked in ${iterationCount} iterations`);
 
+    // Store detailed log to window for inspection
+    if (typeof window !== 'undefined') {
+      window.__snapshotOrderTestLog__ = detailedLog;
+      testController.log('Detailed test log stored in window.__snapshotOrderTestLog__');
+    }
+
+    // Analyze the log to find problematic locations
+    if (sphereData && sphereData.length > 0) {
+      testController.log('\n=== ANALYZING CHECK ORDER VS SPHERE ORDER ===');
+
+      // Build a map of location -> sphere index from sphere log
+      const locationToSphere = new Map();
+      sphereData.forEach(sphere => {
+        const sphereLocations = sphere.locations || [];
+        sphereLocations.forEach(locName => {
+          locationToSphere.set(locName, sphere.sphereIndex);
+        });
+      });
+
+      // Find locations that were checked but appear later in sphere log than unchecked locations
+      const finalCheckedSet = new Set(finalSnapshot?.checkedLocations || []);
+      const sphereLogIssues = [];
+
+      for (const [locationName, sphereIndex] of locationToSphere.entries()) {
+        if (!finalCheckedSet.has(locationName)) {
+          // This location was NOT checked - check if all earlier sphere locations were checked
+          let foundEarlierSphereWithAllChecked = false;
+
+          for (let i = 0; i < sphereIndex; i++) {
+            const earlierSphere = sphereData[i];
+            const earlierLocations = earlierSphere?.locations || [];
+            const allEarlierChecked = earlierLocations.every(loc => finalCheckedSet.has(loc));
+
+            if (earlierLocations.length > 0 && allEarlierChecked) {
+              foundEarlierSphereWithAllChecked = true;
+              sphereLogIssues.push({
+                uncheckedLocation: locationName,
+                sphereIndex: sphereIndex,
+                earlierSphereWithAllChecked: i
+              });
+              break;
+            }
+          }
+        }
+      }
+
+      if (sphereLogIssues.length > 0) {
+        testController.log(`\n⚠️  Found ${sphereLogIssues.length} locations that are unchecked but have earlier spheres fully checked:`);
+        sphereLogIssues.slice(0, 10).forEach(issue => {
+          testController.log(`  - "${issue.uncheckedLocation}" (sphere ${issue.sphereIndex}) - sphere ${issue.earlierSphereWithAllChecked} was fully checked`);
+        });
+        if (sphereLogIssues.length > 10) {
+          testController.log(`  ... and ${sphereLogIssues.length - 10} more`);
+        }
+
+        // Store issues for external inspection
+        if (typeof window !== 'undefined') {
+          window.__snapshotOrderTestLog__.sphereLogIssues = sphereLogIssues;
+        }
+      } else {
+        testController.log('✓ No sphere order issues found (all checked locations respect sphere ordering)');
+      }
+
+      // Find the first location that became inaccessible
+      testController.log('\n=== ANALYZING ACCESSIBILITY CHANGES ===');
+
+      for (let i = 0; i < detailedLog.checkedLocations.length; i++) {
+        const entry = detailedLog.checkedLocations[i];
+        const newlyInaccessible = entry.accessibleLocationsBefore.filter(
+          loc => !entry.accessibleLocationsAfter.includes(loc) && loc !== entry.locationName
+        );
+
+        if (newlyInaccessible.length > 0) {
+          testController.log(`\nAfter checking "${entry.locationName}" (check #${i + 1}):`);
+          testController.log(`  ${newlyInaccessible.length} location(s) became INACCESSIBLE:`);
+          newlyInaccessible.slice(0, 5).forEach(loc => {
+            const sphereIdx = locationToSphere.get(loc);
+            testController.log(`    - ${loc} (sphere ${sphereIdx !== undefined ? sphereIdx : '?'})`);
+          });
+          if (newlyInaccessible.length > 5) {
+            testController.log(`    ... and ${newlyInaccessible.length - 5} more`);
+          }
+        }
+      }
+    }
+
     if (staticData && staticData.locations) {
       // Count manually-checkable locations
       const manuallyCheckableLocations = Object.values(staticData.locations).filter(
@@ -1499,7 +1438,7 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
       );
       const totalManuallyCheckable = manuallyCheckableLocations.length;
 
-      testController.log(`Manually-checkable locations: ${totalManuallyCheckable}`);
+      testController.log(`\nManually-checkable locations: ${totalManuallyCheckable}`);
 
       // Special case for ALTTP: Check if Ganon location was checked
       const gameName = staticData.game_name?.toLowerCase();

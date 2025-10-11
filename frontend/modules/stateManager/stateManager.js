@@ -381,7 +381,7 @@ export class StateManager {
 
     // Remove all event items from inventory and uncheck their locations
     for (const itemName in this.itemData) {
-      if (this.itemData[itemName]?.event || this.itemData[itemName]?.type === 'Event') {
+      if (this.itemData[itemName]?.event || this.itemData[itemName]?.type === 'Event' || this.itemData[itemName]?.type === 'Crystal') {
         if (this.inventory[itemName] > 0) {
           this._logDebug(`[StateManager] Clearing event item: ${itemName}`);
           this.inventory[itemName] = 0;
@@ -790,13 +790,15 @@ export class StateManager {
             region: regionName, // Ensure parent region context is explicitly set
             parent_region_name: regionName, // Store region name for dynamic resolution
           };
+          // Remove any string parent_region from source data
+          delete locationObjectForArray.parent_region;
 
           this.locations.push(locationObjectForArray);
           this.originalLocationOrder.push(descriptiveName);
 
           if (
             locationObjectForArray.item &&
-            locationObjectForArray.item.type === 'Event'
+            (locationObjectForArray.item.type === 'Event' || locationObjectForArray.item.type === 'Crystal')
           ) {
             this.eventLocations.set(
               locationObjectForArray.name,
@@ -1734,6 +1736,7 @@ export class StateManager {
       const snapshotInterface = this._createSelfSnapshotInterface();
       // Add the current location to the context so rules can access it
       snapshotInterface.currentLocation = location;
+      snapshotInterface.location = location; // Also set as 'location' for resolveName()
       return this.evaluateRuleFromEngine(
         location.access_rule,
         snapshotInterface
@@ -1880,7 +1883,8 @@ export class StateManager {
           // Skip event items
           if (
             this.inventory.itemData[itemName]?.event ||
-            this.inventory.itemData[itemName]?.type === 'Event'
+            this.inventory.itemData[itemName]?.type === 'Event' ||
+            this.inventory.itemData[itemName]?.type === 'Crystal'
           ) {
             return;
           }
@@ -1903,7 +1907,8 @@ export class StateManager {
               itemName.includes('Bottle') && excludedItems.includes('AnyBottle')
             ) &&
             !this.inventory.itemData[itemName].event &&
-            this.inventory.itemData[itemName].type !== 'Event'
+            this.inventory.itemData[itemName].type !== 'Event' &&
+            this.inventory.itemData[itemName].type !== 'Crystal'
           ) {
             this.addItemToInventory(itemName);
           }
@@ -2852,6 +2857,7 @@ export class StateManager {
             if (gameLogic && gameLogic.helperFunctions) {
               // Create a logic object with all helper functions bound to receive (snapshot, staticData, ...args)
               // Note: We create the snapshot/staticData lazily inside each function to avoid recursion
+              // Instead, create a minimal snapshot object
               const logicObject = {};
 
               for (const [helperName, helperFunction] of Object.entries(gameLogic.helperFunctions)) {
@@ -2876,7 +2882,9 @@ export class StateManager {
         }
 
         // Current location being evaluated (for location access rules)
-        if (name === 'location') return anInterface.currentLocation;
+        if (name === 'location') {
+          return anInterface.currentLocation || anInterface.location;
+        }
 
         // Parent region being evaluated (for exit access rules)
         if (name === 'parent_region') return anInterface.parent_region;
@@ -2958,6 +2966,43 @@ export class StateManager {
         return self.getStaticGameData();
       },
       getStaticData: () => self.getStaticGameData(),
+      // Resolve attributes with special handling for parent_region
+      resolveAttribute: (baseObject, attributeName) => {
+        if (
+          baseObject &&
+          typeof baseObject === 'object' &&
+          Object.prototype.hasOwnProperty.call(baseObject, attributeName)
+        ) {
+          const attrValue = baseObject[attributeName];
+          if (typeof attrValue === 'function') {
+            return attrValue.bind(baseObject);
+          }
+          return attrValue;
+        }
+
+        // Handle location.parent_region -> get actual region object
+        if (attributeName === 'parent_region') {
+          let regionName = null;
+
+          // Try different ways to get the region name
+          if (baseObject.region) {
+            regionName = baseObject.region;
+          } else if (baseObject.parent_region_name) {
+            regionName = baseObject.parent_region_name;
+          }
+
+          if (regionName) {
+            // Look up the actual region object from self.regions
+            if (self.regions && self.regions[regionName]) {
+              return self.regions[regionName];
+            }
+          }
+
+          return undefined;
+        }
+
+        return undefined;
+      },
     };
 
     // NOTE: We do NOT expose helpers as direct properties here to avoid recursion issues.
@@ -3678,7 +3723,8 @@ export class StateManager {
           if (excludedItems.includes(item)) continue;
           if (
             this.itemData[item]?.event ||
-            this.itemData[item]?.type === 'Event'
+            this.itemData[item]?.type === 'Event' ||
+            this.itemData[item]?.type === 'Crystal'
           )
             continue; // Skip event items from pool for test setup
 
@@ -3700,7 +3746,8 @@ export class StateManager {
           if (excludedItems.includes(itemName)) continue;
           if (
             this.itemData[itemName]?.event ||
-            this.itemData[itemName]?.type === 'Event'
+            this.itemData[itemName]?.type === 'Event' ||
+            this.itemData[itemName]?.type === 'Crystal'
           )
             continue;
           itemsForTest[itemName] = (itemsForTest[itemName] || 0) + 1;
@@ -3843,10 +3890,11 @@ export class StateManager {
       regions: this.regions,
       exits: this.exits,
       dungeons: this.dungeons,
-      items: this.itemData,
-      itemData: this.itemData,
+      items: {[String(this.playerSlot)]: this.itemData},  // Provide items indexed by player slot for stateInterface
+      itemData: this.itemData,  // Keep for backwards compatibility
       groups: this.groupData,
       groupData: this.groupData,
+      item_groups: {[String(this.playerSlot)]: this.groupData},  // Provide item_groups for stateInterface.countGroup
       progressionMapping: this.progressionMapping,
       itempoolCounts: this.itempoolCounts,
       startRegions: this.startRegions,

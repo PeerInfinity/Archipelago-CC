@@ -1302,12 +1302,13 @@ export class TestSpoilerUI {
           if (locationsToCheck.length > 0) {
             this.log('info', `Checking ${locationsToCheck.length} locations from sphere ${context.sphere_number}`);
 
-            // Get initial snapshot once for location definitions (for logging)
+            // Get initial snapshot and static data once (for logging)
             const initialSnapshot = await stateManager.getFullSnapshot();
+            const staticData = stateManager.getStaticData();
 
             for (const locationName of locationsToCheck) {
-              // Get location definition to see what item we're about to receive (for logging)
-              const locationDef = initialSnapshot.locations?.[locationName];
+              // Get location definition from static data to see what item we're about to receive (for logging)
+              const locationDef = Object.values(staticData.locations || {}).find(loc => loc.name === locationName);
               const itemName = locationDef?.item?.name;
 
               if (itemName) {
@@ -1336,7 +1337,7 @@ export class TestSpoilerUI {
               // Check location WITH items via event dispatcher instead of direct call
               // This naturally adds the item (e.g., "Progressive Sword") to inventory
               // Use event-based flow to match how timer and UI modules interact with stateManager
-              const locationRegion = locationDef?.parent_region || locationDef?.region || null;
+              const locationRegion = locationDef?.parent_region_name || locationDef?.parent_region || locationDef?.region || null;
               await this.checkLocationViaEvent(locationName, locationRegion);
             }
 
@@ -1474,7 +1475,7 @@ export class TestSpoilerUI {
             }
 
             // Evaluate accessibility for locName
-            const parentRegionName = locDef.parent_region || locDef.region;
+            const parentRegionName = locDef.parent_region_name || locDef.parent_region || locDef.region;
             const parentRegionReachabilityStatus =
               currentSnapshot.regionReachability?.[parentRegionName];
             const isParentRegionEffectivelyReachable =
@@ -1520,7 +1521,7 @@ export class TestSpoilerUI {
             // Mark location as checked via event dispatcher instead of direct call
             // This will automatically add the item to inventory (addItems=true by default)
             // Use event-based flow to match how timer and UI modules interact with stateManager
-            const locationRegion = locDef?.parent_region || locDef?.region || null;
+            const locationRegion = locDef?.parent_region_name || locDef?.parent_region || locDef?.region || null;
             await this.checkLocationViaEvent(locName, locationRegion);
             this.log('info', `Location "${locName}" marked as checked via event.`);
           }
