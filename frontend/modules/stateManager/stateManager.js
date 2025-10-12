@@ -2310,21 +2310,16 @@ export class StateManager {
       }
     }
 
-    // Phase 3: Send Maps as arrays for efficient transfer and conversion
-    // Format: [[key, value], [key, value], ...]
-    const locationsArray = this.locations ? Array.from(this.locations.entries()) : [];
-    const regionsArray = this.regions ? Array.from(this.regions.entries()) : [];
-    const dungeonsArray = this.dungeons ? Array.from(this.dungeons.entries()) : [];
-    const locationItemsArray = Array.from(locationItemsMap.entries());
-
+    // Phase 3.2: Return Maps directly instead of converting to arrays
+    // Helper functions (like location_item_name) are already designed to handle Maps
     return {
       game_name: this.rules?.game_name,
       game_directory: this.rules?.game_directory,
       playerId: String(this.playerSlot),
-      locations: locationsArray,
-      regions: regionsArray,
+      locations: this.locations || new Map(),  // Return Map directly
+      regions: this.regions || new Map(),      // Return Map directly
       exits: this.exits,
-      dungeons: dungeonsArray,
+      dungeons: this.dungeons || new Map(),    // Return Map directly
       items: this.itemData,  // Direct access for UI components
       itemsByPlayer: { [String(this.playerSlot)]: this.itemData },  // Provide items indexed by player slot for stateInterface
       itemData: this.itemData,  // Keep for backwards compatibility
@@ -2347,8 +2342,8 @@ export class StateManager {
       originalExitOrder: this.originalExitOrder,
       // Event locations
       eventLocations: Object.fromEntries(this.eventLocations || new Map()),
-      // Location items mapping (Phase 3: Convert Map to array for serialization)
-      locationItems: locationItemsArray
+      // Location items mapping (Phase 3.2: Keep as Map)
+      locationItems: locationItemsMap
     };
   }
 }

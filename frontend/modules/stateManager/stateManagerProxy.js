@@ -270,39 +270,47 @@ export class StateManagerProxy {
         if (message.newStaticData) {
           const newCache = { ...message.newStaticData };
 
-          // Phase 3: Convert array format [[key, value], ...] to Maps for O(1) lookups
-          // This is 90% faster than the old array-to-object conversion
+          // Phase 3.2: Handle both Map and array format for backward compatibility
+          // Maps are preferred (no conversion needed), but arrays are converted to Maps
 
-          // Convert locations array to Map
+          // Convert locations to Map if needed
           if (Array.isArray(newCache.locations)) {
             newCache.locations = new Map(newCache.locations);
-            log('info', `[StateManagerProxy] Converted ${newCache.locations.size} locations to Map`);
+            log('info', `[StateManagerProxy] Converted ${newCache.locations.size} locations array to Map`);
+          } else if (newCache.locations instanceof Map) {
+            log('info', `[StateManagerProxy] Received ${newCache.locations.size} locations as Map (no conversion needed)`);
           } else {
-            log('warn', '[StateManagerProxy] newStaticData.locations is not an array. Expected [[key, value], ...] format.');
+            log('warn', '[StateManagerProxy] newStaticData.locations is neither array nor Map');
           }
 
-          // Convert regions array to Map
+          // Convert regions to Map if needed
           if (Array.isArray(newCache.regions)) {
             newCache.regions = new Map(newCache.regions);
-            log('info', `[StateManagerProxy] Converted ${newCache.regions.size} regions to Map`);
+            log('info', `[StateManagerProxy] Converted ${newCache.regions.size} regions array to Map`);
+          } else if (newCache.regions instanceof Map) {
+            log('info', `[StateManagerProxy] Received ${newCache.regions.size} regions as Map (no conversion needed)`);
           } else {
-            log('warn', '[StateManagerProxy] newStaticData.regions is not an array. Expected [[key, value], ...] format.');
+            log('warn', '[StateManagerProxy] newStaticData.regions is neither array nor Map');
           }
 
-          // Convert dungeons array to Map
+          // Convert dungeons to Map if needed
           if (Array.isArray(newCache.dungeons)) {
             newCache.dungeons = new Map(newCache.dungeons);
-            log('info', `[StateManagerProxy] Converted ${newCache.dungeons.size} dungeons to Map`);
+            log('info', `[StateManagerProxy] Converted ${newCache.dungeons.size} dungeons array to Map`);
+          } else if (newCache.dungeons instanceof Map) {
+            log('info', `[StateManagerProxy] Received ${newCache.dungeons.size} dungeons as Map (no conversion needed)`);
           } else if (newCache.dungeons) {
-            log('warn', '[StateManagerProxy] newStaticData.dungeons is not an array. Expected [[key, value], ...] format.');
+            log('warn', '[StateManagerProxy] newStaticData.dungeons is neither array nor Map');
           }
 
-          // Convert locationItems array to Map
+          // Convert locationItems to Map if needed
           if (Array.isArray(newCache.locationItems)) {
             newCache.locationItems = new Map(newCache.locationItems);
-            log('info', `[StateManagerProxy] Converted ${newCache.locationItems.size} locationItems to Map`);
+            log('info', `[StateManagerProxy] Converted ${newCache.locationItems.size} locationItems array to Map`);
+          } else if (newCache.locationItems instanceof Map) {
+            log('info', `[StateManagerProxy] Received ${newCache.locationItems.size} locationItems as Map (no conversion needed)`);
           } else if (newCache.locationItems) {
-            log('warn', '[StateManagerProxy] newStaticData.locationItems is not an array. Expected [[key, value], ...] format.');
+            log('warn', '[StateManagerProxy] newStaticData.locationItems is neither array nor Map');
           }
 
           // Phase 3: Re-link regions to dungeons after Map conversion

@@ -1308,7 +1308,13 @@ export class TestSpoilerUI {
 
             for (const locationName of locationsToCheck) {
               // Get location definition from static data to see what item we're about to receive (for logging)
-              const locationDef = Object.values(staticData.locations || {}).find(loc => loc.name === locationName);
+              // Phase 3.2: Handle Map format for locations
+              let locationDef;
+              if (staticData.locations instanceof Map) {
+                locationDef = staticData.locations.get(locationName);
+              } else {
+                locationDef = Object.values(staticData.locations || {}).find(loc => loc.name === locationName);
+              }
               const itemName = locationDef?.item?.name;
 
               if (itemName) {
