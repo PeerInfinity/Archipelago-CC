@@ -512,9 +512,8 @@ export class ExitUI {
       .querySelector('#exit-search')
       .value.toLowerCase();
 
-    // Start with all exits from staticData
-    // Assuming staticData.exits is an object where keys are exit names/IDs and values are exit objects
-    let filteredExits = Object.values(staticData.exits);
+    // Phase 3.2: Start with all exits from staticData using Map methods
+    let filteredExits = Array.from(staticData.exits.values());
 
     // Initial filtering logic (more to be added)
     if (searchTerm) {

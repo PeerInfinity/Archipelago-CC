@@ -2289,8 +2289,8 @@ export class StateManager {
    * This includes location/item ID mappings, original orders, etc.
    */
   getStaticGameData() {
-    // Build locationItems map from location data
-    const locationItemsMap = {};
+    // Phase 3.2: Build locationItems map from location data as a Map
+    const locationItemsMap = new Map();
     if (this.locations) {
       for (const loc of this.locations.values()) {
         if (
@@ -2298,14 +2298,14 @@ export class StateManager {
           typeof loc.item.name === 'string' &&
           typeof loc.item.player === 'number'
         ) {
-          locationItemsMap[loc.name] = {
+          locationItemsMap.set(loc.name, {
             name: loc.item.name,
             player: loc.item.player,
-          };
+          });
         } else if (loc.item) {
-          locationItemsMap[loc.name] = null;
+          locationItemsMap.set(loc.name, null);
         } else {
-          locationItemsMap[loc.name] = null;
+          locationItemsMap.set(loc.name, null);
         }
       }
     }

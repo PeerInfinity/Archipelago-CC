@@ -800,8 +800,8 @@ export class RegionUI {
       return;
     }
 
-    // Check if the start region exists in the static data
-    if (!staticData.regions[startRegionName]) {
+    // Phase 3.2: Check if the start region exists in the static data
+    if (!staticData.regions.get(startRegionName)) {
       log(
         'warn',
         `[RegionUI] Start region ${startRegionName} does not exist in static region data.`
@@ -900,8 +900,8 @@ export class RegionUI {
         );
         return;
       }
-      // Use separate tracking for "Show All" mode - don't pollute visitedRegions
-      Object.keys(staticData.regions).forEach((regionName) => {
+      // Phase 3.2: Use separate tracking for "Show All" mode - don't pollute visitedRegions
+      Array.from(staticData.regions.keys()).forEach((regionName) => {
         this.showAllExpansionState.set(regionName, true);
       });
     } else {
@@ -924,8 +924,8 @@ export class RegionUI {
         );
         return;
       }
-      // Use separate tracking for "Show All" mode - don't pollute visitedRegions
-      Object.keys(staticData.regions).forEach((regionName) => {
+      // Phase 3.2: Use separate tracking for "Show All" mode - don't pollute visitedRegions
+      Array.from(staticData.regions.keys()).forEach((regionName) => {
         this.showAllExpansionState.set(regionName, false);
       });
     } else {
@@ -1149,7 +1149,8 @@ export class RegionUI {
 
     let regionsToRender = [];
     if (this.showAll) {
-      regionsToRender = Object.keys(staticData.regions).map((name) => ({
+      // Phase 3.2: Use Map methods
+      regionsToRender = Array.from(staticData.regions.keys()).map((name) => ({
         name,
         isVisited: false,
         uid: `all_${name}`,
@@ -1163,8 +1164,8 @@ export class RegionUI {
           snapshot.regionReachability?.[name] === 'checked',
       }));
     } else {
-      // Check if path is too long - show truncated view if path length > 2x total regions
-      const totalRegions = Object.keys(staticData.regions).length;
+      // Phase 3.2: Check if path is too long - show truncated view if path length > 2x total regions
+      const totalRegions = staticData.regions.size;
       const pathTooLong = this.visitedRegions.length > (totalRegions * 2);
       
       // When showAll is false, check showPaths to determine what to render
@@ -1370,7 +1371,8 @@ export class RegionUI {
         continue;
       }
       
-      const regionData = staticData.regions[regionName];
+      // Phase 3.2: Use Map methods
+      const regionData = staticData.regions.get(regionName);
       if (!regionData) {
         log(
           'warn',

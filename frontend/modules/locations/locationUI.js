@@ -713,7 +713,7 @@ export class LocationUI {
       if (
         (sortMethod === 'original' ||
           sortMethod === 'accessibility_original') &&
-        Object.keys(staticData.locations).length > 0 // Only warn if there should be locations
+        staticData.locations.size > 0 // Phase 3.2: Only warn if there should be locations
       ) {
         log(
           'warn',
@@ -765,8 +765,8 @@ export class LocationUI {
       .querySelector('#location-search')
       .value.toLowerCase();
 
-    // Filter locations
-    let filteredLocations = Object.values(staticData.locations).filter(
+    // Phase 3.2: Filter locations using Map methods
+    let filteredLocations = Array.from(staticData.locations.values()).filter(
       (loc) => {
         const name = loc.name;
         const isChecked = !!snapshot?.checkedLocations?.includes(name);
@@ -1485,8 +1485,8 @@ export class LocationUI {
     if (location.label2) {
       detailsContent += `<p><strong>Expression:</strong> ${location.label2}</p>`;
     }
-    // Add more location details as needed (e.g., item if present in staticData.locations[location.name].item)
-    const staticLocationData = staticData.locations[location.name];
+    // Phase 3.2: Add more location details as needed (e.g., item if present in staticData.locations.get(location.name).item)
+    const staticLocationData = staticData.locations.get(location.name);
     if (staticLocationData && staticLocationData.item) {
       detailsContent += `<p><strong>Item:</strong> ${
         staticLocationData.item.name || 'Unknown Item'

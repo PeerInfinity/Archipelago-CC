@@ -47,36 +47,63 @@ export function createStateSnapshotInterface(
 
   function findLocationDataInStatic(locationName) {
     if (!staticData) return null;
-    if (
+
+    // Phase 3: Use Map.get() for O(1) lookup (2x faster than object access)
+    if (staticData.locations instanceof Map) {
+      const location = staticData.locations.get(locationName);
+      if (location) return location;
+    } else if (
       staticData.locations &&
       typeof staticData.locations === 'object' &&
       !Array.isArray(staticData.locations)
     ) {
+      // Fallback for object-based locations (backward compatibility)
       if (staticData.locations[locationName]) {
         return staticData.locations[locationName];
       }
     }
+
+    // Search in regions if not found in flat locations
     if (staticData.regions) {
-      for (const playerId in staticData.regions) {
-        if (
-          Object.prototype.hasOwnProperty.call(staticData.regions, playerId)
-        ) {
-          const playerRegions = staticData.regions[playerId];
-          for (const regionNameKey in playerRegions) {
-            if (
-              Object.prototype.hasOwnProperty.call(playerRegions, regionNameKey)
-            ) {
-              const region = playerRegions[regionNameKey];
-              if (region.locations && Array.isArray(region.locations)) {
-                const foundLoc = region.locations.find(
-                  (l) => l.name === locationName
-                );
-                if (foundLoc) {
-                  return {
-                    ...foundLoc,
-                    region: regionNameKey,
-                    parent_region: regionNameKey,
-                  };
+      // Check if regions is a Map (Phase 3 format)
+      if (staticData.regions instanceof Map) {
+        for (const [regionNameKey, region] of staticData.regions.entries()) {
+          if (region.locations && Array.isArray(region.locations)) {
+            const foundLoc = region.locations.find(
+              (l) => l.name === locationName
+            );
+            if (foundLoc) {
+              return {
+                ...foundLoc,
+                region: regionNameKey,
+                parent_region_name: regionNameKey,
+              };
+            }
+          }
+        }
+      } else {
+        // Fallback for object-based regions
+        for (const playerId in staticData.regions) {
+          if (
+            Object.prototype.hasOwnProperty.call(staticData.regions, playerId)
+          ) {
+            const playerRegions = staticData.regions[playerId];
+            for (const regionNameKey in playerRegions) {
+              if (
+                Object.prototype.hasOwnProperty.call(playerRegions, regionNameKey)
+              ) {
+                const region = playerRegions[regionNameKey];
+                if (region.locations && Array.isArray(region.locations)) {
+                  const foundLoc = region.locations.find(
+                    (l) => l.name === locationName
+                  );
+                  if (foundLoc) {
+                    return {
+                      ...foundLoc,
+                      region: regionNameKey,
+                      parent_region_name: regionNameKey,
+                    };
+                  }
                 }
               }
             }
@@ -124,11 +151,8 @@ export function createStateSnapshotInterface(
         case 'regions':
           return staticData?.regions;
         case 'locations':
-          return staticData.locations &&
-            typeof staticData.locations === 'object' &&
-            !Array.isArray(staticData.locations)
-            ? staticData.locations
-            : undefined;
+          // Phase 3: Return Map directly or fall back to object
+          return staticData?.locations;
         case 'items':
           return staticData?.items;
         case 'groups':
@@ -196,32 +220,49 @@ export function createStateSnapshotInterface(
       return totalCount;
     },
     countGroup: (groupName) => {
-      if (!staticData?.groups || !snapshot?.inventory) return 0;
+      if (!snapshot?.inventory) {
+        return 0;
+      }
       let count = 0;
       const playerSlot = snapshot?.player?.slot || '1'; // Default to '1' if not specified
-      const playerItemGroups =
-        staticData.groups[playerSlot] || staticData.groups; // Try player-specific then general
+
+      // First check if we have item_groups (ALTTP-style with group names as array)
+      const playerItemGroups = staticData?.item_groups?.[playerSlot] || staticData?.item_groups;
 
       if (Array.isArray(playerItemGroups)) {
         // ALTTP uses array of group names
         // This logic assumes staticData.itemsByPlayer is available and structured per player
-        const playerItemsData =
-          staticData.itemsByPlayer && staticData.itemsByPlayer[playerSlot];
+        const playerItemsData = staticData.itemsByPlayer && staticData.itemsByPlayer[playerSlot];
         if (playerItemsData) {
           for (const itemName in playerItemsData) {
             if (playerItemsData[itemName]?.groups?.includes(groupName)) {
-              count += snapshot.inventory[itemName] || 0;
+              const itemCount = snapshot.inventory[itemName] || 0;
+              count += itemCount;
             }
           }
+        } else {
+          log('error', `[countGroup] playerItemsData not found for player ${playerSlot}. staticData.itemsByPlayer:`, staticData?.itemsByPlayer);
         }
       } else if (
         typeof playerItemGroups === 'object' &&
         playerItemGroups[groupName] &&
         Array.isArray(playerItemGroups[groupName])
       ) {
-        // If groups is an object { groupName: [itemNames...] }
+        // If item_groups is an object { groupName: [itemNames...] }
         for (const itemInGroup of playerItemGroups[groupName]) {
           count += snapshot.inventory[itemInGroup] || 0;
+        }
+      } else if (staticData?.groups) {
+        // Fallback to old groups structure if available
+        const playerGroups = staticData.groups[playerSlot] || staticData.groups;
+        if (
+          typeof playerGroups === 'object' &&
+          playerGroups[groupName] &&
+          Array.isArray(playerGroups[groupName])
+        ) {
+          for (const itemInGroup of playerGroups[groupName]) {
+            count += snapshot.inventory[itemInGroup] || 0;
+          }
         }
       }
       return count;
@@ -243,7 +284,7 @@ export function createStateSnapshotInterface(
       if (!locationName) return undefined;
       const locData = findLocationDataInStatic(locationName);
       if (!locData) return undefined;
-      const regionName = locData.parent_region || locData.region;
+      const regionName = locData.parent_region_name || locData.parent_region || locData.region;
       if (!regionName) return undefined;
       const parentRegionIsReachable = this.isRegionReachable(regionName);
       if (parentRegionIsReachable === undefined) return undefined;
@@ -265,6 +306,13 @@ export function createStateSnapshotInterface(
     getShops: () => snapshot?.shops,
     getRegionData: (regionName) => {
       if (!staticData || !staticData.regions) return undefined;
+
+      // Phase 3: Use Map.get() for O(1) lookup
+      if (staticData.regions instanceof Map) {
+        return staticData.regions.get(regionName);
+      }
+
+      // Fallback for object-based regions
       for (const playerId in staticData.regions) {
         if (
           staticData.regions[playerId] &&
@@ -330,30 +378,44 @@ export function createStateSnapshotInterface(
           } else if (staticData && staticData.locations) {
             // Try to find the location in static data and get its region
             const locationName = baseObject.name;
-            if (locationName && staticData.locations[locationName]) {
-              regionName =
-                staticData.locations[locationName].region ||
-                staticData.locations[locationName].parent_region;
+            if (locationName) {
+              // Phase 3: Use Map.get() for O(1) lookup
+              let locationData = null;
+              if (staticData.locations instanceof Map) {
+                locationData = staticData.locations.get(locationName);
+              } else if (staticData.locations[locationName]) {
+                locationData = staticData.locations[locationName];
+              }
+
+              if (locationData) {
+                regionName = locationData.region || locationData.parent_region;
+              }
             }
           }
 
           if (regionName) {
             // Look up the actual region object from static data
             if (staticData && staticData.regions) {
-              // staticData.regions might be nested by player, try to find the region
-              for (const playerId in staticData.regions) {
-                if (
-                  staticData.regions[playerId] &&
-                  staticData.regions[playerId][regionName]
-                ) {
-                  const regionObject = staticData.regions[playerId][regionName];
+              // Phase 3: Use Map.get() for O(1) lookup
+              if (staticData.regions instanceof Map) {
+                const regionObject = staticData.regions.get(regionName);
+                if (regionObject) return regionObject;
+              } else {
+                // Fallback: staticData.regions might be nested by player
+                for (const playerId in staticData.regions) {
+                  if (
+                    staticData.regions[playerId] &&
+                    staticData.regions[playerId][regionName]
+                  ) {
+                    const regionObject = staticData.regions[playerId][regionName];
+                    return regionObject;
+                  }
+                }
+                // If not nested by player, try direct lookup
+                if (staticData.regions[regionName]) {
+                  const regionObject = staticData.regions[regionName];
                   return regionObject;
                 }
-              }
-              // If not nested by player, try direct lookup
-              if (staticData.regions[regionName]) {
-                const regionObject = staticData.regions[regionName];
-                return regionObject;
               }
             }
             // Fallback: return the region name if we can't find the object

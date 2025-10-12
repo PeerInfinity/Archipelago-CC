@@ -373,7 +373,8 @@ export class SpoilerChecklistUI {
 
   renderLocations(container, sphere, checkedLocations, snapshot, staticData, snapshotInterface, indentLevel) {
     for (const locationName of sphere.locations) {
-      const locationData = Object.values(staticData.locations || {}).find(l => l.name === locationName);
+      // Phase 3.2: Use Map.get() instead of Object.values().find()
+      const locationData = staticData.locations?.get(locationName);
       if (!locationData) {
         log('warn', `Location not found in static data: ${locationName}`);
         continue;
@@ -441,7 +442,8 @@ export class SpoilerChecklistUI {
 
       const showItem = this.showLocationItems || isChecked;
       if (showItem) {
-        const itemAtLocation = staticData.locationItems?.[locationName];
+        // Phase 3.2: Use Map.get() instead of bracket notation
+        const itemAtLocation = staticData.locationItems?.get(locationName);
         if (itemAtLocation && itemAtLocation.name) {
           itemSpan.textContent = itemAtLocation.name;
         }

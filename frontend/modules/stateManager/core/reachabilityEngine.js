@@ -231,7 +231,8 @@ export function computeReachableRegions(sm) {
         for (const loc of sm.eventLocations.values()) {
           if (sm.knownReachableRegions.has(loc.region)) {
             const canAccessLoc = isLocationAccessible(sm, loc);
-            if (canAccessLoc && !sm._hasItem(loc.item.name)) {
+            // Check if location hasn't been checked yet AND item isn't already collected
+            if (canAccessLoc && !sm.checkedLocations.has(loc.name) && !sm._hasItem(loc.item.name)) {
               sm._addItemToInventory(loc.item.name, 1);
               sm.checkedLocations.add(loc.name);
               newEventCollected = true;
@@ -239,6 +240,17 @@ export function computeReachableRegions(sm) {
               sm._logDebug(
                 `[ReachabilityEngine] Auto-collected event item: ${loc.item.name} from ${loc.name}`
               );
+
+              // Process event item to update gameStateModule.events
+              if (sm.gameStateModule && sm.logicModule && typeof sm.logicModule.processEventItem === 'function') {
+                const updatedState = sm.logicModule.processEventItem(sm.gameStateModule, loc.item.name);
+                if (updatedState) {
+                  sm.gameStateModule = updatedState;
+                  sm._logDebug(
+                    `[ReachabilityEngine] Processed event item: ${loc.item.name}`
+                  );
+                }
+              }
             }
           }
         }

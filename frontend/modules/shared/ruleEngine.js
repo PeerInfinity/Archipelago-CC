@@ -426,15 +426,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
             if (context.getStaticData && context.getStaticData().regions) {
               const regions = context.getStaticData().regions;
 
-              // Try direct lookup first
-              if (regions[baseObject.parent_region_name]) {
-                return regions[baseObject.parent_region_name];
-              }
-
-              // Try player-specific lookup
-              const playerId = context.playerId || context.getPlayerSlot?.() || '1';
-              if (regions[playerId] && regions[playerId][baseObject.parent_region_name]) {
-                return regions[playerId][baseObject.parent_region_name];
+              // Phase 3.2: Regions is always a Map
+              const region = regions.get(baseObject.parent_region_name);
+              if (region) {
+                return region;
               }
             }
             return undefined;
@@ -461,17 +456,13 @@ export const evaluateRule = (rule, context, depth = 0) => {
               if (typeof dungeonValue === 'string') {
                 // Look up the actual dungeon object from staticData
                 const dungeonName = dungeonValue;
-                const playerId = context.playerId || context.getPlayerSlot?.() || '1';
-                const dungeons = context.dungeons || context.getAllDungeons?.() || context.staticData?.dungeons;
+                const dungeons = context.dungeons || context.getAllDungeons?.() || context.getStaticData?.().dungeons;
 
                 if (dungeons) {
-                  // Try player-specific dungeon first
-                  if (dungeons[playerId] && dungeons[playerId][dungeonName]) {
-                    return dungeons[playerId][dungeonName];
-                  }
-                  // Fallback to direct dungeon lookup if not nested by player
-                  if (dungeons[dungeonName]) {
-                    return dungeons[dungeonName];
+                  // Phase 3.2: Dungeons is always a Map
+                  const dungeon = dungeons.get(dungeonName);
+                  if (dungeon) {
+                    return dungeon;
                   }
                 }
                 // If we couldn't resolve, return the string (fallback)
@@ -543,7 +534,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
           if (context.getStaticData) {
             const staticData = context.getStaticData();
             // Search all regions for this location
-            for (const [regionName, regionData] of Object.entries(staticData.regions || {})) {
+            // Phase 3.2: Regions is always a Map
+            for (const [regionName, regionData] of staticData.regions.entries()) {
               if (regionData.locations) {
                 const location = regionData.locations.find(loc => loc.name === locationName);
                 if (location) {
@@ -556,7 +548,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
               }
             }
           }
-          
+
           return undefined;
         }
         
@@ -584,7 +576,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
           if (context.getStaticData) {
             const staticData = context.getStaticData();
             // Search all regions for this exit
-            for (const [regionName, regionData] of Object.entries(staticData.regions || {})) {
+            // Phase 3.2: Regions is always a Map
+            for (const [regionName, regionData] of staticData.regions.entries()) {
               if (regionData.exits) {
                 const exit = regionData.exits.find(ex => ex.name === exitName);
                 if (exit) {
@@ -597,7 +590,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
               }
             }
           }
-          
+
           return undefined;
         }
         

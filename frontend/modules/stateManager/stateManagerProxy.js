@@ -297,17 +297,43 @@ export class StateManagerProxy {
             log('warn', '[StateManagerProxy] newStaticData.dungeons is not an array. Expected [[key, value], ...] format.');
           }
 
-          // Convert exits array to object keyed by name (exits remain as objects for now)
+          // Phase 3: Re-link regions to dungeons after Map conversion
+          // When regions are serialized from worker, region.dungeon becomes a plain object
+          // We need to replace it with a reference to the dungeon in the dungeons Map
+          if (newCache.regions instanceof Map && newCache.dungeons instanceof Map) {
+            let relinkCount = 0;
+            for (const [regionName, region] of newCache.regions.entries()) {
+              if (region.dungeon && typeof region.dungeon === 'object') {
+                // region.dungeon is currently a plain object (serialized dungeon)
+                // Find the matching dungeon by name in the dungeons Map
+                const dungeonName = region.dungeon.name || region.dungeon_name;
+                if (dungeonName && newCache.dungeons.has(dungeonName)) {
+                  region.dungeon = newCache.dungeons.get(dungeonName);
+                  relinkCount++;
+                }
+              } else if (typeof region.dungeon === 'string') {
+                // If it's just a string name, look it up
+                if (newCache.dungeons.has(region.dungeon)) {
+                  region.dungeon = newCache.dungeons.get(region.dungeon);
+                  relinkCount++;
+                }
+              }
+            }
+            log('info', `[StateManagerProxy] Re-linked ${relinkCount} regions to dungeon objects`);
+          }
+
+          // Phase 3.2: Convert exits array to Map keyed by name
           if (Array.isArray(newCache.exits)) {
-            const exitsObject = {};
+            const exitsMap = new Map();
             newCache.exits.forEach((exit) => {
               if (exit && exit.name) {
-                exitsObject[exit.name] = exit;
+                exitsMap.set(exit.name, exit);
               } else {
                 log('warn', '[StateManagerProxy] Encountered exit without a name during conversion:', exit);
               }
             });
-            newCache.exits = exitsObject;
+            newCache.exits = exitsMap;
+            log('info', `[StateManagerProxy] Converted ${newCache.exits.size} exits to Map`);
           }
 
           this.staticDataCache = newCache;

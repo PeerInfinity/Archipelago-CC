@@ -75,11 +75,12 @@ class CommonUI {
     }
 
     // Find all locations that have this item
+    // Phase 3.2: Use Map methods
     const locationInfos = [];
-    for (const [locName, itemData] of Object.entries(staticData.locationItems)) {
+    for (const [locName, itemData] of staticData.locationItems.entries()) {
       if (itemData && itemData.name === itemName) {
         // Get the location's region from static data
-        const locData = Object.values(staticData.locations).find(l => l.name === locName);
+        const locData = staticData.locations.get(locName);
         if (locData) {
           locationInfos.push({
             locationName: locName,
@@ -244,7 +245,8 @@ class CommonUI {
     }
 
     // Get all item names from static data
-    const itemNames = Object.keys(staticData.items);
+    // Phase 3.2: Use Map methods
+    const itemNames = Array.from(staticData.items.keys());
 
     // Check if showLocationItems is enabled
     const showLocationItems = await settingsManager.getSetting('moduleSettings.commonUI.showLocationItems', false);
