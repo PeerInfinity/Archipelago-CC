@@ -69,10 +69,10 @@ export class StateManager {
     this.playerSlot = 1; // Default player slot to 1 for single-player/offline
     this.team = 0; // Default team
 
-    // Region and location data
-    this.locations = []; // Flat array of all locations
-    this.regions = {}; // Map of region name -> region data
-    this.dungeons = {}; // ADDED: Map of dungeon name -> dungeon data
+    // Region and location data (Phase 3: Converted to Maps for O(1) lookups)
+    this.locations = new Map(); // Map of location name -> location data
+    this.regions = new Map(); // Map of region name -> region data
+    this.dungeons = new Map(); // Map of dungeon name -> dungeon data
     this.eventLocations = new Map(); // Map of location name -> event location data
 
     // Enhance the indirectConnections to match Python implementation
@@ -401,13 +401,13 @@ export class StateManager {
   }
 
   getLocationItem(locationName) {
-    if (!this.locations || this.locations.length === 0) {
+    if (!this.locations || this.locations.size === 0) {
       this._logDebug(
-        `[StateManager getLocationItem] Locations array is empty or not initialized.`
+        `[StateManager getLocationItem] Locations map is empty or not initialized.`
       );
       return null;
     }
-    const location = this.locations.find((loc) => loc.name === locationName);
+    const location = this.locations.get(locationName);
     if (location && location.item) {
       // Ensure item has name and player properties
       if (
@@ -639,7 +639,7 @@ export class StateManager {
       });
     } else {
       // Find the location data
-      const location = this.locations.find((loc) => loc.name === locationName);
+      const location = this.locations.get(locationName);
       if (!location) {
         this._logDebug(`[StateManager Class] Location ${locationName} not found in locations data.`);
 
@@ -1031,7 +1031,7 @@ export class StateManager {
 
     // Check each critical region
     criticalRegions.forEach((regionName) => {
-      const region = this.regions[regionName];
+      const region = this.regions.get(regionName);
       if (!region) {
         log('info', `Region "${regionName}" not found in loaded regions`);
         return;
@@ -1049,8 +1049,7 @@ export class StateManager {
       log('info', `\nIncoming connections to ${regionName}:`);
       let hasIncomingPaths = false;
 
-      Object.keys(this.regions).forEach((sourceRegionName) => {
-        const sourceRegion = this.regions[sourceRegionName];
+      for (const [sourceRegionName, sourceRegion] of this.regions.entries()) {
         if (!sourceRegion || !sourceRegion.exits) return;
 
         const connectingExits = sourceRegion.exits.filter(
@@ -1069,7 +1068,7 @@ export class StateManager {
           connectingExits.forEach((exit) => {
             const snapshotInterface = this._createSelfSnapshotInterface();
             // Set parent_region context for exit evaluation - needs to be the region object, not just the name
-            snapshotInterface.parent_region = this.regions[sourceRegionName];
+            snapshotInterface.parent_region = this.regions.get(sourceRegionName);
             // Set currentExit so get_entrance can detect self-references
             snapshotInterface.currentExit = exit.name;
             const exitAccessible = exit.access_rule
@@ -1091,7 +1090,7 @@ export class StateManager {
             }
           });
         }
-      });
+      }
 
       if (!hasIncomingPaths) {
         log('info', '  No incoming paths found.');
@@ -1438,7 +1437,7 @@ export class StateManager {
       },
       getCurrentRegion: () => self.currentRegionName,
       getAllItems: () => self.itemData,
-      getAllLocations: () => [...self.locations],
+      getAllLocations: () => Array.from(self.locations.values()),
       getAllRegions: () => self.regions,
       getPlayerSlot: () => self.playerSlot,
       helpers: self.helpers,
@@ -1604,8 +1603,8 @@ export class StateManager {
 
           if (regionName) {
             // Look up the actual region object from self.regions
-            if (self.regions && self.regions[regionName]) {
-              return self.regions[regionName];
+            if (self.regions && self.regions.has(regionName)) {
+              return self.regions.get(regionName);
             }
           }
 
@@ -1681,7 +1680,7 @@ export class StateManager {
     // 2. Region Reachability
     const regionReachability = {};
     if (this.regions) {
-      for (const regionName in this.regions) {
+      for (const regionName of this.regions.keys()) {
         if (this.knownReachableRegions.has(regionName)) {
           regionReachability[regionName] = 'reachable';
         } else {
@@ -1697,7 +1696,7 @@ export class StateManager {
     // 3. Location Reachability
     const locationReachability = {};
     if (this.locations) {
-      this.locations.forEach((loc) => {
+      for (const loc of this.locations.values()) {
         if (this.isLocationChecked(loc.name)) {
           locationReachability[loc.name] = 'checked';
         } else if (!this._inHelperExecution && this.isLocationAccessible(loc)) {
@@ -1709,7 +1708,7 @@ export class StateManager {
         }
         // During helper execution, we don't set locationReachability for unchecked locations
         // This prevents incorrect 'unreachable' status during rule evaluation
-      });
+      }
     }
 
     // 4. LocationItems - REMOVED: Now in static data
@@ -2211,9 +2210,7 @@ export class StateManager {
       );
 
       // 5. Find the location object (worker has its own this.locations)
-      const locationObject = this.locations.find(
-        (loc) => loc.name === locationName
-      );
+      const locationObject = this.locations.get(locationName);
       if (!locationObject) {
         log(
           'warn',
@@ -2295,7 +2292,7 @@ export class StateManager {
     // Build locationItems map from location data
     const locationItemsMap = {};
     if (this.locations) {
-      this.locations.forEach((loc) => {
+      for (const loc of this.locations.values()) {
         if (
           loc.item &&
           typeof loc.item.name === 'string' &&
@@ -2310,16 +2307,23 @@ export class StateManager {
         } else {
           locationItemsMap[loc.name] = null;
         }
-      });
+      }
     }
+
+    // Phase 3: Send Maps as arrays for efficient transfer and conversion
+    // Format: [[key, value], [key, value], ...]
+    const locationsArray = this.locations ? Array.from(this.locations.entries()) : [];
+    const regionsArray = this.regions ? Array.from(this.regions.entries()) : [];
+    const dungeonsArray = this.dungeons ? Array.from(this.dungeons.entries()) : [];
+
     return {
       game_name: this.rules?.game_name,
       game_directory: this.rules?.game_directory,
       playerId: String(this.playerSlot),
-      locations: this.locations,
-      regions: this.regions,
+      locations: locationsArray,
+      regions: regionsArray,
       exits: this.exits,
-      dungeons: this.dungeons,
+      dungeons: dungeonsArray,
       items: this.itemData,  // Direct access for UI components
       itemsByPlayer: { [String(this.playerSlot)]: this.itemData },  // Provide items indexed by player slot for stateInterface
       itemData: this.itemData,  // Keep for backwards compatibility

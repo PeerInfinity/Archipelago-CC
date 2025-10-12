@@ -143,22 +143,29 @@ function loadPlayerData(sm, jsonData, selectedPlayerId) {
     `Loaded ${Object.keys(sm.itemNameToId).length} item IDs`
   );
 
-  // Load regions
-  sm.regions = jsonData.regions?.[selectedPlayerId] || {};
-  sm.originalRegionOrder = Object.keys(sm.regions);
+  // Load regions as Map (Phase 3: Map optimization)
+  const regionsObject = jsonData.regions?.[selectedPlayerId] || {};
+  sm.regions.clear(); // Clear the Map initialized in constructor
+  for (const [regionName, regionData] of Object.entries(regionsObject)) {
+    sm.regions.set(regionName, regionData);
+  }
+  sm.originalRegionOrder = Array.from(sm.regions.keys());
   sm._logDebug(
-    `Loaded ${sm.originalRegionOrder.length} regions`
+    `Loaded ${sm.originalRegionOrder.length} regions into Map`
   );
 
-  // Load dungeons
-  sm.dungeons = jsonData.dungeons?.[selectedPlayerId] || {};
-  sm._logDebug(`Loaded ${Object.keys(sm.dungeons).length} dungeons`);
+  // Load dungeons as Map (Phase 3: Map optimization)
+  const dungeonsObject = jsonData.dungeons?.[selectedPlayerId] || {};
+  sm.dungeons.clear(); // Clear the Map initialized in constructor
+  for (const [dungeonName, dungeonData] of Object.entries(dungeonsObject)) {
+    sm.dungeons.set(dungeonName, dungeonData);
+  }
+  sm._logDebug(`Loaded ${sm.dungeons.size} dungeons into Map`);
 
   // Link regions to dungeons
-  for (const regionName in sm.regions) {
-    const region = sm.regions[regionName];
-    if (region.dungeon && sm.dungeons[region.dungeon]) {
-      region.dungeon = sm.dungeons[region.dungeon];
+  for (const [regionName, region] of sm.regions.entries()) {
+    if (region.dungeon && sm.dungeons.has(region.dungeon)) {
+      region.dungeon = sm.dungeons.get(region.dungeon);
     }
   }
   sm._logDebug('Linked regions to dungeon objects');
@@ -217,12 +224,12 @@ function loadGroupData(sm, jsonData, selectedPlayerId) {
  * @param {string} selectedPlayerId - The player ID
  */
 function loadLocations(sm, selectedPlayerId) {
-  sm.locations = [];
+  sm.locations.clear(); // Clear the Map initialized in constructor
   sm.locationNameToId = {};
   sm.eventLocations.clear();
 
   for (const regionName of sm.originalRegionOrder) {
-    const region = sm.regions[regionName];
+    const region = sm.regions.get(regionName); // Use Map.get() instead of bracket notation
     if (!region) continue;
 
     if (region.locations && Array.isArray(region.locations)) {
@@ -245,7 +252,7 @@ function loadLocations(sm, selectedPlayerId) {
         };
         delete locationObject.parent_region;
 
-        sm.locations.push(locationObject);
+        sm.locations.set(descriptiveName, locationObject); // Store in Map by name
         sm.originalLocationOrder.push(descriptiveName);
 
         // Track event locations
@@ -264,7 +271,7 @@ function loadLocations(sm, selectedPlayerId) {
   }
 
   sm._logDebug(
-    `Processed ${sm.locations.length} locations`
+    `Processed ${sm.locations.size} locations into Map`
   );
 }
 
@@ -283,7 +290,7 @@ function loadExits(sm, selectedPlayerId) {
   sm._logDebug('[Initialization] Populating exits...');
 
   for (const regionName of sm.originalRegionOrder) {
-    const regionObject = sm.regions[regionName];
+    const regionObject = sm.regions.get(regionName); // Use Map.get() instead of bracket notation
     if (!regionObject) continue;
 
     if (regionObject.exits && Array.isArray(regionObject.exits)) {

@@ -1634,8 +1634,12 @@ export class TestSpoilerUI {
       return false;
     }
 
-    for (const locName in staticData.locations) {
-      const locDef = staticData.locations[locName];
+    // Phase 3: Support both Map and object formats
+    const locationsIterable = staticData.locations instanceof Map
+      ? staticData.locations.entries()
+      : Object.entries(staticData.locations);
+
+    for (const [locName, locDef] of locationsIterable) {
 
       // Check against the worker's snapshot flags
       const isChecked = currentWorkerSnapshot.flags?.includes(locName);
@@ -1830,9 +1834,12 @@ export class TestSpoilerUI {
         if (logAccessibleSet.has(name)) return false;
 
         // Check if this region is marked as dynamically_added
-        // staticData.regions might be structured differently - check if it's an array
+        // staticData.regions might be structured differently - check format
         let regionData;
-        if (Array.isArray(staticData?.regions)) {
+        if (staticData.regions instanceof Map) {
+          // Phase 3: Map format - O(1) lookup
+          regionData = staticData.regions.get(name);
+        } else if (Array.isArray(staticData?.regions)) {
           // It's an array - find by name
           regionData = staticData.regions.find(r => r.name === name);
         } else if (staticData?.regions) {
@@ -2345,10 +2352,17 @@ export class TestSpoilerUI {
     this.log('info', ''); // Separator
     
     for (const locName of locationNames) {
-      const locDef = staticData.locations[locName];
+      // Phase 3: Use Map.get() or fallback to object access
+      const locDef = staticData.locations instanceof Map
+        ? staticData.locations.get(locName)
+        : staticData.locations[locName];
+
       if (!locDef) {
         this.log('error', `  ${locName}: Location definition not found in static data`);
-        this.log('info', `    Available locations sample: ${Object.keys(staticData.locations).slice(0, 5).join(', ')}...`);
+        const sampleKeys = staticData.locations instanceof Map
+          ? Array.from(staticData.locations.keys()).slice(0, 5).join(', ')
+          : Object.keys(staticData.locations).slice(0, 5).join(', ');
+        this.log('info', `    Available locations sample: ${sampleKeys}...`);
         continue;
       }
 
@@ -2426,7 +2440,13 @@ export class TestSpoilerUI {
     
     // Get list of currently accessible regions for context
     const accessibleRegions = Object.entries(currentWorkerSnapshot.regionReachability || {})
-      .filter(([region, status]) => (status === 'reachable' || status === 'checked') && staticData.regions[region])
+      .filter(([region, status]) => {
+        if (status !== 'reachable' && status !== 'checked') return false;
+        // Phase 3: Use Map.has() or fallback to object access
+        return staticData.regions instanceof Map
+          ? staticData.regions.has(region)
+          : !!staticData.regions[region];
+      })
       .map(([region]) => region);
     
     this.log('info', `[CONTEXT] Currently accessible regions (${accessibleRegions.length}): ${accessibleRegions.slice(0, 10).join(', ')}${accessibleRegions.length > 10 ? '...' : ''}`);
@@ -2444,7 +2464,11 @@ export class TestSpoilerUI {
     this.log('info', ''); // Separator
 
     for (const targetRegionName of regionNames) {
-      const targetRegionDef = staticData.regions[targetRegionName];
+      // Phase 3: Use Map.get() or fallback to object access
+      const targetRegionDef = staticData.regions instanceof Map
+        ? staticData.regions.get(targetRegionName)
+        : staticData.regions[targetRegionName];
+
       if (!targetRegionDef) {
         this.log('error', `  ${targetRegionName}: Region definition not found in static data`);
         continue;
@@ -2458,7 +2482,10 @@ export class TestSpoilerUI {
       const exitsToTarget = [];
       
       for (const sourceRegionName of accessibleRegions) {
-        const sourceRegionDef = staticData.regions[sourceRegionName];
+        // Phase 3: Use Map.get() or fallback to object access
+        const sourceRegionDef = staticData.regions instanceof Map
+          ? staticData.regions.get(sourceRegionName)
+          : staticData.regions[sourceRegionName];
         if (!sourceRegionDef || !sourceRegionDef.exits) continue;
 
         for (const exitName in sourceRegionDef.exits) {
@@ -2479,11 +2506,17 @@ export class TestSpoilerUI {
         
         // Check for exits from inaccessible regions to provide more helpful information
         const exitsFromInaccessibleRegions = [];
-        const allRegions = Object.keys(staticData.regions || {});
+        // Phase 3: Get region keys from Map or object
+        const allRegions = staticData.regions instanceof Map
+          ? Array.from(staticData.regions.keys())
+          : Object.keys(staticData.regions || {});
         const inaccessibleRegions = allRegions.filter(region => !accessibleRegions.includes(region));
-        
+
         for (const sourceRegionName of inaccessibleRegions) {
-          const sourceRegionDef = staticData.regions[sourceRegionName];
+          // Phase 3: Use Map.get() or fallback to object access
+          const sourceRegionDef = staticData.regions instanceof Map
+            ? staticData.regions.get(sourceRegionName)
+            : staticData.regions[sourceRegionName];
           if (!sourceRegionDef || !sourceRegionDef.exits) continue;
 
           for (const exitName in sourceRegionDef.exits) {

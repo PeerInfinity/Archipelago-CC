@@ -62,9 +62,9 @@ export function buildIndirectConnections(sm) {
   sm.indirectConnections.clear();
   if (!sm.regions) return;
 
-  // TODO PHASE 3: When regions becomes Map, use: sm.regions.values()
-  Object.values(sm.regions).forEach((region) => {
-    if (!region.exits) return;
+  // Phase 3: Use Map.values() for efficient iteration
+  for (const region of sm.regions.values()) {
+    if (!region.exits) continue;
     region.exits.forEach((exit) => {
       if (exit.rule) {
         const dependencies = findRegionDependencies(sm, exit.rule);
@@ -78,7 +78,7 @@ export function buildIndirectConnections(sm) {
         });
       }
     });
-  });
+  }
 }
 
 /**
@@ -97,7 +97,7 @@ export function findRegionDependencies(sm, rule) {
 
   if (typeof rule === 'string') {
     // TODO PHASE 3: When regions becomes Map, use: sm.regions.has(rule)
-    if (sm.regions && sm.regions[rule]) {
+    if (sm.regions && sm.regions.has(rule)) {
       dependencies.add(rule);
     } else {
       // Check for helper function calls that might reference regions
@@ -107,7 +107,7 @@ export function findRegionDependencies(sm, rule) {
         args.forEach((arg) => {
           const cleanArg = arg.replace(/['"]/g, '');
           // TODO PHASE 3: When regions becomes Map, use: sm.regions.has(cleanArg)
-          if (sm.regions && sm.regions[cleanArg]) {
+          if (sm.regions && sm.regions.has(cleanArg)) {
             dependencies.add(cleanArg);
           }
         });
@@ -199,7 +199,7 @@ export function computeReachableRegions(sm) {
     // Add exits from start regions to blocked connections
     for (const startRegion of startRegions) {
       // TODO PHASE 3: When regions becomes Map, use: sm.regions.get(startRegion)
-      const region = sm.regions[startRegion];
+      const region = sm.regions.get(startRegion);
       if (region && region.exits) {
         // Add all exits from this region to blocked connections
         for (const exit of region.exits) {
@@ -253,7 +253,7 @@ export function computeReachableRegions(sm) {
     // Finalize unreachable regions set
     // TODO PHASE 3: When regions becomes Map, use: Array.from(sm.regions.keys())
     sm.knownUnreachableRegions = new Set(
-      Object.keys(sm.regions).filter(
+      Array.from(sm.regions.keys()).filter(
         (region) => !sm.knownReachableRegions.has(region)
       )
     );
@@ -320,7 +320,7 @@ export function runBFSPass(sm) {
       const snapshotInterfaceContext = sm._createSelfSnapshotInterface();
       // Set parent_region context for exit evaluation - needs to be the region object, not just the name
       // TODO PHASE 3: When regions becomes Map, use: sm.regions.get(fromRegion)
-      snapshotInterfaceContext.parent_region = sm.regions[fromRegion];
+      snapshotInterfaceContext.parent_region = sm.regions.get(fromRegion);
       // Set currentExit so get_entrance can detect self-references
       snapshotInterfaceContext.currentExit = exit.name;
 
@@ -354,14 +354,14 @@ export function runBFSPass(sm) {
 
         // Add all exits from the newly reachable region to blockedConnections (if not already processed)
         // TODO PHASE 3: When regions becomes Map, use: sm.regions.get(targetRegion)
-        const region = sm.regions[targetRegion];
+        const region = sm.regions.get(targetRegion);
         if (region && region.exits) {
           for (const newExit of region.exits) {
             // Ensure the target of the new exit exists
             // TODO PHASE 3: When regions becomes Map, use: sm.regions.has(newExit.connected_region)
             if (
               newExit.connected_region &&
-              sm.regions[newExit.connected_region]
+              sm.regions.has(newExit.connected_region)
             ) {
               const newConnObj = {
                 fromRegion: targetRegion,
@@ -617,20 +617,20 @@ export function can_reach(sm, target, type = 'Region', player = 1) {
   } else if (type === 'Location') {
     // Find the location object
     // TODO PHASE 3: When locations becomes Map, use: sm.locations.get(target)
-    const location = sm.locations.find((loc) => loc.name === target);
+    const location = sm.locations.get(target);
     return location && isLocationAccessible(sm, location);
   } else if (type === 'Entrance') {
     // Find the entrance across all regions
     // TODO PHASE 3: When regions becomes Map, use: for (const [regionName, regionData] of sm.regions.entries())
-    for (const regionName in sm.regions) {
-      const regionData = sm.regions[regionName];
+    for (const [regionName, regionData] of sm.regions.entries()) {
+      
       if (regionData.exits) {
         const exit = regionData.exits.find((e) => e.name === target);
         if (exit) {
           const snapshotInterface = sm._createSelfSnapshotInterface();
           // Set parent_region context for exit evaluation - needs to be the region object, not just the name
           // TODO PHASE 3: When regions becomes Map, use: sm.regions.get(regionName)
-          snapshotInterface.parent_region = sm.regions[regionName];
+          snapshotInterface.parent_region = regionData;
           // Set currentExit so get_entrance can detect self-references
           snapshotInterface.currentExit = exit.name;
           return (
