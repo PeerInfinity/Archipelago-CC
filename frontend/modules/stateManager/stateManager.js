@@ -17,6 +17,7 @@ import * as ReachabilityModule from './core/reachabilityEngine.js';
 import * as StatePersistenceModule from './core/statePersistence.js';
 import * as LocationCheckingModule from './core/locationChecking.js';
 import * as RuleEvaluatorModule from './core/ruleEvaluator.js';
+import * as BatchUpdateModule from './core/batchUpdateManager.js';
 
 // Create module-level logger
 const moduleLogger = createUniversalLogger('stateManager');
@@ -379,11 +380,7 @@ export class StateManager {
    * Updates the inventory with multiple items at once
    */
   updateInventoryFromList(items) {
-    this.beginBatchUpdate();
-    items.forEach((item) => {
-      this.addItemToInventory(item);
-    });
-    this.commitBatchUpdate();
+    BatchUpdateModule.updateInventoryFromList(this, items);
   }
 
   /**
@@ -539,61 +536,14 @@ export class StateManager {
    * @param {boolean} deferRegionComputation - Whether to defer region computation until commit
    */
   beginBatchUpdate(deferRegionComputation = true) {
-    this._batchMode = true;
-    this._deferRegionComputation = deferRegionComputation;
-    this._batchedUpdates = new Map();
+    BatchUpdateModule.beginBatchUpdate(this, deferRegionComputation);
   }
 
   /**
    * Commit a batch update and process all collected inventory changes
    */
   commitBatchUpdate() {
-    if (!this._batchMode) {
-      return; // Not in batch mode, nothing to do
-    }
-
-    this._logDebug('[StateManager Class] Committing batch update...');
-    this._batchMode = false;
-    let inventoryChanged = false;
-
-    // Process all batched updates
-    for (const [itemName, count] of this._batchedUpdates.entries()) {
-      if (count > 0) {
-        // REFACTOR: Use format-agnostic helper
-        this._addItemToInventory(itemName, count);
-        inventoryChanged = true;
-      } else if (count < 0) {
-        // This case is not currently used as we only add items in batch mode
-        log(
-          'warn',
-          `Batch commit with count ${count} needs inventory.removeItem for ${itemName}`
-        );
-      }
-    }
-
-    this._batchedUpdates.clear();
-
-    let needsSnapshotUpdate = false;
-
-    if (inventoryChanged) {
-      this._logDebug('Inventory changed during batch update.');
-      this.invalidateCache();
-      needsSnapshotUpdate = true;
-    }
-
-    // Compute regions if not deferred OR if inventory changed (which invalidates cache)
-    if (!this._deferRegionComputation || inventoryChanged) {
-      this._logDebug(
-        'Recomputing regions after batch commit (if cache was invalid).'
-      );
-      this.computeReachableRegions(); // This will update cache if invalid. Does not send snapshot.
-      needsSnapshotUpdate = true; // Ensure snapshot is sent if recomputation happened or was due.
-    }
-
-    if (needsSnapshotUpdate) {
-      this._sendSnapshotUpdate();
-    }
-    this._logDebug('[StateManager Class] Batch update committed.');
+    BatchUpdateModule.commitBatchUpdate(this);
   }
 
   /**
