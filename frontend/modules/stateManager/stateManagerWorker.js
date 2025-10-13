@@ -192,11 +192,14 @@ async function processQueue() {
 
 /**
  * Determine if command should send completion response
- * PING is the only command that sends explicit completion response.
- * All other query commands send queryResponse directly from handleMessage.
+ * PING sends its own pingResponse, so it should NOT send commandCompleted.
+ * All query commands send queryResponse directly from handleMessage.
+ * Only commands that need explicit completion notification should return true here.
  */
 function shouldSendCompletionResponse(command) {
-  return command === STATE_MANAGER_COMMANDS.PING;
+  // No commands currently need commandCompleted messages
+  // PING uses pingResponse instead
+  return false;
 }
 
 /**
@@ -220,8 +223,12 @@ async function executeCommandDirectly(command, queryId, payload) {
 async function executeCommand(cmd) {
   const { command, payload, queryId } = cmd;
 
+  // Extract expectResponse from payload if it was stored there
+  const expectResponse = payload?.expectResponse;
+
   // Build message object for handleMessage (reuse existing logic)
-  const message = { command, payload, queryId };
+  // Include expectResponse so handlers know whether to send responses
+  const message = { command, payload, queryId, expectResponse };
   await handleMessage(message);
 }
 
@@ -613,20 +620,22 @@ async function handleMessage(message) {
                 `[SMW] checkLocation: stateManagerInstance.checkLocation completed for "${locationName}".`
               );
 
-              // Query response still sent if queryId was present
-              log(
-                'info',
-                `[SMW] checkLocation: Sending success queryResponse for queryId ${message.queryId}`
-              );
-              self.postMessage({
-                type: 'queryResponse',
-                queryId: message.queryId,
-                result: {
-                  success: true,
-                  locationName: locationName,
-                  status: 'processed_by_state_manager',
-                },
-              });
+              // Only send query response if expectResponse is explicitly true
+              if (message.expectResponse === true) {
+                log(
+                  'info',
+                  `[SMW] checkLocation: Sending success queryResponse for queryId ${message.queryId}`
+                );
+                self.postMessage({
+                  type: 'queryResponse',
+                  queryId: message.queryId,
+                  result: {
+                    success: true,
+                    locationName: locationName,
+                    status: 'processed_by_state_manager',
+                  },
+                });
+              }
             } catch (error) {
               // LOG 7: In catch block for checkLocation
               log(
@@ -639,15 +648,18 @@ async function handleMessage(message) {
                 error.message,
                 error.stack
               );
-              log(
-                'error',
-                `[SMW] checkLocation: Sending error queryResponse for queryId ${message.queryId}`
-              );
-              self.postMessage({
-                type: 'queryResponse',
-                queryId: message.queryId,
-                error: `Error processing checkLocation: ${error.message}`,
-              });
+              // Only send error response if expectResponse is explicitly true
+              if (message.expectResponse === true) {
+                log(
+                  'error',
+                  `[SMW] checkLocation: Sending error queryResponse for queryId ${message.queryId}`
+                );
+                self.postMessage({
+                  type: 'queryResponse',
+                  queryId: message.queryId,
+                  error: `Error processing checkLocation: ${error.message}`,
+                });
+              }
             }
 
           } else {
@@ -1142,7 +1154,7 @@ async function handleMessage(message) {
  */
 self.onmessage = async function (e) {
   const message = e.data;
-  const { command, queryId, payload, config } = message; // Extract config too
+  const { command, queryId, payload, config, expectResponse } = message; // Extract all fields
 
   log('info', '[stateManagerWorker onmessage] Received command:', command);
 
@@ -1150,14 +1162,14 @@ self.onmessage = async function (e) {
   if (!QUEUE_ENABLED || !commandQueue.enabled) {
     log('info', '[stateManagerWorker] Queue disabled, executing directly');
     // For direct execution, pass the entire message to preserve all properties
-    const directMessage = { command, queryId, payload, config };
+    const directMessage = { command, queryId, payload, config, expectResponse };
     await handleMessage(directMessage);
     return;
   }
 
-  // Enqueue command with full message data (including config for initialize command)
-  // Store the entire message in payload to preserve all properties
-  const fullPayload = config ? { ...payload, config } : payload;
+  // Enqueue command with full message data
+  // Store the entire message in payload to preserve all properties including expectResponse
+  const fullPayload = config ? { ...payload, config, expectResponse } : { ...payload, expectResponse };
   const entry = commandQueue.enqueue(command, queryId, fullPayload);
 
   // NOTE: We don't send commandEnqueued acknowledgments anymore.

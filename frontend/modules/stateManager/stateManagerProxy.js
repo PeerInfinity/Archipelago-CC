@@ -544,7 +544,7 @@ export class StateManagerProxy {
     } else {
       log(
         'warn',
-        `[stateManagerProxy] Received response for unknown queryId: ${queryId}`
+        `[stateManagerProxy] Received response for unknown queryId: ${queryId}. Message type: ${message.type}, Command: ${message.command}, Has result: ${!!result}, Has error: ${!!error}`
       );
     }
   }
@@ -1113,15 +1113,15 @@ export class StateManagerProxy {
       );
     }
 
-    const messageId = this.nextMessageId++;
-    const message = {
-      queryId: messageId,
-      command: command,
-      payload: payload,
-      expectResponse: expectResponse,
-    };
-
     return new Promise((resolve, reject) => {
+      const messageId = this.nextMessageId++;
+      const message = {
+        queryId: messageId,
+        command: command,
+        payload: payload,
+        expectResponse: expectResponse,
+      };
+
       if (expectResponse) {
         this.pendingQueries.set(messageId, { resolve, reject, timeout });
         // Start timeout for query

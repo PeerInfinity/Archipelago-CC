@@ -54,6 +54,7 @@ export class CommandQueue {
       totalEnqueued: 0,
       totalProcessed: 0,
       totalFailed: 0,
+      peakQueueDepth: 0,     // Highest number of unprocessed entries
       commandTypeCounts: {}  // Count by command type
     };
   }
@@ -88,6 +89,11 @@ export class CommandQueue {
     this.metrics.totalEnqueued++;
     this.metrics.commandTypeCounts[command] =
       (this.metrics.commandTypeCounts[command] || 0) + 1;
+
+    // Update peak queue depth
+    if (this.commands.length > this.metrics.peakQueueDepth) {
+      this.metrics.peakQueueDepth = this.commands.length;
+    }
 
     // Debug logging
     if (this.debugMode) {
@@ -317,6 +323,7 @@ export class CommandQueue {
         totalEnqueued: this.metrics.totalEnqueued,
         totalProcessed: this.metrics.totalProcessed,
         totalFailed: this.metrics.totalFailed,
+        peakQueueDepth: this.metrics.peakQueueDepth,
         commandTypeCounts: { ...this.metrics.commandTypeCounts }
       }
     };
@@ -342,6 +349,7 @@ export class CommandQueue {
       totalEnqueued: 0,
       totalProcessed: 0,
       totalFailed: 0,
+      peakQueueDepth: 0,
       commandTypeCounts: {}
     };
 
@@ -371,7 +379,8 @@ export class CommandQueue {
       successRate: this.metrics.totalProcessed > 0
         ? (this.metrics.totalProcessed / (this.metrics.totalProcessed + this.metrics.totalFailed)) * 100
         : 100,
-      currentQueueDepth: this.commands.length
+      currentQueueDepth: this.commands.length,
+      peakQueueDepth: this.metrics.peakQueueDepth
     };
   }
 }
