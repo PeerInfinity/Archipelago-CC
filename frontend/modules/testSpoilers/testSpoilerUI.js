@@ -4,6 +4,10 @@ import { evaluateRule } from '../shared/ruleEngine.js'; // ADDED
 import { createStateSnapshotInterface } from '../shared/stateInterface.js'; // ADDED
 import { createRegionLink } from '../commonUI/index.js'; // ADDED
 import TestSpoilerRuleEvaluator from './testSpoilerRuleEvaluator.js'; // ADDED
+import { FileLoader } from './fileLoader.js'; // Phase 1: File loading module
+import { createUniversalLogger } from '../../app/core/universalLogger.js'; // Phase 1: Universal logger
+
+const logger = createUniversalLogger('testSpoilerUI');
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -53,6 +57,9 @@ export class TestSpoilerUI {
     this.currentMismatchDetails = null; // ADDED: Store current mismatch details for result aggregation
     this.previousInventory = {}; // Track previous sphere's inventory to find newly added items
     this.ruleEvaluator = new TestSpoilerRuleEvaluator((level, message, ...data) => this.log(level, message, ...data));
+
+    // Phase 1: Initialize file loader module
+    this.fileLoader = new FileLoader();
 
     // Create and append root element immediately
     this.getRootElement(); // This creates this.rootElement and sets this.testSpoilersContainer
@@ -284,63 +291,9 @@ export class TestSpoilerUI {
   async attemptAutoLoadSpoilerLog(rulesetPath) {
     if (!this.testSpoilersContainer) return;
 
-    let logPath;
-    if (rulesetPath) {
-      // Example rulesetPath: "presets/alttp/MySeed123/MySeed123_rules.json"
-      // or from a direct file load: "MySeed123_rules.json" (less likely for auto-load)
-      
-      // FIXED: Remove leading "./" if present to avoid fetch issues
-      const cleanedRulesetPath = rulesetPath.startsWith('./') ? rulesetPath.substring(2) : rulesetPath;
-
-      const lastSlashIndex = cleanedRulesetPath.lastIndexOf('/');
-      const directoryPath =
-        lastSlashIndex === -1 ? '' : cleanedRulesetPath.substring(0, lastSlashIndex);
-      const rulesFilename =
-        lastSlashIndex === -1
-          ? cleanedRulesetPath
-          : cleanedRulesetPath.substring(lastSlashIndex + 1);
-
-      let baseNameForLog;
-      if (rulesFilename.endsWith('_rules.json')) {
-        baseNameForLog = rulesFilename.substring(
-          0,
-          rulesFilename.length - '_rules.json'.length
-        );
-      } else if (rulesFilename.endsWith('.json')) {
-        baseNameForLog = rulesFilename.substring(
-          0,
-          rulesFilename.length - '.json'.length
-        );
-        this.log(
-          'warn',
-          `Ruleset filename "${rulesFilename}" from path "${rulesetPath}" did not end with "_rules.json". Using "${baseNameForLog}" as base for log file (by removing .json).`
-        );
-      } else {
-        // If no .json extension, this is unexpected for a rules file path.
-        baseNameForLog = rulesFilename;
-        this.log(
-          'error',
-          `Ruleset filename "${rulesFilename}" from path "${rulesetPath}" did not have a .json extension. This might lead to an incorrect log path. Using "${baseNameForLog}" as base.`
-        );
-      }
-
-      if (directoryPath) {
-        // If rulesetPath was "presets/foo/bar_rules.json", logPath becomes "presets/foo/bar_spheres_log.jsonl"
-        logPath = `${directoryPath}/${baseNameForLog}_spheres_log.jsonl`;
-      } else {
-        // If rulesetPath was "bar_rules.json", logPath becomes "./bar_spheres_log.jsonl"
-        // The `./` ensures it's treated as a relative path for fetch, same as before for filename-only cases.
-        logPath = `./${baseNameForLog}_spheres_log.jsonl`;
-      }
-      this.log(
-        'info',
-        `Derived logPath: "${logPath}" from rulesetPath: "${rulesetPath}"`
-      );
-    } else {
-      this.log(
-        'warn',
-        'Cannot attempt auto-load: rulesetPath is undefined or invalid for logPath generation.'
-      );
+    // Handle no ruleset path case
+    if (!rulesetPath) {
+      logger.warn('Cannot attempt auto-load: rulesetPath is undefined or invalid');
       this.testSpoilersContainer.innerHTML = '';
       this.ensureLogContainerReady();
       this.renderManualFileSelectionView(
@@ -349,137 +302,64 @@ export class TestSpoilerUI {
       return;
     }
 
-    // Check 1: Is this exact log path currently being loaded?
-    if (this.isLoadingLogPath === logPath) {
-      this.log(
-        'info',
-        `Auto-load for ${logPath} is already in progress. Skipping duplicate attempt.`
-      );
+    // Phase 1: Delegate to FileLoader module
+    const result = await this.fileLoader.attemptAutoLoad(
+      rulesetPath,
+      this.currentSpoilerLogPath,
+      this.spoilerLogData,
+      this.isLoadingLogPath
+    );
+
+    // Handle already loading case
+    if (result.error === 'Already loading this log path.') {
       return;
     }
 
-    // Check 2: Is this exact log path already loaded and processed successfully?
-    if (
-      this.currentSpoilerLogPath === logPath &&
-      this.spoilerLogData &&
-      this.spoilerLogData.length > 0
-    ) {
-      this.log(
-        'info',
-        `Spoiler log for ${logPath} is already loaded and processed. Refreshing UI.`
+    // Handle already loaded case
+    if (result.alreadyLoaded) {
+      logger.info(
+        `Spoiler log for ${result.logPath} is already loaded and processed. Refreshing UI.`
       );
       this.testSpoilersContainer.innerHTML = '';
       this.ensureLogContainerReady();
       this.renderResultsControls();
-      this.log(
-        'info',
-        `Displaying already loaded test: ${this.currentSpoilerLogPath}`
-      );
+      logger.info(`Displaying already loaded test: ${this.currentSpoilerLogPath}`);
       this.updateStepInfo();
       return;
     }
 
-    this.isLoadingLogPath = logPath; // Set loading flag
+    // Set loading flag
+    this.isLoadingLogPath = result.logPath;
 
     try {
-      this.clearTestState(); // Clear previous test state (this will nullify this.spoilerLogData)
-      this.log(
-        'info',
-        `Attempting to fetch server-side spoiler log: ${logPath}`
-      );
-
-      const response = await fetch(logPath);
-      if (!response.ok) {
-        this.log(
-          'warn',
-          `Failed to fetch spoiler log from ${logPath}: ${response.status} ${response.statusText}`
-        );
-        if (this.initialAutoLoadAttempted)
+      // Handle failure case
+      if (!result.success) {
+        logger.warn(result.error);
+        if (this.initialAutoLoadAttempted) {
           this.renderManualFileSelectionView(
-            `Auto-load failed: Could not fetch ${logPath}. Please select a file manually.`
+            `Auto-load failed: ${result.error}. Please select a file manually.`
           );
+        }
         this.spoilerLogData = null;
-        this.currentSpoilerLogPath = null; // Clear path if fetch failed
+        this.currentSpoilerLogPath = null;
         return;
       }
-      const fileContent = await response.text();
-      const lines = fileContent.split('\n');
-      const newLogEvents = [];
-      for (const line of lines) {
-        if (line.trim() === '') continue;
-        try {
-          const parsedEvent = JSON.parse(line);
-          // ADDED: Detailed logging for parsed event (mirroring readSelectedLogFile)
-          this.log(
-            'debug',
-            `Parsed line from fetched log into object:`,
-            JSON.parse(JSON.stringify(parsedEvent))
-          );
-          if (
-            parsedEvent &&
-            typeof parsedEvent.type === 'string' &&
-            parsedEvent.type.trim() !== ''
-          ) {
-            this.log(
-              'debug',
-              `Fetched event type found: '${parsedEvent.type}'`
-            );
-          } else if (parsedEvent && parsedEvent.hasOwnProperty('type')) {
-            this.log(
-              'warn',
-              `Fetched event type is present but invalid (e.g., undefined, null, empty string): '${parsedEvent.type}'`,
-              parsedEvent
-            );
-          } else {
-            this.log(
-              'warn',
-              `Fetched parsed object is missing 'type' property. Object:`,
-              JSON.parse(JSON.stringify(parsedEvent))
-            );
-          }
-          newLogEvents.push(parsedEvent);
-        } catch (e) {
-          this.log(
-            'error',
-            `Failed to parse line from fetched log: "${line}". Error: ${e.message}`
-          );
-          // Optionally, push a placeholder or the raw line for debugging
-          // newLogEvents.push({ type: 'parse_error', originalLine: line, error: e.message });
-        }
-      }
 
-      if (newLogEvents.length === 0) {
-        this.log(
-          'warn',
-          `Fetched log file ${logPath} was empty or contained no valid JSONL entries.`
-        );
-        this.spoilerLogData = null;
-        this.currentSpoilerLogPath = null; // Clear path as no valid data was loaded
-        if (this.initialAutoLoadAttempted)
-          this.renderManualFileSelectionView(
-            `Auto-load failed: Log file ${logPath} is empty or invalid. Please select manually.`
-          );
-        return; // Return here
-      }
-
-      this.spoilerLogData = newLogEvents;
-      this.currentSpoilerLogPath = logPath; // Set path only on successful load and parse of non-empty data
-      this.log(
-        'info',
-        `Successfully fetched and parsed spoiler log from: ${logPath}. Found ${newLogEvents.length} events.`
-      );
+      // Handle success case
+      this.clearTestState(); // Clear previous test state
+      this.spoilerLogData = result.logData;
+      this.currentSpoilerLogPath = result.logPath;
       await this.prepareSpoilerTest(true);
     } catch (error) {
-      this.log(
-        'warn',
-        `Failed to auto-load or process spoiler log from ${logPath}. Error: ${error.message}. Falling back to manual selection.`
+      logger.warn(
+        `Failed to process spoiler log from ${result.logPath}. Error: ${error.message}`
       );
       this.spoilerLogData = null;
-      this.currentSpoilerLogPath = null; // Ensure path is cleared as the log is not considered loaded
+      this.currentSpoilerLogPath = null;
       this.testSpoilersContainer.innerHTML = '';
       this.ensureLogContainerReady();
       this.renderManualFileSelectionView(
-        `Auto-load failed for ${logPath}. ${error.message}. Please select a spoiler log file.`
+        `Auto-load failed for ${result.logPath}. ${error.message}. Please select a spoiler log file.`
       );
     } finally {
       this.isLoadingLogPath = null; // Clear loading flag
@@ -487,13 +367,8 @@ export class TestSpoilerUI {
   }
 
   extractFilenameBase(filePathOrName) {
-    if (!filePathOrName) return 'unknown_ruleset';
-    const parts = filePathOrName.split(/[\/]/).pop().split('.');
-    if (parts.length > 1) {
-      parts.pop(); // Remove extension
-      return parts.join('.');
-    }
-    return parts[0];
+    // Phase 1: Delegate to FileLoader module
+    return this.fileLoader.extractFilenameBase(filePathOrName);
   }
 
   renderManualFileSelectionView(
@@ -2157,109 +2032,29 @@ export class TestSpoilerUI {
   }
 
   async readSelectedLogFile(file, signal) {
-    return new Promise((resolve, reject) => {
-      if (signal.aborted) {
-        this.log('info', 'File reading aborted before starting.');
-        return reject(new DOMException('Aborted by user', 'AbortError'));
+    // Phase 1: Delegate to FileLoader module
+    try {
+      const result = await this.fileLoader.readFile(file, signal);
+
+      if (!result.success) {
+        logger.warn(`No valid log events found in file: ${file.name}`);
+        return false; // Indicate failure to caller
       }
 
-      const reader = new FileReader();
+      // Store results
+      this.spoilerLogData = result.logData;
+      this.currentSpoilerFile = file;
+      this.currentSpoilerLogPath = file.name;
 
-      const handleAbort = () => {
-        if (reader.readyState === FileReader.LOADING) {
-          reader.abort();
-        }
-        this.log('info', 'File reading operation aborted.');
-        reject(new DOMException('Aborted by user', 'AbortError'));
-      };
-
-      signal.addEventListener('abort', handleAbort, { once: true });
-
-      reader.onload = (e) => {
-        signal.removeEventListener('abort', handleAbort);
-        try {
-          const fileContent = e.target.result;
-          const lines = fileContent.split('\n');
-          const newLogEvents = [];
-          for (const line of lines) {
-            if (line.trim() === '') continue;
-            try {
-              const parsedEvent = JSON.parse(line);
-              // ADDED: Detailed logging for parsed event
-              this.log(
-                'debug',
-                `Parsed line into object:`,
-                JSON.parse(JSON.stringify(parsedEvent))
-              );
-              if (
-                parsedEvent &&
-                typeof parsedEvent.type === 'string' &&
-                parsedEvent.type.trim() !== ''
-              ) {
-                this.log('debug', `Event type found: '${parsedEvent.type}'`);
-              } else if (parsedEvent && parsedEvent.hasOwnProperty('type')) {
-                this.log(
-                  'warn',
-                  `Event type is present but invalid (e.g., undefined, null, empty string): '${parsedEvent.type}'`,
-                  parsedEvent
-                );
-              } else {
-                this.log(
-                  'warn',
-                  `Parsed object is missing 'type' property. Object:`,
-                  JSON.parse(JSON.stringify(parsedEvent))
-                );
-              }
-              newLogEvents.push(parsedEvent);
-            } catch (parseError) {
-              this.log(
-                'error',
-                `Failed to parse line: "${line}". Error: ${parseError.message}`
-              );
-              // Optionally, push a placeholder or the raw line for debugging
-              // newLogEvents.push({ type: 'parse_error', originalLine: line, error: parseError.message });
-            }
-          }
-
-          if (newLogEvents.length === 0) {
-            this.log('warn', `No valid log events found in file: ${file.name}`);
-            // Resolve with empty array, let caller decide if this is an error
-            resolve([]);
-            return;
-          }
-
-          this.spoilerLogData = newLogEvents;
-          this.currentSpoilerFile = file; // Store the File object
-          this.currentSpoilerLogPath = file.name; // Use file name as the path identifier
-          this.log(
-            'info',
-            `Successfully read and parsed ${newLogEvents.length} events from ${file.name}`
-          );
-          resolve(newLogEvents); // Resolve with the parsed events
-        } catch (error) {
-          this.log(
-            'error',
-            `Error processing file content for ${file.name}: ${error.message}`
-          );
-          reject(error);
-        }
-      };
-
-      reader.onerror = (e) => {
-        signal.removeEventListener('abort', handleAbort);
-        this.log('error', `FileReader error for ${file.name}:`, e);
-        reject(new Error(`FileReader error: ${e.target.error.name}`));
-      };
-
-      reader.onabort = () => {
-        // Catch direct aborts on reader if they happen before our listener
-        signal.removeEventListener('abort', handleAbort);
-        this.log('info', `FileReader explicitly aborted for ${file.name}.`);
-        reject(new DOMException('Aborted by user', 'AbortError'));
-      };
-
-      reader.readAsText(file);
-    });
+      return true; // Indicate success to caller
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        logger.info('File reading aborted');
+      } else {
+        logger.error(`Error reading file ${file.name}: ${error.message}`);
+      }
+      throw error; // Re-throw so caller can handle
+    }
   }
 
   ensureLogContainerReady() {
