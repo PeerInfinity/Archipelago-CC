@@ -109,6 +109,11 @@ export class TimerLogic {
       max: this.endTime - this.startTime,
     }, 'timer');
 
+    // Use faster interval when delay is 0 for immediate checking
+    const intervalMs = (this.minCheckDelay === 0 && this.maxCheckDelay === 0)
+      ? 10  // Fast mode: check every 10ms when delay is 0
+      : (Config.TIMER_INTERVAL_MS || 200); // Normal mode: 200ms for smooth progress bar
+
     this.gameInterval = setInterval(async () => {
       if (this.isLoopModeActive) {
         // Double check in case mode changes during interval
@@ -120,20 +125,29 @@ export class TimerLogic {
       const elapsed = currentTime - this.startTime;
       const totalDuration = this.endTime - this.startTime;
 
-      this.eventBus.publish('timer:progressUpdate', {
-        value: elapsed,
-        max: totalDuration,
-      }, 'timer');
+      // Only publish progress updates in normal mode (not when delay is 0)
+      if (intervalMs > 10) {
+        this.eventBus.publish('timer:progressUpdate', {
+          value: elapsed,
+          max: totalDuration,
+        }, 'timer');
+      }
 
       if (currentTime >= this.endTime) {
-        const checkDispatched =
-          await this._determineAndDispatchNextLocationCheck();
 
-        // Check if all locations have been checked
+        // Get snapshot once and reuse it
         const snapshotInterface = await this._getSnapshotInterface();
         let allChecked = false;
+
         if (snapshotInterface) {
           const { snapshot, staticData } = snapshotInterface;
+
+          // Determine and dispatch next location check using the same snapshot
+          const checkDispatched = await this._determineAndDispatchNextLocationCheckWithSnapshot(
+            snapshotInterface
+          );
+
+          // Check if all manually-checkable locations have been checked
           if (staticData && staticData.locations) {
             // Handle Map (Phase 3.2 format), Array, or Object (legacy)
             const locationsArray = staticData.locations instanceof Map
@@ -141,11 +155,24 @@ export class TimerLogic {
               : (Array.isArray(staticData.locations)
                   ? staticData.locations
                   : Object.values(staticData.locations));
-            const totalCheckable = locationsArray.filter(
+
+            // Get list of manually-checkable locations (exclude event locations with id=0)
+            const manuallyCheckableLocations = locationsArray.filter(
               loc => loc.id !== null && loc.id !== undefined && loc.id !== 0
+            );
+            const totalCheckable = manuallyCheckableLocations.length;
+
+            // Count only manually-checkable locations that have been checked
+            const checkedSet = new Set(snapshot.checkedLocations || []);
+            const checkedManualLocations = manuallyCheckableLocations.filter(
+              loc => checkedSet.has(loc.name)
             ).length;
-            const checkedCount = snapshot.checkedLocations?.length || 0;
-            allChecked = (checkedCount >= totalCheckable);
+
+            allChecked = (checkedManualLocations >= totalCheckable);
+
+            log('debug',
+              `[TimerLogic] Location check progress: ${checkedManualLocations}/${totalCheckable} manually-checkable locations checked`
+            );
           }
         }
 
@@ -162,13 +189,16 @@ export class TimerLogic {
             startTime: this.startTime,
             endTime: this.endTime,
           }, 'timer');
-          this.eventBus.publish('timer:progressUpdate', {
-            value: 0,
-            max: this.endTime - this.startTime,
-          }, 'timer');
+          // Only send progress update in normal mode
+          if (intervalMs > 10) {
+            this.eventBus.publish('timer:progressUpdate', {
+              value: 0,
+              max: this.endTime - this.startTime,
+            }, 'timer');
+          }
         }
       }
-    }, Config.TIMER_INTERVAL_MS || 200); // Check more frequently for smoother bar
+    }, intervalMs);
 
     log('info', '[TimerLogic] Timer started.');
   }
@@ -225,12 +255,16 @@ export class TimerLogic {
   }
 
   async _determineAndDispatchNextLocationCheck() {
-    log('info', 
+    log('info',
       '[TimerLogic] Determining next location to check automatically...'
     );
     const snapshotInterface = await this._getSnapshotInterface();
     if (!snapshotInterface) return false;
 
+    return this._determineAndDispatchNextLocationCheckWithSnapshot(snapshotInterface);
+  }
+
+  async _determineAndDispatchNextLocationCheckWithSnapshot(snapshotInterface) {
     const { snapshot, staticData } = snapshotInterface; // Destructure for convenience
 
     if (!staticData || !staticData.locations) {
@@ -248,15 +282,21 @@ export class TimerLogic {
           : Object.values(staticData.locations));
 
     let locationToCheck = null;
+    let uncheckedCount = 0;
+    let inaccessibleCount = 0;
+    let skippedEventCount = 0;
+
     for (const loc of locationsArray) {
       const isChecked = snapshot.checkedLocations?.includes(loc.name);
       if (isChecked) continue;
 
       // Skip locations with invalid IDs (ID 0 or null means not recognized by server)
       if (loc.id === 0 || loc.id === null || loc.id === undefined) {
-        log('debug', `[TimerLogic] Skipping location ${loc.name} with invalid ID: ${loc.id}`);
+        skippedEventCount++;
         continue;
       }
+
+      uncheckedCount++;
 
       // Use snapshotInterface for all evaluations
       const isAccessible = snapshotInterface.isLocationAccessible(loc.name);
@@ -265,11 +305,13 @@ export class TimerLogic {
         // isLocationAccessible already considers parent region reachability internally
         locationToCheck = loc;
         break;
+      } else {
+        inaccessibleCount++;
       }
     }
 
     if (locationToCheck) {
-      log('info', 
+      log('info',
         `[TimerLogic] Auto-found location to check: ${locationToCheck.name}`
       );
       this.dispatcher.publish(
@@ -284,8 +326,9 @@ export class TimerLogic {
       );
       return true;
     } else {
-      log('info', 
-        '[TimerLogic] No reachable and unchecked locations found for auto-check.'
+      log('info',
+        `[TimerLogic] No reachable locations found: ${uncheckedCount} unchecked manually-checkable locations, ` +
+        `${inaccessibleCount} are inaccessible, ${skippedEventCount} event locations skipped`
       );
       this.eventBus.publish('ui:notification', {
         message: 'All available locations checked by timer.',

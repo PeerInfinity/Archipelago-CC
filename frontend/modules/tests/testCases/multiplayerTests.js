@@ -344,7 +344,8 @@ export async function timerOfflineTest(testController) {
     testController.reportCondition('Test started', true);
 
     // EXPERIMENT: Try different location checking orders
-    const testMode = 'snapshot-order'; // Options: 'sphere-order', 'snapshot-order', 'sphere-order-with-accessibility-check', 'sphere-order-check-rejection-test', 'ganon-immediate-check', 'sphere-order-no-autocollect', 'sphere-order-with-accessibility-check-no-autocollect', 'timer'
+    const testMode = 'timer';
+    // Options: 'sphere-order', 'snapshot-order', 'sphere-order-with-accessibility-check', 'sphere-order-check-rejection-test', 'ganon-immediate-check', 'sphere-order-no-autocollect', 'sphere-order-with-accessibility-check-no-autocollect', 'timer'
 
     if (testMode === 'sphere-order') {
       testController.log('EXPERIMENT: Using sphereState to check locations in sphere order');
@@ -397,11 +398,11 @@ export async function timerOfflineTest(testController) {
     testController.log('Running in offline mode (no server connection)');
     testController.reportCondition('Offline mode confirmed', true);
 
-    // Set timer delay to 0.1 seconds for faster testing
-    timerLogic.minCheckDelay = 0.1;
-    timerLogic.maxCheckDelay = 0.1;
+    // Set timer delay to 0.0 seconds for faster testing
+    timerLogic.minCheckDelay = 0.0;
+    timerLogic.maxCheckDelay = 0.0;
 
-    testController.log('Timer delay set to 0.1 seconds');
+    testController.log('Timer delay set to 0.0 seconds');
     testController.reportCondition('Timer delay configured', true);
 
     // Get the control button and click it to begin
@@ -496,10 +497,19 @@ export async function timerOfflineTest(testController) {
     const checkedCount = finalSnapshot.checkedLocations?.length || 0;
     const staticData = stateManager.getStaticData();
 
+    let testPassed = false;
+
     if (staticData && staticData.locations) {
+      // Handle Map (Phase 3.2 format), Array, or Object (legacy)
+      const locationsArray = staticData.locations instanceof Map
+        ? Array.from(staticData.locations.values())
+        : (Array.isArray(staticData.locations)
+          ? staticData.locations
+          : Object.values(staticData.locations));
+
       // Count manually-checkable locations (those with IDs > 0)
       // Locations with id=0 are events that get checked automatically, not by the timer
-      const manuallyCheckableLocations = Object.values(staticData.locations).filter(
+      const manuallyCheckableLocations = locationsArray.filter(
         loc => loc.id !== null && loc.id !== undefined && loc.id !== 0
       );
       const totalManuallyCheckable = manuallyCheckableLocations.length;
@@ -507,34 +517,26 @@ export async function timerOfflineTest(testController) {
       testController.log(`Final result: ${checkedCount} locations checked (includes auto-checked events)`);
       testController.log(`Manually-checkable locations: ${totalManuallyCheckable}`);
 
-      // Special case for ALTTP: Check if Ganon location was checked (means game is beatable)
-      const gameName = staticData.game_name?.toLowerCase();
-      if (gameName === 'a link to the past' || gameName === 'alttp') {
-        const ganonChecked = finalSnapshot.checkedLocations?.includes('Ganon');
-        if (ganonChecked) {
-          testController.reportCondition(
-            `ALTTP: Ganon location checked - game is beatable (${checkedCount} total locations checked)`,
-            true
-          );
-        } else {
-          testController.reportCondition(
-            `ALTTP: Ganon location NOT checked - game is not beatable (${checkedCount} locations checked)`,
-            false
-          );
-        }
-      } else {
-        // In offline mode, we can't check all locations because some require items from other players
-        // Just report what we checked
+      // Test ONLY passes if ALL manually-checkable locations were checked
+      if (checkedCount >= totalManuallyCheckable) {
         testController.reportCondition(
-          `Checked ${checkedCount} locations in offline mode (${totalManuallyCheckable} manually-checkable locations exist)`,
+          `All ${totalManuallyCheckable} manually-checkable locations successfully checked`,
           true
         );
+        testPassed = true;
+      } else {
+        testController.reportCondition(
+          `Only ${checkedCount}/${totalManuallyCheckable} manually-checkable locations were checked - TEST FAILED`,
+          false
+        );
+        testPassed = false;
       }
     } else {
-      testController.reportCondition(`${checkedCount} locations checked`, true);
+      testController.reportCondition(`${checkedCount} locations checked (no static data to verify)`, true);
+      testPassed = true;
     }
 
-    await testController.completeTest(true);
+    await testController.completeTest(testPassed);
   } catch (error) {
     testController.log(`Error in timerOfflineTest: ${error.message}`, 'error');
     testController.reportCondition(`Test errored: ${error.message}`, false);
@@ -1209,7 +1211,7 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
       const accessibleLocations = [];
       for (const loc of locationsArray) {
         if (!currentSnapshot?.checkedLocations?.includes(loc.name) &&
-            loc.id !== null && loc.id !== undefined) {
+          loc.id !== null && loc.id !== undefined) {
           const isAccessible = snapshotInterface.isLocationAccessible(loc.name);
           if (isAccessible) {
             accessibleLocations.push(loc.name);
@@ -1300,7 +1302,7 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
       const accessibleAfter = [];
       for (const loc of locationsArray) {
         if (!afterSnapshot?.checkedLocations?.includes(loc.name) &&
-            loc.id !== null && loc.id !== undefined) {
+          loc.id !== null && loc.id !== undefined) {
           const isAccessible = afterSnapshotInterface.isLocationAccessible(loc.name);
           if (isAccessible) {
             accessibleAfter.push(loc.name);
@@ -1316,8 +1318,8 @@ async function timerOfflineTestWithSnapshotOrder(testController) {
         checkedLocationsAfter: [...(afterSnapshot?.checkedLocations || [])],
         accessibleLocationsBefore: accessibleLocations,
         accessibleLocationsAfter: accessibleAfter,
-        inventoryBefore: {...(currentSnapshot?.inventory || {})},
-        inventoryAfter: {...(afterSnapshot?.inventory || {})}
+        inventoryBefore: { ...(currentSnapshot?.inventory || {}) },
+        inventoryAfter: { ...(afterSnapshot?.inventory || {}) }
       };
 
       detailedLog.checkedLocations.push(checkEntry);
