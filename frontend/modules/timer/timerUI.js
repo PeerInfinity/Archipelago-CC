@@ -301,7 +301,7 @@ export class TimerUI {
       return;
     }
 
-    const allLocationDefinitions = staticData.locations; // This is an object keyed by name
+    const allLocationDefinitions = staticData.locations; // This is a Map (Phase 3.2 format)
     const checkedLocations = new Set(currentSnapshot.checkedLocations || []);
 
     // Initialize counters
@@ -314,35 +314,35 @@ export class TimerUI {
     let checkedEventCount = 0;
     let totalEventCount = 0;
 
-    // Process each location
-    for (const locName in allLocationDefinitions) {
-      if (Object.prototype.hasOwnProperty.call(allLocationDefinitions, locName)) {
-        const loc = allLocationDefinitions[locName];
-        
-        // Determine if this is an event location (no ID)
-        const isEventLocation = loc.id === null || loc.id === undefined;
+    // Process each location - handle both Map (new format) and Object (legacy)
+    const locationsIterator = allLocationDefinitions instanceof Map
+      ? allLocationDefinitions.entries()
+      : Object.entries(allLocationDefinitions);
 
-        // Process event locations separately
-        if (isEventLocation) {
-          totalEventCount++;
-          if (checkedLocations.has(locName)) {
-            checkedEventCount++;
-          }
+    for (const [locName, loc] of locationsIterator) {
+      // Determine if this is an event location (no ID)
+      const isEventLocation = loc.id === null || loc.id === undefined;
+
+      // Process event locations separately
+      if (isEventLocation) {
+        totalEventCount++;
+        if (checkedLocations.has(locName)) {
+          checkedEventCount++;
+        }
+      } else {
+        // Regular locations
+        totalCount++;
+
+        // Track checked locations
+        if (checkedLocations.has(locName)) {
+          checkedCount++;
         } else {
-          // Regular locations
-          totalCount++;
-
-          // Track checked locations
-          if (checkedLocations.has(locName)) {
-            checkedCount++;
+          // For unchecked locations, determine if they are reachable
+          const reachability = currentSnapshot.locationReachability && currentSnapshot.locationReachability[locName];
+          if (reachability === 'reachable') {
+            reachableCount++;
           } else {
-            // For unchecked locations, determine if they are reachable
-            const reachability = currentSnapshot.locationReachability && currentSnapshot.locationReachability[locName];
-            if (reachability === 'reachable') {
-              reachableCount++;
-            } else {
-              unreachableCount++;
-            }
+            unreachableCount++;
           }
         }
       }

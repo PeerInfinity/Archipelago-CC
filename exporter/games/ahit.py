@@ -421,6 +421,78 @@ class AHitGameExportHandler(BaseGameExportHandler):
         # For other types (item_check, region_access), return as-is
         return mapping
     
+    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
+        """Return A Hat in Time item table data including event items."""
+        ahit_items_data = {}
+
+        # Import the item table from the AHIT world
+        try:
+            from worlds.ahit.Items import item_table
+        except ImportError:
+            logger.error("Could not import AHIT item_table")
+            return {}
+
+        # Process regular items from item_table
+        for item_name, item_data in item_table.items():
+            # Get groups this item belongs to
+            groups = [
+                group_name for group_name, items in getattr(world, 'item_name_groups', {}).items()
+                if item_name in items
+            ]
+
+            try:
+                from BaseClasses import ItemClassification
+                item_classification = getattr(item_data, 'classification', None)
+                is_advancement = item_classification == ItemClassification.progression if item_classification else False
+                is_useful = item_classification == ItemClassification.useful if item_classification else False
+                is_trap = item_classification == ItemClassification.trap if item_classification else False
+            except Exception as e:
+                logger.debug(f"Could not determine classification for {item_name}: {e}")
+                is_advancement = False
+                is_useful = False
+                is_trap = False
+
+            ahit_items_data[item_name] = {
+                'name': item_name,
+                'id': getattr(item_data, 'code', None),
+                'groups': sorted(groups),
+                'advancement': is_advancement,
+                'useful': is_useful,
+                'trap': is_trap,
+                'event': False,  # Regular items are not events
+                'type': None,
+                'max_count': 1
+            }
+
+        # Handle dynamically created event items (like Act Completion events)
+        # These are created at runtime via create_event() but not in the static item_table
+        if hasattr(world, 'multiworld'):
+            multiworld = world.multiworld
+            player = world.player
+
+            for location in multiworld.get_locations(player):
+                if location.item and location.item.player == player:
+                    item_name = location.item.name
+                    # Check if this is an event item (no code/ID)
+                    if (location.item.code is None and
+                        item_name not in ahit_items_data and
+                        hasattr(location.item, 'classification')):
+
+                        from BaseClasses import ItemClassification
+                        ahit_items_data[item_name] = {
+                            'name': item_name,
+                            'id': None,
+                            'groups': ['Event'],
+                            'advancement': location.item.classification == ItemClassification.progression,
+                            'useful': location.item.classification == ItemClassification.useful,
+                            'trap': location.item.classification == ItemClassification.trap,
+                            'event': True,
+                            'type': 'Event',
+                            'max_count': 1
+                        }
+
+        return ahit_items_data
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Expand A Hat in Time specific rules with enhanced processing."""
         if not rule:

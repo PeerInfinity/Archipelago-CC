@@ -135,9 +135,12 @@ export class TimerLogic {
         if (snapshotInterface) {
           const { snapshot, staticData } = snapshotInterface;
           if (staticData && staticData.locations) {
-            const locationsArray = Array.isArray(staticData.locations)
-              ? staticData.locations
-              : Object.values(staticData.locations);
+            // Handle Map (Phase 3.2 format), Array, or Object (legacy)
+            const locationsArray = staticData.locations instanceof Map
+              ? Array.from(staticData.locations.values())
+              : (Array.isArray(staticData.locations)
+                  ? staticData.locations
+                  : Object.values(staticData.locations));
             const totalCheckable = locationsArray.filter(
               loc => loc.id !== null && loc.id !== undefined && loc.id !== 0
             ).length;
@@ -231,15 +234,18 @@ export class TimerLogic {
     const { snapshot, staticData } = snapshotInterface; // Destructure for convenience
 
     if (!staticData || !staticData.locations) {
-      log('warn', 
+      log('warn',
         '[TimerLogic] Static location data not available for checking.'
       );
       return false;
     }
 
-    const locationsArray = Array.isArray(staticData.locations)
-      ? staticData.locations
-      : Object.values(staticData.locations);
+    // Handle Map (Phase 3.2 format), Array, or Object (legacy)
+    const locationsArray = staticData.locations instanceof Map
+      ? Array.from(staticData.locations.values())
+      : (Array.isArray(staticData.locations)
+          ? staticData.locations
+          : Object.values(staticData.locations));
 
     let locationToCheck = null;
     for (const loc of locationsArray) {
@@ -323,9 +329,12 @@ export class TimerLogic {
     // For now, let's try to find any accessible, un-checked location.
     // If multiple, maybe prioritize based on region exploration, or just take the first.
 
-    const locationsArray = Array.isArray(staticData.locations)
-      ? staticData.locations
-      : Object.values(staticData.locations);
+    // Handle Map (Phase 3.2 format), Array, or Object (legacy)
+    const locationsArray = staticData.locations instanceof Map
+      ? Array.from(staticData.locations.values())
+      : (Array.isArray(staticData.locations)
+          ? staticData.locations
+          : Object.values(staticData.locations));
 
     let quickCheckTarget = null;
 

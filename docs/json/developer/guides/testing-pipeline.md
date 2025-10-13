@@ -39,7 +39,7 @@ The testing process involves several stages, moving data from the original game 
 
 The generation and export process creates two critical JSON files for each seed:
 
-1.  **`..._rules.json`**: A complete dump of the entire game's logic, including all region data, location rules, item definitions, and game settings, translated into the JSON format that our frontend understands. This is the logic that will be **under test**.
+1.  **`..._rules.json`**: A complete dump of the entire game's logic, including all region data, location rules, item definitions, and game settings, translated into the JSON format that our frontend understands. This is the logic that will be **under test**. The structure of this file follows the schema defined in `frontend/schema/rules.schema.json`.
 2.  **`..._spheres_log.jsonl`**: The list of progression spheres, which serves as the **expected result**. Each sphere contains the set of locations that should become accessible at that stage.
 
 ### Stage 4: Frontend Test Execution (`frontend/modules/testSpoilers/`)
