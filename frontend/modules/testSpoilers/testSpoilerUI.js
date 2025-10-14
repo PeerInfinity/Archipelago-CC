@@ -7,6 +7,7 @@ import TestSpoilerRuleEvaluator from './testSpoilerRuleEvaluator.js'; // ADDED
 import { FileLoader } from './fileLoader.js'; // Phase 1: File loading module
 import { ComparisonEngine } from './comparisonEngine.js'; // Phase 2: Comparison engine module
 import { AnalysisReporter } from './analysisReporter.js'; // Phase 3: Analysis/reporting module
+import { EventProcessor } from './eventProcessor.js'; // Phase 4: Event processing module
 import { createUniversalLogger } from '../../app/core/universalLogger.js'; // Phase 1: Universal logger
 
 const logger = createUniversalLogger('testSpoilerUI');
@@ -56,8 +57,9 @@ export class TestSpoilerUI {
     this.initialAutoLoadAttempted = false; // ADDED to help manage auto-load calls
     this.eventProcessingDelayMs = 0; // ELIMINATED: No delay to prevent background processing issues
     this.stopOnFirstError = true; // ADDED: To control test run behavior - TEMPORARILY DISABLED for debugging
-    this.currentMismatchDetails = null; // ADDED: Store current mismatch details for result aggregation
-    this.previousInventory = {}; // Track previous sphere's inventory to find newly added items
+    this.currentMismatchDetails = null; // DEPRECATED: Use currentMismatchDetailsArray instead
+    this.currentMismatchDetailsArray = []; // Phase 4: Array to store multiple mismatches per event (locations AND regions)
+    // Phase 4: previousInventory moved to EventProcessor
     this.ruleEvaluator = new TestSpoilerRuleEvaluator((level, message, ...data) => this.log(level, message, ...data));
 
     // Phase 1: Initialize file loader module
@@ -69,6 +71,14 @@ export class TestSpoilerUI {
     // Phase 3: Initialize analysis reporter module
     this.analysisReporter = new AnalysisReporter(
       this.ruleEvaluator,
+      (type, message, ...data) => this.log(type, message, ...data)
+    );
+
+    // Phase 4: Initialize event processor module
+    this.eventProcessor = new EventProcessor(
+      this.comparisonEngine,
+      this.analysisReporter,
+      this.eventBus,
       (type, message, ...data) => this.log(type, message, ...data)
     );
 
@@ -603,7 +613,7 @@ export class TestSpoilerUI {
     this.log('debug', `[prepareSpoilerTest] Resetting currentLogIndex from ${this.currentLogIndex} to 0`);
     this.currentLogIndex = 0;
     this.testStateInitialized = false;
-    this.previousInventory = {}; // Reset previous inventory for new test
+    this.eventProcessor.resetInventoryTracking(); // Phase 4: Reset event processor inventory tracking
     this.abortController = new AbortController();
     this.log('debug', `[prepareSpoilerTest] Reset complete. currentLogIndex=${this.currentLogIndex}, testStateInitialized=${this.testStateInitialized}`);
 
@@ -788,8 +798,18 @@ export class TestSpoilerUI {
           this.log('error', errorMessage);
           detailedErrorMessages.push(errorMessage);
 
-          // ADDED: Capture detailed mismatch information
-          if (this.currentMismatchDetails) {
+          // ADDED: Capture ALL detailed mismatch information (locations AND regions)
+          if (this.currentMismatchDetailsArray && this.currentMismatchDetailsArray.length > 0) {
+            // Push all mismatch details (handles both location and region mismatches for same event)
+            mismatchDetails.push(...this.currentMismatchDetailsArray.map(detail => ({
+              eventIndex: this.currentLogIndex,
+              sphereIndex: sphereResult.sphereIndex,
+              ...detail
+            })));
+            this.currentMismatchDetailsArray = []; // Clear for next event
+          }
+          // Legacy support: also check single mismatch field
+          else if (this.currentMismatchDetails) {
             mismatchDetails.push({
               eventIndex: this.currentLogIndex,
               sphereIndex: sphereResult.sphereIndex,
@@ -1028,443 +1048,46 @@ export class TestSpoilerUI {
     }
   }
 
-  /**
-   * Get sphere data from sphereState module
-   * @param {number} sphereIndex - The index of the current sphere being processed
-   * @returns {object|null} Sphere data with accumulated inventory/locations/regions
-   */
-  _getSphereDataFromSphereState(sphereIndex) {
-    try {
-      if (!window.centralRegistry || typeof window.centralRegistry.getPublicFunction !== 'function') {
-        this.log('warn', 'centralRegistry not available for sphereState access');
-        return null;
-      }
-
-      const getSphereData = window.centralRegistry.getPublicFunction('sphereState', 'getSphereData');
-      if (!getSphereData) {
-        this.log('warn', 'sphereState getSphereData function not available');
-        return null;
-      }
-
-      const allSpheres = getSphereData();
-      if (!allSpheres || sphereIndex >= allSpheres.length) {
-        this.log('warn', `Sphere ${sphereIndex} not found in sphereState data`);
-        return null;
-      }
-
-      return allSpheres[sphereIndex];
-    } catch (error) {
-      this.log('error', `Error getting sphere data from sphereState: ${error.message}`);
-      return null;
-    }
-  }
-
-  /**
-   * Helper method to check a location via dispatcher event instead of direct call
-   * This simulates the event-based flow used by timer and UI modules
-   * @param {string} locationName - Name of the location to check
-   * @param {string} regionName - Name of the parent region (optional)
-   */
-  async checkLocationViaEvent(locationName, regionName = null) {
-    // Publish user:locationCheck event through the dispatcher
-    // This will be handled by stateManager's handleUserLocationCheckForStateManager
-    // Use window.eventDispatcher instance created in init.js
-    if (!window.eventDispatcher) {
-      this.log('error', 'eventDispatcher not available on window');
-      return;
-    }
-
-    window.eventDispatcher.publish(
-      'testSpoilers', // originModuleId
-      'user:locationCheck', // eventName
-      {
-        locationName: locationName,
-        regionName: regionName,
-        originator: 'TestSpoilersModule',
-        originalDOMEvent: false,
-      },
-      { initialTarget: 'bottom' }
-    );
-
-    // Wait for the state to update by listening for the snapshot update event
-    // This ensures we don't proceed until the location check is processed
-    await new Promise((resolve) => {
-      const handler = () => {
-        this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
-        resolve();
-      };
-      this.eventBus.subscribe('stateManager:snapshotUpdated', handler, 'testSpoilers');
-
-      // Add a safety timeout in case the snapshot update never comes
-      setTimeout(() => {
-        this.eventBus.unsubscribe('stateManager:snapshotUpdated', handler);
-        resolve();
-      }, 5000); // 5 second timeout
-    });
-  }
+  // Phase 4: _getSphereDataFromSphereState moved to eventProcessor.js
+  // Phase 4: checkLocationViaEvent moved to eventProcessor.js
 
   async processSingleEvent(event) {
-    this.log(
-      'debug',
-      `[processSingleEvent] playerId at start: ${this.playerId}`
-    ); // Log playerId at start of processSingleEvent
-    // This function now only processes a single event
-    if (!event) return;
+    // Phase 4: Delegate to EventProcessor module
+    // Set context before processing
+    this.eventProcessor.setContext(this.currentLogIndex, this.spoilerLogData, this.playerId);
 
-    const eventType = event.type;
-    this.log(
-      'info',
-      `Processing Event ${this.currentLogIndex + 1}/${
-        this.spoilerLogData.length
-      }: Type '${eventType}'`
-    );
+    // Process the event and get result
+    const result = await this.eventProcessor.processSingleEvent(event);
 
-    let comparisonResult = false;
-    let allChecksPassed = true; // Assume true until a check fails
-    let newlyAddedItems = []; // Declare at function scope to be accessible in return statement
+    // Store ALL mismatch details if any (for compatibility with runFullSpoilerTest)
+    // EventProcessor may generate both location AND region mismatches for the same event
+    if (result.error) {
+      // Get all mismatch details from EventProcessor (array to capture both types)
+      this.currentMismatchDetailsArray = this.eventProcessor.getMismatchDetailsArray();
 
-    switch (eventType) {
-      case 'state_update': {
-        // Get sphere data from sphereState (which handles both verbose and incremental formats)
-        const sphereData = this._getSphereDataFromSphereState(this.currentLogIndex);
-
-        if (!sphereData) {
-          this.log(
-            'warn',
-            `Could not get sphere data from sphereState for index ${this.currentLogIndex}. Skipping comparison.`
-          );
-          allChecksPassed = false;
-          break;
-        }
-
-        // Use accumulated data from sphereState
-        const inventory_from_log = sphereData.inventoryDetails?.base_items || {};
-
-        // Find newly added items by comparing with previous inventory
-        newlyAddedItems = this.findNewlyAddedItems(this.previousInventory, inventory_from_log);
-
-        // Log newly added items before the status message
-        if (newlyAddedItems.length > 0) {
-          const itemCounts = {};
-          newlyAddedItems.forEach(item => {
-            itemCounts[item] = (itemCounts[item] || 0) + 1;
-          });
-          const itemList = Object.entries(itemCounts).map(([item, count]) =>
-            count > 1 ? `${item} (x${count})` : item
-          ).join(', ');
-          this.log('info', `📦 Recently added item${newlyAddedItems.length > 1 ? 's' : ''}: ${itemList}`);
-        }
-
-        const accessible_from_log = sphereData.accessibleLocations || [];
-        const accessible_regions_from_log = sphereData.accessibleRegions || [];
-
-        const context = {
-          type: 'state_update',
-          sphere_number:
-            event.sphere_index !== undefined
-              ? event.sphere_index
-              : this.currentLogIndex + 1,
-          player_id: this.playerId,
-        };
-
-        this.log(
-          'info',
-          `Preparing StateManager for sphere ${context.sphere_number}.`
-        );
-
-        try {
-          // Only clear event items for sphere 0
-          if (context.sphere_number === 0) {
-            await stateManager.clearEventItems();
-            this.log('debug', 'Event items cleared for sphere 0.');
-          } else {
-            this.log('debug', `Keeping accumulated state for sphere ${context.sphere_number}.`);
-          }
-
-          // Check locations from current sphere one-by-one, allowing natural item acquisition
-          // NOTE: We now use addItems=true (default) to let checkLocation naturally add items.
-          // Progressive items are automatically resolved by the has() function in game logic.
-          const locationsToCheck = sphereData.locations || [];
-          if (locationsToCheck.length > 0) {
-            this.log('info', `Checking ${locationsToCheck.length} locations from sphere ${context.sphere_number}`);
-
-            // Get initial snapshot and static data once (for logging)
-            const initialSnapshot = await stateManager.getFullSnapshot();
-            const staticData = stateManager.getStaticData();
-
-            for (const locationName of locationsToCheck) {
-              // Get location definition from static data to see what item we're about to receive (for logging)
-              // Phase 3.2: Handle Map format for locations
-              let locationDef;
-              if (staticData.locations instanceof Map) {
-                locationDef = staticData.locations.get(locationName);
-              } else {
-                locationDef = Object.values(staticData.locations || {}).find(loc => loc.name === locationName);
-              }
-              const itemName = locationDef?.item?.name;
-
-              if (itemName) {
-                this.log('debug', `  Checking "${locationName}" (contains: ${itemName})`);
-              } else {
-                this.log('debug', `  Checking "${locationName}" (no item or event)`);
-              }
-
-              // NEW: Check if location is accessible BEFORE attempting to check it
-              const currentSnapshot = await stateManager.getFullSnapshot();
-              const snapshotInterface = createStateSnapshotInterface(currentSnapshot, stateManager.getStaticData());
-              const isAccessible = snapshotInterface.isLocationAccessible(locationName);
-
-              if (!isAccessible) {
-                this.log('error', `  ⚠️ PRE-CHECK FAILED: "${locationName}" is NOT accessible per snapshot before check attempt!`);
-                this.log('error', `    Current inventory: ${JSON.stringify(currentSnapshot.inventory)}`);
-                this.log('error', `    Sphere log says this location should be accessible in sphere ${context.sphere_number}`);
-                this.log('error', `    But snapshot reports it as inaccessible - this is a bug!`);
-
-                // Mark this as a failure and stop the test
-                allChecksPassed = false;
-                comparisonResult = false;
-                throw new Error(`Pre-check accessibility mismatch for "${locationName}" in sphere ${context.sphere_number}`);
-              }
-
-              // Check location WITH items via event dispatcher instead of direct call
-              // This naturally adds the item (e.g., "Progressive Sword") to inventory
-              // Use event-based flow to match how timer and UI modules interact with stateManager
-              const locationRegion = locationDef?.parent_region_name || locationDef?.parent_region || locationDef?.region || null;
-              await this.checkLocationViaEvent(locationName, locationRegion);
-            }
-
-            this.log('info', `Completed checking ${locationsToCheck.length} locations for sphere ${context.sphere_number}`);
-          }
-
-          // TODO: Add inventory comparison in the future
-          // Currently we only compare location accessibility, not inventory contents.
-          // To add inventory comparison, we need to resolve progressive items:
-          //   - StateManager inventory uses base names: {"Progressive Sword": 2}
-          //   - Sphere log uses resolved names: {"Fighter Sword": 1, "Master Sword": 1}
-          // Options:
-          //   1. Implement resolution function to compare these correctly
-          //   2. Enhance sphere log format to include both resolved and unresolved items
-          //   3. Use progression_mapping to convert StateManager inventory to resolved form
-
-          // Ping worker to ensure all commands are processed and state is stable.
-          await stateManager.pingWorker(
-            `spoiler_sphere_${context.sphere_number}_locations_checked`,
-            60000  // Increased timeout to 60 seconds to handle complex rule evaluation
-          );
-          this.log(
-            'debug',
-            'Ping successful. StateManager ready for comparison.'
-          );
-
-          // Get the fresh snapshot from the worker.
-          const freshSnapshot = await stateManager.getFullSnapshot();
-          if (!freshSnapshot) {
-            this.log(
-              'error',
-              'Failed to retrieve a fresh snapshot from StateManager after checking locations.'
-            );
-            allChecksPassed = false;
-            break;
-          }
-          this.log(
-            'info',
-            `Fresh snapshot has ${freshSnapshot.checkedLocations?.length || 0} checked locations`
-          );
-          this.log(
-            'debug',
-            'Retrieved fresh snapshot from StateManager.',
-            freshSnapshot
-          );
-
-          // Compare using the fresh snapshot.
-          const locationComparisonResult = await this.compareAccessibleLocations(
-            accessible_from_log, // This is an array of location names
-            freshSnapshot, // The authoritative snapshot from the worker
-            this.playerId, // Pass player ID for context in comparison
-            context // Original context for logging
-          );
-
-          // Compare accessible regions using the fresh snapshot.
-          const regionComparisonResult = await this.compareAccessibleRegions(
-            accessible_regions_from_log, // This is an array of region names
-            freshSnapshot, // The authoritative snapshot from the worker
-            this.playerId, // Pass player ID for context in comparison
-            context // Original context for logging
-          );
-          
-          // Both location and region comparisons must pass
-          comparisonResult = locationComparisonResult && regionComparisonResult;
-          allChecksPassed = comparisonResult;
-        } catch (err) {
-          this.log(
-            'error',
-            `Error during StateManager interaction or comparison for sphere ${context.sphere_number}: ${err.message}`,
-            err
-          );
-          allChecksPassed = false;
-          // Ensure comparisonResult reflects failure if an error occurs before it's set
-          comparisonResult = false;
-        }
-        break;
+      // Also store the last one in legacy field for backwards compatibility
+      if (this.currentMismatchDetailsArray.length > 0) {
+        this.currentMismatchDetails = this.currentMismatchDetailsArray[this.currentMismatchDetailsArray.length - 1];
       }
-
-
-      case 'connected':
-        this.log(
-          'info',
-          `Player ${event.player_name} (ID: ${event.player_id}) connected. Seed: ${event.seed_name}`
-        );
-        break;
-
-      case 'initial_state':
-        this.log('state', 'Comparing initial state...');
-        // The worker should compute this after rules are loaded via loadRules command,
-        // and the state will be available via snapshot for compareAccessibleLocations.
-        comparisonResult = await this.compareAccessibleLocations(
-          { accessible: event.accessible_locations, inventory: {} },
-          'Initial State'
-        );
-        allChecksPassed = comparisonResult;
-        break;
-
-      case 'checked_location':
-        if (event.location && event.location.name) {
-          const locName = event.location.name;
-          this.log('info', `Simulating check for location: "${locName}"`);
-
-          // Get static data once to find the location details
-          const staticData = stateManager.getStaticData();
-          const locDef = staticData?.locations?.[locName];
-
-          if (!locDef) {
-            this.log(
-              'error',
-              `Location "${locName}" from log not found in current static data. Skipping check.`
-            );
-          } else {
-            const currentSnapshot = await stateManager.getFullSnapshot(); // Get current dynamic state
-            if (!currentSnapshot) {
-              this.log(
-                'error',
-                `Could not get snapshot to check accessibility for "${locName}"`
-              );
-              throw new Error(`Snapshot unavailable for ${locName} check`);
-            }
-            // Create a location-specific snapshotInterface with the location as context
-            const snapshotInterface = createStateSnapshotInterface(
-              currentSnapshot,
-              staticData,
-              { location: locDef } // Pass the location definition as context
-            );
-            if (!snapshotInterface) {
-              this.log(
-                'error',
-                `Could not create snapshotInterface for "${locName}"`
-              );
-              throw new Error(
-                `SnapshotInterface creation failed for ${locName} check`
-              );
-            }
-
-            // Evaluate accessibility for locName
-            const parentRegionName = locDef.parent_region_name || locDef.parent_region || locDef.region;
-            const parentRegionReachabilityStatus =
-              currentSnapshot.regionReachability?.[parentRegionName];
-            const isParentRegionEffectivelyReachable =
-              parentRegionReachabilityStatus === 'reachable' ||
-              parentRegionReachabilityStatus === 'checked';
-
-            const locationAccessRule = locDef.access_rule;
-            let locationRuleEvalResult = true;
-            if (locationAccessRule) {
-              locationRuleEvalResult = evaluateRule(
-                locationAccessRule,
-                snapshotInterface
-              );
-            }
-            const wasAccessible =
-              isParentRegionEffectivelyReachable &&
-              locationRuleEvalResult === true;
-
-            // Check if already checked using the snapshot
-            const isChecked = currentSnapshot.flags?.includes(locName);
-
-            if (!wasAccessible && !isChecked) {
-              this.log(
-                'error',
-                `Log indicates checking "${locName}", but it was NOT accessible according to current logic!`
-              );
-              throw new Error(
-                `Attempted to check inaccessible location: "${locName}"`
-              );
-            }
-
-            // Log what item is at this location (for debugging)
-            const itemAtLocation = locDef.item;
-            const itemName =
-              typeof itemAtLocation === 'object'
-                ? itemAtLocation.name
-                : itemAtLocation;
-
-            if (itemName) {
-              this.log('info', `Location "${locName}" contains item: "${itemName}"`);
-            }
-
-            // Mark location as checked via event dispatcher instead of direct call
-            // This will automatically add the item to inventory (addItems=true by default)
-            // Use event-based flow to match how timer and UI modules interact with stateManager
-            const locationRegion = locDef?.parent_region_name || locDef?.parent_region || locDef?.region || null;
-            await this.checkLocationViaEvent(locName, locationRegion);
-            this.log('info', `Location "${locName}" marked as checked via event.`);
-          }
-        } else {
-          this.log(
-            'error',
-            `Invalid 'checked_location' event structure: ${JSON.stringify(
-              event
-            )}`
-          );
-        }
-        break;
-
-      default:
-        this.log('info', `Skipping unhandled event type: ${event.event}`);
-        break;
+    } else {
+      // Clear mismatch details if event passed
+      this.currentMismatchDetailsArray = [];
+      this.currentMismatchDetails = null;
     }
 
-    if (!allChecksPassed) {
-      this.log(
-        'error',
-        `Test failed at step ${
-          this.currentLogIndex + 1
-        }: Comparison failed for event type '${eventType}'.`
-      );
-    }
-
-    // Update previous inventory for next comparison
-    if (eventType === 'state_update') {
-      const sphereData = this._getSphereDataFromSphereState(this.currentLogIndex);
-      if (sphereData) {
-        this.previousInventory = JSON.parse(JSON.stringify(sphereData.inventoryDetails?.base_items || {}));
-      }
-    }
-    
-    return {
-      error: !allChecksPassed,
-      message: `Comparison for ${eventType} at step ${
-        this.currentLogIndex + 1
-      } ${comparisonResult ? 'Passed' : 'Failed'}`,
-      details: {
-        eventType: eventType,
-        eventIndex: this.currentLogIndex,
-        sphereIndex: event.sphere_index !== undefined ? event.sphere_index : this.currentLogIndex + 1,
-        playerId: this.playerId,
-        newlyAddedItems: eventType === 'state_update' && newlyAddedItems.length > 0 ? newlyAddedItems : null
-      }
-    };
+    return result;
   }
 
-  // Renaming old version to avoid conflict, or it could be removed if only state_update is used.
+  /**
+   * Wrapper method for location comparison
+   *
+   * NOTE (Phase 4): This method is NOT called by EventProcessor.
+   * EventProcessor calls comparisonEngine.compareAccessibleLocations() directly
+   * and triggers analysis inline. This wrapper is kept for potential future use
+   * or for any code paths that might still use it directly.
+   *
+   * @deprecated Consider using EventProcessor for event-based comparisons
+   */
   async compareAccessibleLocations(
     logAccessibleLocationNames,
     currentWorkerSnapshot,
@@ -1525,6 +1148,16 @@ export class TestSpoilerUI {
     return result;
   }
 
+  /**
+   * Wrapper method for region comparison
+   *
+   * NOTE (Phase 4): This method is NOT called by EventProcessor.
+   * EventProcessor calls comparisonEngine.compareAccessibleRegions() directly
+   * and triggers analysis inline. This wrapper is kept for potential future use
+   * or for any code paths that might still use it directly.
+   *
+   * @deprecated Consider using EventProcessor for event-based comparisons
+   */
   async compareAccessibleRegions(
     logAccessibleRegionNames,
     currentWorkerSnapshot,
@@ -1765,7 +1398,7 @@ export class TestSpoilerUI {
     // It's managed by the loading logic (set on success, cleared on certain failures or when changing files).
     this.currentLogIndex = 0;
     this.testStateInitialized = false;
-    this.previousInventory = {}; // Reset previous inventory when clearing state
+    // Phase 4: previousInventory moved to EventProcessor
 
     // MODIFIED: Re-enable auto-collect events as part of clearing test state
     // This is a fire-and-forget call as clearTestState might not be awaited.
@@ -1912,23 +1545,7 @@ export class TestSpoilerUI {
   }
 
   // Phase 3: Analysis methods moved to analysisReporter.js module
-
-  findNewlyAddedItems(previousInventory, currentInventory) {
-    const newlyAdded = [];
-    
-    for (const [itemName, currentCount] of Object.entries(currentInventory)) {
-      const previousCount = previousInventory[itemName] || 0;
-      if (currentCount > previousCount) {
-        // Add entry for each additional count of the item
-        const addedCount = currentCount - previousCount;
-        for (let i = 0; i < addedCount; i++) {
-          newlyAdded.push(itemName);
-        }
-      }
-    }
-    
-    return newlyAdded;
-  }
+  // Phase 4: findNewlyAddedItems moved to eventProcessor.js
 }
 
 // Add default export
