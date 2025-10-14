@@ -18,69 +18,60 @@ import sys
 import time
 import urllib.request
 import urllib.error
+import yaml
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 from seed_utils import get_seed_id as compute_seed_id
 
 
+def read_host_yaml_config(project_root: str) -> Dict:
+    """Read configuration from host.yaml file."""
+    host_yaml_path = os.path.join(project_root, 'host.yaml')
+    try:
+        with open(host_yaml_path, 'r') as f:
+            config = yaml.safe_load(f)
+            return config
+    except (FileNotFoundError, yaml.YAMLError) as e:
+        print(f"Warning: Could not read host.yaml: {e}")
+        return {}
+
+
 def run_post_processing_scripts(project_root: str, results_file: str, multiplayer: bool = False):
     """Run post-processing scripts to update documentation and preset files."""
     print("\n=== Running Post-Processing Scripts ===")
 
-    if multiplayer:
-        # Multiplayer mode: only run generate-test-chart-multiplayer.py
-        print("\nGenerating multiplayer test results chart...")
-        chart_script = os.path.join(project_root, 'scripts', 'generate-test-chart-multiplayer.py')
-        try:
-            result = subprocess.run(
-                [sys.executable, chart_script, '--input-file', results_file],
-                cwd=project_root,
-                capture_output=True,
-                text=True,
-                timeout=30
-            )
-            if result.returncode == 0:
-                print("✓ Multiplayer test chart generated successfully")
-                # Show where the chart was saved
-                if "Chart saved to:" in result.stdout:
-                    for line in result.stdout.split('\n'):
-                        if "Chart saved to:" in line:
-                            print(f"  {line.strip()}")
-            else:
-                print(f"✗ Failed to generate multiplayer test chart: {result.stderr}")
-        except subprocess.TimeoutExpired:
-            print("✗ Multiplayer test chart generation timed out")
-        except Exception as e:
-            print(f"✗ Error running generate-test-chart-multiplayer.py: {e}")
-    else:
-        # Spoiler mode: run both scripts
-        # Script 1: Generate test chart
-        print("\nGenerating test results chart...")
-        chart_script = os.path.join(project_root, 'scripts', 'generate-test-chart.py')
-        try:
-            result = subprocess.run(
-                [sys.executable, chart_script, '--input-file', results_file],
-                cwd=project_root,
-                capture_output=True,
-                text=True,
-                timeout=30
-            )
-            if result.returncode == 0:
-                print("✓ Test chart generated successfully")
-                # Show where the chart was saved
-                if "Chart saved to:" in result.stdout:
-                    for line in result.stdout.split('\n'):
-                        if "Chart saved to:" in line:
-                            print(f"  {line.strip()}")
-            else:
-                print(f"✗ Failed to generate test chart: {result.stderr}")
-        except subprocess.TimeoutExpired:
-            print("✗ Test chart generation timed out")
-        except Exception as e:
-            print(f"✗ Error running generate-test-chart.py: {e}")
+    # Read host.yaml to check extend_sphere_log_to_all_locations setting
+    host_config = read_host_yaml_config(project_root)
+    extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
 
-        # Script 2: Update preset files
+    # Generate test charts using unified script (processes all test types and generates summary)
+    print("\nGenerating test results charts...")
+    chart_script = os.path.join(project_root, 'scripts', 'generate-test-chart.py')
+
+    try:
+        result = subprocess.run(
+            [sys.executable, chart_script],
+            cwd=project_root,
+            capture_output=True,
+            text=True,
+            timeout=60
+        )
+        if result.returncode == 0:
+            print("✓ Test charts generated successfully")
+            # Show output from the script
+            for line in result.stdout.split('\n'):
+                if line.strip() and (line.startswith('✓') or line.startswith('Warning:') or line.startswith('Processing')):
+                    print(f"  {line.strip()}")
+        else:
+            print(f"✗ Failed to generate test charts: {result.stderr}")
+    except subprocess.TimeoutExpired:
+        print("✗ Test chart generation timed out")
+    except Exception as e:
+        print(f"✗ Error running generate-test-chart.py: {e}")
+
+    # Only update preset files if extend_sphere_log_to_all_locations is true and not in multiplayer mode
+    if not multiplayer and extend_sphere_log:
         print("\nUpdating preset files with test data...")
         preset_script = os.path.join(project_root, 'scripts', 'update-preset-files.py')
         try:
@@ -107,6 +98,8 @@ def run_post_processing_scripts(project_root: str, results_file: str, multiplaye
             print("✗ Preset files update timed out")
         except Exception as e:
             print(f"✗ Error running update-preset-files.py: {e}")
+    elif not multiplayer and not extend_sphere_log:
+        print("\nSkipping preset files update (extend_sphere_log_to_all_locations is false)")
 
     print("\n=== Post-Processing Complete ===")
 
@@ -390,62 +383,108 @@ def count_total_spheres(spheres_log_path: str) -> float:
 
 
 def parse_multiplayer_test_results(test_results_dir: str) -> Dict:
-    """Parse multiplayer test results from JSON files."""
+    """Parse multiplayer test results from JSON files for both clients."""
     result = {
         'success': False,
         'client1_passed': False,
-        'locations_checked': 0,
-        'total_locations': 0,
+        'client2_passed': False,
+        'client1_locations_checked': 0,
+        'client1_manually_checkable': 0,
+        'client2_locations_received': 0,
+        'client2_total_locations': 0,
         'error_message': None
     }
 
-    # Find the most recent test result files
+    # Find the most recent test result files for both clients
     try:
         from pathlib import Path
-        files = list(Path(test_results_dir).glob('client1-timer-*.json'))
-        if not files:
-            result['error_message'] = "No test result files found"
+        client1_files = list(Path(test_results_dir).glob('client1-timer-*.json'))
+        client2_files = list(Path(test_results_dir).glob('client2-timer-*.json'))
+
+        if not client1_files:
+            result['error_message'] = "No client1 test result files found"
             return result
 
-        # Get the most recent file
-        latest_file = max(files, key=os.path.getctime)
+        # Get the most recent client1 file
+        latest_client1_file = max(client1_files, key=os.path.getctime)
 
-        with open(latest_file, 'r') as f:
+        # Parse Client 1 results
+        with open(latest_client1_file, 'r') as f:
             data = json.load(f)
 
         # Parse the results
         summary = data.get('summary', {})
         result['client1_passed'] = summary.get('failedCount', 1) == 0
 
-        # Extract locations checked from logs
+        # Extract locations checked from Client 1 logs
         test_details = data.get('testDetails', [])
         if test_details:
-            # First try to find it in conditions
-            conditions = test_details[0].get('conditions', [])
-            for condition in conditions:
-                desc = condition.get('description', '')
-                if 'locations checked' in desc.lower():
-                    # Extract numbers from description like "Checked 24/24 locations" or "Only checked 33/249 locations"
-                    match = re.search(r'(\d+)/(\d+)', desc)
+            logs = test_details[0].get('logs', [])
+            locations_checked_val = 0
+            manually_checkable_val = 0
+
+            for log_entry in logs:
+                message = log_entry.get('message', '')
+
+                # Look for "Final result: X locations checked"
+                if 'final result' in message.lower() and 'locations checked' in message.lower():
+                    match = re.search(r'(\d+)\s+locations?\s+checked', message)
                     if match:
-                        result['locations_checked'] = int(match.group(1))
-                        result['total_locations'] = int(match.group(2))
-                        break
+                        locations_checked_val = int(match.group(1))
 
-            # If not found in conditions, check logs for "Final result"
-            if result['total_locations'] == 0:
-                logs = test_details[0].get('logs', [])
-                for log_entry in logs:
+                # Look for "Manually-checkable locations: X"
+                if 'manually-checkable locations' in message.lower():
+                    match = re.search(r'manually-checkable locations:\s*(\d+)', message, re.IGNORECASE)
+                    if match:
+                        manually_checkable_val = int(match.group(1))
+
+            result['client1_locations_checked'] = locations_checked_val
+            result['client1_manually_checkable'] = manually_checkable_val
+
+        # Parse Client 2 results if available
+        if client2_files:
+            latest_client2_file = max(client2_files, key=os.path.getctime)
+
+            with open(latest_client2_file, 'r') as f:
+                data2 = json.load(f)
+
+            # Parse Client 2 summary
+            summary2 = data2.get('summary', {})
+            result['client2_passed'] = summary2.get('failedCount', 1) == 0
+
+            # Extract locations received from Client 2 logs
+            test_details2 = data2.get('testDetails', [])
+            if test_details2:
+                logs2 = test_details2[0].get('logs', [])
+                expecting_val = 0
+                final_state_val = 0
+
+                for log_entry in logs2:
                     message = log_entry.get('message', '')
-                    if 'final result' in message.lower():
-                        # Extract from "Final result: 24 of 24 locations checked"
-                        match = re.search(r'(\d+)\s+of\s+(\d+)', message)
-                        if match:
-                            result['locations_checked'] = int(match.group(1))
-                            result['total_locations'] = int(match.group(2))
-                            break
 
-        result['success'] = result['client1_passed'] and result['locations_checked'] == result['total_locations']
+                    # Look for "Expecting to receive checks for X locations"
+                    if 'expecting to receive' in message.lower() and 'locations' in message.lower():
+                        match = re.search(r'(\d+)\s+locations?', message)
+                        if match:
+                            expecting_val = int(match.group(1))
+
+                    # Look for "Final state: X locations marked as checked"
+                    if 'final state' in message.lower() and 'locations marked as checked' in message.lower():
+                        match = re.search(r'(\d+)\s+locations?\s+marked', message)
+                        if match:
+                            final_state_val = int(match.group(1))
+
+                result['client2_total_locations'] = expecting_val
+                result['client2_locations_received'] = final_state_val
+
+        # Test passes if:
+        # - Client 1 passed (sent all manually-checkable locations)
+        # - Client 2 passed (received all locations)
+        # - Client 2 received all expected locations
+        result['success'] = (result['client1_passed'] and
+                            result['client2_passed'] and
+                            result['client2_locations_received'] >= result['client2_total_locations'] and
+                            result['client2_total_locations'] > 0)
 
     except Exception as e:
         result['error_message'] = f"Error parsing test results: {str(e)}"
@@ -993,8 +1032,14 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         result['multiplayer_test'].update({
             'success': test_results['success'],
             'client1_passed': test_results['client1_passed'],
-            'locations_checked': test_results['locations_checked'],
-            'total_locations': test_results['total_locations']
+            'client2_passed': test_results['client2_passed'],
+            'client1_locations_checked': test_results['client1_locations_checked'],
+            'client1_manually_checkable': test_results['client1_manually_checkable'],
+            'client2_locations_received': test_results['client2_locations_received'],
+            'client2_total_locations': test_results['client2_total_locations'],
+            # Legacy fields for backwards compatibility
+            'locations_checked': test_results['client2_locations_received'],
+            'total_locations': test_results['client2_total_locations']
         })
 
         if test_results.get('error_message'):
@@ -1516,10 +1561,21 @@ def main():
         print(f"{'Not included' if args.include_list is not None else 'Skipping'}: {len(skipped_files)} files (too many to list)")
     
     # Load existing results for merging
-    # Adjust output file path for multiplayer mode if using default path
-    if args.multiplayer and args.output_file == 'scripts/output/template-test-results.json':
-        # Use multiplayer-specific output directory and file name
-        args.output_file = 'scripts/output-multiplayer/test-results-multiplayer.json'
+    # Adjust output file path based on mode and configuration
+    if args.output_file == 'scripts/output/template-test-results.json':
+        # Using default path - adjust based on mode
+        if args.multiplayer:
+            # Use multiplayer-specific output directory and file name
+            args.output_file = 'scripts/output-multiplayer/test-results-multiplayer.json'
+        else:
+            # Spoiler mode - check extend_sphere_log_to_all_locations setting
+            host_config = read_host_yaml_config(project_root)
+            extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
+
+            if extend_sphere_log:
+                args.output_file = 'scripts/output-spoiler-full/template-test-results.json'
+            else:
+                args.output_file = 'scripts/output-spoiler-minimal/template-test-results.json'
 
     results_file = os.path.join(project_root, args.output_file)
 

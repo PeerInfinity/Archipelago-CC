@@ -235,6 +235,8 @@ trash/*
 node_modules/*
 test-results/*
 set.mm
+output-spoiler-minimal/
+output-spoiler-full/
 output-multiplayer/
 test1/
 test2/
