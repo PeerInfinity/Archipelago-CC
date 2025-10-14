@@ -6,6 +6,7 @@ import { createRegionLink } from '../commonUI/index.js'; // ADDED
 import TestSpoilerRuleEvaluator from './testSpoilerRuleEvaluator.js'; // ADDED
 import { FileLoader } from './fileLoader.js'; // Phase 1: File loading module
 import { ComparisonEngine } from './comparisonEngine.js'; // Phase 2: Comparison engine module
+import { AnalysisReporter } from './analysisReporter.js'; // Phase 3: Analysis/reporting module
 import { createUniversalLogger } from '../../app/core/universalLogger.js'; // Phase 1: Universal logger
 
 const logger = createUniversalLogger('testSpoilerUI');
@@ -64,6 +65,12 @@ export class TestSpoilerUI {
 
     // Phase 2: Initialize comparison engine module
     this.comparisonEngine = new ComparisonEngine(stateManager);
+
+    // Phase 3: Initialize analysis reporter module
+    this.analysisReporter = new AnalysisReporter(
+      this.ruleEvaluator,
+      (type, message, ...data) => this.log(type, message, ...data)
+    );
 
     // Create and append root element immediately
     this.getRootElement(); // This creates this.rootElement and sets this.testSpoilersContainer
@@ -1476,24 +1483,27 @@ export class TestSpoilerUI {
     if (!result) {
       const mismatchDetails = this.comparisonEngine.getMismatchDetails();
       if (mismatchDetails && mismatchDetails.type === 'locations') {
+        // Phase 3: Delegate to AnalysisReporter module
         // Analyze missing locations
         if (mismatchDetails.missingFromState && mismatchDetails.missingFromState.length > 0) {
-          this._analyzeFailingLocations(
+          this.analysisReporter.analyzeFailingLocations(
             mismatchDetails.missingFromState,
             mismatchDetails.staticData,
             mismatchDetails.currentWorkerSnapshot,
             mismatchDetails.snapshotInterface,
-            'MISSING_FROM_STATE'
+            'MISSING_FROM_STATE',
+            this.playerId
           );
         }
         // Analyze extra locations
         if (mismatchDetails.extraInState && mismatchDetails.extraInState.length > 0) {
-          this._analyzeFailingLocations(
+          this.analysisReporter.analyzeFailingLocations(
             mismatchDetails.extraInState,
             mismatchDetails.staticData,
             mismatchDetails.currentWorkerSnapshot,
             mismatchDetails.snapshotInterface,
-            'EXTRA_IN_STATE'
+            'EXTRA_IN_STATE',
+            this.playerId
           );
         }
 
@@ -1533,23 +1543,24 @@ export class TestSpoilerUI {
     if (!result) {
       const mismatchDetails = this.comparisonEngine.getMismatchDetails();
       if (mismatchDetails && mismatchDetails.type === 'regions') {
+        // Phase 3: Delegate to AnalysisReporter module
         // Analyze missing regions
         if (mismatchDetails.missingFromState && mismatchDetails.missingFromState.length > 0) {
-          this._analyzeFailingRegions(
+          this.analysisReporter.analyzeFailingRegions(
             mismatchDetails.missingFromState,
             mismatchDetails.staticData,
             mismatchDetails.currentWorkerSnapshot,
-            mismatchDetails.playerId,
+            this.playerId,
             'MISSING_FROM_STATE'
           );
         }
         // Analyze extra regions
         if (mismatchDetails.extraInState && mismatchDetails.extraInState.length > 0) {
-          this._analyzeFailingRegions(
+          this.analysisReporter.analyzeFailingRegions(
             mismatchDetails.extraInState,
             mismatchDetails.staticData,
             mismatchDetails.currentWorkerSnapshot,
-            mismatchDetails.playerId,
+            this.playerId,
             'EXTRA_IN_STATE'
           );
         }
@@ -1900,308 +1911,7 @@ export class TestSpoilerUI {
     // by the calling function (e.g., attemptAutoLoadSpoilerLog or initialize).
   }
 
-  /**
-   * Analyzes failing locations by examining their region accessibility and rule tree evaluation
-   * @param {string[]} locationNames - Array of location names to analyze
-   * @param {Object} staticData - Static game data
-   * @param {Object} currentWorkerSnapshot - Current state snapshot from worker
-   * @param {Object} snapshotInterface - Interface for evaluating rules against snapshot
-   * @param {string} analysisType - Type of analysis (MISSING_FROM_STATE or EXTRA_IN_STATE)
-   */
-  _analyzeFailingLocations(locationNames, staticData, currentWorkerSnapshot, snapshotInterface, analysisType) {
-    this.log('info', `[LOCATION ANALYSIS] Analyzing ${locationNames.length} ${analysisType} locations:`);
-    
-    // First, log some general context about the state
-    this.log('info', `[CONTEXT] Current snapshot overview:`);
-    if (currentWorkerSnapshot.inventory) {
-      const inventory = currentWorkerSnapshot.inventory;
-      const itemCount = Object.keys(inventory).length;
-      const totalItems = Object.values(inventory).reduce((sum, count) => sum + count, 0);
-      this.log('info', `  Player ${this.playerId} inventory: ${itemCount} unique items, ${totalItems} total items`);
-      this.log('info', `  Sample items: ${Object.entries(inventory).slice(0, 5).map(([item, count]) => `${item}:${count}`).join(', ')}${itemCount > 5 ? '...' : ''}`);
-    } else {
-      this.log('info', `  Player ${this.playerId} inventory: Empty or not found`);
-    }
-    
-    const reachableRegions = Object.entries(currentWorkerSnapshot.regionReachability || {})
-      .filter(([region, status]) => status === 'reachable' || status === 'checked')
-      .map(([region]) => region);
-    this.log('info', `  Reachable regions (${reachableRegions.length}): ${reachableRegions.slice(0, 10).join(', ')}${reachableRegions.length > 10 ? '...' : ''}`);
-    
-    // Log available functions in snapshotInterface
-    const availableFunctions = Object.keys(snapshotInterface).filter(k => typeof snapshotInterface[k] === 'function');
-    this.log('info', `  Available helper functions: ${availableFunctions.join(', ')}`);
-    
-    this.log('info', ''); // Separator
-    
-    for (const locName of locationNames) {
-      // Phase 3: Use Map.get() or fallback to object access
-      const locDef = staticData.locations instanceof Map
-        ? staticData.locations.get(locName)
-        : staticData.locations[locName];
-
-      if (!locDef) {
-        this.log('error', `  ${locName}: Location definition not found in static data`);
-        const sampleKeys = staticData.locations instanceof Map
-          ? Array.from(staticData.locations.keys()).slice(0, 5).join(', ')
-          : Object.keys(staticData.locations).slice(0, 5).join(', ');
-        this.log('info', `    Available locations sample: ${sampleKeys}...`);
-        continue;
-      }
-
-      const parentRegionName = locDef.parent_region || locDef.region;
-      const parentRegionReachabilityStatus = currentWorkerSnapshot.regionReachability?.[parentRegionName];
-      const isParentRegionReachable = parentRegionReachabilityStatus === 'reachable' || parentRegionReachabilityStatus === 'checked';
-      
-      this.log('info', `  ${locName}:`);
-      this.log('info', `    Region: ${parentRegionName} (${parentRegionReachabilityStatus || 'undefined'}) ${isParentRegionReachable ? '✓' : '✗'}`);
-      this.log('info', `    Location definition: ${JSON.stringify(locDef)}`);
-      
-      const locationAccessRule = locDef.access_rule;
-      if (!locationAccessRule) {
-        this.log('info', `    Access Rule: None (always accessible if region is reachable)`);
-        continue;
-      }
-
-      this.log('info', `    Access Rule Structure: ${JSON.stringify(locationAccessRule)}`);
-
-      // Evaluate the rule and provide detailed breakdown
-      let locationRuleResult;
-      try {
-        // Create a location-specific snapshotInterface with the location as context for analysis
-        const locationSnapshotInterface = createStateSnapshotInterface(
-          currentWorkerSnapshot,
-          staticData,
-          { location: locDef } // Pass the location definition as context
-        );
-        
-        locationRuleResult = evaluateRule(locationAccessRule, locationSnapshotInterface);
-        this.log('info', `    Access Rule Result: ${locationRuleResult} ${locationRuleResult ? '✓' : '✗'}`);
-        
-        // Provide detailed rule breakdown using the location-specific interface
-        this.log('info', `    Detailed Rule Analysis:`);
-        this.ruleEvaluator.analyzeRuleTree(locationAccessRule, locationSnapshotInterface, '      ');
-        
-      } catch (error) {
-        this.log('error', `    Access Rule Evaluation Error: ${error.message}`);
-        this.log('error', `    Error stack: ${error.stack}`);
-        this.log('info', `    SnapshotInterface keys: ${Object.keys(locationSnapshotInterface).join(', ')}`);
-        locationRuleResult = false; // Set explicit result for caught errors
-      }
-
-      // Final assessment
-      const shouldBeAccessible = isParentRegionReachable && (locationRuleResult === true);
-      const actuallyAccessible = analysisType === 'EXTRA_IN_STATE';
-      
-      if (analysisType === 'MISSING_FROM_STATE') {
-        this.log('info', `    Expected: Accessible (region: ${isParentRegionReachable}, rule: ${locationRuleResult})`);
-        this.log('info', `    Actual: Not accessible in our implementation`);
-        if (!isParentRegionReachable) {
-          this.log('error', `    ISSUE: Region ${parentRegionName} is not reachable`);
-        } else if (locationRuleResult !== true) {
-          this.log('error', `    ISSUE: Access rule evaluation failed`);
-        }
-      } else {
-        this.log('info', `    Expected: Not accessible according to Python log`);
-        this.log('info', `    Actual: Accessible in our implementation (region: ${isParentRegionReachable}, rule: ${locationRuleResult})`);
-      }
-      
-      this.log('info', ''); // Empty line for readability
-    }
-  }
-
-  /**
-   * Analyzes failing regions by finding exits that lead to them and examining their access rules
-   * @param {Array} regionNames - List of region names to analyze
-   * @param {Object} staticData - Static game data
-   * @param {Object} currentWorkerSnapshot - Current state snapshot from worker
-   * @param {string} playerId - Player ID for context
-   * @param {string} analysisType - Type of analysis (MISSING_FROM_STATE or EXTRA_IN_STATE)
-   */
-  _analyzeFailingRegions(regionNames, staticData, currentWorkerSnapshot, playerId, analysisType) {
-    this.log('info', `[REGION ANALYSIS] Analyzing ${regionNames.length} ${analysisType} regions:`);
-    
-    // Get list of currently accessible regions for context
-    const accessibleRegions = Object.entries(currentWorkerSnapshot.regionReachability || {})
-      .filter(([region, status]) => {
-        if (status !== 'reachable' && status !== 'checked') return false;
-        // Phase 3: Use Map.has() or fallback to object access
-        return staticData.regions instanceof Map
-          ? staticData.regions.has(region)
-          : !!staticData.regions[region];
-      })
-      .map(([region]) => region);
-    
-    this.log('info', `[CONTEXT] Currently accessible regions (${accessibleRegions.length}): ${accessibleRegions.slice(0, 10).join(', ')}${accessibleRegions.length > 10 ? '...' : ''}`);
-    
-    // Log player inventory for context
-    if (currentWorkerSnapshot.inventory) {
-      const inventory = currentWorkerSnapshot.inventory;
-      const itemCount = Object.keys(inventory).length;
-      const totalItems = Object.values(inventory).reduce((sum, count) => sum + count, 0);
-      this.log('info', `[CONTEXT] Player ${playerId} inventory: ${itemCount} unique items, ${totalItems} total items`);
-    } else {
-      this.log('info', `[CONTEXT] Player ${playerId} inventory: Empty or not found`);
-    }
-    
-    this.log('info', ''); // Separator
-
-    for (const targetRegionName of regionNames) {
-      // Phase 3: Use Map.get() or fallback to object access
-      const targetRegionDef = staticData.regions instanceof Map
-        ? staticData.regions.get(targetRegionName)
-        : staticData.regions[targetRegionName];
-
-      if (!targetRegionDef) {
-        this.log('error', `  ${targetRegionName}: Region definition not found in static data`);
-        continue;
-      }
-
-      this.log('info', `  ${targetRegionName}:`);
-      this.log('info', `    Current status: ${currentWorkerSnapshot.regionReachability?.[targetRegionName] || 'undefined'}`);
-      this.log('info', `    Region definition: ${JSON.stringify(targetRegionDef)}`);
-
-      // Find all exits from accessible regions that lead to this target region
-      const exitsToTarget = [];
-      
-      for (const sourceRegionName of accessibleRegions) {
-        // Phase 3: Use Map.get() or fallback to object access
-        const sourceRegionDef = staticData.regions instanceof Map
-          ? staticData.regions.get(sourceRegionName)
-          : staticData.regions[sourceRegionName];
-        if (!sourceRegionDef || !sourceRegionDef.exits) continue;
-
-        for (const exitName in sourceRegionDef.exits) {
-          const exitDef = sourceRegionDef.exits[exitName];
-          if (exitDef.connected_region === targetRegionName) {
-            exitsToTarget.push({
-              exitName,
-              sourceRegion: sourceRegionName,
-              exitDef
-            });
-          }
-        }
-      }
-
-      if (exitsToTarget.length === 0) {
-        this.log('warn', `    No exits found from currently accessible regions to ${targetRegionName}`);
-        this.log('info', `    Note: Only checking exits from accessible regions (${accessibleRegions.length} regions)`);
-        
-        // Check for exits from inaccessible regions to provide more helpful information
-        const exitsFromInaccessibleRegions = [];
-        // Phase 3: Get region keys from Map or object
-        const allRegions = staticData.regions instanceof Map
-          ? Array.from(staticData.regions.keys())
-          : Object.keys(staticData.regions || {});
-        const inaccessibleRegions = allRegions.filter(region => !accessibleRegions.includes(region));
-
-        for (const sourceRegionName of inaccessibleRegions) {
-          // Phase 3: Use Map.get() or fallback to object access
-          const sourceRegionDef = staticData.regions instanceof Map
-            ? staticData.regions.get(sourceRegionName)
-            : staticData.regions[sourceRegionName];
-          if (!sourceRegionDef || !sourceRegionDef.exits) continue;
-
-          for (const exitName in sourceRegionDef.exits) {
-            const exitDef = sourceRegionDef.exits[exitName];
-            if (exitDef.connected_region === targetRegionName) {
-              exitsFromInaccessibleRegions.push({
-                exitName,
-                sourceRegion: sourceRegionName,
-                exitDef,
-                sourceStatus: currentWorkerSnapshot.regionReachability?.[sourceRegionName] || 'unreachable'
-              });
-            }
-          }
-        }
-        
-        if (exitsFromInaccessibleRegions.length > 0) {
-          this.log('info', `    Found ${exitsFromInaccessibleRegions.length} exit(s) from inaccessible regions:`);
-          for (const exitInfo of exitsFromInaccessibleRegions) {
-            this.log('info', `      Exit: ${exitInfo.exitName} (from ${exitInfo.sourceRegion} - status: ${exitInfo.sourceStatus})`);
-            this.log('info', `        Exit definition: ${JSON.stringify(exitInfo.exitDef)}`);
-            
-            // Analyze why the source region is inaccessible
-            if (exitInfo.sourceStatus === 'unreachable' || !exitInfo.sourceStatus) {
-              this.log('info', `        → Source region "${exitInfo.sourceRegion}" is not accessible, blocking this exit`);
-            }
-          }
-        } else {
-          this.log('info', `    No exits found from any region to ${targetRegionName}`);
-          this.log('info', `    This might be a starting region or there could be a data issue`);
-        }
-      } else {
-        this.log('info', `    Found ${exitsToTarget.length} exit(s) from accessible regions:`);
-        
-        for (const exitInfo of exitsToTarget) {
-          this.log('info', `      Exit: ${exitInfo.exitName} (from ${exitInfo.sourceRegion})`);
-          this.log('info', `        Exit definition: ${JSON.stringify(exitInfo.exitDef)}`);
-          
-          const exitAccessRule = exitInfo.exitDef.access_rule;
-          if (!exitAccessRule) {
-            this.log('info', `        Access Rule: None (always accessible)`);
-            this.log('info', `        → This exit should be accessible, so ${targetRegionName} should be reachable`);
-          } else {
-            this.log('info', `        Access Rule Structure: ${JSON.stringify(exitAccessRule)}`);
-            
-            // Evaluate the exit rule
-            try {
-              const snapshotInterface = createStateSnapshotInterface(
-                currentWorkerSnapshot,
-                staticData
-              );
-              
-              const exitRuleResult = evaluateRule(exitAccessRule, snapshotInterface);
-              this.log('info', `        Access Rule Result: ${exitRuleResult} ${exitRuleResult ? '✓' : '✗'}`);
-              
-              // Provide detailed rule breakdown
-              this.log('info', `        Detailed Rule Analysis:`);
-              this.ruleEvaluator.analyzeRuleTree(exitAccessRule, snapshotInterface, '          ');
-              
-              if (exitRuleResult === true) {
-                this.log('info', `        → This exit should be accessible, so ${targetRegionName} should be reachable`);
-              } else {
-                this.log('info', `        → This exit is not accessible, blocking access to ${targetRegionName}`);
-              }
-              
-            } catch (error) {
-              this.log('error', `        Access Rule Evaluation Error: ${error.message}`);
-            }
-          }
-          this.log('info', ''); // Space between exits
-        }
-      }
-
-      // Final assessment
-      if (analysisType === 'MISSING_FROM_STATE') {
-        this.log('info', `    Expected: Region should be accessible according to Python log`);
-        this.log('info', `    Actual: Region is not accessible in our implementation`);
-        
-        if (exitsToTarget.length > 0) {
-          const accessibleExits = exitsToTarget.filter(exit => {
-            if (!exit.exitDef.access_rule) return true;
-            try {
-              const snapshotInterface = createStateSnapshotInterface(currentWorkerSnapshot, staticData);
-              return evaluateRule(exit.exitDef.access_rule, snapshotInterface) === true;
-            } catch {
-              return false;
-            }
-          });
-          
-          if (accessibleExits.length > 0) {
-            this.log('error', `    ISSUE: ${accessibleExits.length} exit(s) should provide access but region is not reachable`);
-          } else {
-            this.log('info', `    All exits have failed access rules - this may be correct`);
-          }
-        }
-      } else {
-        this.log('info', `    Expected: Region should not be accessible according to Python log`);
-        this.log('info', `    Actual: Region is accessible in our implementation`);
-      }
-      
-      this.log('info', ''); // Empty line for readability between regions
-    }
-  }
+  // Phase 3: Analysis methods moved to analysisReporter.js module
 
   findNewlyAddedItems(previousInventory, currentInventory) {
     const newlyAdded = [];
