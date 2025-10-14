@@ -1,3 +1,20 @@
+/**
+ * State Manager Proxy Module
+ *
+ * Main thread proxy for the StateManager web worker. Handles communication
+ * between the UI thread and the worker thread that runs state management logic.
+ *
+ * Key responsibilities:
+ * - Worker lifecycle management (initialization, message handling, termination)
+ * - Query/command routing with promise-based responses
+ * - Snapshot caching for synchronous UI access
+ * - Event forwarding from worker to main thread event bus
+ * - Static data caching (items, locations, regions, etc.)
+ *
+ * @module stateManager/proxy
+ * @class StateManagerProxy
+ */
+
 // Use logger if available, fallback to console.log
 // Check if we're in a worker context (no window object)
 const isWorkerContext = typeof window === 'undefined';

@@ -67,6 +67,8 @@
  * - Maintains all existing APIs for compatibility
  * - Works with Maps from Phase 3 optimizations
  * - Handles both server updates and JSON export/import
+ *
+ * @module stateManager/core/statePersistence
  */
 
 import { initializeGameLogic, getGameLogic } from '../../shared/gameLogic/gameLogicRegistry.js';

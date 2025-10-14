@@ -32,6 +32,8 @@
  *   - error: boolean (true if mismatch or failure)
  *   - message: string (summary)
  *   - details: Object (event info, sphere, player, items)
+ *
+ * @module testSpoilers/eventProcessor
  */
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';

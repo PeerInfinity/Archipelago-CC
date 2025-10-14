@@ -47,6 +47,8 @@
  * - Maintains all existing APIs for compatibility
  * - Works with reachability module for accessibility checks
  * - Coordinates with inventory module for item addition
+ *
+ * @module stateManager/core/locationChecking
  */
 
 // Module-level helper for logging

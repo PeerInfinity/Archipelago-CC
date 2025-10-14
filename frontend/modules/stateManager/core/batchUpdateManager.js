@@ -92,6 +92,8 @@
  * - If _batchMode is true, inventory operations queue updates to _batchedUpdates
  * - If _batchMode is false, inventory operations apply immediately
  * - This module commits the queued updates when ready
+ *
+ * @module stateManager/core/batchUpdateManager
  */
 
 import { createUniversalLogger } from '../../../app/core/universalLogger.js';

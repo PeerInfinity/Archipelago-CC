@@ -1,3 +1,13 @@
+/**
+ * State Manager Module
+ *
+ * Manages game state including inventory and reachable regions/locations.
+ * Handles automatic collection of event items when their locations become accessible.
+ * All state (including events) is tracked through the inventory system.
+ *
+ * @module stateManager
+ */
+
 // Refactored to use canonical inventory format and agnostic logic modules
 import {
   initializeGameLogic,
@@ -28,9 +38,19 @@ function log(level, message, ...data) {
 }
 
 /**
- * Manages game state including inventory and reachable regions/locations.
- * Handles automatic collection of event items when their locations become accessible.
- * All state (including events) is tracked through the inventory system.
+ * Main state manager class that coordinates game state, inventory, and reachability calculations.
+ *
+ * This class delegates most functionality to specialized core modules:
+ * - InitializationModule: Game setup and rule loading
+ * - InventoryModule: Item management and counting
+ * - ReachabilityModule: Region and location accessibility
+ * - StatePersistenceModule: State snapshots and serialization
+ * - LocationCheckingModule: Tracking checked locations
+ * - RuleEvaluatorModule: Logic evaluation and helper execution
+ * - BatchUpdateModule: Efficient bulk updates
+ *
+ * @class StateManager
+ * @memberof module:stateManager
  */
 export class StateManager {
   /**

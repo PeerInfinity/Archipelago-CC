@@ -24,6 +24,8 @@
  *   - Detailed mismatch information
  *   - Progress tracking
  *   - UI control updates
+ *
+ * @module testSpoilers/testOrchestrator
  */
 
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';

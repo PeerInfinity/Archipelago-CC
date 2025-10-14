@@ -35,6 +35,8 @@
  *   - Type "additive": Auto-calculated from component items
  *   - Type "level-based": Normal items (Progressive Sword, etc.)
  *   - Component items update virtual items automatically
+ *
+ * @module stateManager/core/inventoryManager
  */
 
 // Log function is not directly imported - we use StateManager's _logDebug method

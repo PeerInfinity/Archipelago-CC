@@ -68,6 +68,8 @@
  * Main Thread Path: Proxy sends query to worker, worker evaluates, returns result
  *
  * Phase 6 of StateManager refactoring plan.
+ *
+ * @module stateManager/core/ruleEvaluator
  */
 
 import { createUniversalLogger } from '../../../app/core/universalLogger.js';

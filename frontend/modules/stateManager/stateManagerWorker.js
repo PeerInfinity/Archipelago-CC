@@ -1,3 +1,19 @@
+/**
+ * State Manager Web Worker
+ *
+ * Runs StateManager in a separate thread to keep game state calculations
+ * off the main UI thread. Handles command processing via a queue system.
+ *
+ * Key responsibilities:
+ * - StateManager instance lifecycle
+ * - Command queue processing with FIFO ordering
+ * - Rule evaluation and reachability computation
+ * - Snapshot generation and transmission to main thread
+ * - Logging coordination with main thread
+ *
+ * @module stateManager/worker
+ */
+
 // Initial startup message using console directly to avoid circular dependency
 // console.log('[stateManagerWorker] Worker starting...');
 

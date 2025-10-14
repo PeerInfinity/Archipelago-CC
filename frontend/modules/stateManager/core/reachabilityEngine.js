@@ -37,6 +37,8 @@
  *   - Uses Maps for O(1) path lookups
  *   - Caching system to avoid redundant computation
  *   - Regions data structure will be converted to Map in this phase
+ *
+ * @module stateManager/core/reachabilityEngine
  */
 
 // Log function uses StateManager's logger via the 'sm' parameter

@@ -19,12 +19,23 @@
  * Output: Parsed spoiler log data
  *   - Array of event objects: [{type: 'state_update', ...}, {type: 'location_check', ...}, ...]
  *   - Each event has a 'type' property and event-specific data
+ *
+ * @module testSpoilers/fileLoader
  */
 
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 
 const logger = createUniversalLogger('testSpoilerUI:FileLoader');
 
+/**
+ * Handles loading and parsing of spoiler log files from various sources.
+ *
+ * Supports both auto-loading from derived URLs and manual file selection.
+ * Parses JSONL format where each line is a JSON event object.
+ *
+ * @class FileLoader
+ * @memberof module:testSpoilers/fileLoader
+ */
 export class FileLoader {
   constructor() {
     // No parameters needed - logger is module-level
@@ -61,7 +72,7 @@ export class FileLoader {
    * @param {string} currentLogPath - Currently loaded log path (to prevent duplicates)
    * @param {Array|null} currentLogData - Currently loaded log data (to verify data exists)
    * @param {string|null} isLoadingLogPath - Path currently being loaded (to prevent concurrent loads)
-   * @returns {Promise<{success: boolean, logData: Array|null, logPath: string, error?: string}>}
+   * @returns {Promise<Object>} Result object with success, logData, logPath, and optional error properties
    */
   async attemptAutoLoad(rulesetPath, currentLogPath, currentLogData, isLoadingLogPath) {
     logger.debug('attemptAutoLoad called', { rulesetPath, currentLogPath, hasData: !!(currentLogData && currentLogData.length), isLoadingLogPath });
@@ -228,7 +239,7 @@ export class FileLoader {
    *
    * @param {File} file - File object from file input
    * @param {AbortSignal} signal - Abort signal for cancellation
-   * @returns {Promise<{success: boolean, logData: Array|null, fileName: string, error?: string}>}
+   * @returns {Promise<Object>} Result object with success, logData, fileName, and optional error properties
    */
   async readFile(file, signal) {
     logger.debug('readFile called', { fileName: file.name });
@@ -351,7 +362,7 @@ export class FileLoader {
    *
    * @param {string} text - Raw log text
    * @param {string} source - Source identifier (file name or path) for logging
-   * @returns {{success: boolean, logData?: Array, error?: string}}
+   * @returns {Object} Result object with success property, and optional logData or error properties
    * @private
    */
   _parseLogText(text, source = 'log file') {

@@ -164,6 +164,9 @@ shell.nix
 # mkdocs documentation
 /site
 
+# JSDoc generated API documentation
+/docs/json/api/
+
 # mypy
 .mypy_cache/
 .dmypy.json

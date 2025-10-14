@@ -40,6 +40,8 @@
  *   - Access rule structures and evaluation results
  *   - Detailed rule tree analysis
  *   - Assessment of why items are failing
+ *
+ * @module testSpoilers/analysisReporter
  */
 
 import { createUniversalLogger } from '../../app/core/universalLogger.js';

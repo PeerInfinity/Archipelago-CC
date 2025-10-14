@@ -21,6 +21,8 @@
  *   - this.locations: Array of location objects
  *   - this.regions: Map of region objects
  *   - this.gameStateModule: Game-specific state instance
+ *
+ * @module stateManager/core/initialization
  */
 
 import { getGameLogic } from '../../shared/gameLogic/gameLogicRegistry.js';

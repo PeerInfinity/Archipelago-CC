@@ -23,6 +23,8 @@
  * Output: Boolean comparison result
  *   - true: State matches log expectations
  *   - false: Mismatch detected (details stored in currentMismatchDetails)
+ *
+ * @module testSpoilers/comparisonEngine
  */
 
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
