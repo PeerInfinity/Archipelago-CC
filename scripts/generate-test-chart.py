@@ -342,7 +342,54 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data) -> str:
 
     all_games = sorted(set(list(games_minimal.keys()) + list(games_full.keys()) + list(games_multiplayer.keys())))
 
-    md_content += "## Test Results\n\n"
+    # Calculate statistics first
+    def calc_stats(data_dict):
+        if not data_dict:
+            return 0, 0, 0
+        total = len(data_dict)
+        passed = sum(1 for r in data_dict.values() if 'passed' in r.lower())
+        return total, passed, passed/total*100 if total > 0 else 0
+
+    min_total, min_passed, min_pct = calc_stats(games_minimal)
+    full_total, full_passed, full_pct = calc_stats(games_full)
+    mp_total, mp_passed, mp_pct = calc_stats(games_multiplayer)
+
+    # Calculate templates by number of tests passed
+    tests_passed_count = {}
+    for game in all_games:
+        passed_count = 0
+        if game in games_minimal and 'passed' in games_minimal[game].lower():
+            passed_count += 1
+        if game in games_full and 'passed' in games_full[game].lower():
+            passed_count += 1
+        if game in games_multiplayer and 'passed' in games_multiplayer[game].lower():
+            passed_count += 1
+        tests_passed_count[game] = passed_count
+
+    # Count how many templates passed 0, 1, 2, or 3 tests
+    passed_all_3 = sum(1 for count in tests_passed_count.values() if count == 3)
+    passed_2 = sum(1 for count in tests_passed_count.values() if count == 2)
+    passed_1 = sum(1 for count in tests_passed_count.values() if count == 1)
+    passed_0 = sum(1 for count in tests_passed_count.values() if count == 0)
+
+    total_templates = len(all_games)
+
+    # Add Summary Statistics section
+    md_content += "## Summary Statistics\n\n"
+
+    md_content += "### Individual Test Results\n\n"
+    md_content += f"- **Minimal Test:** {min_passed}/{min_total} passed ({min_pct:.1f}%)\n"
+    md_content += f"- **Full Test:** {full_passed}/{full_total} passed ({full_pct:.1f}%)\n"
+    md_content += f"- **Multiplayer Test:** {mp_passed}/{mp_total} passed ({mp_pct:.1f}%)\n"
+
+    md_content += "\n### Combined Test Results\n\n"
+    md_content += f"- **Templates passing all 3 tests:** {passed_all_3}/{total_templates} ({passed_all_3/total_templates*100:.1f}%)\n"
+    md_content += f"- **Templates passing 2 tests:** {passed_2}/{total_templates} ({passed_2/total_templates*100:.1f}%)\n"
+    md_content += f"- **Templates passing 1 test:** {passed_1}/{total_templates} ({passed_1/total_templates*100:.1f}%)\n"
+    md_content += f"- **Templates passing 0 tests:** {passed_0}/{total_templates} ({passed_0/total_templates*100:.1f}%)\n"
+
+    # Add Test Results table
+    md_content += "\n## Test Results\n\n"
     md_content += "| Game Name | Minimal Test | Full Test | Multiplayer Test |\n"
     md_content += "|-----------|--------------|-----------|------------------|\n"
 
@@ -360,23 +407,6 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data) -> str:
                 return "❌ Failed"
 
         md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiplayer_result)} |\n"
-
-    md_content += "\n## Summary Statistics\n\n"
-
-    def calc_stats(data_dict):
-        if not data_dict:
-            return 0, 0, 0
-        total = len(data_dict)
-        passed = sum(1 for r in data_dict.values() if 'passed' in r.lower())
-        return total, passed, passed/total*100 if total > 0 else 0
-
-    min_total, min_passed, min_pct = calc_stats(games_minimal)
-    full_total, full_passed, full_pct = calc_stats(games_full)
-    mp_total, mp_passed, mp_pct = calc_stats(games_multiplayer)
-
-    md_content += f"- **Minimal Test:** {min_passed}/{min_total} passed ({min_pct:.1f}%)\n"
-    md_content += f"- **Full Test:** {full_passed}/{full_total} passed ({full_pct:.1f}%)\n"
-    md_content += f"- **Multiplayer Test:** {mp_passed}/{mp_total} passed ({mp_pct:.1f}%)\n"
 
     return md_content
 
