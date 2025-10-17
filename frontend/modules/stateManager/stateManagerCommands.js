@@ -30,4 +30,5 @@ export const STATE_MANAGER_COMMANDS = {
   CLEAR_EVENT_ITEMS: 'clearEventItems',
   SET_AUTO_COLLECT_EVENTS_CONFIG: 'setAutoCollectEventsConfig',
   SET_SPOILER_TEST_MODE: 'setSpoilerTestMode',
+  RECALCULATE_ACCESSIBILITY: 'recalculateAccessibility',
 };

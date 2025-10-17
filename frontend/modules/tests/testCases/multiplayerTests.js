@@ -30,6 +30,14 @@ export async function timerSendTest(testController) {
     testController.log('Starting timerSendTest...');
     testController.reportCondition('Test started', true);
 
+    // Check if we're running in single client mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const runningSingleClientTest = urlParams.get('runningSingleClientTest') === 'true';
+
+    if (runningSingleClientTest) {
+      testController.log('Running in single client mode - will not wait for second client');
+    }
+
     // Subscribe to game:playerJoined EARLY, before connection completes
     // This ensures we don't miss the event if another player is already connected
     let secondClientConnected = false;
@@ -102,38 +110,44 @@ export async function timerSendTest(testController) {
     const gameName = staticData.game_name;
     testController.log(`Using game name for Bounce targeting: ${gameName}`);
 
-    // Send "CLIENT1_READY" message to let Client 2 know we're ready
-    // Use retry logic since Client 2 might not be connected yet
-    testController.log('Sending CLIENT1_READY message with retry...');
+    // Only wait for Client 2 if we're not in single client mode
+    if (!runningSingleClientTest) {
+      // Send "CLIENT1_READY" message to let Client 2 know we're ready
+      // Use retry logic since Client 2 might not be connected yet
+      testController.log('Sending CLIENT1_READY message with retry...');
 
-    let client2Ready = false;
-    const readyPromise = waitForReadyMessage('CLIENT2', 15000); // 15 second total timeout
+      let client2Ready = false;
+      const readyPromise = waitForReadyMessage('CLIENT2', 15000); // 15 second total timeout
 
-    // Set up retry interval - send every 2 seconds
-    const retryInterval = setInterval(() => {
-      if (!client2Ready) {
-        testController.log('Sending/retrying CLIENT1_READY message...');
-        sendReadyMessage('CLIENT1', { games: [gameName] });
+      // Set up retry interval - send every 2 seconds
+      const retryInterval = setInterval(() => {
+        if (!client2Ready) {
+          testController.log('Sending/retrying CLIENT1_READY message...');
+          sendReadyMessage('CLIENT1', { games: [gameName] });
+        }
+      }, 2000);
+
+      // Send first message immediately
+      sendReadyMessage('CLIENT1', { games: [gameName] });
+      testController.reportCondition('Sent ready message', true);
+
+      // Wait for Client 2's ready message
+      testController.log('Waiting for CLIENT2_READY message...');
+      try {
+        const bounceData = await readyPromise;
+        client2Ready = true;
+        clearInterval(retryInterval);
+        testController.log('Received CLIENT2_READY message:', bounceData);
+        testController.reportCondition('Received ready message from Client 2', true);
+      } catch (error) {
+        clearInterval(retryInterval);
+        testController.log('Timeout waiting for CLIENT2_READY message', 'error');
+        testController.reportCondition('Failed to receive Client 2 confirmation', false);
+        throw error; // Fail the test
       }
-    }, 2000);
-
-    // Send first message immediately
-    sendReadyMessage('CLIENT1', { games: [gameName] });
-    testController.reportCondition('Sent ready message', true);
-
-    // Wait for Client 2's ready message
-    testController.log('Waiting for CLIENT2_READY message...');
-    try {
-      const bounceData = await readyPromise;
-      client2Ready = true;
-      clearInterval(retryInterval);
-      testController.log('Received CLIENT2_READY message:', bounceData);
-      testController.reportCondition('Received ready message from Client 2', true);
-    } catch (error) {
-      clearInterval(retryInterval);
-      testController.log('Timeout waiting for CLIENT2_READY message', 'error');
-      testController.reportCondition('Failed to receive Client 2 confirmation', false);
-      throw error; // Fail the test
+    } else {
+      testController.log('Skipping Client 2 synchronization in single client mode');
+      testController.reportCondition('Single client mode - skipping Client 2 wait', true);
     }
 
     // Clean up the playerJoined subscription we no longer need

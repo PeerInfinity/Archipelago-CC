@@ -835,7 +835,7 @@ def save_results(results: Dict, results_file: str, batch_processing_time: float 
         print(f"Error saving results: {e}")
 
 
-def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiplayer: bool = False, single_client: bool = False) -> Dict:
+def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False) -> Dict:
     """Test a single template file and return results."""
     template_name = os.path.basename(template_file)
     game_name = normalize_game_name(template_name)
@@ -1002,6 +1002,10 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             ]
             multiplayer_env = os.environ.copy()
 
+        # Add --headed flag if requested
+        if headed:
+            multiplayer_cmd.append("--headed")
+
         multiplayer_env['TEST_GAME'] = game_name
         multiplayer_env['TEST_SEED'] = seed
 
@@ -1049,7 +1053,11 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         # Spoiler test
         print("Running spoiler test...")
 
-        spoiler_cmd = ["npm", "test", "--mode=test-spoilers", f"--game={game_name}", f"--seed={seed}"]
+        # Use npm run test:headed if --headed flag is set
+        if headed:
+            spoiler_cmd = ["npm", "run", "test:headed", f"--mode=test-spoilers", f"--game={game_name}", f"--seed={seed}"]
+        else:
+            spoiler_cmd = ["npm", "test", "--mode=test-spoilers", f"--game={game_name}", f"--seed={seed}"]
         spoiler_env = os.environ.copy()
 
         # Time the spoiler test process
@@ -1138,7 +1146,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
     return result
 
 
-def test_template_seed_range(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed_list: List[int], export_only: bool = False, test_only: bool = False, stop_on_failure: bool = False, multiplayer: bool = False, single_client: bool = False) -> Dict:
+def test_template_seed_range(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed_list: List[int], export_only: bool = False, test_only: bool = False, stop_on_failure: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False) -> Dict:
     """Test a template file with multiple seeds and return aggregated results."""
     template_name = os.path.basename(template_file)
     
@@ -1173,7 +1181,7 @@ def test_template_seed_range(template_file: str, templates_dir: str, project_roo
             # Test this specific seed
             result = test_template_single_seed(
                 template_file, templates_dir, project_root, world_mapping,
-                str(seed), export_only, test_only, multiplayer, single_client
+                str(seed), export_only, test_only, multiplayer, single_client, headed
             )
 
             seed_range_result['individual_results'][str(seed)] = result
@@ -1344,6 +1352,11 @@ def main():
         '--single-client',
         action='store_true',
         help='Use single-client mode for multiplayer tests (only valid with --multiplayer)'
+    )
+    parser.add_argument(
+        '--headed',
+        action='store_true',
+        help='Run Playwright tests in headed mode (with visible browser windows)'
     )
 
     args = parser.parse_args()
@@ -1664,14 +1677,16 @@ def main():
                     yaml_file, templates_dir, project_root, world_mapping,
                     seed_list, export_only=args.export_only, test_only=args.test_only,
                     stop_on_failure=not args.seed_range_continue_on_failure,
-                    multiplayer=args.multiplayer, single_client=args.single_client
+                    multiplayer=args.multiplayer, single_client=args.single_client,
+                    headed=args.headed
                 )
             else:
                 # Test with single seed
                 template_result = test_template_single_seed(
                     yaml_file, templates_dir, project_root, world_mapping,
                     str(seed_list[0]), export_only=args.export_only, test_only=args.test_only,
-                    multiplayer=args.multiplayer, single_client=args.single_client
+                    multiplayer=args.multiplayer, single_client=args.single_client,
+                    headed=args.headed
                 )
             
             results['results'][yaml_file] = template_result

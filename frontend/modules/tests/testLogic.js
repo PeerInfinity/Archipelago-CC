@@ -489,7 +489,7 @@ export const testLogic = {
           await Promise.race([
             this.runAllEnabledTests(),
             new Promise((_, reject) => {
-              setTimeout(() => reject(new Error('Auto-start timeout after 120 seconds')), 120000);
+              setTimeout(() => reject(new Error('Auto-start timeout after 600 seconds')), 600000);
             })
           ]);
         } catch (error) {

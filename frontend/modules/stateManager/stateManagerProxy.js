@@ -1711,6 +1711,28 @@ export class StateManagerProxy {
       false // This is a fire-and-forget command, no specific response expected beyond ack
     );
   }
+
+  /**
+   * Manually triggers a recalculation of region and location accessibility in the worker.
+   * This includes:
+   * - Invalidating the reachability cache
+   * - Recomputing reachable regions via BFS
+   * - Scanning for newly accessible event locations and auto-collecting them (if enabled)
+   * - Sending an updated snapshot to the main thread
+   *
+   * Useful for forcing a fresh calculation when state might be stale or
+   * when you need to ensure all event locations have been scanned and checked.
+   *
+   * @returns {Promise<void>} A promise that resolves when the command has been sent
+   */
+  async recalculateAccessibility() {
+    log('info', '[StateManagerProxy] Requesting manual accessibility recalculation from worker');
+    return this._sendCommand(
+      StateManagerProxy.COMMANDS.RECALCULATE_ACCESSIBILITY,
+      null, // No payload needed
+      false // Fire-and-forget, snapshot update will arrive via normal flow
+    );
+  }
 }
 
 export default StateManagerProxy;

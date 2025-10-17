@@ -687,6 +687,7 @@ export class MessageHandler {
 
           if (serverLocationIds && serverLocationIds.length > 0) {
         let locationsMarked = 0;
+
         for (const id of serverLocationIds) {
           const name = getLocationNameFromServerId(id, stateManager);
           if (name && name !== `Location ${id}`) {
@@ -700,7 +701,7 @@ export class MessageHandler {
             );
           }
         }
-        
+
         if (locationsMarked > 0) {
           log(
             'info',
@@ -1013,7 +1014,7 @@ export class MessageHandler {
     // Use clientSlot from this instance
     const slot = this.clientSlot;
     if (slot === undefined || slot === null) {
-      log('error', 
+      log('error',
         '[MessageHandler] Client slot not defined, cannot send location checks. Current value:',
         slot
       );

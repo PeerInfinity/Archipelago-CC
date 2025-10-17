@@ -1063,4 +1063,38 @@ export class StateManager {
 
     return this.commandQueue.getSnapshot();
   }
+
+  /**
+   * Manually triggers a recalculation of region and location accessibility.
+   * This includes:
+   * - Invalidating the reachability cache
+   * - Recomputing reachable regions via BFS
+   * - Auto-collecting accessible event items (if enabled)
+   * - Sending an updated snapshot to the main thread
+   *
+   * Useful for forcing a fresh calculation when state might be stale or
+   * when you need to ensure all event locations have been scanned.
+   *
+   * @param {Object} options - Configuration options
+   * @param {boolean} options.sendUpdate - Whether to send snapshot update (default: true)
+   */
+  recalculateAccessibility(options = {}) {
+    // Default sendUpdate to true
+    const sendUpdate = options.sendUpdate !== false;
+
+    this.logger.info('StateManager', 'Manually recalculating accessibility...');
+
+    // Invalidate the cache to force recomputation
+    this.invalidateCache();
+
+    // Recompute reachable regions (this also auto-collects event items if enabled)
+    this.computeReachableRegions();
+
+    // Send updated snapshot if requested (default is true)
+    if (sendUpdate) {
+      this._sendSnapshotUpdate();
+    }
+
+    this.logger.info('StateManager', 'Accessibility recalculation complete.');
+  }
 }

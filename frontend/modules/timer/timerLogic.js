@@ -42,6 +42,10 @@ export class TimerLogic {
     this.isLoopModeActive = false; // Internal state to track loop mode for pausing timer
     this.unsubscribeHandles = [];
 
+    // Track locations we've attempted to check during this timer session
+    // This prevents duplicate check attempts before state updates
+    this.attemptedChecks = new Set();
+
     log('info', '[TimerLogic] Instance created.');
   }
 
@@ -93,6 +97,10 @@ export class TimerLogic {
       return;
     }
 
+    // Clear attempted checks tracking when starting a new timer session
+    this.attemptedChecks.clear();
+    log('info', '[TimerLogic] Cleared attempted checks tracking for new session');
+
     const rangeMs = (this.maxCheckDelay - this.minCheckDelay) * 1000;
     const baseMs = this.minCheckDelay * 1000;
     const initialDelay = Math.floor(Math.random() * rangeMs + baseMs);
@@ -138,12 +146,13 @@ export class TimerLogic {
         // Get snapshot once and reuse it
         const snapshotInterface = await this._getSnapshotInterface();
         let allChecked = false;
+        let checkDispatched = false;
 
         if (snapshotInterface) {
           const { snapshot, staticData } = snapshotInterface;
 
           // Determine and dispatch next location check using the same snapshot
-          const checkDispatched = await this._determineAndDispatchNextLocationCheckWithSnapshot(
+          checkDispatched = await this._determineAndDispatchNextLocationCheckWithSnapshot(
             snapshotInterface
           );
 
@@ -179,8 +188,12 @@ export class TimerLogic {
         if (allChecked) {
           log('info', '[TimerLogic] All locations checked. Stopping timer.');
           this.stop();
+        } else if (!checkDispatched) {
+          // No location was dispatched - either all inaccessible or recalculation found nothing
+          log('info', '[TimerLogic] No accessible locations found. Stopping timer.');
+          this.stop();
         } else {
-          // Continue the timer whether or not we found a location to check
+          // Successfully dispatched a check, continue the timer
           // This allows waiting for items from the server to unlock new locations
           const nextDelay = Math.floor(Math.random() * rangeMs + baseMs);
           this.startTime = Date.now();
@@ -285,6 +298,7 @@ export class TimerLogic {
     let uncheckedCount = 0;
     let inaccessibleCount = 0;
     let skippedEventCount = 0;
+    let skippedAlreadyAttemptedCount = 0;
 
     for (const loc of locationsArray) {
       const isChecked = snapshot.checkedLocations?.includes(loc.name);
@@ -293,6 +307,13 @@ export class TimerLogic {
       // Skip locations with invalid IDs (ID 0 or null means not recognized by server)
       if (loc.id === 0 || loc.id === null || loc.id === undefined) {
         skippedEventCount++;
+        continue;
+      }
+
+      // Skip locations we've already attempted to check in this session
+      // This prevents duplicate sends before the state updates
+      if (this.attemptedChecks.has(loc.name)) {
+        skippedAlreadyAttemptedCount++;
         continue;
       }
 
@@ -311,8 +332,10 @@ export class TimerLogic {
     }
 
     if (locationToCheck) {
+      // Mark this location as attempted before dispatching
+      this.attemptedChecks.add(locationToCheck.name);
       log('info',
-        `[TimerLogic] Auto-found location to check: ${locationToCheck.name}`
+        `[TimerLogic] Auto-found location to check: ${locationToCheck.name} (tracked in attempted checks)`
       );
       this.dispatcher.publish(
         'user:locationCheck',
@@ -326,14 +349,94 @@ export class TimerLogic {
       );
       return true;
     } else {
-      log('info',
-        `[TimerLogic] No reachable locations found: ${uncheckedCount} unchecked manually-checkable locations, ` +
-        `${inaccessibleCount} are inaccessible, ${skippedEventCount} event locations skipped`
-      );
-      this.eventBus.publish('ui:notification', {
-        message: 'All available locations checked by timer.',
-        type: 'info',
-      }, 'timer');
+      if (skippedAlreadyAttemptedCount > 0) {
+        log('info',
+          `[TimerLogic] No new reachable locations: ${uncheckedCount} unchecked manually-checkable locations, ` +
+          `${inaccessibleCount} inaccessible, ${skippedEventCount} event locations skipped, ` +
+          `${skippedAlreadyAttemptedCount} already attempted (waiting for state update)`
+        );
+      } else {
+        // No accessible locations found - trigger recalculation to ensure we haven't missed any event locations
+        log('info',
+          `[TimerLogic] No accessible locations found (${uncheckedCount} unchecked, ${inaccessibleCount} inaccessible). ` +
+          `Triggering accessibility recalculation to scan for newly accessible event locations...`
+        );
+
+        try {
+          // Trigger recalculation
+          await this.stateManager.recalculateAccessibility();
+
+          // Ping to ensure the worker has finished processing and sent the updated snapshot
+          log('debug', '[TimerLogic] Pinging worker to ensure snapshot is updated after recalculation...');
+          await this.stateManager.pingWorker('timer_recalculate_check', 5000);
+
+          // Get the updated snapshot after recalculation
+          const updatedSnapshotInterface = await this._getSnapshotInterface();
+          if (!updatedSnapshotInterface) {
+            log('warn', '[TimerLogic] Could not get updated snapshot after recalculation');
+            this.eventBus.publish('ui:notification', {
+              message: 'All available locations checked by timer.',
+              type: 'info',
+            }, 'timer');
+            return false;
+          }
+
+          const { snapshot: updatedSnapshot, staticData: updatedStaticData } = updatedSnapshotInterface;
+
+          // Check again for accessible locations in the updated snapshot
+          const locationsArrayUpdated = updatedStaticData.locations instanceof Map
+            ? Array.from(updatedStaticData.locations.values())
+            : (Array.isArray(updatedStaticData.locations)
+                ? updatedStaticData.locations
+                : Object.values(updatedStaticData.locations));
+
+          let newLocationToCheck = null;
+          for (const loc of locationsArrayUpdated) {
+            const isChecked = updatedSnapshot.checkedLocations?.includes(loc.name);
+            if (isChecked) continue;
+
+            if (loc.id === 0 || loc.id === null || loc.id === undefined) continue;
+            if (this.attemptedChecks.has(loc.name)) continue;
+
+            const isAccessible = updatedSnapshotInterface.isLocationAccessible(loc.name);
+            if (isAccessible) {
+              newLocationToCheck = loc;
+              break;
+            }
+          }
+
+          if (newLocationToCheck) {
+            // Found a newly accessible location after recalculation!
+            this.attemptedChecks.add(newLocationToCheck.name);
+            log('info',
+              `[TimerLogic] Found newly accessible location after recalculation: ${newLocationToCheck.name}`
+            );
+            this.dispatcher.publish(
+              'user:locationCheck',
+              {
+                locationName: newLocationToCheck.name,
+                regionName: newLocationToCheck.region || newLocationToCheck.parent_region,
+                originator: 'TimerModuleAuto',
+                originalDOMEvent: false,
+              },
+              { initialTarget: 'bottom' }
+            );
+            return true;
+          } else {
+            log('info', '[TimerLogic] No new accessible locations found after recalculation');
+            this.eventBus.publish('ui:notification', {
+              message: 'All available locations checked by timer.',
+              type: 'info',
+            }, 'timer');
+          }
+        } catch (error) {
+          log('error', '[TimerLogic] Error during accessibility recalculation:', error);
+          this.eventBus.publish('ui:notification', {
+            message: 'All available locations checked by timer.',
+            type: 'info',
+          }, 'timer');
+        }
+      }
       return false;
     }
   }

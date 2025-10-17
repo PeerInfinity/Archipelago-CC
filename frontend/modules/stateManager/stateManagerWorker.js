@@ -1273,6 +1273,28 @@ async function handleMessage(message) {
         }
         break;
 
+      case STATE_MANAGER_COMMANDS.RECALCULATE_ACCESSIBILITY:
+        log('debug', '[Worker] Received recalculateAccessibility command');
+        if (!stateManagerInstance) {
+          log('error', '[Worker] StateManager not initialized for recalculateAccessibility');
+          break;
+        }
+        try {
+          // Invalidate the reachability cache
+          stateManagerInstance.invalidateCache();
+
+          // Recompute reachable regions (this also handles auto-collection of event items)
+          stateManagerInstance.computeReachableRegions();
+
+          // Send updated snapshot to main thread
+          stateManagerInstance._sendSnapshotUpdate();
+
+          log('info', '[Worker] Accessibility recalculated successfully');
+        } catch (error) {
+          log('error', '[Worker] Error recalculating accessibility:', error);
+        }
+        break;
+
       case 'updateWorkerLogConfig':
         log(
           'debug',

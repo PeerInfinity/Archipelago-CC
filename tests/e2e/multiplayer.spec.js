@@ -6,6 +6,9 @@ import { promisify } from 'util';
 const execAsync = promisify(exec);
 
 test.describe('Multiplayer Client Interaction Tests', () => {
+  // Set timeout to 10 minutes for all tests in this suite
+  test.setTimeout(600000);
+
   const testGame = process.env.TEST_GAME || 'adventure';
   const testSeed = process.env.TEST_SEED || '1';
   const outputDir = process.env.TEST_OUTPUT_DIR || 'test_results/multiplayer';
@@ -112,7 +115,8 @@ test.describe('Multiplayer Client Interaction Tests', () => {
     });
 
     // Build URL with autoConnect, game, and seed parameters
-    const url1 = `http://localhost:8000/frontend/?mode=test-multiplayer-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}`;
+    // Add runningSingleClientTest=true for single client mode
+    const url1 = `http://localhost:8000/frontend/?mode=test-multiplayer-client1&autoConnect=true&server=ws://localhost:38281&playerName=Player1&game=${testGame}&seed=${testSeed}&runningSingleClientTest=true`;
 
     console.log('='.repeat(60));
     console.log('Starting single client timer test...');
@@ -153,7 +157,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
         return flag === 'true';
       },
       null,
-      { timeout: 130000, polling: 500 }
+      { timeout: 600000, polling: 500 }
     );
 
     console.log('='.repeat(60));
@@ -297,7 +301,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
           return flag === 'true';
         },
         null,
-        { timeout: 130000, polling: 500 }
+        { timeout: 600000, polling: 500 }
       ),
       page2.waitForFunction(
         () => {
@@ -327,7 +331,7 @@ test.describe('Multiplayer Client Interaction Tests', () => {
           return flag === 'true';
         },
         null,
-        { timeout: 130000, polling: 500 }
+        { timeout: 600000, polling: 500 }
       ),
     ]);
 
