@@ -1078,6 +1078,9 @@ export class StateManager {
    * Useful for forcing a fresh calculation when state might be stale or
    * when you need to ensure all event locations have been scanned.
    *
+   * NOTE: This was added for testing purposes and should never need to be used in normal operation.
+   * The accessibility system automatically recalculates when state changes occur.
+   *
    * @param {Object} options - Configuration options
    * @param {boolean} options.sendUpdate - Whether to send snapshot update (default: true)
    */

@@ -1,11 +1,11 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-10-17 21:14:55
+**Generated:** 2025-10-18 14:31:40
 
 This summary combines results from three types of tests:
-- **Minimal Spoiler Test:** Tests with advancement items only
-- **Full Spoiler Test:** Tests with all locations
-- **Multiplayer Test:** Tests in multiplayer mode
+- **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
+- **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)
+- **Multiplayer Test:** Tests in multiplayer mode - [View Details](./test-results-multiplayer.md)
 
 ## Summary Statistics
 

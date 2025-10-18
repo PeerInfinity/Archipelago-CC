@@ -205,12 +205,11 @@ export class TimerLogic {
           // Stop the timer immediately (this clears the interval and publishes timer:stopped)
           this.stop();
 
-          // Do a final recalculate + ping in the background to catch any remaining event locations
+          // Do a final ping in the background to catch any remaining event locations
           // This doesn't block the timer from stopping
           (async () => {
             try {
-              await this.stateManager.recalculateAccessibility();
-              log('info', '[TimerLogic] Final recalculation complete. Pinging worker...');
+              log('info', '[TimerLogic] Pinging worker...');
               await this.stateManager.pingWorker('timer_final_recalculate', 5000);
 
               // Wait a bit for snapshot updates to propagate
@@ -474,15 +473,12 @@ export class TimerLogic {
         // No accessible locations found - trigger recalculation to ensure we haven't missed any event locations
         log('info',
           `[TimerLogic] No accessible locations found (${uncheckedCount} unchecked, ${inaccessibleCount} inaccessible). ` +
-          `Triggering accessibility recalculation to scan for newly accessible event locations...`
+          `Pinging worker to check for newly accessible event locations...`
         );
 
         try {
-          // Trigger recalculation
-          await this.stateManager.recalculateAccessibility();
-
           // Ping to ensure the worker has finished processing and sent the updated snapshot
-          log('debug', '[TimerLogic] Pinging worker to ensure snapshot is updated after recalculation...');
+          log('debug', '[TimerLogic] Pinging worker to ensure snapshot is updated...');
           await this.stateManager.pingWorker('timer_recalculate_check', 5000);
 
           // Get the updated snapshot after recalculation

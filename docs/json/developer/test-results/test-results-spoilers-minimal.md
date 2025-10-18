@@ -2,11 +2,13 @@
 
 ## Spoiler Test - Advancement Items Only
 
-**Generated:** 2025-10-17 21:14:55
+[← Back to Test Results Summary](./test-results-summary.md)
+
+**Generated:** 2025-10-18 14:31:40
 
 **Source Data Created:** 2025-10-14T13:24:10.253834
 
-**Source Data Last Updated:** 2025-10-17T21:14:55.745342
+**Source Data Last Updated:** 2025-10-17T21:14:55.823599
 
 ## Summary
 

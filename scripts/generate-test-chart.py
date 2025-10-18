@@ -190,6 +190,9 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
     if subtitle:
         md_content += f"## {subtitle}\n\n"
 
+    # Add link to summary document
+    md_content += "[← Back to Test Results Summary](./test-results-summary.md)\n\n"
+
     if metadata:
         md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
         md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"
@@ -255,6 +258,9 @@ def generate_multiplayer_markdown(chart_data: List[Tuple[str, str, int, int, int
     """Generate a markdown table for multiplayer test data."""
     md_content = "# Archipelago Template Test Results Chart\n\n"
     md_content += "## Multiplayer Test\n\n"
+
+    # Add link to summary document
+    md_content += "[← Back to Test Results Summary](./test-results-summary.md)\n\n"
 
     # Add generated timestamp
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
@@ -331,9 +337,9 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data) -> str:
     md_content = "# Archipelago Template Test Results Summary\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
     md_content += "This summary combines results from three types of tests:\n"
-    md_content += "- **Minimal Spoiler Test:** Tests with advancement items only\n"
-    md_content += "- **Full Spoiler Test:** Tests with all locations\n"
-    md_content += "- **Multiplayer Test:** Tests in multiplayer mode\n\n"
+    md_content += "- **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)\n"
+    md_content += "- **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)\n"
+    md_content += "- **Multiplayer Test:** Tests in multiplayer mode - [View Details](./test-results-multiplayer.md)\n\n"
 
     # Create a unified game list
     games_minimal = {name: result for name, result, *_ in minimal_data}

@@ -2,7 +2,9 @@
 
 ## Spoiler Test - All Locations
 
-**Generated:** 2025-10-17 21:14:55
+[← Back to Test Results Summary](./test-results-summary.md)
+
+**Generated:** 2025-10-18 14:31:40
 
 **Source Data Created:** 2025-10-14T13:23:48.314334
 

@@ -29,6 +29,11 @@ This section is for developers who want to understand, modify, or contribute to 
 - **[System Architecture](./developer/architecture.md)**: A high-level overview of the modular frontend and Python backend systems.
 - **[Developer Guides](./developer/guides/)**: In-depth guides on specific architectural components like the State Manager, Module System, and Event System.
 - **[Reference](./developer/reference/)**: Detailed reference material, such as the Logging System guide.
+- **[Test Results](./developer/test-results/)**: Automated test results for all game templates:
+  - [Test Results Summary](./developer/test-results/test-results-summary.md): Combined overview of all test types
+  - [Minimal Spoiler Test Results](./developer/test-results/test-results-spoilers-minimal.md): Tests with advancement items only
+  - [Full Spoiler Test Results](./developer/test-results/test-results-spoilers-full.md): Tests with all locations
+  - [Multiplayer Test Results](./developer/test-results/test-results-multiplayer.md): Tests in multiplayer mode
 
 ### 3. Module Reference
 

@@ -780,82 +780,168 @@ async function loadCombinedModeData(urlParams) {
 
   // --- New logic to iterate over all config keys defined in modes.json for the current mode ---
   const currentModeFileConfigs = G_modesConfig?.[G_currentActiveMode];
+  const defaultModeFileConfigs = G_modesConfig?.['default'];
+
+  // Collect all unique config keys from both current mode and default mode
+  const allConfigKeys = new Set();
   if (currentModeFileConfigs) {
-    for (const configKey in currentModeFileConfigs) {
+    Object.keys(currentModeFileConfigs).forEach(key => allConfigKeys.add(key));
+  }
+  if (defaultModeFileConfigs) {
+    Object.keys(defaultModeFileConfigs).forEach(key => allConfigKeys.add(key));
+  }
+
+  if (allConfigKeys.size > 0) {
+    for (const configKey of allConfigKeys) {
+      // Determine which config entry to use (current mode or fallback to default)
+      let configEntry = null;
+      let usingFallback = false;
+
       if (
+        currentModeFileConfigs &&
         Object.prototype.hasOwnProperty.call(currentModeFileConfigs, configKey)
       ) {
-        const configEntry = currentModeFileConfigs[configKey];
-        // Ensure it's an object with a 'path' or 'paths' and is 'enabled' (or enabled is not specified, defaulting to true)
+        configEntry = currentModeFileConfigs[configKey];
+      } else if (
+        defaultModeFileConfigs &&
+        Object.prototype.hasOwnProperty.call(defaultModeFileConfigs, configKey)
+      ) {
+        configEntry = defaultModeFileConfigs[configKey];
+        usingFallback = true;
+        logger.info(
+          'init',
+          `${configKey} not found in mode "${G_currentActiveMode}", falling back to "default" mode.`
+        );
+      }
+
+      if (
+        configEntry &&
+        typeof configEntry === 'object' &&
+        (configEntry.path || configEntry.paths) &&
+        (typeof configEntry.enabled === 'undefined' || configEntry.enabled)
+      ) {
+        // Get paths to load (supports both single path and multiple paths)
+        let pathsToLoad = getConfigPaths(configEntry);
+
+        // Apply rules URL parameter override if this is rulesConfig
+        if (configKey === 'rulesConfig' && rulesOverride) {
+          pathsToLoad = [rulesOverride];
+          logger.info(
+            'init',
+            `Rules file path overridden by URL parameter: ${rulesOverride}`
+          );
+        }
+
+        // Only load from file if not present in baseCombinedData (from localStorage) or if localStorage load was skipped
         if (
-          configEntry &&
-          typeof configEntry === 'object' &&
-          (configEntry.path || configEntry.paths) &&
-          (typeof configEntry.enabled === 'undefined' || configEntry.enabled)
+          G_skipLocalStorageLoad ||
+          !baseCombinedData.hasOwnProperty(configKey) ||
+          !baseCombinedData[configKey] ||  // Also load if key exists but value is null/undefined/falsey from LS
+          (configKey === 'rulesConfig' && rulesOverride) // Always reload rulesConfig if URL override is present
         ) {
-          // Get paths to load (supports both single path and multiple paths)
-          let pathsToLoad = getConfigPaths(configEntry);
-          
-          // Apply rules URL parameter override if this is rulesConfig
-          if (configKey === 'rulesConfig' && rulesOverride) {
-            pathsToLoad = [rulesOverride];
-            logger.info(
-              'init',
-              `Rules file path overridden by URL parameter: ${rulesOverride}`
+          logger.info(
+            'init',
+            `${configKey} for "${G_currentActiveMode}" is missing or invalid in baseCombinedData. Attempting to load from files.`
+          );
+
+          let fetchedData = null;
+
+          // Check if we have multiple paths to merge
+          if (pathsToLoad.length > 1) {
+            // Load and merge multiple files
+            fetchedData = await loadAndMergeJsonFiles(
+              pathsToLoad,
+              fetchJson,
+              (msg) => logger.info('init', msg)
+            );
+          } else if (pathsToLoad.length === 1) {
+            // Single file load (existing behavior)
+            fetchedData = await fetchJson(
+              pathsToLoad[0],
+              `Error loading ${configKey} from file`
             );
           }
 
-          // Only load from file if not present in baseCombinedData (from localStorage) or if localStorage load was skipped
-          if (
-            G_skipLocalStorageLoad ||
-            !baseCombinedData.hasOwnProperty(configKey) ||
-            !baseCombinedData[configKey] ||  // Also load if key exists but value is null/undefined/falsey from LS
-            (configKey === 'rulesConfig' && rulesOverride) // Always reload rulesConfig if URL override is present
-          ) {
-            logger.info(
-              'init',
-              `${configKey} for "${G_currentActiveMode}" is missing or invalid in baseCombinedData. Attempting to load from files.`
-            );
-            
-            let fetchedData = null;
-            
-            // Check if we have multiple paths to merge
-            if (pathsToLoad.length > 1) {
-              // Load and merge multiple files
-              fetchedData = await loadAndMergeJsonFiles(
-                pathsToLoad,
-                fetchJson,
-                (msg) => logger.info('init', msg)
-              );
-            } else if (pathsToLoad.length === 1) {
-              // Single file load (existing behavior)
-              fetchedData = await fetchJson(
-                pathsToLoad[0],
-                `Error loading ${configKey} from file`
-              );
-            }
-            
-            if (fetchedData) {
-              baseCombinedData[configKey] = fetchedData;
+          if (fetchedData) {
+            baseCombinedData[configKey] = fetchedData;
 
-              dataSources[configKey] = {
-                source: rulesOverride && configKey === 'rulesConfig' ? 'urlOverride' : 'file',
-                timestamp: new Date().toISOString(),
-                details: rulesOverride && configKey === 'rulesConfig' 
-                  ? `Loaded from URL parameter override: ${pathsToLoad[0]}`
+            dataSources[configKey] = {
+              source: rulesOverride && configKey === 'rulesConfig' ? 'urlOverride' : (usingFallback ? 'fallback' : 'file'),
+              timestamp: new Date().toISOString(),
+              details: rulesOverride && configKey === 'rulesConfig'
+                ? `Loaded from URL parameter override: ${pathsToLoad[0]}`
+                : usingFallback
+                  ? `Loaded from "default" mode (fallback): ${pathsToLoad.join(', ')}`
                   : pathsToLoad.length > 1
                     ? `Merged from ${pathsToLoad.length} files: ${pathsToLoad.join(', ')}`
                     : `Loaded from file: ${pathsToLoad[0]}`,
-              };
+            };
 
-              logger.info(
+            logger.info(
+              'init',
+              `Loaded ${configKey} for "${G_currentActiveMode}" from ${pathsToLoad.length} file(s).`
+            );
+          } else {
+            // If fetch failed, try to fall back to default mode (if not already using it)
+            if (!usingFallback && defaultModeFileConfigs && defaultModeFileConfigs[configKey]) {
+              logger.error(
                 'init',
-                `Loaded ${configKey} for "${G_currentActiveMode}" from ${pathsToLoad.length} file(s).`
+                `Failed to load ${configKey} from ${pathsToLoad.join(', ')}. Attempting fallback to "default" mode.`
               );
+
+              const defaultConfigEntry = defaultModeFileConfigs[configKey];
+              if (
+                defaultConfigEntry &&
+                typeof defaultConfigEntry === 'object' &&
+                (defaultConfigEntry.path || defaultConfigEntry.paths) &&
+                (typeof defaultConfigEntry.enabled === 'undefined' || defaultConfigEntry.enabled)
+              ) {
+                const defaultPathsToLoad = getConfigPaths(defaultConfigEntry);
+
+                let defaultFetchedData = null;
+                if (defaultPathsToLoad.length > 1) {
+                  defaultFetchedData = await loadAndMergeJsonFiles(
+                    defaultPathsToLoad,
+                    fetchJson,
+                    (msg) => logger.info('init', msg)
+                  );
+                } else if (defaultPathsToLoad.length === 1) {
+                  defaultFetchedData = await fetchJson(
+                    defaultPathsToLoad[0],
+                    `Error loading ${configKey} from default mode file`
+                  );
+                }
+
+                if (defaultFetchedData) {
+                  baseCombinedData[configKey] = defaultFetchedData;
+                  dataSources[configKey] = {
+                    source: 'fallback',
+                    timestamp: new Date().toISOString(),
+                    details: `Loaded from "default" mode after primary load failed: ${defaultPathsToLoad.join(', ')}`,
+                  };
+                  logger.info(
+                    'init',
+                    `Successfully loaded ${configKey} from "default" mode as fallback.`
+                  );
+                } else {
+                  logger.warn(
+                    'init',
+                    `Failed to load ${configKey} from both current mode and default mode. It will be missing.`
+                  );
+                  if (!baseCombinedData.hasOwnProperty(configKey)) {
+                    baseCombinedData[configKey] = null;
+                    dataSources[configKey] = {
+                      source: 'error',
+                      timestamp: new Date().toISOString(),
+                      details: `Failed to load from both current mode files (${pathsToLoad.join(', ')}) and default mode files (${defaultPathsToLoad.join(', ')})`,
+                    };
+                  }
+                }
+              }
             } else {
               logger.warn(
                 'init',
-                `Failed to load ${configKey} from ${pathsToLoad.join(', ')}. It will be missing unless defaults are applied later.`
+                `Failed to load ${configKey} from ${pathsToLoad.join(', ')}. ${usingFallback ? 'Already using default mode, no further fallback available.' : 'It will be missing unless defaults are applied later.'}`
               );
               // Ensure the key exists with null if fetch failed, to prevent re-attempts if not desired
               if (!baseCombinedData.hasOwnProperty(configKey)) {
@@ -867,19 +953,19 @@ async function loadCombinedModeData(urlParams) {
                 };
               }
             }
-          } else {
-            logger.info(
-              'init',
-              `Using ${configKey} for "${G_currentActiveMode}" from localStorage.`
-            );
           }
+        } else {
+          logger.info(
+            'init',
+            `Using ${configKey} for "${G_currentActiveMode}" from localStorage.`
+          );
         }
       }
     }
   } else {
     logger.warn(
       'init',
-      `No file configurations found in modes.json for mode "${G_currentActiveMode}".`
+      `No file configurations found in modes.json for mode "${G_currentActiveMode}" or "default".`
     );
   }
 
