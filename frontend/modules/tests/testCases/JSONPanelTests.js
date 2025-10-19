@@ -555,10 +555,15 @@ export async function testJSONPanelLayoutImportExport(testController) {
 export async function testJSONPanelGameStateImportExport(testController) {
   log('info', 'Starting JSON panel Game State Import/Export test');
   const testRunId = `json-gamestate-test-${Date.now()}`;
-  
+
   try {
     testController.log(`[${testRunId}] Starting JSON panel Game State Import/Export test...`);
     testController.reportCondition('Test started', true);
+
+    // Step 0: Load ALTTP rules first (this test uses ALTTP-specific locations like Mushroom)
+    testController.log(`[${testRunId}] Loading ALTTP rules for test setup...`);
+    await testController.loadALTTPRules();
+    testController.reportCondition('ALTTP rules loaded for test', true);
 
     const eventBusModule = await import('../../../app/core/eventBus.js');
     const eventBus = eventBusModule.default;
@@ -566,7 +571,6 @@ export async function testJSONPanelGameStateImportExport(testController) {
     // Step 1: Activate the Locations panel
     testController.log(`[${testRunId}] Step 1: Activating Locations panel...`);
     eventBus.publish('ui:activatePanel', { panelId: 'locationsPanel' }, 'tests');
-    await new Promise((resolve) => setTimeout(resolve, 1500));
     
     let locationsPanelElement = null;
     if (!(await testController.pollForCondition(
@@ -582,9 +586,18 @@ export async function testJSONPanelGameStateImportExport(testController) {
     }
     testController.reportCondition('Locations panel found in DOM', true);
 
+    // Step 1b: Ensure "Show Checked" checkbox is enabled (same as rulesReloadTest)
+    testController.log(`[${testRunId}] Step 1b: Ensuring "Show Checked" checkbox is enabled...`);
+    const showCheckedCheckbox = document.querySelector('#show-checked');
+    if (showCheckedCheckbox && !showCheckedCheckbox.checked) {
+      testController.log(`[${testRunId}] "Show Checked" was not checked, enabling it...`);
+      showCheckedCheckbox.click();
+    }
+    testController.reportCondition('"Show Checked" checkbox enabled', showCheckedCheckbox && showCheckedCheckbox.checked);
+
     // Step 2: In the Locations panel, find the location card for "Mushroom" and click it
     testController.log(`[${testRunId}] Step 2: Finding and clicking Mushroom location...`);
-    
+
     // Find the Mushroom location using same method as rulesReloadTest
     const mushroomLocation = await testController.pollForValue(
       () => {
@@ -610,11 +623,8 @@ export async function testJSONPanelGameStateImportExport(testController) {
 
     // Step 3: Wait for the status of the Mushroom location card to change to "checked"
     testController.log(`[${testRunId}] Step 3: Waiting for Mushroom location to be checked...`);
-    
-    // Wait for location to be processed - using same timing as rulesReloadTest
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Then wait for it to be fully checked (using exact same method as rulesReloadTest)
+
+    // Wait for it to be fully checked (polling handles the wait)
     const mushroomLocationChecked = await testController.pollForCondition(
       () => {
         const locationCards = document.querySelectorAll('.location-card');
@@ -638,7 +648,6 @@ export async function testJSONPanelGameStateImportExport(testController) {
     // Step 4: Activate the JSON panel
     testController.log(`[${testRunId}] Step 4: Activating JSON panel...`);
     eventBus.publish('ui:activatePanel', { panelId: 'jsonPanel' }, 'tests');
-    await new Promise((resolve) => setTimeout(resolve, 1500));
     
     let jsonPanelElement = null;
     if (!(await testController.pollForCondition(
@@ -693,7 +702,6 @@ export async function testJSONPanelGameStateImportExport(testController) {
     }
     
     exportTextButton.click();
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     testController.reportCondition('Export to Text button clicked', true);
 
     // Step 7: Save the contents of the Editor window to a string
@@ -771,7 +779,6 @@ export async function testJSONPanelGameStateImportExport(testController) {
     // Step 9: Activate the Locations panel
     testController.log(`[${testRunId}] Step 9: Re-activating Locations panel...`);
     eventBus.publish('ui:activatePanel', { panelId: 'locationsPanel' }, 'tests');
-    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Step 10: In the Locations panel, find the location card for "Bottle Merchant" and click it
     testController.log(`[${testRunId}] Step 10: Finding and clicking Bottle Merchant location...`);
@@ -801,11 +808,8 @@ export async function testJSONPanelGameStateImportExport(testController) {
 
     // Step 11: Wait for the status of the Bottle Merchant location card to change to "checked"
     testController.log(`[${testRunId}] Step 11: Waiting for Bottle Merchant location to be checked...`);
-    
-    // Wait for location to be processed - using same timing as rulesReloadTest
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Then wait for it to be fully checked (using exact same method as rulesReloadTest)
+
+    // Wait for it to be fully checked (polling handles the wait)
     const bottleMerchantLocationChecked = await testController.pollForCondition(
       () => {
         const locationCards = document.querySelectorAll('.location-card');
@@ -829,7 +833,6 @@ export async function testJSONPanelGameStateImportExport(testController) {
     // Step 12: Activate the JSON panel
     testController.log(`[${testRunId}] Step 12: Re-activating JSON panel...`);
     eventBus.publish('ui:activatePanel', { panelId: 'jsonPanel' }, 'tests');
-    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Step 13: Disable all of the checkboxes in the JSON panel except for the Game State
     testController.log(`[${testRunId}] Step 13: Re-configuring JSON panel checkboxes...`);
@@ -859,23 +862,20 @@ export async function testJSONPanelGameStateImportExport(testController) {
     // Step 14: Activate the Editor panel
     testController.log(`[${testRunId}] Step 14: Activating Editor panel...`);
     eventBus.publish('ui:activatePanel', { panelId: 'editorPanel' }, 'tests');
-    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Step 15: Select "Data for Export" from the dropdown
     testController.log(`[${testRunId}] Step 15: Selecting Data for Export from dropdown...`);
-    
+
     editorDropdown.value = 'dataForExport';
     editorDropdown.dispatchEvent(new Event('change'));
-    await new Promise((resolve) => setTimeout(resolve, 500));
     testController.reportCondition('Editor dropdown set to Data for Export', true);
 
     // Step 16: Verify that the contents of the Editor edit area match the string we saved earlier
     testController.log(`[${testRunId}] Step 16: Verifying editor content matches saved content...`);
-    
+
     // First set the editor content to our saved content
     editorTextarea.value = savedEditorContent;
     editorTextarea.dispatchEvent(new Event('input'));
-    await new Promise((resolve) => setTimeout(resolve, 500));
     testController.reportCondition('Editor content set to saved state', true);
 
     // Step 17: In the JSON panel, click the button to Load from Text
@@ -895,20 +895,39 @@ export async function testJSONPanelGameStateImportExport(testController) {
     try {
       // Activate JSON panel
       eventBus.publish('ui:activatePanel', { panelId: 'jsonPanel' }, 'tests');
-      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Click Import from Text button
       const importTextButton = jsonPanelElement.querySelector('#json-btn-import-text');
       if (!importTextButton) {
         throw new Error('Import from Text button not found in JSON panel');
       }
-      
+
       importTextButton.click();
-      await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait longer for import process
       testController.reportCondition('Import from Text button clicked', true);
-      
-      // Give additional time for UI to refresh completely after import (like rulesReloadTest)
-      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Wait for import to complete by polling for Bottle Merchant to become unchecked
+      // (The import restores the state to before we checked Bottle Merchant)
+      testController.log(`[${testRunId}] Waiting for import to complete...`);
+      const importCompleted = await testController.pollForCondition(
+        () => {
+          const locationCards = document.querySelectorAll('.location-card');
+          for (const card of locationCards) {
+            if (card.textContent.includes('Bottle Merchant')) {
+              // Import is complete when Bottle Merchant is no longer checked
+              const isChecked = card.classList.contains('checked') || card.classList.contains('location-checked');
+              return !isChecked;
+            }
+          }
+          return false;
+        },
+        'Import process completed (Bottle Merchant unchecked)',
+        10000, // Give up to 10 seconds for import
+        250
+      );
+
+      if (!importCompleted) {
+        throw new Error('Import did not complete within timeout');
+      }
     } finally {
       // Restore original functions
       window.confirm = originalConfirm;
@@ -918,9 +937,8 @@ export async function testJSONPanelGameStateImportExport(testController) {
     // Step 18: Confirm that in the Locations panel, "Mushroom" is checked, but "Bottle Merchant" isn't
     testController.log(`[${testRunId}] Step 18: Verifying location states after import...`);
     eventBus.publish('ui:activatePanel', { panelId: 'locationsPanel' }, 'tests');
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Give more time for state to propagate
-    
-    // Check Mushroom is still checked (using same method as rulesReloadTest)
+
+    // Check Mushroom is still checked
     const mushroomStillChecked = await testController.pollForCondition(
       () => {
         const locationCards = document.querySelectorAll('.location-card');
@@ -966,8 +984,7 @@ export async function testJSONPanelGameStateImportExport(testController) {
     // Step 19: Confirm that in the Inventory panel, "Rupees (20)" appears, but "Piece of Heart" doesn't
     testController.log(`[${testRunId}] Step 19: Verifying inventory state after import...`);
     eventBus.publish('ui:activatePanel', { panelId: 'inventoryPanel' }, 'tests');
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
+
     let inventoryPanelElement = null;
     if (!(await testController.pollForCondition(
       () => {
@@ -1017,23 +1034,16 @@ export async function testJSONPanelGameStateImportExport(testController) {
     testController.reportCondition('Rupees (20) appears in inventory after import', true);
 
     // Check that Piece of Heart does not appear (it comes from Bottle Merchant which we unchecked)
+    // Since we're checking for absence, we should verify directly rather than polling
     let pieceOfHeartFound = false;
-    await testController.pollForCondition(
-      () => {
-        const inventoryItems = inventoryPanelElement.querySelectorAll('.inventory-item');
-        for (const item of inventoryItems) {
-          const nameElement = item.querySelector('.inventory-item-name');
-          if (nameElement && nameElement.textContent.includes('Piece of Heart')) {
-            pieceOfHeartFound = true;
-            return true;
-          }
-        }
-        return false;
-      },
-      'Piece of Heart not in inventory (checking)',
-      2000,
-      250
-    );
+    const inventoryItems = inventoryPanelElement.querySelectorAll('.inventory-item');
+    for (const item of inventoryItems) {
+      const nameElement = item.querySelector('.inventory-item-name');
+      if (nameElement && nameElement.textContent.includes('Piece of Heart')) {
+        pieceOfHeartFound = true;
+        break;
+      }
+    }
 
     if (pieceOfHeartFound) {
       throw new Error('Piece of Heart found in inventory after import (should have been removed by state restoration)');

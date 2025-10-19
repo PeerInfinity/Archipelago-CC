@@ -15,7 +15,7 @@ export async function testPathAnalyzerPanel(testController) {
 
     // Load default rules to reset state
     testController.log(`[${testRunId}] Loading default rules to reset state...`);
-    await testController.loadDefaultRules();
+    await testController.loadALTTPRules();
     testController.log(`[${testRunId}] Default rules loaded successfully`);
 
     // Step 1: Verify state manager availability (still good to have)
@@ -333,43 +333,54 @@ export async function debugPathAnalyzerTest(testController) {
   testController.reportCondition('Test started', true);
 
   try {
-    // Step 1: Get state manager
-    testController.log('Step 1: Getting state manager...');
+    // Step 1: Load ALTTP rules (required for this test)
+    testController.log('Step 1: Loading ALTTP rules...');
+    const alttpRulesPath = './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+    await testController.loadRulesFromFile(alttpRulesPath);
+    testController.reportCondition('ALTTP rules loaded', true);
+
+    // Give time for static data cache to update after rules load
+    testController.log('Waiting for static data cache to update...');
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Step 2: Get state manager
+    testController.log('Step 2: Getting state manager...');
     const sm = testController.stateManager;
     if (!sm) {
       throw new Error('State manager not available');
     }
     testController.reportCondition('State manager available', true);
 
-    // Step 2: Set up simple test state
-    testController.log('Step 2: Setting up simple test state...');
+    // Step 3: Set up simple test state
+    testController.log('Step 3: Setting up simple test state...');
     await sm.applyTestInventoryAndEvaluate('Moon Pearl', [], []);
     testController.reportCondition('Test inventory applied', true);
 
-    // Step 3: Check if target region exists
-    testController.log('Step 3: Getting static data...');
+    // Step 4: Check if target region exists
+    testController.log('Step 4: Getting static data...');
     const staticData = sm.getStaticData();
-    testController.log('Step 3a: Static data retrieved');
 
     if (!staticData || !staticData.regions) {
       testController.reportCondition('Static data check', false);
       testController.log('✗ No static data or regions available');
       return false;
     }
-    testController.log('Step 3b: Static data validation passed');
+    testController.reportCondition('Static data available', true);
 
-    // Use a simple region that should definitely exist
+    // Use a simple region that should definitely exist in ALTTP
     const testRegion = 'Light World';
-    const regionExists = staticData.regions[testRegion];
-    testController.log(
-      `Step 3c: Region "${testRegion}" exists: ${!!regionExists}`
-    );
+    const regionExists = staticData.regions instanceof Map
+      ? staticData.regions.has(testRegion)
+      : staticData.regions[testRegion];
+    testController.log(`Checking for region "${testRegion}"...`);
 
     if (!regionExists) {
-      testController.log('Available regions (first 10):');
-      const regionNames = Object.keys(staticData.regions).slice(0, 10);
+      const regionNames = staticData.regions instanceof Map
+        ? Array.from(staticData.regions.keys()).slice(0, 10)
+        : Object.keys(staticData.regions).slice(0, 10);
+      testController.log(`Region "${testRegion}" not found. Available regions (first 10):`);
       regionNames.forEach((name) => testController.log(`  - ${name}`));
-      testController.reportCondition('Region validation', false);
+      testController.reportCondition('Target region exists', false);
       return false;
     }
     testController.reportCondition('Target region exists', true);
@@ -496,6 +507,11 @@ export async function testPathAnalyzerLibrary(testController) {
   try {
     testController.reportCondition('Test started', true);
 
+    // Step 0: Load ALTTP rules first (this test uses ALTTP-specific regions)
+    testController.log(`[${testRunId}] Loading ALTTP rules for test setup...`);
+    await testController.loadALTTPRules();
+    testController.reportCondition('ALTTP rules loaded for test', true);
+
     // Step 1: Verify state manager availability
     const stateManager = testController.stateManager;
     if (!stateManager) {
@@ -504,8 +520,25 @@ export async function testPathAnalyzerLibrary(testController) {
     testController.reportCondition('State manager available', true);
 
     // Step 2: Get static data to verify region exists
+    // Note: staticData.regions is a Map (see state-snapshots.md)
     const staticData = stateManager.getStaticData();
-    if (!staticData || !staticData.regions || !staticData.regions['Library']) {
+
+    if (!staticData || !staticData.regions) {
+      testController.log(`[${testRunId}] No regions found in static data`);
+      testController.reportCondition('Library region exists in static data', false);
+      return false;
+    }
+
+    // regions is a Map, use Map methods
+    const regionsMap = staticData.regions;
+    testController.log(`[${testRunId}] Found ${regionsMap.size} regions in static data`);
+
+    if (regionsMap.size > 0) {
+      const firstFewRegions = Array.from(regionsMap.keys()).slice(0, 10);
+      testController.log(`[${testRunId}] First few region names:`, firstFewRegions);
+    }
+
+    if (!regionsMap.has('Library')) {
       testController.log(`[${testRunId}] Library region not found in static data`);
       testController.reportCondition('Library region exists in static data', false);
       return false;
@@ -550,6 +583,11 @@ export async function testPathAnalyzerMiseryMireEntrance(testController) {
   try {
     testController.reportCondition('Test started', true);
 
+    // Step 0: Load ALTTP rules first (this test uses ALTTP-specific regions)
+    testController.log(`[${testRunId}] Loading ALTTP rules for test setup...`);
+    await testController.loadALTTPRules();
+    testController.reportCondition('ALTTP rules loaded for test', true);
+
     // Step 1: Verify state manager availability
     const stateManager = testController.stateManager;
     if (!stateManager) {
@@ -558,13 +596,24 @@ export async function testPathAnalyzerMiseryMireEntrance(testController) {
     testController.reportCondition('State manager available', true);
 
     // Step 2: Get static data to verify region exists
+    // Note: staticData.regions is a Map (see state-snapshots.md)
     const staticData = stateManager.getStaticData();
     const regionName = 'Misery Mire (Entrance)';
-    
-    if (!staticData || !staticData.regions || !staticData.regions[regionName]) {
+
+    if (!staticData || !staticData.regions) {
+      testController.log(`[${testRunId}] No regions found in static data`);
+      testController.reportCondition(`${regionName} region exists in static data`, false);
+      return false;
+    }
+
+    // regions is a Map, use Map methods
+    const regionsMap = staticData.regions;
+
+    if (!regionsMap.has(regionName)) {
       testController.log(`[${testRunId}] ${regionName} region not found in static data`);
-      testController.log(`[${testRunId}] Available regions matching "Misery":`, 
-        Object.keys(staticData.regions || {}).filter(name => name.includes('Misery')));
+      const allRegions = Array.from(regionsMap.keys());
+      testController.log(`[${testRunId}] Available regions matching "Misery":`,
+        allRegions.filter(name => name.includes('Misery')));
       testController.reportCondition(`${regionName} region exists in static data`, false);
       return false;
     }
@@ -592,9 +641,10 @@ export async function testPathAnalyzerMiseryMireEntrance(testController) {
     testController.log(`[${testRunId}] ${regionName} - Found ${result.analysisData?.entrances?.length || 0} entrances`);
 
     // Log specific debug information about string matching
+    // Note: staticData.regions is a Map, use Map iteration methods
     testController.log(`[${testRunId}] Checking for exits that connect to "${regionName}"`);
     let foundMatches = 0;
-    Object.entries(staticData.regions).forEach(([otherRegionName, otherRegionData]) => {
+    for (const [otherRegionName, otherRegionData] of regionsMap.entries()) {
       if (otherRegionData.exits) {
         otherRegionData.exits.forEach(exit => {
           if (exit.connected_region === regionName) {
@@ -605,8 +655,8 @@ export async function testPathAnalyzerMiseryMireEntrance(testController) {
           }
         });
       }
-    });
-    
+    }
+
     testController.log(`[${testRunId}] Total exact matches found: ${foundMatches}`);
     testController.reportCondition(`Found exits connecting to ${regionName}`, foundMatches > 0);
 
@@ -767,6 +817,11 @@ export async function testPathAnalyzerUIMiseryMireEntrance(testController) {
   try {
     testController.reportCondition('Test started', true);
 
+    // Step 0: Load ALTTP rules first (this test uses ALTTP-specific regions)
+    testController.log(`[${testRunId}] Loading ALTTP rules for test setup...`);
+    await testController.loadALTTPRules();
+    testController.reportCondition('ALTTP rules loaded for test', true);
+
     // Step 1: Verify state manager availability
     const stateManager = testController.stateManager;
     if (!stateManager) {
@@ -781,7 +836,6 @@ export async function testPathAnalyzerUIMiseryMireEntrance(testController) {
       eventName: 'ui:activatePanel',
       payload: { panelId: 'pathAnalyzerPanel' },
     });
-    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Step 3: Wait for panel elements to be available
     testController.log(`[${testRunId}] Waiting for Path Analyzer panel elements...`);
@@ -871,14 +925,16 @@ export async function testPathAnalyzerUIMiseryMireEntrance(testController) {
     }
 
     // Step 8: Additional debugging - check if the region exists in static data
+    // Note: staticData.regions is a Map (see state-snapshots.md)
     testController.log(`[${testRunId}] Verifying region exists in static data...`);
     const staticData = stateManager.getStaticData();
-    const regionExists = staticData && staticData.regions && staticData.regions[regionName];
+    const regionExists = staticData && staticData.regions && staticData.regions.has(regionName);
     testController.reportCondition(`"${regionName}" exists in static data`, !!regionExists);
-    
+
     if (!regionExists) {
-      testController.log(`[${testRunId}] Available regions matching "Misery":`, 
-        Object.keys(staticData.regions || {}).filter(name => name.includes('Misery')));
+      const allRegions = staticData.regions ? Array.from(staticData.regions.keys()) : [];
+      testController.log(`[${testRunId}] Available regions matching "Misery":`,
+        allRegions.filter(name => name.includes('Misery')));
     }
 
     testController.reportCondition('Misery Mire (Entrance) UI test completed successfully', true);

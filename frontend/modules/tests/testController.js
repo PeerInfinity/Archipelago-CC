@@ -491,12 +491,12 @@ export class TestController {
         }
         return; // This action is for setup
 
-      case 'LOAD_DEFAULT_RULES':
+      case 'LOAD_ALTTP_RULES':
         if (this.stateManager) {
-          // Always load the specific default rules file for test consistency
-          const defaultRulesPath = './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json';
-          
-          this.log(`Loading default rules from: ${defaultRulesPath}`);
+          // Load ALTTP rules for tests that require this specific game mode
+          const alttpRulesPath = './presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+          this.log(`Loading ALTTP rules from: ${alttpRulesPath}`);
           
           try {
             let rulesData;
@@ -505,11 +505,11 @@ export class TestController {
               playerName: actionDetails.playerName || `TestPlayer${actionDetails.playerId || '1'}`,
             };
 
-            // Fetch the default rules data
-            this.log(`Fetching default rules data from file: ${defaultRulesPath}`);
-            const response = await fetch(defaultRulesPath);
+            // Fetch the ALTTP rules data
+            this.log(`Fetching ALTTP rules data from file: ${alttpRulesPath}`);
+            const response = await fetch(alttpRulesPath);
             if (!response.ok) {
-              throw new Error(`Failed to fetch default rules: ${response.status} ${response.statusText}`);
+              throw new Error(`Failed to fetch ALTTP rules: ${response.status} ${response.statusText}`);
             }
             rulesData = await response.json();
 
@@ -519,23 +519,75 @@ export class TestController {
               8000 // Longer timeout for loading
             );
 
-            // Load the default rules
-            await this.stateManager.loadRules(rulesData, playerInfo, defaultRulesPath);
-            this.log('StateManager.loadRules command sent for default rules.');
+            // Load the ALTTP rules
+            await this.stateManager.loadRules(rulesData, playerInfo, alttpRulesPath);
+            this.log('StateManager.loadRules command sent for ALTTP rules.');
 
             // Wait for the worker to process and confirm
             await rulesLoadedPromise;
-            this.log('stateManager:rulesLoaded event received after LOAD_DEFAULT_RULES.');
+            this.log('stateManager:rulesLoaded event received after LOAD_ALTTP_RULES.');
             
           } catch (error) {
             this.log(
-              `Error loading default rules: ${error.message}`,
+              `Error loading ALTTP rules: ${error.message}`,
               'error'
             );
             throw error;
           }
         } else {
-          const errMsg = 'StateManager proxy not available for LOAD_DEFAULT_RULES.';
+          const errMsg = 'StateManager proxy not available for LOAD_ALTTP_RULES.';
+          this.log(errMsg, 'error');
+          throw new Error(errMsg);
+        }
+        return; // This action is for setup
+
+      case 'LOAD_RULES_FROM_FILE':
+        if (this.stateManager) {
+          const rulesPath = actionDetails.rulesPath;
+          if (!rulesPath) {
+            throw new Error('LOAD_RULES_FROM_FILE requires a rulesPath parameter');
+          }
+
+          this.log(`Loading rules from file: ${rulesPath}`);
+
+          try {
+            let rulesData;
+            let playerInfo = {
+              playerId: actionDetails.playerId || '1',
+              playerName: actionDetails.playerName || `TestPlayer${actionDetails.playerId || '1'}`,
+            };
+
+            // Fetch the rules data from the specified file
+            this.log(`Fetching rules data from file: ${rulesPath}`);
+            const response = await fetch(rulesPath);
+            if (!response.ok) {
+              throw new Error(`Failed to fetch rules from ${rulesPath}: ${response.status} ${response.statusText}`);
+            }
+            rulesData = await response.json();
+
+            // Set up the event listener BEFORE calling loadRules to avoid race condition
+            const rulesLoadedPromise = this.waitForEvent(
+              'stateManager:rulesLoaded',
+              8000 // Longer timeout for loading
+            );
+
+            // Load the rules
+            await this.stateManager.loadRules(rulesData, playerInfo, rulesPath);
+            this.log('StateManager.loadRules command sent for custom rules file.');
+
+            // Wait for the worker to process and confirm
+            await rulesLoadedPromise;
+            this.log('stateManager:rulesLoaded event received after LOAD_RULES_FROM_FILE.');
+
+          } catch (error) {
+            this.log(
+              `Error loading rules from file: ${error.message}`,
+              'error'
+            );
+            throw error;
+          }
+        } else {
+          const errMsg = 'StateManager proxy not available for LOAD_RULES_FROM_FILE.';
           this.log(errMsg, 'error');
           throw new Error(errMsg);
         }
@@ -744,18 +796,37 @@ export class TestController {
   }
 
   /**
-   * Loads the default rules.json file for consistent test setup.
-   * This always loads the same default file regardless of what was previously loaded,
-   * ensuring test isolation and consistent starting state.
-   * 
+   * Loads the ALTTP (A Link to the Past) rules for tests that require this specific game mode.
+   * This always loads the same ALTTP file regardless of what was previously loaded,
+   * ensuring test isolation and consistent starting state for ALTTP-specific tests.
+   *
    * @param {Object} options - Optional configuration
    * @param {string} options.playerId - Player ID to use (defaults to '1')
    * @param {string} options.playerName - Player name to use (defaults to 'TestPlayer1')
-   * @returns {Promise<void>} - Resolves when default rules are loaded and ready
+   * @returns {Promise<void>} - Resolves when ALTTP rules are loaded and ready
    */
-  async loadDefaultRules(options = {}) {
+  async loadALTTPRules(options = {}) {
     return await this.performAction({
-      type: 'LOAD_DEFAULT_RULES',
+      type: 'LOAD_ALTTP_RULES',
+      playerId: options.playerId || '1',
+      playerName: options.playerName || `TestPlayer${options.playerId || '1'}`
+    });
+  }
+
+  /**
+   * Load rules from a specific file path.
+   * Useful for loading specific game mode rules (e.g., ALTTP, Adventure, etc.)
+   *
+   * @param {string} rulesPath - Path to the rules JSON file
+   * @param {Object} options - Optional configuration
+   * @param {string} options.playerId - Player ID to use (defaults to '1')
+   * @param {string} options.playerName - Player name to use (defaults to 'TestPlayer1')
+   * @returns {Promise<void>} - Resolves when rules are loaded and ready
+   */
+  async loadRulesFromFile(rulesPath, options = {}) {
+    return await this.performAction({
+      type: 'LOAD_RULES_FROM_FILE',
+      rulesPath: rulesPath,
       playerId: options.playerId || '1',
       playerName: options.playerName || `TestPlayer${options.playerId || '1'}`
     });

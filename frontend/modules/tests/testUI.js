@@ -78,12 +78,27 @@ export class TestUI {
     controlsContainer.style.alignItems = 'flex-start'; // Left align all items
     controlsContainer.style.gap = '10px';
 
+    // Button container for horizontal layout
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.gap = '10px';
+    buttonContainer.style.flexWrap = 'wrap';
+
     const runAllButton = document.createElement('button');
     runAllButton.textContent = 'Run All Enabled Tests';
     runAllButton.className = 'button run-all-tests-button';
     runAllButton.style.display = 'block';
     runAllButton.style.width = 'fit-content';
-    controlsContainer.appendChild(runAllButton);
+    buttonContainer.appendChild(runAllButton);
+
+    const exportButton = document.createElement('button');
+    exportButton.textContent = 'Export Results to JSON';
+    exportButton.className = 'button export-results-button';
+    exportButton.style.display = 'block';
+    exportButton.style.width = 'fit-content';
+    buttonContainer.appendChild(exportButton);
+
+    controlsContainer.appendChild(buttonContainer);
 
     // Auto-start checkbox
     const autoStartLabel = document.createElement('label');
@@ -165,6 +180,17 @@ export class TestUI {
           log('error', 'Error running all tests:', error);
           this.overallStatusElement.textContent = `Error: ${error.message}`;
           this.overallStatusElement.style.color = 'lightcoral';
+        }
+      });
+
+    this.rootElement
+      .querySelector('.export-results-button')
+      .addEventListener('click', async () => {
+        try {
+          await this.exportTestResults();
+        } catch (error) {
+          log('error', 'Error exporting test results:', error);
+          alert(`Error exporting test results: ${error.message}`);
         }
       });
 
@@ -575,11 +601,89 @@ export class TestUI {
       const tests = await testLogic.getTests();
       const allEnabled = tests.every(test => test.isEnabled);
       const anyEnabled = tests.some(test => test.isEnabled);
-      
+
       this.enableAllCheckbox.checked = allEnabled;
       this.enableAllCheckbox.indeterminate = !allEnabled && anyEnabled;
     } catch (error) {
       log('error', 'Error updating Enable All checkbox:', error);
+    }
+  }
+
+  async exportTestResults() {
+    try {
+      const tests = await testLogic.getTests();
+
+      // Calculate summary statistics
+      const totalRun = tests.filter(t => t.status === 'passed' || t.status === 'failed').length;
+      const passedCount = tests.filter(t => t.status === 'passed').length;
+      const failedCount = tests.filter(t => t.status === 'failed').length;
+
+      // Count failed conditions/subtests
+      let failedConditionsCount = 0;
+      tests.forEach(test => {
+        if (test.conditions && Array.isArray(test.conditions)) {
+          failedConditionsCount += test.conditions.filter(c => c.status === 'failed').length;
+        }
+      });
+
+      // Build the export data structure
+      const exportData = {
+        exportedAt: new Date().toISOString(),
+        summary: {
+          totalRun,
+          passedCount,
+          failedCount,
+          failedConditionsCount,
+          totalTests: tests.length,
+          enabledTests: tests.filter(t => t.isEnabled).length,
+          disabledTests: tests.filter(t => !t.isEnabled).length
+        },
+        testDetails: tests.map(test => ({
+          id: test.id,
+          name: test.name,
+          description: test.description,
+          category: test.category,
+          status: test.status,
+          isEnabled: test.isEnabled,
+          order: test.order,
+          conditions: test.conditions || [],
+          logs: test.logs || []
+        }))
+      };
+
+      // Create a downloadable JSON file
+      const jsonString = JSON.stringify(exportData, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      // Create a temporary link and trigger download
+      const link = document.createElement('a');
+      link.href = url;
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+      link.download = `test-results-${timestamp}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      log('info', `Test results exported successfully: ${link.download}`);
+
+      // Show success message in the UI
+      if (this.overallStatusElement) {
+        const previousText = this.overallStatusElement.textContent;
+        const previousColor = this.overallStatusElement.style.color;
+        this.overallStatusElement.textContent = `Results exported to ${link.download}`;
+        this.overallStatusElement.style.color = 'lightgreen';
+
+        // Restore previous message after 3 seconds
+        setTimeout(() => {
+          this.overallStatusElement.textContent = previousText;
+          this.overallStatusElement.style.color = previousColor;
+        }, 3000);
+      }
+    } catch (error) {
+      log('error', 'Error exporting test results:', error);
+      throw error;
     }
   }
 

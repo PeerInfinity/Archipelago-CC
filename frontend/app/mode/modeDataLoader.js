@@ -582,7 +582,7 @@ function prepareStateManagerConfig(baseCombinedData, dataSources, log) {
       }
     } else {
       log(
-        'warn',
+        'info',
         `[Init] Could not extract source path from rulesConfig dataSources details: ${dataSources.rulesConfig.details}`
       );
     }

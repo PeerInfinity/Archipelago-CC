@@ -1146,7 +1146,13 @@ async function handleMessage(message) {
           } else {
             // Find the location object and evaluate accessibility directly
             try {
-              const locationObject = stateManagerInstance.locations.find(
+              // locations is an object, not an array, so we need to convert it
+              const locationsArray = stateManagerInstance.locations
+                ? (Array.isArray(stateManagerInstance.locations)
+                    ? stateManagerInstance.locations
+                    : Object.values(stateManagerInstance.locations))
+                : [];
+              const locationObject = locationsArray.find(
                 (loc) => loc.name === locationName
               );
               if (locationObject) {

@@ -109,8 +109,8 @@ export async function testLibraryRegionAccessibilityShowAll(testController) {
     let libraryRegionBlock = null;
     const regionBlocks = regionsContainer.querySelectorAll('.region-block');
     for (const block of regionBlocks) {
-      const regionNameElement = block.querySelector('.region-name');
-      if (regionNameElement && regionNameElement.textContent.trim() === 'Library') {
+      const regionName = block.getAttribute('data-region');
+      if (regionName && regionName === 'Library') {
         libraryRegionBlock = block;
         break;
       }
@@ -264,6 +264,11 @@ export async function testLibraryRegionAccessibilityNavigation(testController) {
     testController.log(`[${testRunId}] Starting Library region navigation accessibility test...`);
     testController.reportCondition('Test started', true);
 
+    // 0. Load ALTTP rules first (this test uses ALTTP-specific regions and exits)
+    testController.log(`[${testRunId}] Loading ALTTP rules for test setup...`);
+    await testController.loadALTTPRules();
+    testController.reportCondition('ALTTP rules loaded for test', true);
+
     // 1. Activate the Regions panel
     testController.log(`[${testRunId}] Activating ${PANEL_ID} panel...`);
     const eventBusModule = await import('../../../app/core/eventBus.js');
@@ -337,58 +342,56 @@ export async function testLibraryRegionAccessibilityNavigation(testController) {
     for (const step of navigationSteps) {
       testController.log(`[${testRunId}] Navigating from ${step.from} to ${step.to} via ${step.exit}...`);
       
-      // Find the current region block
+      // Find the current region block using data-region attribute
       const regionBlocks = regionsContainer.querySelectorAll('.region-block');
       let foundBlock = null;
       for (const block of regionBlocks) {
-        const nameElement = block.querySelector('.region-name');
-        if (nameElement && nameElement.textContent.trim() === step.from) {
+        const regionName = block.getAttribute('data-region');
+        if (regionName && regionName === step.from) {
           foundBlock = block;
           break;
         }
       }
-      
+
       if (!foundBlock) {
         // Debug: Log all available region blocks
         const availableRegions = [];
         for (const block of regionBlocks) {
-          const nameElement = block.querySelector('.region-name');
-          if (nameElement) {
-            availableRegions.push(nameElement.textContent.trim());
+          const regionName = block.getAttribute('data-region');
+          if (regionName) {
+            availableRegions.push(regionName);
           }
         }
         testController.log(`[${testRunId}] Available region blocks: [${availableRegions.join(', ')}]`);
         throw new Error(`Could not find region block for "${step.from}". Available regions: [${availableRegions.join(', ')}]`);
       }
-      
-      // Find the move button for the specific exit
-      const moveButtons = foundBlock.querySelectorAll('.move-btn');
-      let targetMoveButton = null;
-      
-      for (const button of moveButtons) {
-        // Check if button text or nearby text contains the exit name
-        const buttonText = button.textContent || '';
-        const parentText = button.parentElement.textContent || '';
-        if (buttonText.includes(step.exit) || parentText.includes(step.exit)) {
-          targetMoveButton = button;
+
+      // Find the exit wrapper for the specific exit (no more move buttons, entire exit is clickable)
+      const exitWrappers = foundBlock.querySelectorAll('.exit-wrapper');
+      let targetExitWrapper = null;
+
+      for (const wrapper of exitWrappers) {
+        // Check if wrapper text contains the exit name
+        const wrapperText = wrapper.textContent || '';
+        if (wrapperText.includes(step.exit)) {
+          targetExitWrapper = wrapper;
           break;
         }
       }
-      
-      if (!targetMoveButton) {
-        // Debug: Log all available move buttons in this region
-        const availableButtons = [];
-        for (const button of moveButtons) {
-          const buttonText = button.textContent || '';
-          const parentText = button.parentElement.textContent || '';
-          availableButtons.push(`"${buttonText}" (parent: "${parentText}")`);
+
+      if (!targetExitWrapper) {
+        // Debug: Log all available exit wrappers in this region
+        const availableExits = [];
+        for (const wrapper of exitWrappers) {
+          const wrapperText = wrapper.textContent || '';
+          availableExits.push(`"${wrapperText.substring(0, 50)}..."`);
         }
-        testController.log(`[${testRunId}] Available move buttons in "${step.from}": [${availableButtons.join(', ')}]`);
-        throw new Error(`Could not find Move button for exit "${step.exit}" in region "${step.from}". Available buttons: [${availableButtons.join(', ')}]`);
+        testController.log(`[${testRunId}] Available exit wrappers in "${step.from}": [${availableExits.join(', ')}]`);
+        throw new Error(`Could not find exit wrapper for exit "${step.exit}" in region "${step.from}". Available exits: [${availableExits.join(', ')}]`);
       }
-      
-      // Click the move button
-      targetMoveButton.click();
+
+      // Click the exit wrapper (entire exit block is now clickable)
+      targetExitWrapper.click();
       
       // Wait for the new region to appear (if specified)
       if (step.newRegion) {
@@ -396,8 +399,8 @@ export async function testLibraryRegionAccessibilityNavigation(testController) {
           () => {
             const regionBlocks = regionsContainer.querySelectorAll('.region-block');
             for (const block of regionBlocks) {
-              const nameElement = block.querySelector('.region-name');
-              if (nameElement && nameElement.textContent.trim() === step.newRegion) {
+              const regionName = block.getAttribute('data-region');
+              if (regionName && regionName === step.newRegion) {
                 return true;
               }
             }
@@ -407,15 +410,15 @@ export async function testLibraryRegionAccessibilityNavigation(testController) {
           5000,
           50
         );
-        
+
         if (!newRegionAppeared) {
           // Debug: Show what regions are actually available after navigation
           const currentRegions = [];
           const regionBlocks = regionsContainer.querySelectorAll('.region-block');
           for (const block of regionBlocks) {
-            const nameElement = block.querySelector('.region-name');
-            if (nameElement) {
-              currentRegions.push(nameElement.textContent.trim());
+            const regionName = block.getAttribute('data-region');
+            if (regionName) {
+              currentRegions.push(regionName);
             }
           }
           testController.log(`[${testRunId}] Regions after navigation: [${currentRegions.join(', ')}]`);
@@ -431,8 +434,8 @@ export async function testLibraryRegionAccessibilityNavigation(testController) {
       () => {
         const regionBlocks = regionsContainer.querySelectorAll('.region-block');
         for (const block of regionBlocks) {
-          const regionNameElement = block.querySelector('.region-name');
-          if (regionNameElement && regionNameElement.textContent.trim() === 'Library') {
+          const regionName = block.getAttribute('data-region');
+          if (regionName && regionName === 'Library') {
             return true;
           }
         }
@@ -451,8 +454,8 @@ export async function testLibraryRegionAccessibilityNavigation(testController) {
     let libraryRegionBlock = null;
     const regionBlocks = regionsContainer.querySelectorAll('.region-block');
     for (const block of regionBlocks) {
-      const regionNameElement = block.querySelector('.region-name');
-      if (regionNameElement && regionNameElement.textContent.trim() === 'Library') {
+      const regionName = block.getAttribute('data-region');
+      if (regionName && regionName === 'Library') {
         libraryRegionBlock = block;
         break;
       }
@@ -827,23 +830,28 @@ export async function testShowPathsCheckbox(testController) {
 export async function testRegionMoveEventDispatch(testController) {
   let overallResult = true;
   const testRunId = `region-move-event-${Date.now()}`;
-  
+
   try {
     testController.log(`[${testRunId}] Starting region move event test...`);
-    
+
+    // Load ALTTP rules first (this test needs ALTTP-specific regions and exits)
+    testController.log(`[${testRunId}] Loading ALTTP rules for test setup...`);
+    await testController.loadALTTPRules();
+    testController.reportCondition('ALTTP rules loaded for test', true);
+
     // Set up event listener
     let eventReceived = false;
     let eventData = null;
     let originalPublish = null;
-    
+
     // Get the dispatcher from the regions module directly
     const regionsModule = await import('../../regions/index.js');
     const eventDispatcher = regionsModule.moduleDispatcher;
-    
+
     // The user:regionMove event is published to "bottom" direction, not publishToNextModule
     // We'll monitor the dispatcher's publish method to see if it's called
     testController.log(`[${testRunId}] eventDispatcher methods:`, Object.keys(eventDispatcher || {}));
-    
+
     if (eventDispatcher && typeof eventDispatcher.publish === 'function') {
       originalPublish = eventDispatcher.publish;
       eventDispatcher.publish = function(eventName, data, direction) {
@@ -857,15 +865,15 @@ export async function testRegionMoveEventDispatch(testController) {
     } else {
       testController.log(`[${testRunId}] eventDispatcher.publish not available`);
     }
-    
+
     // Log moduleDispatcher availability
     testController.log(`[${testRunId}] moduleDispatcher available:`, !!regionsModule.moduleDispatcher);
-    
+
     // Activate Regions panel
     const eventBusModule = await import('../../../app/core/eventBus.js');
     const eventBus = eventBusModule.default;
     eventBus.publish('ui:activatePanel', { panelId: PANEL_ID }, 'tests');
-    
+
     const regionsPanelElement = await testController.pollForValue(
       () => document.querySelector('.regions-panel-container'),
       'Regions panel found',
@@ -875,30 +883,29 @@ export async function testRegionMoveEventDispatch(testController) {
     if (!regionsPanelElement) {
       throw new Error('Regions panel not found');
     }
-    
-    // Wait for Move buttons to appear and find them
-    const moveButtonsFound = await testController.pollForCondition(
+
+    // Wait for exit wrappers to appear (no more move buttons, entire exit is clickable)
+    const exitWrappersFound = await testController.pollForCondition(
       () => {
-        const buttons = regionsPanelElement.querySelectorAll('.move-btn:not([disabled])');
-        return buttons.length > 0;
+        const wrappers = regionsPanelElement.querySelectorAll('.exit-wrapper');
+        return wrappers.length > 0;
       },
-      'Move buttons loaded',
+      'Exit wrappers loaded',
       MAX_WAIT_TIME,
       50
     );
-    
-    const moveButtons = regionsPanelElement.querySelectorAll('.move-btn:not([disabled])');
-    testController.reportCondition('Move buttons exist', moveButtons.length > 0);
-    
-    if (moveButtons.length > 0) {
-      // Log button info for debugging
-      const firstMoveBtn = moveButtons[0];
-      const buttonParent = firstMoveBtn.parentElement;
-      testController.log(`[${testRunId}] First move button parent text:`, buttonParent.textContent.trim());
-      
-      // Click the first enabled Move button
-      firstMoveBtn.click();
-      testController.log(`[${testRunId}] Move button clicked`);
+
+    const exitWrappers = regionsPanelElement.querySelectorAll('.exit-wrapper');
+    testController.reportCondition('Exit wrappers exist', exitWrappers.length > 0);
+
+    if (exitWrappers.length > 0) {
+      // Log exit info for debugging
+      const firstExitWrapper = exitWrappers[0];
+      testController.log(`[${testRunId}] First exit wrapper text:`, firstExitWrapper.textContent.trim().substring(0, 50));
+
+      // Click the first exit wrapper
+      firstExitWrapper.click();
+      testController.log(`[${testRunId}] Exit wrapper clicked`);
       
       // Wait for event to be dispatched using polling
       await testController.pollForCondition(
@@ -1115,7 +1122,7 @@ export async function testRegionMoveComplete(testController) {
     
     // Reset state by loading default rules
     testController.log(`[${testRunId}] Loading default rules to reset state...`);
-    await testController.loadDefaultRules();
+    await testController.loadALTTPRules();
     testController.log(`[${testRunId}] Default rules loaded successfully`);
     
     // Import modules we'll need
@@ -1571,7 +1578,7 @@ export async function testRegionMoveEventHandlerToggle(testController) {
     
     // Reset state by loading default rules
     testController.log(`[${testRunId}] Loading default rules to reset state...`);
-    await testController.loadDefaultRules();
+    await testController.loadALTTPRules();
     testController.log(`[${testRunId}] Default rules loaded successfully`);
     
     // Import modules we'll need

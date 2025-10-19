@@ -602,18 +602,64 @@ class EventsUI {
       }
     }
 
-    // Find publishers/subscribers that are in eventBus but not in centralRegistry
+    // Find publishers/subscribers that are truly external (not part of the application)
+    // Build a set of all known internal participants:
+    // 1. Modules from loadPriority
+    // 2. Modules registered in centralRegistry (even if not in loadPriority)
+    // 3. Known core components
+    const knownInternalComponents = new Set(loadPriority);
+
+    // Add all modules that have registered with centralRegistry (publishers and subscribers)
+    registryPublishers.forEach((publishers, eventName) => {
+      publishers.forEach((publisherInfo, moduleId) => {
+        knownInternalComponents.add(moduleId);
+      });
+    });
+    registrySubscribers.forEach((subscribers, eventName) => {
+      subscribers.forEach(subscriberInfo => {
+        knownInternalComponents.add(subscriberInfo.moduleId);
+      });
+    });
+
+    // Helper function to determine if a participant is truly external
+    const isExternalParticipant = (participantId) => {
+      // If it's a known internal component, it's not external
+      if (knownInternalComponents.has(participantId)) {
+        return false;
+      }
+
+      // Explicitly mark iframes as external
+      if (participantId.startsWith('iframe_')) {
+        return true;
+      }
+
+      // For anything else not in our known list, check if it looks like an external system
+      // Known internal naming patterns: app, stateManager, logger, connection, etc.
+      // If it's not in knownInternalComponents but doesn't match external patterns,
+      // assume it's an internal component we just haven't registered yet
+      // This is conservative: only mark as external if we're sure
+      const knownCorePatterns = ['app', 'stateManager', 'logger', 'connection', 'uiHostRegistry',
+                                  'mobileLayoutManager', 'eventDispatcher', 'centralRegistry'];
+
+      // Check if it matches a known core pattern
+      if (knownCorePatterns.includes(participantId)) {
+        return false;
+      }
+
+      // If it's not in any of our lists and doesn't match known patterns,
+      // it's likely external
+      return true;
+    };
+
     const additionalPublishers = new Map();
     const additionalSubscribers = new Map();
 
     // Check for additional publishers
     Object.keys(allPublishers).forEach(eventName => {
       const eventPublishers = allPublishers[eventName];
-      const registryEventPublishers = registryPublishers.get(eventName) || new Map();
-      
+
       eventPublishers.forEach((publisherInfo, publisherId) => {
-        // If this publisher is not in the registry, it's additional (like an iframe)
-        if (!registryEventPublishers.has(publisherId)) {
+        if (isExternalParticipant(publisherId)) {
           if (!additionalPublishers.has(eventName)) {
             additionalPublishers.set(eventName, new Map());
           }
@@ -622,18 +668,15 @@ class EventsUI {
       });
     });
 
-    // Check for additional subscribers  
+    // Check for additional subscribers
     logger.debug('eventsUI', `[Additional Check] Processing ${Object.keys(allSubscribers).length} events for additional subscribers`);
     Object.keys(allSubscribers).forEach(eventName => {
       const eventSubscribers = allSubscribers[eventName];
-      const registryEventSubscribers = registrySubscribers.get(eventName) || [];
-      const registrySubscriberIds = new Set(registryEventSubscribers.map(s => s.moduleId));
-      
-      logger.debug('eventsUI', `[Additional Subscribers Check] Event: ${eventName}, EventBus subscribers:`, eventSubscribers.map(s => s.moduleName), 'Registry subscribers:', Array.from(registrySubscriberIds));
-      
+
+      logger.debug('eventsUI', `[Additional Subscribers Check] Event: ${eventName}, EventBus subscribers:`, eventSubscribers.map(s => s.moduleName), 'Known internal:', Array.from(knownInternalComponents));
+
       eventSubscribers.forEach(subscriber => {
-        // If this subscriber is not in the registry, it's additional
-        if (!registrySubscriberIds.has(subscriber.moduleName)) {
+        if (isExternalParticipant(subscriber.moduleName)) {
           logger.debug('eventsUI', `[Additional Subscribers] Found additional subscriber: ${subscriber.moduleName} for event ${eventName}`);
           if (!additionalSubscribers.has(eventName)) {
             additionalSubscribers.set(eventName, []);
@@ -715,7 +758,7 @@ class EventsUI {
         const allParticipantIds = new Set();
         eventPublishers.forEach((_, publisherId) => allParticipantIds.add(publisherId));
         eventSubscribers.forEach(sub => allParticipantIds.add(sub.moduleId));
-        
+
         const sortedParticipants = Array.from(allParticipantIds).sort();
 
         sortedParticipants.forEach((participantId, index) => {

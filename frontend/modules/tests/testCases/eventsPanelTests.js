@@ -20,7 +20,7 @@ export async function testEventsPanelSenderReceiverDisplay(testController) {
 
     // Reset state by loading default rules to ensure clean test environment
     testController.log(`[${testRunId}] Loading default rules to reset state...`);
-    await testController.loadDefaultRules();
+    await testController.loadALTTPRules();
     testController.log(`[${testRunId}] Default rules loaded successfully`);
 
     // 1. Activate the Events panel
@@ -234,7 +234,7 @@ export async function testEventsPanelModuleNameTracking(testController) {
 
     // Reset state by loading default rules to ensure clean test environment
     testController.log(`[${testRunId}] Loading default rules to reset state...`);
-    await testController.loadDefaultRules();
+    await testController.loadALTTPRules();
     testController.log(`[${testRunId}] Default rules loaded successfully`);
 
     // 1. First activate the Regions panel to trigger subscription to ui:navigateToRegion
@@ -634,21 +634,23 @@ export async function testEventsPanelAdditionalParticipants(testController) {
 
     // 11. Verify that regular module events are still in the main section (not in additional participants)
     testController.log(`[${testRunId}] Verifying module events are not in additional participants section...`);
-    
+
     // Look for a known module event that should NOT be in additional participants
     const moduleEventContainers = additionalParticipantsSection.querySelectorAll('.event-bus-event');
     let moduleEventInAdditional = false;
-    
+    let foundEventName = '';
+
     for (const container of moduleEventContainers) {
       const eventTitle = container.querySelector('h4');
       if (eventTitle && (eventTitle.textContent.includes('stateManager:') || eventTitle.textContent.includes('ui:activatePanel'))) {
         moduleEventInAdditional = true;
+        foundEventName = eventTitle.textContent.trim();
         break;
       }
     }
-    
+
     if (moduleEventInAdditional) {
-      throw new Error('Found module event in additional participants section - should only contain non-module participants');
+      throw new Error(`Found module event "${foundEventName}" in additional participants section - should only contain non-module participants`);
     }
     testController.reportCondition('Module events correctly excluded from additional participants', true);
 
