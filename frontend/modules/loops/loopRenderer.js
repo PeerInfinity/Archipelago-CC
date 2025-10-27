@@ -20,11 +20,12 @@ const logger = createUniversalLogger('loopUI:Renderer');
  * - Group and organize actions for display
  */
 export class LoopRenderer {
-  constructor(expansionStateManager, displaySettingsManager, rootElement, buildRegionBlockFn) {
+  constructor(expansionStateManager, displaySettingsManager, rootElement, buildRegionBlockFn, loopUI) {
     this.expansionState = expansionStateManager;
     this.displaySettings = displaySettingsManager;
     this.rootElement = rootElement;
     this.buildRegionBlockFn = buildRegionBlockFn; // Callback to build region blocks
+    this.loopUI = loopUI; // Reference to LoopUI for accessing structureBuilt flag
 
     logger.debug('LoopRenderer constructed');
   }
@@ -155,6 +156,12 @@ export class LoopRenderer {
    * @param {number} max - Max mana
    */
   updateManaDisplay(current, max) {
+    // Guard: Don't try to update if structure isn't built yet
+    if (!this.loopUI?.structureBuilt) {
+      logger.debug('Skipping mana display update - structure not yet built');
+      return;
+    }
+
     const manaContainer = this.rootElement?.querySelector('.mana-container');
     if (!manaContainer) {
       logger.warn('Mana container not found');

@@ -13,11 +13,11 @@ import {
 } from './xpFormulas.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import { LoopRegionBlockBuilder } from './loopRegionBlockBuilder.js';
 import { DisplaySettingsManager } from './displaySettingsManager.js';
 import { ExpansionStateManager } from './expansionStateManager.js';
 import { LoopRenderer } from './loopRenderer.js';
 import { EventCoordinator } from './eventCoordinator.js';
+import { LoopBlockBuilder } from './loopBlockBuilder.js';
 import { getPlayerStateAPI, getLoopsModuleDispatcher } from './index.js';
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
@@ -49,12 +49,15 @@ export class LoopUI {
     // Animation state
     this._animationFrameId = null;
     this._lastUpdateTime = 0;
-    
+
+    // Initialization state flags
+    this.structureBuilt = false; // Track if initial DOM structure is built
+
     // PlayerState API (will be set during initialization)
     this.playerStateAPI = null;
 
-    // Create the block builder for rendering action blocks
-    this.actionBlockBuilder = new LoopRegionBlockBuilder(this);
+    // Create the loop block builder for rendering region blocks
+    this.loopBlockBuilder = new LoopBlockBuilder(this);
 
     // Create managers
     this.displaySettings = new DisplaySettingsManager(settingsManager, null); // rootElement will be set later
@@ -75,12 +78,13 @@ export class LoopUI {
     // Set rootElement for DisplaySettingsManager now that it's created
     this.displaySettings.rootElement = this.rootElement;
 
-    // Initialize LoopRenderer with callback to _buildHybridRegionBlock
+    // Initialize LoopRenderer with callback to loopBlockBuilder.buildRegionBlock
     this.loopRenderer = new LoopRenderer(
       this.expansionState,
       this.displaySettings,
       this.rootElement,
-      this._buildHybridRegionBlock.bind(this) // Bind to maintain 'this' context
+      this.loopBlockBuilder.buildRegionBlock.bind(this.loopBlockBuilder),
+      this // Pass loopUI instance for accessing structureBuilt flag
     );
 
     // Initialize EventCoordinator
@@ -534,15 +538,13 @@ export class LoopUI {
       '#current-action-container'
     ); // May not exist yet in fixed-area
     this.loopRegionsArea = container.querySelector('#loop-regions-area');
-    this.manaBarElement = container.querySelector('#mana-bar'); // May not exist yet in fixed-area
-    this.manaValueElement = container.querySelector('#mana-value'); // May not exist yet in fixed-area
 
     // Initialize fixed area content (Mana bar, current action)
     this._initializeFixedArea();
 
     // Set initial button states based on loopState
     this._updatePauseButtonState(loopState.isPaused);
-    
+
     // Update auto-restart button state
     const autoRestartBtn = this.rootElement.querySelector('#loop-ui-toggle-auto-restart');
     if (autoRestartBtn) {
@@ -550,6 +552,10 @@ export class LoopUI {
         ? 'Auto-restart enabled'
         : 'Pause when queue complete';
     }
+
+    // Mark structure as built
+    this.structureBuilt = true;
+    log('info', 'LoopUI: Initial structure build complete');
 
     // Initial render based on mode
     this.renderLoopPanel();
@@ -589,8 +595,8 @@ export class LoopUI {
         <div class="mana-container">
           <div class="resource-label">Mana:</div>
           <div class="mana-bar-container">
-            <div id="mana-bar" class="mana-bar"></div>
-                    <span id="mana-value">Loading...</span>
+            <div class="mana-bar-fill"></div>
+            <span class="mana-text">0/0</span>
           </div>
         </div>
         <div class="loop-control-buttons" style="padding: 5px 0;">
@@ -606,8 +612,6 @@ export class LoopUI {
       this.actionQueueContainer = fixedArea.querySelector(
         '#current-action-container'
       );
-      this.manaBarElement = fixedArea.querySelector('#mana-bar');
-      this.manaValueElement = fixedArea.querySelector('#mana-value');
       this.loopNumberElement = fixedArea.querySelector('#loop-number');
       this.totalXpElement = fixedArea.querySelector('#total-xp');
       this.actionsCompletedElement = fixedArea.querySelector('#actions-completed');
@@ -718,8 +722,13 @@ export class LoopUI {
    */
   getActionQueue() {
     if (!this.playerStateAPI || !this.playerStateAPI.getPath) {
-      log('warn', 'LoopUI: PlayerState API not available, using loopState queue');
-      // Fallback case - should not normally happen
+      // Only log warning if structure is built (meaning this is happening after init)
+      // During initialization, this is expected and not a problem
+      if (this.structureBuilt) {
+        log('warn', 'LoopUI: PlayerState API not available after initialization');
+      } else {
+        log('debug', 'LoopUI: PlayerState API not yet available during initialization');
+      }
       return [];
     }
     const path = this.playerStateAPI.getPath() || [];
@@ -1333,185 +1342,6 @@ export class LoopUI {
   }
 
   /**
-   * Create an action block element for display in the region
-   * @param {Object} pathEntry - The path entry object
-   * @param {number} index - The index in the action queue
-   * @param {boolean} isCurrentAction - Whether this is the currently executing action
-   * @returns {HTMLElement} The action block element
-   */
-  _createActionBlockElement(pathEntry, index, isCurrentAction) {
-    const actionDiv = document.createElement('div');
-    actionDiv.className = 'region-action-block';
-    actionDiv.dataset.actionIndex = index;
-    
-    if (isCurrentAction) {
-      actionDiv.classList.add('current-action');
-    }
-    
-    // Determine action type and create appropriate display
-    let actionText = '';
-    let manaCost = 0;
-    
-    if (pathEntry.type === 'regionMove') {
-      actionText = `Move to ${pathEntry.region}`;
-      if (pathEntry.exitUsed) {
-        actionText += ` via ${pathEntry.exitUsed}`;
-      }
-      manaCost = loopState._calculateActionCost({type: 'moveToRegion', destinationRegion: pathEntry.region});
-    } else if (pathEntry.type === 'locationCheck') {
-      actionText = `Check: ${pathEntry.locationName}`;
-      manaCost = loopState._calculateActionCost({type: 'checkLocation', locationName: pathEntry.locationName});
-    } else if (pathEntry.type === 'customAction') {
-      if (pathEntry.actionName === 'explore') {
-        actionText = 'Explore Region';
-        manaCost = loopState._calculateActionCost({type: 'explore', regionName: pathEntry.region});
-      } else {
-        actionText = `Action: ${pathEntry.actionName}`;
-      }
-    }
-    
-    // Create content
-    actionDiv.innerHTML = `
-      <span class="action-text">${actionText}</span>
-      <span class="action-mana">-${manaCost} Mana</span>
-      <button class="remove-action-btn" data-index="${index}">×</button>
-    `;
-    
-    // Add progress bar if this is the current action
-    if (isCurrentAction && loopState.actionProgress) {
-      const progress = loopState.actionProgress.get(index) || 0;
-      const progressBar = document.createElement('div');
-      progressBar.className = 'action-progress-bar';
-      progressBar.innerHTML = `
-        <div class="progress-fill" style="width: ${progress}%"></div>
-      `;
-      actionDiv.appendChild(progressBar);
-    }
-    
-    // Add remove button handler
-    const removeBtn = actionDiv.querySelector('.remove-action-btn');
-    if (removeBtn) {
-      removeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this._removeActionAtIndex(index);
-      });
-    }
-    
-    return actionDiv;
-  }
-  
-  /**
-   * Create a location element with clickable functionality
-   * @param {Object} location - The location data
-   * @param {string} regionName - The region name
-   * @param {Object} snapshot - Current state snapshot
-   * @param {Object} snapshotInterface - Snapshot interface
-   * @param {boolean} useColorblind - Whether to use colorblind mode
-   * @returns {HTMLElement} The location element
-   */
-  _createLocationElement(location, regionName, snapshot, snapshotInterface, useColorblind) {
-    const locationEl = document.createElement('div');
-    locationEl.className = 'location-item clickable';
-    
-    // Check if location is accessible
-    const isAccessible = location.requires ? 
-      evaluateRule(location.requires, snapshotInterface) : true;
-    
-    // Check if location has been checked
-    const isChecked = snapshot?.checked_locations?.includes(location.name) || false;
-    
-    // Apply appropriate styling
-    if (isChecked) {
-      locationEl.classList.add('checked');
-    } else if (isAccessible) {
-      locationEl.classList.add('accessible');
-    } else {
-      locationEl.classList.add('inaccessible');
-    }
-    
-    if (useColorblind) {
-      locationEl.classList.add('colorblind');
-    }
-    
-    locationEl.innerHTML = `
-      <span class="location-name">${location.name}</span>
-      ${isChecked ? '<span class="check-mark">✓</span>' : ''}
-    `;
-    
-    // Make clickable to queue location check
-    locationEl.addEventListener('click', () => {
-      if (this.playerStateAPI?.addLocationCheck) {
-        this.playerStateAPI.addLocationCheck(location.name, regionName);
-        this.renderLoopPanel();
-      }
-    });
-    
-    return locationEl;
-  }
-  
-  /**
-   * Create an exit element with clickable functionality
-   * @param {Object} exit - The exit data
-   * @param {string} regionName - The region name
-   * @param {Object} snapshot - Current state snapshot
-   * @param {Object} snapshotInterface - Snapshot interface
-   * @param {boolean} useColorblind - Whether to use colorblind mode
-   * @returns {HTMLElement} The exit element
-   */
-  _createExitElement(exit, regionName, snapshot, snapshotInterface, useColorblind) {
-    const exitEl = document.createElement('div');
-    exitEl.className = 'exit-item clickable';
-    
-    // Check if exit is accessible
-    const isAccessible = exit.requires ?
-      evaluateRule(exit.requires, snapshotInterface) : true;
-    
-    // Apply appropriate styling
-    if (isAccessible) {
-      exitEl.classList.add('accessible');
-    } else {
-      exitEl.classList.add('inaccessible');
-    }
-    
-    if (useColorblind) {
-      exitEl.classList.add('colorblind');
-    }
-    
-    exitEl.innerHTML = `
-      <span class="exit-name">${exit.name} → ${exit.connected_region}</span>
-    `;
-
-    // Make clickable to trigger region move
-    exitEl.addEventListener('click', () => {
-      // Publish region move event via EventDispatcher (not EventBus)
-      const dispatcher = getLoopsModuleDispatcher();
-      if (dispatcher) {
-        dispatcher.publish('loops', 'user:regionMove', {
-          sourceRegion: regionName,
-          targetRegion: exit.connected_region,
-          exitName: exit.name
-        }, { initialTarget: 'bottom' });
-      } else {
-        log('error', 'Dispatcher not available for publishing user:regionMove');
-      }
-      this.renderLoopPanel();
-    });
-    
-    return exitEl;
-  }
-  
-  /**
-   * Queue an explore action for a region
-   * @param {string} regionName - The region to explore
-   */
-  _queueExploreAction(regionName) {
-    if (this.playerStateAPI?.addCustomAction) {
-      this.playerStateAPI.addCustomAction('explore', { regionName });
-      this.renderLoopPanel();
-    }
-  }
-  
-  /**
    * Remove an action at a specific index
    * @param {number} index - The index to remove
    */
@@ -1528,530 +1358,7 @@ export class LoopUI {
       }
     }
   }
-  
-  /**
-   * Build a hybrid region block with action blocks at the top
-   * @param {string} regionName - Name of the region
-   * @param {Object} regionStaticData - Static data for the region
-   * @param {Array} actions - Array of actions for this region
-   * @param {Object} snapshot - Current state snapshot
-   * @param {Object} snapshotInterface - Snapshot interface for rule evaluation
-   * @param {boolean} useColorblind - Whether to use colorblind mode
-   * @param {boolean} isExpanded - Whether the region is expanded
-   * @param {number} currentActionIndex - Index of the current action being processed
-   * @returns {HTMLElement} The region block element
-   */
-  _buildHybridRegionBlock(
-    regionName,
-    regionStaticData,
-    actions,
-    snapshot,
-    snapshotInterface,
-    useColorblind,
-    isExpanded,
-    currentActionIndex
-  ) {
-    const regionBlock = document.createElement('div');
-    regionBlock.className = 'loop-region-block';
-    regionBlock.dataset.region = regionName;
-    regionBlock.classList.add(isExpanded ? 'expanded' : 'collapsed');
-    
-    // Check if this is the initial Menu (starting position)
-    const isInitialMenu = regionName === 'Menu' && 
-                         actions.length === 1 && 
-                         actions[0].index === 0 &&
-                         actions[0].pathEntry.type === 'regionMove' &&
-                         !actions[0].pathEntry.exitUsed;
-    
-    // Create header
-    const headerEl = document.createElement('div');
-    headerEl.className = 'loop-region-header';
-    
-    if (isInitialMenu) {
-      // Special display for initial Menu (starting position)
-      // Create a special action block that looks like the old system expected
-      const actionBlock = document.createElement('div');
-      actionBlock.className = 'loop-action-block';
-      
-      const titleEl = document.createElement('div');
-      titleEl.className = 'action-title';
-      titleEl.textContent = 'Starting Region: Menu';
-      actionBlock.appendChild(titleEl);
-      
-      // No mana cost for starting position
-      regionBlock.appendChild(actionBlock);
-      
-      // Simple header for Menu
-      headerEl.innerHTML = `
-        <span class="loop-region-name">Menu</span>
-        <span class="loop-expand-indicator">${isExpanded ? '▼' : '▶'}</span>
-      `;
-    } else {
-      // Calculate XP data for the region
-      const xpData = loopState.getRegionXP(regionName);
-      const speedBonus = xpData.level * 5;
-      
-      headerEl.innerHTML = `
-        <span class="loop-region-name">${regionName}</span>
-        <span class="region-xp">Level ${xpData.level} (+${speedBonus}% efficiency)</span>
-        <span class="loop-expand-indicator">${isExpanded ? '▼' : '▶'}</span>
-      `;
-    }
-    
-    regionBlock.appendChild(headerEl);
-    
-    // Header click event for expanding/collapsing - entire header is clickable
-    headerEl.addEventListener('click', (e) => {
-      this.toggleRegionExpanded(regionName);
-    });
-    
-    // Add action blocks section (always visible, even when collapsed)
-    // Skip for initial Menu since we already added the special display
-    if (!isInitialMenu && actions.length > 0) {
-      const actionsContainer = document.createElement('div');
-      actionsContainer.className = 'region-actions-container';
-      
-      actions.forEach(({pathEntry, index}) => {
-        const isCurrentAction = index === currentActionIndex && loopState.isProcessing;
-        const actionEl = this._createActionBlockElement(pathEntry, index, isCurrentAction);
-        if (actionEl) {
-          actionsContainer.appendChild(actionEl);
-        }
-      });
-      
-      regionBlock.appendChild(actionsContainer);
-    }
-    
-    // If expanded, add region details (locations, exits, explore button)
-    // Show details for all expanded regions, including initial Menu
-    if (isExpanded) {
-      const detailsEl = document.createElement('div');
-      detailsEl.className = 'loop-region-details';
 
-      // Add explore button if in loop mode
-      if (this.isLoopModeActive) {
-        const exploreContainer = document.createElement('div');
-        exploreContainer.className = 'region-explore-container';
-
-        const exploreBtn = document.createElement('button');
-        exploreBtn.className = 'explore-btn';
-        exploreBtn.textContent = 'Explore Region';
-        exploreBtn.addEventListener('click', () => {
-          this._queueExploreAction(regionName);
-        });
-        exploreContainer.appendChild(exploreBtn);
-
-        detailsEl.appendChild(exploreContainer);
-      }
-      
-      // Add locations if any
-      if (regionStaticData?.locations && regionStaticData.locations.length > 0) {
-        const locationsContainer = document.createElement('div');
-        locationsContainer.className = 'loop-region-locations-container';
-        locationsContainer.innerHTML = '<h4>Locations</h4>';
-        
-        const locationsList = document.createElement('div');
-        locationsList.className = 'locations-list';
-        
-        regionStaticData.locations.forEach(location => {
-          const locationEl = this._createLocationElement(
-            location,
-            regionName,
-            snapshot,
-            snapshotInterface,
-            useColorblind
-          );
-          if (locationEl) {
-            locationsList.appendChild(locationEl);
-          }
-        });
-        
-        locationsContainer.appendChild(locationsList);
-        detailsEl.appendChild(locationsContainer);
-      }
-      
-      // Add exits if any
-      if (regionStaticData?.exits && regionStaticData.exits.length > 0) {
-        const exitsContainer = document.createElement('div');
-        exitsContainer.className = 'loop-region-exits-container';
-        exitsContainer.innerHTML = '<h4>Exits</h4>';
-        
-        const exitsList = document.createElement('div');
-        exitsList.className = 'exits-list';
-        
-        regionStaticData.exits.forEach(exit => {
-          const exitEl = this._createExitElement(
-            exit,
-            regionName,
-            snapshot,
-            snapshotInterface,
-            useColorblind
-          );
-          if (exitEl) {
-            exitsList.appendChild(exitEl);
-          }
-        });
-        
-        exitsContainer.appendChild(exitsList);
-        detailsEl.appendChild(exitsContainer);
-      }
-      
-      regionBlock.appendChild(detailsEl);
-    }
-    
-    return regionBlock;
-  }
-
-  /**
-   * Build a region block (OLD - NOT USED)
-   * @param {Object} region - Region data
-   * @param {boolean} expanded - Whether the region is expanded
-   * @returns {HTMLElement} - The region block element
-   * @deprecated
-   */
-  _buildRegionBlock(region, expanded, useColorblind) {
-    // <<< Receive setting
-    if (!region) {
-      log('warn', 'buildRegionBlock called with invalid region data');
-      return document.createElement('div');
-    }
-
-    const regionName = region.name;
-    const regionBlock = document.createElement('div');
-    regionBlock.className = 'loop-region-block';
-    regionBlock.dataset.region = regionName;
-    regionBlock.classList.add(expanded ? 'expanded' : 'collapsed');
-    regionBlock.classList.toggle('colorblind-mode', useColorblind); // <<< Apply class to block
-
-    // --- Header ---
-    const headerEl = document.createElement('div');
-    headerEl.className = 'loop-region-header';
-    headerEl.innerHTML = `
-      <span class="loop-region-name">${regionName}</span>
-      <button class="loop-collapse-btn">${
-        expanded ? 'Collapse' : 'Expand'
-      }</button>
-    `;
-    headerEl.addEventListener('click', (e) => {
-      // Prevent clicks on buttons inside header from toggling expand/collapse
-      if (e.target.tagName !== 'BUTTON') {
-        this.toggleRegionExpanded(regionName);
-      }
-    });
-    regionBlock.appendChild(headerEl);
-
-    // --- Queued Actions ---
-    // Filter actions: show if regionName matches OR (it's moveToRegion AND destination matches)
-    const actionQueue = this.getActionQueue();
-    const actionsForRegion = actionQueue.filter(
-      (action) =>
-        action.regionName === regionName ||
-        (action.type === 'moveToRegion' &&
-          action.destinationRegion === regionName)
-    );
-
-    if (actionsForRegion.length > 0) {
-      const queuedActionsContainer = document.createElement('div');
-      queuedActionsContainer.className = 'region-queued-actions';
-      actionsForRegion.forEach((action) => {
-        const actionItem = this._createActionItem(action, useColorblind); // <<< Accept setting
-        queuedActionsContainer.appendChild(actionItem);
-      });
-      regionBlock.appendChild(queuedActionsContainer);
-    }
-
-    // --- Details (if expanded) ---
-    if (expanded) {
-      const detailEl = document.createElement('div');
-      detailEl.className = 'loop-region-details';
-
-      // XP Display
-      const xpData = loopState.getRegionXP(regionName);
-      const speedBonus = xpData.level * 5; // Assuming 5% per level
-      const xpPercentage =
-        xpData.xpForNextLevel > 0
-          ? (xpData.xp / xpData.xpForNextLevel) * 100
-          : 0;
-      const xpDisplay = document.createElement('div');
-      xpDisplay.className = 'region-xp-display';
-      xpDisplay.innerHTML = `
-            <div class="xp-text">Level ${xpData.level} (${Math.floor(
-        xpData.xp
-      )}/${
-        xpData.xpForNextLevel
-      } XP) <span class="discount-text">+${speedBonus}% efficiency</span></div>
-            <div class="xp-bar-container"><div class="xp-bar" style="width: ${xpPercentage}%"></div></div>
-      `;
-      detailEl.appendChild(xpDisplay);
-
-      // Discovery Stats
-      // Get static data
-      const staticData = stateManager.getStaticData();
-      const regionData = staticData?.regions?.[regionName]; // Get full data
-      const totalLocations = regionData?.locations?.length || 0;
-      const totalExits = regionData?.exits?.length || 0;
-      // <<< Use discoveryStateSingleton
-      const discoveredLocationCount =
-        regionData?.locations?.filter((loc) =>
-          discoveryStateSingleton.isLocationDiscovered(loc.name)
-        ).length || 0;
-      const discoveredExitCount =
-        discoveryStateSingleton.discoveredExits.get(regionName)?.size || 0;
-      // >>> End discoveryStateSingleton use
-      const totalItems = totalLocations + totalExits;
-      const discoveredItems = discoveredLocationCount + discoveredExitCount;
-      const explorationPercentage =
-        totalItems > 0
-          ? Math.floor((discoveredItems / totalItems) * 100)
-          : totalItems === 0
-          ? 100
-          : 0; // Handle 0 total items
-      const discoveryStats = document.createElement('div');
-      discoveryStats.className = 'region-discovery-stats';
-      discoveryStats.innerHTML = `
-        <div>Exploration: <span class="stat-value">${explorationPercentage}%</span></div>
-        <div>Locations: <span class="stat-value">${discoveredLocationCount}/${totalLocations}</span></div>
-        <div>Exits: <span class="stat-value">${discoveredExitCount}/${totalExits}</span></div>
-      `;
-      detailEl.appendChild(discoveryStats);
-
-      // Actions Area (Explore Button + Repeat Checkbox)
-      if (this.isLoopModeActive) {
-        // Only show actions if loop mode is active
-        const actionsArea = document.createElement('div');
-        actionsArea.className = 'region-actions';
-
-        const exploreBtn = document.createElement('button');
-        exploreBtn.className = 'explore-btn button'; // Added button class
-        exploreBtn.textContent =
-          discoveredItems < totalItems ? 'Explore Region' : 'Farm Region XP';
-        exploreBtn.addEventListener('click', (e) => {
-          e.stopPropagation(); // Prevent header click
-          this._queueExploreAction(regionName);
-        });
-        actionsArea.appendChild(exploreBtn);
-
-        const repeatCheckboxId = `repeat-explore-checkbox-${regionName.replace(
-          /\s+/g,
-          '-'
-        )}`;
-        const repeatWrapper = document.createElement('div');
-        repeatWrapper.className = 'checkbox-container';
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.id = repeatCheckboxId;
-        checkbox.className = 'repeat-explore-checkbox';
-        checkbox.checked = this.repeatExploreStates.get(regionName) || false;
-        checkbox.addEventListener('change', (e) => {
-          e.stopPropagation(); // Prevent header click
-          this.repeatExploreStates.set(regionName, e.target.checked);
-        });
-        checkbox.addEventListener('click', (e) => e.stopPropagation()); // Also stop propagation on click
-
-        const label = document.createElement('label');
-        label.htmlFor = repeatCheckboxId;
-        label.textContent = 'Repeat Explore Action';
-        label.addEventListener('click', (e) => e.stopPropagation()); // Prevent header click on label
-
-        repeatWrapper.appendChild(checkbox);
-        repeatWrapper.appendChild(label);
-        actionsArea.appendChild(repeatWrapper);
-
-        detailEl.appendChild(actionsArea);
-      }
-
-      // Locations Container
-      if (
-        regionData &&
-        regionData.locations &&
-        regionData.locations.length > 0
-      ) {
-        const locationsContainer = document.createElement('div');
-        locationsContainer.className = 'loop-region-locations-container';
-        locationsContainer.classList.toggle('colorblind-mode', useColorblind); // Apply to lists
-        // <<< Call new method with singleton
-        this._renderLocationList(regionName, locationsContainer, useColorblind);
-        // >>>
-        detailEl.appendChild(locationsContainer);
-      }
-
-      // Exits Container
-      if (regionData && regionData.exits && regionData.exits.length > 0) {
-        const exitsContainer = document.createElement('div');
-        exitsContainer.className = 'loop-region-exits-container';
-        exitsContainer.classList.toggle('colorblind-mode', useColorblind); // Apply to lists
-        // <<< Call new method with singleton
-        this._renderExitList(regionName, exitsContainer, useColorblind);
-        // >>>
-        detailEl.appendChild(exitsContainer);
-      }
-
-      regionBlock.appendChild(detailEl);
-    }
-
-    return regionBlock;
-  }
-
-  // --- NEW: Helper to render location list using DiscoveryState --- //
-  /**
-   * Renders the list of discovered locations for a region.
-   * @param {string} regionName
-   * @param {HTMLElement} container
-   * @param {boolean} useColorblind
-   */
-  _renderLocationList(regionName, container, useColorblind) {
-    container.innerHTML = ''; // Clear previous content
-    const staticData = stateManager.getStaticData();
-    const regionData = staticData?.regions?.[regionName];
-    if (!regionData || !regionData.locations) return;
-
-    const sortedLocations = [...regionData.locations].sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
-
-    sortedLocations.forEach((loc) => {
-      // Check discovery status using the singleton
-      const isDiscovered = discoveryStateSingleton.isLocationDiscovered(
-        loc.name
-      );
-
-      // Only render if the location itself is discovered
-      if (!isDiscovered) {
-        return; // Skip undiscovered locations
-      }
-
-      const isChecked = stateManager.instance.isLocationChecked(loc.name);
-      const isAccessible = stateManager.instance.isLocationAccessible(loc);
-
-      const div = document.createElement('div');
-      div.className = 'loop-location-wrapper';
-      div.dataset.locationName = loc.name;
-
-      if (isChecked) {
-        div.classList.add('checked-loc');
-      } else {
-        div.classList.toggle('accessible', isAccessible);
-        div.classList.toggle('inaccessible', !isAccessible);
-      }
-
-      const button = document.createElement('button');
-      button.className = 'loop-check-loc-btn button';
-      button.textContent = loc.name;
-      button.title = isChecked ? `${loc.name} (Checked)` : `Check ${loc.name}`;
-      button.disabled = isChecked;
-
-      button.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent region header click
-        if (!isChecked) {
-          this._queueCheckLocationAction(regionName, loc.name);
-        }
-      });
-
-      if (useColorblind) {
-        const symbolSpan = document.createElement('span');
-        symbolSpan.classList.add('colorblind-symbol');
-        if (isChecked) {
-          symbolSpan.textContent = '✓ ';
-          symbolSpan.classList.add('checked-loc');
-        } else if (isAccessible) {
-          symbolSpan.textContent = '✓ ';
-          symbolSpan.classList.add('accessible');
-        } else {
-          symbolSpan.textContent = '✗ ';
-          symbolSpan.classList.add('inaccessible');
-        }
-        div.appendChild(symbolSpan); // Add symbol before button
-      }
-
-      div.appendChild(button);
-
-      if (isChecked) {
-        const checkMark = document.createElement('span');
-        checkMark.className = 'loop-check-mark';
-        checkMark.textContent = '✓';
-        div.appendChild(checkMark);
-      }
-
-      container.appendChild(div);
-    });
-  }
-
-  // --- NEW: Helper to render exit list using DiscoveryState --- //
-  /**
-   * Renders the list of discovered exits for a region.
-   * @param {string} regionName
-   * @param {HTMLElement} container
-   * @param {boolean} useColorblind
-   */
-  _renderExitList(regionName, container, useColorblind) {
-    container.innerHTML = ''; // Clear previous content
-    const staticData = stateManager.getStaticData();
-    const regionData = staticData?.regions?.[regionName];
-    if (!regionData || !regionData.exits) return;
-
-    const sortedExits = [...regionData.exits].sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
-
-    sortedExits.forEach((exit) => {
-      // Check discovery status using the singleton
-      const isDiscovered = discoveryStateSingleton.isExitDiscovered(
-        regionName,
-        exit.name
-      );
-
-      // Only render if the exit itself is discovered
-      if (!isDiscovered) {
-        return; // Skip undiscovered exits
-      }
-
-      const targetRegion = exit.connected_region;
-      const isTargetRegionDiscovered =
-        discoveryStateSingleton.isRegionDiscovered(targetRegion);
-      const isAccessible =
-        isTargetRegionDiscovered &&
-        stateManager.instance.helpers.evaluateRule(exit.rule);
-
-      const div = document.createElement('div');
-      div.className = 'loop-exit-wrapper';
-      div.dataset.regionName = regionName;
-      div.dataset.exitName = exit.name;
-      div.dataset.destinationRegion = targetRegion;
-
-      div.classList.toggle('accessible', isAccessible);
-      div.classList.toggle('inaccessible', !isAccessible);
-
-      const button = document.createElement('button');
-      button.className = 'loop-move-btn button';
-      button.textContent = `${exit.name} → ${targetRegion}`;
-      button.title = `Move to ${targetRegion} via ${exit.name}`;
-      // Disable if the target region isn't discovered OR if the exit isn't accessible
-      button.disabled = !isTargetRegionDiscovered || !isAccessible;
-
-      button.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent region header click
-        if (isTargetRegionDiscovered && isAccessible) {
-          this._queueMoveAction(regionName, exit.name, targetRegion);
-        }
-      });
-
-      if (useColorblind) {
-        const symbolSpan = document.createElement('span');
-        symbolSpan.classList.add('colorblind-symbol');
-        if (isAccessible) {
-          symbolSpan.textContent = '✓ ';
-          symbolSpan.classList.add('accessible');
-        } else {
-          symbolSpan.textContent = '✗ ';
-          symbolSpan.classList.add('inaccessible');
-        }
-        div.appendChild(symbolSpan); // Add symbol before button
-      }
-
-      div.appendChild(button);
-      container.appendChild(div);
-    });
-  }
 
   /**
    * Create an action item element
