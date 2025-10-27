@@ -1239,7 +1239,7 @@ export class LocationUI {
 
         // Item at Location (if showLocationItems is enabled)
         if (this.showLocationItems && staticData?.locationItems) {
-          const itemAtLocation = staticData.locationItems[name];
+          const itemAtLocation = staticData.locationItems.get(name);
           if (itemAtLocation && itemAtLocation.name) {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'text-sm location-item-name';

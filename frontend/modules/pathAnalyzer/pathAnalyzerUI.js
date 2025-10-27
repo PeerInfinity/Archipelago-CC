@@ -395,8 +395,8 @@ export class PathAnalyzerUI {
 
       /* PERFORMANCE WARNING - DISABLED
       // Add warning for potentially complex regions
-      const regionData = stateManager.regions.get(regionName);
-      const regionCount = stateManager.regions.size;
+      const regionData = staticData.regions.get(regionName);
+      const regionCount = staticData.regions.size;
       if (regionData && regionCount > 100) {
         const warningMessage = document.createElement('div');
         warningMessage.className = 'performance-warning';
@@ -1630,10 +1630,10 @@ export class PathAnalyzerUI {
         const snapshot = stateManager.getLatestStateSnapshot();
         const staticData = stateManager.getStaticData();
 
-        if (snapshot?.locationItems && staticData?.locations) {
+        if (staticData?.locationItems && staticData?.locations) {
           // Find ALL locations that have this item
           const locationInfos = [];
-          for (const [locName, itemData] of Object.entries(snapshot.locationItems)) {
+          for (const [locName, itemData] of staticData.locationItems.entries()) {
             if (itemData && itemData.name === itemName) {
               // Get the location's region from static data
               const locData = Object.values(staticData.locations).find(l => l.name === locName);
@@ -1828,8 +1828,8 @@ export class PathAnalyzerUI {
    * @param {string} text - The text to check
    */
   _appendPossibleRegionLink(container, text) {
-    // Get the list of all known regions from stateManager.regions (not getRegions)
-    const allRegions = Object.keys(stateManager.regions || {});
+    // Get the list of all known regions from staticData.regions
+    const allRegions = staticData && staticData.regions ? Array.from(staticData.regions.keys()) : [];
 
     // Check if the text matches a known region name
     if (allRegions.includes(text)) {

@@ -841,8 +841,8 @@ export function location_item_name(snapshot, staticData, locationName) {
   }
 
   // Check if we have item placement data in the static data
-  if (staticData && staticData.locationItems && staticData.locationItems[locationName]) {
-    const item = staticData.locationItems[locationName];
+  if (staticData && staticData.locationItems && staticData.locationItems.get(locationName)) {
+    const item = staticData.locationItems.get(locationName);
     if (typeof item === 'string') {
       return [item, snapshot.player?.slot || 1];
     } else if (item && item.name) {

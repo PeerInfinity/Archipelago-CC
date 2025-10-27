@@ -275,10 +275,10 @@ export class CommandQueue {
     }
 
     // Count commands by type in current queue
-    const commandTypeCounts = {};
+    const pendingCommandTypeCounts = {};
     for (const cmd of this.commands) {
-      commandTypeCounts[cmd.command] =
-        (commandTypeCounts[cmd.command] || 0) + 1;
+      pendingCommandTypeCounts[cmd.command] =
+        (pendingCommandTypeCounts[cmd.command] || 0) + 1;
     }
 
     // Recent history (last 5 successes, all failures)
@@ -309,7 +309,7 @@ export class CommandQueue {
       currentCommand: currentCommandInfo,
 
       // Queue contents
-      commandTypeCounts: commandTypeCounts,
+      pendingCommandTypeCounts: pendingCommandTypeCounts,
       oldestPendingCommand: oldestPending,
 
       // History
@@ -318,13 +318,15 @@ export class CommandQueue {
       recentSuccesses: recentSuccesses,
       recentFailures: recentFailures,
 
+      // Cumulative metrics (total commands sent of each type)
+      cumulativeCommandTypeCounts: { ...this.metrics.commandTypeCounts },
+
       // Metrics
       metrics: {
         totalEnqueued: this.metrics.totalEnqueued,
         totalProcessed: this.metrics.totalProcessed,
         totalFailed: this.metrics.totalFailed,
-        peakQueueDepth: this.metrics.peakQueueDepth,
-        commandTypeCounts: { ...this.metrics.commandTypeCounts }
+        peakQueueDepth: this.metrics.peakQueueDepth
       }
     };
   }
