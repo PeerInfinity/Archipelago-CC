@@ -2174,7 +2174,7 @@ export class PathAnalyzerUI {
    * @param {Object} results - The analysis results
    */
   _storeAnalysisResults(regionName, results) {
-    // Store results in localStorage for Playwright to access
+    // Store results in window object for Playwright to access (no size limits)
     const analysisResults = {
       regionName: regionName,
       timestamp: new Date().toISOString(),
@@ -2186,32 +2186,24 @@ export class PathAnalyzerUI {
         results.isReachable !== undefined ? results.isReachable : false,
       hasDiscrepancy:
         results.hasDiscrepancy !== undefined ? results.hasDiscrepancy : false,
-      allNodes: results.allNodes || {}, // Default to empty object
+      allNodes: results.allNodes || {}, // Include full data since window has no quota
     };
 
-    // Store individual result
-    localStorage.setItem(
-      `__pathAnalysis_${regionName}__`,
-      JSON.stringify(analysisResults)
-    );
+    // Store in window object (no size limits)
+    if (typeof window !== 'undefined') {
+      // Store individual result by region name
+      if (!window.__pathAnalysisResults__) {
+        window.__pathAnalysisResults__ = {};
+      }
+      window.__pathAnalysisResults__[regionName] = analysisResults;
 
-    // Also maintain a list of all analyzed regions
-    const existingResults = JSON.parse(
-      localStorage.getItem('__pathAnalysisResults__') || '[]'
-    );
-    const updatedResults = existingResults.filter(
-      (r) => r.regionName !== regionName
-    );
-    updatedResults.push(analysisResults);
-    localStorage.setItem(
-      '__pathAnalysisResults__',
-      JSON.stringify(updatedResults)
-    );
+      // Also maintain a list format for compatibility
+      window.__pathAnalysisResultsList__ = Object.values(window.__pathAnalysisResults__);
 
-    log(
-      'info',
-      `[PathAnalyzerUI] Stored analysis results for ${regionName}:`,
-      analysisResults
-    );
+      log(
+        'info',
+        `[PathAnalyzerUI] Stored analysis results for ${regionName} in window.__pathAnalysisResults__`
+      );
+    }
   }
 }

@@ -81,7 +81,10 @@ export class TestSpoilerUI {
 
     // Initialize module dependencies
     this.fileLoader = new FileLoader();
-    this.comparisonEngine = new ComparisonEngine(stateManager);
+    this.comparisonEngine = new ComparisonEngine(
+      stateManager,
+      (type, message, ...data) => this.log(type, message, ...data)
+    );
     this.analysisReporter = new AnalysisReporter(
       this.ruleEvaluator,
       (type, message, ...data) => this.log(type, message, ...data)

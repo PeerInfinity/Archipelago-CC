@@ -34,8 +34,9 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 const logger = createUniversalLogger('testSpoilerUI:ComparisonEngine');
 
 export class ComparisonEngine {
-  constructor(stateManager) {
+  constructor(stateManager, logCallback = null) {
     this.stateManager = stateManager;
+    this.logCallback = logCallback;  // Callback for UI logging: (type, message, ...data) => void
     this.currentMismatchDetails = null;
     logger.debug('ComparisonEngine constructor called');
   }
@@ -182,6 +183,14 @@ export class ComparisonEngine {
     );
 
     if (missingFromState.length === 0 && extraInState.length === 0) {
+      const successMessage = `✓ Sphere ${context.sphere_number} passed: ${stateAccessibleSet.size} locations match`;
+
+      // Log to UI panel if callback available
+      if (this.logCallback) {
+        this.logCallback('success', successMessage);
+      }
+
+      // Also log to console for debugging
       logger.info(
         `State match OK for: ${
           typeof context === 'string' ? context : JSON.stringify(context)
@@ -189,25 +198,40 @@ export class ComparisonEngine {
       );
       return true;
     } else {
-      logger.error(
-        `STATE MISMATCH found for: ${
-          typeof context === 'string' ? context : JSON.stringify(context)
-        }`
-      );
+      const mismatchMessage = `STATE MISMATCH found for: ${
+        typeof context === 'string' ? context : JSON.stringify(context)
+      }`;
+
+      // Log to UI panel if callback available
+      if (this.logCallback) {
+        this.logCallback('error', mismatchMessage);
+      }
+
+      // Also log to console for debugging
+      logger.error(mismatchMessage);
+
       if (missingFromState.length > 0) {
-        logger.error(
-          ` > Locations accessible in LOG but NOT in STATE (or checked): ${missingFromState.join(
-            ', '
-          )}`
-        );
+        const missingMessage = ` > Locations accessible in LOG but NOT in STATE (or checked): ${missingFromState.join(', ')}`;
+
+        // Log to UI panel (this will trigger link creation in testSpoilerUI.js)
+        if (this.logCallback) {
+          this.logCallback('error', missingMessage);
+        }
+
+        // Also log to console
+        logger.error(missingMessage);
         console.error(`[MISMATCH DETAIL] Missing from state (${missingFromState.length}):`, missingFromState);
       }
       if (extraInState.length > 0) {
-        logger.error(
-          ` > Locations accessible in STATE (and unchecked) but NOT in LOG: ${extraInState.join(
-            ', '
-          )}`
-        );
+        const extraMessage = ` > Locations accessible in STATE (and unchecked) but NOT in LOG: ${extraInState.join(', ')}`;
+
+        // Log to UI panel (this will trigger link creation in testSpoilerUI.js)
+        if (this.logCallback) {
+          this.logCallback('error', extraMessage);
+        }
+
+        // Also log to console
+        logger.error(extraMessage);
         console.error(`[MISMATCH DETAIL] Extra in state (${extraInState.length}):`, extraInState);
       }
       logger.debug('[compareAccessibleLocations] Mismatch Details:', {
@@ -360,6 +384,8 @@ export class ComparisonEngine {
     );
 
     if (missingFromState.length === 0 && extraInState.length === 0) {
+      // Don't log region success to UI panel to avoid clutter (locations are the main check)
+      // Only log to console for debugging
       logger.info(
         `Region match OK for: ${
           typeof context === 'string' ? context : JSON.stringify(context)
@@ -367,25 +393,40 @@ export class ComparisonEngine {
       );
       return true;
     } else {
-      logger.error(
-        `REGION MISMATCH found for: ${
-          typeof context === 'string' ? context : JSON.stringify(context)
-        }`
-      );
+      const mismatchMessage = `REGION MISMATCH found for: ${
+        typeof context === 'string' ? context : JSON.stringify(context)
+      }`;
+
+      // Log to UI panel if callback available
+      if (this.logCallback) {
+        this.logCallback('error', mismatchMessage);
+      }
+
+      // Also log to console for debugging
+      logger.error(mismatchMessage);
+
       if (missingFromState.length > 0) {
-        logger.error(
-          ` > Regions accessible in LOG but NOT in STATE: ${missingFromState.join(
-            ', '
-          )}`
-        );
+        const missingMessage = ` > Regions accessible in LOG but NOT in STATE: ${missingFromState.join(', ')}`;
+
+        // Log to UI panel (this will trigger link creation in testSpoilerUI.js)
+        if (this.logCallback) {
+          this.logCallback('error', missingMessage);
+        }
+
+        // Also log to console
+        logger.error(missingMessage);
         console.error(`[REGION MISMATCH DETAIL] Missing from state (${missingFromState.length}):`, missingFromState);
       }
       if (extraInState.length > 0) {
-        logger.error(
-          ` > Regions accessible in STATE but NOT in LOG: ${extraInState.join(
-            ', '
-          )}`
-        );
+        const extraMessage = ` > Regions accessible in STATE but NOT in LOG: ${extraInState.join(', ')}`;
+
+        // Log to UI panel (this will trigger link creation in testSpoilerUI.js)
+        if (this.logCallback) {
+          this.logCallback('error', extraMessage);
+        }
+
+        // Also log to console
+        logger.error(extraMessage);
         console.error(`[REGION MISMATCH DETAIL] Extra in state (${extraInState.length}):`, extraInState);
       }
       logger.debug('[compareAccessibleRegions] Mismatch Details:', {

@@ -438,23 +438,6 @@ export class TestOrchestrator {
         );
       }
 
-      // Store in localStorage as backup
-      try {
-        localStorage.setItem(
-          '__spoilerTestResults__',
-          JSON.stringify(detailedTestResults)
-        );
-        this.uiCallbacks.log(
-          'info',
-          'Detailed spoiler test results stored in localStorage'
-        );
-      } catch (e) {
-        this.uiCallbacks.log(
-          'warn',
-          `Could not store detailed results in localStorage: ${e.message}`
-        );
-      }
-
       // Re-enable auto-collect events
       try {
         await stateManager.setAutoCollectEventsConfig(true);
