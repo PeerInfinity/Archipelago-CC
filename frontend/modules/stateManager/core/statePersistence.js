@@ -254,8 +254,54 @@ export function _sendSnapshotUpdate(sm) {
 export function _createSelfSnapshotInterface(sm) {
   const anInterface = {
     _isSnapshotInterface: true,
-    hasItem: (itemName) => sm._hasItem(itemName),
-    countItem: (itemName) => sm._countItem(itemName),
+    hasItem: (itemName) => {
+      // Use game-specific 'has' helper if available (handles progressive items)
+      // This ensures Progressive Shield → Mirror Shield resolution works correctly
+      if (sm.helperFunctions && typeof sm.helperFunctions.has === 'function') {
+        try {
+          // Create a minimal snapshot for the helper
+          const snapshot = {
+            inventory: sm.inventory,
+            flags: sm.gameStateModule?.flags || [],
+            events: sm.gameStateModule?.events || [],
+            player: { slot: sm.playerSlot }
+          };
+          const staticData = {
+            progressionMapping: sm.progressionMapping,
+            items: sm.itemData
+          };
+          return sm.helperFunctions.has(snapshot, staticData, itemName);
+        } catch (e) {
+          // Fallback to direct inventory check if helper fails
+          sm.logger?.warn?.('StatePersistence', `Error using game-specific has helper for ${itemName}:`, e);
+          return sm._hasItem(itemName);
+        }
+      }
+      // Fallback to direct inventory check if no helper available
+      return sm._hasItem(itemName);
+    },
+    countItem: (itemName) => {
+      // Use game-specific 'count' helper if available (handles progressive items)
+      if (sm.helperFunctions && typeof sm.helperFunctions.count === 'function') {
+        try {
+          const snapshot = {
+            inventory: sm.inventory,
+            flags: sm.gameStateModule?.flags || [],
+            events: sm.gameStateModule?.events || [],
+            player: { slot: sm.playerSlot }
+          };
+          const staticData = {
+            progressionMapping: sm.progressionMapping,
+            items: sm.itemData
+          };
+          return sm.helperFunctions.count(snapshot, staticData, itemName);
+        } catch (e) {
+          sm.logger?.warn?.('StatePersistence', `Error using game-specific count helper for ${itemName}:`, e);
+          return sm._countItem(itemName);
+        }
+      }
+      return sm._countItem(itemName);
+    },
     hasGroup: (groupName) => sm._hasGroup(groupName),
     countGroup: (groupName) => sm._countGroup(groupName),
     getTotalItemCount: () => {
