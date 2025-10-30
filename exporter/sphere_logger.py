@@ -255,7 +255,7 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
             sphere_candidates -= sphere
             initial_collection_spheres.append(sphere)
             state_cache.append(state.copy())
-            logging.debug('Calculated initial sphere %i, containing %i of %i progress items.', 
+            logging.debug('Calculated initial sphere %i, containing %i of %i progress items.',
                           len(initial_collection_spheres), len(sphere), len(prog_locations))
             if not sphere:
                 if any([multiworld.worlds[location.item.player].options.accessibility != 'minimal' for location in sphere_candidates]):
@@ -270,6 +270,12 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
             for num, sphere in reversed(tuple(enumerate(initial_collection_spheres))):
                 to_delete: Set["Location"] = set()
                 for location in sphere:
+                    # Skip pruning for self-locking locations (those with always_allow set)
+                    # These locations have access rules that depend on the item being placed there
+                    if hasattr(location, 'always_allow') and location.always_allow:
+                        logging.debug(f'Skipping pruning for self-locking location: {location.name}')
+                        continue
+
                     old_item = location.item
                     location.item = None
                     if multiworld.can_beat_game(state_cache[num]):

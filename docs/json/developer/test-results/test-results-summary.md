@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-10-22 13:44:32
+**Generated:** 2025-10-30 13:36:45
 
 This summary combines results from three types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -11,15 +11,15 @@ This summary combines results from three types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 28/79 passed (35.4%)
-- **Full Test:** 18/79 passed (22.8%)
+- **Minimal Test:** 29/79 passed (36.7%)
+- **Full Test:** 19/79 passed (24.1%)
 - **Multiplayer Test:** 28/79 passed (35.4%)
 
 ### Combined Test Results
 
-- **Templates passing all 3 tests:** 16/79 (20.3%)
+- **Templates passing all 3 tests:** 17/79 (21.5%)
 - **Templates passing 2 tests:** 11/79 (13.9%)
-- **Templates passing 1 test:** 4/79 (5.1%)
+- **Templates passing 1 test:** 3/79 (3.8%)
 - **Templates passing 0 tests:** 48/79 (60.8%)
 
 ## Test Results
@@ -27,7 +27,7 @@ This summary combines results from three types of tests:
 | Game Name | Minimal Test | Full Test | Multiplayer Test |
 |-----------|--------------|-----------|------------------|
 | A Hat in Time | ✅ Passed | ❌ Failed | ✅ Passed |
-| A Link to the Past | ❌ Failed | ❌ Failed | ✅ Passed |
+| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed |
 | Aquaria | ✅ Passed | ❌ Failed | ✅ Passed |
