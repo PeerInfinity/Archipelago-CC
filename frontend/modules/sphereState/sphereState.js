@@ -354,6 +354,18 @@ export class SphereState {
       return staticData.player;
     }
 
+    // For multiworld: Try game_info field to identify this player's rules file
+    // In multiworld, game_info has a single key matching the player ID
+    if (staticData?.game_info) {
+      const gameInfoKeys = Object.keys(staticData.game_info);
+      if (gameInfoKeys.length === 1) {
+        const playerId = gameInfoKeys[0];
+        log('info', `Detected multiworld player ID from game_info: ${playerId}`);
+        this.setCurrentPlayerId(playerId);
+        return playerId;
+      }
+    }
+
     // Try player_names field - get first player
     if (staticData?.player_names) {
       const playerIds = Object.keys(staticData.player_names);

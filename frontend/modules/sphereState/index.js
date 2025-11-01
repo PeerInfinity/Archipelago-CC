@@ -179,8 +179,11 @@ function handleRulesLoaded(data, propagationOptions) {
   log('info', `Rules source: ${sourceName}`);
 
   // Extract game directory and preset ID from sourceName
-  // Expected format: "./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json"
-  const match = sourceName.match(/presets\/([^/]+)\/([^/]+)\/\2_rules\.json$/);
+  // Expected formats:
+  //   Single-player: "./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json"
+  //   Multiworld:    "./presets/multiworld/AP_14089154938208861744/AP_14089154938208861744_P2_rules.json"
+  // The sphere log is shared and named: AP_14089154938208861744_spheres_log.jsonl (without _P{N})
+  const match = sourceName.match(/presets\/([^/]+)\/([^/]+)\/\2(?:_P\d+)?_rules\.json$/);
   if (!match) {
     // If sourceName indicates data loaded from localStorage, this is expected
     const isFromLocalStorage = sourceName === 'moduleSpecificConfigProvidedRules';

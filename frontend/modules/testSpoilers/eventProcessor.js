@@ -40,6 +40,7 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createStateSnapshotInterface } from '../shared/stateInterface.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
+import settingsManager from '../../app/core/settingsManager.js';
 
 const logger = createUniversalLogger('testSpoilerUI:EventProcessor');
 
@@ -54,7 +55,25 @@ export class EventProcessor {
     this.spoilerLogData = null;
     this.playerId = null;
     this.currentEventMismatchDetails = []; // Store all mismatch details for current event
+    this.verboseMode = false; // Will be loaded from settings
     logger.debug('EventProcessor constructor called');
+
+    // Load verbose mode setting
+    this._loadVerboseSetting();
+  }
+
+  /**
+   * Load the verbose mode setting from settingsManager
+   * @private
+   */
+  async _loadVerboseSetting() {
+    try {
+      this.verboseMode = await settingsManager.getSetting('moduleSettings.testSpoilers.verboseSpoilerTests', false);
+      logger.debug(`Verbose spoiler tests mode: ${this.verboseMode}`);
+    } catch (error) {
+      logger.warn('Failed to load verboseSpoilerTests setting, defaulting to false', error);
+      this.verboseMode = false;
+    }
   }
 
   /**
@@ -110,10 +129,9 @@ export class EventProcessor {
     // Clear mismatch details for this event
     this.currentEventMismatchDetails = [];
 
-    this.logCallback(
-      'debug',
-      `[processSingleEvent] playerId at start: ${this.playerId}`
-    );
+    if (this.verboseMode) {
+      this.logCallback('debug', `[processSingleEvent] playerId at start: ${this.playerId}`);
+    }
 
     // This function now only processes a single event
     if (!event) return;
@@ -174,18 +192,24 @@ export class EventProcessor {
           player_id: this.playerId,
         };
 
-        this.logCallback(
-          'info',
-          `Preparing StateManager for sphere ${context.sphere_number}.`
-        );
+        if (this.verboseMode) {
+          this.logCallback(
+            'info',
+            `Preparing StateManager for sphere ${context.sphere_number}.`
+          );
+        }
 
         try {
           // Only clear event items for sphere 0
           if (context.sphere_number === 0) {
             await stateManager.clearEventItems();
-            this.logCallback('debug', 'Event items cleared for sphere 0.');
+            if (this.verboseMode) {
+              this.logCallback('debug', 'Event items cleared for sphere 0.');
+            }
           } else {
-            this.logCallback('debug', `Keeping accumulated state for sphere ${context.sphere_number}.`);
+            if (this.verboseMode) {
+              this.logCallback('debug', `Keeping accumulated state for sphere ${context.sphere_number}.`);
+            }
           }
 
           // Check locations from current sphere one-by-one, allowing natural item acquisition
@@ -263,10 +287,12 @@ export class EventProcessor {
             `spoiler_sphere_${context.sphere_number}_locations_checked`,
             60000  // Increased timeout to 60 seconds to handle complex rule evaluation
           );
-          this.logCallback(
-            'debug',
-            'Ping successful. StateManager ready for comparison.'
-          );
+          if (this.verboseMode) {
+            this.logCallback(
+              'debug',
+              'Ping successful. StateManager ready for comparison.'
+            );
+          }
 
           // Get the fresh snapshot from the worker.
           const freshSnapshot = await stateManager.getFullSnapshot();
@@ -282,11 +308,13 @@ export class EventProcessor {
             'info',
             `Fresh snapshot has ${freshSnapshot.checkedLocations?.length || 0} checked locations`
           );
-          this.logCallback(
-            'debug',
-            'Retrieved fresh snapshot from StateManager.',
-            freshSnapshot
-          );
+          if (this.verboseMode) {
+            this.logCallback(
+              'debug',
+              'Retrieved fresh snapshot from StateManager.',
+              freshSnapshot
+            );
+          }
 
           // Compare using the fresh snapshot.
           const locationComparisonResult = await this.comparisonEngine.compareAccessibleLocations(
@@ -559,6 +587,7 @@ export class EventProcessor {
    * Input: Location to check
    *   ├─> locationName: string
    *   ├─> regionName: string (optional, for event context)
+   *   ├─> addItems: boolean (optional, whether to add item to inventory, defaults to true)
    *
    * Processing:
    *   ├─> Publish user:locationCheck event via dispatcher
@@ -571,8 +600,9 @@ export class EventProcessor {
    *
    * @param {string} locationName - Name of the location to check
    * @param {string} regionName - Name of the parent region (optional)
+   * @param {boolean} addItems - Whether to add the item to inventory (defaults to true)
    */
-  async checkLocationViaEvent(locationName, regionName = null) {
+  async checkLocationViaEvent(locationName, regionName = null, addItems = true) {
     // Publish user:locationCheck event through the dispatcher
     // This will be handled by stateManager's handleUserLocationCheckForStateManager
     // Use window.eventDispatcher instance created in init.js
@@ -587,6 +617,7 @@ export class EventProcessor {
       {
         locationName: locationName,
         regionName: regionName,
+        addItems: addItems, // Pass through addItems parameter
         originator: 'TestSpoilersModule',
         originalDOMEvent: false,
       },
@@ -752,9 +783,12 @@ export class EventProcessor {
         throw new Error(`Pre-check accessibility mismatch for "${locationName}" in sphere ${context.sphere_number}`);
       }
 
-      // Check the location (which adds the item to inventory)
+      // Check the location
+      // For multiworld: Only add items if they're in our inventory delta (meaning they're for us)
+      // Items for other players won't be in our newItems, so we skip adding them to avoid "unknown item" warnings
+      const shouldAddItem = !itemName || newItems.hasOwnProperty(itemName);
       const locationRegion = locationDef?.parent_region_name || locationDef?.parent_region || locationDef?.region || null;
-      await this.checkLocationViaEvent(locationName, locationRegion);
+      await this.checkLocationViaEvent(locationName, locationRegion, shouldAddItem);
     }
 
     // Step 2: Add cross-player items (items we received from other players' locations)
@@ -784,7 +818,7 @@ export class EventProcessor {
 
           // If not from own location, it's a cross-player item - add it
           if (!fromOwnLocation) {
-            this.logCallback('warn', `  [Player ${this.playerId}] Receiving ${itemsToAdd}x cross-player item: "${itemName}"`);
+            this.logCallback('info', `  [Player ${this.playerId}] Receiving ${itemsToAdd}x cross-player item: "${itemName}"`);
             for (let i = 0; i < itemsToAdd; i++) {
               await stateManager.addItemToInventory(itemName, 1);
             }
@@ -793,7 +827,9 @@ export class EventProcessor {
       }
     }
 
-    this.logCallback('info', `Multiworld sphere ${context.sphere_number} complete: checked ${sphereLocations.length} locations`);
+    if (this.verboseMode) {
+      this.logCallback('info', `Multiworld sphere ${context.sphere_number} complete: checked ${sphereLocations.length} locations`);
+    }
   }
 
   /**

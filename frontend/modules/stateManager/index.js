@@ -289,18 +289,34 @@ async function postInitialize(initializationApi, moduleSpecificConfig = {}) {
     const playerNames = rulesConfigToUse.player_names || {};
 
     if (!playerIdToUse) {
-      if (playerIds.length === 0) {
-        logger.warn(
-          moduleInfo.name,
-          '[StateManager Module] No players found in rules data. Defaulting to player 1.'
-        );
-        playerIdToUse = '1';
-      } else {
-        playerIdToUse = playerIds[0];
-        logger.info(
-          moduleInfo.name,
-          `[StateManager Module] Auto-selected player ID from rules: ${playerIdToUse}`
-        );
+      // For multiworld: Try game_info field to identify this player's rules file
+      // In multiworld, game_info has a single key matching the player ID
+      if (rulesConfigToUse.game_info) {
+        const gameInfoKeys = Object.keys(rulesConfigToUse.game_info);
+        if (gameInfoKeys.length === 1) {
+          playerIdToUse = gameInfoKeys[0];
+          logger.info(
+            moduleInfo.name,
+            `[StateManager Module] Detected multiworld player ID from game_info: ${playerIdToUse}`
+          );
+        }
+      }
+
+      // Fallback to first player from player_names if game_info didn't work
+      if (!playerIdToUse) {
+        if (playerIds.length === 0) {
+          logger.warn(
+            moduleInfo.name,
+            '[StateManager Module] No players found in rules data. Defaulting to player 1.'
+          );
+          playerIdToUse = '1';
+        } else {
+          playerIdToUse = playerIds[0];
+          logger.info(
+            moduleInfo.name,
+            `[StateManager Module] Auto-selected player ID from rules: ${playerIdToUse}`
+          );
+        }
       }
     }
     playerInfo = {
@@ -409,7 +425,9 @@ async function handleUserLocationCheckForStateManager(eventData) {
     eventData
   );
   if (eventData.locationName) {
-    await stateManagerProxySingleton.checkLocation(eventData.locationName); // Command worker
+    // Pass addItems parameter from event data (defaults to true for backward compatibility)
+    const addItems = eventData.addItems !== undefined ? eventData.addItems : true;
+    await stateManagerProxySingleton.checkLocation(eventData.locationName, addItems); // Command worker
   } else {
     // Handle "check next available" locally.
     // This requires StateManagerProxySingleton to expose a method that commands the worker
