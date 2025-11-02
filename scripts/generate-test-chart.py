@@ -332,21 +332,150 @@ def generate_multiplayer_markdown(chart_data: List[Tuple[str, str, int, int, int
     return md_content
 
 
-def generate_summary_chart(minimal_data, full_data, multiplayer_data) -> str:
-    """Generate a combined summary chart with all three test results."""
+def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, int, int, int, int, int, bool, bool]]:
+    """
+    Extract multiworld test chart data from results.
+    Returns list of tuples: (game_name, pass_fail, player_number, total_players_tested,
+                            players_passed, players_failed, prerequisite_check,
+                            has_custom_exporter, has_custom_game_logic)
+    """
+    chart_data = []
+
+    if 'results' not in results:
+        return chart_data
+
+    for template_name, template_data in results['results'].items():
+        world_info = template_data.get('world_info', {})
+        game_name = world_info.get('game_name_from_yaml') or template_name.replace('.yaml', '')
+        has_custom_exporter = world_info.get('has_custom_exporter', False)
+        has_custom_game_logic = world_info.get('has_custom_game_logic', False)
+
+        multiworld_test = template_data.get('multiworld_test', {})
+        prerequisite_check = template_data.get('prerequisite_check', {})
+
+        success = multiworld_test.get('success', False)
+        player_number = multiworld_test.get('player_number', 0)
+        total_players_tested = multiworld_test.get('total_players_tested', 0)
+        players_passed = multiworld_test.get('players_passed', 0)
+        players_failed = multiworld_test.get('players_failed', 0)
+        all_prereqs_passed = prerequisite_check.get('all_prerequisites_passed', False)
+
+        if not all_prereqs_passed:
+            pass_fail = 'Skipped (Prerequisites)'
+        elif success:
+            pass_fail = 'Passed'
+        else:
+            pass_fail = 'Failed'
+
+        chart_data.append((game_name, pass_fail, player_number, total_players_tested,
+                          players_passed, players_failed, all_prereqs_passed,
+                          has_custom_exporter, has_custom_game_logic))
+
+    chart_data.sort(key=lambda x: x[0])
+    return chart_data
+
+
+def generate_multiworld_markdown(chart_data: List[Tuple[str, str, int, int, int, int, bool, bool, bool]],
+                                 metadata: Dict[str, Any], top_level_metadata: Optional[Dict[str, Any]] = None) -> str:
+    """Generate a markdown table for multiworld test data."""
+    md_content = "# Archipelago Template Test Results Chart\n\n"
+    md_content += "## Multiworld Test\n\n"
+
+    # Add link to summary document
+    md_content += "[← Back to Test Results Summary](./test-results-summary.md)\n\n"
+
+    # Add generated timestamp
+    md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+
+    # Add top-level metadata if available
+    if top_level_metadata:
+        if 'timestamp' in top_level_metadata and top_level_metadata['timestamp']:
+            md_content += f"**Test Timestamp:** {top_level_metadata.get('timestamp')}\n\n"
+        if 'seed' in top_level_metadata and top_level_metadata['seed']:
+            md_content += f"**Seed:** {top_level_metadata.get('seed')}\n\n"
+    elif metadata and ('created' in metadata or 'last_updated' in metadata):
+        if 'created' in metadata:
+            md_content += f"**Source Data Created:** {metadata.get('created', 'Unknown')}\n\n"
+        if 'last_updated' in metadata:
+            md_content += f"**Source Data Last Updated:** {metadata.get('last_updated', 'Unknown')}\n\n"
+
+    if chart_data:
+        total_games = len(chart_data)
+        passed = sum(1 for _, pf, *_ in chart_data if pf.lower() == 'passed')
+        skipped = sum(1 for _, pf, *_ in chart_data if 'skipped' in pf.lower() or 'prerequisites' in pf.lower())
+        failed = total_games - passed - skipped
+
+        md_content += "## Summary\n\n"
+        md_content += f"- **Total Games:** {total_games}\n"
+        md_content += f"- **Passed:** {passed} ({passed/total_games*100:.1f}%)\n"
+        md_content += f"- **Failed:** {failed} ({failed/total_games*100:.1f}%)\n"
+        md_content += f"- **Skipped (Prerequisites):** {skipped} ({skipped/total_games*100:.1f}%)\n\n"
+
+    md_content += "## Test Results\n\n"
+    md_content += "| Game Name | Test Result | Player # | Total Players | Players Passed | Players Failed | Custom Exporter | Custom GameLogic |\n"
+    md_content += "|-----------|-------------|----------|---------------|----------------|----------------|-----------------|------------------|\n"
+
+    for (game_name, pass_fail, player_number, total_players_tested,
+         players_passed, players_failed, all_prereqs_passed,
+         has_custom_exporter, has_custom_game_logic) in chart_data:
+
+        if pass_fail.lower() == 'passed':
+            result_display = "✅ Passed"
+        elif 'skipped' in pass_fail.lower() or 'prerequisites' in pass_fail.lower():
+            result_display = "⚫ Skipped"
+        else:
+            result_display = "❌ Failed"
+
+        exporter_indicator = "✅" if has_custom_exporter else "⚫"
+        game_logic_indicator = "✅" if has_custom_game_logic else "⚫"
+
+        player_display = str(player_number) if player_number > 0 else "N/A"
+        total_display = str(total_players_tested) if total_players_tested > 0 else "N/A"
+        passed_display = str(players_passed) if total_players_tested > 0 else "N/A"
+        failed_display = str(players_failed) if total_players_tested > 0 else "N/A"
+
+        md_content += f"| {game_name} | {result_display} | {player_display} | {total_display} | {passed_display} | {failed_display} | {exporter_indicator} | {game_logic_indicator} |\n"
+
+    if not chart_data:
+        md_content += "| No data available | - | - | - | - | - | - | - |\n"
+
+    md_content += "\n## Notes\n\n"
+    md_content += "- **Player #:** The player number assigned to this template in the multiworld\n"
+    md_content += "- **Total Players:** Number of players tested in the multiworld configuration\n"
+    md_content += "- **Players Passed:** Number of players that passed the spoiler test\n"
+    md_content += "- **Players Failed:** Number of players that failed the spoiler test\n"
+    md_content += "- **Custom Exporter:** ✅ Has custom Python exporter script, ⚫ Uses generic exporter\n"
+    md_content += "- **Custom GameLogic:** ✅ Has custom JavaScript game logic, ⚫ Uses generic logic\n\n"
+    md_content += "**Pass Criteria:** All prerequisite tests (Spoiler Minimal, Spoiler Full, Multiplayer) must pass, and all players in the multiworld must pass their spoiler tests\n\n"
+    md_content += "**Skipped:** Templates that did not meet prerequisite requirements\n"
+
+    return md_content
+
+
+def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld_data=None) -> str:
+    """Generate a combined summary chart with all test results."""
     md_content = "# Archipelago Template Test Results Summary\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-    md_content += "This summary combines results from three types of tests:\n"
-    md_content += "- **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)\n"
-    md_content += "- **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)\n"
-    md_content += "- **Multiplayer Test:** Tests in multiplayer mode - [View Details](./test-results-multiplayer.md)\n\n"
+
+    if multiworld_data is not None:
+        md_content += "This summary combines results from four types of tests:\n"
+        md_content += "- **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)\n"
+        md_content += "- **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)\n"
+        md_content += "- **Multiplayer Test:** Tests in multiplayer mode - [View Details](./test-results-multiplayer.md)\n"
+        md_content += "- **Multiworld Test:** Tests in multiworld mode with multiple games - [View Details](./test-results-multiworld.md)\n\n"
+    else:
+        md_content += "This summary combines results from three types of tests:\n"
+        md_content += "- **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)\n"
+        md_content += "- **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)\n"
+        md_content += "- **Multiplayer Test:** Tests in multiplayer mode - [View Details](./test-results-multiplayer.md)\n\n"
 
     # Create a unified game list
     games_minimal = {name: result for name, result, *_ in minimal_data}
     games_full = {name: result for name, result, *_ in full_data}
     games_multiplayer = {name: result for name, result, *_ in multiplayer_data}
+    games_multiworld = {name: result for name, result, *_ in multiworld_data} if multiworld_data else {}
 
-    all_games = sorted(set(list(games_minimal.keys()) + list(games_full.keys()) + list(games_multiplayer.keys())))
+    all_games = sorted(set(list(games_minimal.keys()) + list(games_full.keys()) + list(games_multiplayer.keys()) + list(games_multiworld.keys())))
 
     # Calculate statistics first
     def calc_stats(data_dict):
@@ -362,6 +491,8 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data) -> str:
 
     # Calculate templates by number of tests passed
     tests_passed_count = {}
+    num_tests = 4 if multiworld_data is not None else 3
+
     for game in all_games:
         passed_count = 0
         if game in games_minimal and 'passed' in games_minimal[game].lower():
@@ -370,13 +501,13 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data) -> str:
             passed_count += 1
         if game in games_multiplayer and 'passed' in games_multiplayer[game].lower():
             passed_count += 1
+        if multiworld_data is not None and game in games_multiworld and 'passed' in games_multiworld[game].lower():
+            passed_count += 1
         tests_passed_count[game] = passed_count
 
-    # Count how many templates passed 0, 1, 2, or 3 tests
-    passed_all_3 = sum(1 for count in tests_passed_count.values() if count == 3)
-    passed_2 = sum(1 for count in tests_passed_count.values() if count == 2)
-    passed_1 = sum(1 for count in tests_passed_count.values() if count == 1)
-    passed_0 = sum(1 for count in tests_passed_count.values() if count == 0)
+    # Count how many templates passed 0, 1, 2, 3, or 4 tests
+    passed_all = sum(1 for count in tests_passed_count.values() if count == num_tests)
+    passed_counts = {i: sum(1 for count in tests_passed_count.values() if count == i) for i in range(num_tests)}
 
     total_templates = len(all_games)
 
@@ -388,31 +519,48 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data) -> str:
     md_content += f"- **Full Test:** {full_passed}/{full_total} passed ({full_pct:.1f}%)\n"
     md_content += f"- **Multiplayer Test:** {mp_passed}/{mp_total} passed ({mp_pct:.1f}%)\n"
 
+    if multiworld_data is not None:
+        mw_total, mw_passed, mw_pct = calc_stats(games_multiworld)
+        md_content += f"- **Multiworld Test:** {mw_passed}/{mw_total} passed ({mw_pct:.1f}%)\n"
+
     md_content += "\n### Combined Test Results\n\n"
-    md_content += f"- **Templates passing all 3 tests:** {passed_all_3}/{total_templates} ({passed_all_3/total_templates*100:.1f}%)\n"
-    md_content += f"- **Templates passing 2 tests:** {passed_2}/{total_templates} ({passed_2/total_templates*100:.1f}%)\n"
-    md_content += f"- **Templates passing 1 test:** {passed_1}/{total_templates} ({passed_1/total_templates*100:.1f}%)\n"
-    md_content += f"- **Templates passing 0 tests:** {passed_0}/{total_templates} ({passed_0/total_templates*100:.1f}%)\n"
+    md_content += f"- **Templates passing all {num_tests} tests:** {passed_all}/{total_templates} ({passed_all/total_templates*100:.1f}%)\n"
+
+    for i in range(num_tests - 1, -1, -1):
+        if i > 0:
+            md_content += f"- **Templates passing {i} test{'s' if i > 1 else ''}:** {passed_counts[i]}/{total_templates} ({passed_counts[i]/total_templates*100:.1f}%)\n"
+        else:
+            md_content += f"- **Templates passing 0 tests:** {passed_counts[0]}/{total_templates} ({passed_counts[0]/total_templates*100:.1f}%)\n"
 
     # Add Test Results table
     md_content += "\n## Test Results\n\n"
-    md_content += "| Game Name | Minimal Test | Full Test | Multiplayer Test |\n"
-    md_content += "|-----------|--------------|-----------|------------------|\n"
+    if multiworld_data is not None:
+        md_content += "| Game Name | Minimal Test | Full Test | Multiplayer Test | Multiworld Test |\n"
+        md_content += "|-----------|--------------|-----------|------------------|------------------|\n"
+    else:
+        md_content += "| Game Name | Minimal Test | Full Test | Multiplayer Test |\n"
+        md_content += "|-----------|--------------|-----------|------------------|\n"
 
     for game in all_games:
         minimal_result = games_minimal.get(game, "N/A")
         full_result = games_full.get(game, "N/A")
         multiplayer_result = games_multiplayer.get(game, "N/A")
+        multiworld_result = games_multiworld.get(game, "N/A") if multiworld_data is not None else None
 
         def format_result(result):
             if result == "N/A":
                 return "❓ N/A"
             elif 'passed' in result.lower():
                 return "✅ Passed"
+            elif 'skipped' in result.lower():
+                return "⚫ Skipped"
             else:
                 return "❌ Failed"
 
-        md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiplayer_result)} |\n"
+        if multiworld_data is not None:
+            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiplayer_result)} | {format_result(multiworld_result)} |\n"
+        else:
+            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiplayer_result)} |\n"
 
     return md_content
 
@@ -421,7 +569,7 @@ def main():
     parser = argparse.ArgumentParser(description='Generate test results charts from template test results')
     parser.add_argument('--input-file', type=str, help='Input JSON file path (processes only this file)')
     parser.add_argument('--output-file', type=str, help='Output markdown file path')
-    parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiplayer'],
+    parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiplayer', 'multiworld'],
                        help='Test type when using --input-file')
 
     args = parser.parse_args()
@@ -451,7 +599,7 @@ def main():
             chart_data = extract_spoiler_chart_data(results)
             subtitle = "Spoiler Test - Advancement Items Only" if args.test_type == 'minimal' else "Spoiler Test - All Locations"
             md_content = generate_spoiler_markdown(chart_data, metadata, subtitle)
-        else:  # multiplayer
+        elif args.test_type == 'multiplayer':
             chart_data = extract_multiplayer_chart_data(results)
             # Extract top-level metadata for multiplayer
             top_level = {
@@ -461,6 +609,14 @@ def main():
                 'seed': results.get('seed')
             }
             md_content = generate_multiplayer_markdown(chart_data, metadata, top_level)
+        else:  # multiworld
+            chart_data = extract_multiworld_chart_data(results)
+            # Extract top-level metadata for multiworld
+            top_level = {
+                'timestamp': results.get('timestamp'),
+                'seed': results.get('seed')
+            }
+            md_content = generate_multiworld_markdown(chart_data, metadata, top_level)
 
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         with open(output_path, 'w') as f:
@@ -531,11 +687,33 @@ def main():
         print(f"Warning: Multiplayer test results not found: {mp_input}")
         mp_data = []
 
+    # Load multiworld test results
+    mw_input = os.path.join(project_root, 'scripts/output-multiworld/test-results-multiworld.json')
+    mw_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiworld.md')
+
+    mw_data = None
+    if os.path.exists(mw_input):
+        print(f"Processing multiworld test results...")
+        mw_results = load_test_results(mw_input)
+        mw_data = extract_multiworld_chart_data(mw_results)
+        # Extract top-level metadata for multiworld
+        top_level_mw = {
+            'timestamp': mw_results.get('timestamp'),
+            'seed': mw_results.get('seed')
+        }
+        mw_md = generate_multiworld_markdown(mw_data, mw_results.get('metadata', {}), top_level_mw)
+        os.makedirs(os.path.dirname(mw_output), exist_ok=True)
+        with open(mw_output, 'w') as f:
+            f.write(mw_md)
+        print(f"✓ Multiworld chart saved to: {mw_output}")
+    else:
+        print(f"Warning: Multiworld test results not found: {mw_input}")
+
     # Generate summary chart
-    if minimal_data or full_data or mp_data:
+    if minimal_data or full_data or mp_data or mw_data:
         print(f"Generating summary chart...")
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data)
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
         print(f"✓ Summary chart saved to: {summary_output}")

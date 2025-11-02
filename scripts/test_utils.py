@@ -284,10 +284,19 @@ def run_command(cmd: List[str], cwd: str = None, timeout: int = 300, env: Dict =
         return -1, "", str(e)
 
 
-def count_total_spheres(spheres_log_path: str) -> float:
+def count_total_spheres(spheres_log_path: str, player_num: int = None) -> float:
     """
     Get the highest sphere_index from spheres_log.jsonl file.
     Returns the sphere_index value from the last line in the file.
+
+    Args:
+        spheres_log_path: Path to the spheres_log.jsonl file
+        player_num: Optional player number for multiworld games. If specified,
+                   only counts spheres where the player had activity (new items,
+                   locations, or regions)
+
+    Returns:
+        The highest sphere index found
     """
     try:
         if not os.path.exists(spheres_log_path):
@@ -301,11 +310,34 @@ def count_total_spheres(spheres_log_path: str) -> float:
                     try:
                         sphere_data = json.loads(line)
                         sphere_index = sphere_data.get('sphere_index', 0)
-                        # Convert to float to handle values like "1.1", "2.3", etc.
-                        if isinstance(sphere_index, str):
-                            last_sphere = float(sphere_index)
+
+                        # If player_num is specified, check if this player had activity in this sphere
+                        if player_num is not None:
+                            player_data = sphere_data.get('player_data', {})
+                            player_key = str(player_num)
+
+                            if player_key in player_data:
+                                player_info = player_data[player_key]
+                                # Check if player had any activity (new items, locations, or regions)
+                                has_activity = (
+                                    player_info.get('new_inventory_details', {}).get('base_items', {}) or
+                                    player_info.get('new_accessible_locations', []) or
+                                    player_info.get('new_accessible_regions', []) or
+                                    player_info.get('sphere_locations', [])
+                                )
+
+                                if has_activity:
+                                    # Convert to float to handle values like "1.1", "2.3", etc.
+                                    if isinstance(sphere_index, str):
+                                        last_sphere = float(sphere_index)
+                                    else:
+                                        last_sphere = float(sphere_index)
                         else:
-                            last_sphere = float(sphere_index)
+                            # No player filter - just get the highest sphere
+                            if isinstance(sphere_index, str):
+                                last_sphere = float(sphere_index)
+                            else:
+                                last_sphere = float(sphere_index)
                     except (json.JSONDecodeError, ValueError):
                         continue
             return last_sphere

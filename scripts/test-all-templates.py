@@ -36,12 +36,13 @@ from test_results import (
 )
 from test_runner import (
     test_template_single_seed,
-    test_template_seed_range
+    test_template_seed_range,
+    test_template_multiworld
 )
 from seed_utils import get_seed_id as compute_seed_id
 
 
-def run_post_processing_scripts(project_root: str, results_file: str, multiplayer: bool = False):
+def run_post_processing_scripts(project_root: str, results_file: str, multiplayer: bool = False, multiworld: bool = False):
     """Run post-processing scripts to update documentation and preset files."""
     print("\n=== Running Post-Processing Scripts ===")
 
@@ -176,6 +177,11 @@ def main():
         help='Run multiplayer timer tests instead of spoiler tests'
     )
     parser.add_argument(
+        '--multiworld',
+        action='store_true',
+        help='Run multiworld tests - requires all other test types to pass first'
+    )
+    parser.add_argument(
         '--single-client',
         action='store_true',
         help='Use single-client mode for multiplayer tests (only valid with --multiplayer)'
@@ -206,6 +212,10 @@ def main():
 
     if args.single_client and not args.multiplayer:
         print("Error: --single-client can only be used with --multiplayer")
+        sys.exit(1)
+
+    if args.multiplayer and args.multiworld:
+        print("Error: --multiplayer and --multiworld are mutually exclusive")
         sys.exit(1)
 
     if args.retest and args.include_list is not None:
@@ -351,7 +361,9 @@ def main():
     # Handle --retest mode: load existing results and filter to only failed tests
     if args.retest:
         # Determine the correct results file path based on mode
-        if args.multiplayer:
+        if args.multiworld:
+            retest_results_file = os.path.join(project_root, 'scripts/output-multiworld/test-results-multiworld.json')
+        elif args.multiplayer:
             retest_results_file = os.path.join(project_root, 'scripts/output-multiplayer/test-results-multiplayer.json')
         else:
             # Read host.yaml to determine spoiler output directory
@@ -531,7 +543,10 @@ def main():
     # Adjust output file path based on mode and configuration
     if args.output_file == 'scripts/output/template-test-results.json':
         # Using default path - adjust based on mode
-        if args.multiplayer:
+        if args.multiworld:
+            # Use multiworld-specific output directory and file name
+            args.output_file = 'scripts/output-multiworld/test-results-multiworld.json'
+        elif args.multiplayer:
             # Use multiplayer-specific output directory and file name
             args.output_file = 'scripts/output-multiplayer/test-results-multiplayer.json'
         else:
@@ -615,10 +630,40 @@ def main():
         else:
             print("Will stop at first failure (default behavior)")
     
+    # Multiworld mode setup
+    multiworld_dir = None
+    multiworld_player_count = 0
+    if args.multiworld:
+        # Set up multiworld directory
+        multiworld_dir = os.path.join(project_root, 'Players', 'presets', 'Multiworld')
+
+        # Delete all template files from multiworld directory at start (for first seed only)
+        if seed_list[0] == 1 or (args.retest and not args.retest_continue):
+            print(f"\n=== Multiworld Mode: Clearing multiworld directory ===")
+            if os.path.exists(multiworld_dir):
+                # Delete all .yaml files in the directory
+                for file in os.listdir(multiworld_dir):
+                    if file.endswith('.yaml'):
+                        file_path = os.path.join(multiworld_dir, file)
+                        try:
+                            os.remove(file_path)
+                            print(f"  Removed {file}")
+                        except Exception as e:
+                            print(f"  Error removing {file}: {e}")
+            else:
+                # Create the directory if it doesn't exist
+                os.makedirs(multiworld_dir, exist_ok=True)
+                print(f"  Created multiworld directory: {multiworld_dir}")
+        else:
+            # For subsequent seeds, count existing templates
+            if os.path.exists(multiworld_dir):
+                multiworld_player_count = len([f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')])
+                print(f"\n=== Multiworld Mode: Using existing {multiworld_player_count} templates ===")
+
     # Start timing the batch processing
     batch_start_time = time.time()
     print(f"Starting batch processing of {len(yaml_files)} templates...")
-    
+
     # Test each template
     total_files = len(yaml_files)
     for i, yaml_file in enumerate(yaml_files, 1):
@@ -705,6 +750,31 @@ def main():
                         multiplayer=args.multiplayer, single_client=args.single_client,
                         headed=args.headed
                     )
+            elif args.multiworld:
+                # Multiworld mode - special handling
+                # For each seed, test the template in multiworld mode
+                if len(seed_list) > 1:
+                    # Seed range testing in multiworld mode
+                    print(f"Error: Seed range testing not yet supported in multiworld mode")
+                    # For now, we'll just test the first seed
+                    template_result = test_template_multiworld(
+                        yaml_file, templates_dir, project_root, world_mapping,
+                        str(seed_list[0]), multiworld_dir, existing_results,
+                        multiworld_player_count, export_only=args.export_only,
+                        test_only=args.test_only, headed=args.headed
+                    )
+                else:
+                    # Single seed in multiworld mode
+                    template_result = test_template_multiworld(
+                        yaml_file, templates_dir, project_root, world_mapping,
+                        str(seed_list[0]), multiworld_dir, existing_results,
+                        multiworld_player_count, export_only=args.export_only,
+                        test_only=args.test_only, headed=args.headed
+                    )
+
+                # If the test passed, increment player count for next template
+                if template_result.get('multiworld_test', {}).get('success', False):
+                    multiworld_player_count += 1
             elif len(seed_list) > 1:
                 # Test with seed range (normal mode)
                 template_result = test_template_seed_range(
@@ -733,7 +803,7 @@ def main():
 
             # Run post-processing after each test if requested (do this BEFORE checking retest status)
             if args.post_process:
-                run_post_processing_scripts(project_root, results_file, args.multiplayer)
+                run_post_processing_scripts(project_root, results_file, args.multiplayer, args.multiworld)
 
             # In retest mode, check if this test is now passing and stop if it still fails
             if args.retest:
@@ -850,7 +920,15 @@ def main():
             failed_exports = len(yaml_files) - successful_exports
             print(f"Export Summary: {successful_exports} successful, {failed_exports} failed")
         elif args.test_only:
-            if args.multiplayer:
+            if args.multiworld:
+                # Multiworld test summary
+                passed = sum(1 for r in results['results'].values()
+                            if r.get('multiworld_test', {}).get('success', False))
+                skipped = sum(1 for r in results['results'].values()
+                            if not r.get('prerequisite_check', {}).get('all_prerequisites_passed', False))
+                failed = len(yaml_files) - passed - skipped
+                print(f"Multiworld Test Summary: {passed} passed, {failed} failed, {skipped} skipped (prerequisites not met)")
+            elif args.multiplayer:
                 # Multiplayer test summary
                 passed = sum(1 for r in results['results'].values()
                             if r.get('multiplayer_test', {}).get('success', False))
@@ -866,7 +944,17 @@ def main():
                 print(f"Spoiler Test Summary: {passed} passed, {failed} failed, {errors} errors")
         else:
             # Full run (not test-only or export-only)
-            if args.multiplayer:
+            if args.multiworld:
+                # Multiworld test summary
+                passed = sum(1 for r in results['results'].values()
+                            if r.get('multiworld_test', {}).get('success', False))
+                skipped = sum(1 for r in results['results'].values()
+                            if not r.get('prerequisite_check', {}).get('all_prerequisites_passed', False))
+                failed = len(yaml_files) - passed - skipped
+                print(f"Single Seed Test Summary: {passed} passed, {failed} failed, {skipped} skipped")
+                print(f"\nMultiworld Details:")
+                print(f"  Total players in final multiworld: {multiworld_player_count}")
+            elif args.multiplayer:
                 # Multiplayer test summary
                 passed = sum(1 for r in results['results'].values()
                             if r.get('multiplayer_test', {}).get('success', False))
@@ -884,7 +972,7 @@ def main():
     # Run post-processing scripts if requested (only if not already run after each test)
     # This ensures post-processing runs at least once, even if no tests were run
     if args.post_process and len(yaml_files) == 0:
-        run_post_processing_scripts(project_root, results_file, args.multiplayer)
+        run_post_processing_scripts(project_root, results_file, args.multiplayer, args.multiworld)
 
 
 if __name__ == '__main__':

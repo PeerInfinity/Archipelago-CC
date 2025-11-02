@@ -8,9 +8,12 @@ This module contains the main test execution logic for:
 - Running generation (Generate.py)
 - Running spoiler tests
 - Running multiplayer tests
+- Running multiworld tests
 """
 
+import json
 import os
+import shutil
 import time
 from datetime import datetime
 from typing import Dict, List
@@ -472,3 +475,340 @@ def test_template_seed_range(template_file: str, templates_dir: str, project_roo
         print(f"🎉 All {seed_range_result['seeds_passed']} seeds passed!")
 
     return seed_range_result
+
+
+def test_template_multiworld(template_file: str, templates_dir: str, project_root: str,
+                            world_mapping: Dict[str, Dict], seed: str,
+                            multiworld_dir: str, existing_results: Dict,
+                            current_player_count: int, export_only: bool = False,
+                            test_only: bool = False, headed: bool = False) -> Dict:
+    """
+    Test a single template in multiworld mode.
+
+    This checks if the template has passed all prerequisite tests (spoiler minimal,
+    spoiler full, and multiplayer), then copies it to the multiworld directory,
+    runs generation with all accumulated templates, and tests each player.
+
+    Args:
+        template_file: Name of the template file to test
+        templates_dir: Path to templates directory
+        project_root: Path to project root
+        world_mapping: World mapping dictionary
+        seed: Seed number to use
+        multiworld_dir: Path to Players/presets/Multiworld directory
+        existing_results: Dictionary containing all test results (spoiler-minimal, spoiler-full, multiplayer)
+        current_player_count: Number of players currently in the multiworld directory (before adding this one)
+        export_only: If True, only run generation
+        test_only: If True, skip generation
+        headed: If True, run Playwright tests in headed mode
+
+    Returns:
+        Dictionary with test results
+    """
+    template_name = os.path.basename(template_file)
+    game_name = normalize_game_name(template_name)
+
+    # Compute seed ID
+    try:
+        seed_id = compute_seed_id(int(seed))
+    except (ValueError, TypeError):
+        print(f"Error: Seed '{seed}' is not a valid number")
+        seed_id = None
+
+    # Get world info
+    world_info = get_world_info(template_file, templates_dir, world_mapping)
+
+    print(f"\n=== Testing {template_name} (Multiworld Mode) ===")
+
+    result = {
+        'template_name': template_name,
+        'game_name': game_name,
+        'seed': seed,
+        'seed_id': seed_id,
+        'timestamp': datetime.now().isoformat(),
+        'world_info': world_info,
+        'prerequisite_check': {
+            'spoiler_minimal_passed': False,
+            'spoiler_full_passed': False,
+            'multiplayer_passed': False,
+            'all_prerequisites_passed': False
+        },
+        'multiworld_test': {
+            'success': False,
+            'player_number': current_player_count + 1,
+            'total_players_tested': 0,
+            'players_passed': 0,
+            'players_failed': 0,
+            'first_failure_player': None,
+            'player_results': {},
+            'processing_time_seconds': 0
+        }
+    }
+
+    # Check prerequisites - the template must have passed all three other test types
+    print(f"Checking prerequisites for {template_name}...")
+
+    # Load the three test results files
+    spoiler_minimal_file = os.path.join(project_root, 'scripts/output-spoiler-minimal/template-test-results.json')
+    spoiler_full_file = os.path.join(project_root, 'scripts/output-spoiler-full/template-test-results.json')
+    multiplayer_file = os.path.join(project_root, 'scripts/output-multiplayer/test-results-multiplayer.json')
+
+    spoiler_minimal_passed = False
+    spoiler_full_passed = False
+    multiplayer_passed = False
+
+    # Check spoiler minimal
+    if os.path.exists(spoiler_minimal_file):
+        with open(spoiler_minimal_file, 'r') as f:
+            spoiler_minimal_results = json.load(f)
+            if template_name in spoiler_minimal_results.get('results', {}):
+                template_result = spoiler_minimal_results['results'][template_name]
+                if isinstance(template_result, dict):
+                    # Check if this is seed range data (same logic as postprocessing script)
+                    if 'seed_range' in template_result:
+                        # Seed range results - check if all seeds passed
+                        seeds_failed = template_result.get('seeds_failed', 0)
+                        seeds_passed = template_result.get('seeds_passed', 0)
+                        spoiler_minimal_passed = (seeds_failed == 0 and seeds_passed > 0)
+                    else:
+                        # Single seed result
+                        spoiler_test = template_result.get('spoiler_test', {})
+                        generation = template_result.get('generation', {})
+                        # Apply same criteria as postprocessing script
+                        spoiler_minimal_passed = (
+                            spoiler_test.get('pass_fail') == 'passed' and
+                            generation.get('error_count', 0) == 0 and
+                            spoiler_test.get('total_spheres', 0) > 0
+                        )
+
+    # Check spoiler full
+    if os.path.exists(spoiler_full_file):
+        with open(spoiler_full_file, 'r') as f:
+            spoiler_full_results = json.load(f)
+            if template_name in spoiler_full_results.get('results', {}):
+                template_result = spoiler_full_results['results'][template_name]
+                if isinstance(template_result, dict):
+                    # Check if this is seed range data (same logic as postprocessing script)
+                    if 'seed_range' in template_result:
+                        # Seed range results - check if all seeds passed
+                        seeds_failed = template_result.get('seeds_failed', 0)
+                        seeds_passed = template_result.get('seeds_passed', 0)
+                        spoiler_full_passed = (seeds_failed == 0 and seeds_passed > 0)
+                    else:
+                        # Single seed result
+                        spoiler_test = template_result.get('spoiler_test', {})
+                        generation = template_result.get('generation', {})
+                        # Apply same criteria as postprocessing script
+                        spoiler_full_passed = (
+                            spoiler_test.get('pass_fail') == 'passed' and
+                            generation.get('error_count', 0) == 0 and
+                            spoiler_test.get('total_spheres', 0) > 0
+                        )
+
+    # Check multiplayer
+    if os.path.exists(multiplayer_file):
+        with open(multiplayer_file, 'r') as f:
+            multiplayer_results = json.load(f)
+            if template_name in multiplayer_results.get('results', {}):
+                template_result = multiplayer_results['results'][template_name]
+                if isinstance(template_result, dict):
+                    multiplayer_test = template_result.get('multiplayer_test', {})
+                    generation = template_result.get('generation', {})
+                    # Apply same criteria as postprocessing script
+                    multiplayer_passed = (
+                        multiplayer_test.get('success', False) and
+                        generation.get('error_count', 0) == 0
+                    )
+
+    result['prerequisite_check']['spoiler_minimal_passed'] = spoiler_minimal_passed
+    result['prerequisite_check']['spoiler_full_passed'] = spoiler_full_passed
+    result['prerequisite_check']['multiplayer_passed'] = multiplayer_passed
+    result['prerequisite_check']['all_prerequisites_passed'] = (
+        spoiler_minimal_passed and spoiler_full_passed and multiplayer_passed
+    )
+
+    print(f"  Spoiler Minimal: {'PASS' if spoiler_minimal_passed else 'FAIL'}")
+    print(f"  Spoiler Full: {'PASS' if spoiler_full_passed else 'FAIL'}")
+    print(f"  Multiplayer: {'PASS' if multiplayer_passed else 'FAIL'}")
+
+    if not result['prerequisite_check']['all_prerequisites_passed']:
+        print(f"Skipping {template_name} - not all prerequisites passed")
+        result['multiworld_test']['success'] = False
+        result['multiworld_test']['skip_reason'] = 'Prerequisites not met'
+        return result
+
+    # Copy template to multiworld directory
+    print(f"Copying {template_name} to multiworld directory...")
+    source_path = os.path.join(templates_dir, template_name)
+    dest_path = os.path.join(multiworld_dir, template_name)
+
+    try:
+        shutil.copy2(source_path, dest_path)
+        print(f"  Copied successfully")
+    except Exception as e:
+        print(f"  Error copying template: {e}")
+        result['multiworld_test']['success'] = False
+        result['multiworld_test']['error'] = f"Failed to copy template: {e}"
+        return result
+
+    # Return early if export_only mode
+    if export_only:
+        print(f"Template copied for {template_name} (export-only mode)")
+        return result
+
+    # Step 1: Run Generate.py with all templates in multiworld directory (skip if test_only mode)
+    if not test_only:
+        print(f"Running Generate.py for multiworld with {current_player_count + 1} players...")
+        generate_cmd = [
+            "python", "Generate.py",
+            "--player_files_path", "Players/presets/Multiworld",
+            "--seed", seed
+        ]
+
+        # Time the generation process
+        gen_start_time = time.time()
+        gen_return_code, gen_stdout, gen_stderr = run_command(generate_cmd, cwd=project_root, timeout=600)
+        gen_end_time = time.time()
+        gen_processing_time = round(gen_end_time - gen_start_time, 2)
+
+        # Analyze generation output
+        full_output = gen_stdout + "\n" + gen_stderr
+        gen_error_count, gen_warning_count, gen_first_error, gen_first_warning = count_errors_and_warnings(full_output)
+
+        result['generation'] = {
+            'success': gen_return_code == 0,
+            'return_code': gen_return_code,
+            'error_count': gen_error_count,
+            'warning_count': gen_warning_count,
+            'first_error_line': gen_first_error,
+            'first_warning_line': gen_first_warning,
+            'processing_time_seconds': gen_processing_time
+        }
+
+        if gen_return_code != 0:
+            print(f"Generation failed with return code {gen_return_code}")
+            result['multiworld_test']['success'] = False
+            result['multiworld_test']['error'] = 'Generation failed'
+            # Delete the template from multiworld directory since it failed
+            try:
+                os.remove(dest_path)
+                print(f"  Removed {template_name} from multiworld directory due to generation failure")
+            except Exception as e:
+                print(f"  Error removing template: {e}")
+            return result
+    else:
+        print(f"Skipping generation for {template_name} (test-only mode)")
+
+    # Step 2: Run spoiler tests for each player
+    print(f"Running multiworld spoiler tests for {current_player_count + 1} players...")
+
+    test_start_time = time.time()
+    all_players_passed = True
+
+    # Test each player (numbered 1 to current_player_count + 1)
+    for player_num in range(1, current_player_count + 2):
+        print(f"\n  Testing Player {player_num}...")
+
+        # Use npm run test:headed if --headed flag is set
+        if headed:
+            spoiler_cmd = ["npm", "run", "test:headed", "--mode=test-spoilers",
+                         f"--game=multiworld", f"--seed={seed}", f"--player={player_num}"]
+        else:
+            spoiler_cmd = ["npm", "test", "--mode=test-spoilers",
+                         f"--game=multiworld", f"--seed={seed}", f"--player={player_num}"]
+
+        spoiler_env = os.environ.copy()
+
+        spoiler_return_code, spoiler_stdout, spoiler_stderr = run_command(
+            spoiler_cmd, cwd=project_root, timeout=900, env=spoiler_env
+        )
+
+        player_passed = spoiler_return_code == 0
+
+        # Analyze test output
+        full_output = spoiler_stdout + "\n" + spoiler_stderr
+        test_error_count, test_warning_count, test_first_error, test_first_warning = count_errors_and_warnings(full_output)
+
+        # Run test analysis
+        analysis_cmd = ["npm", "run", "test:analyze"]
+        analysis_return_code, analysis_stdout, analysis_stderr = run_command(
+            analysis_cmd, cwd=project_root, timeout=60
+        )
+
+        sphere_reached = 0
+        total_spheres = 0
+        pass_fail = 'unknown'
+
+        # Read playwright-analysis.txt if it exists
+        analysis_file = os.path.join(project_root, "playwright-analysis.txt")
+        if os.path.exists(analysis_file):
+            try:
+                with open(analysis_file, 'r') as f:
+                    analysis_text = f.read()
+
+                # Parse the analysis
+                analysis_result = parse_playwright_analysis(analysis_text)
+                sphere_reached = analysis_result.get('sphere_reached', 0)
+                pass_fail = analysis_result.get('pass_fail', 'unknown')
+            except IOError:
+                pass
+
+        # Read total spheres from spheres_log.jsonl file
+        # For multiworld, there's a single spheres_log file with data for all players
+        spheres_log_path = os.path.join(project_root, 'frontend', 'presets', 'multiworld', seed_id,
+                                       f'{seed_id}_spheres_log.jsonl')
+        total_spheres = count_total_spheres(spheres_log_path, player_num=player_num)
+
+        # If test passed, sphere_reached should equal total_spheres
+        if pass_fail == 'passed':
+            sphere_reached = total_spheres
+
+        player_result = {
+            'player_number': player_num,
+            'passed': player_passed and pass_fail == 'passed',
+            'return_code': spoiler_return_code,
+            'sphere_reached': sphere_reached,
+            'total_spheres': total_spheres,
+            'pass_fail': pass_fail,
+            'error_count': test_error_count,
+            'warning_count': test_warning_count,
+            'first_error_line': test_first_error,
+            'first_warning_line': test_first_warning
+        }
+
+        result['multiworld_test']['player_results'][f'player_{player_num}'] = player_result
+
+        if player_result['passed']:
+            result['multiworld_test']['players_passed'] += 1
+            print(f"    Player {player_num}: PASS (sphere {sphere_reached}/{total_spheres})")
+        else:
+            result['multiworld_test']['players_failed'] += 1
+            all_players_passed = False
+            if result['multiworld_test']['first_failure_player'] is None:
+                result['multiworld_test']['first_failure_player'] = player_num
+            print(f"    Player {player_num}: FAIL (sphere {sphere_reached}/{total_spheres})")
+
+    test_end_time = time.time()
+    test_processing_time = round(test_end_time - test_start_time, 2)
+
+    result['multiworld_test']['total_players_tested'] = current_player_count + 1
+    result['multiworld_test']['processing_time_seconds'] = test_processing_time
+    result['multiworld_test']['success'] = all_players_passed
+
+    # If any player failed, delete the template from multiworld directory
+    if not all_players_passed:
+        print(f"\n  Multiworld test FAILED for {template_name}")
+        print(f"  Removing {template_name} from multiworld directory...")
+        try:
+            os.remove(dest_path)
+            print(f"  Removed successfully")
+        except Exception as e:
+            print(f"  Error removing template: {e}")
+    else:
+        print(f"\n  Multiworld test PASSED for {template_name}")
+        print(f"  Keeping {template_name} in multiworld directory for future tests")
+
+    print(f"\nCompleted {template_name}: Multiworld Test={'[PASS]' if result['multiworld_test']['success'] else '[FAIL]'}, "
+          f"Players Passed={result['multiworld_test']['players_passed']}/{result['multiworld_test']['total_players_tested']}")
+
+    return result
