@@ -182,6 +182,16 @@ def main():
         help='Run multiworld tests - requires all other test types to pass first'
     )
     parser.add_argument(
+        '--multiworld-keep-templates',
+        action='store_true',
+        help='Keep existing templates in Multiworld directory (do not clear or add new templates)'
+    )
+    parser.add_argument(
+        '--multiworld-test-all-players',
+        action='store_true',
+        help='Test all players each time (not just the newly added player)'
+    )
+    parser.add_argument(
         '--single-client',
         action='store_true',
         help='Use single-client mode for multiplayer tests (only valid with --multiplayer)'
@@ -216,6 +226,14 @@ def main():
 
     if args.multiplayer and args.multiworld:
         print("Error: --multiplayer and --multiworld are mutually exclusive")
+        sys.exit(1)
+
+    if args.multiworld_keep_templates and not args.multiworld:
+        print("Error: --multiworld-keep-templates can only be used with --multiworld")
+        sys.exit(1)
+
+    if args.multiworld_test_all_players and not args.multiworld:
+        print("Error: --multiworld-test-all-players can only be used with --multiworld")
         sys.exit(1)
 
     if args.retest and args.include_list is not None:
@@ -637,28 +655,39 @@ def main():
         # Set up multiworld directory
         multiworld_dir = os.path.join(project_root, 'Players', 'presets', 'Multiworld')
 
-        # Delete all template files from multiworld directory at start (for first seed only)
-        if seed_list[0] == 1 or (args.retest and not args.retest_continue):
-            print(f"\n=== Multiworld Mode: Clearing multiworld directory ===")
+        if args.multiworld_keep_templates:
+            # Keep existing templates - just count them
             if os.path.exists(multiworld_dir):
-                # Delete all .yaml files in the directory
-                for file in os.listdir(multiworld_dir):
-                    if file.endswith('.yaml'):
-                        file_path = os.path.join(multiworld_dir, file)
-                        try:
-                            os.remove(file_path)
-                            print(f"  Removed {file}")
-                        except Exception as e:
-                            print(f"  Error removing {file}: {e}")
+                multiworld_player_count = len([f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')])
+                print(f"\n=== Multiworld Mode: Keeping existing {multiworld_player_count} templates ===")
             else:
                 # Create the directory if it doesn't exist
                 os.makedirs(multiworld_dir, exist_ok=True)
-                print(f"  Created multiworld directory: {multiworld_dir}")
+                print(f"\n=== Multiworld Mode: Created multiworld directory (no existing templates) ===")
         else:
-            # For subsequent seeds, count existing templates
-            if os.path.exists(multiworld_dir):
-                multiworld_player_count = len([f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')])
-                print(f"\n=== Multiworld Mode: Using existing {multiworld_player_count} templates ===")
+            # Normal mode - clear or count based on seed
+            # Delete all template files from multiworld directory at start (for first seed only)
+            if seed_list[0] == 1 or (args.retest and not args.retest_continue):
+                print(f"\n=== Multiworld Mode: Clearing multiworld directory ===")
+                if os.path.exists(multiworld_dir):
+                    # Delete all .yaml files in the directory
+                    for file in os.listdir(multiworld_dir):
+                        if file.endswith('.yaml'):
+                            file_path = os.path.join(multiworld_dir, file)
+                            try:
+                                os.remove(file_path)
+                                print(f"  Removed {file}")
+                            except Exception as e:
+                                print(f"  Error removing {file}: {e}")
+                else:
+                    # Create the directory if it doesn't exist
+                    os.makedirs(multiworld_dir, exist_ok=True)
+                    print(f"  Created multiworld directory: {multiworld_dir}")
+            else:
+                # For subsequent seeds, count existing templates
+                if os.path.exists(multiworld_dir):
+                    multiworld_player_count = len([f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')])
+                    print(f"\n=== Multiworld Mode: Using existing {multiworld_player_count} templates ===")
 
     # Start timing the batch processing
     batch_start_time = time.time()
@@ -761,7 +790,9 @@ def main():
                         yaml_file, templates_dir, project_root, world_mapping,
                         str(seed_list[0]), multiworld_dir, existing_results,
                         multiworld_player_count, export_only=args.export_only,
-                        test_only=args.test_only, headed=args.headed
+                        test_only=args.test_only, headed=args.headed,
+                        keep_templates=args.multiworld_keep_templates,
+                        test_all_players=args.multiworld_test_all_players
                     )
                 else:
                     # Single seed in multiworld mode
@@ -769,11 +800,13 @@ def main():
                         yaml_file, templates_dir, project_root, world_mapping,
                         str(seed_list[0]), multiworld_dir, existing_results,
                         multiworld_player_count, export_only=args.export_only,
-                        test_only=args.test_only, headed=args.headed
+                        test_only=args.test_only, headed=args.headed,
+                        keep_templates=args.multiworld_keep_templates,
+                        test_all_players=args.multiworld_test_all_players
                     )
 
-                # If the test passed, increment player count for next template
-                if template_result.get('multiworld_test', {}).get('success', False):
+                # If the test passed AND we're not in keep_templates mode, increment player count for next template
+                if not args.multiworld_keep_templates and template_result.get('multiworld_test', {}).get('success', False):
                     multiworld_player_count += 1
             elif len(seed_list) > 1:
                 # Test with seed range (normal mode)

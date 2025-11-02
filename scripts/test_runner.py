@@ -481,7 +481,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
                             world_mapping: Dict[str, Dict], seed: str,
                             multiworld_dir: str, existing_results: Dict,
                             current_player_count: int, export_only: bool = False,
-                            test_only: bool = False, headed: bool = False) -> Dict:
+                            test_only: bool = False, headed: bool = False,
+                            keep_templates: bool = False, test_all_players: bool = False) -> Dict:
     """
     Test a single template in multiworld mode.
 
@@ -501,6 +502,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         export_only: If True, only run generation
         test_only: If True, skip generation
         headed: If True, run Playwright tests in headed mode
+        keep_templates: If True, don't copy template to multiworld directory (just test existing templates)
+        test_all_players: If True, test all players; if False, only test the newly added player
 
     Returns:
         Dictionary with test results
@@ -637,24 +640,29 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         result['multiworld_test']['skip_reason'] = 'Prerequisites not met'
         return result
 
-    # Copy template to multiworld directory
-    print(f"Copying {template_name} to multiworld directory...")
-    source_path = os.path.join(templates_dir, template_name)
-    dest_path = os.path.join(multiworld_dir, template_name)
+    # Copy template to multiworld directory (unless keep_templates is True)
+    if not keep_templates:
+        print(f"Copying {template_name} to multiworld directory...")
+        source_path = os.path.join(templates_dir, template_name)
+        dest_path = os.path.join(multiworld_dir, template_name)
 
-    try:
-        shutil.copy2(source_path, dest_path)
-        print(f"  Copied successfully")
-    except Exception as e:
-        print(f"  Error copying template: {e}")
-        result['multiworld_test']['success'] = False
-        result['multiworld_test']['error'] = f"Failed to copy template: {e}"
-        return result
+        try:
+            shutil.copy2(source_path, dest_path)
+            print(f"  Copied successfully")
+        except Exception as e:
+            print(f"  Error copying template: {e}")
+            result['multiworld_test']['success'] = False
+            result['multiworld_test']['error'] = f"Failed to copy template: {e}"
+            return result
 
-    # Return early if export_only mode
-    if export_only:
-        print(f"Template copied for {template_name} (export-only mode)")
-        return result
+        # Return early if export_only mode
+        if export_only:
+            print(f"Template copied for {template_name} (export-only mode)")
+            return result
+    else:
+        print(f"Skipping template copy (--multiworld-keep-templates mode)")
+        # In keep_templates mode, we don't add new templates
+        # So we shouldn't increment the player count
 
     # Step 1: Run Generate.py with all templates in multiworld directory (skip if test_only mode)
     if not test_only:
@@ -700,13 +708,23 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         print(f"Skipping generation for {template_name} (test-only mode)")
 
     # Step 2: Run spoiler tests for each player
-    print(f"Running multiworld spoiler tests for {current_player_count + 1} players...")
+    # Determine which players to test based on test_all_players flag
+    if test_all_players or keep_templates:
+        # Test all players
+        start_player = 1
+        end_player = current_player_count + (0 if keep_templates else 1)
+        print(f"Running multiworld spoiler tests for all {end_player} players...")
+    else:
+        # Only test the newly added player
+        start_player = current_player_count + 1
+        end_player = current_player_count + 1
+        print(f"Running multiworld spoiler test for player {start_player} only...")
 
     test_start_time = time.time()
     all_players_passed = True
 
-    # Test each player (numbered 1 to current_player_count + 1)
-    for player_num in range(1, current_player_count + 2):
+    # Test the appropriate range of players
+    for player_num in range(start_player, end_player + 1):
         print(f"\n  Testing Player {player_num}...")
 
         # Use npm run test:headed if --headed flag is set
@@ -791,22 +809,28 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     test_end_time = time.time()
     test_processing_time = round(test_end_time - test_start_time, 2)
 
-    result['multiworld_test']['total_players_tested'] = current_player_count + 1
+    # Set total_players based on mode
+    if keep_templates:
+        result['multiworld_test']['total_players_tested'] = end_player
+    else:
+        result['multiworld_test']['total_players_tested'] = current_player_count + 1
     result['multiworld_test']['processing_time_seconds'] = test_processing_time
     result['multiworld_test']['success'] = all_players_passed
 
-    # If any player failed, delete the template from multiworld directory
+    # If any player failed, delete the template from multiworld directory (unless keep_templates)
     if not all_players_passed:
         print(f"\n  Multiworld test FAILED for {template_name}")
-        print(f"  Removing {template_name} from multiworld directory...")
-        try:
-            os.remove(dest_path)
-            print(f"  Removed successfully")
-        except Exception as e:
-            print(f"  Error removing template: {e}")
+        if not keep_templates:
+            print(f"  Removing {template_name} from multiworld directory...")
+            try:
+                os.remove(dest_path)
+                print(f"  Removed successfully")
+            except Exception as e:
+                print(f"  Error removing template: {e}")
     else:
         print(f"\n  Multiworld test PASSED for {template_name}")
-        print(f"  Keeping {template_name} in multiworld directory for future tests")
+        if not keep_templates:
+            print(f"  Keeping {template_name} in multiworld directory for future tests")
 
     print(f"\nCompleted {template_name}: Multiworld Test={'[PASS]' if result['multiworld_test']['success'] else '[FAIL]'}, "
           f"Players Passed={result['multiworld_test']['players_passed']}/{result['multiworld_test']['total_players_tested']}")
