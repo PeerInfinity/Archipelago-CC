@@ -227,7 +227,6 @@ playwright-analysis.txt
 *-new.js
 *-new.py
 *-new/
-NewDocs/*
 test_results/
 test_files-full.json
 scrap/*
