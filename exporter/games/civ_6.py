@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Civ6GameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Civilization VI'
     """Handler for Civilization VI-specific rules."""
     
     def get_game_info(self, world) -> Dict[str, Any]:

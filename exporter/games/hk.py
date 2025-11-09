@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class HKExportHandler(GenericGameExportHandler):
+    GAME_NAME = 'Hollow Knight'
     """Export handler for Hollow Knight game-specific rules and items."""
     
     def postprocess_regions(self, multiworld, player: int):

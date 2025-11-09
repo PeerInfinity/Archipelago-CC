@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class BumpStikGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Bumper Stickers'
     """Bumper Stickers specific rule expander with game-specific helper functions."""
     
     def expand_helper(self, helper_name: str, args: List[Any] = None):

@@ -1,4 +1,12 @@
-"""Base class for game-specific helper expanders."""
+"""Base class for game-specific helper expanders.
+
+NOTE: New games should generally inherit from GenericGameExportHandler
+instead of BaseGameExportHandler directly, unless you need full control
+over all export methods. GenericGameExportHandler provides intelligent
+defaults for rule analysis, item data discovery, and common helper patterns.
+
+See exporter/games/generic.py for details on the enhanced functionality.
+"""
 
 from typing import Dict, Any, List
 import collections

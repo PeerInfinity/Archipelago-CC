@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class CvCotMGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Castlevania - Circle of the Moon'
     """Expander for Castlevania - Circle of the Moon specific functions."""
     
     def __init__(self):

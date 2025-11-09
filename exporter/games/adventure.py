@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class AdventureGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Adventure'
     """Validates helper names are known Adventure helpers"""
     
     def __init__(self):

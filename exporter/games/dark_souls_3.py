@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class DarkSouls3GameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Dark Souls III'
     """Dark Souls III-specific export handler."""
     
     def __init__(self, world):

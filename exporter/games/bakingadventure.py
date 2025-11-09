@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class BakingAdventureGameExportHandler(GenericGameExportHandler):
+    GAME_NAME = 'ChocolateChipCookies'
     """Export handler for Baking Adventure."""
     
     def expand_helper(self, helper_name: str):

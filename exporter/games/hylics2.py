@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Hylics2GameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Hylics 2'
     """Export handler for Hylics 2."""
     
     def expand_helper(self, helper_name: str):

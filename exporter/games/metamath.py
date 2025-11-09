@@ -9,6 +9,7 @@ import re
 logger = logging.getLogger(__name__)
 
 class MetamathGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Metamath'
     """Metamath specific rule handler that resolves statement dependencies."""
 
     def __init__(self):

@@ -6,20 +6,8 @@ from .generic import GenericGameExportHandler
 
 
 class LingoGameExportHandler(GenericGameExportHandler):
-    """Export handler for Lingo that ensures consistent item ordering and handles AccessRequirements."""
-
-    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
-        """
-        Return item data with consistent ordering.
-
-        Sorts items by ID to ensure consistent ordering across runs.
-        """
-        # Get the base item data from the generic handler
-        item_data = super().get_item_data(world)
-
-        # Return sorted by item ID to ensure consistent ordering
-        # Items with None ID (events) will be placed at the end
-        return dict(sorted(item_data.items(), key=lambda x: (x[1].get('id') is None, x[1].get('id'))))
+    GAME_NAME = 'Lingo'
+    """Export handler for Lingo that handles AccessRequirements string sorting."""
 
     def expand_rule(self, analyzed_rule: Dict[str, Any]) -> Dict[str, Any]:
         """

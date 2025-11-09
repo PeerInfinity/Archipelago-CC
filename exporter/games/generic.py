@@ -1,4 +1,27 @@
-"""Generic fallback helper expander."""
+"""Generic fallback helper expander.
+
+This is the recommended base class for new game export handlers.
+
+GenericGameExportHandler extends BaseGameExportHandler with:
+- Intelligent rule analysis that attempts to infer meaning from patterns
+- Automatic item data discovery from world.item_name_to_id
+- Recognition of common helper naming patterns (has_*, can_*, defeat_*, etc.)
+- Special handling for __analyzed_func__ and other edge cases
+- Working default implementations that reduce boilerplate code
+
+To create a new game handler, simply inherit from GenericGameExportHandler
+and add a GAME_NAME class attribute:
+
+    class MyGameExportHandler(GenericGameExportHandler):
+        GAME_NAME = 'My Game Name'
+
+        # Override methods only when you need custom behavior:
+        # def expand_rule(self, rule):
+        #     # Custom rule handling
+        #     return super().expand_rule(rule)
+
+The handler will be automatically discovered and registered.
+"""
 
 from typing import Dict, Any, List
 from .base import BaseGameExportHandler
@@ -8,7 +31,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 class GenericGameExportHandler(BaseGameExportHandler):
-    """Fallback expander that intelligently handles game-specific rules."""
+    """Fallback expander that intelligently handles game-specific rules.
+
+    This is the recommended base class for new game export handlers.
+    Provides intelligent defaults for rule analysis, item discovery, and helper expansion.
+    """
     
     def expand_helper(self, helper_name: str):
         return None  # Preserve helper nodes as-is
@@ -265,5 +292,7 @@ class GenericGameExportHandler(BaseGameExportHandler):
                             'type': 'Event',
                             'max_count': 1
                         }
-        
-        return item_data
+
+        # Return sorted by item ID to ensure consistent ordering
+        # Items with None ID (events) will be placed at the end
+        return dict(sorted(item_data.items(), key=lambda x: (x[1].get('id') is None, x[1].get('id'))))

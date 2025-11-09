@@ -8,6 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class AquariaGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Aquaria'
     """Aquaria-specific expander for handling game-specific rules."""
     
     def postprocess_regions(self, multiworld, player):

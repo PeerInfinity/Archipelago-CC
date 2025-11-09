@@ -10,6 +10,7 @@ import inspect
 logger = logging.getLogger(__name__)
 
 class BlasphemousGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Blasphemous'
     """Blasphemous-specific rule expander with direct logic data conversion."""
     
     def __init__(self, world):

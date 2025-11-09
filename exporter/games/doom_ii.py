@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Doom2GameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'DOOM II'
     """Handle DOOM II specific rule expansions."""
     
     def __init__(self, world=None):

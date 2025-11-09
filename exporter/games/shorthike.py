@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class ShortHikeGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'A Short Hike'
     """A Short Hike specific export handler based on game mechanics."""
     
     def expand_helper(self, helper_name: str):

@@ -8,6 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class KH1GameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Kingdom Hearts'
     """KH1-specific expander that handles Kingdom Hearts 1 rules."""
     
     def __init__(self, world=None):

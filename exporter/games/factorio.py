@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class FactorioGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Factorio'
     """Export handler for Factorio."""
     
     def __init__(self, world=None):

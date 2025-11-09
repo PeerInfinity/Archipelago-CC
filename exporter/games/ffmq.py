@@ -8,6 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class FFMQGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Final Fantasy Mystic Quest'
     """Export handler for Final Fantasy Mystic Quest"""
     
     def __init__(self, world):

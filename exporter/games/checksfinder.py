@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class ChecksFinderGameExportHandler(GenericGameExportHandler):
+    GAME_NAME = 'ChecksFinder'
     """ChecksFinder game handler with special handling for has_from_list."""
     
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:

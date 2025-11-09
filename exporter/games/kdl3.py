@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class KDL3GameExportHandler(BaseGameExportHandler):
+    GAME_NAME = "Kirby's Dream Land 3"
     """Handle KDL3-specific rule expansions and f-string conversions."""
     
     def expand_helper(self, helper_name: str):

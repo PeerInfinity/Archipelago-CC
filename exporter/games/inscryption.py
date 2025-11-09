@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class InscryptionGameExportHandler(GenericGameExportHandler):
+    GAME_NAME = 'Inscryption'
     """Inscryption game handler with special handling for helper functions."""
     
     def __init__(self, world=None):

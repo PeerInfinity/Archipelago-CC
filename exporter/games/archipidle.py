@@ -8,6 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class ArchipIDLEGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'ArchipIDLE'
     """Exporter for ArchipIDLE game logic."""
     
     def handle_special_function_call(self, func_name: str, processed_args: list) -> dict:

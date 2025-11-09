@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Celeste64GameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Celeste 64'
     """Celeste 64 expander that handles game-specific rules."""
     
     def __init__(self, world=None):

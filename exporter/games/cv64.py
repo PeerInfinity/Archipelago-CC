@@ -8,6 +8,7 @@ import re
 logger = logging.getLogger(__name__)
 
 class Cv64GameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Castlevania 64'
     """Export handler for Castlevania 64."""
     
     def __init__(self, world):

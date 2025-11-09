@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class AHitGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'A Hat in Time'
     """A Hat in Time specific rule expander with game-specific helper functions."""
 
     def get_settings_data(self, world, multiworld, player):

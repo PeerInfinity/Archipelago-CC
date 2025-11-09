@@ -4,6 +4,7 @@ from typing import Dict, Any
 from .base import BaseGameExportHandler
 
 class FaxanaduGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Faxanadu'
     """Handler for Faxanadu-specific rules and helpers."""
     
     def __init__(self, world=None):

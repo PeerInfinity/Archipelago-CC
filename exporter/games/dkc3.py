@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class DKC3GameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Donkey Kong Country 3'
     """Handle DKC3-specific rule expansions and helper functions."""
     
     def __init__(self, world=None):

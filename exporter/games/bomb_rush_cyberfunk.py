@@ -8,6 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class BombRushCyberfunkGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'Bomb Rush Cyberfunk'
     """Bomb Rush Cyberfunk expander that handles game-specific rules."""
     
     def __init__(self, world=None):

@@ -7,6 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Doom1993GameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'DOOM 1993'
     """Handle DOOM 1993 specific rule expansions."""
     
     def __init__(self, world=None):
