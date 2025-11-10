@@ -227,6 +227,7 @@ playwright-analysis.txt
 *-new.js
 *-new.py
 *-new/
+NewDocs/*
 test_results/
 test_files-full.json
 scrap/*
@@ -234,12 +235,23 @@ trash/*
 node_modules/*
 test-results/*
 set.mm
-output-spoiler-minimal/
-output-spoiler-full/
-output-multiplayer/
-output-multiworld/
-output-multitemplate-minimal/
-output-multitemplate-full/
+
+# Ignore everything in output directories
+output-spoiler-minimal/*
+output-spoiler-full/*
+output-multiplayer/*
+output-multiworld/*
+output-multitemplate-minimal/*
+output-multitemplate-full/*
+
+# But keep test-results.json files
+!output-spoiler-minimal/test-results.json
+!output-spoiler-full/test-results.json
+!output-multiplayer/test-results.json
+!output-multiworld/test-results.json
+!output-multitemplate-minimal/test-results.json
+!output-multitemplate-full/test-results.json
+
 test1/
 test2/
 test3/

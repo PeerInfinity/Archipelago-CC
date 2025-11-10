@@ -119,8 +119,8 @@ def main():
     parser.add_argument(
         '--output-file',
         type=str,
-        default='scripts/output/template-test-results.json',
-        help='Output file path (default: scripts/output/template-test-results.json)'
+        default='scripts/output/test-results.json',
+        help='Output file path (default: scripts/output/test-results.json)'
     )
     parser.add_argument(
         '--skip-list',
@@ -216,6 +216,11 @@ def main():
         type=int,
         metavar='MAX_SEED',
         help='When used with --retest, if a failing seed passes, continue testing subsequent seeds up to MAX_SEED (e.g., --retest-continue 10 to test through seed 10)'
+    )
+    parser.add_argument(
+        '--include-error-details',
+        action='store_true',
+        help='Include first_error_line and first_warning_line fields in test results (disabled by default)'
     )
 
     args = parser.parse_args()
@@ -393,17 +398,17 @@ def main():
     if args.retest:
         # Determine the correct results file path based on mode
         if args.multiworld:
-            retest_results_file = os.path.join(project_root, 'scripts/output-multiworld/test-results-multiworld.json')
+            retest_results_file = os.path.join(project_root, 'scripts/output-multiworld/test-results.json')
         elif args.multiplayer:
-            retest_results_file = os.path.join(project_root, 'scripts/output-multiplayer/test-results-multiplayer.json')
+            retest_results_file = os.path.join(project_root, 'scripts/output-multiplayer/test-results.json')
         else:
             # Read host.yaml to determine spoiler output directory
             host_config = read_host_yaml_config(project_root)
             extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
             if extend_sphere_log:
-                retest_results_file = os.path.join(project_root, 'scripts/output-spoiler-full/template-test-results.json')
+                retest_results_file = os.path.join(project_root, 'scripts/output-spoiler-full/test-results.json')
             else:
-                retest_results_file = os.path.join(project_root, 'scripts/output-spoiler-minimal/template-test-results.json')
+                retest_results_file = os.path.join(project_root, 'scripts/output-spoiler-minimal/test-results.json')
 
         # Load existing results
         if not os.path.exists(retest_results_file):
@@ -572,32 +577,32 @@ def main():
     
     # Load existing results for merging
     # Adjust output file path based on mode and configuration
-    if args.output_file == 'scripts/output/template-test-results.json':
+    if args.output_file == 'scripts/output/test-results.json':
         # Using default path - adjust based on mode
         if args.multiworld:
             # Use multiworld-specific output directory and file name
-            args.output_file = 'scripts/output-multiworld/test-results-multiworld.json'
+            args.output_file = 'scripts/output-multiworld/test-results.json'
         elif args.multiplayer:
             # Use multiplayer-specific output directory and file name
-            args.output_file = 'scripts/output-multiplayer/test-results-multiplayer.json'
+            args.output_file = 'scripts/output-multiplayer/test-results.json'
         elif args.multitemplate:
             # Multitemplate mode - check extend_sphere_log_to_all_locations setting
             host_config = read_host_yaml_config(project_root)
             extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
 
             if extend_sphere_log:
-                args.output_file = 'scripts/output-multitemplate-full/test-results-multitemplate-full.json'
+                args.output_file = 'scripts/output-multitemplate-full/test-results.json'
             else:
-                args.output_file = 'scripts/output-multitemplate-minimal/test-results-multitemplate-minimal.json'
+                args.output_file = 'scripts/output-multitemplate-minimal/test-results.json'
         else:
             # Spoiler mode - check extend_sphere_log_to_all_locations setting
             host_config = read_host_yaml_config(project_root)
             extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
 
             if extend_sphere_log:
-                args.output_file = 'scripts/output-spoiler-full/template-test-results.json'
+                args.output_file = 'scripts/output-spoiler-full/test-results.json'
             else:
-                args.output_file = 'scripts/output-spoiler-minimal/template-test-results.json'
+                args.output_file = 'scripts/output-spoiler-minimal/test-results.json'
 
     results_file = os.path.join(project_root, args.output_file)
 
@@ -738,7 +743,7 @@ def main():
                             retest_seed_list, export_only=args.export_only, test_only=args.test_only,
                             stop_on_failure=True,  # Stop on first failure in retest mode
                             multiplayer=args.multiplayer, single_client=args.single_client,
-                            headed=args.headed
+                            headed=args.headed, include_error_details=args.include_error_details
                         )
                     else:
                         # Failing seed is >= retest_continue, just test the failing seed
@@ -747,7 +752,7 @@ def main():
                             yaml_file, templates_dir, project_root, world_mapping,
                             str(failing_seed), export_only=args.export_only, test_only=args.test_only,
                             multiplayer=args.multiplayer, single_client=args.single_client,
-                            headed=args.headed
+                            headed=args.headed, include_error_details=args.include_error_details
                         )
                 elif failing_seed:
                     # Test just the failing seed
@@ -756,7 +761,7 @@ def main():
                         yaml_file, templates_dir, project_root, world_mapping,
                         str(failing_seed), export_only=args.export_only, test_only=args.test_only,
                         multiplayer=args.multiplayer, single_client=args.single_client,
-                        headed=args.headed
+                        headed=args.headed, include_error_details=args.include_error_details
                     )
                 elif args.retest_continue and seed_range_tested:
                     # No failing seed, but we have seed range data and --retest-continue
@@ -777,7 +782,7 @@ def main():
                                 retest_seed_list, export_only=args.export_only, test_only=args.test_only,
                                 stop_on_failure=True,  # Stop on first failure in retest mode
                                 multiplayer=args.multiplayer, single_client=args.single_client,
-                                headed=args.headed
+                                headed=args.headed, include_error_details=args.include_error_details
                             )
                         else:
                             # Already tested up to or past retest_continue, nothing to do
@@ -790,7 +795,7 @@ def main():
                             yaml_file, templates_dir, project_root, world_mapping,
                             "1", export_only=args.export_only, test_only=args.test_only,
                             multiplayer=args.multiplayer, single_client=args.single_client,
-                            headed=args.headed
+                            headed=args.headed, include_error_details=args.include_error_details
                         )
                 else:
                     # No seed-specific failure data, test seed 1
@@ -799,7 +804,7 @@ def main():
                         yaml_file, templates_dir, project_root, world_mapping,
                         "1", export_only=args.export_only, test_only=args.test_only,
                         multiplayer=args.multiplayer, single_client=args.single_client,
-                        headed=args.headed
+                        headed=args.headed, include_error_details=args.include_error_details
                     )
             elif args.multiworld:
                 # Multiworld mode - special handling
@@ -814,7 +819,8 @@ def main():
                         multiworld_player_count, export_only=args.export_only,
                         test_only=args.test_only, headed=args.headed,
                         keep_templates=args.multiworld_keep_templates,
-                        test_all_players=args.multiworld_test_all_players
+                        test_all_players=args.multiworld_test_all_players,
+                        include_error_details=args.include_error_details
                     )
                 else:
                     # Single seed in multiworld mode
@@ -824,7 +830,8 @@ def main():
                         multiworld_player_count, export_only=args.export_only,
                         test_only=args.test_only, headed=args.headed,
                         keep_templates=args.multiworld_keep_templates,
-                        test_all_players=args.multiworld_test_all_players
+                        test_all_players=args.multiworld_test_all_players,
+                        include_error_details=args.include_error_details
                     )
 
                 # If the test passed AND we're not in keep_templates mode, increment player count for next template
@@ -837,7 +844,7 @@ def main():
                     seed_list, export_only=args.export_only, test_only=args.test_only,
                     stop_on_failure=not args.seed_range_continue_on_failure,
                     multiplayer=args.multiplayer, single_client=args.single_client,
-                    headed=args.headed
+                    headed=args.headed, include_error_details=args.include_error_details
                 )
             else:
                 # Test with single seed (normal mode)
@@ -845,7 +852,7 @@ def main():
                     yaml_file, templates_dir, project_root, world_mapping,
                     str(seed_list[0]), export_only=args.export_only, test_only=args.test_only,
                     multiplayer=args.multiplayer, single_client=args.single_client,
-                    headed=args.headed
+                    headed=args.headed, include_error_details=args.include_error_details
                 )
             
             # Store results - in multitemplate mode, nest by game name → template filename
