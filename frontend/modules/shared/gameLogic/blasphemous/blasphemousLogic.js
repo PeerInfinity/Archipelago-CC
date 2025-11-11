@@ -1093,14 +1093,15 @@ export const helperFunctions = {
   },
 
   /**
-   * Count eye items
+   * Count eye items (for Traitor quest)
+   * Python equivalent: state.count_group_unique("eye", self.player)
    */
   eyes(snapshot, staticData) {
-    // Count unique eye items
+    // Count unique eye items in the "eye" group
     let count = 0;
     const eyeItems = [
       "Severed Right Eye of the Traitor",
-      "Crystallised Left Eye of the Envious"
+      "Broken Left Eye of the Traitor"
     ];
     for (const item of eyeItems) {
       if (this.has(snapshot, staticData, item)) {

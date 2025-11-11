@@ -26,3 +26,12 @@
 **Solution:** Updated toes() to check the correct three items in the toe group
 **Files modified:** frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js (lines 1060-1074)
 **Result:** limestones() now correctly counts toe items, allowing Redento's 5th meeting to be properly accessible
+
+### Issue 4: eyes() helper using wrong item name - FIXED
+**Sphere:** 7.6
+**Problem:** The `eyes()` helper function was checking for "Crystallised Left Eye of the Envious" instead of "Broken Left Eye of the Traitor".
+**Python implementation:** Counts items in the "eye" group: "Severed Right Eye of the Traitor", "Broken Left Eye of the Traitor"
+**Wrong JS implementation:** Checked for "Crystallised Left Eye of the Envious"
+**Solution:** Updated eyes() to check the correct item name "Broken Left Eye of the Traitor"
+**Files modified:** frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js (lines 1099-1112)
+**Result:** traitor_eyes() now correctly counts eye items, allowing access to "KotTW: Gift from the Traitor"

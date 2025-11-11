@@ -1347,8 +1347,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Charged Skill"
+                        "type": "helper",
+                        "name": "charged"
                       },
                       "op": ">",
                       "right": {
@@ -1359,8 +1359,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">",
                       "right": {
@@ -1374,8 +1374,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Lunge Skill"
+                            "type": "helper",
+                            "name": "lunge"
                           },
                           "op": ">=",
                           "right": {
@@ -1439,8 +1439,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Charged Skill"
+                        "type": "helper",
+                        "name": "charged"
                       },
                       "op": ">",
                       "right": {
@@ -1451,8 +1451,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">",
                       "right": {
@@ -1466,8 +1466,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Lunge Skill"
+                            "type": "helper",
+                            "name": "lunge"
                           },
                           "op": ">=",
                           "right": {
@@ -3044,8 +3044,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "count_check",
-                    "item": "Charged Skill"
+                    "type": "helper",
+                    "name": "charged"
                   },
                   "op": ">=",
                   "right": {
@@ -3056,8 +3056,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "count_check",
-                    "item": "Ranged Skill"
+                    "type": "helper",
+                    "name": "ranged"
                   },
                   "op": ">",
                   "right": {
@@ -4845,8 +4845,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Ranged Skill"
+                        "type": "helper",
+                        "name": "ranged"
                       },
                       "op": ">",
                       "right": {
@@ -4987,8 +4987,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "count_check",
-                    "item": "Charged Skill"
+                    "type": "helper",
+                    "name": "charged"
                   },
                   "op": ">=",
                   "right": {
@@ -4999,8 +4999,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "count_check",
-                    "item": "Ranged Skill"
+                    "type": "helper",
+                    "name": "ranged"
                   },
                   "op": ">",
                   "right": {
@@ -7293,8 +7293,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -7322,8 +7322,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -7368,8 +7368,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -7421,8 +7421,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -7474,8 +7474,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -7521,8 +7521,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -7550,8 +7550,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -7584,8 +7584,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -7625,8 +7625,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -7666,8 +7666,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -7835,8 +7835,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -7864,8 +7864,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -7910,8 +7910,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -7963,8 +7963,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -8016,8 +8016,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -8063,8 +8063,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -8092,8 +8092,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -8126,8 +8126,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -8167,8 +8167,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -8208,8 +8208,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -8976,8 +8976,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "count_check",
-                "item": "Bead of Blue Wax"
+                "type": "helper",
+                "name": "blue_wax"
               },
               "op": ">=",
               "right": {
@@ -9006,8 +9006,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "count_check",
-                "item": "Bead of Blue Wax"
+                "type": "helper",
+                "name": "blue_wax"
               },
               "op": ">=",
               "right": {
@@ -10959,8 +10959,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -11131,8 +11131,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -11246,8 +11246,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -11366,8 +11366,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -11539,8 +11539,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -11654,8 +11654,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -12110,8 +12110,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -12225,8 +12225,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -12451,8 +12451,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -12623,8 +12623,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -12738,8 +12738,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -12964,8 +12964,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -13136,8 +13136,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -13251,8 +13251,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -13455,8 +13455,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -13762,8 +13762,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -14666,8 +14666,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -14776,8 +14776,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -14919,8 +14919,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -15062,8 +15062,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -15259,8 +15259,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -15369,8 +15369,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -15512,8 +15512,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -15655,8 +15655,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -15733,8 +15733,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">=",
                       "right": {
@@ -15846,8 +15846,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -16806,8 +16806,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -17099,8 +17099,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Dive Skill"
+                            "type": "helper",
+                            "name": "dive"
                           },
                           "op": ">=",
                           "right": {
@@ -17240,8 +17240,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Charged Skill"
+                        "type": "helper",
+                        "name": "charged"
                       },
                       "op": ">",
                       "right": {
@@ -17252,8 +17252,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">",
                       "right": {
@@ -17267,8 +17267,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Lunge Skill"
+                            "type": "helper",
+                            "name": "lunge"
                           },
                           "op": ">=",
                           "right": {
@@ -17325,8 +17325,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">=",
                       "right": {
@@ -17571,8 +17571,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Charged Skill"
+                        "type": "helper",
+                        "name": "charged"
                       },
                       "op": ">",
                       "right": {
@@ -17583,8 +17583,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">",
                       "right": {
@@ -17598,8 +17598,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Lunge Skill"
+                            "type": "helper",
+                            "name": "lunge"
                           },
                           "op": ">=",
                           "right": {
@@ -17656,8 +17656,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">=",
                       "right": {
@@ -17777,8 +17777,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Charged Skill"
+                        "type": "helper",
+                        "name": "charged"
                       },
                       "op": ">",
                       "right": {
@@ -17789,8 +17789,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">",
                       "right": {
@@ -17804,8 +17804,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Lunge Skill"
+                            "type": "helper",
+                            "name": "lunge"
                           },
                           "op": ">=",
                           "right": {
@@ -17862,8 +17862,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">=",
                       "right": {
@@ -17983,8 +17983,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Charged Skill"
+                        "type": "helper",
+                        "name": "charged"
                       },
                       "op": ">",
                       "right": {
@@ -17995,8 +17995,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">",
                       "right": {
@@ -18010,8 +18010,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Lunge Skill"
+                            "type": "helper",
+                            "name": "lunge"
                           },
                           "op": ">=",
                           "right": {
@@ -18068,8 +18068,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">=",
                       "right": {
@@ -18213,8 +18213,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">=",
                       "right": {
@@ -18401,8 +18401,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -18600,8 +18600,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -18657,8 +18657,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -18860,8 +18860,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -18907,8 +18907,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -18944,8 +18944,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -18984,8 +18984,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -19024,8 +19024,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -19064,8 +19064,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -19121,8 +19121,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -19225,8 +19225,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -20245,8 +20245,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -22879,8 +22879,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "count_check",
-                "item": "Bead of Red Wax"
+                "type": "helper",
+                "name": "red_wax"
               },
               "op": ">=",
               "right": {
@@ -23034,8 +23034,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "count_check",
-                "item": "Bead of Red Wax"
+                "type": "helper",
+                "name": "red_wax"
               },
               "op": ">=",
               "right": {
@@ -26040,8 +26040,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Ranged Skill"
+                        "type": "helper",
+                        "name": "ranged"
                       },
                       "op": ">",
                       "right": {
@@ -30919,8 +30919,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -31166,8 +31166,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -31491,8 +31491,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -33992,8 +33992,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -34171,8 +34171,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -34311,8 +34311,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -34451,8 +34451,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -36288,8 +36288,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -36467,8 +36467,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -36607,8 +36607,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -36747,8 +36747,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -42748,8 +42748,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -42813,8 +42813,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -42937,8 +42937,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -42987,8 +42987,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -43254,8 +43254,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -43316,8 +43316,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Combo Skill"
+                            "type": "helper",
+                            "name": "combo"
                           },
                           "op": ">=",
                           "right": {
@@ -46575,8 +46575,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "count_check",
-                "item": "Bead of Red Wax"
+                "type": "helper",
+                "name": "red_wax"
               },
               "op": ">=",
               "right": {
@@ -46615,8 +46615,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Bead of Red Wax"
+                        "type": "helper",
+                        "name": "red_wax"
                       },
                       "op": ">=",
                       "right": {
@@ -46642,8 +46642,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Bead of Red Wax"
+                        "type": "helper",
+                        "name": "red_wax"
                       },
                       "op": ">=",
                       "right": {
@@ -47018,8 +47018,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "count_check",
-                    "item": "Charged Skill"
+                    "type": "helper",
+                    "name": "charged"
                   },
                   "op": ">",
                   "right": {
@@ -47030,8 +47030,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "count_check",
-                    "item": "Dive Skill"
+                    "type": "helper",
+                    "name": "dive"
                   },
                   "op": ">",
                   "right": {
@@ -47045,8 +47045,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Lunge Skill"
+                        "type": "helper",
+                        "name": "lunge"
                       },
                       "op": ">=",
                       "right": {
@@ -49200,8 +49200,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "count_check",
-                    "item": "Bead of Red Wax"
+                    "type": "helper",
+                    "name": "red_wax"
                   },
                   "op": ">=",
                   "right": {
@@ -49212,8 +49212,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "count_check",
-                    "item": "Bead of Blue Wax"
+                    "type": "helper",
+                    "name": "blue_wax"
                   },
                   "op": ">=",
                   "right": {
@@ -49247,8 +49247,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "count_check",
-                    "item": "Bead of Red Wax"
+                    "type": "helper",
+                    "name": "red_wax"
                   },
                   "op": ">=",
                   "right": {
@@ -49259,8 +49259,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "count_check",
-                    "item": "Bead of Blue Wax"
+                    "type": "helper",
+                    "name": "blue_wax"
                   },
                   "op": ">=",
                   "right": {
@@ -52311,8 +52311,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -52454,8 +52454,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -52529,8 +52529,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -52574,8 +52574,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -52639,8 +52639,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -52677,8 +52677,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -52734,8 +52734,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -52779,8 +52779,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -52842,8 +52842,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -52890,8 +52890,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -55228,8 +55228,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -55289,8 +55289,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -57258,8 +57258,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -57465,8 +57465,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -57672,8 +57672,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -57885,8 +57885,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -58092,8 +58092,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -58299,8 +58299,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -58473,8 +58473,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -58602,8 +58602,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -58731,8 +58731,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -58905,8 +58905,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -59141,8 +59141,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -59380,8 +59380,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -62379,8 +62379,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -62598,8 +62598,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -62778,8 +62778,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -62958,8 +62958,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -65020,8 +65020,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -65219,8 +65219,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -65379,8 +65379,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -65539,8 +65539,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -67110,8 +67110,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -67309,8 +67309,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -67469,8 +67469,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -67629,8 +67629,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -69149,8 +69149,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -69348,8 +69348,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -69508,8 +69508,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -69668,8 +69668,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -71210,8 +71210,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -71409,8 +71409,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -71569,8 +71569,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -71729,8 +71729,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -73334,8 +73334,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -73533,8 +73533,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -73693,8 +73693,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -73853,8 +73853,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -75454,8 +75454,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -75653,8 +75653,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -75813,8 +75813,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -75973,8 +75973,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -77467,8 +77467,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -77627,8 +77627,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -77787,8 +77787,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -79392,8 +79392,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -79591,8 +79591,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -79751,8 +79751,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -79911,8 +79911,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -81615,8 +81615,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -81814,8 +81814,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -81974,8 +81974,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -82134,8 +82134,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -83727,8 +83727,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -83926,8 +83926,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -84086,8 +84086,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -84246,8 +84246,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -86086,8 +86086,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -86285,8 +86285,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -86445,8 +86445,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -86605,8 +86605,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -88412,8 +88412,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -88619,8 +88619,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -88835,8 +88835,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -89042,8 +89042,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -89219,8 +89219,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -89348,8 +89348,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -89525,8 +89525,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -92674,8 +92674,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -92893,8 +92893,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -93073,8 +93073,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -93253,8 +93253,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -95290,8 +95290,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -95509,8 +95509,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -95689,8 +95689,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -95869,8 +95869,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "count_check",
-                            "item": "Ranged Skill"
+                            "type": "helper",
+                            "name": "ranged"
                           },
                           "op": ">",
                           "right": {
@@ -98472,8 +98472,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "count_check",
-                "item": "Bead of Blue Wax"
+                "type": "helper",
+                "name": "blue_wax"
               },
               "op": ">=",
               "right": {
@@ -98494,8 +98494,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Bead of Blue Wax"
+                        "type": "helper",
+                        "name": "blue_wax"
                       },
                       "op": ">=",
                       "right": {
@@ -98521,8 +98521,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Bead of Blue Wax"
+                        "type": "helper",
+                        "name": "blue_wax"
                       },
                       "op": ">=",
                       "right": {
@@ -98627,8 +98627,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "count_check",
-                "item": "Bead of Blue Wax"
+                "type": "helper",
+                "name": "blue_wax"
               },
               "op": ">=",
               "right": {
@@ -98649,8 +98649,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Bead of Blue Wax"
+                        "type": "helper",
+                        "name": "blue_wax"
                       },
                       "op": ">=",
                       "right": {
@@ -98676,8 +98676,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Bead of Blue Wax"
+                        "type": "helper",
+                        "name": "blue_wax"
                       },
                       "op": ">=",
                       "right": {
@@ -99733,8 +99733,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">=",
                       "right": {
@@ -99934,8 +99934,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "count_check",
-                        "item": "Dive Skill"
+                        "type": "helper",
+                        "name": "dive"
                       },
                       "op": ">=",
                       "right": {

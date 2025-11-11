@@ -504,16 +504,16 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
             'incorrupt_hand': {'type': 'item_check', 'item': 'Incorrupt Hand of the Fraternal Master'},
             'olive': {'type': 'item_check', 'item': 'Olive Seeds'},
             'blessing': {'type': 'item_check', 'item': 'Quicksilver'},
-            # Skill count methods - these return counts, not booleans
-            'charged': {'type': 'count_check', 'item': 'Charged Skill'},
-            'ranged': {'type': 'count_check', 'item': 'Ranged Skill'},
-            'dive': {'type': 'count_check', 'item': 'Dive Skill'},
-            'lunge': {'type': 'count_check', 'item': 'Lunge Skill'},
-            'upward': {'type': 'count_check', 'item': 'Upward Skill'},
-            'combo': {'type': 'count_check', 'item': 'Combo Skill'},
-            # Bead count methods
-            'red_wax': {'type': 'count_check', 'item': 'Bead of Red Wax'},
-            'blue_wax': {'type': 'count_check', 'item': 'Bead of Blue Wax'},
+            # Skill count methods - these return counts, not booleans, so use helper type
+            'charged': {'type': 'helper', 'name': 'charged'},
+            'ranged': {'type': 'helper', 'name': 'ranged'},
+            'dive': {'type': 'helper', 'name': 'dive'},
+            'lunge': {'type': 'helper', 'name': 'lunge'},
+            'upward': {'type': 'helper', 'name': 'upward'},
+            'combo': {'type': 'helper', 'name': 'combo'},
+            # Bead count methods - these return counts, not booleans, so use helper type
+            'red_wax': {'type': 'helper', 'name': 'red_wax'},
+            'blue_wax': {'type': 'helper', 'name': 'blue_wax'},
             # Prayer methods
             'debla': {'type': 'item_check', 'item': 'Debla of the Lights'},
             'taranto': {'type': 'item_check', 'item': 'Taranto to my Sister'},
