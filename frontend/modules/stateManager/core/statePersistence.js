@@ -327,6 +327,34 @@ export function _createSelfSnapshotInterface(sm) {
     getAllSettings: () => sm.settings,
     isRegionReachable: (regionName) => sm.isRegionReachable(regionName),
     isLocationChecked: (locName) => sm.isLocationChecked(locName),
+    isLocationAccessible: (locationOrName) => {
+      // Check if a location is accessible (reachable and rules pass)
+      const locationName = typeof locationOrName === 'string' ? locationOrName : locationOrName?.name;
+      if (!locationName) return undefined;
+
+      // Find the location data
+      const location = sm.locations.get(locationName);
+      if (!location) return undefined;
+
+      // Check if the parent region is reachable
+      const regionName = location.region;
+      if (!regionName) return undefined;
+
+      const parentRegionIsReachable = sm.isRegionReachable(regionName);
+      if (parentRegionIsReachable === undefined) return undefined;
+      if (parentRegionIsReachable === false) return false;
+
+      // If no access rule, location is accessible if region is reachable
+      if (!location.access_rule) return true;
+
+      // Evaluate the access rule
+      // Create a context with the location set
+      const locationContext = sm._createSelfSnapshotInterface();
+      locationContext.location = location;
+      locationContext.currentLocation = location;
+
+      return sm.evaluateRuleFromEngine(location.access_rule, locationContext);
+    },
     executeHelper: (name, ...args) => {
       // Just delegate to the new centralized method
       return sm.executeHelper(name, ...args);

@@ -7035,21 +7035,11 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "_can_go_to"
-                      },
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Profaned Capital"
-                        }
-                      ]
+                      "type": "can_reach",
+                      "region": {
+                        "type": "constant",
+                        "value": "Profaned Capital"
+                      }
                     }
                   ]
                 },
@@ -8197,38 +8187,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Firelink Shrine Bell Tower"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Firelink Shrine Bell Tower"
+                  }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Cathedral of the Deep"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Cathedral of the Deep"
+                  }
                 }
               ]
             },
@@ -8246,38 +8216,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Firelink Shrine Bell Tower"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Firelink Shrine Bell Tower"
+                  }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Cathedral of the Deep"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Cathedral of the Deep"
+                  }
                 }
               ]
             },
@@ -8295,38 +8245,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Firelink Shrine Bell Tower"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Firelink Shrine Bell Tower"
+                  }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Cathedral of the Deep"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Cathedral of the Deep"
+                  }
                 }
               ]
             },
@@ -9684,21 +9614,11 @@
             "name": "FK: Havel's Helm - upper keep, after killing AP belfry roof NPC",
             "id": 100587,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
-                }
-              ]
+              "type": "can_reach",
+              "region": {
+                "type": "constant",
+                "value": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Twinkling Titanite",
@@ -9711,21 +9631,11 @@
             "name": "FK: Havel's Armor - upper keep, after killing AP belfry roof NPC",
             "id": 100588,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
-                }
-              ]
+              "type": "can_reach",
+              "region": {
+                "type": "constant",
+                "value": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Dragonslayer Gauntlets",
@@ -9738,21 +9648,11 @@
             "name": "FK: Havel's Gauntlets - upper keep, after killing AP belfry roof NPC",
             "id": 100589,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
-                }
-              ]
+              "type": "can_reach",
+              "region": {
+                "type": "constant",
+                "value": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Magic Clutch Ring",
@@ -9765,21 +9665,11 @@
             "name": "FK: Havel's Leggings - upper keep, after killing AP belfry roof NPC",
             "id": 100590,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
-                }
-              ]
+              "type": "can_reach",
+              "region": {
+                "type": "constant",
+                "value": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Dancer's Armor",
@@ -16356,21 +16246,11 @@
             "name": "CKG: Drakeblood Helm - tomb, after killing AP mausoleum NPC",
             "id": 101028,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
-                }
-              ]
+              "type": "can_reach",
+              "region": {
+                "type": "constant",
+                "value": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "White Dragon Breath",
@@ -16383,21 +16263,11 @@
             "name": "CKG: Drakeblood Armor - tomb, after killing AP mausoleum NPC",
             "id": 101029,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
-                }
-              ]
+              "type": "can_reach",
+              "region": {
+                "type": "constant",
+                "value": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Titanite Chunk",
@@ -16410,21 +16280,11 @@
             "name": "CKG: Drakeblood Gauntlets - tomb, after killing AP mausoleum NPC",
             "id": 101030,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
-                }
-              ]
+              "type": "can_reach",
+              "region": {
+                "type": "constant",
+                "value": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Archdeacon's Great Staff",
@@ -16437,21 +16297,11 @@
             "name": "CKG: Drakeblood Leggings - tomb, after killing AP mausoleum NPC",
             "id": 101031,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Archdragon Peak"
-                }
-              ]
+              "type": "can_reach",
+              "region": {
+                "type": "constant",
+                "value": "Archdragon Peak"
+              }
             },
             "item": {
               "name": "Soul of a Crestfallen Knight",
@@ -19328,21 +19178,11 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Undead Settlement"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Undead Settlement"
+                  }
                 },
                 {
                   "type": "item_check",
@@ -19367,21 +19207,11 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Undead Settlement"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Undead Settlement"
+                  }
                 },
                 {
                   "type": "item_check",
@@ -19406,21 +19236,11 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Irithyll of the Boreal Valley"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Irithyll of the Boreal Valley"
+                  }
                 },
                 {
                   "type": "location_check",
@@ -19452,21 +19272,11 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Irithyll of the Boreal Valley"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Irithyll of the Boreal Valley"
+                  }
                 },
                 {
                   "type": "location_check",
@@ -19498,21 +19308,11 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Irithyll of the Boreal Valley"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Irithyll of the Boreal Valley"
+                  }
                 },
                 {
                   "type": "location_check",
@@ -19544,21 +19344,11 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Irithyll of the Boreal Valley"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Irithyll of the Boreal Valley"
+                  }
                 },
                 {
                   "type": "location_check",
@@ -19593,21 +19383,11 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "_can_go_to"
-                      },
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Grand Archives"
-                        }
-                      ]
+                      "type": "can_reach",
+                      "region": {
+                        "type": "constant",
+                        "value": "Grand Archives"
+                      }
                     },
                     {
                       "type": "location_check",
@@ -19622,21 +19402,11 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "_can_go_to"
-                      },
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Irithyll of the Boreal Valley"
-                        }
-                      ]
+                      "type": "can_reach",
+                      "region": {
+                        "type": "constant",
+                        "value": "Irithyll of the Boreal Valley"
+                      }
                     },
                     {
                       "type": "location_check",
