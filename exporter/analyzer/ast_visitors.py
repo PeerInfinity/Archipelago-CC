@@ -548,17 +548,27 @@ class ASTVisitorMixin:
             # Check if this name is in closure vars and should be resolved to a constant
             if name in self.closure_vars:
                 value = self.closure_vars[name]
-                # Only resolve simple values to constants (numbers, strings, bools)
+                # Handle simple values (numbers, strings, bools)
                 if isinstance(value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant value: {value}")
                     return {'type': 'constant', 'value': value}
-            
+                # Handle enum values by extracting their .value attribute
+                elif hasattr(value, 'value') and isinstance(value.value, (int, float, str, bool)):
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to enum constant value: {value.value}")
+                    return {'type': 'constant', 'value': value.value}
+
             # Also check function defaults for lambda parameters
             if name not in self.closure_vars:
                 resolved_value = self.expression_resolver.resolve_variable(name)
-                if resolved_value is not None and isinstance(resolved_value, (int, float, str, bool)):
-                    logging.debug(f"visit_Name: Resolved '{name}' from function defaults to constant value: {resolved_value}")
-                    return {'type': 'constant', 'value': resolved_value}
+                if resolved_value is not None:
+                    # Handle simple values
+                    if isinstance(resolved_value, (int, float, str, bool)):
+                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults to constant value: {resolved_value}")
+                        return {'type': 'constant', 'value': resolved_value}
+                    # Handle enum values by extracting their .value attribute
+                    elif hasattr(resolved_value, 'value') and isinstance(resolved_value.value, (int, float, str, bool)):
+                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults to enum constant value: {resolved_value.value}")
+                        return {'type': 'constant', 'value': resolved_value.value}
 
             # Use game handler to replace names if available
             if self.game_handler and hasattr(self.game_handler, 'replace_name'):
