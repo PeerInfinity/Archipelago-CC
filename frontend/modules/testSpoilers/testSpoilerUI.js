@@ -412,6 +412,20 @@ export class TestSpoilerUI {
       this.clearTestState(); // Clear previous test state
       this.spoilerLogData = result.logData;
       this.currentSpoilerLogPath = result.logPath;
+
+      // Infer playerId from spoiler log if not already set
+      if (this.playerId === null && this.spoilerLogData && this.spoilerLogData.length > 0) {
+        const firstEvent = this.spoilerLogData[0];
+        if (firstEvent && firstEvent.player_data) {
+          const playerIds = Object.keys(firstEvent.player_data);
+          if (playerIds.length > 0) {
+            // Use the first player ID found (typically "1" for single-player)
+            this.playerId = parseInt(playerIds[0], 10);
+            this.log('info', `Inferred playerId from spoiler log: ${this.playerId}`);
+          }
+        }
+      }
+
       await this.prepareSpoilerTest(true);
     } catch (error) {
       logger.warn(
@@ -909,6 +923,19 @@ export class TestSpoilerUI {
       this.spoilerLogData = result.logData;
       this.currentSpoilerFile = file;
       this.currentSpoilerLogPath = file.name;
+
+      // Infer playerId from spoiler log if not already set
+      if (this.playerId === null && this.spoilerLogData && this.spoilerLogData.length > 0) {
+        const firstEvent = this.spoilerLogData[0];
+        if (firstEvent && firstEvent.player_data) {
+          const playerIds = Object.keys(firstEvent.player_data);
+          if (playerIds.length > 0) {
+            // Use the first player ID found (typically "1" for single-player)
+            this.playerId = parseInt(playerIds[0], 10);
+            this.log('info', `Inferred playerId from spoiler log: ${this.playerId}`);
+          }
+        }
+      }
 
       return true; // Indicate success to caller
     } catch (error) {
