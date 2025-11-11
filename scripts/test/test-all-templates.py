@@ -328,7 +328,8 @@ def main():
         print("")
     
     # Determine project root early (needed for server startup)
-    project_root = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    # Script is now at scripts/test/test-all-templates.py, so go up 3 levels to get to project root
+    project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
     # Check if HTTP server is running (required for spoiler tests, but not for export-only)
     if not args.export_only and not check_http_server():

@@ -38,7 +38,7 @@ def read_host_yaml_config(project_root: str) -> Dict:
 def build_and_load_world_mapping(project_root: str) -> Dict[str, Dict]:
     """Build world mapping and load it."""
     mapping_file = os.path.join(project_root, 'scripts', 'data', 'world-mapping.json')
-    build_script = os.path.join(project_root, 'scripts', 'build-world-mapping.py')
+    build_script = os.path.join(project_root, 'scripts', 'build', 'build-world-mapping.py')
 
     # Always build the mapping to ensure it's current
     try:
