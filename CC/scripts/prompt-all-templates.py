@@ -273,9 +273,17 @@ def main():
 
                 # Handle --promptfile mode
                 if args.promptfile:
-                    prompt_text = get_prompt_for_game(game_name, seed_to_use)
-                    if prompt_text:
-                        collected_prompts.append(prompt_text)
+                    try:
+                        cmd = ['python', 'CC/scripts/prompt.py', game_name, '--seed', str(seed_to_use), '-p']
+                        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+                        if result.returncode == 0:
+                            collected_prompts.append(result.stdout)
+                        else:
+                            if not quiet_mode:
+                                print(f"Error getting prompt for {game_name}: {result.stderr}", file=sys.stderr)
+                    except Exception as e:
+                        if not quiet_mode:
+                            print(f"Error getting prompt for {game_name}: {e}", file=sys.stderr)
                 else:
                     # Run prompt script
                     run_prompt_for_game(game_name, args.text, args.prompt, seed_to_use, quiet_mode)
