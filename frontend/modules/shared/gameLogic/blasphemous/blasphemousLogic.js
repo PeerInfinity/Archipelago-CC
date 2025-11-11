@@ -726,8 +726,8 @@ export const helperFunctions = {
             count = 4;
 
             // Fifth meeting - requires knots >= 1 AND limestones >= 3 AND reaching specific regions
-            const hasKnots = (snapshot?.inventory?.["Knot of Hair"] || 0) >= 1;
-            const hasLimestones = (snapshot?.inventory?.["Limestone"] || 0) >= 3;
+            const hasKnots = this.knots(snapshot, staticData) >= 1;
+            const hasLimestones = this.limestones(snapshot, staticData) >= 3;
 
             if (hasKnots && hasLimestones &&
                 (isReachable("D04Z02S08[E]") || isReachable("D04BZ02S01[Redento]"))) {
@@ -1035,6 +1035,7 @@ export const helperFunctions = {
 
   /**
    * Count egg ceremony items
+   * These are the three items needed for the egg ceremony
    */
   egg_items(snapshot, staticData) {
     // Count unique egg ceremony items
@@ -1053,17 +1054,16 @@ export const helperFunctions = {
   },
 
   /**
-   * Count toe items
+   * Count toe items (for Redento quest - limestones)
+   * Python equivalent: state.count_group_unique("toe", self.player)
    */
   toes(snapshot, staticData) {
-    // Count unique toe items
+    // Count unique toe items in the "toe" group
     let count = 0;
     const toeItems = [
-      "Big Toe Made of Limestone",
-      "Second Toe Made of Tin",
-      "Third Toe Made of Marble",
-      "Fourth Toe Made of Wood",
-      "Little Toe Made of Serpent's Scales"
+      "Little Toe made of Limestone",
+      "Big Toe made of Limestone",
+      "Fourth Toe made of Limestone"
     ];
     for (const item of toeItems) {
       if (this.has(snapshot, staticData, item)) {
@@ -1279,20 +1279,12 @@ export const helperFunctions = {
 
   /**
    * Count ceremony items (egg items)
+   * This counts the three items in the "egg" group needed for the egg ceremony
+   * Python equivalent: state.count_group_unique("egg", self.player)
    */
   ceremony_items(snapshot, staticData) {
-    // Count unique egg ceremony items
-    let count = 0;
-    const eggItems = [
-      "Egg of Deformity"
-      // Add other egg items if they exist
-    ];
-    for (const egg of eggItems) {
-      if (this.has(snapshot, staticData, egg)) {
-        count++;
-      }
-    }
-    return count;
+    // Delegate to egg_items() which has the correct implementation
+    return this.egg_items(snapshot, staticData);
   },
 
   /**
