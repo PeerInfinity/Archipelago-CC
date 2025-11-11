@@ -129,7 +129,7 @@ def get_template_files(template_dir, skip_list=None):
     return [f.name for f in template_files]
 
 
-def run_prompt_for_game(game_name, use_text_mode=False, use_prompt_mode=False, seed=1, quiet_mode=False):
+def run_prompt_for_game(game_name, use_text_mode=False, use_prompt_mode=False, seed=1, quiet_mode=False, use_cloud_docs=False):
     """Run the prompt script for a specific game."""
     if not quiet_mode:
         print(f"Running prompt script for game: {game_name}")
@@ -139,6 +139,8 @@ def run_prompt_for_game(game_name, use_text_mode=False, use_prompt_mode=False, s
             cmd.append('--text')
         if use_prompt_mode:
             cmd.append('--prompt')
+        if use_cloud_docs:
+            cmd.append('--CC')
 
         result = subprocess.run(cmd, check=False)
         return result.returncode == 0
@@ -148,10 +150,12 @@ def run_prompt_for_game(game_name, use_text_mode=False, use_prompt_mode=False, s
         return False
 
 
-def get_prompt_for_game(game_name, seed=1):
+def get_prompt_for_game(game_name, seed=1, use_cloud_docs=False):
     """Get the prompt text for a specific game without running it."""
     try:
         cmd = ['python', 'CC/scripts/prompt.py', game_name, '--seed', str(seed), '--prompt']
+        if use_cloud_docs:
+            cmd.append('--CC')
         result = subprocess.run(cmd, capture_output=True, text=True, check=False)
         if result.returncode == 0:
             return result.stdout
@@ -187,6 +191,8 @@ def main():
                        help='Maximum number of complete cycles through all templates (default: 1)')
     parser.add_argument('--promptfile', action='store_true',
                        help='Write all prompts to prompts.txt instead of running them')
+    parser.add_argument('--CC', action='store_true',
+                       help='Use cloud-specific documentation when generating prompts')
 
     args = parser.parse_args()
 
@@ -275,6 +281,8 @@ def main():
                 if args.promptfile:
                     try:
                         cmd = ['python', 'CC/scripts/prompt.py', game_name, '--seed', str(seed_to_use), '-p']
+                        if args.CC:
+                            cmd.append('--CC')
                         result = subprocess.run(cmd, capture_output=True, text=True, check=False)
                         if result.returncode == 0:
                             collected_prompts.append(result.stdout)
@@ -286,7 +294,7 @@ def main():
                             print(f"Error getting prompt for {game_name}: {e}", file=sys.stderr)
                 else:
                     # Run prompt script
-                    run_prompt_for_game(game_name, args.text, args.prompt, seed_to_use, quiet_mode)
+                    run_prompt_for_game(game_name, args.text, args.prompt, seed_to_use, quiet_mode, args.CC)
 
                     # Exit immediately if -t or -p was specified (regardless of --loud)
                     if args.text or args.prompt:
