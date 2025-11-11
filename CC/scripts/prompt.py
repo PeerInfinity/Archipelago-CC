@@ -101,7 +101,7 @@ The command to run the spoiler test is
 
 npm test --mode=test-spoilers --game={world_dir} --seed={seed}
 
-These commands need to be run from the archipelago-json directory.
+These commands need to be run from the project root directory.
 
 {exporter_message}
 
