@@ -53,32 +53,43 @@ def get_game_info(game_name, world_mapping):
     sys.exit(1)
 
 
-def build_prompt(game_name, game_info, seed=1):
+def build_prompt(game_name, game_info, seed=1, use_cloud_docs=False):
     """Build the Claude prompt with appropriate messages."""
     world_dir = game_info['world_directory']
-    
+
     # Compute seed ID from seed number
     seed_id = get_seed_id(seed)
-    
+
     # Ensure game name has .yaml extension for template path
     template_name = game_name if game_name.endswith('.yaml') else f"{game_name}.yaml"
-    
+
     # Build exporter message
     if game_info['has_custom_exporter']:
         exporter_path = game_info['exporter_path']
         exporter_message = f"A custom exporter already exists for this game, in {exporter_path}"
     else:
         exporter_message = "This game does not yet have a custom exporter. You will need to create one."
-    
+
     # Build helper message
     if game_info['has_custom_game_logic']:
         helper_path = game_info['game_logic_path']
         helper_message = f"A custom helper function file already exists for this game, in {helper_path}"
     else:
         helper_message = "This game does not yet have a custom helper function file. This is a helper issue - you may need to create one if there are test failures caused by missing helper functions."
-    
+
+    # Choose appropriate documentation based on cloud/local mode
+    if use_cloud_docs:
+        setup_doc = "CC/cloud-setup.md"
+        debugging_doc = "CC/game-debugging-CC.md"
+        setup_instruction = f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read {debugging_doc}."""
+    else:
+        debugging_doc = "CC/game-debugging.md"
+        setup_instruction = f"Please read {debugging_doc}."
+
     # Build the full prompt
-    prompt = f"""Please read CC/game-debugging.md.
+    prompt = f"""{setup_instruction}
 
 The next game we want to work on is {game_name}.
 
@@ -205,6 +216,7 @@ def main():
     parser.add_argument('-t', '--text', action='store_true', help='Output the command text instead of running it')
     parser.add_argument('-p', '--prompt', action='store_true', help='Output just the prompt contents')
     parser.add_argument('-s', '--seed', type=int, default=1, help='Seed number to use for generation (default: 1)')
+    parser.add_argument('--CC', action='store_true', help='Use cloud-specific documentation (CC/cloud-setup.md and CC/game-debugging-CC.md)')
 
     args = parser.parse_args()
 
@@ -222,7 +234,7 @@ def main():
     setup_game_logs(world_dir)
 
     # Build prompt using the actual game name (important for template path)
-    prompt = build_prompt(actual_game_name, game_info, args.seed)
+    prompt = build_prompt(actual_game_name, game_info, args.seed, args.CC)
 
     if args.prompt:
         # Output just the prompt contents
