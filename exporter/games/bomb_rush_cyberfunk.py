@@ -55,8 +55,8 @@ class BombRushCyberfunkGameExportHandler(BaseGameExportHandler):
             return rule
             
         # Handle helper functions with variable resolution
-        if rule.get('type') == 'helper' and rule.get('name') == 'graffiti_spots':
-            # Resolve the arguments
+        if rule.get('type') == 'helper':
+            # Resolve the arguments for all helper functions
             resolved_args = []
             for arg in rule.get('args', []):
                 if arg.get('type') == 'name':
@@ -85,7 +85,7 @@ class BombRushCyberfunkGameExportHandler(BaseGameExportHandler):
                         resolved_args.append(arg)
                 else:
                     resolved_args.append(arg)
-            
+
             return {
                 'type': 'helper',
                 'name': rule['name'],
