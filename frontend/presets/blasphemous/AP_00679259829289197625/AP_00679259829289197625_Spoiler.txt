@@ -1,0 +1,599 @@
+﻿Archipelago Version 0.6.4  -  Seed: 6
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Blasphemous
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+Unlock Fast Travel:              Yes
+Auto Skip Cutscenes:             Yes
+Corpse Hints:                    Yes
+Difficulty:                      Normal
+Penitence:                       No
+Starting Location:               Brotherhood
+Ending:                          Any Ending
+Skip Long Quests:                No
+Shuffle Thorn:                   Anywhere
+Shuffle Dash:                    No
+Shuffle Wall Climb:              No
+Shuffle Penitence Rewards:       Yes
+Boots of Pleading:               No
+Purified Hand of the Nun:        No
+Start with Wheel:                No
+Skill Randomizer:                No
+Enemy Randomizer:                Disabled
+Enemy Groups:                    Yes
+Enemy Scaling:                   Yes
+Death Link:                      No
+
+
+Starting Items:
+
+Dash Ability
+Wall Climb Ability
+
+Locations:
+
+Beginning gift: Quirce's Scorched Bead
+Defeat 1 Amanecida: Amber Eye
+Defeat 2 Amanecidas: Dove Skull
+Defeat 3 Amanecidas: Tentudia's Skeletal Remains
+Defeat 4 Amanecidas: Coxal of June, the Prostitute
+Defeat all Amanecidas: Fervour Upgrade
+Confessor Dungeon 1 main: Empty Bile Vessel
+Confessor Dungeon 2 main: Knot of Rosary Rope
+Confessor Dungeon 3 main: Triquetral of Luca, the Tailor
+Confessor Dungeon 4 main: Linen Cloth
+Confessor Dungeon 5 main: Child of Moonlight
+Confessor Dungeon 6 main: Sacrum of the Dark Warlock
+Confessor Dungeon 7 main: Lorquiana
+Confessor Dungeon 1 extra: Little Toe made of Limestone
+Confessor Dungeon 2 extra: Cantina of the Blue Rose
+Confessor Dungeon 3 extra: Moss Preserved in Glass
+Confessor Dungeon 4 extra: Radius of Helzer, the Poet
+Confessor Dungeon 5 extra: Life Upgrade
+Confessor Dungeon 6 extra: Thorned Symbol
+Confessor Dungeon 7 extra: Knot of Rosary Rope
+Skill 1, Tier 1: Combo Skill
+Skill 1, Tier 2: Combo Skill
+Skill 1, Tier 3: Combo Skill
+Skill 2, Tier 1: Charged Skill
+Skill 2, Tier 2: Charged Skill
+Skill 2, Tier 3: Charged Skill
+Skill 3, Tier 1: Ranged Skill
+Skill 3, Tier 2: Ranged Skill
+Skill 3, Tier 3: Ranged Skill
+Skill 4, Tier 1: Dive Skill
+Skill 4, Tier 2: Dive Skill
+Skill 4, Tier 3: Dive Skill
+Skill 5, Tier 1: Lunge Skill
+Skill 5, Tier 2: Lunge Skill
+Skill 5, Tier 3: Lunge Skill
+THL: Deogracias' gift: Knot of Rosary Rope
+THL: Hanging skeleton: Tears of Atonement (750)
+THL: Across blood platforms: Token of Appreciation
+Petrous: Temple entrance: Navicular of Kahnnyhoo, the Murderer
+THL: Underground ledge: Painted Wood Bead
+THL: Underground chest: Fire Enclosed in Enamel
+THL: Child of Moonlight: Verdiales of the Forsaken Hamlet
+Albero: Bless Severed Hand: Child of Moonlight
+Albero: Bless Linen Cloth: Key of the Scribe
+Albero: Bless Hatched Egg: Tears of Atonement (2100)
+Albero: Tirso's house, top floor: Life Upgrade
+Albero: Tirso's 1st reward: Phalanx of Aralcarim, the Archivist
+Albero: Tirso's 2nd reward: Jaw of Ashgan, the Inquisitor
+Albero: Tirso's 3rd reward: Black Grieving Veil
+Albero: Tirso's 4th reward: Pelican Effigy
+Albero: Tirso's 5th reward: Perpetva's Protection
+Albero: Tirso's 6th reward: Mea Culpa Upgrade
+Albero: Tirso's final reward: Tibia of Alsahli, the Mystic
+Albero: Mea Culpa altar: Child of Moonlight
+Albero: Outside Ossuary: Thorn Upgrade
+Albero: Lvdovico's 1st reward: Kneecap of Sebastien, the Puppeteer
+Albero: Lvdovico's 2nd reward: Seashell of the Inverted Spiral
+Albero: Lvdovico's 3rd reward: Tears of Atonement (4300)
+Albero: Graveyard: Linen of Golden Thread
+Albero: Donate 5000 Tears: Holy Wound of Contrition
+Albero: Donate 50000 Tears: Ribs of Sabnock, the Guardian
+Ossuary: 1st reward: Smoking Heart of Incense
+Ossuary: 2nd reward: Bead of Red Wax
+Ossuary: 3rd reward: Severed Hand
+Ossuary: 4th reward: Tears of Atonement (3000)
+Ossuary: 5th reward: Sternum of Vitas, the Performer
+Ossuary: 6th reward: Tears of Atonement (10000)
+Ossuary: 7th reward: Child of Moonlight
+Ossuary: 8th reward: Scale of Burnished Alabaster
+Ossuary: 9th reward: Thorn Upgrade
+Ossuary: 10th reward: Tentudia's Carnal Remains
+Ossuary: 11th reward: Key to the Chamber of the Eldest Brother
+WotBC: Lower log path: Holy Wound of Attrition
+Albero: Gate of Travel room: Clavicle of Dalhuisen, the Schoolchild
+Ossuary: Isidora, Voice of the Dead: Verses Spun from Gold
+WotBC: Hidden alcove: Ember of the Holy Cremation
+WotBC: Outside ledge: Bead of Red Wax
+WotBC: Outside Child of Moonlight: Mea Culpa Upgrade
+DC: Shortcut to WotBC: Bouquet of Thyme
+DC: Hidden alcove near fountain: Heart of Cerulean Incense
+WotBC: Cliffside statue: Child of Moonlight
+WotBC: Cliffside Child of Moonlight: Tiento to your Thorned Hairs
+WotBC: Under broken bridge: Verses Spun from Gold
+WotBC: 3rd meeting with Redento: Verses Spun from Gold
+DC: Lower east tunnel chest: Deformed Mask of Orestes
+BotTC: Esdras, of the Anointed Legion: Tears of Atonement (30000)
+BotTC: Esdras' gift: Life Upgrade
+MD: First area hidden wall: Embers of a Broken Star
+MD: Second area trapped chest: Tears of Atonement (2000)
+MD: Second area ledge: Child of Moonlight
+MD: Second area Child of Moonlight: Bead of Gold Thread
+MD: Shop item 1: Dried Clove
+MD: Shop item 2: Muted Bell
+MD: Shop item 3: Child of Moonlight
+MD: Third area hidden room: Life Upgrade
+MD: Ten Piedad: Dried Flowers bathed in Tears
+MD: Sliding challenge: Mea Culpa Upgrade
+MD: Cave Child of Moonlight: Empty Bile Vessel
+MD: First red candle: Thorn Upgrade
+MD: Visage of Attrition: Heart of Saltpeter Blood
+MotED: Under entrance to DC: Key of the Secular
+DC: Top of elevator Child of Moonlight: Tirana of the Celestial Bastion
+DC: Oil of the Pilgrims: Child of Moonlight
+DC: Behind gate in miasma room: Melted Golden Coins
+DC: Child of Moonlight, miasma room: Apodictic Heart of Mea Culpa
+DC: Child of Moonlight, above water: Tears of Atonement (18000)
+DC: Behind sewage drips: Holy Wound of Compunction
+DC: Lady of the Six Sorrows, from MD: Child of Moonlight
+DC: Shroud puzzle: Severed Right Eye of the Traitor
+DC: Mea Culpa altar: Coccyx of Daniel, the Possessed
+DC: Chalice room: Chalice of Inverted Verses
+DC: Lady of the Six Sorrows, elevator shaft: Sooty Garlic
+WOTW: Entrance to tomb: Big Toe made of Limestone
+WOTW: Upper east statue: Bead of Blue Wax
+WOTW: Death run: Tears of Atonement (1000)
+WOTW: Underground tomb: Fourth Toe made of Limestone
+GotP: Lower west shaft: Femur of Karpow, the Bounty Hunter
+GotP: East cliffside: Fervour Upgrade
+GotP: Amanecida of the Bejeweled Arrow: Verses Spun from Gold
+GotP: Oil of the Pilgrims: Child of Moonlight
+GotP: Elevator shaft ledge: Fervour Upgrade
+GotP: Elevator shaft Child of Moonlight: Quicksilver
+GotP: Shop item 1: Scapula of Carlos, the Executioner
+GotP: Shop item 2: Mark of the First Refuge
+GotP: Shop item 3: Tears of Atonement (18000)
+GotP: Confessor Dungeon room: Cord of the True Burying
+GotP: Lady of the Six Sorrows: The Young Mason's Wheel
+GotP: Self sacrifice statue: Wicker Knot
+CoOLotCV: Visage of Compunction: Calcified Eye of Erudition
+CoOLotCV: Fountain of burning oil: Golden Thimble Filled with Burning Oil
+CoOLotCV: Mea Culpa altar: Sphere of the Sacred Smoke
+CoOLotCV: Center enemy lineup: Tears of Atonement (1000)
+CoOLotCV: First blue candle: Tears of Atonement (2600)
+CoOLotCV: Lower west statue: Tears of Atonement (1750)
+CoOLotCV: Our Lady of the Charred Visage: Child of Moonlight
+WotHP: Outside Child of Moonlight: Remains of Tentudia's Hair
+CoOLotCV: Lady of the Six Sorrows: Heart of the Single Tone
+CoOLotCV: Mask room: Quicksilver
+CoOLotCV: Outside pathway: Bead of Red Wax
+MotED: Perpetva: Aubade of the Nameless Guardian
+MotED: Egg hatching: Hatched Egg of Deformity
+MotED: Blood platform alcove: Knot of Rosary Rope
+Jondo: Upper west Child of Moonlight: Frontal of Martinus, the Ropemaker
+Jondo: Upper east ledge: Phalanx of Zeth, the Prisoner
+Jondo: Lower west lift alcove: Vertebra of Lindquist, the Forger
+Jondo: Lower east bell trap: Cloistered Sapphire
+Jondo: Upper west bell puzzle: Child of Moonlight
+Jondo: Upper west tree root: Anklebone of Weston, the Pilgrim
+Jondo: Spike tunnel cave: Tears of Atonement (5000)
+GA: Lower west ledge: Empty Bile Vessel
+GA: Oil of the Pilgrims: Shroud of Dreamt Sins
+GA: Altasgracias' gift: Knot of Rosary Rope
+GA: Miasma room floor: Mirrored Mask of Dolphos
+GA: Miasma room treasure: Child of Moonlight
+GA: Miasma room Child of Moonlight: Solea of Excommunication
+GA: End of blood bridge: Empty Bile Vessel
+GA: Blood bridge Child of Moonlight: Tears of Atonement (9000)
+GA: Lower east Child of Moonlight: Broken Left Eye of the Traitor
+GA: Tres Angustias: Scaphoid of Fierce, the Leper
+GA: Visage of Contrition: Heart of the Holy Purge
+PotSS: Second area ledge: Mea Culpa Upgrade
+PotSS: First area Child of Moonlight: Piece of a Golden Mask
+PotSS: Third area lower ledge: Empty Bile Vessel
+PotSS: Third area upper ledge: Child of Moonlight
+PotSS: Third area Child of Moonlight: Embossed Mask of Crescente
+PotSS: 4th meeting with Redento: Tears of Atonement (18000)
+PotSS: Amanecida of the Chiselled Steel: Child of Moonlight
+PotSS: Climb to WotHP: Incomplete Scapular
+MoM: Upper west floor: Debla of the Lights
+MoM: Mask room: Parietal bone of Lasser, the Inquisitor
+MoM: Oil of the Pilgrims: Petrified Bell
+Albero: First gift for Cleofas: Tears of Atonement (500)
+Albero: Final gift for Cleofas: Occipital of Tequila, the Metalsmith
+MoM: East chandelier platform: Child of Moonlight
+MoM: Upper east ledge: Incense Garlic
+MoM: Upper center floor: Fervour Upgrade
+MoM: Upper center Child of Moonlight: Mirabras of the Return to Port
+MoM: Giant chandelier statue: Tears of Atonement (5000)
+MoM: Melquiades, The Exhumed Archbishop: Child of Moonlight
+MoM: Redento's treasure: Capitate of Barock, the Herald
+MoM: Final meeting with Redento: Scaly Coin
+MoM: Mea Culpa altar: Cloistered Ruby
+AtTotS: Miriam's gift: Child of Moonlight
+Third red candle: Saeta Dolorosa
+LotNW: Mask room: Reliquary of the Fervent Heart
+LotNW: Platform room ledge: Bead of Blue Wax
+LotNW: Platform room Child of Moonlight: Cervical vertebra of Zicher, the Brewmaster
+LotNW: Twisted wood hidden wall: Key of the Inquisitor
+LotNW: Hidden floor: Tears of Atonement (5000)
+LotNW: Platform puzzle chest: Empty Bile Vessel
+LotNW: Lady of the Six Sorrows: Olive Seeds
+LotNW: Bone puzzle: Fervour Upgrade
+LotNW: Lowest west center ledge: Brilliant Heart of Dawn
+LotNW: Lowest west Child of Moonlight: Incorrupt Hand of the Fraternal Master
+LotNW: Oil of the Pilgrims: Child of Moonlight
+LotNW: Elevator Child of Moonlight: Tears of Atonement (18000)
+TSC: Swinging blade tunnel: Thorn Upgrade
+TSC: Exposito, Scion of Abjuration: Crown of Gnawed Iron
+LotNW: Mea Culpa altar: Child of Moonlight
+TSC: Under elevator shaft: Metacarpus of Hodges, the Blacksmith
+KotTW: Gift from the Traitor: Piece of a Tombstone
+TSC: Painting ladder ledge: Drop of Coagulated Ink
+TSC: Shop item 1: Tears of Atonement (2000)
+TSC: Shop item 2: Empty Bile Vessel
+TSC: Shop item 3: Empty Bile Vessel
+TSC: Jocinero's 1st reward: Key of the High Peaks
+TSC: Jocinero's final reward: Reliquary of the Sorrowful Heart
+TSC: Candle wax puzzle: Child of Moonlight
+AR: First soldier fight: Child of Moonlight
+AR: Lady of the Six Sorrows: Child of Moonlight
+AR: Upper east shaft ledge: Light of the Lady of the Lamp
+AR: Third soldier fight: Romance to the Crimson Mist
+WotHP: Amanecida of the Molten Thorn: Calcaneum of Persian, the Bandit
+AR: Mea Culpa altar: Mark of the Second Refuge
+AR: Crisanta of the Wrapped Agony: Tears of Atonement (11250)
+AR: Statue near MoM: Bead of Blue Wax
+DoHH: Viridiana's gift: Quicksilver
+HotD: Laudes, the First of the Amanecidas: Trapezoid of Yeager, the Jeweller
+BotTC: Inside giant statue: Vertebra of John, the Gambler
+HotD: Mirror room: Tears of Atonement (18000)
+WotHP: Upper east room, top bronze cell: Zambra to the Resplendent Crown
+WotHP: Upper east room, top silver cell: Quicksilver
+WotHP: Upper east room, center cell ledge: Child of Moonlight
+WotHP: Upper west room, center gold cell: Uvula of Proclamation
+WotHP: Lower west room, bottom gold cell: Child of Moonlight
+WotHP: Lower east room, top silver cell: Heart of Oils
+WotHP: Lower east room, bottom silver cell: Humerus of McMittens, the Nurse
+WotHP: Quirce, Returned By The Flames: Zarabanda of the Safe Haven
+WotHP: Lower east room, top bronze cell: Tears of Atonement (500)
+WotHP: Upper east room, center gold cell: Campanillero to the Sons of the Aurora
+WotHP: Oil of the Pilgrims: Child of Moonlight
+BotSS: Starting room ledge: Fibula of Rysp, the Ranger
+BotSS: Warden of the Silent Sorrow: Egg of Deformity
+BotSS: Chamber of the Eldest Brother: Child of Moonlight
+BotSS: Mea Culpa altar: Three Gnarled Tongues
+BotSS: Esdras' final gift: Hamate of Vukelich, the Copyist
+BotSS: Crisanta's gift: Holy Wound of Abnegation
+EoS: Lantern jump near MotED: Reliquary of the Suffering Heart
+MaH: West chest: Metatarsus of Rikusyo, the Traveller
+TRPotS: Perpetva's shrine: Silver Grape
+MaH: Upper east chest: Child of Moonlight
+MaH: Sierpes: Phalanx of William, the Sceptic
+MaH: Sierpes' eye: Phalanx of Brannon, the Gravedigger
+Albero: Child of Moonlight: Child of Moonlight
+MD: Behind gate to TSC: Molten Heart of Boiling Blood
+DC: Upper east tunnel chest: Phalanx of Miriam, the Counsellor
+DC: Upper east Child of Moonlight: Trapezium of Jeremiah, the Hangman
+DC: Child of Moonlight, behind pillar: Mea Culpa Upgrade
+DC: High ledge near elevator shaft: Thorn Upgrade
+DC: Elevator shaft ledge: Pisiform of Hernandez, the Explorer
+DC: Elevator shaft Child of Moonlight: Consecrated Amethyst
+WOTW: Below Prie Dieu: Empty Golden Thimble
+WOTW: Gemino's gift: Tears of Atonement (1000)
+WOTW: Gemino's reward: Thorn Upgrade
+WOTW: Upper east Child of Moonlight: Crimson Heart of a Miura
+WOTW: Gift for the tomb: Child of Moonlight
+WOTW: Underground ledge: Hollow Pearl
+WOTW: Underground Child of Moonlight: Weight of True Guilt
+GotP: Center shaft Child of Moonlight: Nasal bone of Charles, the Artist
+GotP: Lower east shaft: Cante Jondo of the Three Sisters
+GotP: Center east shaft: Life Upgrade
+GotP: Upper east shaft: Fervour Upgrade
+GotP: Upper west shaft: Child of Moonlight
+GotP: West shaft Child of Moonlight: Frozen Olive
+GotP: Center shaft ledge: Thorn Upgrade
+GotP: Shop cave hidden hole: Thorn Upgrade
+GotP: Shop cave Child of Moonlight: Knot of Hair
+CoOLotCV: Snowy window ledge: Child of Moonlight
+CoOLotCV: Center miasma room: Tears of Atonement (3000)
+MotED: Platform above chasm: Child of Moonlight
+MotED: 1st meeting with Redento: Key Grown from Twisted Wood
+MotED: Child of Moonlight, above chasm: Bouquet of Rosemary
+MotED: Amanecida of the Golden Blades: Child of Moonlight
+Jondo: Upper east chest: Torn Bridal Ribbon
+Jondo: Lower east under chargers: Tears of Atonement (1500)
+Jondo: Upper east Child of Moonlight: Child of Moonlight
+Jondo: Lower west bell alcove: Maxilla of Tarradax, the Cleric
+Jondo: Spike tunnel statue: Child of Moonlight
+Jondo: Spike tunnel Child of Moonlight: Ulna of Koke, the Troubadour
+GA: Empty giant egg: Tears of Atonement (1000)
+PotSS: First area ledge: Silvered Lung of Dolphos
+MoM: Lower west Child of Moonlight: Taranto to my Sister
+MoM: Outside Cleofas' room: Tears of Atonement (625)
+LotNW: Root ceiling platform: Heart of the Virtuous Pain
+LotNW: Miasma hallway chest: Mark of the Third Refuge
+LotNW: Silence for Diosdado: Tears of Atonement (1250)
+LotNW: Lowest west upper ledge: Heart of the Unnamed Minstrel
+AR: Second soldier fight: Hyoid bone of Senex, the Beggar
+AR: Upper west shaft ledge: Mea Culpa Upgrade
+AR: Upper west shaft chest: Quicksilver
+AR: Upper west shaft Child of Moonlight: Seguiriya to your Eyes like Stars
+WotHP: Upper east room, lift puzzle: Mea Culpa Upgrade
+WotHP: Collapsing floor ledge: Lunate of Keiya, the Butcher
+WotHP: Lower west room, top ledge: Child of Moonlight
+WotHP: Lower east room, hidden ledge: Nail Uprooted from Dirt
+WotHP: Upper east room, center cell floor: Knot of Rosary Rope
+WotHP: Upper west room, top silver cell: Child of Moonlight
+BotSS: Starting room Child of Moonlight: Tears of Atonement (2500)
+BotSS: Outside church: Life Upgrade
+BotSS: Platforming gauntlet: Blood Perpetuated in Sand
+EoS: Lantern jump near elevator: Tears of Atonement (5500)
+Second red candle: Tears of Atonement (5000)
+Second blue candle: Temporal of Joel, the Thief
+Third blue candle: Phalanx of Arthur, the Sailor
+His Holiness Escribar: Victory
+
+Playthrough:
+
+0: {
+  Dash Ability
+  Wall Climb Ability
+}
+1: {
+  Albero: Child of Moonlight: Child of Moonlight
+  Albero: Gate of Travel room: Clavicle of Dalhuisen, the Schoolchild
+  Albero: Graveyard: Linen of Golden Thread
+  Albero: Mea Culpa altar: Child of Moonlight
+  Albero: Outside Ossuary: Thorn Upgrade
+  Albero: Tirso's house, top floor: Life Upgrade
+  BotSS: Mea Culpa altar: Three Gnarled Tongues
+  BotSS: Platforming gauntlet: Blood Perpetuated in Sand
+  BotSS: Warden of the Silent Sorrow: Egg of Deformity
+  CoOLotCV: Outside pathway: Bead of Red Wax
+  CoOLotCV: Snowy window ledge: Child of Moonlight
+  GA: Miasma room Child of Moonlight: Solea of Excommunication
+  GA: Miasma room treasure: Child of Moonlight
+  GotP: Center east shaft: Life Upgrade
+  GotP: Center shaft ledge: Thorn Upgrade
+  GotP: Confessor Dungeon room: Cord of the True Burying
+  GotP: Elevator shaft Child of Moonlight: Quicksilver
+  GotP: Elevator shaft ledge: Fervour Upgrade
+  GotP: Lady of the Six Sorrows: The Young Mason's Wheel
+  GotP: Lower east shaft: Cante Jondo of the Three Sisters
+  GotP: Lower west shaft: Femur of Karpow, the Bounty Hunter
+  GotP: Oil of the Pilgrims: Child of Moonlight
+  GotP: Shop item 1: Scapula of Carlos, the Executioner
+  GotP: Shop item 2: Mark of the First Refuge
+  GotP: Upper west shaft: Child of Moonlight
+  Jondo: Lower west bell alcove: Maxilla of Tarradax, the Cleric
+  Jondo: Lower west lift alcove: Vertebra of Lindquist, the Forger
+  Jondo: Spike tunnel Child of Moonlight: Ulna of Koke, the Troubadour
+  Jondo: Spike tunnel statue: Child of Moonlight
+  Jondo: Upper east Child of Moonlight: Child of Moonlight
+  Jondo: Upper east ledge: Phalanx of Zeth, the Prisoner
+  Jondo: Upper west Child of Moonlight: Frontal of Martinus, the Ropemaker
+  Jondo: Upper west bell puzzle: Child of Moonlight
+  MD: First red candle: Thorn Upgrade
+  MD: Second area ledge: Child of Moonlight
+  MD: Shop item 1: Dried Clove
+  MD: Shop item 3: Child of Moonlight
+  MD: Sliding challenge: Mea Culpa Upgrade
+  MD: Third area hidden room: Life Upgrade
+  MotED: 1st meeting with Redento: Key Grown from Twisted Wood
+  MotED: Child of Moonlight, above chasm: Bouquet of Rosemary
+  MotED: Perpetva: Aubade of the Nameless Guardian
+  MotED: Under entrance to DC: Key of the Secular
+  Skill 1, Tier 1: Combo Skill
+  Skill 1, Tier 2: Combo Skill
+  Skill 2, Tier 1: Charged Skill
+  Skill 3, Tier 1: Ranged Skill
+  Skill 4, Tier 1: Dive Skill
+  Skill 5, Tier 1: Lunge Skill
+  Skill 5, Tier 2: Lunge Skill
+  THL: Child of Moonlight: Verdiales of the Forsaken Hamlet
+  THL: Deogracias' gift: Knot of Rosary Rope
+  WOTW: Below Prie Dieu: Empty Golden Thimble
+  WOTW: Entrance to tomb: Big Toe made of Limestone
+  WotBC: 3rd meeting with Redento: Verses Spun from Gold
+  WotBC: Cliffside statue: Child of Moonlight
+  WotBC: Lower log path: Holy Wound of Attrition
+  WotBC: Outside Child of Moonlight: Mea Culpa Upgrade
+  WotBC: Outside ledge: Bead of Red Wax
+}
+2: {
+  Albero: Donate 5000 Tears: Holy Wound of Contrition
+  Albero: Donate 50000 Tears: Ribs of Sabnock, the Guardian
+  Albero: Tirso's 1st reward: Phalanx of Aralcarim, the Archivist
+  Albero: Tirso's 2nd reward: Jaw of Ashgan, the Inquisitor
+  BotSS: Outside church: Life Upgrade
+  BotSS: Starting room ledge: Fibula of Rysp, the Ranger
+  CoOLotCV: Fountain of burning oil: Golden Thimble Filled with Burning Oil
+  CoOLotCV: Our Lady of the Charred Visage: Child of Moonlight
+  DC: Behind gate in miasma room: Melted Golden Coins
+  DC: Behind sewage drips: Holy Wound of Compunction
+  DC: Chalice room: Chalice of Inverted Verses
+  DC: Child of Moonlight, miasma room: Apodictic Heart of Mea Culpa
+  DC: Elevator shaft ledge: Pisiform of Hernandez, the Explorer
+  DC: Lady of the Six Sorrows, elevator shaft: Sooty Garlic
+  DC: Lady of the Six Sorrows, from MD: Child of Moonlight
+  DC: Lower east tunnel chest: Deformed Mask of Orestes
+  DC: Oil of the Pilgrims: Child of Moonlight
+  DC: Shortcut to WotBC: Bouquet of Thyme
+  DC: Top of elevator Child of Moonlight: Tirana of the Celestial Bastion
+  DC: Upper east Child of Moonlight: Trapezium of Jeremiah, the Hangman
+  DC: Upper east tunnel chest: Phalanx of Miriam, the Counsellor
+  GA: End of blood bridge: Empty Bile Vessel
+  GA: Lower east Child of Moonlight: Broken Left Eye of the Traitor
+  GA: Oil of the Pilgrims: Shroud of Dreamt Sins
+  GA: Tres Angustias: Scaphoid of Fierce, the Leper
+  GotP: Center shaft Child of Moonlight: Nasal bone of Charles, the Artist
+  GotP: East cliffside: Fervour Upgrade
+  GotP: Shop cave hidden hole: Thorn Upgrade
+  GotP: Upper east shaft: Fervour Upgrade
+  Jondo: Upper east chest: Torn Bridal Ribbon
+  Jondo: Upper west tree root: Anklebone of Weston, the Pilgrim
+  MD: Ten Piedad: Dried Flowers bathed in Tears
+  MaH: West chest: Metatarsus of Rikusyo, the Traveller
+  MotED: Blood platform alcove: Knot of Rosary Rope
+  MotED: Egg hatching: Hatched Egg of Deformity
+  MotED: Platform above chasm: Child of Moonlight
+  Ossuary: 2nd reward: Bead of Red Wax
+  Petrous: Temple entrance: Navicular of Kahnnyhoo, the Murderer
+  Skill 2, Tier 2: Charged Skill
+  Skill 4, Tier 2: Dive Skill
+  WOTW: Underground Child of Moonlight: Weight of True Guilt
+  WOTW: Upper east statue: Bead of Blue Wax
+  WotBC: Cliffside Child of Moonlight: Tiento to your Thorned Hairs
+  WotBC: Under broken bridge: Verses Spun from Gold
+}
+3: {
+  AR: First soldier fight: Child of Moonlight
+  AR: Second soldier fight: Hyoid bone of Senex, the Beggar
+  AR: Statue near MoM: Bead of Blue Wax
+  AR: Upper west shaft Child of Moonlight: Seguiriya to your Eyes like Stars
+  AR: Upper west shaft ledge: Mea Culpa Upgrade
+  Albero: Tirso's 3rd reward: Black Grieving Veil
+  BotTC: Esdras' gift: Life Upgrade
+  Confessor Dungeon 1 extra: Little Toe made of Limestone
+  Confessor Dungeon 1 main: Empty Bile Vessel
+  Confessor Dungeon 2 extra: Cantina of the Blue Rose
+  Confessor Dungeon 2 main: Knot of Rosary Rope
+  Confessor Dungeon 3 main: Triquetral of Luca, the Tailor
+  Confessor Dungeon 4 extra: Radius of Helzer, the Poet
+  Confessor Dungeon 4 main: Linen Cloth
+  Confessor Dungeon 5 extra: Life Upgrade
+  Confessor Dungeon 5 main: Child of Moonlight
+  Confessor Dungeon 6 main: Sacrum of the Dark Warlock
+  DC: Mea Culpa altar: Coccyx of Daniel, the Possessed
+  LotNW: Bone puzzle: Fervour Upgrade
+  LotNW: Lady of the Six Sorrows: Olive Seeds
+  LotNW: Lowest west center ledge: Brilliant Heart of Dawn
+  LotNW: Mea Culpa altar: Child of Moonlight
+  LotNW: Oil of the Pilgrims: Child of Moonlight
+  LotNW: Platform puzzle chest: Empty Bile Vessel
+  LotNW: Platform room Child of Moonlight: Cervical vertebra of Zicher, the Brewmaster
+  LotNW: Platform room ledge: Bead of Blue Wax
+  LotNW: Twisted wood hidden wall: Key of the Inquisitor
+  MD: Cave Child of Moonlight: Empty Bile Vessel
+  MaH: Upper east chest: Child of Moonlight
+  MoM: East chandelier platform: Child of Moonlight
+  MoM: Lower west Child of Moonlight: Taranto to my Sister
+  MoM: Mask room: Parietal bone of Lasser, the Inquisitor
+  MoM: Mea Culpa altar: Cloistered Ruby
+  MoM: Melquiades, The Exhumed Archbishop: Child of Moonlight
+  MoM: Oil of the Pilgrims: Petrified Bell
+  MoM: Upper center Child of Moonlight: Mirabras of the Return to Port
+  MoM: Upper center floor: Fervour Upgrade
+  MoM: Upper east ledge: Incense Garlic
+  MoM: Upper west floor: Debla of the Lights
+  Ossuary: 3rd reward: Severed Hand
+  Ossuary: 5th reward: Sternum of Vitas, the Performer
+  PotSS: Climb to WotHP: Incomplete Scapular
+  PotSS: First area ledge: Silvered Lung of Dolphos
+  PotSS: Second area ledge: Mea Culpa Upgrade
+  PotSS: Third area Child of Moonlight: Embossed Mask of Crescente
+  PotSS: Third area lower ledge: Empty Bile Vessel
+  PotSS: Third area upper ledge: Child of Moonlight
+  Second blue candle: Temporal of Joel, the Thief
+  Skill 1, Tier 3: Combo Skill
+  Skill 2, Tier 3: Charged Skill
+  Skill 3, Tier 2: Ranged Skill
+  Skill 4, Tier 3: Dive Skill
+  Skill 5, Tier 3: Lunge Skill
+  TSC: Shop item 2: Empty Bile Vessel
+  TSC: Shop item 3: Empty Bile Vessel
+  TSC: Swinging blade tunnel: Thorn Upgrade
+  TSC: Under elevator shaft: Metacarpus of Hodges, the Blacksmith
+  Third blue candle: Phalanx of Arthur, the Sailor
+  Third red candle: Saeta Dolorosa
+  WOTW: Gemino's reward: Thorn Upgrade
+  WOTW: Gift for the tomb: Child of Moonlight
+  WOTW: Underground tomb: Fourth Toe made of Limestone
+  WotHP: Lower east room, hidden ledge: Nail Uprooted from Dirt
+  WotHP: Upper east room, center cell floor: Knot of Rosary Rope
+  WotHP: Upper east room, center cell ledge: Child of Moonlight
+  WotHP: Upper east room, lift puzzle: Mea Culpa Upgrade
+  WotHP: Upper east room, top bronze cell: Zambra to the Resplendent Crown
+}
+4: {
+  AR: Lady of the Six Sorrows: Child of Moonlight
+  AR: Mea Culpa altar: Mark of the Second Refuge
+  AR: Third soldier fight: Romance to the Crimson Mist
+  AR: Upper west shaft chest: Quicksilver
+  Albero: Bless Linen Cloth: Key of the Scribe
+  Albero: Bless Severed Hand: Child of Moonlight
+  Albero: Tirso's 6th reward: Mea Culpa Upgrade
+  AtTotS: Miriam's gift: Child of Moonlight
+  BotSS: Esdras' final gift: Hamate of Vukelich, the Copyist
+  DC: Child of Moonlight, behind pillar: Mea Culpa Upgrade
+  DC: High ledge near elevator shaft: Thorn Upgrade
+  DC: Shroud puzzle: Severed Right Eye of the Traitor
+  Defeat 3 Amanecidas: Tentudia's Skeletal Remains
+  GA: Altasgracias' gift: Knot of Rosary Rope
+  GA: Lower west ledge: Empty Bile Vessel
+  GA: Miasma room floor: Mirrored Mask of Dolphos
+  GotP: Amanecida of the Bejeweled Arrow: Verses Spun from Gold
+  LotNW: Miasma hallway chest: Mark of the Third Refuge
+  MaH: Sierpes: Phalanx of William, the Sceptic
+  MaH: Sierpes' eye: Phalanx of Brannon, the Gravedigger
+  MoM: Redento's treasure: Capitate of Barock, the Herald
+  MotED: Amanecida of the Golden Blades: Child of Moonlight
+  Ossuary: 7th reward: Child of Moonlight
+  Ossuary: Isidora, Voice of the Dead: Verses Spun from Gold
+  PotSS: Amanecida of the Chiselled Steel: Child of Moonlight
+  Skill 3, Tier 3: Ranged Skill
+  TSC: Candle wax puzzle: Child of Moonlight
+  TSC: Jocinero's 1st reward: Key of the High Peaks
+  WotHP: Lower west room, bottom gold cell: Child of Moonlight
+  WotHP: Upper east room, center gold cell: Campanillero to the Sons of the Aurora
+}
+5: {
+  Albero: Final gift for Cleofas: Occipital of Tequila, the Metalsmith
+  Albero: Lvdovico's 1st reward: Kneecap of Sebastien, the Puppeteer
+  Albero: Tirso's final reward: Tibia of Alsahli, the Mystic
+  BotSS: Crisanta's gift: Holy Wound of Abnegation
+  BotTC: Inside giant statue: Vertebra of John, the Gambler
+  CoOLotCV: Mask room: Quicksilver
+  Confessor Dungeon 7 extra: Knot of Rosary Rope
+  Confessor Dungeon 7 main: Lorquiana
+  Defeat 4 Amanecidas: Coxal of June, the Prostitute
+  Defeat all Amanecidas: Fervour Upgrade
+  DoHH: Viridiana's gift: Quicksilver
+  His Holiness Escribar: Victory
+  HotD: Laudes, the First of the Amanecidas: Trapezoid of Yeager, the Jeweller
+  WotHP: Amanecida of the Molten Thorn: Calcaneum of Persian, the Bandit
+  WotHP: Collapsing floor ledge: Lunate of Keiya, the Butcher
+  WotHP: Lower east room, bottom silver cell: Humerus of McMittens, the Nurse
+  WotHP: Lower west room, top ledge: Child of Moonlight
+  WotHP: Oil of the Pilgrims: Child of Moonlight
+  WotHP: Outside Child of Moonlight: Remains of Tentudia's Hair
+  WotHP: Quirce, Returned By The Flames: Zarabanda of the Safe Haven
+  WotHP: Upper east room, top silver cell: Quicksilver
+  WotHP: Upper west room, top silver cell: Child of Moonlight
+}
+6: {
+  Ossuary: 10th reward: Tentudia's Carnal Remains
+  Ossuary: 11th reward: Key to the Chamber of the Eldest Brother
+  Ossuary: 9th reward: Thorn Upgrade
+}
+7: {
+  BotSS: Chamber of the Eldest Brother: Child of Moonlight
+}

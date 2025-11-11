@@ -52,11 +52,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -84,11 +84,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -116,11 +116,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -148,11 +148,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -180,11 +180,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -212,11 +212,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -244,11 +244,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -276,11 +276,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -308,11 +308,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -340,11 +340,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -372,11 +372,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -404,11 +404,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -436,11 +436,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -468,11 +468,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -500,11 +500,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -532,11 +532,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -564,11 +564,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -596,11 +596,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -628,11 +628,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -660,11 +660,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -692,11 +692,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -724,11 +724,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -756,11 +756,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -788,11 +788,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -820,11 +820,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -852,11 +852,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -884,11 +884,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -916,11 +916,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -948,11 +948,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -980,11 +980,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1012,11 +1012,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1044,11 +1044,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1076,11 +1076,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1108,11 +1108,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1140,11 +1140,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1172,11 +1172,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1204,11 +1204,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1236,11 +1236,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1268,11 +1268,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1300,11 +1300,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1332,11 +1332,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1364,11 +1364,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1396,11 +1396,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1428,11 +1428,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1460,11 +1460,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1492,11 +1492,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1524,11 +1524,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1556,11 +1556,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1588,11 +1588,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1620,11 +1620,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1652,11 +1652,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1684,11 +1684,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1716,11 +1716,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1748,11 +1748,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1780,11 +1780,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1812,11 +1812,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1844,11 +1844,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1876,11 +1876,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1908,11 +1908,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1940,11 +1940,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1972,11 +1972,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2004,11 +2004,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2036,11 +2036,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2068,11 +2068,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2100,11 +2100,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2132,11 +2132,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2164,11 +2164,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2196,11 +2196,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2228,11 +2228,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2260,11 +2260,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2292,11 +2292,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2324,11 +2324,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2356,11 +2356,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2388,11 +2388,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2420,11 +2420,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2452,11 +2452,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2484,11 +2484,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2516,11 +2516,11 @@
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
-                  "value": 0
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2697,8 +2697,8 @@
               "name": "bmx",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 2
+                  "type": "name",
+                  "name": "movestyle"
                 }
               ]
             },
@@ -2790,8 +2790,8 @@
               "name": "versum_hill_ch1_roadblock",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 }
               ]
             }
@@ -2848,8 +2848,8 @@
               "name": "bmx",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 2
+                  "type": "name",
+                  "name": "movestyle"
                 }
               ]
             },
@@ -3101,8 +3101,8 @@
               "name": "inline_skates",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 2
+                  "type": "name",
+                  "name": "movestyle"
                 }
               ]
             },
@@ -3146,8 +3146,8 @@
               "name": "versum_hill_ch1_roadblock",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 }
               ]
             }
@@ -3190,12 +3190,12 @@
               "name": "versum_hill_rave",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             },
@@ -3234,8 +3234,8 @@
               "name": "versum_hill_ch1_roadblock",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 }
               ]
             }
@@ -3283,8 +3283,8 @@
               "name": "versum_hill_ch1_roadblock",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 }
               ]
             }
@@ -3356,12 +3356,12 @@
               "name": "versum_hill_rietveld",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             },
@@ -3380,12 +3380,12 @@
               "name": "versum_hill_crew_battle",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             },
@@ -3409,8 +3409,8 @@
               "name": "versum_hill_ch1_roadblock",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 }
               ]
             }
@@ -3830,8 +3830,8 @@
               "name": "bmx",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 2
+                  "type": "name",
+                  "name": "movestyle"
                 }
               ]
             },
@@ -4001,12 +4001,12 @@
               "name": "brink_terminal_mesh",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             },
@@ -4081,12 +4081,12 @@
               "name": "brink_terminal_mesh",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             },
@@ -4183,8 +4183,8 @@
               "name": "inline_skates",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 2
+                  "type": "name",
+                  "name": "movestyle"
                 }
               ]
             },
@@ -4231,12 +4231,12 @@
               "name": "brink_terminal_crew_battle",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             },
@@ -4269,8 +4269,8 @@
               "name": "millennium_mall_oldhead_ceiling",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 }
               ]
             }
@@ -4283,12 +4283,12 @@
               "name": "millennium_mall_big",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             }
@@ -4345,8 +4345,8 @@
               "name": "inline_skates",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 2
+                  "type": "name",
+                  "name": "movestyle"
                 }
               ]
             },
@@ -4432,8 +4432,8 @@
               "name": "millennium_mall_theater",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 }
               ]
             }
@@ -4578,8 +4578,8 @@
               "name": "bmx",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 2
+                  "type": "name",
+                  "name": "movestyle"
                 }
               ]
             },
@@ -4637,12 +4637,12 @@
               "name": "millennium_mall_big",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             }
@@ -4676,12 +4676,12 @@
               "name": "millennium_mall_big",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             }
@@ -4781,12 +4781,12 @@
               "name": "millennium_mall_crew_battle",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             },
@@ -4872,8 +4872,8 @@
               "name": "bmx",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 2
+                  "type": "name",
+                  "name": "movestyle"
                 }
               ]
             },
@@ -4975,12 +4975,12 @@
               "name": "pyramid_island_upper_half",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             }
@@ -5140,8 +5140,8 @@
               "name": "skateboard",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 2
+                  "type": "name",
+                  "name": "movestyle"
                 }
               ]
             },
@@ -5298,8 +5298,8 @@
               "name": "inline_skates",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 2
+                  "type": "name",
+                  "name": "movestyle"
                 }
               ]
             },
@@ -5394,12 +5394,12 @@
               "name": "pyramid_island_crew_battle",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             },
@@ -5441,12 +5441,12 @@
               "name": "pyramid_island_upper_half",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             }
@@ -5593,12 +5593,12 @@
               "name": "mataan_deep_city",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             }
@@ -5721,12 +5721,12 @@
               "name": "mataan_smoke_wall2",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             }
@@ -5769,12 +5769,12 @@
               "name": "mataan_challenge1",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             },
@@ -5793,12 +5793,12 @@
               "name": "mataan_challenge2",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             },
@@ -5879,12 +5879,12 @@
               "name": "mataan_deep_city",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             }
@@ -5932,12 +5932,12 @@
               "name": "mataan_deep_city",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             }
@@ -5950,12 +5950,12 @@
               "name": "mataan_deepest",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             }
@@ -6056,12 +6056,12 @@
               "name": "mataan_deepest",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             },
@@ -6123,12 +6123,12 @@
               "name": "mataan_faux",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "limit"
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "name",
+                  "name": "glitched"
                 }
               ]
             },
