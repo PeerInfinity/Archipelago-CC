@@ -3,8 +3,6 @@
 # Interactive Branch Fetch and Merge Script
 # This script helps you fetch and merge remote branches interactively
 
-set -e
-
 # Color codes for better readability
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -16,21 +14,16 @@ NC='\033[0m' # No Color
 get_unfetched_branches() {
     local unfetched=()
 
-    # Get all remote branches
-    while IFS= read -r remote_branch; do
-        # Remove "origin/" prefix and skip HEAD
-        local branch_name="${remote_branch#origin/}"
-
-        # Skip if it's the HEAD pointer
-        if [[ "$branch_name" == *"HEAD ->"* ]]; then
-            continue
-        fi
+    # Get all remote branches directly from the remote server (without fetching)
+    while IFS=$'\t' read -r hash ref; do
+        # Extract branch name from refs/heads/branch_name
+        local branch_name="${ref#refs/heads/}"
 
         # Check if local branch exists
         if ! git show-ref --verify --quiet "refs/heads/$branch_name"; then
             unfetched+=("$branch_name")
         fi
-    done < <(git branch -r | grep "origin/" | sed 's/^[[:space:]]*//')
+    done < <(git ls-remote --heads origin)
 
     printf '%s\n' "${unfetched[@]}"
 }
@@ -41,36 +34,41 @@ select_branch() {
     local count=${#branches[@]}
 
     if [ "$count" -eq 0 ]; then
-        echo -e "${GREEN}All remote branches have been fetched!${NC}"
+        echo -e "${GREEN}All remote branches have been fetched!${NC}" >&2
         return 1
     fi
 
-    echo -e "${BLUE}=== Unfetched Branches ===${NC}"
+    echo -e "${BLUE}=== Unfetched Branches ===${NC}" >&2
     for i in "${!branches[@]}"; do
-        echo "$((i+1)). ${branches[$i]}"
+        echo "$((i+1)). ${branches[$i]}" >&2
     done
-    echo
+    echo >&2
 
     while true; do
-        read -p "Select a branch to fetch (1-$count): " selection
+        read -p "Select a branch to fetch [1-$count, default: 1]: " selection >&2
+
+        # Default to first branch if user just presses enter
+        if [ -z "$selection" ]; then
+            selection=1
+        fi
 
         if [[ "$selection" =~ ^[0-9]+$ ]] && [ "$selection" -ge 1 ] && [ "$selection" -le "$count" ]; then
             echo "${branches[$((selection-1))]}"
             return 0
         else
-            echo -e "${RED}Invalid selection. Please enter a number between 1 and $count.${NC}"
+            echo -e "${RED}Invalid selection. Please enter a number between 1 and $count.${NC}" >&2
         fi
     done
 }
 
 # Function to select merge type
 select_merge_type() {
-    echo -e "${BLUE}=== Merge Options ===${NC}"
-    echo "1. No-commit, no-fast-forward merge (default)"
-    echo "2. Automated merge (fast-forward if possible)"
-    echo
+    echo -e "${BLUE}=== Merge Options ===${NC}" >&2
+    echo "1. No-commit, no-fast-forward merge (default)" >&2
+    echo "2. Automated merge (fast-forward if possible)" >&2
+    echo >&2
 
-    read -p "Select merge type [1]: " merge_choice
+    read -p "Select merge type [1]: " merge_choice >&2
 
     # Default to option 1 if user just presses enter
     if [ -z "$merge_choice" ]; then
