@@ -11,19 +11,19 @@ import subprocess
 import sys
 from pathlib import Path
 
-# Add parent directory to path to import seed_utils
+# Add parent directory to path to import from scripts/lib
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'scripts'))
-from seed_utils import get_seed_id
+from lib.seed_utils import get_seed_id
 
 
 def load_world_mapping():
     """Load the world mapping from the JSON file."""
     script_dir = Path(__file__).parent.parent.parent / 'scripts' / 'data'
     mapping_file = script_dir / 'world-mapping.json'
-    
+
     if not mapping_file.exists():
         print(f"Error: World mapping file not found at {mapping_file}", file=sys.stderr)
-        print("Please run scripts/build-world-mapping.py first", file=sys.stderr)
+        print("Please run scripts/build/build-world-mapping.py first", file=sys.stderr)
         sys.exit(1)
     
     with open(mapping_file, 'r') as f:

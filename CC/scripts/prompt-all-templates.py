@@ -15,8 +15,8 @@ from pathlib import Path
 # Add parent scripts directory to path to import shared modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'scripts')))
 
-from test_utils import read_host_yaml_config
-from test_results import is_test_passing, load_existing_results
+from lib.test_utils import read_host_yaml_config
+from lib.test_results import is_test_passing, load_existing_results
 
 
 def get_test_results_path(project_root):
@@ -27,9 +27,9 @@ def get_test_results_path(project_root):
 
     # Use appropriate output directory based on configuration
     if extend_sphere_log:
-        return Path(project_root) / 'scripts/output-spoiler-full/template-test-results.json'
+        return Path(project_root) / 'scripts/output/spoiler-full/test-results.json'
     else:
-        return Path(project_root) / 'scripts/output-spoiler-minimal/template-test-results.json'
+        return Path(project_root) / 'scripts/output/spoiler-minimal/test-results.json'
 
 
 def load_test_results(project_root):
@@ -48,7 +48,7 @@ def run_template_test(template_file, seed=1):
     print(f"Running template test for: {template_file}")
     try:
         result = subprocess.run(
-            ['python', 'scripts/test-all-templates.py', '--include-list', template_file, '--seed', str(seed)],
+            ['python', 'scripts/test/test-all-templates.py', '--include-list', template_file, '--seed', str(seed)],
             capture_output=True, text=True, check=False
         )
         return result.returncode == 0

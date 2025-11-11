@@ -300,8 +300,8 @@ def main():
     parser.add_argument(
         '--test-results',
         type=str,
-        default='scripts/output/test-results.json',
-        help='Input test results JSON file (default: scripts/output/test-results.json)'
+        default='scripts/output/spoiler-full/test-results.json',
+        help='Input test results JSON file (default: scripts/output/spoiler-full/test-results.json)'
     )
     parser.add_argument(
         '--preset-files',

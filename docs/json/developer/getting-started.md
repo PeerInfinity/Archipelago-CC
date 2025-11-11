@@ -30,7 +30,7 @@ git clone -b JSONExport https://github.com/PeerInfinity/Archipelago.git archipel
 cd archipelago-json
 
 # Run the automated setup script
-python scripts/setup_dev_environment.py
+python scripts/setup/setup_dev_environment.py
 ```
 
 The script will automatically:
@@ -268,13 +268,13 @@ This creates a `host.yaml` file in the project root. For testing purposes, you c
 **Option 1: Use the convenience script (recommended)**
 ```bash
 # Enable minimal spoiler testing (basic sphere validation)
-python scripts/update_host_settings.py minimal-spoilers
+python scripts/setup/update_host_settings.py minimal-spoilers
 
 # Enable full spoiler testing (includes all location tracking)
-python scripts/update_host_settings.py full-spoilers
+python scripts/setup/update_host_settings.py full-spoilers
 
 # Later, disable testing settings and return to normal operation
-python scripts/update_host_settings.py normal
+python scripts/setup/update_host_settings.py normal
 ```
 
 **Option 2: Manual editing**

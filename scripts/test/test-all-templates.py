@@ -19,14 +19,17 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
 
-# Import utility functions from refactored modules
-from test_utils import (
+# Add parent scripts directory to path to import from lib
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+# Import utility functions from library modules
+from lib.test_utils import (
     read_host_yaml_config,
     build_and_load_world_mapping,
     check_virtual_environment,
     check_http_server
 )
-from test_results import (
+from lib.test_results import (
     is_test_passing,
     get_failed_templates,
     get_failing_seed_info,
@@ -34,12 +37,12 @@ from test_results import (
     merge_results,
     save_results
 )
-from test_runner import (
+from lib.test_runner import (
     test_template_single_seed,
     test_template_seed_range,
     test_template_multiworld
 )
-from seed_utils import get_seed_id as compute_seed_id
+from lib.seed_utils import get_seed_id as compute_seed_id
 
 
 def run_post_processing_scripts(project_root: str, results_file: str, multiplayer: bool = False, multiworld: bool = False, multitemplate: bool = False):
@@ -52,7 +55,7 @@ def run_post_processing_scripts(project_root: str, results_file: str, multiplaye
 
     # Generate test charts using unified script (processes all test types and generates summary)
     print("\nGenerating test results charts...")
-    chart_script = os.path.join(project_root, 'scripts', 'generate-test-chart.py')
+    chart_script = os.path.join(project_root, 'scripts', 'docs', 'generate-test-chart.py')
 
     try:
         result = subprocess.run(
@@ -78,7 +81,7 @@ def run_post_processing_scripts(project_root: str, results_file: str, multiplaye
     # Only update preset files if extend_sphere_log_to_all_locations is true and not in multiplayer mode
     if not multiplayer and extend_sphere_log:
         print("\nUpdating preset files with test data...")
-        preset_script = os.path.join(project_root, 'scripts', 'update-preset-files.py')
+        preset_script = os.path.join(project_root, 'scripts', 'docs', 'update-preset-files.py')
         try:
             result = subprocess.run(
                 [sys.executable, preset_script, '--test-results', results_file],
@@ -119,8 +122,8 @@ def main():
     parser.add_argument(
         '--output-file',
         type=str,
-        default='scripts/output/test-results.json',
-        help='Output file path (default: scripts/output/test-results.json)'
+        default='scripts/output/spoiler-minimal/test-results.json',
+        help='Output file path (default: scripts/output/spoiler-minimal/test-results.json)'
     )
     parser.add_argument(
         '--skip-list',
@@ -169,7 +172,7 @@ def main():
     parser.add_argument(
         '-p', '--post-process',
         action='store_true',
-        help='Run post-processing scripts after testing (generate-test-chart.py and update-preset-files.py)'
+        help='Run post-processing scripts after testing (docs/generate-test-chart.py and docs/update-preset-files.py)'
     )
     parser.add_argument(
         '--multiplayer',
@@ -398,17 +401,17 @@ def main():
     if args.retest:
         # Determine the correct results file path based on mode
         if args.multiworld:
-            retest_results_file = os.path.join(project_root, 'scripts/output-multiworld/test-results.json')
+            retest_results_file = os.path.join(project_root, 'scripts/output/multiworld/test-results.json')
         elif args.multiplayer:
-            retest_results_file = os.path.join(project_root, 'scripts/output-multiplayer/test-results.json')
+            retest_results_file = os.path.join(project_root, 'scripts/output/multiplayer/test-results.json')
         else:
             # Read host.yaml to determine spoiler output directory
             host_config = read_host_yaml_config(project_root)
             extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
             if extend_sphere_log:
-                retest_results_file = os.path.join(project_root, 'scripts/output-spoiler-full/test-results.json')
+                retest_results_file = os.path.join(project_root, 'scripts/output/spoiler-full/test-results.json')
             else:
-                retest_results_file = os.path.join(project_root, 'scripts/output-spoiler-minimal/test-results.json')
+                retest_results_file = os.path.join(project_root, 'scripts/output/spoiler-minimal/test-results.json')
 
         # Load existing results
         if not os.path.exists(retest_results_file):
@@ -577,32 +580,32 @@ def main():
     
     # Load existing results for merging
     # Adjust output file path based on mode and configuration
-    if args.output_file == 'scripts/output/test-results.json':
+    if args.output_file == 'scripts/output/spoiler-minimal/test-results.json':
         # Using default path - adjust based on mode
         if args.multiworld:
             # Use multiworld-specific output directory and file name
-            args.output_file = 'scripts/output-multiworld/test-results.json'
+            args.output_file = 'scripts/output/multiworld/test-results.json'
         elif args.multiplayer:
             # Use multiplayer-specific output directory and file name
-            args.output_file = 'scripts/output-multiplayer/test-results.json'
+            args.output_file = 'scripts/output/multiplayer/test-results.json'
         elif args.multitemplate:
             # Multitemplate mode - check extend_sphere_log_to_all_locations setting
             host_config = read_host_yaml_config(project_root)
             extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
 
             if extend_sphere_log:
-                args.output_file = 'scripts/output-multitemplate-full/test-results.json'
+                args.output_file = 'scripts/output/multitemplate-full/test-results.json'
             else:
-                args.output_file = 'scripts/output-multitemplate-minimal/test-results.json'
+                args.output_file = 'scripts/output/multitemplate-minimal/test-results.json'
         else:
             # Spoiler mode - check extend_sphere_log_to_all_locations setting
             host_config = read_host_yaml_config(project_root)
             extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
 
             if extend_sphere_log:
-                args.output_file = 'scripts/output-spoiler-full/test-results.json'
+                args.output_file = 'scripts/output/spoiler-full/test-results.json'
             else:
-                args.output_file = 'scripts/output-spoiler-minimal/test-results.json'
+                args.output_file = 'scripts/output/spoiler-minimal/test-results.json'
 
     results_file = os.path.join(project_root, args.output_file)
 

@@ -10,12 +10,12 @@ from pathlib import Path
 
 # Define the output directories
 DIRECTORIES = [
-    "output-spoiler-minimal",
-    "output-spoiler-full",
-    "output-multiplayer",
-    "output-multiworld",
-    "output-multitemplate-minimal",
-    "output-multitemplate-full"
+    "output/spoiler-minimal",
+    "output/spoiler-full",
+    "output/multiplayer",
+    "output/multiworld",
+    "output/multitemplate-minimal",
+    "output/multitemplate-full"
 ]
 
 # File to keep

@@ -17,10 +17,10 @@ import shutil
 import time
 from datetime import datetime
 from typing import Dict, List
-from seed_utils import get_seed_id as compute_seed_id
+from .seed_utils import get_seed_id as compute_seed_id
 
 # Import from the utility modules
-from test_utils import (
+from .test_utils import (
     normalize_game_name,
     get_world_info,
     count_errors_and_warnings,
