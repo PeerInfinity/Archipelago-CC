@@ -4,7 +4,7 @@
     "batch_processing_time_minutes": 13.3,
     "batch_processing_time_seconds": 795.3,
     "created": "2025-10-14T13:24:10.253834",
-    "last_updated": "2025-11-04T16:29:21.455292",
+    "last_updated": "2025-11-11T21:19:33.818546",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2705,7 +2705,7 @@
     },
     "Blasphemous.yaml": {
       "consecutive_passes_before_failure": 0,
-      "first_failure_reason": "Test error: [10:03:09 PM] [spoilers-full-run-1761886976911] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":227,\"processedEvents\":123,\"errorCount\":1,\"sphereCount\":124,\"testLogPath\":\"presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+      "first_failure_reason": "Test failed at sphere 4.17",
       "first_failure_seed": 1,
       "individual_results": {
         "1": {
@@ -2717,7 +2717,8 @@
           "game_name": "blasphemous",
           "generation": {
             "error_count": 1,
-            "processing_time_seconds": 29.95,
+            "error_type": null,
+            "processing_time_seconds": 37.59,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -2732,7 +2733,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 15.01,
+            "processing_time_seconds": 18.68,
             "return_code": 1,
             "sphere_reached": 4.17,
             "success": false,
@@ -2740,7 +2741,7 @@
             "warning_count": 0
           },
           "template_name": "Blasphemous.yaml",
-          "timestamp": "2025-10-30T22:02:24.899994",
+          "timestamp": "2025-11-11T21:17:55.984245",
           "world_info": {
             "exporter_path": "exporter/games/blasphemous.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
@@ -3149,7 +3150,7 @@
         "failure_rate": 0.1
       },
       "template_name": "Blasphemous.yaml",
-      "timestamp": "2025-10-30T22:02:24.899994",
+      "timestamp": "2025-11-11T21:17:55.973170",
       "total_seeds_tested": 10
     },
     "Bomb Rush Cyberfunk.yaml": {
@@ -8340,9 +8341,9 @@
       "total_seeds_tested": 10
     },
     "Final Fantasy Mystic Quest.yaml": {
-      "consecutive_passes_before_failure": 0,
-      "first_failure_reason": "Test error: [10:05:20 PM] [spoilers-full-run-1761887117780] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":74,\"processedEvents\":0,\"errorCount\":1,\"sphereCount\":1,\"testLogPath\":\"presets/ffmq/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
-      "first_failure_seed": 1,
+      "consecutive_passes_before_failure": 1,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "individual_results": {
         "1": {
           "analysis": {
@@ -8353,30 +8354,31 @@
           "game_name": "ffmq",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 2.54,
+            "error_type": null,
+            "processing_time_seconds": 5.51,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/ffmq/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 459273,
-            "size_mb": 0.44
+            "size_bytes": 434087,
+            "size_mb": 0.41
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 5.02,
-            "return_code": 1,
-            "sphere_reached": 0.0,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.49,
+            "return_code": 0,
+            "sphere_reached": 18.2,
+            "success": true,
             "total_spheres": 18.2,
             "warning_count": 0
           },
           "template_name": "Final Fantasy Mystic Quest.yaml",
-          "timestamp": "2025-10-30T22:05:13.257943",
+          "timestamp": "2025-11-11T21:19:19.257069",
           "world_info": {
             "exporter_path": "exporter/games/ffmq.py",
             "game_logic_path": null,
@@ -8389,16 +8391,16 @@
         }
       },
       "seed_range": "1",
-      "seeds_failed": 1,
-      "seeds_passed": 0,
+      "seeds_failed": 0,
+      "seeds_passed": 1,
       "stop_on_failure": true,
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 1.0
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_name": "Final Fantasy Mystic Quest.yaml",
-      "timestamp": "2025-10-30T22:05:13.257943",
+      "timestamp": "2025-11-11T21:19:19.257069",
       "total_seeds_tested": 1
     },
     "Heretic.yaml": {
