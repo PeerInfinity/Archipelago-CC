@@ -17,6 +17,113 @@ class LADXGameExportHandler(GenericGameExportHandler):
         # Will add game-specific helpers as we discover them during testing
         return super().expand_helper(helper_name)
 
+    def handle_complex_exit_rule(self, exit_name: str, access_rule_method):
+        """
+        Extract the actual condition from LADX entrance objects.
+
+        LADX entrances store the actual condition in entrance.condition attribute,
+        not in the access_rule method. We extract it directly here to avoid
+        the isinstance pattern that the analyzer can't handle.
+        """
+        # access_rule_method is a bound method, so we can get the instance
+        if hasattr(access_rule_method, '__self__'):
+            entrance = access_rule_method.__self__
+
+            # Check if this is a LinksAwakeningEntrance with a condition attribute
+            if hasattr(entrance, 'condition'):
+                condition = entrance.condition
+
+                # Case 1: None = always accessible
+                if condition is None:
+                    logger.debug(f"LADX exit '{exit_name}' has no condition, always accessible")
+                    return {'type': 'constant', 'value': True}
+
+                # Case 2: String = item or event name
+                elif isinstance(condition, str):
+                    logger.debug(f"LADX exit '{exit_name}' requires item/event: {condition}")
+                    return {
+                        'type': 'item_check',
+                        'item': condition
+                    }
+
+                # Case 3: LADXR condition object (AND/OR) - convert to rules
+                else:
+                    logger.debug(f"LADX exit '{exit_name}' has LADXR condition object, converting to rules")
+                    converted_rule = self._convert_ladxr_condition_to_rule(condition)
+                    if converted_rule:
+                        return converted_rule
+                    # If conversion failed, return None to use normal analysis
+                    logger.warning(f"LADX exit '{exit_name}' LADXR condition conversion failed, using normal analysis")
+                    return None
+
+        # If we can't extract the condition, return None to use normal analysis
+        return None
+
+    def _convert_ladxr_condition_to_rule(self, condition) -> Optional[Dict[str, Any]]:
+        """
+        Convert a LADXR condition object (AND/OR) to a rule structure.
+
+        LADXR uses AND and OR classes with private __items and __children attributes.
+        We access them using Python's name mangling.
+        """
+        # Get the class name
+        class_name = condition.__class__.__name__
+
+        if class_name == 'OR':
+            # Access private attributes using name mangling
+            items = getattr(condition, '_OR__items', [])
+            children = getattr(condition, '_OR__children', [])
+
+            conditions = []
+            # Add item checks
+            for item in items:
+                conditions.append(self._parse_ladxr_item(item))
+            # Recursively convert children
+            for child in children:
+                child_rule = self._convert_ladxr_condition_to_rule(child)
+                if child_rule:
+                    conditions.append(child_rule)
+
+            if len(conditions) == 1:
+                return conditions[0]
+            elif len(conditions) > 1:
+                return {
+                    'type': 'or',
+                    'conditions': conditions
+                }
+            else:
+                return None
+
+        elif class_name == 'AND':
+            # Access private attributes using name mangling
+            items = getattr(condition, '_AND__items', [])
+            children = getattr(condition, '_AND__children', [])
+
+            conditions = []
+            # Add item checks
+            for item in items:
+                conditions.append(self._parse_ladxr_item(item))
+            # Recursively convert children
+            for child in children:
+                child_rule = self._convert_ladxr_condition_to_rule(child)
+                if child_rule:
+                    conditions.append(child_rule)
+
+            if len(conditions) == 1:
+                return conditions[0]
+            elif len(conditions) > 1:
+                return {
+                    'type': 'and',
+                    'conditions': conditions
+                }
+            else:
+                return None
+
+        else:
+            # Unknown condition type
+            logger.warning(f"Unknown LADXR condition type: {class_name}")
+            return None
+
     def _parse_ladxr_condition_string(self, condition_str: str) -> Optional[Dict[str, Any]]:
         """
         Parse LADXR's special condition string format into rule structures.
