@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-04 22:15:41
+**Generated:** 2025-11-12 05:49:58
 
 **Source Data Created:** 2025-10-14T13:24:10.253834
 
-**Source Data Last Updated:** 2025-11-04T16:29:21.455292
+**Source Data Last Updated:** 2025-11-11T20:49:04.218919
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 27 (34.2%)
-- **Failed:** 52 (65.8%)
+- **Passed:** 28 (35.4%)
+- **Failed:** 51 (64.6%)
 
 ## Test Results
 
@@ -26,7 +26,7 @@
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ⚫ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | ArchipIDLE | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
-| Blasphemous | ❌ Failed seed 1 | 1 | 4.17 | 13.1 | 🟡 31.8% | ✅ | ✅ |
+| Blasphemous | ✅ Passed seeds 1-10 | 1 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed seed 1 | 0 | 2.1 | 10.9 | 🟡 19.3% | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 4.4 | 4.4 | 🟢 Complete | ✅ | ✅ |
