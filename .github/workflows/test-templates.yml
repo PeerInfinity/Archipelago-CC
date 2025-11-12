@@ -29,6 +29,9 @@ on:
           - quick
           - full
 
+permissions:
+  contents: write  # Allow pushing commits and creating branches
+
 jobs:
   # Quick test - runs on every PR/push and manual trigger with 'quick'
   quick-test:
