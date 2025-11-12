@@ -4,13 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
+<<<<<<< Updated upstream
 **Generated:** 2025-11-12 05:49:58
+=======
+**Generated:** 2025-11-12 16:37:27
+>>>>>>> Stashed changes
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 28 (35.4%)
-- **Failed:** 51 (64.6%)
+- **Passed:** 27 (34.2%)
+- **Failed:** 52 (65.8%)
 
 ## Test Results
 
@@ -19,7 +23,7 @@
 | A Hat in Time | ✅ Passed | 0 | ✅ | 232 | 223 | ✅ | 232 | 232 | ✅ | ✅ |
 | A Link to the Past | ✅ Passed | 0 | ✅ | 268 | 249 | ✅ | 268 | 268 | ✅ | ✅ |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131 | 131 | ✅ | 131 | 131 | ✅ | ⚫ |
-| Adventure | ✅ Passed | 0 | ✅ | 25 | 24 | ✅ | 25 | 25 | ✅ | ⚫ |
+| Adventure | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ✅ | ⚫ |
 | Aquaria | ✅ Passed | 0 | ✅ | 237 | 218 | ✅ | 237 | 237 | ✅ | ✅ |
 | ArchipIDLE | ✅ Passed | 0 | ✅ | 200 | 200 | ✅ | 200 | 200 | ✅ | ✅ |
 | Blasphemous | ❌ Failed | 0 | ❌ | 289 | 304 | ❌ | 0 | 305 | ✅ | ✅ |

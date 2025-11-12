@@ -4,7 +4,7 @@
     "batch_processing_time_minutes": 4.6,
     "batch_processing_time_seconds": 274.9,
     "created": "2025-11-01T20:22:44.438555",
-    "last_updated": "2025-11-01T22:05:20.869898",
+    "last_updated": "2025-11-12T16:37:19.521331",
     "script_version": "1.0.0"
   },
   "results": {
@@ -162,31 +162,32 @@
       "game_name": "adventure",
       "generation": {
         "error_count": 0,
-        "processing_time_seconds": 3.18,
+        "error_type": null,
+        "processing_time_seconds": 2.38,
         "return_code": 0,
         "success": true,
         "warning_count": 0
       },
       "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
+        "first_failure_player": 1,
+        "player_number": 1,
         "player_results": {
-          "player_3": {
-            "error_count": 3,
+          "player_1": {
+            "error_count": 1,
             "pass_fail": "passed",
-            "passed": true,
-            "player_number": 3,
-            "return_code": 0,
-            "sphere_reached": 5.8,
-            "total_spheres": 5.8,
+            "passed": false,
+            "player_number": 1,
+            "return_code": 1,
+            "sphere_reached": 3.1,
+            "total_spheres": 3.1,
             "warning_count": 0
           }
         },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 5.22,
-        "success": true,
-        "total_players_tested": 3
+        "players_failed": 1,
+        "players_passed": 0,
+        "processing_time_seconds": 1.48,
+        "success": false,
+        "total_players_tested": 1
       },
       "prerequisite_check": {
         "all_prerequisites_passed": true,
@@ -197,7 +198,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_name": "Adventure.yaml",
-      "timestamp": "2025-11-01T22:01:18.939274",
+      "timestamp": "2025-11-12T16:37:15.561392",
       "world_info": {
         "exporter_path": "exporter/games/adventure.py",
         "game_logic_path": null,

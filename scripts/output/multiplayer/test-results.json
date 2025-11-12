@@ -4,7 +4,7 @@
     "batch_processing_time_minutes": 40.5,
     "batch_processing_time_seconds": 2429.3,
     "created": "2025-10-08T12:38:50.087301",
-    "last_updated": "2025-10-22T13:44:32.751897",
+    "last_updated": "2025-11-12T16:37:27.354366",
     "script_version": "1.0.0"
   },
   "results": {
@@ -141,24 +141,25 @@
       "game_name": "adventure",
       "generation": {
         "error_count": 0,
-        "processing_time_seconds": 2.4,
+        "error_type": null,
+        "processing_time_seconds": 2.59,
         "return_code": 0,
         "success": true,
         "warning_count": 0
       },
       "multiplayer_test": {
-        "client1_locations_checked": 25,
-        "client1_manually_checkable": 24,
-        "client1_passed": true,
-        "client2_locations_received": 25,
-        "client2_passed": true,
-        "client2_total_locations": 25,
-        "error_count": 0,
-        "locations_checked": 25,
-        "processing_time_seconds": 10.33,
-        "return_code": 0,
-        "success": true,
-        "total_locations": 25,
+        "client1_locations_checked": 0,
+        "client1_manually_checkable": 0,
+        "client1_passed": false,
+        "client2_locations_received": 0,
+        "client2_passed": false,
+        "client2_total_locations": 0,
+        "error_count": 1,
+        "locations_checked": 0,
+        "processing_time_seconds": 1.5,
+        "return_code": 1,
+        "success": false,
+        "total_locations": 0,
         "warning_count": 0
       },
       "rules_file": {
@@ -169,7 +170,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_name": "Adventure.yaml",
-      "timestamp": "2025-10-22T13:05:15.708561",
+      "timestamp": "2025-11-12T16:37:23.171361",
       "world_info": {
         "exporter_path": "exporter/games/adventure.py",
         "game_logic_path": null,
