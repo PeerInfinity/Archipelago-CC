@@ -580,6 +580,20 @@ export function createStateSnapshotInterface(
           return finalSnapshotInterface.isLocationAccessible(targetName);
       }
 
+      // Handle can_reach_region method (Python alias for can_reach with Region type)
+      if (methodName === 'can_reach_region' && args.length >= 1) {
+        const regionName = args[0];
+        // args[1] would be player_id in Python but we ignore it in single-player context
+        return finalSnapshotInterface.isRegionReachable(regionName);
+      }
+
+      // Handle can_reach_location method (Python alias for can_reach with Location type)
+      if (methodName === 'can_reach_location' && args.length >= 1) {
+        const locationName = args[0];
+        // args[1] would be player_id in Python but we ignore it in single-player context
+        return finalSnapshotInterface.isLocationAccessible(locationName);
+      }
+
       // Handle StateManager inventory methods
       if (methodName === 'has_any' && args.length >= 1) {
         const items = args[0];
