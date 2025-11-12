@@ -316,12 +316,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Starting Room - HI",
-                    444400,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -340,12 +336,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Starting Room - HIDDEN",
-                    444401,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -494,12 +486,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hidden Room - DEAD END",
-                    444406,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -518,12 +506,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hidden Room - OPEN",
-                    444407,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -591,12 +575,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Seeker - Achievement",
-                    444409,
-                    "AccessRequirements(rooms={'Hidden Room'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -679,12 +659,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Second Room - Good Luck",
-                    445203,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -953,12 +929,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hub Room - ORDER",
-                    444432,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -977,12 +949,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hub Room - SLAUGHTER",
-                    444433,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1001,12 +969,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hub Room - TRACE",
-                    444436,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1025,12 +989,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hub Room - RAT",
-                    444437,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1049,12 +1009,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hub Room - OPEN",
-                    444438,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1073,12 +1029,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hub Room - LOST",
-                    444440,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1196,12 +1148,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Pilgrim Antechamber - PILGRIM",
-                    444447,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1220,12 +1168,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Pilgrim Room - HOT CRUST",
-                    445205,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1272,12 +1216,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Pilgrim Room - THIS",
-                    444449,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'gray'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1567,12 +1507,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Crossroads - DECAY",
-                    444462,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1591,12 +1527,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Crossroads - NOPE",
-                    444463,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1615,12 +1547,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Crossroads - WE ROT",
-                    444465,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1639,12 +1567,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Crossroads - BEND HI",
-                    444469,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1663,12 +1587,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Crossroads - THE EYES",
-                    444470,
-                    "AccessRequirements(rooms={'Crossroads'}, doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1687,12 +1607,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Crossroads - TURN/RUNT",
-                    445206,
-                    "AccessRequirements(rooms={'Orange Tower Fourth Floor'}, doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1711,12 +1627,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Crossroads - WORDS, SWORD",
-                    445207,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1763,12 +1675,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Crossroads - LOST Pair",
-                    445208,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1836,12 +1744,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Amen Name Area - AMEN, NAME",
-                    445209,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -1999,12 +1903,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Tenacious - Achievement",
-                    444491,
-                    "AccessRequirements(rooms={'Crossroads', 'Dread Hallway', 'Hub Room', 'Outside The Agreeable'}, doors=set(), colors={'black', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2023,12 +1923,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Tenacious - Palindromes",
-                    445210,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2047,12 +1943,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Tenacious - White Palindromes",
-                    445211,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2117,12 +2009,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Symmetry Room - NEAR, FAR",
-                    445204,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2190,12 +2078,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Symmetry Room - WARTS, STRAW",
-                    445212,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2263,12 +2147,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Symmetry Room - LEAF, FEEL",
-                    445213,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2471,12 +2351,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Agreeable - MASSACRED",
-                    444496,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2495,12 +2371,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Agreeable - BLACK",
-                    444497,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2519,12 +2391,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Agreeable - CLOSE",
-                    444498,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2543,12 +2411,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Agreeable - RIGHT",
-                    444501,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2631,12 +2495,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Agreeable - Lookout Panels",
-                    445271,
-                    "AccessRequirements(rooms={'Elements Area', 'Orange Tower Fifth Floor', 'Outside The Bold', 'Suits Area'}, doors=set(), colors={'blue', 'green', 'purple', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2704,12 +2564,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dread Hallway - DREAD",
-                    444516,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2777,12 +2633,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Agreeable - Achievement",
-                    444517,
-                    "AccessRequirements(rooms={'Outside The Agreeable'}, doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2801,12 +2653,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Agreeable - BYE",
-                    444518,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -2994,12 +2842,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hedge Maze - DOWN",
-                    444530,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3018,12 +2862,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hedge Maze - Hide and Seek",
-                    445215,
-                    "AccessRequirements(rooms={'Outside The Agreeable'}, doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3085,12 +2925,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Perceptive - Achievement",
-                    444546,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'green'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3109,12 +2945,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Perceptive - GAZE",
-                    444547,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3182,12 +3014,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Fearless - First Floor Puzzles",
-                    445216,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3212,12 +3040,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Fearless - Second Floor Puzzles",
-                    445217,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3242,12 +3066,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Fearless - Achievement",
-                    444560,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3351,12 +3171,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Observant - Achievement",
-                    444565,
-                    "AccessRequirements(rooms={'The Observant'}, doors=set(), colors={'green'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3375,12 +3191,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Observant - SIX",
-                    444569,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'green'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3399,12 +3211,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Observant - FOUR (1), FOUR (2)",
-                    445218,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'green'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3490,12 +3298,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Incomparable - Achievement",
-                    444585,
-                    "AccessRequirements(rooms={'Courtyard', 'Eight Room', 'Elements Area'}, doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3514,12 +3318,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Giant Sevens",
-                    445219,
-                    "AccessRequirements(rooms={'Courtyard', 'Elements Area'}, doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3742,12 +3542,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Orange Tower First Floor - SECRET",
-                    444602,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3766,12 +3562,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Orange Tower First Floor - DADS + ALE",
-                    444603,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'orange'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -3790,12 +3582,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Orange Tower First Floor - Salt Pepper Door",
-                    445220,
-                    "AccessRequirements(rooms={'Directional Gallery'}, doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -4046,12 +3834,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Orange Tower Third Floor - DEER + WREN",
-                    444606,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'orange'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -4070,12 +3854,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Color Barriers - RED and YELLOW",
-                    445221,
-                    "AccessRequirements(rooms={'Color Hunt', 'Directional Gallery'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -4278,12 +4058,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Orange Tower Fourth Floor - LEARNS + UNSEW",
-                    444609,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'orange'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -4302,12 +4078,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Orange Tower Fourth Floor - HOT CRUSTS",
-                    444610,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -4326,12 +4098,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Orange Tower Fourth Floor - IRK HORN",
-                    444611,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -4525,12 +4293,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Orange Tower Fifth Floor - DRAWL + RUNS",
-                    444615,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'orange'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -4549,12 +4313,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Orange Tower Fifth Floor - SIZE (Small), SIZE (Big)",
-                    445222,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'gray'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -4778,12 +4538,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The End (Solved)",
-                    null,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -5687,12 +5443,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Courtyard - FIRST, SECOND, THIRD, FOURTH",
-                    445224,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -5757,12 +5509,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Colorful - White",
-                    445225,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -5830,12 +5578,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Colorful - Black",
-                    445226,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -5903,12 +5647,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Colorful - Red",
-                    445227,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -5976,12 +5716,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Colorful - Yellow",
-                    445228,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6049,12 +5785,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Colorful - Blue",
-                    445229,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6122,12 +5854,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Colorful - Purple",
-                    445230,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6195,12 +5923,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Colorful - Orange",
-                    445231,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'orange'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6268,12 +5992,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Colorful - Green",
-                    445232,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'green'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6341,12 +6061,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Colorful - Brown",
-                    445233,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'brown'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6414,12 +6130,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Colorful - Gray",
-                    445234,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'gray'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6484,12 +6196,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Colorful - Achievement",
-                    444652,
-                    "AccessRequirements(rooms={'The Colorful (Black)', 'The Colorful (Blue)', 'The Colorful (Brown)', 'The Colorful (Gray)', 'The Colorful (Green)', 'The Colorful (Orange)', 'The Colorful (Purple)', 'The Colorful (Red)', 'The Colorful (White)', 'The Colorful (Yellow)'}, doors=set(), colors={'black', 'blue', 'brown', 'gray', 'green', 'orange', 'purple', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6578,12 +6286,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Welcome Back Area - WELCOME BACK",
-                    444653,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6602,12 +6306,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Welcome Back Area - CLOCKWISE",
-                    444655,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6690,12 +6390,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Owl Hallway - STRAYS",
-                    444656,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6714,12 +6410,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Owl Hallway - READS + RUST",
-                    444657,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'orange'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6946,12 +6638,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Initiated - UNCOVER",
-                    444664,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6970,12 +6658,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Initiated - OXEN",
-                    444665,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -6994,12 +6678,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Color Barriers - BLUE and YELLOW",
-                    445235,
-                    "AccessRequirements(rooms={'Color Hunt', 'Directional Gallery'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7018,12 +6698,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Color Barriers - RED and BLUE",
-                    445236,
-                    "AccessRequirements(rooms={'Color Hunt', 'Orange Tower Third Floor'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7042,12 +6718,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Color Barriers - GREEN, ORANGE and PURPLE",
-                    445237,
-                    "AccessRequirements(rooms={'Color Hunt', 'Courtyard', 'Directional Gallery', 'Orange Tower Third Floor', 'Outside The Agreeable', 'Outside The Initiated'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7072,12 +6744,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Initiated - Achievement",
-                    444676,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7139,12 +6807,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Optimistic - Achievement",
-                    444667,
-                    "AccessRequirements(rooms={'Directional Gallery', 'The Bearer', 'The Observant', 'Yellow Backside Area'}, doors=set(), colors={'green', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7212,12 +6876,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Traveled - Achievement",
-                    444693,
-                    "AccessRequirements(rooms={'Hub Room'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7236,12 +6896,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Traveled - HELLO",
-                    444698,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7510,12 +7166,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Bold - UNOPEN",
-                    444711,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7534,12 +7186,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Bold - BEGIN",
-                    444712,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7564,12 +7212,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Bold - Achievement",
-                    444725,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7733,12 +7377,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Undeterred - ART + ART",
-                    444743,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'orange'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7757,12 +7397,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Undeterred - PEN",
-                    444744,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7781,12 +7417,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Undeterred - RAINY",
-                    444750,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black', 'brown', 'purple', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7805,12 +7437,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Undeterred - ZERO",
-                    444751,
-                    "AccessRequirements(rooms={'Amen Name Area', 'Art Gallery', 'Crossroads', 'Dead End Area', 'Directional Gallery', 'Elements Area', 'Hot Crusts Area', 'Hub Room', 'Knight Night Exit', 'Number Hunt', 'Orange Tower Fifth Floor', 'Outside The Agreeable', 'Outside The Bold', 'Outside The Initiated', 'Outside The Undeterred', 'Rhyme Room (Cross)', 'The Bearer (East)', 'The Bearer (South)', 'The Eyes They See', 'The Traveled', 'Yellow Backside Area'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7829,12 +7457,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Undeterred - ONE",
-                    444752,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7853,12 +7477,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Twos",
-                    445238,
-                    "AccessRequirements(rooms={'Outside The Undeterred'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7877,12 +7497,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Threes",
-                    445239,
-                    "AccessRequirements(rooms={'Outside The Undeterred'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7901,12 +7517,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Fours",
-                    445240,
-                    "AccessRequirements(rooms={'Dead End Area', 'Hub Room', 'Outside The Undeterred', 'The Traveled'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -7931,12 +7543,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Undeterred - Achievement",
-                    444759,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8046,12 +7654,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Fives",
-                    445241,
-                    "AccessRequirements(rooms={'Dead End Area', 'Directional Gallery', 'Hub Room', 'Outside The Agreeable', 'Outside The Undeterred', 'The Traveled'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8070,12 +7674,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Sixes",
-                    445242,
-                    "AccessRequirements(rooms={'Dead End Area', 'Directional Gallery', 'Hub Room', 'Number Hunt', 'Outside The Agreeable', 'Outside The Bold', 'Outside The Undeterred', 'The Bearer (East)', 'The Bearer (South)', 'The Traveled'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8094,12 +7694,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Sevens",
-                    445243,
-                    "AccessRequirements(rooms={'Dead End Area', 'Directional Gallery', 'Hub Room', 'Knight Night Exit', 'Number Hunt', 'Outside The Agreeable', 'Outside The Bold', 'Outside The Initiated', 'Outside The Undeterred', 'The Bearer (East)', 'The Bearer (South)', 'The Traveled'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8118,12 +7714,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Eights",
-                    445244,
-                    "AccessRequirements(rooms={'Art Gallery', 'Crossroads', 'Dead End Area', 'Directional Gallery', 'Hot Crusts Area', 'Hub Room', 'Knight Night Exit', 'Number Hunt', 'Outside The Agreeable', 'Outside The Bold', 'Outside The Initiated', 'Outside The Undeterred', 'The Bearer (East)', 'The Bearer (South)', 'The Eyes They See', 'The Traveled'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8142,12 +7734,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Nines",
-                    445245,
-                    "AccessRequirements(rooms={'Amen Name Area', 'Art Gallery', 'Crossroads', 'Dead End Area', 'Directional Gallery', 'Elements Area', 'Hot Crusts Area', 'Hub Room', 'Knight Night Exit', 'Number Hunt', 'Orange Tower Fifth Floor', 'Outside The Agreeable', 'Outside The Bold', 'Outside The Initiated', 'Outside The Undeterred', 'Rhyme Room (Cross)', 'The Bearer (East)', 'The Bearer (South)', 'The Eyes They See', 'The Traveled', 'Yellow Backside Area'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8365,12 +7953,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Directional Gallery - 834283054",
-                    444792,
-                    "AccessRequirements(rooms={'Dead End Area', 'Directional Gallery', 'Hub Room', 'Number Hunt', 'Outside The Agreeable', 'Outside The Undeterred', 'The Traveled'}, doors=set(), colors={'blue', 'orange', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8389,12 +7973,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Directional Gallery - PARANOID",
-                    444793,
-                    "AccessRequirements(rooms={'Dead End Area', 'Directional Gallery', 'Hub Room', 'Number Hunt', 'Outside The Agreeable', 'Outside The Undeterred', 'The Traveled'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8413,12 +7993,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Directional Gallery - WADED + WEE",
-                    444795,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'orange'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8437,12 +8013,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Directional Gallery - TURN, LEARN",
-                    445246,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8528,12 +8100,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Color Hunt - EXIT",
-                    444806,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8552,12 +8120,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Color Hunt - RED",
-                    444808,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8576,12 +8140,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Color Hunt - BLUE",
-                    444809,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8600,12 +8160,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Color Hunt - YELLOW",
-                    444810,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8624,12 +8180,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Color Hunt - GREEN",
-                    444811,
-                    "AccessRequirements(rooms={'Color Hunt', 'Directional Gallery', 'Outside The Initiated'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8648,12 +8200,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Color Hunt - PURPLE",
-                    444812,
-                    "AccessRequirements(rooms={'Color Hunt', 'Orange Tower Third Floor', 'Outside The Initiated'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8672,12 +8220,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Color Hunt - ORANGE",
-                    444813,
-                    "AccessRequirements(rooms={'Color Hunt', 'Directional Gallery', 'Orange Tower Third Floor'}, doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8724,12 +8268,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Champion's Rest - YOU",
-                    444814,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'gray'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8860,12 +8400,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Bearer - Achievement",
-                    444819,
-                    "AccessRequirements(rooms={'Bearer Side Area', 'Cross Tower (East)', 'Cross Tower (North)', 'Cross Tower (South)', 'Cross Tower (West)', 'Elements Area', 'Orange Tower Fifth Floor', 'Outside The Bold', 'Suits Area', 'The Bearer (East)', 'The Bearer (North)', 'The Bearer (South)', 'The Bearer (West)'}, doors=set(), colors={'blue', 'purple', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8884,12 +8420,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Bearer - MIDDLE",
-                    444820,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -8908,12 +8440,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Bearer - FARTHER",
-                    444821,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -9266,12 +8794,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Bearer - SHORTCUT",
-                    445247,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -10511,12 +10035,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Steady - Achievement",
-                    444859,
-                    "AccessRequirements(rooms={'The Steady (Amber)', 'The Steady (Amethyst)', 'The Steady (Blueberry)', 'The Steady (Carnation)', 'The Steady (Cherry)', 'The Steady (Emerald)', 'The Steady (Lemon)', 'The Steady (Lilac)', 'The Steady (Lime)', 'The Steady (Orange)', 'The Steady (Plum)', 'The Steady (Rose)', 'The Steady (Ruby)', 'The Steady (Sapphire)', 'The Steady (Sunflower)', 'The Steady (Topaz)'}, doors=set(), colors={'black', 'blue', 'purple', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -10727,12 +10247,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Knight Night Room - TRUSTED",
-                    445248,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -10959,12 +10475,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Artistic - Achievement",
-                    444885,
-                    "AccessRequirements(rooms={'The Artistic (Apple)', 'The Artistic (Lattice)', 'The Artistic (Panda)'}, doors=set(), colors={'black', 'blue', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -10983,12 +10495,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Artistic - Smiley and Panda",
-                    445249,
-                    "AccessRequirements(rooms={'The Artistic (Panda)'}, doors=set(), colors={'blue', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -11074,12 +10582,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Artistic - Panda and Lattice",
-                    445250,
-                    "AccessRequirements(rooms={'The Artistic (Lattice)'}, doors=set(), colors={'black', 'blue', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -11186,12 +10690,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Artistic - Lattice and Apple",
-                    445251,
-                    "AccessRequirements(rooms={'The Artistic (Apple)'}, doors=set(), colors={'black', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -11277,12 +10777,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Artistic - Apple and Smiley",
-                    445252,
-                    "AccessRequirements(rooms={'The Artistic (Smiley)'}, doors=set(), colors={'black', 'blue', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -11312,12 +10808,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Discerning - Achievement",
-                    444920,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -11400,12 +10892,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Eyes They See - NEAR",
-                    444937,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -11538,12 +11026,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Wondrous - SHRINK",
-                    444940,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -11824,12 +11308,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Wondrous - Achievement",
-                    444947,
-                    "AccessRequirements(rooms={'The Wondrous (Bookcase)', 'The Wondrous (Chandelier)', 'The Wondrous (Table)', 'The Wondrous (Window)'}, doors=set(), colors={'blue', 'brown', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -11957,12 +11437,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hallway Room (1) - OUT",
-                    444505,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -11981,12 +11457,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hallway Room - First Room",
-                    445214,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12051,12 +11523,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hallway Room - Second Room",
-                    445253,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12121,12 +11589,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hallway Room - Third Room",
-                    445254,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12191,12 +11655,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Hallway Room - Fourth Room",
-                    445255,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12279,12 +11739,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Elements Area - UNDISTRACTED",
-                    444961,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12370,12 +11826,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Wanderer - WANDERLUST",
-                    444966,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'orange'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12400,12 +11852,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Wanderer - Achievement",
-                    444967,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'orange'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12587,12 +12035,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Art Gallery - ORDER",
-                    444981,
-                    "AccessRequirements(rooms={'Art Gallery (Fourth Floor)'}, doors=set(), colors={'blue', 'brown', 'gray', 'orange', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12636,12 +12080,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Art Gallery - First Floor Puzzles",
-                    445256,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue', 'purple', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12685,12 +12125,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Art Gallery - Second Floor Puzzles",
-                    445257,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black', 'blue', 'brown', 'red'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12734,12 +12170,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Art Gallery - Third Floor Puzzles",
-                    445258,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12783,12 +12215,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Art Gallery - Fourth Floor Puzzles",
-                    445259,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue', 'orange', 'purple', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12877,12 +12305,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Rhyme Room (Smiley) - Puzzles Toward Target",
-                    445260,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -12968,12 +12392,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Rhyme Room (Cross) - Exit Puzzles",
-                    445261,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -13059,12 +12479,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Rhyme Room - Circle/Smiley Wall",
-                    445262,
-                    "AccessRequirements(rooms={'Rhyme Room (Smiley)'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -13174,12 +12590,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Rhyme Room - Circle/Looped Square Wall",
-                    445263,
-                    "AccessRequirements(rooms={'Rhyme Room (Circle)'}, doors=set(), colors={'blue', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -13198,12 +12610,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Rhyme Room - Cross/Looped Square Wall",
-                    445264,
-                    "AccessRequirements(rooms={'Rhyme Room (Cross)'}, doors=set(), colors={'black', 'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -13222,12 +12630,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Rhyme Room - Target/Looped Square Wall",
-                    445265,
-                    "AccessRequirements(rooms={'Rhyme Room (Target)'}, doors=set(), colors={'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -13313,12 +12717,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Rhyme Room (Target) - Puzzles Toward Cross",
-                    445266,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'purple'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -13383,12 +12783,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Room Room - BASE",
-                    445076,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'blue', 'gray', 'purple', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -13519,12 +12915,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Outside The Wise - KITTEN, CAT",
-                    445267,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black', 'brown'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -13549,12 +12941,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "The Wise - Achievement",
-                    445086,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black', 'brown'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -13722,12 +13110,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Challenge Room - WELCOME",
-                    445176,
-                    "AccessRequirements(rooms=set(), doors=set(), colors=set(), items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
@@ -13746,12 +13130,8 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Challenge Room - Achievement",
-                    445178,
-                    "AccessRequirements(rooms=set(), doors=set(), colors={'black', 'blue', 'brown', 'gray', 'orange', 'purple', 'red', 'yellow'}, items=set(), progression={}), the_master=False, postgame=False"
-                  ]
+                  "type": "name",
+                  "name": "location"
                 }
               ]
             },
