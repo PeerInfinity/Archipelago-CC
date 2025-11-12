@@ -81,15 +81,20 @@ jobs:
           source .venv/bin/activate
           npx playwright install chromium
 
-      - name: Start HTTP server
+      - name: Run quick test (with HTTP server)
         run: |
+          # Start HTTP server in background
           python -m http.server 8000 &
+          SERVER_PID=$!
           sleep 2
 
-      - name: Run quick test
-        run: |
+          # Run template test
           source .venv/bin/activate
           python scripts/test/test-all-templates.py --include-list "A Link to the Past.yaml" -p
+
+          # Stop HTTP server
+          kill $SERVER_PID || true
+          sleep 1
 
       - name: Run regression tests
         run: |
