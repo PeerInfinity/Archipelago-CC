@@ -51,7 +51,6 @@ export default defineConfig({
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-gpu',
-        '--single-process', // May help in constrained environments
       ],
     },
   },
