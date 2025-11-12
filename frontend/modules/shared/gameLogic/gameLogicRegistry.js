@@ -251,6 +251,8 @@ import { mmbn3StateModule } from './mmbn3/mmbn3Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import { helperFunctions as mm2HelperFunctions } from './mm2/mm2Logic.js';
+import * as v6Logic from './v6/v6Logic.js';
+import { v6StateModule } from './v6/v6Logic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -387,6 +389,12 @@ const GAME_REGISTRY = {
     helperFunctions: mm2HelperFunctions,
     worldClasses: ['MM2World'],
     aliases: ['Mega Man 2', 'MM2', 'Megaman 2']
+  },
+  'VVVVVV': {
+    logicModule: v6Logic.v6StateModule,
+    helperFunctions: v6Logic.helperFunctions,
+    worldClasses: ['V6World'],
+    aliases: ['VVVVVV', 'V6']
   },
   // Add more games here as they're implemented
   'Generic': {
