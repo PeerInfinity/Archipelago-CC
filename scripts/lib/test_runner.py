@@ -233,6 +233,8 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
         multiplayer_env['TEST_GAME'] = test_game
         multiplayer_env['TEST_SEED'] = seed
+        # Disable --single-process flag for multiplayer tests (incompatible with multi-context tests)
+        multiplayer_env['DISABLE_SINGLE_PROCESS'] = 'true'
 
         # Show the command being run
         print(f"  Command: {' '.join(multiplayer_cmd)}")
