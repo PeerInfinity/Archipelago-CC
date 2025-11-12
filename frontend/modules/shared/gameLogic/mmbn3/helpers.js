@@ -13,40 +13,43 @@
 export function explore_score(snapshot, staticData) {
     let score = 0;
 
-    // Get the reachable regions from the snapshot
-    const reachableRegions = snapshot?.reachable_regions || new Set();
+    // Helper function to check if a region is reachable
+    const canReachRegion = (regionName) => {
+        const status = snapshot?.regionReachability?.[regionName];
+        return status === 'reachable' || status === 'checked';
+    };
 
     // If you can reach WWW Island, you can access everything
-    if (reachableRegions.has('WWW Island')) {
+    if (canReachRegion('WWW Island')) {
         return 999;
     }
 
     // Add scores for each accessible region
-    if (reachableRegions.has('SciLab Overworld')) {
+    if (canReachRegion('SciLab Overworld')) {
         score += 3;
     }
-    if (reachableRegions.has('SciLab Cyberworld')) {
+    if (canReachRegion('SciLab Cyberworld')) {
         score += 1;
     }
-    if (reachableRegions.has('Yoka Overworld')) {
+    if (canReachRegion('Yoka Overworld')) {
         score += 2;
     }
-    if (reachableRegions.has('Yoka Cyberworld')) {
+    if (canReachRegion('Yoka Cyberworld')) {
         score += 1;
     }
-    if (reachableRegions.has('Beach Overworld')) {
+    if (canReachRegion('Beach Overworld')) {
         score += 3;
     }
-    if (reachableRegions.has('Beach Cyberworld')) {
+    if (canReachRegion('Beach Cyberworld')) {
         score += 1;
     }
-    if (reachableRegions.has('Undernet')) {
+    if (canReachRegion('Undernet')) {
         score += 2;
     }
-    if (reachableRegions.has('Deep Undernet')) {
+    if (canReachRegion('Deep Undernet')) {
         score += 1;
     }
-    if (reachableRegions.has('Secret Area')) {
+    if (canReachRegion('Secret Area')) {
         score += 1;
     }
 

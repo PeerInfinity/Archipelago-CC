@@ -29,3 +29,9 @@
 - Registered 'MegaMan Battle Network 3' in GAME_REGISTRY
 - World class: MMBN3World
 - Aliases: MegaMan Battle Network 3, MMBN3, mmbn3
+
+### 4. Fixed snapshot access format in explore_score
+- Changed from snapshot.reachable_regions (incorrect) to snapshot.regionReachability (correct)
+- Used same pattern as other games: `snapshot?.regionReachability?.[regionName]`
+- Check for status === 'reachable' or status === 'checked'
+- Tests now passing for all Numberman Code locations
