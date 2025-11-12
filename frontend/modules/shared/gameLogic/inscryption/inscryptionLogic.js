@@ -53,7 +53,7 @@ export const helperFunctions = {
    * @returns {boolean} True if Act 2 requirements are met
    */
   has_act2_requirements(state, playerId) {
-    const filmRoll = snapshot?.inventory?.['Film Roll'] || 0;
+    const filmRoll = state?.inventory?.['Film Roll'] || 0;
     return filmRoll > 0;
   },
 
@@ -65,14 +65,14 @@ export const helperFunctions = {
    */
   has_all_epitaph_pieces(state, playerId) {
     // Check for "Epitaph Pieces" item (might be plural form)
-    const epitaphPieces = snapshot?.inventory?.['Epitaph Pieces'] || 0;
+    const epitaphPieces = state?.inventory?.['Epitaph Pieces'] || 0;
     if (epitaphPieces >= 1) {
       return true;
     }
-    
+
     // Also check for individual "Epitaph Piece" items
     // Inscryption typically has 9 epitaph pieces total
-    const epitaphPiece = snapshot?.inventory?.['Epitaph Piece'] || 0;
+    const epitaphPiece = state?.inventory?.['Epitaph Piece'] || 0;
     return epitaphPiece >= 9;
   },
 
@@ -83,8 +83,8 @@ export const helperFunctions = {
    * @returns {boolean} True if both camera and meat are collected
    */
   has_camera_and_meat(state, playerId) {
-    const camera = snapshot?.inventory?.['Camera Replica'] || 0;
-    const meat = snapshot?.inventory?.['Pile Of Meat'] || 0;
+    const camera = state?.inventory?.['Camera Replica'] || 0;
+    const meat = state?.inventory?.['Pile Of Meat'] || 0;
     return camera > 0 && meat > 0;
   },
 
@@ -95,7 +95,7 @@ export const helperFunctions = {
    * @returns {boolean} True if monocle is collected
    */
   has_monocle(state, playerId) {
-    const monocle = snapshot?.inventory?.['Monocle'] || 0;
+    const monocle = state?.inventory?.['Monocle'] || 0;
     return monocle > 0;
   },
 
@@ -122,7 +122,7 @@ export const helperFunctions = {
    * @returns {boolean} True if transcendence requirements are met
    */
   has_transcendence_requirements(state, playerId) {
-    const quill = snapshot?.inventory?.['Quill'] || 0;
+    const quill = state?.inventory?.['Quill'] || 0;
     return quill > 0 && helperFunctions.has_gems_and_battery(state, playerId);
   },
 
@@ -140,10 +140,10 @@ export const helperFunctions = {
     if (Array.isArray(itemList) && itemList.length === 1 && Array.isArray(itemList[0])) {
       items = itemList[0];
     }
-    
+
     // Check if player has all items
     for (const item of items) {
-      const count = snapshot?.inventory?.[item] || 0;
+      const count = state?.inventory?.[item] || 0;
       if (count === 0) {
         return false;
       }
@@ -169,8 +169,8 @@ export const helperFunctions = {
    * @returns {boolean} True if gems module and battery are collected
    */
   has_gems_and_battery(state, playerId) {
-    const gems = snapshot?.inventory?.['Gems Module'] || 0;
-    const battery = snapshot?.inventory?.['Inspectometer Battery'] || 0;
+    const gems = state?.inventory?.['Gems Module'] || 0;
+    const battery = state?.inventory?.['Inspectometer Battery'] || 0;
     return gems > 0 && battery > 0;
   },
 
@@ -181,7 +181,7 @@ export const helperFunctions = {
    * @returns {boolean} True if inspectometer battery is collected
    */
   has_inspectometer_battery(state, playerId) {
-    const battery = snapshot?.inventory?.['Inspectometer Battery'] || 0;
+    const battery = state?.inventory?.['Inspectometer Battery'] || 0;
     return battery > 0;
   },
 };
