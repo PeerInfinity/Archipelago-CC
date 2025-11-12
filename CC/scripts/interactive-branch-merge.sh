@@ -10,18 +10,35 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# Function to get unfetched branches (remote branches without local counterpart)
+# Function to get unfetched branches (remote branches without local counterpart or with updates)
 get_unfetched_branches() {
     local unfetched=()
 
     # Get all remote branches directly from the remote server (without fetching)
-    while IFS=$'\t' read -r hash ref; do
+    while IFS=$'\t' read -r remote_hash ref; do
         # Extract branch name from refs/heads/branch_name
         local branch_name="${ref#refs/heads/}"
 
         # Check if local branch exists
         if ! git show-ref --verify --quiet "refs/heads/$branch_name"; then
-            unfetched+=("$branch_name")
+            # Branch doesn't exist locally at all
+            unfetched+=("$branch_name [new]")
+        else
+            # Branch exists locally, check if remote has updates
+            local local_hash=$(git rev-parse "refs/heads/$branch_name" 2>/dev/null)
+            if [ "$local_hash" != "$remote_hash" ]; then
+                # Remote has different commits (could be ahead, behind, or diverged)
+                # Check if remote is ahead of local
+                if git merge-base --is-ancestor "$local_hash" "$remote_hash" 2>/dev/null; then
+                    unfetched+=("$branch_name [updates]")
+                elif git merge-base --is-ancestor "$remote_hash" "$local_hash" 2>/dev/null; then
+                    # Local is ahead of remote, skip
+                    :
+                else
+                    # Branches have diverged
+                    unfetched+=("$branch_name [diverged]")
+                fi
+            fi
         fi
     done < <(git ls-remote --heads origin)
 
@@ -34,11 +51,11 @@ select_branch() {
     local count=${#branches[@]}
 
     if [ "$count" -eq 0 ]; then
-        echo -e "${GREEN}All remote branches have been fetched!${NC}" >&2
+        echo -e "${GREEN}All remote branches are up to date!${NC}" >&2
         return 1
     fi
 
-    echo -e "${BLUE}=== Unfetched Branches ===${NC}" >&2
+    echo -e "${BLUE}=== Branches with Updates ===${NC}" >&2
     for i in "${!branches[@]}"; do
         echo "$((i+1)). ${branches[$i]}" >&2
     done
@@ -80,13 +97,26 @@ select_merge_type() {
 
 # Function to perform fetch and merge
 fetch_and_merge() {
-    local branch_name="$1"
+    local branch_with_status="$1"
     local merge_type="$2"
+
+    # Extract branch name by removing status suffix
+    local branch_name="${branch_with_status%% \[*\]}"
+    local status=""
+    if [[ "$branch_with_status" =~ \[(.*)\] ]]; then
+        status="${BASH_REMATCH[1]}"
+    fi
 
     echo -e "${YELLOW}Fetching branch: $branch_name${NC}"
 
     # Fetch the specific branch
-    git fetch origin "$branch_name:$branch_name"
+    if [ "$status" = "new" ]; then
+        # For new branches, create local branch from remote
+        git fetch origin "$branch_name:$branch_name"
+    else
+        # For existing branches with updates or diverged, just fetch
+        git fetch origin "$branch_name:$branch_name"
+    fi
 
     echo -e "${GREEN}Successfully fetched $branch_name${NC}"
     echo
@@ -165,9 +195,9 @@ main() {
         # Get unfetched branches
         mapfile -t unfetched_branches < <(get_unfetched_branches)
 
-        # If no unfetched branches, exit
+        # If no branches with updates, exit
         if [ "${#unfetched_branches[@]}" -eq 0 ]; then
-            echo -e "${GREEN}All remote branches have been fetched!${NC}"
+            echo -e "${GREEN}All remote branches are up to date!${NC}"
             break
         fi
 
@@ -191,16 +221,16 @@ main() {
         # Check if this was the last branch
         mapfile -t remaining_branches < <(get_unfetched_branches)
         if [ "${#remaining_branches[@]}" -eq 0 ]; then
-            echo -e "${GREEN}That was the last unfetched branch!${NC}"
+            echo -e "${GREEN}That was the last branch with updates!${NC}"
             break
         fi
 
         # Ask if user wants to continue
-        echo -e "${BLUE}Remaining unfetched branches: ${#remaining_branches[@]}${NC}"
+        echo -e "${BLUE}Remaining branches with updates: ${#remaining_branches[@]}${NC}"
         read -p "Continue with another branch? [Y/n]: " continue_choice
 
         if [[ "$continue_choice" =~ ^[Nn]$ ]]; then
-            echo -e "${BLUE}Exiting. You can run this script again to fetch remaining branches.${NC}"
+            echo -e "${BLUE}Exiting. You can run this script again to update remaining branches.${NC}"
             break
         fi
 
