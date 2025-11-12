@@ -25,31 +25,15 @@ class KH2GameExportHandler(BaseGameExportHandler):
             # final_form_region_access has complex logic - leave as helper
             # valor, wisdom, master forms need investigation
         }
-        
-        # Special handling for form_list_unlock
-        if helper_name == 'form_list_unlock' and args and len(args) >= 2:
-            # Extract the form name from the first argument
-            form_arg = args[0]
-            level_arg = args[1] if len(args) > 1 else {'type': 'constant', 'value': 0}
 
-            # Get the level requirement
-            level_required = 0
-            if level_arg.get('type') == 'constant':
-                level_required = level_arg.get('value')
+        # form_list_unlock should be kept as a helper call for JavaScript evaluation
+        # Don't expand it - let it be processed as a helper in the frontend
+        if helper_name == 'form_list_unlock':
+            return None  # Return None to preserve as helper
 
-            # For level 0, just check if we have the form
-            # Return the form_arg as-is so it can be properly resolved by the analyzer
-            if level_required == 0:
-                return {'type': 'item_check', 'item': form_arg}
-
-            # For higher levels, just require the form itself for now
-            # TODO: Implement proper form level counting logic
-            # Return the form_arg as-is so it can be properly resolved by the analyzer
-            return {'type': 'item_check', 'item': form_arg}
-        
         if helper_name in helper_map:
             return helper_map[helper_name]
-            
+
         # For now, preserve helper nodes as-is until we identify specific helpers
         return None
         
