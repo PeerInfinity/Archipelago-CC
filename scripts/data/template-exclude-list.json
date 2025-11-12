@@ -10,10 +10,6 @@
       "reason": "Requires manual configuration and is not compatible with automated testing"
     },
     {
-      "name": "Secret of Evermore.yaml",
-      "reason": "Uses an external tool (pyevermizer) for its logic and is not compatible with automated testing"
-    },
-    {
       "name": "Sudoku.yaml",
       "reason": "Cannot be used for generating worlds"
     },
