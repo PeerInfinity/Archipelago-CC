@@ -4,7 +4,7 @@
     "batch_processing_time_minutes": 13.3,
     "batch_processing_time_seconds": 795.3,
     "created": "2025-10-14T13:24:10.253834",
-    "last_updated": "2025-11-12T01:22:36.912360",
+    "last_updated": "2025-11-12T01:22:52.011505",
     "script_version": "1.0.0"
   },
   "results": {
@@ -6776,7 +6776,7 @@
     },
     "DLCQuest.yaml": {
       "consecutive_passes_before_failure": 0,
-      "first_failure_reason": "Test error: [10:04:18 PM] [spoilers-full-run-1761887056219] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":22,\"processedEvents\":1,\"errorCount\":1,\"sphereCount\":2,\"testLogPath\":\"presets/dlcquest/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+      "first_failure_reason": "Test failed at sphere 0.1",
       "first_failure_seed": 1,
       "individual_results": {
         "1": {
@@ -6788,7 +6788,8 @@
           "game_name": "dlcquest",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 2.2,
+            "error_type": null,
+            "processing_time_seconds": 5.4,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -6803,7 +6804,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 4.98,
+            "processing_time_seconds": 9.07,
             "return_code": 1,
             "sphere_reached": 0.1,
             "success": false,
@@ -6811,7 +6812,7 @@
             "warning_count": 0
           },
           "template_name": "DLCQuest.yaml",
-          "timestamp": "2025-10-30T22:04:12.067441",
+          "timestamp": "2025-11-12T01:22:37.081716",
           "world_info": {
             "exporter_path": "exporter/games/dlcquest.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js",
@@ -6833,7 +6834,7 @@
         "failure_rate": 1.0
       },
       "template_name": "DLCQuest.yaml",
-      "timestamp": "2025-10-30T22:04:12.067441",
+      "timestamp": "2025-11-12T01:22:37.060003",
       "total_seeds_tested": 1
     },
     "DOOM 1993.yaml": {
