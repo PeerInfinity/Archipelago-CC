@@ -2312,38 +2312,18 @@ Epona from Lon Lon Ranch
 Fire Temple Boss Key Chest
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Lower Locked Door
    =>   Fire Temple Lower Locked Door
 Fire Temple Boulder Maze Lower Chest
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Big Lava Room
    =>   Fire Temple Big Lava Room -> Fire Temple Big Lava Room -> Fire Temple Elevator Room
@@ -2352,19 +2332,9 @@ Fire Temple Boulder Maze Lower Chest
 Fire Temple Boulder Maze Side Room Chest
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Big Lava Room
    =>   Fire Temple Big Lava Room -> Fire Temple Big Lava Room -> Fire Temple Elevator Room
@@ -2373,19 +2343,9 @@ Fire Temple Boulder Maze Side Room Chest
 Fire Temple Boulder Maze Upper Chest
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Big Lava Room
    =>   Fire Temple Big Lava Room -> Fire Temple Big Lava Room -> Fire Temple Elevator Room
@@ -2396,19 +2356,9 @@ Fire Temple Boulder Maze Upper Chest
 Fire Temple Compass Chest
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Big Lava Room
    =>   Fire Temple Big Lava Room -> Fire Temple Big Lava Room -> Fire Temple Elevator Room
@@ -2420,57 +2370,27 @@ Fire Temple Compass Chest
 Fire Temple Flare Dancer Chest
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Lower Locked Door
    =>   Fire Temple Lower Locked Door
 Fire Temple GS Boss Key Loop
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Lower Locked Door
    =>   Fire Temple Lower Locked Door
 Fire Temple GS Boulder Maze
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Big Lava Room
    =>   Fire Temple Big Lava Room -> Fire Temple Big Lava Room -> Fire Temple Elevator Room
@@ -2479,19 +2399,9 @@ Fire Temple GS Boulder Maze
 Fire Temple GS Scarecrow Climb
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Big Lava Room
    =>   Fire Temple Big Lava Room -> Fire Temple Big Lava Room -> Fire Temple Elevator Room
@@ -2502,19 +2412,9 @@ Fire Temple GS Scarecrow Climb
 Fire Temple GS Scarecrow Top
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Big Lava Room
    =>   Fire Temple Big Lava Room -> Fire Temple Big Lava Room -> Fire Temple Elevator Room
@@ -2525,38 +2425,18 @@ Fire Temple GS Scarecrow Top
 Fire Temple GS Song of Time Room
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Big Lava Room
    =>   Fire Temple Big Lava Room
 Fire Temple Highest Goron Chest
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Big Lava Room
    =>   Fire Temple Big Lava Room -> Fire Temple Big Lava Room -> Fire Temple Elevator Room
@@ -2569,37 +2449,17 @@ Fire Temple Highest Goron Chest
 Fire Temple Lower Fairy Pot
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower
 Fire Temple Map Chest
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Big Lava Room
    =>   Fire Temple Big Lava Room -> Fire Temple Big Lava Room -> Fire Temple Elevator Room
@@ -2609,19 +2469,9 @@ Fire Temple Map Chest
 Fire Temple Megaton Hammer Chest
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Big Lava Room
    =>   Fire Temple Big Lava Room -> Fire Temple Big Lava Room -> Fire Temple Elevator Room
@@ -2634,37 +2484,17 @@ Fire Temple Megaton Hammer Chest
 Fire Temple Near Boss Chest
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower
 Fire Temple Scarecrow Chest
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Big Lava Room
    =>   Fire Temple Big Lava Room -> Fire Temple Big Lava Room -> Fire Temple Elevator Room
@@ -2675,19 +2505,9 @@ Fire Temple Scarecrow Chest
 Fire Temple Volvagia Heart
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Boss Door
    =>   Fire Temple Boss Door -> Fire Temple Boss Door -> Volvagia Boss Room
@@ -6715,19 +6535,9 @@ Twinrova
 Volvagia
         Menu -> New Game
    =>   Root -> Root -> Root Exits
-   =>   Root Exits -> Root Exits -> Child Spawn
-   =>   Child Spawn -> Child Spawn -> KF Links House
-   =>   KF Links House -> KF Links House -> Kokiri Forest
-   =>   Kokiri Forest -> Kokiri Forest -> LW Bridge From Forest
-   =>   LW Bridge From Forest -> LW Bridge From Forest -> LW Bridge
-   =>   LW Bridge -> LW Bridge -> Hyrule Field
-   =>   Hyrule Field -> Hyrule Field -> Kakariko Village
-   =>   Kakariko Village -> Kakariko Village -> Kak Behind Gate
-   =>   Kak Behind Gate -> Kak Behind Gate -> Death Mountain
-   =>   Death Mountain -> Death Mountain -> Goron City
-   =>   Goron City -> Goron City -> GC Darunias Chamber
-   =>   GC Darunias Chamber -> GC Darunias Chamber -> DMC Lower Local
-   =>   DMC Lower Local -> DMC Lower Local -> DMC Fire Temple Entrance
+   =>   Root Exits -> Root Exits -> Bolero of Fire Warp
+   =>   Bolero of Fire Warp -> Bolero of Fire Warp -> DMC Central Local
+   =>   DMC Central Local -> DMC Central Local -> DMC Fire Temple Entrance
    =>   DMC Fire Temple Entrance -> DMC Fire Temple Entrance -> Fire Temple Lower
    =>   Fire Temple Lower -> Fire Temple Lower -> Fire Temple Boss Door
    =>   Fire Temple Boss Door -> Fire Temple Boss Door -> Volvagia Boss Room

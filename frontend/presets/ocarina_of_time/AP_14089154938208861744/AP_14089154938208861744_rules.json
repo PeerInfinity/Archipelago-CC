@@ -606,19 +606,8 @@
             "name": "KF Links House Cow",
             "id": 67028,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Milk",
@@ -1008,19 +997,8 @@
             "name": "LW Deku Scrub Near Bridge",
             "id": 67047,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Rupees (5)",
@@ -1219,19 +1197,8 @@
             "name": "LW Deku Scrub Near Deku Theater Right",
             "id": 67049,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Nut (5)",
@@ -1244,19 +1211,8 @@
             "name": "LW Deku Scrub Near Deku Theater Left",
             "id": 67048,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Stick (1)",
@@ -1614,19 +1570,8 @@
             "name": "HF Ocarina of Time Item",
             "id": 67059,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Ocarina",
@@ -1639,19 +1584,8 @@
             "name": "Song from Ocarina of Time",
             "id": 67014,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Minuet of Forest",
@@ -4808,19 +4742,8 @@
             "name": "Market Bazaar Item 6",
             "id": 67081,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Arrows (50)",
@@ -4969,26 +4892,20 @@
             "name": "Market Potion Shop Item 1",
             "id": 67084,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
-                    },
-                    "attr": "_oot_has_bottle"
+              "type": "function_call",
+              "function": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "CollectionState"
                   },
-                  "args": []
+                  "attr": "_oot_has_bottle"
                 },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+                "args": []
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Green Potion",
@@ -5006,29 +4923,26 @@
                 {
                   "type": "function_call",
                   "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "CollectionState"
+                      },
+                      "attr": "_oot_has_bottle"
                     },
-                    "attr": "_oot_has_bottle"
+                    "args": []
                   },
                   "args": []
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
+                  "type": "function_call",
+                  "function": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "args": []
                 }
               ]
             },
@@ -5054,26 +4968,20 @@
             "name": "Market Potion Shop Item 4",
             "id": 67087,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
-                    },
-                    "attr": "_oot_has_bottle"
+              "type": "function_call",
+              "function": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "CollectionState"
                   },
-                  "args": []
+                  "attr": "_oot_has_bottle"
                 },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+                "args": []
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Fairy's Spirit",
@@ -5097,26 +5005,20 @@
             "name": "Market Potion Shop Item 6",
             "id": 67089,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
-                    },
-                    "attr": "_oot_has_bottle"
+              "type": "function_call",
+              "function": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "CollectionState"
                   },
-                  "args": []
+                  "attr": "_oot_has_bottle"
                 },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+                "args": []
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Bottle Bug",
@@ -5129,26 +5031,20 @@
             "name": "Market Potion Shop Item 7",
             "id": 67090,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
-                    },
-                    "attr": "_oot_has_bottle"
+              "type": "function_call",
+              "function": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "CollectionState"
                   },
-                  "args": []
+                  "attr": "_oot_has_bottle"
                 },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+                "args": []
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Poe",
@@ -5166,29 +5062,26 @@
                 {
                   "type": "function_call",
                   "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "CollectionState"
+                      },
+                      "attr": "_oot_has_bottle"
                     },
-                    "attr": "_oot_has_bottle"
+                    "args": []
                   },
                   "args": []
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
+                  "type": "function_call",
+                  "function": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "args": []
                 }
               ]
             },
@@ -5238,19 +5131,8 @@
             "name": "Market Bombchu Shop Item 1",
             "id": 67092,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Bombchu (5)",
@@ -5263,19 +5145,8 @@
             "name": "Market Bombchu Shop Item 2",
             "id": 67093,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Bombchu (10)",
@@ -5288,19 +5159,8 @@
             "name": "Market Bombchu Shop Item 3",
             "id": 67094,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Bombchu (10)",
@@ -5313,19 +5173,8 @@
             "name": "Market Bombchu Shop Item 4",
             "id": 67095,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Bombchu (10)",
@@ -5338,29 +5187,12 @@
             "name": "Market Bombchu Shop Item 5",
             "id": 67096,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "constant",
+                "value": true
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Bombchu (20)",
@@ -5373,29 +5205,12 @@
             "name": "Market Bombchu Shop Item 6",
             "id": 67097,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "constant",
+                "value": true
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Bombchu (20)",
@@ -5408,29 +5223,12 @@
             "name": "Market Bombchu Shop Item 7",
             "id": 67098,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "constant",
+                "value": true
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Bombchu (20)",
@@ -5443,29 +5241,12 @@
             "name": "Market Bombchu Shop Item 8",
             "id": 67099,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "constant",
+                "value": true
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Bombchu (20)",
@@ -6258,19 +6039,8 @@
             "name": "Kak Bazaar Item 6",
             "id": 67144,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Arrows (50)",
@@ -6361,29 +6131,26 @@
                 {
                   "type": "function_call",
                   "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "CollectionState"
+                      },
+                      "attr": "_oot_has_bottle"
                     },
-                    "attr": "_oot_has_bottle"
+                    "args": []
                   },
                   "args": []
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
+                  "type": "function_call",
+                  "function": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "args": []
                 }
               ]
             },
@@ -6409,26 +6176,20 @@
             "name": "Kak Potion Shop Item 4",
             "id": 67150,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
-                    },
-                    "attr": "_oot_has_bottle"
+              "type": "function_call",
+              "function": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "CollectionState"
                   },
-                  "args": []
+                  "attr": "_oot_has_bottle"
                 },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+                "args": []
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Green Potion",
@@ -6446,29 +6207,26 @@
                 {
                   "type": "function_call",
                   "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "CollectionState"
+                      },
+                      "attr": "_oot_has_bottle"
                     },
-                    "attr": "_oot_has_bottle"
+                    "args": []
                   },
                   "args": []
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
+                  "type": "function_call",
+                  "function": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "args": []
                 }
               ]
             },
@@ -6483,26 +6241,20 @@
             "name": "Kak Potion Shop Item 6",
             "id": 67152,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
-                    },
-                    "attr": "_oot_has_bottle"
+              "type": "function_call",
+              "function": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "CollectionState"
                   },
-                  "args": []
+                  "attr": "_oot_has_bottle"
                 },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+                "args": []
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Bottle Bug",
@@ -6515,26 +6267,20 @@
             "name": "Kak Potion Shop Item 7",
             "id": 67153,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
-                    },
-                    "attr": "_oot_has_bottle"
+              "type": "function_call",
+              "function": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "CollectionState"
                   },
-                  "args": []
+                  "attr": "_oot_has_bottle"
                 },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+                "args": []
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Poe",
@@ -6547,26 +6293,20 @@
             "name": "Kak Potion Shop Item 8",
             "id": 67154,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
-                    },
-                    "attr": "_oot_has_bottle"
+              "type": "function_call",
+              "function": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "CollectionState"
                   },
-                  "args": []
+                  "attr": "_oot_has_bottle"
                 },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+                "args": []
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Fairy's Spirit",
@@ -7888,19 +7628,8 @@
             "name": "GC Shop Item 4",
             "id": 67190,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Bombs (30)",
@@ -7913,29 +7642,12 @@
             "name": "GC Shop Item 5",
             "id": 67191,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "constant",
+                "value": true
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Goron Tunic",
@@ -8174,19 +7886,8 @@
             "name": "DMC Deku Scrub",
             "id": 67199,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Bombs (5) for 35 Rupees",
@@ -8654,19 +8355,8 @@
             "name": "ZR Frogs Ocarina Game",
             "id": 67208,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Rupees (5)",
@@ -9624,29 +9314,12 @@
             "name": "ZD Shop Item 1",
             "id": 67221,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "constant",
+                "value": true
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Zora Tunic",
@@ -9703,19 +9376,8 @@
             "name": "ZD Shop Item 6",
             "id": 67226,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Arrows (50)",
@@ -9733,29 +9395,26 @@
                 {
                   "type": "function_call",
                   "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "CollectionState"
+                      },
+                      "attr": "_oot_has_bottle"
                     },
-                    "attr": "_oot_has_bottle"
+                    "args": []
                   },
                   "args": []
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
+                  "type": "function_call",
+                  "function": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "args": []
                 }
               ]
             },
@@ -10383,19 +10042,8 @@
             "name": "Deku Theater Mask of Truth",
             "id": 67045,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Piece of Heart",
@@ -10420,19 +10068,8 @@
             "name": "LW Deku Scrub Grotto Rear",
             "id": 67051,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Seeds (30)",
@@ -10445,19 +10082,8 @@
             "name": "LW Deku Scrub Grotto Front",
             "id": 67050,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Deku Stick Capacity",
@@ -10516,19 +10142,8 @@
             "name": "SFM Deku Scrub Grotto Rear",
             "id": 67057,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Red Potion for 30 Rupees",
@@ -10546,29 +10161,26 @@
                 {
                   "type": "function_call",
                   "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "CollectionState"
+                      },
+                      "attr": "_oot_has_bottle"
                     },
-                    "attr": "_oot_has_bottle"
+                    "args": []
                   },
                   "args": []
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
+                  "type": "function_call",
+                  "function": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "args": []
                 }
               ]
             },
@@ -10629,19 +10241,8 @@
             "name": "LLR Deku Scrub Grotto Left",
             "id": 67108,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Nut (5)",
@@ -10654,19 +10255,8 @@
             "name": "LLR Deku Scrub Grotto Right",
             "id": 67110,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Bombs (5) for 35 Rupees",
@@ -10679,19 +10269,8 @@
             "name": "LLR Deku Scrub Grotto Center",
             "id": 67109,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Seeds (30)",
@@ -10905,19 +10484,8 @@
             "name": "HF Deku Scrub Grotto",
             "id": 67064,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Bombs (20)",
@@ -11656,19 +11224,8 @@
             "name": "GC Deku Scrub Grotto Left",
             "id": 67182,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Nut (5)",
@@ -11681,19 +11238,8 @@
             "name": "GC Deku Scrub Grotto Right",
             "id": 67184,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Bombs (5) for 35 Rupees",
@@ -11706,19 +11252,8 @@
             "name": "GC Deku Scrub Grotto Center",
             "id": 67183,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Arrows (30)",
@@ -11843,19 +11378,8 @@
             "name": "DMC Deku Scrub Grotto Left",
             "id": 67200,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Nut (5)",
@@ -11868,19 +11392,8 @@
             "name": "DMC Deku Scrub Grotto Right",
             "id": 67202,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Bombs (5) for 35 Rupees",
@@ -11893,19 +11406,8 @@
             "name": "DMC Deku Scrub Grotto Center",
             "id": 67201,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Arrows (30)",
@@ -12053,19 +11555,8 @@
             "name": "ZR Deku Scrub Grotto Rear",
             "id": 67212,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Red Potion for 30 Rupees",
@@ -12083,29 +11574,26 @@
                 {
                   "type": "function_call",
                   "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "CollectionState"
+                      },
+                      "attr": "_oot_has_bottle"
                     },
-                    "attr": "_oot_has_bottle"
+                    "args": []
                   },
                   "args": []
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
+                  "type": "function_call",
+                  "function": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "args": []
                 }
               ]
             },
@@ -12143,19 +11631,8 @@
             "name": "LH Deku Scrub Grotto Left",
             "id": 67241,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Nut (5)",
@@ -12168,19 +11645,8 @@
             "name": "LH Deku Scrub Grotto Right",
             "id": 67243,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Bombs (5) for 35 Rupees",
@@ -12193,19 +11659,8 @@
             "name": "LH Deku Scrub Grotto Center",
             "id": 67242,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Seeds (30)",
@@ -12241,19 +11696,8 @@
             "name": "Colossus Deku Scrub Grotto Rear",
             "id": 67275,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Red Potion for 30 Rupees",
@@ -12271,29 +11715,26 @@
                 {
                   "type": "function_call",
                   "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "CollectionState"
+                      },
+                      "attr": "_oot_has_bottle"
                     },
-                    "attr": "_oot_has_bottle"
+                    "args": []
                   },
                   "args": []
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
+                  "type": "function_call",
+                  "function": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "args": []
                 }
               ]
             },
@@ -12431,19 +11872,8 @@
             "name": "GV Deku Scrub Grotto Rear",
             "id": 67253,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Red Potion for 30 Rupees",
@@ -12461,29 +11891,26 @@
                 {
                   "type": "function_call",
                   "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "CollectionState"
+                      },
+                      "attr": "_oot_has_bottle"
                     },
-                    "attr": "_oot_has_bottle"
+                    "args": []
                   },
                   "args": []
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
+                  "type": "function_call",
+                  "function": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "args": []
                 }
               ]
             },
@@ -13624,19 +13051,8 @@
             "name": "Dodongos Cavern Deku Scrub Lobby",
             "id": 67310,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Shield",
@@ -13829,19 +13245,8 @@
             "name": "Dodongos Cavern Deku Scrub Side Room Near Dodongos",
             "id": 67309,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Stick (1)",
@@ -13973,19 +13378,8 @@
             "name": "Dodongos Cavern Deku Scrub Near Bomb Bag Right",
             "id": 67312,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Seeds (30)",
@@ -13998,19 +13392,8 @@
             "name": "Dodongos Cavern Deku Scrub Near Bomb Bag Left",
             "id": 67311,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Nut (5)",
@@ -14395,19 +13778,8 @@
             "name": "Jabu Jabus Belly Deku Scrub",
             "id": 67338,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Deku Nut (5)",
@@ -20352,19 +19724,8 @@
             "name": "Ganons Castle Deku Scrub Center-Left",
             "id": 67652,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Bombs (5) for 35 Rupees",
@@ -20377,19 +19738,8 @@
             "name": "Ganons Castle Deku Scrub Center-Right",
             "id": 67653,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Arrows (30)",
@@ -20402,19 +19752,8 @@
             "name": "Ganons Castle Deku Scrub Right",
             "id": 67654,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "rule",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "old_rule",
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Buy Red Potion for 30 Rupees",
@@ -20432,29 +19771,26 @@
                 {
                   "type": "function_call",
                   "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "CollectionState"
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "CollectionState"
+                      },
+                      "attr": "_oot_has_bottle"
                     },
-                    "attr": "_oot_has_bottle"
+                    "args": []
                   },
                   "args": []
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "rule",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "old_rule",
-                      "args": []
-                    }
-                  ]
+                  "type": "function_call",
+                  "function": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "args": []
                 }
               ]
             },

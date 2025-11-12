@@ -140,6 +140,27 @@ class ASTVisitorMixin:
             func_name = func_info['name']
             logging.debug(f"Checking helper: {func_name}")
 
+            # Check if this is a callable closure variable that should be analyzed
+            if func_name in self.closure_vars and callable(self.closure_vars[func_name]):
+                logging.debug(f"Detected call to callable closure variable '{func_name}', analyzing it inline")
+                try:
+                    from .analysis import analyze_rule
+                    analyzed_result = analyze_rule(
+                        rule_func=self.closure_vars[func_name],
+                        closure_vars=self.closure_vars.copy(),
+                        seen_funcs=self.seen_funcs,
+                        game_handler=self.game_handler,
+                        player_context=self.player_context
+                    )
+                    if analyzed_result and analyzed_result.get('type') != 'error':
+                        logging.debug(f"Successfully inlined callable closure variable '{func_name}'")
+                        return analyzed_result
+                    else:
+                        logging.debug(f"Could not analyze callable '{func_name}', treating as regular helper")
+                except Exception as e:
+                    logging.debug(f"Error analyzing callable closure variable '{func_name}': {e}")
+                    # Fall through to treat as regular helper
+
             # Filter arguments for game handler and result creation
             filtered_args = self._filter_special_args(args_with_nodes)
             
@@ -556,6 +577,27 @@ class ASTVisitorMixin:
                 elif hasattr(value, 'value') and isinstance(value.value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to enum constant value: {value.value}")
                     return {'type': 'constant', 'value': value.value}
+                # Handle callable closure variables (like 'rule' and 'old_rule' from exclusion_rules)
+                elif callable(value):
+                    logging.debug(f"visit_Name: Detected callable closure variable '{name}', attempting to analyze it")
+                    try:
+                        from .analysis import analyze_rule
+                        analyzed_result = analyze_rule(
+                            rule_func=value,
+                            closure_vars=self.closure_vars.copy(),
+                            seen_funcs=self.seen_funcs,
+                            game_handler=self.game_handler,
+                            player_context=self.player_context
+                        )
+                        if analyzed_result and analyzed_result.get('type') != 'error':
+                            logging.debug(f"visit_Name: Successfully analyzed callable '{name}', returning inlined result")
+                            return analyzed_result
+                        else:
+                            logging.debug(f"visit_Name: Could not analyze callable '{name}', falling back to helper")
+                            # Fall through to return as helper
+                    except Exception as e:
+                        logging.debug(f"visit_Name: Error analyzing callable '{name}': {e}")
+                        # Fall through to return as helper
 
             # Also check function defaults for lambda parameters
             if name not in self.closure_vars:
