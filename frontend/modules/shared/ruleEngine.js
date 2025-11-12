@@ -794,6 +794,48 @@ export const evaluateRule = (rule, context, depth = 0) => {
           }
         }
 
+        // Special handling for self.method_name() calls (e.g., self.explore_score())
+        // These should be treated as helper function calls
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.object?.type === 'name' &&
+          rule.function.object.name === 'self'
+        ) {
+          const helperName = rule.function.attr;
+          const args = (rule.args || []).map(
+            (arg) => evaluateRule(arg, context, depth + 1)
+          );
+
+          // If any argument evaluation results in undefined, return undefined
+          if (args.some((arg) => arg === undefined)) {
+            result = undefined;
+            break;
+          }
+
+          // Call the helper function through context.executeHelper
+          if (context.executeHelper) {
+            try {
+              result = context.executeHelper(helperName, ...args);
+              break;
+            } catch (error) {
+              logError(
+                LOG_LEVEL.ERROR,
+                `[ruleEngine] [evaluateRule] Failed to execute helper '${helperName}':`,
+                error
+              );
+              result = undefined;
+              break;
+            }
+          } else {
+            logError(
+              LOG_LEVEL.ERROR,
+              `[ruleEngine] [evaluateRule] No executeHelper method in context for helper '${helperName}'`
+            );
+            result = undefined;
+            break;
+          }
+        }
+
         const func = evaluateRule(rule.function, context, depth + 1);
 
         if (typeof func === 'undefined') {

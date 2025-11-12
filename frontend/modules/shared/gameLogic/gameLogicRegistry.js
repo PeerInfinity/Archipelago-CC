@@ -246,6 +246,8 @@ import { landstalkerStateModule } from './landstalker/landstalkerLogic.js';
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
 import * as mlssLogic from './mlss/mlssLogic.js';
 import { mlssStateModule } from './mlss/mlssLogic.js';
+import * as mmbn3Logic from './mmbn3/mmbn3Logic.js';
+import { mmbn3StateModule } from './mmbn3/mmbn3Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import { helperFunctions as mm2HelperFunctions } from './mm2/mm2Logic.js';
@@ -355,6 +357,12 @@ const GAME_REGISTRY = {
     helperFunctions: mlssLogic.helperFunctions,
     worldClasses: ['MLSSWorld'],
     aliases: ['Mario & Luigi Superstar Saga', 'MLSS']
+  },
+  'MegaMan Battle Network 3': {
+    logicModule: mmbn3Logic.mmbn3StateModule,
+    helperFunctions: mmbn3Logic.helperFunctions,
+    worldClasses: ['MMBN3World'],
+    aliases: ['MegaMan Battle Network 3', 'MMBN3', 'mmbn3']
   },
   'Pokemon Red and Blue': {
     logicModule: pokemon_rbLogic.pokemon_rbStateModule,
