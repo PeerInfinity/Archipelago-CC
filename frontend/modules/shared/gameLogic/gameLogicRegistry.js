@@ -257,6 +257,8 @@ import * as ootLogic from './oot/ootLogic.js';
 import { ootStateModule } from './oot/ootLogic.js';
 import * as sm64exLogic from './sm64ex/sm64exLogic.js';
 import { sm64exStateModule } from './sm64ex/sm64exLogic.js';
+import * as v6Logic from './v6/v6Logic.js';
+import { v6StateModule } from './v6/v6Logic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -417,6 +419,12 @@ const GAME_REGISTRY = {
     helperFunctions: sm64exLogic.helperFunctions,
     worldClasses: ['SM64World'],
     aliases: ['Super Mario 64', 'SM64', 'sm64ex']
+  },
+  'VVVVVV': {
+    logicModule: v6Logic.v6StateModule,
+    helperFunctions: v6Logic.helperFunctions,
+    worldClasses: ['V6World'],
+    aliases: ['VVVVVV', 'V6']
   },
   // Add more games here as they're implemented
   'Generic': {
