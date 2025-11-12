@@ -4,30 +4,13 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-**Generated:** 2025-11-12 05:49:58
-=======
-**Generated:** 2025-11-12 16:37:27
->>>>>>> Stashed changes
-=======
-**Generated:** 2025-11-12 16:45:13
->>>>>>> Stashed changes
-=======
-**Generated:** 2025-11-12 17:59:34
->>>>>>> Stashed changes
+**Generated:** 2025-11-12 20:49:46
 
 ## Summary
 
 - **Total Games:** 79
-<<<<<<< Updated upstream
-- **Passed:** 27 (34.2%)
-- **Failed:** 52 (65.8%)
-=======
-- **Passed:** 29 (36.7%)
-- **Failed:** 50 (63.3%)
->>>>>>> Stashed changes
+- **Passed:** 33 (41.8%)
+- **Failed:** 46 (58.2%)
 
 ## Test Results
 
@@ -36,7 +19,7 @@
 | A Hat in Time | ✅ Passed | 0 | ✅ | 232 | 223 | ✅ | 232 | 232 | ✅ | ✅ |
 | A Link to the Past | ✅ Passed | 0 | ✅ | 268 | 249 | ✅ | 268 | 268 | ✅ | ✅ |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131 | 131 | ✅ | 131 | 131 | ✅ | ⚫ |
-| Adventure | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ✅ | ⚫ |
+| Adventure | ✅ Passed | 0 | ✅ | 25 | 24 | ✅ | 25 | 25 | ✅ | ⚫ |
 | Aquaria | ✅ Passed | 0 | ✅ | 237 | 218 | ✅ | 237 | 237 | ✅ | ✅ |
 | ArchipIDLE | ✅ Passed | 0 | ✅ | 200 | 200 | ✅ | 200 | 200 | ✅ | ✅ |
 | Blasphemous | ❌ Failed | 1 | ✅ | 305 | 304 | ✅ | 305 | 305 | ✅ | ✅ |
@@ -52,13 +35,13 @@
 | DOOM 1993 | ✅ Passed | 0 | ✅ | 348 | 348 | ✅ | 348 | 348 | ✅ | ⚫ |
 | DOOM II | ✅ Passed | 0 | ✅ | 453 | 453 | ✅ | 453 | 453 | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed | 0 | ✅ | 453 | 453 | ✅ | 453 | 453 | ✅ | ⚫ |
-| Donkey Kong Country 3 | ✅ Passed | 0 | ✅ | 453 | 453 | ✅ | 453 | 453 | ✅ | ⚫ |
+| Donkey Kong Country 3 | ✅ Passed | 0 | ✅ | 180 | 180 | ✅ | 180 | 180 | ✅ | ⚫ |
 | Factorio | ❌ Failed | 0 | ❌ | 6 | 179 | ❌ | 0 | 186 | ✅ | ⚫ |
 | Faxanadu | ✅ Passed | 0 | ✅ | 114 | 110 | ✅ | 114 | 114 | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299 | 251 | ✅ | 299 | 299 | ✅ | ⚫ |
 | Heretic | ✅ Passed | 0 | ✅ | 502 | 502 | ✅ | 502 | 502 | ⚫ | ⚫ |
 | Hollow Knight | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ✅ | ✅ |
-| Hylics 2 | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ✅ | ⚫ |
+| Hylics 2 | ✅ Passed | 0 | ✅ | 134 | 133 | ✅ | 134 | 134 | ✅ | ⚫ |
 | Inscryption | ✅ Passed | 0 | ✅ | 100 | 100 | ✅ | 100 | 100 | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ✅ | ⚫ |
 | Kingdom Hearts | ❌ Failed | 0 | ❌ | 281 | 440 | ❌ | 0 | 440 | ✅ | ✅ |
@@ -66,7 +49,7 @@
 | Kirby's Dream Land 3 | ❌ Failed | 0 | ❌ | 27 | 65 | ❌ | 0 | 567 | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ❌ Failed | 49 | ❌ | 68 | 291 | ❌ | 0 | 298 | ✅ | ✅ |
 | Lingo | ❌ Failed | 0 | ❌ | 155 | 155 | ❌ | 0 | 156 | ✅ | ✅ |
-| Links Awakening DX | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ✅ | ⚫ |
+| Links Awakening DX | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ✅ | ✅ |
 | Lufia II Ancient Cave | ❌ Failed | 0 | ❌ | 11 | 35 | ❌ | 0 | 40 | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ❌ Failed | 0 | ❌ | 57 | 556 | ❌ | 0 | 557 | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | ✅ | 11 | 10 | ✅ | 11 | 11 | ⚫ | ⚫ |
@@ -76,7 +59,7 @@
 | Metamath | ✅ Passed | 0 | ✅ | 9 | 9 | ✅ | 9 | 9 | ✅ | ⚫ |
 | Muse Dash | ✅ Passed | 0 | ✅ | 90 | 90 | ✅ | 90 | 90 | ⚫ | ⚫ |
 | Noita | ✅ Passed | 0 | ✅ | 117 | 109 | ✅ | 117 | 117 | ⚫ | ⚫ |
-| Ocarina of Time | ❌ Failed | 2524 | ❌ | 0 | 0 | ❌ | 0 | 0 | ✅ | ⚫ |
+| Ocarina of Time | ❌ Failed | 32 | ❌ | 39 | 1053 | ❌ | 0 | 1272 | ✅ | ✅ |
 | Old School Runescape | ❌ Failed | 0 | ❌ | 7 | 76 | ❌ | 0 | 76 | ⚫ | ⚫ |
 | Overcooked! 2 | ❌ Failed | 0 | ❌ | 0 | 43 | ❌ | 0 | 215 | ⚫ | ⚫ |
 | Paint | ❌ Failed | 130 | ✅ | 130 | 130 | ✅ | 130 | 130 | ⚫ | ⚫ |
@@ -86,15 +69,15 @@
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223 | 221 | ✅ | 223 | 223 | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed | 0 | ❌ | 0 | 316 | ❌ | 0 | 316 | ⚫ | ⚫ |
 | Saving Princess | ❌ Failed | 0 | ❌ | 27 | 36 | ❌ | 0 | 37 | ✅ | ⚫ |
-| Secret of Evermore | ❌ Failed | 339 | ❌ | 0 | 0 | ❌ | 0 | 0 | ⚫ | ⚫ |
+| Secret of Evermore | ❌ Failed | 339 | ❌ | 339 | 339 | ❌ | 0 | 340 | ✅ | ⚫ |
 | Shivers | ❌ Failed | 0 | ❌ | 80 | 76 | ❌ | 0 | 114 | ⚫ | ⚫ |
-| Sonic Adventure 2 Battle | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ⚫ | ⚫ |
+| Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207 | 206 | ✅ | 207 | 207 | ✅ | ⚫ |
 | Starcraft 2 | ❌ Failed | 0 | ❌ | 25 | 663 | ❌ | 0 | 746 | ⚫ | ⚫ |
 | Stardew Valley | ❌ Failed | 718 | ❌ | 25 | 663 | ❌ | 0 | 746 | ⚫ | ⚫ |
 | Subnautica | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 135 | ⚫ | ⚫ |
-| Super Mario 64 | ❌ Failed | 2 | ❌ | 0 | 0 | ❌ | 0 | 0 | ⚫ | ⚫ |
+| Super Mario 64 | ❌ Failed | 0 | ❌ | 138 | 149 | ❌ | 0 | 149 | ✅ | ✅ |
 | Super Mario Land 2 | ❌ Failed | 0 | ❌ | 6 | 59 | ❌ | 0 | 60 | ⚫ | ⚫ |
-| Super Mario World | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ⚫ | ⚫ |
+| Super Mario World | ✅ Passed | 0 | ✅ | 108 | 108 | ✅ | 108 | 108 | ✅ | ⚫ |
 | Super Metroid | ❌ Failed | 0 | ❌ | 0 | 101 | ❌ | 0 | 109 | ⚫ | ⚫ |
 | TUNIC | ❌ Failed | 0 | ❌ | 172 | 302 | ❌ | 0 | 303 | ⚫ | ⚫ |
 | Terraria | ❌ Failed | 0 | ❌ | 0 | 63 | ❌ | 0 | 244 | ⚫ | ⚫ |
@@ -104,14 +87,14 @@
 | The Witness | ❌ Failed | 0 | ❌ | 0 | 132 | ❌ | 0 | 147 | ⚫ | ⚫ |
 | Timespinner | ❌ Failed | 0 | ❌ | 7 | 180 | ❌ | 0 | 185 | ⚫ | ⚫ |
 | Undertale | ❌ Failed | 0 | ❌ | 45 | 48 | ❌ | 0 | 51 | ⚫ | ⚫ |
-| VVVVVV | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ⚫ | ⚫ |
+| VVVVVV | ✅ Passed | 0 | ✅ | 20 | 20 | ✅ | 20 | 20 | ✅ | ✅ |
 | Wargroove | ❌ Failed | 0 | ❌ | 4 | 38 | ❌ | 0 | 39 | ⚫ | ⚫ |
 | WebDevJourney | ✅ Passed | 0 | ✅ | 62 | 61 | ✅ | 62 | 62 | ⚫ | ⚫ |
-| Yacht Dice | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ⚫ | ⚫ |
+| Yacht Dice | ❌ Failed | 0 | ❌ | 15 | 90 | ❌ | 0 | 90 | ✅ | ✅ |
 | Yoshi's Island | ❌ Failed | 0 | ❌ | 11 | 191 | ❌ | 0 | 207 | ⚫ | ⚫ |
 | Yu-Gi-Oh! 2006 | ❌ Failed | 2 | ❌ | 136 | 84 | ❌ | 0 | 978 | ⚫ | ⚫ |
 | Zillion | ❌ Failed | 147 | ✅ | 147 | 147 | ✅ | 147 | 147 | ⚫ | ⚫ |
-| shapez | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ⚫ | ⚫ |
+| shapez | ❌ Failed | 0 | ❌ | 21 | 139 | ❌ | 0 | 140 | ⚫ | ⚫ |
 
 ## Notes
 

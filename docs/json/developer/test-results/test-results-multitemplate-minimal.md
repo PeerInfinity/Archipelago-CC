@@ -4,19 +4,11 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-<<<<<<< Updated upstream
-**Generated:** 2025-11-12 05:49:58
+**Generated:** 2025-11-12 20:32:05
 
 **Source Data Created:** 2025-11-04T16:11:04.595013
 
-**Source Data Last Updated:** 2025-11-04T22:15:41.588876
-=======
-**Generated:** 2025-11-12 17:44:04
-
-**Source Data Created:** 2025-11-04T16:11:04.595013
-
-**Source Data Last Updated:** 2025-11-12T17:44:04.504640
->>>>>>> Stashed changes
+**Source Data Last Updated:** 2025-11-12T20:32:04.920834
 
 ## Summary
 
