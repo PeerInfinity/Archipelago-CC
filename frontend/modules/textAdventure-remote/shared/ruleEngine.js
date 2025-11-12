@@ -558,6 +558,9 @@ export const evaluateRule = (rule, context, depth = 0) => {
           if (rule.attr === 'keyblades_unlock_chests') {
             return false; // Default value
           }
+          if (rule.attr === 'advanced_logic') {
+            return false; // Default value
+          }
 
           return undefined;
         }
