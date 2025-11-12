@@ -1,0 +1,378 @@
+name: Test Templates
+
+on:
+  # Run on push to main branch
+  push:
+    branches:
+      - main
+    paths:
+      - 'Players/Templates/*.yaml'
+      - 'scripts/test/**'
+      - '.github/workflows/test-templates.yml'
+
+  # Run on pull requests
+  pull_request:
+    paths:
+      - 'Players/Templates/*.yaml'
+      - 'scripts/test/**'
+      - '.github/workflows/test-templates.yml'
+
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Which test suite to run'
+        required: true
+        default: 'quick'
+        type: choice
+        options:
+          - quick
+          - full
+
+jobs:
+  # Quick test - runs on every PR/push and manual trigger with 'quick'
+  quick-test:
+    name: Quick Test (ALTTP)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    # Run on PR/push, or on manual dispatch with 'quick' selected
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.test_suite == 'quick'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run quick test
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py --include-list "A Link to the Past.yaml" -p
+
+      - name: Run regression tests
+        run: |
+          npm test -- --mode=test-regression
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quick-test-results
+          path: |
+            scripts/output/
+            docs/json/developer/test-results/
+          retention-days: 7
+
+  # Full test suite - only runs on manual workflow_dispatch with 'full'
+  full-test:
+    name: Full Test - ${{ matrix.test_name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    # Only run on manual workflow dispatch with 'full' selected
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.test_suite == 'full'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Minimal spoiler test for all templates, seeds 1-10
+          - test_name: "Minimal Spoiler (Seeds 1-10)"
+            host_config: "minimal-spoilers"
+            test_command: "python scripts/test/test-all-templates.py --seed-range 1-10 --seed-range-continue-on-failure -p"
+
+          # Full spoiler test for all templates, seeds 1-10
+          - test_name: "Full Spoiler (Seeds 1-10)"
+            host_config: "full-spoilers"
+            test_command: "python scripts/test/test-all-templates.py --seed-range 1-10 --seed-range-continue-on-failure -p"
+
+          # Multiplayer test for all templates
+          - test_name: "Multiplayer"
+            host_config: "minimal-spoilers"
+            test_command: "python scripts/test/test-all-templates.py --multiplayer -p"
+
+          # Multiworld test for all templates
+          - test_name: "Multiworld"
+            host_config: "minimal-spoilers"
+            test_command: "python scripts/test/test-all-templates.py --multiworld -p"
+
+          # Multitemplate test for ALTTP, minimal
+          - test_name: "Multitemplate ALTTP Minimal"
+            host_config: "minimal-spoilers"
+            setup_multitemplate: true
+            test_command: "python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate -p"
+
+          # Multitemplate test for ALTTP, full
+          - test_name: "Multitemplate ALTTP Full"
+            host_config: "full-spoilers"
+            setup_multitemplate: true
+            test_command: "python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate -p"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Generate multitemplate configurations
+        if: matrix.setup_multitemplate
+        run: |
+          source .venv/bin/activate
+          python scripts/build/generate-multitemplate-configs.py
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py ${{ matrix.host_config }}
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run test - ${{ matrix.test_name }}
+        run: |
+          source .venv/bin/activate
+          ${{ matrix.test_command }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-test-${{ matrix.test_name }}
+          path: |
+            scripts/output/
+            docs/json/developer/test-results/
+          retention-days: 14
+
+      - name: Check for test failures
+        if: always()
+        run: |
+          source .venv/bin/activate
+          # Parse results and fail if tests failed
+          python -c "
+          import json
+          import sys
+          from pathlib import Path
+
+          failed = False
+
+          # Find all test results files
+          for results_file in Path('scripts/output').rglob('test-results.json'):
+              if results_file.stat().st_size > 0:
+                  with open(results_file) as f:
+                      data = json.load(f)
+                      results = data.get('results', {})
+
+                      for template, result in results.items():
+                          if isinstance(result, dict):
+                              # Check spoiler test
+                              if result.get('spoiler_test', {}).get('pass_fail') == 'failed':
+                                  print(f'❌ {template} failed spoiler test')
+                                  failed = True
+                              # Check multiplayer test
+                              elif not result.get('multiplayer_test', {}).get('success', True):
+                                  print(f'❌ {template} failed multiplayer test')
+                                  failed = True
+                              # Check multiworld test
+                              elif not result.get('multiworld_test', {}).get('success', True):
+                                  print(f'❌ {template} failed multiworld test')
+                                  failed = True
+                              # Check generation
+                              elif not result.get('generation', {}).get('success', True):
+                                  print(f'❌ {template} failed generation')
+                                  failed = True
+
+          if failed:
+              print('\\n❌ Some tests failed')
+              sys.exit(1)
+          else:
+              print('✅ All tests passed!')
+          "
+
+  # Commit results job - runs after all full tests complete
+  commit-results:
+    name: Commit Test Results
+    runs-on: ubuntu-latest
+    needs: full-test
+    if: always() && github.event_name == 'workflow_dispatch' && github.event.inputs.test_suite == 'full'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Merge test results into repository
+        run: |
+          # Create directories if they don't exist
+          mkdir -p scripts/output/spoiler-minimal
+          mkdir -p scripts/output/spoiler-full
+          mkdir -p scripts/output/multiplayer
+          mkdir -p scripts/output/multiworld
+          mkdir -p scripts/output/multitemplate-minimal
+          mkdir -p scripts/output/multitemplate-full
+          mkdir -p docs/json/developer/test-results
+
+          # Copy JSON results (excluding timestamped backup files)
+          find artifacts -name "test-results.json" -exec bash -c '
+            for file; do
+              dir=$(dirname "$file")
+              if [[ "$dir" == *"spoiler-minimal"* ]]; then
+                cp "$file" scripts/output/spoiler-minimal/test-results.json
+              elif [[ "$dir" == *"spoiler-full"* ]]; then
+                cp "$file" scripts/output/spoiler-full/test-results.json
+              elif [[ "$dir" == *"multiplayer"* ]]; then
+                cp "$file" scripts/output/multiplayer/test-results.json
+              elif [[ "$dir" == *"multiworld"* ]]; then
+                cp "$file" scripts/output/multiworld/test-results.json
+              elif [[ "$dir" == *"multitemplate-minimal"* ]]; then
+                cp "$file" scripts/output/multitemplate-minimal/test-results.json
+              elif [[ "$dir" == *"multitemplate-full"* ]]; then
+                cp "$file" scripts/output/multitemplate-full/test-results.json
+              fi
+            done
+          ' bash {} +
+
+          # Copy markdown documentation files
+          find artifacts -path "*/docs/json/developer/test-results/*.md" -exec cp {} docs/json/developer/test-results/ \;
+
+          # List what was copied
+          echo "=== Copied JSON Results ==="
+          ls -lh scripts/output/*/test-results.json || echo "No JSON files found"
+
+          echo "=== Copied Markdown Files ==="
+          ls -lh docs/json/developer/test-results/*.md || echo "No markdown files found"
+
+      - name: Create or switch to test-results-update branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Fetch all branches
+          git fetch origin
+
+          # Check if branch exists remotely
+          if git ls-remote --exit-code --heads origin test-results-update; then
+            echo "Branch test-results-update exists, checking it out"
+            git checkout test-results-update
+            git pull origin test-results-update
+          else
+            echo "Creating new branch test-results-update"
+            git checkout -b test-results-update
+          fi
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Add the specific files we want to commit
+          git add scripts/output/spoiler-minimal/test-results.json
+          git add scripts/output/spoiler-full/test-results.json
+          git add scripts/output/multiplayer/test-results.json
+          git add scripts/output/multiworld/test-results.json
+          git add scripts/output/multitemplate-minimal/test-results.json
+          git add scripts/output/multitemplate-full/test-results.json
+          git add docs/json/developer/test-results/*.md
+
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update test results from GitHub Actions
+
+            Generated by workflow run: ${{ github.run_id }}
+            Triggered by: ${{ github.actor }}
+
+            Test results include:
+            - Minimal spoiler tests (seeds 1-10)
+            - Full spoiler tests (seeds 1-10)
+            - Multiplayer tests
+            - Multiworld tests
+            - Multitemplate ALTTP tests (minimal and full)
+            "
+
+            git push origin test-results-update
+
+            echo "✅ Test results committed to test-results-update branch"
+            echo "View the branch at: ${{ github.server_url }}/${{ github.repository }}/tree/test-results-update"
+          fi
