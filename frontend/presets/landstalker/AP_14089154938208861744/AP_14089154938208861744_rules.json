@@ -94,10 +94,8 @@
                   "name": "_landstalker_has_visited_regions",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Swamp Shrine"
-                      ]
+                      "type": "name",
+                      "name": "required_regions"
                     }
                   ]
                 }
@@ -730,10 +728,8 @@
                   "name": "_landstalker_has_visited_regions",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Swamp Shrine"
-                      ]
+                      "type": "name",
+                      "name": "required_regions"
                     }
                   ]
                 }
@@ -872,10 +868,8 @@
                   "name": "_landstalker_has_visited_regions",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Massan"
-                      ]
+                      "type": "name",
+                      "name": "required_regions"
                     }
                   ]
                 }
@@ -1088,10 +1082,8 @@
                   "name": "_landstalker_has_visited_regions",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Thieves Hideout (after keydoor)"
-                      ]
+                      "type": "name",
+                      "name": "required_regions"
                     }
                   ]
                 }
@@ -1744,10 +1736,8 @@
                   "name": "_landstalker_has_visited_regions",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Massan"
-                      ]
+                      "type": "name",
+                      "name": "required_regions"
                     }
                   ]
                 }
@@ -1988,10 +1978,8 @@
                   "name": "_landstalker_has_visited_regions",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Ryuma (repaired lighthouse)"
-                      ]
+                      "type": "name",
+                      "name": "required_regions"
                     }
                   ]
                 }
@@ -2732,10 +2720,8 @@
                   "name": "_landstalker_has_visited_regions",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Verla Mines"
-                      ]
+                      "type": "name",
+                      "name": "required_regions"
                     }
                   ]
                 }
@@ -3802,10 +3788,8 @@
                   "name": "_landstalker_has_visited_regions",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Verla Mines"
-                      ]
+                      "type": "name",
+                      "name": "required_regions"
                     }
                   ]
                 }
@@ -3933,10 +3917,8 @@
                   "name": "_landstalker_has_visited_regions",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Verla Mines"
-                      ]
+                      "type": "name",
+                      "name": "required_regions"
                     }
                   ]
                 }
@@ -4033,10 +4015,8 @@
                   "name": "_landstalker_has_visited_regions",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Verla Mines"
-                      ]
+                      "type": "name",
+                      "name": "required_regions"
                     }
                   ]
                 }
@@ -6397,10 +6377,8 @@
                   "name": "_landstalker_has_visited_regions",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "King Nole's Labyrinth (raft entrance)"
-                      ]
+                      "type": "name",
+                      "name": "required_regions"
                     }
                   ]
                 }
