@@ -6525,57 +6525,18 @@
   },
   "items": {
     "1": {
-      "1 coin": {
-        "name": "1 coin",
-        "id": 12320791,
+      "The Princess": {
+        "name": "The Princess",
+        "id": 12320768,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 26
-      },
-      "5 coins": {
-        "name": "5 coins",
-        "id": 12320792,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 30
-      },
-      "10 coins": {
-        "name": "10 coins",
-        "id": 12320793,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 48
-      },
-      "50 coins": {
-        "name": "50 coins",
-        "id": 12320794,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 40
+        "max_count": 1
       },
       "1-Up Mushroom": {
         "name": "1-Up Mushroom",
@@ -6733,19 +6694,6 @@
         "type": null,
         "max_count": 2
       },
-      "Special Zone Clear": {
-        "name": "Special Zone Clear",
-        "id": 12320795,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
       "Yellow Switch Palace": {
         "name": "Yellow Switch Palace",
         "id": 12320782,
@@ -6797,6 +6745,19 @@
         "event": false,
         "type": null,
         "max_count": 2
+      },
+      "Boss Token": {
+        "name": "Boss Token",
+        "id": 12320786,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 11
       },
       "Ice Trap": {
         "name": "Ice Trap",
@@ -6850,6 +6811,71 @@
         "type": null,
         "max_count": 1
       },
+      "1 coin": {
+        "name": "1 coin",
+        "id": 12320791,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 26
+      },
+      "5 coins": {
+        "name": "5 coins",
+        "id": 12320792,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 30
+      },
+      "10 coins": {
+        "name": "10 coins",
+        "id": 12320793,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 48
+      },
+      "50 coins": {
+        "name": "50 coins",
+        "id": 12320794,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 40
+      },
+      "Special Zone Clear": {
+        "name": "Special Zone Clear",
+        "id": 12320795,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
       "Reverse Trap": {
         "name": "Reverse Trap",
         "id": 12320796,
@@ -6875,32 +6901,6 @@
         "event": false,
         "type": null,
         "max_count": 1
-      },
-      "The Princess": {
-        "name": "The Princess",
-        "id": 12320768,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Boss Token": {
-        "name": "Boss Token",
-        "id": 12320786,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 11
       }
     }
   },

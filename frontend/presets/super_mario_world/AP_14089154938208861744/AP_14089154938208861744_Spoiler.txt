@@ -182,6 +182,7 @@ Playthrough:
   Green Switch Palace: Swim
 }
 4: {
+  Butter Bridge 1 - Normal Exit: Super Star Activate
   Butter Bridge 2 - Normal Exit: Progressive Powerup
   Vanilla Fortress - Boss: Boss Token
   Vanilla Secret 3 - Normal Exit: P-Switch
@@ -192,14 +193,26 @@ Playthrough:
 6: {
   #3 Lemmy's Castle - Boss: Boss Token
   #4 Ludwig's Castle - Boss: Boss Token
+  Vanilla Dome 2 - Normal Exit: Progressive Powerup
 }
 7: {
   Forest Fortress - Boss: Boss Token
   Forest Fortress - Normal Exit: Spin Jump
+  Forest of Illusion 3 - Normal Exit: Progressive Powerup
+  Forest of Illusion 4 - Normal Exit: Green Switch Palace
 }
 8: {
   #5 Roy's Castle - Boss: Boss Token
+  #5 Roy's Castle - Normal Exit: P-Balloon
+  #6 Wendy's Castle - Boss: Boss Token
+  #7 Larry's Castle - Boss: Boss Token
+  Chocolate Fortress - Boss: Boss Token
+  Chocolate Island 4 - Normal Exit: Red Switch Palace
+  Donut Ghost House - Normal Exit: Blue Switch Palace
+  Star Road 1 - Secret Exit: Yellow Switch Palace
+  Valley Fortress - Boss: Boss Token
 }
 9: {
   Bowser: The Princess
+  Gnarly - Normal Exit: Special Zone Clear
 }

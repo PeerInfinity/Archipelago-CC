@@ -4,7 +4,7 @@
     "batch_processing_time_minutes": 65.4,
     "batch_processing_time_seconds": 3922.8,
     "created": "2025-10-14T13:24:10.253834",
-    "last_updated": "2025-11-12T06:26:04.197896",
+    "last_updated": "2025-11-12T08:41:05.165030",
     "script_version": "1.0.0"
   },
   "results": {
@@ -8832,7 +8832,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.43,
+            "processing_time_seconds": 4.85,
             "return_code": 0,
             "success": true,
             "warning_count": 2
@@ -8855,7 +8855,7 @@
             "warning_count": 0
           },
           "template_name": "Donkey Kong Country 3.yaml",
-          "timestamp": "2025-11-12T05:40:30.949598",
+          "timestamp": "2025-11-12T08:41:00.310293",
           "world_info": {
             "exporter_path": "exporter/games/dkc3.py",
             "game_logic_path": null,
@@ -9185,7 +9185,7 @@
         "failure_rate": 0.9
       },
       "template_name": "Donkey Kong Country 3.yaml",
-      "timestamp": "2025-11-12T05:40:27.129630",
+      "timestamp": "2025-11-12T08:41:00.240211",
       "total_seeds_tested": 10
     },
     "Factorio.yaml": {
