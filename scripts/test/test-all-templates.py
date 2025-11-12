@@ -27,7 +27,8 @@ from lib.test_utils import (
     read_host_yaml_config,
     build_and_load_world_mapping,
     check_virtual_environment,
-    check_http_server
+    check_http_server,
+    load_template_exclude_list
 )
 from lib.test_results import (
     is_test_passing,
@@ -113,10 +114,13 @@ def run_post_processing_scripts(project_root: str, results_file: str, multiplaye
 
 
 def main():
+    # Load default exclude list
+    default_exclude_list = load_template_exclude_list()
+
     parser = argparse.ArgumentParser(description='Test all Archipelago template files')
     parser.add_argument(
-        '--templates-dir', 
-        type=str, 
+        '--templates-dir',
+        type=str,
         help='Path to alternate template directory (default: Players/Templates)'
     )
     parser.add_argument(
@@ -129,8 +133,8 @@ def main():
         '--skip-list',
         type=str,
         nargs='*',
-        default=['Archipelago.yaml', 'Universal Tracker.yaml', 'Final Fantasy.yaml', 'Sudoku.yaml'],
-        help='List of template files to skip (default: Archipelago.yaml Universal Tracker.yaml Final Fantasy.yaml Sudoku.yaml)'
+        default=default_exclude_list,
+        help=f'List of template files to skip (default: {" ".join(default_exclude_list)})'
     )
     parser.add_argument(
         '--include-list',

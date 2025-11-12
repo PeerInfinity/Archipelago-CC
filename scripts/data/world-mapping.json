@@ -565,5 +565,12 @@
     "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "zillion"
+  },
+  "shapez": {
+    "exporter_path": null,
+    "game_logic_path": null,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "world_directory": "shapez"
   }
 }

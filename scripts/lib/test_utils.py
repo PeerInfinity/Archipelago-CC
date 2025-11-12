@@ -35,6 +35,56 @@ def read_host_yaml_config(project_root: str) -> Dict:
         return {}
 
 
+def load_template_exclude_list(project_root: str = None, include_reasons: bool = False):
+    """
+    Load the default template exclude list from scripts/data/template-exclude-list.json.
+
+    Args:
+        project_root: Optional project root path. If not provided, will be inferred.
+        include_reasons: If True, returns list of dicts with 'name' and 'reason' keys.
+                        If False, returns list of template filenames only.
+
+    Returns:
+        List[str] if include_reasons=False: List of template filenames to exclude
+        List[Dict] if include_reasons=True: List of dicts with 'name' and 'reason' keys
+        Returns default list if file not found or malformed.
+    """
+    if project_root is None:
+        # Infer project root from this file's location (scripts/lib/test_utils.py)
+        project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+
+    exclude_list_file = os.path.join(project_root, 'scripts', 'data', 'template-exclude-list.json')
+
+    # Default fallback list (old format)
+    default_exclude_list = ['Archipelago.yaml', 'Universal Tracker.yaml', 'Final Fantasy.yaml', 'Sudoku.yaml']
+
+    try:
+        with open(exclude_list_file, 'r') as f:
+            data = json.load(f)
+            exclude_list = data.get('exclude_list', default_exclude_list)
+
+            # Check if the list contains dictionaries (new format) or strings (old format)
+            if exclude_list and isinstance(exclude_list[0], dict):
+                # New format: list of objects with 'name' and 'reason'
+                if include_reasons:
+                    return exclude_list
+                else:
+                    return [item['name'] for item in exclude_list]
+            else:
+                # Old format: list of strings
+                if include_reasons:
+                    # Convert to new format with empty reasons
+                    return [{'name': name, 'reason': ''} for name in exclude_list]
+                else:
+                    return exclude_list
+    except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
+        # If file doesn't exist or is malformed, return default list
+        if include_reasons:
+            return [{'name': name, 'reason': ''} for name in default_exclude_list]
+        else:
+            return default_exclude_list
+
+
 def build_and_load_world_mapping(project_root: str) -> Dict[str, Dict]:
     """Build world mapping and load it."""
     mapping_file = os.path.join(project_root, 'scripts', 'data', 'world-mapping.json')
