@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-11 23:41:03
+**Generated:** 2025-11-12 20:35:04
 
 **Source Data Created:** 2025-10-14T13:24:10.253834
 
-**Source Data Last Updated:** 2025-11-11T23:41:03.408448
+**Source Data Last Updated:** 2025-11-12T20:35:04.160469
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 67 (84.8%)
-- **Failed:** 12 (15.2%)
+- **Passed:** 64 (81.0%)
+- **Failed:** 15 (19.0%)
 
 ## Test Results
 
@@ -29,18 +29,18 @@
 | Blasphemous | ✅ Passed seeds 1-10 | 1 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed seeds 1-10 | 0 | 10.9 | 10.9 | 🟢 Complete | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ⚫ |
-| Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 4.4 | 4.4 | 🟢 Complete | ✅ | ✅ |
-| Castlevania 64 | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ⚫ |
+| Castlevania - Circle of the Moon | ❌ Failed seed 5 | 0 | 1.1 | 4.2 | 🟡 26.2% | ✅ | ✅ |
+| Castlevania 64 | ❌ Failed seed 10 | 0 | 1.7 | 4.1 | 🟡 41.5% | ✅ | ⚫ |
 | Celeste 64 | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | ChecksFinder | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ⚫ |
 | ChocolateChipCookies | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ⚫ |
 | Civilization VI | ✅ Passed seeds 1-10 | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ⚫ |
-| DLCQuest | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
+| DLCQuest | ❌ Failed seed 1 | 0 | 0.1 | 8.1 | 🟠 1.2% | ✅ | ✅ |
 | DOOM 1993 | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ⚫ |
 | DOOM II | ✅ Passed seeds 1-10 | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ⚫ |
-| Donkey Kong Country 3 | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ✅ | ⚫ |
-| Factorio | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | ✅ | ⚫ |
+| Donkey Kong Country 3 | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
+| Factorio | ❌ Failed seed 1 | 0 | 0.1 | 12.1 | 🟠 0.8% | ✅ | ⚫ |
 | Faxanadu | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ⚫ |
 | Heretic | ✅ Passed seeds 1-10 | 0 | 24.1 | 24.1 | 🟢 Complete | ⚫ | ⚫ |

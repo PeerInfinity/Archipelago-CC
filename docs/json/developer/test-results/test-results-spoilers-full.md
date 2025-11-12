@@ -4,24 +4,24 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-11 23:41:03
+**Generated:** 2025-11-12 21:09:35
 
 **Source Data Created:** 2025-10-14T13:23:48.314334
 
-**Source Data Last Updated:** 2025-11-12T06:30:40.436574
+**Source Data Last Updated:** 2025-11-12T21:09:35.611728
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 66 (83.5%)
-- **Failed:** 13 (16.5%)
+- **Passed:** 59 (74.7%)
+- **Failed:** 20 (25.3%)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Custom Exporter | Custom GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|-----------------|------------------|
 | A Hat in Time | ✅ Passed seeds 1-10 | 0 | 5.21 | 5.21 | 🟢 Complete | ✅ | ✅ |
-| A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | ✅ | ✅ |
+| A Link to the Past | ❌ Failed seed 8 | 0 | 22.5 | 24.1 | 🟡 93.4% | ✅ | ✅ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ⚫ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 5.19 | 5.19 | 🟢 Complete | ✅ | ✅ |
@@ -29,21 +29,21 @@
 | Blasphemous | ✅ Passed seeds 1-10 | 1 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed seeds 1-10 | 0 | 10.18 | 10.18 | 🟢 Complete | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ⚫ |
-| Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 4.41 | 4.41 | 🟢 Complete | ✅ | ✅ |
-| Castlevania 64 | ✅ Passed seeds 1-10 | 0 | 5.6 | 5.6 | 🟢 Complete | ✅ | ⚫ |
+| Castlevania - Circle of the Moon | ❌ Failed seed 5 | 0 | 1.7 | 4.25 | 🟡 40.0% | ✅ | ✅ |
+| Castlevania 64 | ❌ Failed seed 10 | 0 | 1.47 | 4.2 | 🟡 35.0% | ✅ | ⚫ |
 | Celeste 64 | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | ChecksFinder | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ⚫ |
 | ChocolateChipCookies | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ⚫ |
 | Civilization VI | ✅ Passed seeds 1-10 | 0 | 8.15 | 8.15 | 🟢 Complete | ✅ | ⚫ |
-| DLCQuest | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
-| DOOM 1993 | ✅ Passed seeds 1-10 | 0 | 18.5 | 18.5 | 🟢 Complete | ✅ | ⚫ |
+| DLCQuest | ❌ Failed seed 1 | 0 | 0.1 | 8.1 | 🟠 1.2% | ✅ | ✅ |
+| DOOM 1993 | ❌ Failed seed 9 | 0 | 12.22 | 14.2 | 🟡 86.1% | ✅ | ⚫ |
 | DOOM II | ✅ Passed seeds 1-10 | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ⚫ |
-| Dark Souls III | ✅ Passed seeds 1-10 | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ⚫ |
-| Donkey Kong Country 3 | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ✅ | ⚫ |
-| Factorio | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | ✅ | ⚫ |
+| Dark Souls III | ❌ Failed seed 5 | 0 | 2.84 | 7.31 | 🟡 38.9% | ✅ | ⚫ |
+| Donkey Kong Country 3 | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
+| Factorio | ❌ Failed seed 1 | 0 | 0.1 | 12.1 | 🟠 0.8% | ✅ | ⚫ |
 | Faxanadu | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed seeds 1-10 | 0 | 19.6 | 19.6 | 🟢 Complete | ✅ | ⚫ |
-| Heretic | ✅ Passed seeds 1-10 | 0 | 24.4 | 24.4 | 🟢 Complete | ⚫ | ⚫ |
+| Heretic | ❌ Failed seed 1 | 0 | 15.12 | 24.4 | 🟡 62.0% | ⚫ | ⚫ |
 | Hollow Knight | ✅ Passed seeds 1-10 | 0 | 70.1 | 70.1 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ✅ | ⚫ |
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 10.2 | 10.2 | 🟢 Complete | ✅ | ✅ |
