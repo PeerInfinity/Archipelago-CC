@@ -20769,6 +20769,19 @@
         "type": null,
         "max_count": 2
       },
+      "Zeldas Letter": {
+        "name": "Zeldas Letter",
+        "id": 66011,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Megaton Hammer": {
         "name": "Megaton Hammer",
         "id": 66013,
@@ -21370,9 +21383,9 @@
         "type": null,
         "max_count": 2
       },
-      "Nayrus Love": {
-        "name": "Nayrus Love",
-        "id": 66094,
+      "Farores Wind": {
+        "name": "Farores Wind",
+        "id": 66093,
         "groups": [
           "Everything"
         ],
@@ -21383,9 +21396,9 @@
         "type": null,
         "max_count": 2
       },
-      "Farores Wind": {
-        "name": "Farores Wind",
-        "id": 66093,
+      "Nayrus Love": {
+        "name": "Nayrus Love",
+        "id": 66094,
         "groups": [
           "Everything"
         ],
@@ -22288,45 +22301,6 @@
         "type": null,
         "max_count": 2
       },
-      "Magic Bean Pack": {
-        "name": "Magic Bean Pack",
-        "id": 66201,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Triforce Piece": {
-        "name": "Triforce Piece",
-        "id": 66202,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Zeldas Letter": {
-        "name": "Zeldas Letter",
-        "id": 66011,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Minuet of Forest": {
         "name": "Minuet of Forest",
         "id": 66187,
@@ -22477,6 +22451,32 @@
           "Everything"
         ],
         "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Magic Bean Pack": {
+        "name": "Magic Bean Pack",
+        "id": 66201,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Triforce Piece": {
+        "name": "Triforce Piece",
+        "id": 66202,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
