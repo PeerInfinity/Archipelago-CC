@@ -896,23 +896,74 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
 
     # 3. Update classification flags from placed items (use values from placed items if not set by handler)
     for location in multiworld.get_locations(player):
-        if location.item and location.item.name in items_data:
-            item_data = items_data[location.item.name]
-            # Only update flags if they are still default (False)
-            if not item_data.get('advancement'):
-                item_data['advancement'] = getattr(location.item, 'advancement', False)
-            if not item_data.get('useful'):
-                 item_data['useful'] = getattr(location.item, 'useful', False)
-            if not item_data.get('trap'):
-                 item_data['trap'] = getattr(location.item, 'trap', False)
-            # Event flag likely comes from type, less critical to update here unless specific logic requires it
+        if location.item:
+            item_name = location.item.name
+            # Add event items that aren't in items_data yet (items with code=None)
+            if item_name not in items_data:
+                # Extract type value
+                type_obj = getattr(location.item, 'type', None)
+                if type_obj is not None:
+                    if hasattr(type_obj, 'value'):
+                        item_type = type_obj.value
+                    else:
+                        item_type = str(type_obj)
+                else:
+                    item_type = None
+
+                # This is likely an event item - create an entry for it
+                items_data[item_name] = {
+                    'name': item_name,
+                    'id': getattr(location.item, 'code', None),
+                    'groups': [],
+                    'advancement': getattr(location.item, 'advancement', False),
+                    'useful': getattr(location.item, 'useful', False),
+                    'trap': getattr(location.item, 'trap', False),
+                    'event': True if getattr(location.item, 'code', None) is None else False,
+                    'type': item_type,
+                    'max_count': 1
+                }
+            else:
+                # Item already exists, update flags if they are still default (False)
+                item_data = items_data[item_name]
+                if not item_data.get('advancement'):
+                    item_data['advancement'] = getattr(location.item, 'advancement', False)
+                if not item_data.get('useful'):
+                     item_data['useful'] = getattr(location.item, 'useful', False)
+                if not item_data.get('trap'):
+                     item_data['trap'] = getattr(location.item, 'trap', False)
+                # Event flag likely comes from type, less critical to update here unless specific logic requires it
 
     # 3b. Also check precollected items for advancement status
     if player in multiworld.precollected_items:
         for item in multiworld.precollected_items[player]:
-            if item.name in items_data:
-                item_data = items_data[item.name]
-                # Only update flags if they are still default (False)
+            item_name = item.name
+            # Add event items that aren't in items_data yet (items with code=None)
+            if item_name not in items_data:
+                # Extract type value
+                type_obj = getattr(item, 'type', None)
+                if type_obj is not None:
+                    if hasattr(type_obj, 'value'):
+                        item_type = type_obj.value
+                    else:
+                        item_type = str(type_obj)
+                else:
+                    item_type = None
+
+                # This is likely an event item - create an entry for it
+                items_data[item_name] = {
+                    'name': item_name,
+                    'id': getattr(item, 'code', None),
+                    'groups': [],
+                    'advancement': getattr(item, 'advancement', False),
+                    'useful': getattr(item, 'useful', False),
+                    'trap': getattr(item, 'trap', False),
+                    'event': True if getattr(item, 'code', None) is None else False,
+                    'type': item_type,
+                    'max_count': 1
+                }
+            else:
+                # Item already exists, update flags if they are still default (False)
+                item_data = items_data[item_name]
                 if not item_data.get('advancement'):
                     item_data['advancement'] = getattr(item, 'advancement', False)
                 if not item_data.get('useful'):

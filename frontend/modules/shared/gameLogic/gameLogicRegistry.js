@@ -239,6 +239,7 @@ import { hylics2StateModule } from './hylics_2/hylics2Logic.js';
 import * as inscryptionLogic from './inscryption/inscryptionLogic.js';
 import { inscryptionStateModule } from './inscryption/inscryptionLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
+import * as kdl3Logic from './kdl3/kdl3Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 
@@ -329,6 +330,12 @@ const GAME_REGISTRY = {
     helperFunctions: kh1Logic,
     worldClasses: ['KH1World'],
     aliases: ['Kingdom Hearts', 'KH1', 'Kingdom Hearts 1']
+  },
+  "Kirby's Dream Land 3": {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: kdl3Logic.helperFunctions,
+    worldClasses: ['KDL3World'],
+    aliases: ["Kirby's Dream Land 3", 'KDL3']
   },
   'Pokemon Red and Blue': {
     logicModule: pokemon_rbLogic.pokemon_rbStateModule,
