@@ -278,6 +278,147 @@ export const kh1Logic = {
         value1 = value1 ?? Infinity;
         value2 = value2 ?? Infinity;
         return Math.min(value1, value2);
+    },
+
+    /**
+     * Returns the ceiling of a number
+     * @param {Object} snapshot - The current game state (not used)
+     * @param {Object} staticData - Static game data (not used)
+     * @param {number} value - Value to ceil
+     * @returns {number}
+     */
+    ceil(snapshot, staticData, value) {
+        return Math.ceil(value);
+    },
+
+    /**
+     * Checks if the player has at least count unique items from a list
+     * Returns True if the state contains at least `count` items matching any of the item names from a list.
+     * Ignores duplicates of the same item.
+     * @param {Object} snapshot - The current game state
+     * @param {Object} staticData - Static game data (not used)
+     * @param {Array} items - List of item names to check
+     * @param {number} count - Minimum number of unique items required
+     * @returns {boolean}
+     */
+    has_from_list_unique(snapshot, staticData, items, count) {
+        let found = 0;
+        for (const itemName of items) {
+            if (snapshot?.inventory?.[itemName] > 0) {
+                found++;
+                if (found >= count) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    },
+
+    /**
+     * Checks if the player can access Oogie's Manor
+     * @param {Object} snapshot - The current game state
+     * @param {Object} staticData - Static game data
+     * @param {boolean} advanced_logic - Whether advanced logic is enabled
+     * @returns {boolean}
+     */
+    has_oogie_manor(snapshot, staticData, advanced_logic) {
+        advanced_logic = advanced_logic ?? false;
+
+        const hasFire = (snapshot?.inventory?.["Progressive Fire"] || 0) > 0;
+        const hasHighJump = (snapshot?.inventory?.["High Jump"] || 0);
+        const hasGlide = (snapshot?.inventory?.["Progressive Glide"] || 0) > 0;
+
+        return (
+            hasFire ||
+            (advanced_logic && hasHighJump >= 2) ||
+            (advanced_logic && hasHighJump > 0 && hasGlide)
+        );
+    },
+
+    /**
+     * Checks if the player has all magic types at a certain level
+     * @param {Object} snapshot - The current game state
+     * @param {Object} staticData - Static game data
+     * @param {number} level - Required level for each magic type
+     * @returns {boolean}
+     */
+    has_all_magic_lvx(snapshot, staticData, level) {
+        level = level || 1;
+
+        const magicTypes = [
+            "Progressive Fire",
+            "Progressive Blizzard",
+            "Progressive Thunder",
+            "Progressive Cure",
+            "Progressive Gravity",
+            "Progressive Aero",
+            "Progressive Stop"
+        ];
+
+        for (const magicType of magicTypes) {
+            const count = snapshot?.inventory?.[magicType] || 0;
+            if (count < level) {
+                return false;
+            }
+        }
+
+        return true;
+    },
+
+    /**
+     * Checks if the player meets the Final Rest door requirement
+     * @param {Object} snapshot - The current game state
+     * @param {Object} staticData - Static game data
+     * @param {string} final_rest_door_requirement - Type of requirement (reports/puppies/postcards/superbosses)
+     * @param {number} final_rest_door_required_reports - Number of reports required
+     * @param {boolean} keyblades_unlock_chests - Whether keyblades are needed for chests
+     * @param {string} puppies_choice - Puppy collection mode (individual/triplets/full)
+     * @returns {boolean}
+     */
+    has_final_rest_door(snapshot, staticData, final_rest_door_requirement, final_rest_door_required_reports, keyblades_unlock_chests, puppies_choice) {
+        final_rest_door_requirement = final_rest_door_requirement || "reports";
+        final_rest_door_required_reports = final_rest_door_required_reports || 0;
+        keyblades_unlock_chests = keyblades_unlock_chests ?? false;
+        puppies_choice = puppies_choice || "triplets";
+
+        if (final_rest_door_requirement === "reports") {
+            return this.has_reports(snapshot, staticData, final_rest_door_required_reports);
+        }
+        if (final_rest_door_requirement === "puppies") {
+            return this.has_puppies(snapshot, staticData, 99);
+        }
+        if (final_rest_door_requirement === "postcards") {
+            const postcardCount = snapshot?.inventory?.["Postcard"] || 0;
+            return postcardCount >= 10;
+        }
+        if (final_rest_door_requirement === "superbosses") {
+            const requiredItems = [
+                "Olympus Coliseum",
+                "Neverland",
+                "Agrabah",
+                "Hollow Bastion",
+                "Green Trinity",
+                "Phil Cup",
+                "Pegasus Cup",
+                "Hercules Cup",
+                "Entry Pass"
+            ];
+
+            for (const item of requiredItems) {
+                if (!snapshot?.inventory?.[item] || snapshot.inventory[item] <= 0) {
+                    return false;
+                }
+            }
+
+            return (
+                this.has_emblems(snapshot, staticData, keyblades_unlock_chests) &&
+                this.has_all_magic_lvx(snapshot, staticData, 2) &&
+                this.has_defensive_tools(snapshot, staticData) &&
+                this.has_x_worlds(snapshot, staticData, 7, keyblades_unlock_chests)
+            );
+        }
+
+        return false;
     }
 };
 

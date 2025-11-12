@@ -495,6 +495,22 @@ export function _createSelfSnapshotInterface(sm) {
         return sm.settings[name];
       }
 
+      // Game-specific location variable extraction
+      // For variables not found elsewhere, try to extract from current location name
+      const currentLoc = anInterface.currentLocation || anInterface.location;
+      if (currentLoc && currentLoc.name) {
+        const locationName = currentLoc.name;
+        const gameName = sm.rules?.game_name;
+
+        // Kingdom Hearts: Extract puppies_required from "Return X Puppies" locations
+        if (name === 'puppies_required' && gameName === 'Kingdom Hearts') {
+          const match = locationName.match(/Return (\d+) Puppies/);
+          if (match) {
+            return parseInt(match[1], 10);
+          }
+        }
+      }
+
       // log('warn', `[StateManager SelfSnapshotInterface resolveName] Unhandled name: ${name}`);
       return undefined; // Crucial: return undefined for unhandled names
     },
