@@ -399,9 +399,9 @@
     "world_directory": "shivers"
   },
   "Sonic Adventure 2 Battle": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/sa2b.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "sa2b"
   },
