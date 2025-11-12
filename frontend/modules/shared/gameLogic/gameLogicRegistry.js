@@ -241,10 +241,11 @@ import { inscryptionStateModule } from './inscryption/inscryptionLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
 import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
 import * as kdl3Logic from './kdl3/kdl3Logic.js';
-import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
-import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import * as landstalkerLogic from './landstalker/landstalkerLogic.js';
 import { landstalkerStateModule } from './landstalker/landstalkerLogic.js';
+import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
+import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
+import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -357,6 +358,12 @@ const GAME_REGISTRY = {
     helperFunctions: landstalkerLogic.helperFunctions,
     worldClasses: ['LandstalkerWorld'],
     aliases: ['Landstalker - The Treasures of King Nole', 'Landstalker']
+  },
+  'Lingo': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: lingoHelperFunctions,
+    worldClasses: ['LingoWorld'],
+    aliases: ['Lingo']
   },
   // Add more games here as they're implemented
   'Generic': {
