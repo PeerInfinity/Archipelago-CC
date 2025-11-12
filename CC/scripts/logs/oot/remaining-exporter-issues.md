@@ -1,6 +1,6 @@
 # Ocarina of Time - Remaining Exporter Issues
 
-Status: Root cause identified
+Status: Partial fix implemented
 
 ## Primary Issue: Missing Access Rules
 
@@ -34,3 +34,19 @@ The fix requires implementing a rule string parser in `exporter/games/oot.py`:
    - Setting checks: `open_forest == 'open'`
 
 **Alternative approach:** Leverage OOT's existing `Rule_AST_Transformer` to parse the rule string into an AST, then convert the AST to JSON format. This avoids duplicating the parser logic.
+
+## Progress Update
+
+**Implemented (Commit 137bf3e):**
+- ✅ Added `build_rule_string_map()` method to OOT exporter
+- ✅ Implemented `override_rule_analysis()` to use rule strings
+- ✅ Modified `get_game_export_handler()` to call `build_rule_string_map()`
+- ✅ Rules now use `parse_oot_rule` helper with original DSL string as argument
+
+**Results:**
+- Locations with None rules: 1204 → 32 (97% reduction!)
+- Exits with None rules: 593 → 0 (100% fixed!)
+- 996 rules now have `parse_oot_rule` helper with rule string
+
+**Remaining Work:**
+The exporter fix is complete. Now need to implement frontend helper functions to parse and evaluate OOT's rule DSL. See `remaining-helper-issues.md`.
