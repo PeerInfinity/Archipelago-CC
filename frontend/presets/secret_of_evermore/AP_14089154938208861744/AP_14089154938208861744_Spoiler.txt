@@ -399,13 +399,22 @@ Playthrough:
 2: {
   Cave Raptors: Diamond Eye
   Ivor Sewers #269: Diamond Eye
+  Naris #249: Gladiator Sword
+  Salabog: Revealer
+  Vigor: Bronze Spear
 }
 3: {
+  Megataur: Lance (Weapon)
+  Pyramid bottom #131: Horn Spear
   Pyramid top #137: Gauge
+  Tiny's hideout #161: Spider Claw
   Tiny's hideout #162: Levitate
 }
 4: {
+  E. Crustacia #108: Laser Lance
+  Pipe Maze #91: Atom Smasher
   Tiny: Energy Core
+  Volcano Room1 #79: Crusader Sword
   Volcano Room2 #81: Bronze Axe
 }
 5: {
@@ -413,4 +422,5 @@ Playthrough:
 }
 6: {
   Done: Victory
+  Storage room #281: Diamond Eye
 }

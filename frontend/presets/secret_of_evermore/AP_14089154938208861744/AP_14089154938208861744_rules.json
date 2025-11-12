@@ -6161,14 +6161,12 @@
       "Victory": {
         "name": "Victory",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
         "advancement": true,
         "useful": false,
         "trap": false,
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       }
     }
