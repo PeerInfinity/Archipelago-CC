@@ -259,6 +259,8 @@ import * as sm64exLogic from './sm64ex/sm64exLogic.js';
 import { sm64exStateModule } from './sm64ex/sm64exLogic.js';
 import * as v6Logic from './v6/v6Logic.js';
 import { v6StateModule } from './v6/v6Logic.js';
+import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
+import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -425,6 +427,12 @@ const GAME_REGISTRY = {
     helperFunctions: v6Logic.helperFunctions,
     worldClasses: ['V6World'],
     aliases: ['VVVVVV', 'V6']
+  },
+  'Yacht Dice': {
+    logicModule: yachtdiceLogic.yachtdiceStateModule,
+    helperFunctions: yachtdiceLogic.helperFunctions,
+    worldClasses: ['YachtDiceWorld'],
+    aliases: ['Yacht Dice', 'yacht_dice']
   },
   // Add more games here as they're implemented
   'Generic': {
