@@ -134,12 +134,12 @@ def get_world_directory_name(game_name: str) -> str:
                 import re
                 pattern = r'game:\s*ClassVar\[str\]\s*=\s*"([^"]*)"'
                 match = re.search(pattern, content)
-                
+
                 if match:
                     found_game_name = match.group(1)
                     if found_game_name == game_name:
                         return world_dir_name
-                
+
                 # Fallback pattern for single quotes
                 pattern = r'game:\s*ClassVar\[str\]\s*=\s*\'([^\']*)\''
                 match = re.search(pattern, content)
@@ -150,7 +150,17 @@ def get_world_directory_name(game_name: str) -> str:
                         return world_dir_name
 
                 # Pattern for type-annotated declarations: game: str = "Game Name"
+                # This matches ClassVar[str], str, or any other type annotation
                 pattern = r'game:\s*[A-Za-z_]\w*(?:\[[^\]]*\])?\s*=\s*"([^"]*)"'
+                match = re.search(pattern, content)
+
+                if match:
+                    found_game_name = match.group(1)
+                    if found_game_name == game_name:
+                        return world_dir_name
+
+                # Fallback pattern for single quotes with type annotations
+                pattern = r'game:\s*[A-Za-z_]\w*(?:\[[^\]]*\])?\s*=\s*\'([^\']*)\''
                 match = re.search(pattern, content)
 
                 if match:
@@ -161,16 +171,16 @@ def get_world_directory_name(game_name: str) -> str:
                 # Fallback: look for simpler pattern: game = "Game Name"
                 pattern = r'game\s*=\s*"([^"]*)"'
                 match = re.search(pattern, content)
-                
+
                 if match:
                     found_game_name = match.group(1)
                     if found_game_name == game_name:
                         return world_dir_name
-                
+
                 # Fallback pattern for single quotes
                 pattern = r'game\s*=\s*\'([^\']*)\''
                 match = re.search(pattern, content)
-                
+
                 if match:
                     found_game_name = match.group(1)
                     if found_game_name == game_name:
