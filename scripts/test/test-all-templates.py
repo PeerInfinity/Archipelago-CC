@@ -225,12 +225,26 @@ def main():
         action='store_true',
         help='Include first_error_line and first_warning_line fields in test results (disabled by default)'
     )
+    parser.add_argument(
+        '--minimal-spoilers',
+        action='store_true',
+        help='Configure host settings for minimal spoilers before running tests'
+    )
+    parser.add_argument(
+        '--full-spoilers',
+        action='store_true',
+        help='Configure host settings for full spoilers before running tests'
+    )
 
     args = parser.parse_args()
 
     # Validate mutually exclusive options
     if args.export_only and args.test_only:
         print("Error: --export-only and --test-only are mutually exclusive")
+        sys.exit(1)
+
+    if args.minimal_spoilers and args.full_spoilers:
+        print("Error: --minimal-spoilers and --full-spoilers are mutually exclusive")
         sys.exit(1)
 
     if args.single_client and not args.multiplayer:
@@ -273,11 +287,68 @@ def main():
         print("Error: --retest-continue MAX_SEED must be at least 1")
         sys.exit(1)
 
+    # Determine project root early (needed for setup scripts)
+    # Script is now at scripts/test/test-all-templates.py, so go up 3 levels to get to project root
+    project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+
+    # Run host settings configuration if requested (before any other processing)
+    if args.minimal_spoilers:
+        print("Configuring host settings for minimal spoilers...")
+        setup_script = os.path.join(project_root, 'scripts', 'setup', 'update_host_settings.py')
+        try:
+            result = subprocess.run(
+                [sys.executable, setup_script, 'minimal-spoilers'],
+                cwd=project_root,
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            if result.returncode == 0:
+                print("✓ Host settings configured for minimal spoilers")
+                if result.stdout:
+                    print(result.stdout)
+            else:
+                print(f"✗ Failed to configure host settings: {result.stderr}")
+                sys.exit(1)
+        except subprocess.TimeoutExpired:
+            print("✗ Host settings configuration timed out")
+            sys.exit(1)
+        except Exception as e:
+            print(f"✗ Error running update_host_settings.py: {e}")
+            sys.exit(1)
+        print()
+
+    if args.full_spoilers:
+        print("Configuring host settings for full spoilers...")
+        setup_script = os.path.join(project_root, 'scripts', 'setup', 'update_host_settings.py')
+        try:
+            result = subprocess.run(
+                [sys.executable, setup_script, 'full-spoilers'],
+                cwd=project_root,
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            if result.returncode == 0:
+                print("✓ Host settings configured for full spoilers")
+                if result.stdout:
+                    print(result.stdout)
+            else:
+                print(f"✗ Failed to configure host settings: {result.stderr}")
+                sys.exit(1)
+        except subprocess.TimeoutExpired:
+            print("✗ Host settings configuration timed out")
+            sys.exit(1)
+        except Exception as e:
+            print(f"✗ Error running update_host_settings.py: {e}")
+            sys.exit(1)
+        print()
+
     # Check if both seed and seed_range were explicitly provided
     if args.seed is not None and args.seed_range is not None:
         print("Error: --seed and --seed-range are mutually exclusive")
         sys.exit(1)
-    
+
     # Parse seed range if provided
     seed_list = []
     if args.seed_range:
@@ -326,10 +397,6 @@ def main():
         print("")
         print("Continuing anyway...")
         print("")
-    
-    # Determine project root early (needed for server startup)
-    # Script is now at scripts/test/test-all-templates.py, so go up 3 levels to get to project root
-    project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
     # Check if HTTP server is running (required for spoiler tests, but not for export-only)
     if not args.export_only and not check_http_server():

@@ -263,6 +263,19 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
         # Parse test results
         test_results_dir = os.path.join(project_root, 'test_results', 'multiplayer')
+        print(f"Looking for test results in: {test_results_dir}")
+
+        # Check if directory exists
+        if not os.path.exists(test_results_dir):
+            print(f"WARNING: Test results directory does not exist: {test_results_dir}")
+        else:
+            # List files in the directory
+            try:
+                files = os.listdir(test_results_dir)
+                print(f"Files in test results directory: {files}")
+            except Exception as e:
+                print(f"ERROR: Could not list test results directory: {e}")
+
         test_results = parse_multiplayer_test_results(test_results_dir)
 
         result['multiplayer_test'].update({
@@ -280,6 +293,16 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
         if include_error_details and test_results.get('error_message'):
             result['multiplayer_test']['first_error_line'] = test_results['error_message']
+
+        # Always log if test failed
+        if not test_results['success']:
+            error_msg = test_results.get('error_message', 'Unknown error')
+            print(f"Multiplayer test failed: {error_msg}")
+            print(f"Test return code: {test_return_code}")
+            if test_error_count > 0:
+                print(f"Errors in output: {test_error_count}")
+                if test_first_error:
+                    print(f"First error: {test_first_error}")
 
     else:
         # Spoiler test
@@ -605,9 +628,9 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     print(f"Checking prerequisites for {template_name}...")
 
     # Load the three test results files
-    spoiler_minimal_file = os.path.join(project_root, 'scripts/output-spoiler-minimal/test-results.json')
-    spoiler_full_file = os.path.join(project_root, 'scripts/output-spoiler-full/test-results.json')
-    multiplayer_file = os.path.join(project_root, 'scripts/output-multiplayer/test-results.json')
+    spoiler_minimal_file = os.path.join(project_root, 'scripts/output/spoiler-minimal/test-results.json')
+    spoiler_full_file = os.path.join(project_root, 'scripts/output/spoiler-full/test-results.json')
+    multiplayer_file = os.path.join(project_root, 'scripts/output/multiplayer/test-results.json')
 
     spoiler_minimal_passed = False
     spoiler_full_passed = False
