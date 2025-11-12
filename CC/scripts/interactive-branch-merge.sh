@@ -138,6 +138,13 @@ fetch_and_merge() {
                 git clean -fd frontend/presets/ 2>/dev/null || true
             fi
 
+            # Unstage and discard changes in scripts/output/
+            if [ -d "scripts/output" ]; then
+                git reset -- scripts/output/ 2>/dev/null || true
+                git checkout -- scripts/output/ 2>/dev/null || true
+                git clean -fd scripts/output/ 2>/dev/null || true
+            fi
+
             echo -e "${GREEN}Temporary files cleaned.${NC}"
         else
             echo -e "${BLUE}Skipped cleaning temporary files.${NC}"
