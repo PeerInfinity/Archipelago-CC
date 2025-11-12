@@ -92,7 +92,12 @@ fetch_and_merge() {
     echo
 
     # Ask if user wants to merge now
-    read -p "Do you want to merge $branch_name into the current branch? [y/N]: " merge_confirm
+    read -p "Do you want to merge $branch_name into the current branch? [Y/n]: " merge_confirm
+
+    # Default to Y if user just presses enter
+    if [ -z "$merge_confirm" ]; then
+        merge_confirm="Y"
+    fi
 
     if [[ "$merge_confirm" =~ ^[Yy]$ ]]; then
         echo -e "${YELLOW}Merging $branch_name...${NC}"
@@ -105,6 +110,37 @@ fetch_and_merge() {
             # Automated merge
             git merge "$branch_name"
             echo -e "${GREEN}Merge completed.${NC}"
+        fi
+        echo
+
+        # Ask if user wants to clean temporary files
+        read -p "Do you want to clean temporary files? [Y/n]: " clean_confirm
+
+        # Default to Y if user just presses enter
+        if [ -z "$clean_confirm" ]; then
+            clean_confirm="Y"
+        fi
+
+        if [[ "$clean_confirm" =~ ^[Yy]$ ]]; then
+            echo -e "${YELLOW}Cleaning temporary files...${NC}"
+
+            # Unstage and discard changes in CC/scripts/logs/
+            if [ -d "CC/scripts/logs" ]; then
+                git reset -- CC/scripts/logs/ 2>/dev/null || true
+                git checkout -- CC/scripts/logs/ 2>/dev/null || true
+                git clean -fd CC/scripts/logs/ 2>/dev/null || true
+            fi
+
+            # Unstage and discard changes in frontend/presets/
+            if [ -d "frontend/presets" ]; then
+                git reset -- frontend/presets/ 2>/dev/null || true
+                git checkout -- frontend/presets/ 2>/dev/null || true
+                git clean -fd frontend/presets/ 2>/dev/null || true
+            fi
+
+            echo -e "${GREEN}Temporary files cleaned.${NC}"
+        else
+            echo -e "${BLUE}Skipped cleaning temporary files.${NC}"
         fi
     else
         echo -e "${BLUE}Skipped merge. Branch $branch_name has been fetched and is available locally.${NC}"
