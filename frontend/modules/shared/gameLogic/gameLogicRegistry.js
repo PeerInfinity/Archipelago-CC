@@ -244,6 +244,8 @@ import * as kdl3Logic from './kdl3/kdl3Logic.js';
 import * as landstalkerLogic from './landstalker/landstalkerLogic.js';
 import { landstalkerStateModule } from './landstalker/landstalkerLogic.js';
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
+import * as mlssLogic from './mlss/mlssLogic.js';
+import { mlssStateModule } from './mlss/mlssLogic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 
@@ -346,6 +348,12 @@ const GAME_REGISTRY = {
     helperFunctions: kdl3Logic.helperFunctions,
     worldClasses: ['KDL3World'],
     aliases: ["Kirby's Dream Land 3", 'KDL3']
+  },
+  'Mario & Luigi Superstar Saga': {
+    logicModule: mlssLogic.mlssStateModule,
+    helperFunctions: mlssLogic.helperFunctions,
+    worldClasses: ['MLSSWorld'],
+    aliases: ['Mario & Luigi Superstar Saga', 'MLSS']
   },
   'Pokemon Red and Blue': {
     logicModule: pokemon_rbLogic.pokemon_rbStateModule,
