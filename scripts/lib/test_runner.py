@@ -558,13 +558,15 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
                             current_player_count: int, export_only: bool = False,
                             test_only: bool = False, headed: bool = False,
                             keep_templates: bool = False, test_all_players: bool = False,
+                            require_prerequisites: bool = False,
                             include_error_details: bool = False) -> Dict:
     """
     Test a single template in multiworld mode.
 
-    This checks if the template has passed all prerequisite tests (spoiler minimal,
-    spoiler full, and multiplayer), then copies it to the multiworld directory,
-    runs generation with all accumulated templates, and tests each player.
+    By default, tests all templates. If require_prerequisites is True, only tests
+    templates that have passed spoiler minimal, spoiler full, and multiplayer tests.
+    Copies template to the multiworld directory, runs generation with all accumulated
+    templates, and tests each player.
 
     Args:
         template_file: Name of the template file to test
@@ -580,6 +582,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         headed: If True, run Playwright tests in headed mode
         keep_templates: If True, don't copy template to multiworld directory (just test existing templates)
         test_all_players: If True, test all players; if False, only test the newly added player
+        require_prerequisites: If True, skip templates that haven't passed other test types (default: False)
 
     Returns:
         Dictionary with test results
@@ -710,11 +713,13 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     print(f"  Spoiler Full: {'PASS' if spoiler_full_passed else 'FAIL'}")
     print(f"  Multiplayer: {'PASS' if multiplayer_passed else 'FAIL'}")
 
-    if not result['prerequisite_check']['all_prerequisites_passed']:
+    if require_prerequisites and not result['prerequisite_check']['all_prerequisites_passed']:
         print(f"Skipping {template_name} - not all prerequisites passed")
         result['multiworld_test']['success'] = False
         result['multiworld_test']['skip_reason'] = 'Prerequisites not met'
         return result
+    elif not require_prerequisites:
+        print(f"Proceeding with multiworld test (prerequisite check disabled)")
 
     # Copy template to multiworld directory (unless keep_templates is True)
     if not keep_templates:

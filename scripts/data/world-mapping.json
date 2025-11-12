@@ -246,9 +246,9 @@
   },
   "Links Awakening DX": {
     "exporter_path": "exporter/games/ladx.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "ladx"
   },
   "Lufia II Ancient Cave": {
@@ -316,9 +316,9 @@
   },
   "Ocarina of Time": {
     "exporter_path": "exporter/games/oot.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/oot/ootLogic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "oot"
   },
   "Old School Runescape": {
@@ -385,9 +385,9 @@
     "world_directory": "saving_princess"
   },
   "Secret of Evermore": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/soe.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "soe"
   },
@@ -434,10 +434,10 @@
     "world_directory": "apsudoku"
   },
   "Super Mario 64": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/sm64ex.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "sm64ex"
   },
   "Super Mario Land 2": {
@@ -539,10 +539,10 @@
     "world_directory": "codingadventure"
   },
   "Yacht Dice": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/yachtdice.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "yachtdice"
   },
   "Yoshi's Island": {

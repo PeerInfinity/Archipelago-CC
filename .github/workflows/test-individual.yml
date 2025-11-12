@@ -193,58 +193,58 @@ jobs:
 
       - name: Merge test results into repository
         run: |
-          # Create directories if they don't exist
-          mkdir -p scripts/output/spoiler-minimal
-          mkdir -p scripts/output/spoiler-full
-          mkdir -p scripts/output/multiplayer
-          mkdir -p scripts/output/multiworld
-          mkdir -p scripts/output/multitemplate-minimal
-          mkdir -p scripts/output/multitemplate-full
-          mkdir -p docs/json/developer/test-results
+          # Create temporary directories
+          mkdir -p /tmp/merged-results/scripts/output/spoiler-minimal
+          mkdir -p /tmp/merged-results/scripts/output/spoiler-full
+          mkdir -p /tmp/merged-results/scripts/output/multiplayer
+          mkdir -p /tmp/merged-results/scripts/output/multiworld
+          mkdir -p /tmp/merged-results/scripts/output/multitemplate-minimal
+          mkdir -p /tmp/merged-results/scripts/output/multitemplate-full
+          mkdir -p /tmp/merged-results/docs/json/developer/test-results
 
-          # Copy JSON results based on test type
+          # Copy JSON results to temp based on test type
           case "${{ github.event.inputs.test_type }}" in
             "minimal-spoiler")
               if [ -f artifacts/scripts/output/spoiler-minimal/test-results.json ]; then
-                cp artifacts/scripts/output/spoiler-minimal/test-results.json scripts/output/spoiler-minimal/test-results.json
+                cp artifacts/scripts/output/spoiler-minimal/test-results.json /tmp/merged-results/scripts/output/spoiler-minimal/test-results.json
               fi
               ;;
             "full-spoiler")
               if [ -f artifacts/scripts/output/spoiler-full/test-results.json ]; then
-                cp artifacts/scripts/output/spoiler-full/test-results.json scripts/output/spoiler-full/test-results.json
+                cp artifacts/scripts/output/spoiler-full/test-results.json /tmp/merged-results/scripts/output/spoiler-full/test-results.json
               fi
               ;;
             "multiplayer")
               if [ -f artifacts/scripts/output/multiplayer/test-results.json ]; then
-                cp artifacts/scripts/output/multiplayer/test-results.json scripts/output/multiplayer/test-results.json
+                cp artifacts/scripts/output/multiplayer/test-results.json /tmp/merged-results/scripts/output/multiplayer/test-results.json
               fi
               ;;
             "multiworld")
               if [ -f artifacts/scripts/output/multiworld/test-results.json ]; then
-                cp artifacts/scripts/output/multiworld/test-results.json scripts/output/multiworld/test-results.json
+                cp artifacts/scripts/output/multiworld/test-results.json /tmp/merged-results/scripts/output/multiworld/test-results.json
               fi
               ;;
             "multitemplate-minimal")
               if [ -f artifacts/scripts/output/multitemplate-minimal/test-results.json ]; then
-                cp artifacts/scripts/output/multitemplate-minimal/test-results.json scripts/output/multitemplate-minimal/test-results.json
+                cp artifacts/scripts/output/multitemplate-minimal/test-results.json /tmp/merged-results/scripts/output/multitemplate-minimal/test-results.json
               fi
               ;;
             "multitemplate-full")
               if [ -f artifacts/scripts/output/multitemplate-full/test-results.json ]; then
-                cp artifacts/scripts/output/multitemplate-full/test-results.json scripts/output/multitemplate-full/test-results.json
+                cp artifacts/scripts/output/multitemplate-full/test-results.json /tmp/merged-results/scripts/output/multitemplate-full/test-results.json
               fi
               ;;
           esac
 
-          # Copy markdown documentation files
-          find artifacts -path "*/docs/json/developer/test-results/*.md" -exec cp {} docs/json/developer/test-results/ \;
+          # Copy markdown documentation files to temp
+          find artifacts -path "*/docs/json/developer/test-results/*.md" -exec cp {} /tmp/merged-results/docs/json/developer/test-results/ \;
 
           # List what was copied
-          echo "=== Copied JSON Results ==="
-          ls -lh scripts/output/*/test-results.json || echo "No JSON files found"
+          echo "=== Copied JSON Results to temp ==="
+          ls -lh /tmp/merged-results/scripts/output/*/test-results.json || echo "No JSON files found"
 
-          echo "=== Copied Markdown Files ==="
-          ls -lh docs/json/developer/test-results/*.md || echo "No markdown files found"
+          echo "=== Copied Markdown Files to temp ==="
+          ls -lh /tmp/merged-results/docs/json/developer/test-results/*.md || echo "No markdown files found"
 
       - name: Create or switch to test-results-update branch
         run: |
@@ -257,16 +257,24 @@ jobs:
           # Check if branch exists remotely
           if git ls-remote --exit-code --heads origin test-results-update; then
             echo "Branch test-results-update exists, checking it out"
-            # Stash any local changes from the merge step
-            git stash push -m "Stashing merged test results temporarily"
             git checkout test-results-update
             git pull origin test-results-update
-            # Apply the stashed changes back
-            git stash pop || echo "No stash to pop (this is fine)"
           else
             echo "Creating new branch test-results-update"
             git checkout -b test-results-update
           fi
+
+          # Now copy the merged results from temp location
+          echo "Copying merged results to repository..."
+          mkdir -p scripts/output
+          mkdir -p docs/json/developer/test-results
+
+          cp -r /tmp/merged-results/scripts/output/* scripts/output/ 2>/dev/null || true
+          cp /tmp/merged-results/docs/json/developer/test-results/*.md docs/json/developer/test-results/ 2>/dev/null || true
+
+          echo "=== Files in repository after copy ==="
+          ls -lh scripts/output/*/test-results.json || echo "No JSON files"
+          ls -lh docs/json/developer/test-results/*.md || echo "No MD files"
 
       - name: Commit and push results
         run: |

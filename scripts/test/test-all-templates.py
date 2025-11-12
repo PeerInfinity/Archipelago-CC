@@ -186,12 +186,17 @@ def main():
     parser.add_argument(
         '--multiworld',
         action='store_true',
-        help='Run multiworld tests - requires all other test types to pass first'
+        help='Run multiworld tests'
     )
     parser.add_argument(
         '--multiworld-keep-templates',
         action='store_true',
         help='Keep existing templates in Multiworld directory (do not clear or add new templates)'
+    )
+    parser.add_argument(
+        '--multiworld-require-prerequisites',
+        action='store_true',
+        help='Require prerequisite tests to pass before including template in multiworld test (default: disabled)'
     )
     parser.add_argument(
         '--multiworld-test-all-players',
@@ -895,6 +900,7 @@ def main():
                         test_only=args.test_only, headed=args.headed,
                         keep_templates=args.multiworld_keep_templates,
                         test_all_players=args.multiworld_test_all_players,
+                        require_prerequisites=args.multiworld_require_prerequisites,
                         include_error_details=args.include_error_details
                     )
                 else:
@@ -906,6 +912,7 @@ def main():
                         test_only=args.test_only, headed=args.headed,
                         keep_templates=args.multiworld_keep_templates,
                         test_all_players=args.multiworld_test_all_players,
+                        require_prerequisites=args.multiworld_require_prerequisites,
                         include_error_details=args.include_error_details
                     )
 
