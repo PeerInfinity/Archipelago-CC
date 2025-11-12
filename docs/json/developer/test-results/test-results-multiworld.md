@@ -5,9 +5,13 @@
 [← Back to Test Results Summary](./test-results-summary.md)
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 **Generated:** 2025-11-12 05:49:58
 =======
 **Generated:** 2025-11-12 16:37:19
+>>>>>>> Stashed changes
+=======
+**Generated:** 2025-11-12 16:45:02
 >>>>>>> Stashed changes
 
 ## Summary
@@ -24,7 +28,11 @@
 | A Hat in Time | ✅ Passed | 1 | 1 | 1 | 0 | ✅ | ✅ |
 | A Link to the Past | ❌ Failed | 2 | 2 | 0 | 1 | ✅ | ✅ |
 | A Short Hike | ✅ Passed | 2 | 2 | 1 | 0 | ✅ | ⚫ |
+<<<<<<< Updated upstream
 | Adventure | ❌ Failed | 1 | 1 | 0 | 1 | ✅ | ⚫ |
+=======
+| Adventure | ✅ Passed | 1 | 1 | 1 | 0 | ✅ | ⚫ |
+>>>>>>> Stashed changes
 | Aquaria | ✅ Passed | 4 | 4 | 1 | 0 | ✅ | ✅ |
 | ArchipIDLE | ⚫ Skipped | 5 | N/A | N/A | N/A | ✅ | ✅ |
 | Blasphemous | ⚫ Skipped | 5 | N/A | N/A | N/A | ✅ | ✅ |

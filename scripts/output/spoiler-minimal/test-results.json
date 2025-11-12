@@ -5,9 +5,13 @@
     "batch_processing_time_seconds": 795.3,
     "created": "2025-10-14T13:24:10.253834",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "last_updated": "2025-11-11T20:49:04.218919",
 =======
     "last_updated": "2025-11-12T16:37:56.077662",
+>>>>>>> Stashed changes
+=======
+    "last_updated": "2025-11-12T16:46:08.119972",
 >>>>>>> Stashed changes
     "script_version": "1.0.0"
   },
@@ -1378,7 +1382,11 @@
             "processing_time_seconds": 2.04,
 =======
             "error_type": null,
+<<<<<<< Updated upstream
             "processing_time_seconds": 2.47,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 2.32,
 >>>>>>> Stashed changes
             "return_code": 0,
             "success": true,
@@ -1395,11 +1403,16 @@
             "error_count": 0,
             "pass_fail": "passed",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             "processing_time_seconds": 5.08,
             "return_code": 0,
 =======
             "processing_time_seconds": 1.34,
             "return_code": 1,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 5.87,
+            "return_code": 0,
 >>>>>>> Stashed changes
             "sphere_reached": 6.1,
             "success": true,
@@ -1408,9 +1421,13 @@
           },
           "template_name": "Adventure.yaml",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "timestamp": "2025-11-01T20:30:15.595006",
 =======
           "timestamp": "2025-11-12T16:37:18.401757",
+>>>>>>> Stashed changes
+=======
+          "timestamp": "2025-11-12T16:44:48.794132",
 >>>>>>> Stashed changes
           "world_info": {
             "exporter_path": "exporter/games/adventure.py",
@@ -1435,7 +1452,11 @@
             "processing_time_seconds": 2.31,
 =======
             "error_type": null,
+<<<<<<< Updated upstream
             "processing_time_seconds": 2.38,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 2.28,
 >>>>>>> Stashed changes
             "return_code": 0,
             "success": true,
@@ -1452,11 +1473,16 @@
             "error_count": 0,
             "pass_fail": "passed",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             "processing_time_seconds": 4.87,
             "return_code": 0,
 =======
             "processing_time_seconds": 1.2,
             "return_code": 1,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 5.48,
+            "return_code": 0,
 >>>>>>> Stashed changes
             "sphere_reached": 2.1,
             "success": true,
@@ -1465,9 +1491,13 @@
           },
           "template_name": "Adventure.yaml",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "timestamp": "2025-10-14T22:36:02.399615",
 =======
           "timestamp": "2025-11-12T16:37:52.222005",
+>>>>>>> Stashed changes
+=======
+          "timestamp": "2025-11-12T16:46:00.108090",
 >>>>>>> Stashed changes
           "world_info": {
             "exporter_path": "exporter/games/adventure.py",
@@ -1492,7 +1522,11 @@
             "processing_time_seconds": 2.6,
 =======
             "error_type": null,
+<<<<<<< Updated upstream
             "processing_time_seconds": 2.34,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 2.26,
 >>>>>>> Stashed changes
             "return_code": 0,
             "success": true,
@@ -1509,11 +1543,16 @@
             "error_count": 0,
             "pass_fail": "passed",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             "processing_time_seconds": 5.04,
             "return_code": 0,
 =======
             "processing_time_seconds": 1.17,
             "return_code": 1,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 5.62,
+            "return_code": 0,
 >>>>>>> Stashed changes
             "sphere_reached": 3.1,
             "success": true,
@@ -1522,9 +1561,13 @@
           },
           "template_name": "Adventure.yaml",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "timestamp": "2025-10-14T22:34:59.675511",
 =======
           "timestamp": "2025-11-12T16:37:22.372922",
+>>>>>>> Stashed changes
+=======
+          "timestamp": "2025-11-12T16:44:57.154069",
 >>>>>>> Stashed changes
           "world_info": {
             "exporter_path": "exporter/games/adventure.py",
@@ -1549,7 +1592,11 @@
             "processing_time_seconds": 2.3,
 =======
             "error_type": null,
+<<<<<<< Updated upstream
             "processing_time_seconds": 2.35,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 2.26,
 >>>>>>> Stashed changes
             "return_code": 0,
             "success": true,
@@ -1565,7 +1612,11 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
+<<<<<<< Updated upstream
             "processing_time_seconds": 6.66,
+=======
+            "processing_time_seconds": 5.47,
+>>>>>>> Stashed changes
             "return_code": 0,
             "sphere_reached": 3.1,
             "success": true,
@@ -1574,9 +1625,13 @@
           },
           "template_name": "Adventure.yaml",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "timestamp": "2025-10-14T22:35:07.456943",
 =======
           "timestamp": "2025-11-12T16:37:26.050562",
+>>>>>>> Stashed changes
+=======
+          "timestamp": "2025-11-12T16:45:05.184596",
 >>>>>>> Stashed changes
           "world_info": {
             "exporter_path": "exporter/games/adventure.py",
@@ -1601,7 +1656,11 @@
             "processing_time_seconds": 2.31,
 =======
             "error_type": null,
+<<<<<<< Updated upstream
             "processing_time_seconds": 2.4,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 2.22,
 >>>>>>> Stashed changes
             "return_code": 0,
             "success": true,
@@ -1618,6 +1677,7 @@
             "error_count": 0,
             "pass_fail": "passed",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             "processing_time_seconds": 4.88,
             "return_code": 0,
             "sphere_reached": 4.1,
@@ -1630,13 +1690,21 @@
 =======
             "processing_time_seconds": 1.18,
             "return_code": 1,
+=======
+            "processing_time_seconds": 5.48,
+            "return_code": 0,
+>>>>>>> Stashed changes
             "sphere_reached": 5.1,
-            "success": false,
+            "success": true,
             "total_spheres": 5.1,
             "warning_count": 0
           },
           "template_name": "Adventure.yaml",
+<<<<<<< Updated upstream
           "timestamp": "2025-11-12T16:37:29.744622",
+>>>>>>> Stashed changes
+=======
+          "timestamp": "2025-11-12T16:45:13.057283",
 >>>>>>> Stashed changes
           "world_info": {
             "exporter_path": "exporter/games/adventure.py",
@@ -1661,7 +1729,11 @@
             "processing_time_seconds": 2.31,
 =======
             "error_type": null,
+<<<<<<< Updated upstream
             "processing_time_seconds": 2.43,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 2.19,
 >>>>>>> Stashed changes
             "return_code": 0,
             "success": true,
@@ -1678,11 +1750,16 @@
             "error_count": 0,
             "pass_fail": "passed",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             "processing_time_seconds": 4.88,
             "return_code": 0,
 =======
             "processing_time_seconds": 1.18,
             "return_code": 1,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 5.46,
+            "return_code": 0,
 >>>>>>> Stashed changes
             "sphere_reached": 4.1,
             "success": true,
@@ -1691,9 +1768,13 @@
           },
           "template_name": "Adventure.yaml",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "timestamp": "2025-10-14T22:35:23.874925",
 =======
           "timestamp": "2025-11-12T16:37:33.476661",
+>>>>>>> Stashed changes
+=======
+          "timestamp": "2025-11-12T16:45:20.899530",
 >>>>>>> Stashed changes
           "world_info": {
             "exporter_path": "exporter/games/adventure.py",
@@ -1718,7 +1799,11 @@
             "processing_time_seconds": 2.31,
 =======
             "error_type": null,
+<<<<<<< Updated upstream
             "processing_time_seconds": 2.36,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 2.21,
 >>>>>>> Stashed changes
             "return_code": 0,
             "success": true,
@@ -1735,11 +1820,16 @@
             "error_count": 0,
             "pass_fail": "passed",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             "processing_time_seconds": 4.88,
             "return_code": 0,
 =======
             "processing_time_seconds": 1.21,
             "return_code": 1,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 5.5,
+            "return_code": 0,
 >>>>>>> Stashed changes
             "sphere_reached": 3.1,
             "success": true,
@@ -1748,9 +1838,13 @@
           },
           "template_name": "Adventure.yaml",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "timestamp": "2025-10-14T22:35:31.197425",
 =======
           "timestamp": "2025-11-12T16:37:37.250499",
+>>>>>>> Stashed changes
+=======
+          "timestamp": "2025-11-12T16:45:28.698475",
 >>>>>>> Stashed changes
           "world_info": {
             "exporter_path": "exporter/games/adventure.py",
@@ -1772,10 +1866,15 @@
           "generation": {
             "error_count": 0,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             "processing_time_seconds": 2.31,
 =======
             "error_type": null,
             "processing_time_seconds": 2.38,
+>>>>>>> Stashed changes
+=======
+            "error_type": null,
+            "processing_time_seconds": 2.24,
 >>>>>>> Stashed changes
             "return_code": 0,
             "success": true,
@@ -1792,6 +1891,7 @@
             "error_count": 0,
             "pass_fail": "passed",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             "processing_time_seconds": 4.89,
             "return_code": 0,
             "sphere_reached": 2.1,
@@ -1804,13 +1904,21 @@
 =======
             "processing_time_seconds": 1.18,
             "return_code": 1,
+=======
+            "processing_time_seconds": 5.48,
+            "return_code": 0,
+>>>>>>> Stashed changes
             "sphere_reached": 2.2,
-            "success": false,
+            "success": true,
             "total_spheres": 2.2,
             "warning_count": 0
           },
           "template_name": "Adventure.yaml",
+<<<<<<< Updated upstream
           "timestamp": "2025-11-12T16:37:40.987884",
+>>>>>>> Stashed changes
+=======
+          "timestamp": "2025-11-12T16:45:36.552760",
 >>>>>>> Stashed changes
           "world_info": {
             "exporter_path": "exporter/games/adventure.py",
@@ -1835,7 +1943,11 @@
             "processing_time_seconds": 4.1,
 =======
             "error_type": null,
+<<<<<<< Updated upstream
             "processing_time_seconds": 2.41,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 2.21,
 >>>>>>> Stashed changes
             "return_code": 0,
             "success": true,
@@ -1852,11 +1964,16 @@
             "error_count": 0,
             "pass_fail": "passed",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             "processing_time_seconds": 4.88,
             "return_code": 0,
 =======
             "processing_time_seconds": 1.19,
             "return_code": 1,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 5.48,
+            "return_code": 0,
 >>>>>>> Stashed changes
             "sphere_reached": 4.1,
             "success": true,
@@ -1865,9 +1982,13 @@
           },
           "template_name": "Adventure.yaml",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "timestamp": "2025-10-14T22:35:45.844142",
 =======
           "timestamp": "2025-11-12T16:37:44.708924",
+>>>>>>> Stashed changes
+=======
+          "timestamp": "2025-11-12T16:45:44.412654",
 >>>>>>> Stashed changes
           "world_info": {
             "exporter_path": "exporter/games/adventure.py",
@@ -1889,10 +2010,15 @@
           "generation": {
             "error_count": 0,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             "processing_time_seconds": 2.3,
 =======
             "error_type": null,
             "processing_time_seconds": 2.4,
+>>>>>>> Stashed changes
+=======
+            "error_type": null,
+            "processing_time_seconds": 2.23,
 >>>>>>> Stashed changes
             "return_code": 0,
             "success": true,
@@ -1909,11 +2035,16 @@
             "error_count": 0,
             "pass_fail": "passed",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             "processing_time_seconds": 4.97,
             "return_code": 0,
 =======
             "processing_time_seconds": 1.19,
             "return_code": 1,
+>>>>>>> Stashed changes
+=======
+            "processing_time_seconds": 5.48,
+            "return_code": 0,
 >>>>>>> Stashed changes
             "sphere_reached": 4.1,
             "success": true,
@@ -1922,9 +2053,13 @@
           },
           "template_name": "Adventure.yaml",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
           "timestamp": "2025-10-14T22:35:54.954541",
 =======
           "timestamp": "2025-11-12T16:37:48.464129",
+>>>>>>> Stashed changes
+=======
+          "timestamp": "2025-11-12T16:45:52.254025",
 >>>>>>> Stashed changes
           "world_info": {
             "exporter_path": "exporter/games/adventure.py",
@@ -1948,9 +2083,13 @@
       },
       "template_name": "Adventure.yaml",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       "timestamp": "2025-11-01T20:30:15.595006",
 =======
       "timestamp": "2025-11-12T16:37:18.382594",
+>>>>>>> Stashed changes
+=======
+      "timestamp": "2025-11-12T16:44:48.777316",
 >>>>>>> Stashed changes
       "total_seeds_tested": 10
     },
