@@ -110,7 +110,14 @@ jobs:
         with:
           name: individual-test-${{ github.event.inputs.test_type }}
           path: |
-            scripts/output/
+            scripts/output/${{
+              github.event.inputs.test_type == 'minimal-spoiler' && 'spoiler-minimal/' ||
+              github.event.inputs.test_type == 'full-spoiler' && 'spoiler-full/' ||
+              github.event.inputs.test_type == 'multiplayer' && 'multiplayer/' ||
+              github.event.inputs.test_type == 'multiworld' && 'multiworld/' ||
+              github.event.inputs.test_type == 'multitemplate-minimal' && 'multitemplate-minimal/' ||
+              'multitemplate-full/'
+            }}
             docs/json/developer/test-results/
           retention-days: 7
 
@@ -250,8 +257,12 @@ jobs:
           # Check if branch exists remotely
           if git ls-remote --exit-code --heads origin test-results-update; then
             echo "Branch test-results-update exists, checking it out"
+            # Stash any local changes from the merge step
+            git stash push -m "Stashing merged test results temporarily"
             git checkout test-results-update
             git pull origin test-results-update
+            # Apply the stashed changes back
+            git stash pop || echo "No stash to pop (this is fine)"
           else
             echo "Creating new branch test-results-update"
             git checkout -b test-results-update

@@ -129,28 +129,28 @@ jobs:
           # Minimal spoiler test for all templates, seeds 1-10
           - test_name: "Minimal Spoiler (Seeds 1-10)"
             host_config: "minimal-spoilers"
-            test_command: "python scripts/test/test-all-templates.py --seed-range 1-10 --seed-range-continue-on-failure -p --include-list \"Adventure.yaml\""
+            test_command: "python scripts/test/test-all-templates.py --seed-range 1-10 --seed-range-continue-on-failure -p"
             output_dir: "spoiler-minimal"
             output_md_file: "test-results-spoilers-minimal.md"
 
           # Full spoiler test for all templates, seeds 1-10
           - test_name: "Full Spoiler (Seeds 1-10)"
             host_config: "full-spoilers"
-            test_command: "python scripts/test/test-all-templates.py --seed-range 1-10 --seed-range-continue-on-failure -p --include-list \"Adventure.yaml\""
+            test_command: "python scripts/test/test-all-templates.py --seed-range 1-10 --seed-range-continue-on-failure -p"
             output_dir: "spoiler-full"
             output_md_file: "test-results-spoilers-full.md"
 
           # Multiplayer test for all templates
           - test_name: "Multiplayer"
             host_config: "minimal-spoilers"
-            test_command: "python scripts/test/test-all-templates.py --multiplayer -p --include-list \"Adventure.yaml\""
+            test_command: "python scripts/test/test-all-templates.py --multiplayer -p"
             output_dir: "multiplayer"
             output_md_file: "test-results-multiplayer.md"
 
           # Multiworld test for all templates
           - test_name: "Multiworld"
             host_config: "minimal-spoilers"
-            test_command: "python scripts/test/test-all-templates.py --multiworld -p --include-list \"Adventure.yaml\""
+            test_command: "python scripts/test/test-all-templates.py --multiworld -p"
             output_dir: "multiworld"
             output_md_file: "test-results-multiworld.md"
 
@@ -158,7 +158,7 @@ jobs:
           - test_name: "Multitemplate ALTTP Minimal"
             host_config: "minimal-spoilers"
             setup_multitemplate: true
-            test_command: "python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate -p --include-list \"Adventure.yaml\""
+            test_command: "python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate -p"
             output_dir: "multitemplate-minimal"
             output_md_file: "test-results-multitemplate-minimal.md"
 
@@ -166,7 +166,7 @@ jobs:
           - test_name: "Multitemplate ALTTP Full"
             host_config: "full-spoilers"
             setup_multitemplate: true
-            test_command: "python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate -p --include-list \"Adventure.yaml\""
+            test_command: "python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate -p"
             output_dir: "multitemplate-full"
             output_md_file: "test-results-multitemplate-full.md"
 
@@ -377,8 +377,6 @@ jobs:
             - Multiplayer tests
             - Multiworld tests
             - Multitemplate ALTTP tests (minimal and full)
-
-            Note: Tests limited to Adventure.yaml template only
             "
 
             git push origin test-results-update
