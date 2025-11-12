@@ -241,6 +241,7 @@ import { inscryptionStateModule } from './inscryption/inscryptionLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
+import { helperFunctions as mm2HelperFunctions } from './mm2/mm2Logic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -335,6 +336,12 @@ const GAME_REGISTRY = {
     helperFunctions: pokemon_rbLogic.helperFunctions,
     worldClasses: ['PokemonRedBlueWorld'],
     aliases: ['Pokemon Red and Blue', 'Pokemon RB', 'pokemon_rb']
+  },
+  'Mega Man 2': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: mm2HelperFunctions,
+    worldClasses: ['MM2World'],
+    aliases: ['Mega Man 2', 'MM2', 'Megaman 2']
   },
   // Add more games here as they're implemented
   'Generic': {
