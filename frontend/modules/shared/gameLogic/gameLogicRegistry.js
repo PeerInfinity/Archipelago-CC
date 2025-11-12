@@ -239,6 +239,8 @@ import { hylics2StateModule } from './hylics_2/hylics2Logic.js';
 import * as inscryptionLogic from './inscryption/inscryptionLogic.js';
 import { inscryptionStateModule } from './inscryption/inscryptionLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
+import * as mlssLogic from './mlss/mlssLogic.js';
+import { mlssStateModule } from './mlss/mlssLogic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 
@@ -329,6 +331,12 @@ const GAME_REGISTRY = {
     helperFunctions: kh1Logic,
     worldClasses: ['KH1World'],
     aliases: ['Kingdom Hearts', 'KH1', 'Kingdom Hearts 1']
+  },
+  'Mario & Luigi Superstar Saga': {
+    logicModule: mlssLogic.mlssStateModule,
+    helperFunctions: mlssLogic.helperFunctions,
+    worldClasses: ['MLSSWorld'],
+    aliases: ['Mario & Luigi Superstar Saga', 'MLSS']
   },
   'Pokemon Red and Blue': {
     logicModule: pokemon_rbLogic.pokemon_rbStateModule,

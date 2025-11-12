@@ -311,8 +311,9 @@ export function createStateSnapshotInterface(
             options: staticData?.settings?.[playerId] || staticData?.settings || {}
           };
         case 'logic':
+        case 'StateLogic':
           // Return game-specific helper functions as an object
-          // This allows code like logic.can_surf(...) to work
+          // This allows code like logic.can_surf(...) or StateLogic.hammers(...) to work
           const selectedHelpers = getHelperFunctions(gameName);
           if (selectedHelpers) {
             // Wrap each helper to accept the right parameters
