@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-11 23:41:03
+**Generated:** 2025-11-12 08:57:21
 
 **Source Data Created:** 2025-10-14T13:24:10.253834
 
-**Source Data Last Updated:** 2025-11-11T23:41:03.408448
+**Source Data Last Updated:** 2025-11-12T08:57:21.186510
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 67 (84.8%)
-- **Failed:** 12 (15.2%)
+- **Passed:** 69 (87.3%)
+- **Failed:** 10 (12.7%)
 
 ## Test Results
 
@@ -39,13 +39,13 @@
 | DOOM 1993 | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ⚫ |
 | DOOM II | ✅ Passed seeds 1-10 | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ⚫ |
-| Donkey Kong Country 3 | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ✅ | ⚫ |
+| Donkey Kong Country 3 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ✅ | ⚫ |
 | Factorio | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | ✅ | ⚫ |
 | Faxanadu | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ⚫ |
 | Heretic | ✅ Passed seeds 1-10 | 0 | 24.1 | 24.1 | 🟢 Complete | ⚫ | ⚫ |
 | Hollow Knight | ✅ Passed seeds 1-10 | 0 | 70.1 | 70.1 | 🟢 Complete | ✅ | ✅ |
-| Hylics 2 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ✅ | ⚫ |
+| Hylics 2 | ✅ Passed seeds 1-10 | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ⚫ |
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 9.2 | 9.2 | 🟢 Complete | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ✅ | ⚫ |
 | Kingdom Hearts | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |

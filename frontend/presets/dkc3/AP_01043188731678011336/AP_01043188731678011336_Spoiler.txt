@@ -1,0 +1,366 @@
+﻿Archipelago Version 0.6.4  -  Seed: 2
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Donkey Kong Country 3
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Goal:                            Knautilus
+Krematoa Bonus Coins Cost:       15
+Percentage of Extra Bonus Coins: 100
+Number of Banana Birds:          15
+Percentage of Banana Birds:      100
+DK Coins for Gyrocopter:         30
+KONGsanity:                      No
+Level Shuffle:                   No
+Difficulty:                      NORML
+Autosave:                        Yes
+MERRY:                           No
+Music Shuffle:                   No
+Kong Palette Swap:               Default
+Starting Life Count:             5
+
+
+Locations:
+
+Lakeside Limbo - Flag: 1-Up Balloon
+Lakeside Limbo - Bonus 1: 1-Up Balloon
+Lakeside Limbo - Bonus 2: Bonus Coin
+Lakeside Limbo - DK Coin: Bonus Coin
+Doorstop Dash - Flag: Bonus Coin
+Doorstop Dash - Bonus 1: Bonus Coin
+Doorstop Dash - Bonus 2: DK Coin
+Doorstop Dash - DK Coin: DK Coin
+Tidal Trouble - Flag: Bear Coin
+Tidal Trouble - Bonus 1: Bonus Coin
+Tidal Trouble - Bonus 2: DK Coin
+Tidal Trouble - DK Coin: Bear Coin
+Skidda's Row - Flag: Bonus Coin
+Skidda's Row - Bonus 1: DK Coin
+Skidda's Row - Bonus 2: Bonus Coin
+Skidda's Row - DK Coin: 1-Up Balloon
+Murky Mill - Flag: Bonus Coin
+Murky Mill - Bonus 1: Progressive Boat Upgrade
+Murky Mill - Bonus 2: Bonus Coin
+Murky Mill - DK Coin: Bonus Coin
+Barrel Shield Bust-Up - Flag: DK Coin
+Barrel Shield Bust-Up - Bonus 1: Krematoa Cog
+Barrel Shield Bust-Up - Bonus 2: DK Coin
+Barrel Shield Bust-Up - DK Coin: Bonus Coin
+Riverside Race - Flag: Bear Coin
+Riverside Race - Bonus 1: Bear Coin
+Riverside Race - Bonus 2: Bonus Coin
+Riverside Race - DK Coin: 1-Up Balloon
+Squeals On Wheels - Flag: Bonus Coin
+Squeals On Wheels - Bonus 1: 1-Up Balloon
+Squeals On Wheels - Bonus 2: Bonus Coin
+Squeals On Wheels - DK Coin: DK Coin
+Springin' Spiders - Flag: Bonus Coin
+Springin' Spiders - Bonus 1: Bonus Coin
+Springin' Spiders - Bonus 2: 1-Up Balloon
+Springin' Spiders - DK Coin: Bear Coin
+Bobbing Barrel Brawl - Flag: Bonus Coin
+Bobbing Barrel Brawl - Bonus 1: Bonus Coin
+Bobbing Barrel Brawl - Bonus 2: DK Coin
+Bobbing Barrel Brawl - DK Coin: DK Coin
+Bazza's Blockade - Flag: DK Coin
+Bazza's Blockade - Bonus 1: Bonus Coin
+Bazza's Blockade - Bonus 2: 1-Up Balloon
+Bazza's Blockade - DK Coin: DK Coin
+Rocket Barrel Ride - Flag: Bear Coin
+Rocket Barrel Ride - Bonus 1: Bonus Coin
+Rocket Barrel Ride - Bonus 2: 1-Up Balloon
+Rocket Barrel Ride - DK Coin: Bear Coin
+Kreeping Klasps - Flag: Bonus Coin
+Kreeping Klasps - Bonus 1: Bonus Coin
+Kreeping Klasps - Bonus 2: Bear Coin
+Kreeping Klasps - DK Coin: Bonus Coin
+Tracker Barrel Trek - Flag: DK Coin
+Tracker Barrel Trek - Bonus 1: 1-Up Balloon
+Tracker Barrel Trek - Bonus 2: Progressive Boat Upgrade
+Tracker Barrel Trek - DK Coin: DK Coin
+Fish Food Frenzy - Flag: Progressive Boat Upgrade
+Fish Food Frenzy - Bonus 1: Bonus Coin
+Fish Food Frenzy - Bonus 2: 1-Up Balloon
+Fish Food Frenzy - DK Coin: DK Coin
+Fire-Ball Frenzy - Flag: Bonus Coin
+Fire-Ball Frenzy - Bonus 1: Bear Coin
+Fire-Ball Frenzy - Bonus 2: DK Coin
+Fire-Ball Frenzy - DK Coin: Bonus Coin
+Demolition Drain-Pipe - Flag: Bonus Coin
+Demolition Drain-Pipe - Bonus 1: DK Coin
+Demolition Drain-Pipe - Bonus 2: Bonus Coin
+Demolition Drain-Pipe - DK Coin: Bear Coin
+Ripsaw Rage - Flag: DK Coin
+Ripsaw Rage - Bonus 1: Bear Coin
+Ripsaw Rage - Bonus 2: DK Coin
+Ripsaw Rage - DK Coin: Bonus Coin
+Blazing Bazukas - Flag: Bonus Coin
+Blazing Bazukas - Bonus 1: DK Coin
+Blazing Bazukas - Bonus 2: Bonus Coin
+Blazing Bazukas - DK Coin: 1-Up Balloon
+Low-G Labyrinth - Flag: Bonus Coin
+Low-G Labyrinth - Bonus 1: 1-Up Balloon
+Low-G Labyrinth - Bonus 2: Bonus Coin
+Low-G Labyrinth - DK Coin: Bear Coin
+Krevice Kreepers - Flag: Bear Coin
+Krevice Kreepers - Bonus 1: Bonus Coin
+Krevice Kreepers - Bonus 2: 1-Up Balloon
+Krevice Kreepers - DK Coin: Bonus Coin
+Tearaway Toboggan - Flag: Bonus Coin
+Tearaway Toboggan - Bonus 1: Bonus Coin
+Tearaway Toboggan - Bonus 2: Bonus Coin
+Tearaway Toboggan - DK Coin: Bonus Coin
+Barrel Drop Bounce - Flag: Bonus Coin
+Barrel Drop Bounce - Bonus 1: DK Coin
+Barrel Drop Bounce - Bonus 2: Bonus Coin
+Barrel Drop Bounce - DK Coin: Bonus Coin
+Krack-Shot Kroc - Flag: DK Coin
+Krack-Shot Kroc - Bonus 1: Bonus Coin
+Krack-Shot Kroc - Bonus 2: Bear Coin
+Krack-Shot Kroc - DK Coin: Bonus Coin
+Lemguin Lunge - Flag: Bonus Coin
+Lemguin Lunge - Bonus 1: DK Coin
+Lemguin Lunge - Bonus 2: Krematoa Cog
+Lemguin Lunge - DK Coin: DK Coin
+Buzzer Barrage - Flag: DK Coin
+Buzzer Barrage - Bonus 1: Bonus Coin
+Buzzer Barrage - Bonus 2: Bonus Coin
+Buzzer Barrage - DK Coin: Bonus Coin
+Kong-Fused Cliffs - Flag: Bonus Coin
+Kong-Fused Cliffs - Bonus 1: Bonus Coin
+Kong-Fused Cliffs - Bonus 2: Bear Coin
+Kong-Fused Cliffs - DK Coin: DK Coin
+Floodlit Fish - Flag: Bonus Coin
+Floodlit Fish - Bonus 1: 1-Up Balloon
+Floodlit Fish - Bonus 2: Bonus Coin
+Floodlit Fish - DK Coin: 1-Up Balloon
+Pothole Panic - Flag: Bonus Coin
+Pothole Panic - Bonus 1: Bonus Coin
+Pothole Panic - Bonus 2: Bonus Coin
+Pothole Panic - DK Coin: 1-Up Balloon
+Ropey Rumpus - Flag: Bonus Coin
+Ropey Rumpus - Bonus 1: Bear Coin
+Ropey Rumpus - Bonus 2: 1-Up Balloon
+Ropey Rumpus - DK Coin: DK Coin
+Konveyor Rope Klash - Flag: 1-Up Balloon
+Konveyor Rope Klash - Bonus 1: Bonus Coin
+Konveyor Rope Klash - Bonus 2: Bonus Coin
+Konveyor Rope Klash - DK Coin: DK Coin
+Creepy Caverns - Flag: Bonus Coin
+Creepy Caverns - Bonus 1: Bonus Coin
+Creepy Caverns - Bonus 2: DK Coin
+Creepy Caverns - DK Coin: DK Coin
+Lightning Lookout - Flag: Bonus Coin
+Lightning Lookout - Bonus 1: Bonus Coin
+Lightning Lookout - Bonus 2: Bonus Coin
+Lightning Lookout - DK Coin: Bonus Coin
+Koindozer Klamber - Flag: Bear Coin
+Koindozer Klamber - Bonus 1: DK Coin
+Koindozer Klamber - Bonus 2: Bonus Coin
+Koindozer Klamber - DK Coin: DK Coin
+Poisonous Pipeline - Flag: Bonus Coin
+Poisonous Pipeline - Bonus 1: DK Coin
+Poisonous Pipeline - Bonus 2: Bonus Coin
+Poisonous Pipeline - DK Coin: Bonus Coin
+Stampede Sprint - Flag: 1-Up Balloon
+Stampede Sprint - Bonus 1: Bonus Coin
+Stampede Sprint - Bonus 2: Bonus Coin
+Stampede Sprint - Bonus 3: Bear Coin
+Stampede Sprint - DK Coin: DK Coin
+Criss Kross Cliffs - Flag: DK Coin
+Criss Kross Cliffs - Bonus 1: DK Coin
+Criss Kross Cliffs - Bonus 2: Bonus Coin
+Criss Kross Cliffs - DK Coin: Krematoa Cog
+Tyrant Twin Tussle - Flag: Bear Coin
+Tyrant Twin Tussle - Bonus 1: Bear Coin
+Tyrant Twin Tussle - Bonus 2: DK Coin
+Tyrant Twin Tussle - Bonus 3: DK Coin
+Tyrant Twin Tussle - DK Coin: Bonus Coin
+Swoopy Salvo - Flag: Bonus Coin
+Swoopy Salvo - Bonus 1: DK Coin
+Swoopy Salvo - Bonus 2: Bonus Coin
+Swoopy Salvo - Bonus 3: Bonus Coin
+Swoopy Salvo - DK Coin: Bonus Coin
+Rocket Rush - Flag: Krematoa Cog
+Rocket Rush - DK Coin: Bonus Coin
+Belcha's Barn: Bear Coin
+Arich's Ambush: Bonus Coin
+Squirt's Showdown: Bonus Coin
+KAOS Karnage: Bear Coin
+Bleak's House: Bonus Coin
+Barbos's Barrier: 1-Up Balloon
+Kastle KAOS: Donkey Kong
+Knautilus: Bonus Coin
+Belcha's Burrow: DK Coin
+Kong Cave: Bear Coin
+Undercover Cove: DK Coin
+K's Cache: Bonus Coin
+Hill-Top Hoard: Bonus Coin
+Bounty Beach: Bear Coin
+Smuggler's Cove: Bonus Coin
+Arich's Hoard: Bonus Coin
+Bounty Bay: DK Coin
+Glacial Grotto: Krematoa Cog
+Sewer Stockpile: Bear Coin
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Arich's Ambush: Bonus Coin
+  Arich's Hoard: Bonus Coin
+  Barrel Shield Bust-Up - Bonus 1: Krematoa Cog
+  Barrel Shield Bust-Up - Bonus 2: DK Coin
+  Barrel Shield Bust-Up - DK Coin: Bonus Coin
+  Barrel Shield Bust-Up - Flag: DK Coin
+  Bobbing Barrel Brawl - Bonus 1: Bonus Coin
+  Bobbing Barrel Brawl - Bonus 2: DK Coin
+  Bobbing Barrel Brawl - DK Coin: DK Coin
+  Bobbing Barrel Brawl - Flag: Bonus Coin
+  Doorstop Dash - Bonus 1: Bonus Coin
+  Doorstop Dash - Bonus 2: DK Coin
+  Doorstop Dash - DK Coin: DK Coin
+  Doorstop Dash - Flag: Bonus Coin
+  Lakeside Limbo - Bonus 2: Bonus Coin
+  Lakeside Limbo - DK Coin: Bonus Coin
+  Murky Mill - Bonus 1: Progressive Boat Upgrade
+  Murky Mill - Bonus 2: Bonus Coin
+  Murky Mill - DK Coin: Bonus Coin
+  Murky Mill - Flag: Bonus Coin
+  Riverside Race - Bonus 2: Bonus Coin
+  Skidda's Row - Bonus 1: DK Coin
+  Skidda's Row - Bonus 2: Bonus Coin
+  Skidda's Row - Flag: Bonus Coin
+  Smuggler's Cove: Bonus Coin
+  Springin' Spiders - Bonus 1: Bonus Coin
+  Springin' Spiders - Flag: Bonus Coin
+  Squeals On Wheels - Bonus 2: Bonus Coin
+  Squeals On Wheels - DK Coin: DK Coin
+  Squeals On Wheels - Flag: Bonus Coin
+  Tidal Trouble - Bonus 1: Bonus Coin
+  Tidal Trouble - Bonus 2: DK Coin
+}
+2: {
+  Bazza's Blockade - Bonus 1: Bonus Coin
+  Bazza's Blockade - DK Coin: DK Coin
+  Bazza's Blockade - Flag: DK Coin
+  Blazing Bazukas - Bonus 1: DK Coin
+  Blazing Bazukas - Bonus 2: Bonus Coin
+  Blazing Bazukas - Flag: Bonus Coin
+  Bounty Bay: DK Coin
+  Demolition Drain-Pipe - Bonus 1: DK Coin
+  Demolition Drain-Pipe - Bonus 2: Bonus Coin
+  Demolition Drain-Pipe - Flag: Bonus Coin
+  Fire-Ball Frenzy - Bonus 2: DK Coin
+  Fire-Ball Frenzy - DK Coin: Bonus Coin
+  Fire-Ball Frenzy - Flag: Bonus Coin
+  Fish Food Frenzy - Bonus 1: Bonus Coin
+  Fish Food Frenzy - DK Coin: DK Coin
+  Fish Food Frenzy - Flag: Progressive Boat Upgrade
+  Kreeping Klasps - Bonus 1: Bonus Coin
+  Kreeping Klasps - DK Coin: Bonus Coin
+  Kreeping Klasps - Flag: Bonus Coin
+  Low-G Labyrinth - Bonus 2: Bonus Coin
+  Low-G Labyrinth - Flag: Bonus Coin
+  Ripsaw Rage - Bonus 2: DK Coin
+  Ripsaw Rage - DK Coin: Bonus Coin
+  Ripsaw Rage - Flag: DK Coin
+  Rocket Barrel Ride - Bonus 1: Bonus Coin
+  Squirt's Showdown: Bonus Coin
+  Tracker Barrel Trek - Bonus 2: Progressive Boat Upgrade
+  Tracker Barrel Trek - DK Coin: DK Coin
+  Tracker Barrel Trek - Flag: DK Coin
+}
+3: {
+  Barrel Drop Bounce - Bonus 1: DK Coin
+  Barrel Drop Bounce - Bonus 2: Bonus Coin
+  Barrel Drop Bounce - DK Coin: Bonus Coin
+  Barrel Drop Bounce - Flag: Bonus Coin
+  Bleak's House: Bonus Coin
+  Buzzer Barrage - Bonus 1: Bonus Coin
+  Buzzer Barrage - Bonus 2: Bonus Coin
+  Buzzer Barrage - DK Coin: Bonus Coin
+  Buzzer Barrage - Flag: DK Coin
+  Creepy Caverns - Bonus 1: Bonus Coin
+  Creepy Caverns - Bonus 2: DK Coin
+  Creepy Caverns - DK Coin: DK Coin
+  Creepy Caverns - Flag: Bonus Coin
+  Criss Kross Cliffs - Bonus 1: DK Coin
+  Criss Kross Cliffs - Bonus 2: Bonus Coin
+  Criss Kross Cliffs - DK Coin: Krematoa Cog
+  Criss Kross Cliffs - Flag: DK Coin
+  Floodlit Fish - Bonus 2: Bonus Coin
+  Floodlit Fish - Flag: Bonus Coin
+  Glacial Grotto: Krematoa Cog
+  Knautilus: Bonus Coin
+  Koindozer Klamber - Bonus 1: DK Coin
+  Koindozer Klamber - Bonus 2: Bonus Coin
+  Koindozer Klamber - DK Coin: DK Coin
+  Kong-Fused Cliffs - Bonus 1: Bonus Coin
+  Kong-Fused Cliffs - DK Coin: DK Coin
+  Kong-Fused Cliffs - Flag: Bonus Coin
+  Konveyor Rope Klash - Bonus 1: Bonus Coin
+  Konveyor Rope Klash - Bonus 2: Bonus Coin
+  Konveyor Rope Klash - DK Coin: DK Coin
+  Krack-Shot Kroc - Bonus 1: Bonus Coin
+  Krack-Shot Kroc - DK Coin: Bonus Coin
+  Krack-Shot Kroc - Flag: DK Coin
+  Krevice Kreepers - Bonus 1: Bonus Coin
+  Krevice Kreepers - DK Coin: Bonus Coin
+  Lemguin Lunge - Bonus 1: DK Coin
+  Lemguin Lunge - Bonus 2: Krematoa Cog
+  Lemguin Lunge - DK Coin: DK Coin
+  Lemguin Lunge - Flag: Bonus Coin
+  Lightning Lookout - Bonus 1: Bonus Coin
+  Lightning Lookout - Bonus 2: Bonus Coin
+  Lightning Lookout - DK Coin: Bonus Coin
+  Lightning Lookout - Flag: Bonus Coin
+  Poisonous Pipeline - Bonus 1: DK Coin
+  Poisonous Pipeline - Bonus 2: Bonus Coin
+  Poisonous Pipeline - DK Coin: Bonus Coin
+  Poisonous Pipeline - Flag: Bonus Coin
+  Pothole Panic - Bonus 1: Bonus Coin
+  Pothole Panic - Bonus 2: Bonus Coin
+  Pothole Panic - Flag: Bonus Coin
+  Ropey Rumpus - DK Coin: DK Coin
+  Ropey Rumpus - Flag: Bonus Coin
+  Stampede Sprint - Bonus 1: Bonus Coin
+  Stampede Sprint - Bonus 2: Bonus Coin
+  Stampede Sprint - DK Coin: DK Coin
+  Tearaway Toboggan - Bonus 1: Bonus Coin
+  Tearaway Toboggan - Bonus 2: Bonus Coin
+  Tearaway Toboggan - DK Coin: Bonus Coin
+  Tearaway Toboggan - Flag: Bonus Coin
+  Undercover Cove: DK Coin
+}
+4: {
+  Belcha's Burrow: DK Coin
+  Hill-Top Hoard: Bonus Coin
+  K's Cache: Bonus Coin
+  Rocket Rush - DK Coin: Bonus Coin
+  Rocket Rush - Flag: Krematoa Cog
+  Swoopy Salvo - Bonus 1: DK Coin
+  Swoopy Salvo - Bonus 2: Bonus Coin
+  Swoopy Salvo - Bonus 3: Bonus Coin
+  Swoopy Salvo - DK Coin: Bonus Coin
+  Swoopy Salvo - Flag: Bonus Coin
+  Tyrant Twin Tussle - Bonus 2: DK Coin
+  Tyrant Twin Tussle - Bonus 3: DK Coin
+  Tyrant Twin Tussle - DK Coin: Bonus Coin
+}
+5: {
+  Kastle KAOS: Donkey Kong
+}

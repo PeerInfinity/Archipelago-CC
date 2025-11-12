@@ -518,10 +518,10 @@
     "world_directory": "undertale"
   },
   "VVVVVV": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/v6.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/v6/v6Logic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "v6"
   },
   "Wargroove": {

@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-11 23:41:03
+**Generated:** 2025-11-12 08:57:21
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,7 +12,7 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 67/79 passed (84.8%)
+- **Minimal Test:** 69/79 passed (87.3%)
 - **Full Test:** 66/79 passed (83.5%)
 - **Multiplayer Test:** 28/79 passed (35.4%)
 - **Multiworld Test:** 14/79 passed (17.7%)
@@ -20,9 +20,9 @@ This summary combines results from four types of tests:
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 12/79 (15.2%)
-- **Templates passing 3 tests:** 12/79 (15.2%)
+- **Templates passing 3 tests:** 13/79 (16.5%)
 - **Templates passing 2 tests:** 44/79 (55.7%)
-- **Templates passing 1 test:** 3/79 (3.8%)
+- **Templates passing 1 test:** 2/79 (2.5%)
 - **Templates passing 0 tests:** 8/79 (10.1%)
 
 ## Test Results
@@ -48,13 +48,13 @@ This summary combines results from four types of tests:
 | DOOM 1993 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ⚫ |
 | DOOM II | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
-| Donkey Kong Country 3 | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ⚫ |
+| Donkey Kong Country 3 | ✅ Passed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ⚫ |
 | Factorio | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
 | Faxanadu | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
 | Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Hollow Knight | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
-| Hylics 2 | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
+| Hylics 2 | ✅ Passed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Inscryption | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
