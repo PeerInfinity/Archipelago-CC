@@ -634,6 +634,22 @@
           "AP_00679259829289197625_rules.json",
           "AP_00679259829289197625_spheres_log.jsonl"
         ]
+      },
+      "AP_35931773795037525048": {
+        "seed": 7,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Bomb Rush Cyberfunk"
+          }
+        ],
+        "files": [
+          "AP_35931773795037525048.archipelago",
+          "AP_35931773795037525048_Spoiler.txt",
+          "AP_35931773795037525048_rules.json",
+          "AP_35931773795037525048_spheres_log.jsonl"
+        ]
       }
     },
     "test_result": {
