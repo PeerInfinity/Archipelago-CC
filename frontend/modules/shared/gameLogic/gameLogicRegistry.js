@@ -251,6 +251,8 @@ import { mmbn3StateModule } from './mmbn3/mmbn3Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import { helperFunctions as mm2HelperFunctions } from './mm2/mm2Logic.js';
+import * as sm64exLogic from './sm64ex/sm64exLogic.js';
+import { sm64exStateModule } from './sm64ex/sm64exLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -387,6 +389,12 @@ const GAME_REGISTRY = {
     helperFunctions: mm2HelperFunctions,
     worldClasses: ['MM2World'],
     aliases: ['Mega Man 2', 'MM2', 'Megaman 2']
+  },
+  'Super Mario 64': {
+    logicModule: sm64exLogic.sm64exStateModule,
+    helperFunctions: sm64exLogic.helperFunctions,
+    worldClasses: ['SM64World'],
+    aliases: ['Super Mario 64', 'SM64', 'sm64ex']
   },
   // Add more games here as they're implemented
   'Generic': {

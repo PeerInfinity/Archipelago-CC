@@ -82,6 +82,11 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
         """Extract and store world options for rule parsing."""
         if hasattr(world, 'options'):
             try:
+                if hasattr(world.options, 'enable_move_rando'):
+                    self._options['enable_move_rando'] = bool(world.options.enable_move_rando.value)
+                else:
+                    self._options['enable_move_rando'] = False
+
                 if hasattr(world.options, 'strict_cap_requirements'):
                     self._options['capless'] = not bool(world.options.strict_cap_requirements.value)
 
@@ -107,6 +112,9 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
         # Add settings to the output
         if hasattr(world, 'options'):
             try:
+                if hasattr(world.options, 'enable_move_rando'):
+                    settings['enable_move_rando'] = bool(world.options.enable_move_rando.value)
+
                 if hasattr(world.options, 'strict_cap_requirements'):
                     settings['strict_cap_requirements'] = bool(world.options.strict_cap_requirements.value)
 
@@ -280,6 +288,9 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
 
         # Check if it's a known token
         if token in self.TOKEN_TABLE:
+            # If move randomizer is disabled, all moves are available from the start
+            if not self._options.get('enable_move_rando', False):
+                return True  # Move is always available
             return self.TOKEN_TABLE[token]
 
         # Unknown token

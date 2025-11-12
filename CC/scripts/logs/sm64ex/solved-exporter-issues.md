@@ -49,4 +49,31 @@ rf.assign_rule("WF: Fall onto the Caged Island", "CL & {WF: Tower} | MOVELESS & 
 ```
 
 ### Files Created
-- `exporter/games/sm64ex.py` - Main exporter handler (314 lines)
+- `exporter/games/sm64ex.py` - Main exporter handler (320 lines)
+
+## Issue 2: Move randomizer logic not handling disabled state - SOLVED
+
+**Status:** SOLVED
+**Solution:** Added enable_move_rando setting export and logic
+
+### Problem
+The exporter was treating all movement tokens (CL, TJ, etc.) as item requirements even when move randomizer was disabled. In the test seed, move randomizer was disabled (`enable_move_rando: false`), meaning all moves should be available from the start, but the exporter was still requiring them as items.
+
+### Evidence
+- Spoiler shows "Enable Move Randomizer: No"
+- Settings had `strict_move_requirements: True` but moves were not actually randomized
+- Location "WF: Fall onto the Caged Island" required Climb item but should have been accessible with just region access
+
+### Root Cause
+The Python `parse_token` function checks `move_rando_bitvec` to determine if a move is randomized. If not randomized, it returns `True` (always available). The exporter wasn't checking `enable_move_rando` setting.
+
+### Solution
+1. Added `enable_move_rando` to settings export in `get_settings_data()`
+2. Added `enable_move_rando` extraction in `extract_world_options()`
+3. Updated `resolve_token()` to return `True` for all move tokens when `enable_move_rando` is False
+
+### Result
+Movement tokens now correctly resolve to `True` when move randomizer is disabled, making rules simpler and matching Python logic. Test progressed from failing at sphere 0.1 to sphere 0.3.
+
+### Files Modified
+- `exporter/games/sm64ex.py` - Added move randomizer logic (3 methods changed)

@@ -50,3 +50,27 @@ The analyzer doesn't handle negative slicing like `expression[1:-1]` (which uses
 
 ### Impact
 Unknown - need to investigate what code is using this pattern and whether it affects exported rules.
+
+## Issue 3: Sphere 0.3 mismatch - "BoB: Mario Wings to the Sky"
+
+**Status:** Active
+**Priority:** Medium
+**Sphere Failure:** 0.3
+
+### Problem
+Location "BoB: Mario Wings to the Sky" is accessible in STATE but not in LOG at sphere 0.3.
+
+### Evidence
+Test error: "Locations accessible in STATE (and unchecked) but NOT in LOG: BoB: Mario Wings to the Sky"
+
+### Progress
+- Initial test failed at sphere 0.1 due to missing helper functions
+- After adding helpers and fixing move randomizer logic, test now fails at sphere 0.3
+- **This represents major progress through 3 spheres!**
+
+### Analysis Needed
+- Check the rule for this location
+- Verify what items/regions are available in sphere 0.3
+- Determine why Python logic considers it inaccessible while frontend considers it accessible
+
+This is the NEXT issue to investigate.

@@ -308,17 +308,8 @@
             "name": "MIPS 1",
             "id": 3626171,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Dive"
-                },
-                {
-                  "type": "constant",
-                  "value": false
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Star",
@@ -331,17 +322,8 @@
             "name": "MIPS 2",
             "id": 3626172,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Dive"
-                },
-                {
-                  "type": "constant",
-                  "value": false
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Star",
@@ -366,21 +348,8 @@
                   "item": "Cannon Unlock BoB"
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Wing Cap"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Triple Jump"
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "and",
@@ -392,10 +361,6 @@
                     {
                       "type": "constant",
                       "value": false
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Long Jump"
                     }
                   ]
                 }
@@ -439,17 +404,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Cannon Unlock BoB"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Wing Cap"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Cannon Unlock BoB"
                 },
                 {
                   "type": "and",
@@ -599,49 +555,22 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "can_reach_region",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Climb"
-                    },
-                    {
-                      "type": "helper",
-                      "name": "can_reach_region",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "WF: Tower"
-                        }
-                      ]
+                      "type": "constant",
+                      "value": "WF: Tower"
                     }
                   ]
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Triple Jump"
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Long Jump"
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "and",
@@ -676,17 +605,8 @@
                   "item": "Cannon Unlock WF"
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Ledge Grab"
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 }
               ]
             },
@@ -803,17 +723,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_all_items",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Cannon Unlock JRB",
-                        "Climb"
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Cannon Unlock JRB"
                 },
                 {
                   "type": "and",
@@ -854,17 +765,8 @@
             "name": "JRB: Through the Jet Stream",
             "id": 3626019,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Metal Cap"
-                },
-                {
-                  "type": "constant",
-                  "value": false
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Star",
@@ -990,48 +892,12 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "has_any_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Triple Jump",
-                            "Wall Kick"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Cannon Unlock CCM"
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Cannon Unlock CCM"
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "helper",
-                      "name": "has_any_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Triple Jump",
-                            "Wall Kick"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -1192,8 +1058,8 @@
             "name": "BBH: Eye to Eye in the Secret Room",
             "id": 3626033,
             "access_rule": {
-              "type": "item_check",
-              "item": "Vanish Cap"
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Power Star",
@@ -1525,39 +1391,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_all_items",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Long Jump",
-                        "Metal Cap"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "helper",
-                      "name": "has_all_items",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Long Jump",
-                            "Triple Jump"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "and",
@@ -1569,20 +1404,6 @@
                     {
                       "type": "constant",
                       "value": false
-                    },
-                    {
-                      "type": "helper",
-                      "name": "has_any_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Long Jump",
-                            "Triple Jump",
-                            "Wall Kick"
-                          ]
-                        }
-                      ]
                     }
                   ]
                 }
@@ -1846,53 +1667,12 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_all_items",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Triple Jump",
-                        "Wing Cap"
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Cannon Unlock SSL"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_items",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Cannon Unlock SSL",
-                        "Wing Cap"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "has_any_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Triple Jump",
-                            "Side Flip",
-                            "Backflip"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "constant",
-                      "value": false
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "and",
@@ -1999,55 +1779,12 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_all_items",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Triple Jump",
-                        "Wing Cap",
-                        "Ground Pound"
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Cannon Unlock SSL"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_items",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Cannon Unlock SSL",
-                        "Wing Cap",
-                        "Ground Pound"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "has_any_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Triple Jump",
-                            "Side Flip",
-                            "Backflip"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "constant",
-                      "value": false
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "constant",
@@ -2114,17 +1851,8 @@
             "name": "DDD: Through the Jet Stream",
             "id": 3626059,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Metal Cap"
-                },
-                {
-                  "type": "constant",
-                  "value": false
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Star",
@@ -2151,35 +1879,8 @@
             "name": "DDD: Collect the Caps...",
             "id": 3626061,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_all_items",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Vanish Cap",
-                        "Metal Cap"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Vanish Cap"
-                    }
-                  ]
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Star",
@@ -2195,47 +1896,18 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "can_reach_location",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Climb"
-                    },
-                    {
-                      "type": "helper",
-                      "name": "can_reach_location",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Bowser in the Fire Sea Key"
-                        }
-                      ]
+                      "type": "constant",
+                      "value": "Bowser in the Fire Sea Key"
                     }
                   ]
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "has_all_items",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Triple Jump",
-                            "Dive",
-                            "Ledge Grab",
-                            "Wall Kick"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "constant",
-                      "value": false
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 }
               ]
             },
@@ -2270,17 +1942,8 @@
             "name": "Cavern of the Metal Cap Red Coins",
             "id": 3626133,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Metal Cap"
-                },
-                {
-                  "type": "constant",
-                  "value": false
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Star",
@@ -2327,47 +1990,8 @@
             "name": "Vanish Cap Under the Moat Red Coins",
             "id": 3626147,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "has_any_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Triple Jump",
-                            "Backflip",
-                            "Side Flip",
-                            "Ledge Grab",
-                            "Wall Kick"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Vanish Cap"
-                    }
-                  ]
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Wall Kick"
-                    }
-                  ]
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Star",
@@ -2607,47 +2231,8 @@
             "name": "SL: Into the Igloo",
             "id": 3626068,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Vanish Cap"
-                    },
-                    {
-                      "type": "helper",
-                      "name": "has_any_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Triple Jump",
-                            "Side Flip",
-                            "Backflip",
-                            "Wall Kick",
-                            "Ledge Grab"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Vanish Cap"
-                    }
-                  ]
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Star",
@@ -2821,70 +2406,8 @@
             "name": "WDW: Quick Race Through Downtown!",
             "id": 3626075,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Vanish Cap"
-                    },
-                    {
-                      "type": "helper",
-                      "name": "has_any_item",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Wall Kick",
-                            "Backflip"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Vanish Cap"
-                    },
-                    {
-                      "type": "helper",
-                      "name": "has_all_items",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Triple Jump",
-                            "Ledge Grab"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Vanish Cap"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Triple Jump"
-                    }
-                  ]
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Wing Cap",
@@ -2961,17 +2484,8 @@
                   "item": "Cannon Unlock TTM"
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Long Jump"
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "and",
@@ -3696,17 +3210,8 @@
             "name": "Wing Mario Over the Rainbow Red Coins",
             "id": 3626154,
             "access_rule": {
-              "type": "helper",
-              "name": "has_all_items",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Triple Jump",
-                    "Wing Cap"
-                  ]
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Power Star",
@@ -3719,17 +3224,8 @@
             "name": "Wing Mario Over the Rainbow 1Up Block",
             "id": 3626243,
             "access_rule": {
-              "type": "helper",
-              "name": "has_all_items",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Triple Jump",
-                    "Wing Cap"
-                  ]
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "1Up Mushroom",
@@ -4215,6 +3711,7 @@
     "1": {
       "game": "Super Mario 64",
       "assume_bidirectional_exits": false,
+      "enable_move_rando": false,
       "strict_cap_requirements": true,
       "strict_cannon_requirements": true,
       "strict_move_requirements": true,
