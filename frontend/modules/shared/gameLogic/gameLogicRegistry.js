@@ -251,6 +251,8 @@ import { mmbn3StateModule } from './mmbn3/mmbn3Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import { helperFunctions as mm2HelperFunctions } from './mm2/mm2Logic.js';
+import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
+import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -387,6 +389,12 @@ const GAME_REGISTRY = {
     helperFunctions: mm2HelperFunctions,
     worldClasses: ['MM2World'],
     aliases: ['Mega Man 2', 'MM2', 'Megaman 2']
+  },
+  'Yacht Dice': {
+    logicModule: yachtdiceLogic.yachtdiceStateModule,
+    helperFunctions: yachtdiceLogic.helperFunctions,
+    worldClasses: ['YachtDiceWorld'],
+    aliases: ['Yacht Dice', 'yacht_dice']
   },
   // Add more games here as they're implemented
   'Generic': {

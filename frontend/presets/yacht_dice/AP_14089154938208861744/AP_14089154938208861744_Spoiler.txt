@@ -220,6 +220,7 @@ Playthrough:
   456 score: Category Threes
 }
 14: {
+  490 score: 10 Points
   507 score: Roll Fragment
   524 score: Category Pair
 }
@@ -229,10 +230,26 @@ Playthrough:
 16: {
   579 score: Category Tiny Straight
   598 score: Fixed Score Multiplier
+  637 score: 10 Points
 }
 17: {
   657 score: Fixed Score Multiplier
+  719 score: Fixed Score Multiplier
+  740 score: Category Twos
 }
 18: {
   777 score: Victory
+  806 score: Category Three of a Kind
+}
+19: {
+  852 score: 10 Points
+}
+20: {
+  899 score: Category Small Straight
+}
+21: {
+  948 score: Category Fives
+}
+22: {
+  1000 score: Roll Fragment
 }
