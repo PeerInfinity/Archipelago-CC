@@ -6,6 +6,7 @@
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 **Generated:** 2025-11-12 05:49:58
 
 **Source Data Created:** 2025-10-14T13:23:48.314334
@@ -25,22 +26,35 @@
 
 **Source Data Last Updated:** 2025-11-12T16:46:18.043749
 >>>>>>> Stashed changes
+=======
+**Generated:** 2025-11-12 18:24:49
+
+**Source Data Created:** 2025-10-14T13:23:48.314334
+
+**Source Data Last Updated:** 2025-11-12T18:24:49.048189
+>>>>>>> Stashed changes
 
 ## Summary
 
 - **Total Games:** 79
+<<<<<<< Updated upstream
 - **Passed:** 21 (26.6%)
 - **Failed:** 58 (73.4%)
+=======
+- **Passed:** 57 (72.2%)
+- **Failed:** 22 (27.8%)
+>>>>>>> Stashed changes
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Custom Exporter | Custom GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|-----------------|------------------|
 | A Hat in Time | ✅ Passed seeds 1-10 | 0 | 5.21 | 5.21 | 🟢 Complete | ✅ | ✅ |
-| A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | ✅ | ✅ |
+| A Link to the Past | ❌ Failed seed 2 | 0 | 21.2 | 24.2 | 🟡 87.6% | ✅ | ✅ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ⚫ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 5.19 | 5.19 | 🟢 Complete | ✅ | ✅ |
+<<<<<<< Updated upstream
 | ArchipIDLE | ❌ Failed seed 7 | 0 | 4.68 | 4.1 | 🟡 114.1% | ✅ | ✅ |
 | Blasphemous | ❌ Failed seed 1 | 0 | 4.22 | 13.1 | 🟡 32.2% | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed seeds 1-10 | 0 | 10.18 | 10.18 | 🟢 Complete | ✅ | ⚫ |
@@ -56,6 +70,23 @@
 | DOOM II | ❌ Failed seed 1 | 0 | 12.16 | 21.4 | 🟡 56.8% | ✅ | ⚫ |
 | Dark Souls III | ❌ Failed seed 1 | 0 | 0.25 | 6.2 | 🟠 4.0% | ✅ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
+=======
+| ArchipIDLE | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
+| Blasphemous | ✅ Passed seeds 1-10 | 1 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
+| Bomb Rush Cyberfunk | ❌ Failed seed 9 | 0 | 1.18 | 7.44 | 🟡 15.9% | ✅ | ⚫ |
+| Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ⚫ |
+| Castlevania - Circle of the Moon | ❌ Failed seed 5 | 0 | 1.7 | 4.25 | 🟡 40.0% | ✅ | ✅ |
+| Castlevania 64 | ❌ Failed seed 10 | 0 | 1.47 | 4.2 | 🟡 35.0% | ✅ | ⚫ |
+| Celeste 64 | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
+| ChecksFinder | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ⚫ |
+| ChocolateChipCookies | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ⚫ |
+| Civilization VI | ✅ Passed seeds 1-10 | 0 | 8.15 | 8.15 | 🟢 Complete | ✅ | ⚫ |
+| DLCQuest | ❌ Failed seed 1 | 0 | 0.1 | 8.1 | 🟠 1.2% | ✅ | ✅ |
+| DOOM 1993 | ❌ Failed seed 3 | 0 | 17.11 | 19.2 | 🟡 89.1% | ✅ | ⚫ |
+| DOOM II | ❌ Failed seed 10 | 0 | 14.11 | 19.4 | 🟡 72.7% | ✅ | ⚫ |
+| Dark Souls III | ❌ Failed seed 2 | 0 | 3.87 | 8.22 | 🟡 47.1% | ✅ | ⚫ |
+| Donkey Kong Country 3 | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ✅ | ⚫ |
+>>>>>>> Stashed changes
 | Factorio | ❌ Failed seed 1 | 0 | 0.1 | 12.1 | 🟠 0.8% | ✅ | ⚫ |
 | Faxanadu | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ❌ Failed seed 1 | 0 | 0 | 19.6 | 🔴 0.0% | ✅ | ⚫ |

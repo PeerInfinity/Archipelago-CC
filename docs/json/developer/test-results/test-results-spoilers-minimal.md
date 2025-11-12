@@ -6,6 +6,7 @@
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 **Generated:** 2025-11-12 05:49:58
 
 **Source Data Created:** 2025-10-14T13:24:10.253834
@@ -25,12 +26,24 @@
 
 **Source Data Last Updated:** 2025-11-12T16:46:08.006033
 >>>>>>> Stashed changes
+=======
+**Generated:** 2025-11-12 17:50:42
+
+**Source Data Created:** 2025-10-14T13:24:10.253834
+
+**Source Data Last Updated:** 2025-11-12T17:50:42.243399
+>>>>>>> Stashed changes
 
 ## Summary
 
 - **Total Games:** 79
+<<<<<<< Updated upstream
 - **Passed:** 28 (35.4%)
 - **Failed:** 51 (64.6%)
+=======
+- **Passed:** 63 (79.7%)
+- **Failed:** 16 (20.3%)
+>>>>>>> Stashed changes
 
 ## Test Results
 
@@ -45,17 +58,26 @@
 | Blasphemous | ✅ Passed seeds 1-10 | 1 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed seed 1 | 0 | 2.1 | 10.9 | 🟡 19.3% | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ⚫ |
-| Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 4.4 | 4.4 | 🟢 Complete | ✅ | ✅ |
-| Castlevania 64 | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ⚫ |
+| Castlevania - Circle of the Moon | ❌ Failed seed 5 | 0 | 1.1 | 4.2 | 🟡 26.2% | ✅ | ✅ |
+| Castlevania 64 | ❌ Failed seed 10 | 0 | 1.7 | 4.1 | 🟡 41.5% | ✅ | ⚫ |
 | Celeste 64 | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | ChecksFinder | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ⚫ |
 | ChocolateChipCookies | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ⚫ |
+<<<<<<< Updated upstream
 | Civilization VI | ❌ Failed seed 1 | 0 | 0.13 | 8.2 | 🟠 1.6% | ✅ | ⚫ |
 | DLCQuest | ❌ Failed seed 1 | 0 | 0.1 | 8.1 | 🟠 1.2% | ✅ | ✅ |
 | DOOM 1993 | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ⚫ |
 | DOOM II | ✅ Passed seeds 1-10 | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ⚫ |
 | Dark Souls III | ❌ Failed seed 1 | 0 | 0.4 | 5.1 | 🟠 7.8% | ✅ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
+=======
+| Civilization VI | ✅ Passed seeds 1-10 | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ⚫ |
+| DLCQuest | ❌ Failed seed 1 | 0 | 0.1 | 8.1 | 🟠 1.2% | ✅ | ✅ |
+| DOOM 1993 | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ⚫ |
+| DOOM II | ✅ Passed seeds 1-10 | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ⚫ |
+| Dark Souls III | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ⚫ |
+| Donkey Kong Country 3 | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ✅ | ⚫ |
+>>>>>>> Stashed changes
 | Factorio | ❌ Failed seed 1 | 0 | 0.1 | 12.1 | 🟠 0.8% | ✅ | ⚫ |
 | Faxanadu | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ❌ Failed seed 1 | 0 | 0 | 18.2 | 🔴 0.0% | ✅ | ⚫ |
