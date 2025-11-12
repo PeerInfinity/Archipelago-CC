@@ -45,6 +45,26 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
 
         return subscript_rule
 
+    def _resolve_attribute(self, attr_rule: Dict[str, Any]) -> Any:
+        """Resolve an attribute access, particularly for world attributes."""
+        if not isinstance(attr_rule, dict) or attr_rule.get('type') != 'attribute':
+            return attr_rule
+
+        obj = attr_rule.get('object', {})
+        attr = attr_rule.get('attr')
+
+        # Check if this is a world attribute access
+        if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'world':
+            if attr == 'total_trade_orbs' and self.world:
+                # Return the calculated total_trade_orbs value
+                return self.world.total_trade_orbs
+            elif attr == 'can_trade':
+                # Return a marker that this is the can_trade function
+                # We'll handle this in the function_call handler
+                return {'_is_world_can_trade': True}
+
+        return attr_rule
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Expand Jak and Daxter-specific rules, particularly capability rules."""
         if not rule or not isinstance(rule, dict):
@@ -60,6 +80,74 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
             if 'count' in rule:
                 rule['count'] = self._unwrap_constant(rule['count'])
             # Continue processing the rule after unwrapping
+
+        # Handle function_call rules, especially world.can_trade
+        if rule.get('type') == 'function_call':
+            function = rule.get('function', {})
+            args = rule.get('args', [])
+
+            # Resolve the function to check if it's world.can_trade
+            resolved_function = self._resolve_attribute(function)
+
+            if isinstance(resolved_function, dict) and resolved_function.get('_is_world_can_trade'):
+                # This is world.can_trade(required_orbs, required_previous_trade)
+                # Resolve the arguments
+                required_orbs = None
+                required_previous_trade = None
+
+                if len(args) >= 1:
+                    # First argument is the required orbs amount
+                    orb_arg = self._resolve_attribute(args[0])
+                    required_orbs = self._unwrap_constant(orb_arg)
+
+                if len(args) >= 2:
+                    # Second argument is the optional previous trade location
+                    required_previous_trade = self._unwrap_constant(args[1])
+
+                # Determine which check to use based on orbsanity setting
+                # Default is orbsanity off, which uses "Reachable Orbs"
+                use_tradeable_orbs = False
+                if self.world and hasattr(self.world, 'options'):
+                    from worlds.jakanddaxter.options import EnableOrbsanity
+                    if self.world.options.enable_orbsanity != EnableOrbsanity.option_off:
+                        use_tradeable_orbs = True
+
+                # Build the orb check rule
+                if use_tradeable_orbs:
+                    # Tradeable Orbs is a real item that can be checked
+                    orb_check = {
+                        'type': 'item_check',
+                        'item': 'Tradeable Orbs',
+                        'count': required_orbs if required_orbs is not None else 1
+                    }
+                else:
+                    # Reachable Orbs requires a helper function
+                    orb_check = {
+                        'type': 'helper',
+                        'name': 'can_reach_orbs',
+                        'args': [required_orbs if required_orbs is not None else 1]
+                    }
+
+                # If there's a required previous trade, combine with AND
+                if required_previous_trade is not None:
+                    # Look up the location name from the location ID
+                    from worlds.jakanddaxter.locations import location_table
+                    from worlds.jakanddaxter.locs import cell_locations as cells
+                    location_id = cells.to_ap_id(required_previous_trade)
+                    if location_id in location_table:
+                        location_name = location_table[location_id]
+                        return {
+                            'type': 'and',
+                            'conditions': [
+                                orb_check,
+                                {
+                                    'type': 'location_check',
+                                    'location': location_name
+                                }
+                            ]
+                        }
+
+                return orb_check
 
         # Handle state_method calls that need to be converted
         if rule.get('type') == 'state_method':

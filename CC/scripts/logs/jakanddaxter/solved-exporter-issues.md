@@ -81,3 +81,46 @@
 
 **Progress Summary**: With these 4 fixes, the spoiler test now passes Spheres 0 through 3.14 successfully.
 
+## Issue 5: World attribute references in function calls - orb trading ✅ SOLVED
+
+**Description**: Orb trade locations used function calls that referenced runtime world attributes:
+```json
+{
+  "type": "function_call",
+  "function": {
+    "type": "attribute",
+    "object": {"type": "name", "name": "world"},
+    "attr": "can_trade"
+  },
+  "args": [
+    {
+      "type": "attribute",
+      "object": {"type": "name", "name": "world"},
+      "attr": "total_trade_orbs"
+    },
+    {"type": "constant", "value": null}
+  ]
+}
+```
+
+**Affected locations**: 15 orb trading locations (RV, SV, VC)
+
+**Root cause**: The analyzer was exporting runtime function calls that referenced `world.can_trade` and `world.total_trade_orbs`.
+
+**Solution**:
+1. Added `_resolve_attribute()` method to resolve world attribute accesses at export time
+2. Expanded `world.can_trade()` function calls based on orbsanity settings:
+   - When orbsanity is OFF (default): Create `can_reach_orbs` helper function
+   - When orbsanity is ON: Create item_check for "Tradeable Orbs"
+3. Resolved `world.total_trade_orbs` to its calculated value (1530 for default settings)
+4. Handled optional `required_previous_trade` parameter with location_check rules
+
+**Implementation**:
+- Added function_call handling in `expand_rule()`
+- Created helper function `can_reach_orbs(required_count)` for vanilla orb trading
+- Properly resolved world attributes at generation time
+
+**Result**: Orb trading rules are now properly exported. The exporter successfully converts all complex rule types. Now needs frontend helper implementation for `can_reach_orbs`.
+
+**Final Status**: All exporter issues resolved! Test passes Spheres 0-3.14. Remaining work is frontend helper implementation.
+

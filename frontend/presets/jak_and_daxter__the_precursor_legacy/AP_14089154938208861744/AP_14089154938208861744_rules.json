@@ -666,28 +666,10 @@
             "name": "SV: Bring 90 Orbs To The Mayor",
             "id": 741000011,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
+              "type": "helper",
+              "name": "can_reach_orbs",
               "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
-                },
-                {
-                  "type": "constant",
-                  "value": null
-                }
+                1530
               ]
             },
             "item": {
@@ -701,28 +683,10 @@
             "name": "SV: Bring 90 Orbs to Your Uncle",
             "id": 741000012,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
+              "type": "helper",
+              "name": "can_reach_orbs",
               "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
-                },
-                {
-                  "type": "constant",
-                  "value": null
-                }
+                1530
               ]
             },
             "item": {
@@ -937,28 +901,10 @@
             "name": "SV: Bring 120 Orbs To The Oracle (1)",
             "id": 741000013,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
+              "type": "helper",
+              "name": "can_reach_orbs",
               "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
-                },
-                {
-                  "type": "constant",
-                  "value": null
-                }
+                1530
               ]
             },
             "item": {
@@ -972,27 +918,18 @@
             "name": "SV: Bring 120 Orbs To The Oracle (2)",
             "id": 741000014,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
+                  "type": "helper",
+                  "name": "can_reach_orbs",
+                  "args": [
+                    1530
+                  ]
                 },
                 {
-                  "type": "constant",
-                  "value": 13
+                  "type": "location_check",
+                  "location": "SV: Bring 120 Orbs To The Oracle (1)"
                 }
               ]
             },
@@ -3102,28 +3039,10 @@
             "name": "RV: Bring 90 Orbs To The Gambler",
             "id": 741000031,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
+              "type": "helper",
+              "name": "can_reach_orbs",
               "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
-                },
-                {
-                  "type": "constant",
-                  "value": null
-                }
+                1530
               ]
             },
             "item": {
@@ -3137,28 +3056,10 @@
             "name": "RV: Bring 90 Orbs To The Geologist",
             "id": 741000032,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
+              "type": "helper",
+              "name": "can_reach_orbs",
               "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
-                },
-                {
-                  "type": "constant",
-                  "value": null
-                }
+                1530
               ]
             },
             "item": {
@@ -3172,28 +3073,10 @@
             "name": "RV: Bring 90 Orbs To The Warrior",
             "id": 741000033,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
+              "type": "helper",
+              "name": "can_reach_orbs",
               "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
-                },
-                {
-                  "type": "constant",
-                  "value": null
-                }
+                1530
               ]
             },
             "item": {
@@ -3207,28 +3090,10 @@
             "name": "RV: Bring 120 Orbs To The Oracle (1)",
             "id": 741000034,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
+              "type": "helper",
+              "name": "can_reach_orbs",
               "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
-                },
-                {
-                  "type": "constant",
-                  "value": null
-                }
+                1530
               ]
             },
             "item": {
@@ -3242,27 +3107,18 @@
             "name": "RV: Bring 120 Orbs To The Oracle (2)",
             "id": 741000035,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
+                  "type": "helper",
+                  "name": "can_reach_orbs",
+                  "args": [
+                    1530
+                  ]
                 },
                 {
-                  "type": "constant",
-                  "value": 34
+                  "type": "location_check",
+                  "location": "RV: Bring 120 Orbs To The Oracle (1)"
                 }
               ]
             },
@@ -5771,28 +5627,10 @@
             "name": "VC: Bring 90 Orbs To The Miners (1)",
             "id": 741000096,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
+              "type": "helper",
+              "name": "can_reach_orbs",
               "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
-                },
-                {
-                  "type": "constant",
-                  "value": null
-                }
+                1530
               ]
             },
             "item": {
@@ -5806,27 +5644,18 @@
             "name": "VC: Bring 90 Orbs To The Miners (2)",
             "id": 741000097,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
+                  "type": "helper",
+                  "name": "can_reach_orbs",
+                  "args": [
+                    1530
+                  ]
                 },
                 {
-                  "type": "constant",
-                  "value": 96
+                  "type": "location_check",
+                  "location": "VC: Bring 90 Orbs To The Miners (1)"
                 }
               ]
             },
@@ -5841,27 +5670,18 @@
             "name": "VC: Bring 90 Orbs To The Miners (3)",
             "id": 741000098,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
+                  "type": "helper",
+                  "name": "can_reach_orbs",
+                  "args": [
+                    1530
+                  ]
                 },
                 {
-                  "type": "constant",
-                  "value": 97
+                  "type": "location_check",
+                  "location": "VC: Bring 90 Orbs To The Miners (2)"
                 }
               ]
             },
@@ -5876,27 +5696,18 @@
             "name": "VC: Bring 90 Orbs To The Miners (4)",
             "id": 741000099,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
+                  "type": "helper",
+                  "name": "can_reach_orbs",
+                  "args": [
+                    1530
+                  ]
                 },
                 {
-                  "type": "constant",
-                  "value": 98
+                  "type": "location_check",
+                  "location": "VC: Bring 90 Orbs To The Miners (3)"
                 }
               ]
             },
@@ -5911,28 +5722,10 @@
             "name": "VC: Bring 120 Orbs To The Oracle (1)",
             "id": 741000100,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
+              "type": "helper",
+              "name": "can_reach_orbs",
               "args": [
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
-                },
-                {
-                  "type": "constant",
-                  "value": null
-                }
+                1530
               ]
             },
             "item": {
@@ -5946,27 +5739,18 @@
             "name": "VC: Bring 120 Orbs To The Oracle (2)",
             "id": 741000101,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
-                },
-                "attr": "can_trade"
-              },
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "total_trade_orbs"
+                  "type": "helper",
+                  "name": "can_reach_orbs",
+                  "args": [
+                    1530
+                  ]
                 },
                 {
-                  "type": "constant",
-                  "value": 100
+                  "type": "location_check",
+                  "location": "VC: Bring 120 Orbs To The Oracle (1)"
                 }
               ]
             },
