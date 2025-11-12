@@ -2,9 +2,9 @@
 
 This file tracks unresolved issues with the Landstalker exporter.
 
-## Issue 1: Shop Item Rules Not Analyzed
+## Issue 1: Shop Item Rules Not Analyzed (Low Priority)
 
-**Status**: Not fixed yet
+**Status**: Not fixed - but shop item rules are optional for basic progression
 
 **Description**: The analyzer cannot handle complex shop item rules that use list comprehensions to check for duplicates within the same shop.
 
@@ -26,7 +26,27 @@ def make_shop_location_requirement_lambda(player: int, location: LandstalkerLoca
             and item.name not in [loc.item.name for loc in other_locations_in_shop if loc.item is not None])
 ```
 
-**Solution Needed**: Create a custom exporter that handles this pattern, possibly by:
-- Creating a custom rule type for shop item restrictions
-- Or simplifying the rule to something the analyzer can understand
-- Or implementing a helper function to handle duplicate checking
+**Impact**: These rules prevent duplicate items within the same shop. Without them, the frontend might allow logically invalid item placements. However, this doesn't affect progression logic since shop locations are still accessible.
+
+**Solution Needed**: Custom exporter handling for this pattern or allow-self-locking-items feature.
+
+## Issue 2: Unresolved Variable References in Region Visit Checks
+
+**Status**: Partially fixed with workaround
+
+**Description**: Some `_landstalker_has_visited_regions` calls have unresolved variable references that the static analyzer cannot resolve.
+
+**Example**:
+```json
+{
+  "type": "helper",
+  "name": "_landstalker_has_visited_regions",
+  "args": [{"type": "name", "name": "required_regions"}]
+}
+```
+
+**Current Workaround**: The JavaScript helper treats `undefined` (unresolved) as "no regions required" (always pass).
+
+**Impact**: Some exits that require visiting specific regions first may be accessible earlier than intended. This appears to be causing the Witch Helga's Hut accessibility issue (test fails at sphere 1.2).
+
+**Proper Solution**: Extract actual required region data from the world path data during export and embed it in the rules as constants.

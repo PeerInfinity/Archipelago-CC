@@ -75,11 +75,31 @@ export function count(snapshot, staticData, itemName) {
  *
  * @param {Object} snapshot - Canonical state snapshot
  * @param {Object} staticData - Static game data
- * @param {Array} regions - Array of region objects or region codes
+ * @param {Array|Object} regions - Array of region objects/codes, or an unresolved variable reference
  * @returns {boolean} True if player has visited all required regions
  */
 export function _landstalker_has_visited_regions(snapshot, staticData, regions) {
-  if (!regions || regions.length === 0) {
+  // Handle unresolved variable references from the analyzer
+  // These come from lambda parameters that couldn't be resolved statically
+  // The rule engine tries to resolve them via resolveName() and returns undefined if it can't
+  if (regions === undefined || regions === null) {
+    // Unresolved variable reference - the analyzer couldn't determine which regions are required
+    // This is a limitation of the static analysis - the actual region requirements
+    // would need to be extracted from the world data during export
+    // For now, treat unresolved references as "no regions required" (always pass)
+    return true;
+  }
+
+  if (typeof regions === 'object' && !Array.isArray(regions)) {
+    // Check if this is a "name" type node (unresolved variable reference)
+    // This shouldn't happen since the rule engine resolves names first, but handle it just in case
+    if (regions.type === 'name') {
+      console.warn(`_landstalker_has_visited_regions: Cannot resolve variable reference '${regions.name}', defaulting to true`);
+      return true;
+    }
+  }
+
+  if (regions.length === 0) {
     return true;
   }
 
