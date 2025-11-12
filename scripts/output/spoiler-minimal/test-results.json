@@ -4,7 +4,7 @@
     "batch_processing_time_minutes": 13.3,
     "batch_processing_time_seconds": 795.3,
     "created": "2025-10-14T13:24:10.253834",
-    "last_updated": "2025-11-11T20:49:04.218919",
+    "last_updated": "2025-11-12T01:12:28.619104",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3163,9 +3163,9 @@
       "total_seeds_tested": 10
     },
     "Bomb Rush Cyberfunk.yaml": {
-      "consecutive_passes_before_failure": 0,
-      "first_failure_reason": "Test failed at sphere 2.1",
-      "first_failure_seed": 1,
+      "consecutive_passes_before_failure": 10,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "individual_results": {
         "1": {
           "analysis": {
@@ -3177,30 +3177,30 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 6.25,
+            "processing_time_seconds": 6.77,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 225779,
-            "size_mb": 0.22
+            "size_bytes": 224988,
+            "size_mb": 0.21
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 10.45,
-            "return_code": 1,
-            "sphere_reached": 2.1,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 52.76,
+            "return_code": 0,
+            "sphere_reached": 10.9,
+            "success": true,
             "total_spheres": 10.9,
             "warning_count": 0
           },
           "template_name": "Bomb Rush Cyberfunk.yaml",
-          "timestamp": "2025-11-11T20:48:47.085743",
+          "timestamp": "2025-11-12T01:00:09.763219",
           "world_info": {
             "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
             "game_logic_path": null,
@@ -3220,30 +3220,31 @@
           "game_name": "bomb_rush_cyberfunk",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 8.87,
+            "error_type": null,
+            "processing_time_seconds": 6.62,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/bomb_rush_cyberfunk/AP_55941320597534372051/AP_55941320597534372051_rules.json",
-            "size_bytes": 239452,
-            "size_mb": 0.23
+            "size_bytes": 224896,
+            "size_mb": 0.21
           },
           "seed": "10",
           "seed_id": "AP_55941320597534372051",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 20.6,
+            "processing_time_seconds": 47.67,
             "return_code": 0,
-            "sphere_reached": 7.1,
+            "sphere_reached": 7.33,
             "success": true,
-            "total_spheres": 7.1,
+            "total_spheres": 7.33,
             "warning_count": 0
           },
           "template_name": "Bomb Rush Cyberfunk.yaml",
-          "timestamp": "2025-10-14T22:55:35.018254",
+          "timestamp": "2025-11-12T01:08:54.996804",
           "world_info": {
             "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
             "game_logic_path": null,
@@ -3263,30 +3264,31 @@
           "game_name": "bomb_rush_cyberfunk",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 6.78,
+            "error_type": null,
+            "processing_time_seconds": 6.38,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/bomb_rush_cyberfunk/AP_01043188731678011336/AP_01043188731678011336_rules.json",
-            "size_bytes": 239547,
-            "size_mb": 0.23
+            "size_bytes": 224991,
+            "size_mb": 0.21
           },
           "seed": "2",
           "seed_id": "AP_01043188731678011336",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 25.3,
+            "processing_time_seconds": 54.7,
             "return_code": 0,
-            "sphere_reached": 9.1,
+            "sphere_reached": 9.27,
             "success": true,
-            "total_spheres": 9.1,
+            "total_spheres": 9.27,
             "warning_count": 0
           },
           "template_name": "Bomb Rush Cyberfunk.yaml",
-          "timestamp": "2025-10-14T22:52:31.014404",
+          "timestamp": "2025-11-12T01:01:10.213937",
           "world_info": {
             "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
             "game_logic_path": null,
@@ -3306,30 +3308,31 @@
           "game_name": "bomb_rush_cyberfunk",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 6.64,
+            "error_type": null,
+            "processing_time_seconds": 6.43,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/bomb_rush_cyberfunk/AP_84719271504320872445/AP_84719271504320872445_rules.json",
-            "size_bytes": 239548,
-            "size_mb": 0.23
+            "size_bytes": 224992,
+            "size_mb": 0.21
           },
           "seed": "3",
           "seed_id": "AP_84719271504320872445",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 21.31,
+            "processing_time_seconds": 48.54,
             "return_code": 0,
-            "sphere_reached": 8.1,
+            "sphere_reached": 8.35,
             "success": true,
-            "total_spheres": 8.1,
+            "total_spheres": 8.35,
             "warning_count": 0
           },
           "template_name": "Bomb Rush Cyberfunk.yaml",
-          "timestamp": "2025-10-14T22:53:03.330512",
+          "timestamp": "2025-11-12T01:02:12.194259",
           "world_info": {
             "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
             "game_logic_path": null,
@@ -3349,30 +3352,31 @@
           "game_name": "bomb_rush_cyberfunk",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 6.71,
+            "error_type": null,
+            "processing_time_seconds": 6.7,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/bomb_rush_cyberfunk/AP_05594871498841892311/AP_05594871498841892311_rules.json",
-            "size_bytes": 239452,
-            "size_mb": 0.23
+            "size_bytes": 224896,
+            "size_mb": 0.21
           },
           "seed": "4",
           "seed_id": "AP_05594871498841892311",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 11.1,
+            "processing_time_seconds": 43.42,
             "return_code": 0,
-            "sphere_reached": 7.1,
+            "sphere_reached": 7.32,
             "success": true,
-            "total_spheres": 7.1,
+            "total_spheres": 7.32,
             "warning_count": 0
           },
           "template_name": "Bomb Rush Cyberfunk.yaml",
-          "timestamp": "2025-10-14T22:53:31.481207",
+          "timestamp": "2025-11-12T01:03:08.005880",
           "world_info": {
             "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
             "game_logic_path": null,
@@ -3392,30 +3396,31 @@
           "game_name": "bomb_rush_cyberfunk",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 6.66,
+            "error_type": null,
+            "processing_time_seconds": 6.59,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/bomb_rush_cyberfunk/AP_96945849220684217413/AP_96945849220684217413_rules.json",
-            "size_bytes": 239545,
-            "size_mb": 0.23
+            "size_bytes": 224989,
+            "size_mb": 0.21
           },
           "seed": "5",
           "seed_id": "AP_96945849220684217413",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 12.97,
+            "processing_time_seconds": 53.35,
             "return_code": 0,
-            "sphere_reached": 7.1,
+            "sphere_reached": 7.3,
             "success": true,
-            "total_spheres": 7.1,
+            "total_spheres": 7.3,
             "warning_count": 0
           },
           "template_name": "Bomb Rush Cyberfunk.yaml",
-          "timestamp": "2025-10-14T22:53:49.451888",
+          "timestamp": "2025-11-12T01:03:58.846489",
           "world_info": {
             "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
             "game_logic_path": null,
@@ -3435,30 +3440,31 @@
           "game_name": "bomb_rush_cyberfunk",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 6.72,
+            "error_type": null,
+            "processing_time_seconds": 6.34,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/bomb_rush_cyberfunk/AP_00679259829289197625/AP_00679259829289197625_rules.json",
-            "size_bytes": 239548,
-            "size_mb": 0.23
+            "size_bytes": 224992,
+            "size_mb": 0.21
           },
           "seed": "6",
           "seed_id": "AP_00679259829289197625",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 21.37,
+            "processing_time_seconds": 50.16,
             "return_code": 0,
-            "sphere_reached": 6.1,
+            "sphere_reached": 7.15,
             "success": true,
-            "total_spheres": 6.1,
+            "total_spheres": 7.15,
             "warning_count": 0
           },
           "template_name": "Bomb Rush Cyberfunk.yaml",
-          "timestamp": "2025-10-14T22:54:09.267269",
+          "timestamp": "2025-11-12T01:04:59.691670",
           "world_info": {
             "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
             "game_logic_path": null,
@@ -3478,30 +3484,31 @@
           "game_name": "bomb_rush_cyberfunk",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 6.64,
+            "error_type": null,
+            "processing_time_seconds": 6.59,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/bomb_rush_cyberfunk/AP_35931773795037525048/AP_35931773795037525048_rules.json",
-            "size_bytes": 239549,
-            "size_mb": 0.23
+            "size_bytes": 224993,
+            "size_mb": 0.21
           },
           "seed": "7",
           "seed_id": "AP_35931773795037525048",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 11.11,
+            "processing_time_seconds": 51.59,
             "return_code": 0,
-            "sphere_reached": 8.1,
+            "sphere_reached": 8.34,
             "success": true,
-            "total_spheres": 8.1,
+            "total_spheres": 8.34,
             "warning_count": 0
           },
           "template_name": "Bomb Rush Cyberfunk.yaml",
-          "timestamp": "2025-10-14T22:54:37.561941",
+          "timestamp": "2025-11-12T01:05:57.077681",
           "world_info": {
             "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
             "game_logic_path": null,
@@ -3521,30 +3528,31 @@
           "game_name": "bomb_rush_cyberfunk",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 7.28,
+            "error_type": null,
+            "processing_time_seconds": 6.2,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/bomb_rush_cyberfunk/AP_20777137877808592492/AP_20777137877808592492_rules.json",
-            "size_bytes": 239449,
-            "size_mb": 0.23
+            "size_bytes": 224893,
+            "size_mb": 0.21
           },
           "seed": "8",
           "seed_id": "AP_20777137877808592492",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 13.12,
+            "processing_time_seconds": 52.68,
             "return_code": 0,
-            "sphere_reached": 8.1,
+            "sphere_reached": 8.36,
             "success": true,
-            "total_spheres": 8.1,
+            "total_spheres": 8.36,
             "warning_count": 0
           },
           "template_name": "Bomb Rush Cyberfunk.yaml",
-          "timestamp": "2025-10-14T22:54:55.479326",
+          "timestamp": "2025-11-12T01:06:56.112752",
           "world_info": {
             "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
             "game_logic_path": null,
@@ -3564,30 +3572,31 @@
           "game_name": "bomb_rush_cyberfunk",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 6.69,
+            "error_type": null,
+            "processing_time_seconds": 6.42,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/bomb_rush_cyberfunk/AP_48205312626925217390/AP_48205312626925217390_rules.json",
-            "size_bytes": 239545,
-            "size_mb": 0.23
+            "size_bytes": 224989,
+            "size_mb": 0.21
           },
           "seed": "9",
           "seed_id": "AP_48205312626925217390",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 12.12,
+            "processing_time_seconds": 51.75,
             "return_code": 0,
-            "sphere_reached": 7.1,
+            "sphere_reached": 7.33,
             "success": true,
-            "total_spheres": 7.1,
+            "total_spheres": 7.33,
             "warning_count": 0
           },
           "template_name": "Bomb Rush Cyberfunk.yaml",
-          "timestamp": "2025-10-14T22:55:16.039136",
+          "timestamp": "2025-11-12T01:07:55.893855",
           "world_info": {
             "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
             "game_logic_path": null,
@@ -3600,16 +3609,16 @@
         }
       },
       "seed_range": "1-10",
-      "seeds_failed": 1,
-      "seeds_passed": 9,
+      "seeds_failed": 0,
+      "seeds_passed": 10,
       "stop_on_failure": true,
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 0.1
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_name": "Bomb Rush Cyberfunk.yaml",
-      "timestamp": "2025-11-11T20:48:47.018998",
+      "timestamp": "2025-11-12T01:00:09.711218",
       "total_seeds_tested": 10
     },
     "Bumper Stickers.yaml": {
@@ -6307,9 +6316,9 @@
       "total_seeds_tested": 10
     },
     "Civilization VI.yaml": {
-      "consecutive_passes_before_failure": 0,
-      "first_failure_reason": "Test error: [10:04:11 PM] [spoilers-full-run-1761887048803] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":56,\"processedEvents\":13,\"errorCount\":1,\"sphereCount\":14,\"testLogPath\":\"presets/civ_6/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
-      "first_failure_seed": 1,
+      "consecutive_passes_before_failure": 10,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "individual_results": {
         "1": {
           "analysis": {
@@ -6320,30 +6329,427 @@
           "game_name": "civ_6",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 2.13,
+            "error_type": null,
+            "processing_time_seconds": 4.77,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/civ_6/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 121479,
+            "size_bytes": 121567,
             "size_mb": 0.12
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 4.97,
-            "return_code": 1,
-            "sphere_reached": 0.13,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.86,
+            "return_code": 0,
+            "sphere_reached": 8.2,
+            "success": true,
             "total_spheres": 8.2,
             "warning_count": 0
           },
           "template_name": "Civilization VI.yaml",
-          "timestamp": "2025-10-30T22:04:04.748143",
+          "timestamp": "2025-11-12T01:09:50.256570",
+          "world_info": {
+            "exporter_path": "exporter/games/civ_6.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Civilization VI",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "civ_6",
+            "world_directory": "civ_6"
+          }
+        },
+        "10": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "civ_6",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 4.94,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/civ_6/AP_55941320597534372051/AP_55941320597534372051_rules.json",
+            "size_bytes": 121551,
+            "size_mb": 0.12
+          },
+          "seed": "10",
+          "seed_id": "AP_55941320597534372051",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.84,
+            "return_code": 0,
+            "sphere_reached": 8.2,
+            "success": true,
+            "total_spheres": 8.2,
+            "warning_count": 0
+          },
+          "template_name": "Civilization VI.yaml",
+          "timestamp": "2025-11-12T01:11:59.539720",
+          "world_info": {
+            "exporter_path": "exporter/games/civ_6.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Civilization VI",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "civ_6",
+            "world_directory": "civ_6"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "civ_6",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.09,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/civ_6/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 121559,
+            "size_mb": 0.12
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.55,
+            "return_code": 0,
+            "sphere_reached": 8.2,
+            "success": true,
+            "total_spheres": 8.2,
+            "warning_count": 0
+          },
+          "template_name": "Civilization VI.yaml",
+          "timestamp": "2025-11-12T01:10:04.346748",
+          "world_info": {
+            "exporter_path": "exporter/games/civ_6.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Civilization VI",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "civ_6",
+            "world_directory": "civ_6"
+          }
+        },
+        "3": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "civ_6",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 4.92,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/civ_6/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 121511,
+            "size_mb": 0.12
+          },
+          "seed": "3",
+          "seed_id": "AP_84719271504320872445",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.7,
+            "return_code": 0,
+            "sphere_reached": 8.2,
+            "success": true,
+            "total_spheres": 8.2,
+            "warning_count": 0
+          },
+          "template_name": "Civilization VI.yaml",
+          "timestamp": "2025-11-12T01:10:18.451675",
+          "world_info": {
+            "exporter_path": "exporter/games/civ_6.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Civilization VI",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "civ_6",
+            "world_directory": "civ_6"
+          }
+        },
+        "4": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "civ_6",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.03,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/civ_6/AP_05594871498841892311/AP_05594871498841892311_rules.json",
+            "size_bytes": 121567,
+            "size_mb": 0.12
+          },
+          "seed": "4",
+          "seed_id": "AP_05594871498841892311",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.86,
+            "return_code": 0,
+            "sphere_reached": 8.2,
+            "success": true,
+            "total_spheres": 8.2,
+            "warning_count": 0
+          },
+          "template_name": "Civilization VI.yaml",
+          "timestamp": "2025-11-12T01:10:32.573382",
+          "world_info": {
+            "exporter_path": "exporter/games/civ_6.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Civilization VI",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "civ_6",
+            "world_directory": "civ_6"
+          }
+        },
+        "5": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "civ_6",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.12,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/civ_6/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 121521,
+            "size_mb": 0.12
+          },
+          "seed": "5",
+          "seed_id": "AP_96945849220684217413",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.7,
+            "return_code": 0,
+            "sphere_reached": 8.2,
+            "success": true,
+            "total_spheres": 8.2,
+            "warning_count": 0
+          },
+          "template_name": "Civilization VI.yaml",
+          "timestamp": "2025-11-12T01:10:46.971893",
+          "world_info": {
+            "exporter_path": "exporter/games/civ_6.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Civilization VI",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "civ_6",
+            "world_directory": "civ_6"
+          }
+        },
+        "6": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "civ_6",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 4.92,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/civ_6/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+            "size_bytes": 121554,
+            "size_mb": 0.12
+          },
+          "seed": "6",
+          "seed_id": "AP_00679259829289197625",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.98,
+            "return_code": 0,
+            "sphere_reached": 8.2,
+            "success": true,
+            "total_spheres": 8.2,
+            "warning_count": 0
+          },
+          "template_name": "Civilization VI.yaml",
+          "timestamp": "2025-11-12T01:11:01.241961",
+          "world_info": {
+            "exporter_path": "exporter/games/civ_6.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Civilization VI",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "civ_6",
+            "world_directory": "civ_6"
+          }
+        },
+        "7": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "civ_6",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.65,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/civ_6/AP_35931773795037525048/AP_35931773795037525048_rules.json",
+            "size_bytes": 121508,
+            "size_mb": 0.12
+          },
+          "seed": "7",
+          "seed_id": "AP_35931773795037525048",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.85,
+            "return_code": 0,
+            "sphere_reached": 8.2,
+            "success": true,
+            "total_spheres": 8.2,
+            "warning_count": 0
+          },
+          "template_name": "Civilization VI.yaml",
+          "timestamp": "2025-11-12T01:11:15.623522",
+          "world_info": {
+            "exporter_path": "exporter/games/civ_6.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Civilization VI",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "civ_6",
+            "world_directory": "civ_6"
+          }
+        },
+        "8": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "civ_6",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.33,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/civ_6/AP_20777137877808592492/AP_20777137877808592492_rules.json",
+            "size_bytes": 121512,
+            "size_mb": 0.12
+          },
+          "seed": "8",
+          "seed_id": "AP_20777137877808592492",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.33,
+            "return_code": 0,
+            "sphere_reached": 8.2,
+            "success": true,
+            "total_spheres": 8.2,
+            "warning_count": 0
+          },
+          "template_name": "Civilization VI.yaml",
+          "timestamp": "2025-11-12T01:11:30.603791",
+          "world_info": {
+            "exporter_path": "exporter/games/civ_6.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Civilization VI",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "civ_6",
+            "world_directory": "civ_6"
+          }
+        },
+        "9": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "civ_6",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 4.84,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/civ_6/AP_48205312626925217390/AP_48205312626925217390_rules.json",
+            "size_bytes": 121531,
+            "size_mb": 0.12
+          },
+          "seed": "9",
+          "seed_id": "AP_48205312626925217390",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.53,
+            "return_code": 0,
+            "sphere_reached": 8.2,
+            "success": true,
+            "total_spheres": 8.2,
+            "warning_count": 0
+          },
+          "template_name": "Civilization VI.yaml",
+          "timestamp": "2025-11-12T01:11:45.702238",
           "world_info": {
             "exporter_path": "exporter/games/civ_6.py",
             "game_logic_path": null,
@@ -6355,22 +6761,22 @@
           }
         }
       },
-      "seed_range": "1",
-      "seeds_failed": 1,
-      "seeds_passed": 0,
+      "seed_range": "1-10",
+      "seeds_failed": 0,
+      "seeds_passed": 10,
       "stop_on_failure": true,
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 1.0
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_name": "Civilization VI.yaml",
-      "timestamp": "2025-10-30T22:04:04.748143",
-      "total_seeds_tested": 1
+      "timestamp": "2025-11-12T01:09:50.227829",
+      "total_seeds_tested": 10
     },
     "DLCQuest.yaml": {
       "consecutive_passes_before_failure": 0,
-      "first_failure_reason": "Test error: [10:04:18 PM] [spoilers-full-run-1761887056219] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":22,\"processedEvents\":1,\"errorCount\":1,\"sphereCount\":2,\"testLogPath\":\"presets/dlcquest/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+      "first_failure_reason": "Test failed at sphere 0.1",
       "first_failure_seed": 1,
       "individual_results": {
         "1": {
@@ -6382,7 +6788,8 @@
           "game_name": "dlcquest",
           "generation": {
             "error_count": 0,
-            "processing_time_seconds": 2.2,
+            "error_type": null,
+            "processing_time_seconds": 5.13,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -6397,7 +6804,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 4.98,
+            "processing_time_seconds": 9.02,
             "return_code": 1,
             "sphere_reached": 0.1,
             "success": false,
@@ -6405,7 +6812,7 @@
             "warning_count": 0
           },
           "template_name": "DLCQuest.yaml",
-          "timestamp": "2025-10-30T22:04:12.067441",
+          "timestamp": "2025-11-12T01:12:13.977008",
           "world_info": {
             "exporter_path": "exporter/games/dlcquest.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js",
@@ -6427,7 +6834,7 @@
         "failure_rate": 1.0
       },
       "template_name": "DLCQuest.yaml",
-      "timestamp": "2025-10-30T22:04:12.067441",
+      "timestamp": "2025-11-12T01:12:13.921004",
       "total_seeds_tested": 1
     },
     "DOOM 1993.yaml": {
