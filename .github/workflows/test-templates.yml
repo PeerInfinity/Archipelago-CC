@@ -140,12 +140,12 @@ jobs:
             output_dir: "spoiler-full"
             output_md_file: "test-results-spoilers-full.md"
 
-          # Multiplayer test for all templates
-          - test_name: "Multiplayer"
-            host_config: "minimal-spoilers"
-            test_command: "python scripts/test/test-all-templates.py --multiplayer -p"
-            output_dir: "multiplayer"
-            output_md_file: "test-results-multiplayer.md"
+          # Multiplayer test for all templates (disabled - not working through GitHub Actions)
+          # - test_name: "Multiplayer"
+          #   host_config: "minimal-spoilers"
+          #   test_command: "python scripts/test/test-all-templates.py --multiplayer -p"
+          #   output_dir: "multiplayer"
+          #   output_md_file: "test-results-multiplayer.md"
 
           # Multiworld test for all templates
           - test_name: "Multiworld"
@@ -352,7 +352,7 @@ jobs:
           # Add the specific files we want to commit
           git add scripts/output/spoiler-minimal/test-results.json
           git add scripts/output/spoiler-full/test-results.json
-          git add scripts/output/multiplayer/test-results.json
+          # git add scripts/output/multiplayer/test-results.json  # Disabled - not working through GitHub Actions
           git add scripts/output/multiworld/test-results.json
           git add scripts/output/multitemplate-minimal/test-results.json
           git add scripts/output/multitemplate-full/test-results.json
@@ -370,7 +370,6 @@ jobs:
             Test results include:
             - Minimal spoiler tests (seeds 1-10)
             - Full spoiler tests (seeds 1-10)
-            - Multiplayer tests
             - Multiworld tests
             - Multitemplate ALTTP tests (minimal and full)
             "
