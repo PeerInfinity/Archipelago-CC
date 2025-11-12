@@ -130,33 +130,45 @@ jobs:
           - test_name: "Minimal Spoiler (Seeds 1-10)"
             host_config: "minimal-spoilers"
             test_command: "python scripts/test/test-all-templates.py --seed-range 1-10 --seed-range-continue-on-failure -p"
+            output_dir: "spoiler-minimal"
+            output_md_file: "test-results-spoilers-minimal.md"
 
           # Full spoiler test for all templates, seeds 1-10
           - test_name: "Full Spoiler (Seeds 1-10)"
             host_config: "full-spoilers"
             test_command: "python scripts/test/test-all-templates.py --seed-range 1-10 --seed-range-continue-on-failure -p"
+            output_dir: "spoiler-full"
+            output_md_file: "test-results-spoilers-full.md"
 
           # Multiplayer test for all templates
           - test_name: "Multiplayer"
             host_config: "minimal-spoilers"
             test_command: "python scripts/test/test-all-templates.py --multiplayer -p"
+            output_dir: "multiplayer"
+            output_md_file: "test-results-multiplayer.md"
 
           # Multiworld test for all templates
           - test_name: "Multiworld"
             host_config: "minimal-spoilers"
             test_command: "python scripts/test/test-all-templates.py --multiworld -p"
+            output_dir: "multiworld"
+            output_md_file: "test-results-multiworld.md"
 
           # Multitemplate test for ALTTP, minimal
           - test_name: "Multitemplate ALTTP Minimal"
             host_config: "minimal-spoilers"
             setup_multitemplate: true
             test_command: "python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate -p"
+            output_dir: "multitemplate-minimal"
+            output_md_file: "test-results-multitemplate-minimal.md"
 
           # Multitemplate test for ALTTP, full
           - test_name: "Multitemplate ALTTP Full"
             host_config: "full-spoilers"
             setup_multitemplate: true
             test_command: "python scripts/test/test-all-templates.py --templates-dir Players/presets/multitemplate/alttp --multitemplate -p"
+            output_dir: "multitemplate-full"
+            output_md_file: "test-results-multitemplate-full.md"
 
     steps:
       - name: Checkout repository
@@ -222,8 +234,9 @@ jobs:
         with:
           name: full-test-${{ matrix.test_name }}
           path: |
-            scripts/output/
-            docs/json/developer/test-results/
+            scripts/output/${{ matrix.output_dir }}/
+            docs/json/developer/test-results/${{ matrix.output_md_file }}
+            docs/json/developer/test-results/test-results-summary.md
           retention-days: 14
 
       - name: Check for test failures
@@ -297,37 +310,14 @@ jobs:
 
       - name: Merge test results into repository
         run: |
-          # Create directories if they don't exist
-          mkdir -p scripts/output/spoiler-minimal
-          mkdir -p scripts/output/spoiler-full
-          mkdir -p scripts/output/multiplayer
-          mkdir -p scripts/output/multiworld
-          mkdir -p scripts/output/multitemplate-minimal
-          mkdir -p scripts/output/multitemplate-full
+          # Create output directories if they don't exist
+          mkdir -p scripts/output
           mkdir -p docs/json/developer/test-results
 
-          # Copy JSON results (excluding timestamped backup files)
-          find artifacts -name "test-results.json" -exec bash -c '
-            for file; do
-              dir=$(dirname "$file")
-              if [[ "$dir" == *"spoiler-minimal"* ]]; then
-                cp "$file" scripts/output/spoiler-minimal/test-results.json
-              elif [[ "$dir" == *"spoiler-full"* ]]; then
-                cp "$file" scripts/output/spoiler-full/test-results.json
-              elif [[ "$dir" == *"multiplayer"* ]]; then
-                cp "$file" scripts/output/multiplayer/test-results.json
-              elif [[ "$dir" == *"multiworld"* ]]; then
-                cp "$file" scripts/output/multiworld/test-results.json
-              elif [[ "$dir" == *"multitemplate-minimal"* ]]; then
-                cp "$file" scripts/output/multitemplate-minimal/test-results.json
-              elif [[ "$dir" == *"multitemplate-full"* ]]; then
-                cp "$file" scripts/output/multitemplate-full/test-results.json
-              fi
-            done
-          ' bash {} +
-
-          # Copy markdown documentation files
-          find artifacts -path "*/docs/json/developer/test-results/*.md" -exec cp {} docs/json/developer/test-results/ \;
+          # Copy all artifact contents to their respective locations
+          # Each artifact contains only its specific output_dir and specific .md file
+          find artifacts -type d -path "*/scripts/output/*" ! -path "*/scripts/output" -exec sh -c 'cp -r "$1" scripts/output/' sh {} \;
+          find artifacts -type f -path "*/docs/json/developer/test-results/*.md" -exec cp {} docs/json/developer/test-results/ \;
 
           # List what was copied
           echo "=== Copied JSON Results ==="
