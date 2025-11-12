@@ -20,9 +20,18 @@
  * @returns {number} The maximum achievable score
  */
 export function dice_simulation_state_change(snapshot, staticData, fragsPerDice, fragsPerRoll, allowedCategories, difficulty) {
-    // Check if we have a cached result
-    if (snapshot.__yachtDiceMaxScore !== undefined) {
-        return snapshot.__yachtDiceMaxScore;
+    // Create a cache key based on the current inventory state
+    // Don't cache across different states!
+    const inventoryKey = JSON.stringify(snapshot?.items || {});
+    const cacheKey = `${inventoryKey}_${fragsPerDice}_${fragsPerRoll}_${difficulty}`;
+
+    // Check cache (but create it if doesn't exist)
+    if (!snapshot.__yachtDiceScoreCache) {
+        snapshot.__yachtDiceScoreCache = {};
+    }
+
+    if (snapshot.__yachtDiceScoreCache[cacheKey] !== undefined) {
+        return snapshot.__yachtDiceScoreCache[cacheKey];
     }
 
     // Extract progression from current state
@@ -36,8 +45,14 @@ export function dice_simulation_state_change(snapshot, staticData, fragsPerDice,
 
     const maxScore = simulatedScore + extraPoints;
 
-    // Cache the result
-    snapshot.__yachtDiceMaxScore = maxScore;
+    // Cache the result with proper key
+    snapshot.__yachtDiceScoreCache[cacheKey] = maxScore;
+
+    // Debug logging (can be removed later)
+    if (typeof console !== 'undefined' && console.log) {
+        console.log(`[YachtDice] dice_simulation_state_change: numDice=${numDice}, numRolls=${numRolls}, ` +
+                    `categories=${categories.length}, maxScore=${maxScore}`);
+    }
 
     return maxScore;
 }
@@ -52,7 +67,16 @@ export function dice_simulation_state_change(snapshot, staticData, fragsPerDice,
  * @returns {Object} Progression data
  */
 function extractProgression(snapshot, fragsPerDice, fragsPerRoll, allowedCategories) {
-    const items = snapshot?.items || {};
+    // Try multiple possible locations for items in the snapshot
+    // Different games structure their snapshots differently
+    const items = snapshot?.items || snapshot?.inventory || snapshot || {};
+
+    // Debug: Log snapshot structure once
+    if (typeof console !== 'undefined' && console.log && !items.__debugLogged) {
+        console.log('[YachtDice] Snapshot keys:', Object.keys(snapshot || {}).slice(0, 20));
+        console.log('[YachtDice] Items structure:', JSON.stringify(items).substring(0, 200));
+        items.__debugLogged = true;
+    }
 
     // Count dice and rolls (including fragments)
     const diceFrags = (items["Dice Fragment"] || 0);
@@ -166,26 +190,28 @@ function estimateMeanScore(categoryName, numDice, numRolls) {
 
     // Very basic estimation based on category type and dice/rolls
     // This is TEMPORARY and should be replaced with yacht_weights lookup
+    // Using VERY conservative estimates to match Python's percentile-based logic
 
-    const baseFactor = Math.pow(numDice, 0.8) * Math.pow(numRolls, 0.5);
+    const baseFactor = Math.pow(numDice, 0.6) * Math.pow(numRolls, 0.3);
 
     // Different categories have different expected values
-    if (categoryName.includes("Choice")) {
-        return baseFactor * 8;
+    // These are intentionally low to avoid overestimating accessibility
+    if (categoryName.includes("Choice") || categoryName.includes("Inverse")) {
+        return baseFactor * 2.0;
     } else if (categoryName.includes("Ones") || categoryName.includes("Twos")) {
-        return baseFactor * 2;
+        return baseFactor * 0.6;
     } else if (categoryName.includes("Threes") || categoryName.includes("Fours")) {
-        return baseFactor * 3;
+        return baseFactor * 0.8;
     } else if (categoryName.includes("Fives") || categoryName.includes("Sixes")) {
-        return baseFactor * 4;
+        return baseFactor * 1.0;
     } else if (categoryName.includes("Straight")) {
-        return baseFactor * 5;
+        return baseFactor * 1.2;
     } else if (categoryName.includes("Full House") || categoryName.includes("Yacht")) {
-        return baseFactor * 6;
+        return baseFactor * 1.5;
     } else if (categoryName.includes("Kind")) {
-        return baseFactor * 4;
+        return baseFactor * 1.0;
     } else {
-        return baseFactor * 3;
+        return baseFactor * 0.8;
     }
 }
 
