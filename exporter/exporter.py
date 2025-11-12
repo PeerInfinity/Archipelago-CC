@@ -24,6 +24,65 @@ def clear_rule_cache():
     """Clear the rule analysis cache. Call between generations."""
     _rule_analysis_cache.clear()
 
+def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, Any]:
+    """
+    Recursively resolve attribute nodes in a rule structure to their actual string values.
+    This is needed for item_check rules that reference ItemName.* attributes.
+
+    Args:
+        rule: The rule dictionary to process
+        world: The world object to resolve attributes from
+
+    Returns:
+        The rule with resolved attributes
+    """
+    if not rule or not isinstance(rule, dict):
+        return rule
+
+    # Process item_check rules
+    if rule.get('type') == 'item_check':
+        item = rule.get('item')
+        if isinstance(item, dict) and item.get('type') == 'attribute':
+            # Try to resolve the attribute (e.g., ItemName.MasterForm -> "Master Form")
+            obj_name = item.get('object', {}).get('name')
+            attr_name = item.get('attr')
+
+            if obj_name and attr_name:
+                try:
+                    # Try to get the module/class from the world or its module
+                    obj = None
+                    if hasattr(world, obj_name):
+                        obj = getattr(world, obj_name)
+                    elif hasattr(world, '__class__') and hasattr(world.__class__, '__module__'):
+                        # Import the world's module and look for the object there
+                        import sys
+                        world_module = sys.modules.get(world.__class__.__module__)
+                        if world_module and hasattr(world_module, obj_name):
+                            obj = getattr(world_module, obj_name)
+
+                    if obj:
+                        # Get the attribute value (e.g., MasterForm -> "Master Form")
+                        resolved_value = getattr(obj, attr_name)
+                        if isinstance(resolved_value, str):
+                            logger.debug(f"Resolved attribute {obj_name}.{attr_name} to '{resolved_value}'")
+                            rule['item'] = {'type': 'constant', 'value': resolved_value}
+                except (AttributeError, KeyError) as e:
+                    logger.debug(f"Could not resolve attribute {obj_name}.{attr_name}: {e}")
+
+    # Recursively process nested rules
+    if rule.get('type') in ['and', 'or']:
+        rule['conditions'] = [resolve_attribute_nodes_in_rule(cond, world) for cond in rule.get('conditions', [])]
+
+    if rule.get('type') == 'not':
+        rule['condition'] = resolve_attribute_nodes_in_rule(rule.get('condition'), world)
+
+    if rule.get('type') == 'conditional':
+        rule['test'] = resolve_attribute_nodes_in_rule(rule.get('test'), world)
+        rule['if_true'] = resolve_attribute_nodes_in_rule(rule.get('if_true'), world)
+        rule['if_false'] = resolve_attribute_nodes_in_rule(rule.get('if_false'), world)
+
+    return rule
+
 @lru_cache(maxsize=128)
 def get_world_directory_name(game_name: str) -> str:
     """
@@ -533,6 +592,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                 expanded = game_handler.expand_rule(analysis_result)
 
+                # Resolve any attribute nodes in item_check rules
+                if expanded:
+                    expanded = resolve_attribute_nodes_in_rule(expanded, world)
+
                 # Cache the result before returning
                 if expanded:
                     _rule_analysis_cache[cache_key] = expanded
@@ -734,6 +797,8 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                     special_rule = game_handler.handle_complex_exit_rule(exit_name, exit.access_rule)
                                     if special_rule:
                                         expanded_rule = game_handler.expand_rule(special_rule)
+                                        # Resolve any attribute nodes in item_check rules
+                                        expanded_rule = resolve_attribute_nodes_in_rule(expanded_rule, world)
 
                                 # If no special handling, use normal analysis
                                 if expanded_rule is None:

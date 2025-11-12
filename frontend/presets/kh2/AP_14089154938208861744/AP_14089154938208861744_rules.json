@@ -10239,7 +10239,10 @@
             "id": 1245776,
             "access_rule": {
               "type": "item_check",
-              "item": "ValorForm"
+              "item": {
+                "type": "constant",
+                "value": "Valor Form"
+              }
             },
             "item": {
               "name": "Bond of Flame",
@@ -10253,7 +10256,10 @@
             "id": 1245777,
             "access_rule": {
               "type": "item_check",
-              "item": "ValorForm"
+              "item": {
+                "type": "constant",
+                "value": "Valor Form"
+              }
             },
             "item": {
               "name": "Elixir",
@@ -10267,7 +10273,10 @@
             "id": 1245778,
             "access_rule": {
               "type": "item_check",
-              "item": "ValorForm"
+              "item": {
+                "type": "constant",
+                "value": "Valor Form"
+              }
             },
             "item": {
               "name": "Precious Mushroom+",
@@ -10281,7 +10290,10 @@
             "id": 1245779,
             "access_rule": {
               "type": "item_check",
-              "item": "ValorForm"
+              "item": {
+                "type": "constant",
+                "value": "Valor Form"
+              }
             },
             "item": {
               "name": "Power Boost",
@@ -10295,7 +10307,10 @@
             "id": 1245780,
             "access_rule": {
               "type": "item_check",
-              "item": "ValorForm"
+              "item": {
+                "type": "constant",
+                "value": "Valor Form"
+              }
             },
             "item": {
               "name": "Lucky Emblem",
@@ -10309,7 +10324,10 @@
             "id": 1245781,
             "access_rule": {
               "type": "item_check",
-              "item": "ValorForm"
+              "item": {
+                "type": "constant",
+                "value": "Valor Form"
+              }
             },
             "item": {
               "name": "Drive Converter",
@@ -10329,7 +10347,10 @@
             "id": 1245782,
             "access_rule": {
               "type": "item_check",
-              "item": "WisdomForm"
+              "item": {
+                "type": "constant",
+                "value": "Wisdom Form"
+              }
             },
             "item": {
               "name": "Protect Belt",
@@ -10343,7 +10364,10 @@
             "id": 1245783,
             "access_rule": {
               "type": "item_check",
-              "item": "WisdomForm"
+              "item": {
+                "type": "constant",
+                "value": "Wisdom Form"
+              }
             },
             "item": {
               "name": "Horizontal Slash",
@@ -10357,7 +10381,10 @@
             "id": 1245784,
             "access_rule": {
               "type": "item_check",
-              "item": "WisdomForm"
+              "item": {
+                "type": "constant",
+                "value": "Wisdom Form"
+              }
             },
             "item": {
               "name": "Secret Ansem's Report 4",
@@ -10371,7 +10398,10 @@
             "id": 1245785,
             "access_rule": {
               "type": "item_check",
-              "item": "WisdomForm"
+              "item": {
+                "type": "constant",
+                "value": "Wisdom Form"
+              }
             },
             "item": {
               "name": "Blizzagun Armlet",
@@ -10385,7 +10415,10 @@
             "id": 1245786,
             "access_rule": {
               "type": "item_check",
-              "item": "WisdomForm"
+              "item": {
+                "type": "constant",
+                "value": "Wisdom Form"
+              }
             },
             "item": {
               "name": "Hi-Potion",
@@ -10399,7 +10432,10 @@
             "id": 1245787,
             "access_rule": {
               "type": "item_check",
-              "item": "WisdomForm"
+              "item": {
+                "type": "constant",
+                "value": "Wisdom Form"
+              }
             },
             "item": {
               "name": "Moon Amulet",
@@ -10419,7 +10455,10 @@
             "id": 1245788,
             "access_rule": {
               "type": "item_check",
-              "item": "LimitForm"
+              "item": {
+                "type": "constant",
+                "value": "Limit Form"
+              }
             },
             "item": {
               "name": "Magnet Element",
@@ -10433,7 +10472,10 @@
             "id": 1245789,
             "access_rule": {
               "type": "item_check",
-              "item": "LimitForm"
+              "item": {
+                "type": "constant",
+                "value": "Limit Form"
+              }
             },
             "item": {
               "name": "Gold Ring",
@@ -10447,7 +10489,10 @@
             "id": 1245790,
             "access_rule": {
               "type": "item_check",
-              "item": "LimitForm"
+              "item": {
+                "type": "constant",
+                "value": "Limit Form"
+              }
             },
             "item": {
               "name": "Proof of Peace",
@@ -10461,7 +10506,10 @@
             "id": 1245791,
             "access_rule": {
               "type": "item_check",
-              "item": "LimitForm"
+              "item": {
+                "type": "constant",
+                "value": "Limit Form"
+              }
             },
             "item": {
               "name": "Donald Auto Healing",
@@ -10475,7 +10523,10 @@
             "id": 1245792,
             "access_rule": {
               "type": "item_check",
-              "item": "LimitForm"
+              "item": {
+                "type": "constant",
+                "value": "Limit Form"
+              }
             },
             "item": {
               "name": "Way to the Dawn",
@@ -10489,7 +10540,10 @@
             "id": 1245793,
             "access_rule": {
               "type": "item_check",
-              "item": "LimitForm"
+              "item": {
+                "type": "constant",
+                "value": "Limit Form"
+              }
             },
             "item": {
               "name": "Proof of Connection",
@@ -10509,7 +10563,10 @@
             "id": 1245794,
             "access_rule": {
               "type": "item_check",
-              "item": "MasterForm"
+              "item": {
+                "type": "constant",
+                "value": "Master Form"
+              }
             },
             "item": {
               "name": "Max MP Up",
@@ -10523,7 +10580,10 @@
             "id": 1245795,
             "access_rule": {
               "type": "item_check",
-              "item": "MasterForm"
+              "item": {
+                "type": "constant",
+                "value": "Master Form"
+              }
             },
             "item": {
               "name": "Ether",
@@ -10537,7 +10597,10 @@
             "id": 1245796,
             "access_rule": {
               "type": "item_check",
-              "item": "MasterForm"
+              "item": {
+                "type": "constant",
+                "value": "Master Form"
+              }
             },
             "item": {
               "name": "Hi-Potion",
@@ -10551,7 +10614,10 @@
             "id": 1245797,
             "access_rule": {
               "type": "item_check",
-              "item": "MasterForm"
+              "item": {
+                "type": "constant",
+                "value": "Master Form"
+              }
             },
             "item": {
               "name": "Max HP Up",
@@ -10565,7 +10631,10 @@
             "id": 1245798,
             "access_rule": {
               "type": "item_check",
-              "item": "MasterForm"
+              "item": {
+                "type": "constant",
+                "value": "Master Form"
+              }
             },
             "item": {
               "name": "Tent",
@@ -10579,7 +10648,10 @@
             "id": 1245799,
             "access_rule": {
               "type": "item_check",
-              "item": "MasterForm"
+              "item": {
+                "type": "constant",
+                "value": "Master Form"
+              }
             },
             "item": {
               "name": "Accessory Slot Up",
@@ -10599,7 +10671,10 @@
             "id": 1245800,
             "access_rule": {
               "type": "item_check",
-              "item": "FinalForm"
+              "item": {
+                "type": "constant",
+                "value": "Final Form"
+              }
             },
             "item": {
               "name": "Counterguard",
@@ -10613,7 +10688,10 @@
             "id": 1245801,
             "access_rule": {
               "type": "item_check",
-              "item": "FinalForm"
+              "item": {
+                "type": "constant",
+                "value": "Final Form"
+              }
             },
             "item": {
               "name": "Goofy Protega",
@@ -10627,7 +10705,10 @@
             "id": 1245802,
             "access_rule": {
               "type": "item_check",
-              "item": "FinalForm"
+              "item": {
+                "type": "constant",
+                "value": "Final Form"
+              }
             },
             "item": {
               "name": "Secret Ansem's Report 13",
@@ -10641,7 +10722,10 @@
             "id": 1245803,
             "access_rule": {
               "type": "item_check",
-              "item": "FinalForm"
+              "item": {
+                "type": "constant",
+                "value": "Final Form"
+              }
             },
             "item": {
               "name": "Fire Element",
@@ -10655,7 +10739,10 @@
             "id": 1245804,
             "access_rule": {
               "type": "item_check",
-              "item": "FinalForm"
+              "item": {
+                "type": "constant",
+                "value": "Final Form"
+              }
             },
             "item": {
               "name": "Lucky Emblem",
@@ -10669,7 +10756,10 @@
             "id": 1245805,
             "access_rule": {
               "type": "item_check",
-              "item": "FinalForm"
+              "item": {
+                "type": "constant",
+                "value": "Final Form"
+              }
             },
             "item": {
               "name": "Hero's Crest",
