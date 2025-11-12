@@ -548,14 +548,25 @@ class ASTVisitorMixin:
             # Check if this name is in closure vars and should be resolved to a constant
             if name in self.closure_vars:
                 value = self.closure_vars[name]
+                # Handle None values
+                if value is None:
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to None")
+                    return {'type': 'constant', 'value': None}
                 # Handle simple values (numbers, strings, bools)
-                if isinstance(value, (int, float, str, bool)):
+                elif isinstance(value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant value: {value}")
                     return {'type': 'constant', 'value': value}
                 # Handle enum values by extracting their .value attribute
                 elif hasattr(value, 'value') and isinstance(value.value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to enum constant value: {value.value}")
                     return {'type': 'constant', 'value': value.value}
+                # Handle NamedTuples (like RoomAndDoor) by converting to list/dict
+                elif hasattr(value, '_fields'):
+                    # This is a NamedTuple - convert to a serializable format
+                    # Convert to list to preserve order
+                    serialized = list(value)
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to NamedTuple as list: {serialized}")
+                    return {'type': 'constant', 'value': serialized}
 
             # Also check function defaults for lambda parameters
             if name not in self.closure_vars:
@@ -569,6 +580,11 @@ class ASTVisitorMixin:
                     elif hasattr(resolved_value, 'value') and isinstance(resolved_value.value, (int, float, str, bool)):
                         logging.debug(f"visit_Name: Resolved '{name}' from function defaults to enum constant value: {resolved_value.value}")
                         return {'type': 'constant', 'value': resolved_value.value}
+                    # Handle NamedTuples from function defaults
+                    elif hasattr(resolved_value, '_fields'):
+                        serialized = list(resolved_value)
+                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults to NamedTuple as list: {serialized}")
+                        return {'type': 'constant', 'value': serialized}
 
             # Use game handler to replace names if available
             if self.game_handler and hasattr(self.game_handler, 'replace_name'):

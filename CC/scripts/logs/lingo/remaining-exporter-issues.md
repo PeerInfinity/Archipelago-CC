@@ -1,53 +1,50 @@
 # Remaining Exporter Issues for Lingo
 
-## Issue 1: Door variable not resolved from closure in lingo_can_use_entrance
+## Issue 1: PlayerLocation serialization in lingo_can_use_location
 
-**Status:** Investigated - complex issue
-**Type:** Variable resolution / serialization
-**Priority:** Critical
+**Status:** Identified
+**Type:** Object serialization
+**Priority:** Medium
 
 **Description:**
-The exporter is not resolving the `door` variable from lambda closures when exporting entrance access rules. The variable appears as `{"type": "name", "name": "door"}` in the exported JSON instead of being resolved to its actual value.
+The `lingo_can_use_location` helper function is being called with a PlayerLocation object that's not serializing properly. The location object contains an AccessRequirements object with the actual access logic.
 
-**Python Code:**
-```python
-# In worlds/lingo/regions.py
-connection.access_rule = lambda state: lingo_can_use_entrance(state, target_region.name, door, world)
-```
-
-Where `door` is a RoomAndDoor NamedTuple or None captured in the closure.
-
-**Exported JSON:**
+**Current State:**
+The location access rule is exporting as:
 ```json
 {
   "type": "helper",
-  "name": "lingo_can_use_entrance",
+  "name": "lingo_can_use_location",
   "args": [
-    {"type": "constant", "value": "Starting Room"},
-    {"type": "name", "name": "door"}  // <-- Unresolved variable reference
+    {
+      "type": "constant",
+      "value": ["Starting Room - HI", 444400, "rooms=set("]
+    }
   ]
 }
 ```
 
-**Root Cause:**
-1. The analyzer extracts closure variables (`door`) from the lambda
-2. The `door` variable is a RoomAndDoor NamedTuple which cannot be directly serialized to JSON
-3. The analyzer returns it as a `name` reference instead of resolving it
-4. The frontend cannot resolve this variable because it doesn't have access to Python closure context
+The third element `"rooms=set("` is a partial string representation of the AccessRequirements object, which indicates improper serialization.
 
-**Attempted Solutions:**
-1. ✅ Created frontend helper functions (placeholder implementation)
-2. ✅ Added Lingo exporter with `_resolve_door_variables` method (but doesn't have access to closure vars in `expand_rule`)
-3. ❌ Tried to serialize RoomAndDoor NamedTuple (complex, needs custom serialization)
-4. ❌ Tried to inline helper function logic (requires significant refactoring)
+**Root Cause:**
+The `make_location_lambda` function creates lambdas like:
+```python
+return lambda state: lingo_can_use_location(state, location, world)
+```
+
+Where `location` is a PlayerLocation object with complex nested data (AccessRequirements) that the analyzer is struggling to serialize properly.
 
 **Impact:**
-- All entrance access rules with `lingo_can_use_entrance` fail to evaluate properly
-- 37 regions are not accessible in Sphere 0
-- Test completely fails at the first state update
+- Location access rules may not evaluate correctly
+- Currently mitigated by placeholder helper function returning `true`
+- Causes too many locations to be accessible (136 extra locations in Sphere 0)
+- Causes 114 extra regions to be accessible
 
-**Next Steps:**
-1. Investigate if we can add a hook in the exporter that has access to closure variables during analysis
-2. Add custom serialization for RoomAndDoor NamedTuple in the analyzer
-3. Consider inlining the `lingo_can_use_entrance` logic instead of keeping it as a helper call
-4. Alternatively, modify how regions/entrances are created in Lingo to avoid closure variables
+**Potential Solutions:**
+1. Inline the `_lingo_can_satisfy_requirements` logic instead of calling helper
+2. Export AccessRequirements data as separate game data structure
+3. Modify how location access rules are created in Lingo world to use simpler structures
+4. Add custom serialization for PlayerLocation and AccessRequirements objects
+
+**Notes:**
+The door variable issue has been solved (see solved-exporter-issues.md). This is the next issue to tackle, though it's lower priority since the helper function infrastructure is in place.

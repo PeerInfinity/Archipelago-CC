@@ -19,54 +19,24 @@
             "name": "Menu to Starting Room",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Starting Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Menu to Sunwarps",
             "connected_region": "Sunwarps",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Sunwarps"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Menu to Orange Tower",
             "connected_region": "Orange Tower",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Orange Tower"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -316,8 +286,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Starting Room - HI",
+                    444400,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -336,8 +310,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Starting Room - HIDDEN",
+                    444401,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -420,18 +398,8 @@
             "name": "Hidden Room to Owl Hallway",
             "connected_region": "Owl Hallway",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Owl Hallway"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -486,8 +454,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hidden Room - DEAD END",
+                    444406,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -506,8 +478,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hidden Room - OPEN",
+                    444407,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -575,8 +551,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Seeker - Achievement",
+                    444409,
+                    "rooms={'Hidden Room'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -659,8 +639,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Second Room - Good Luck",
+                    445203,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -722,18 +706,8 @@
             "name": "Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)",
             "connected_region": "Crossroads",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Crossroads"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -803,18 +777,8 @@
             "name": "Hub Room to Near Far Area",
             "connected_region": "Near Far Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Near Far Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -863,18 +827,8 @@
             "name": "Hub Room to Welcome Back Area",
             "connected_region": "Welcome Back Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Welcome Back Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -929,8 +883,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hub Room - ORDER",
+                    444432,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -949,8 +907,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hub Room - SLAUGHTER",
+                    444433,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -969,8 +931,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hub Room - TRACE",
+                    444436,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -989,8 +955,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hub Room - RAT",
+                    444437,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1009,8 +979,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hub Room - OPEN",
+                    444438,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1029,8 +1003,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hub Room - LOST",
+                    444440,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1092,18 +1070,8 @@
             "name": "Dead End Area to The Artistic (Smiley)",
             "connected_region": "The Artistic (Smiley)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Artistic (Smiley)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -1148,8 +1116,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Pilgrim Antechamber - PILGRIM",
+                    444447,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1168,8 +1140,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Pilgrim Room - HOT CRUST",
+                    445205,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1216,8 +1192,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Pilgrim Room - THIS",
+                    444449,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1321,18 +1301,8 @@
             "name": "Crossroads to Outside The Agreeable",
             "connected_region": "Outside The Agreeable",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Agreeable"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -1402,36 +1372,16 @@
             "name": "Crossroads to Color Hallways",
             "connected_region": "Color Hallways",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Color Hallways"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Crossroads to The Artistic (Smiley)",
             "connected_region": "The Artistic (Smiley)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Artistic (Smiley)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -1507,8 +1457,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - DECAY",
+                    444462,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1527,8 +1481,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - NOPE",
+                    444463,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1547,8 +1505,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - WE ROT",
+                    444465,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1567,8 +1529,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - BEND HI",
+                    444469,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1587,8 +1553,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - THE EYES",
+                    444470,
+                    "rooms={'Crossroads'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -1607,8 +1577,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - TURN/RUNT",
+                    445206,
+                    "rooms={'Orange Tower Fourth Floor'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -1627,8 +1601,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - WORDS, SWORD",
+                    445207,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1675,8 +1653,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Crossroads - LOST Pair",
+                    445208,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1744,8 +1726,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Amen Name Area - AMEN, NAME",
+                    445209,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1903,8 +1889,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Tenacious - Achievement",
+                    444491,
+                    "rooms={'Hub Room', 'Dread Hallway', 'Crossroads', 'Outside The Agreeable'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -1923,8 +1913,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Tenacious - Palindromes",
+                    445210,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1943,8 +1937,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Tenacious - White Palindromes",
+                    445211,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -1964,18 +1962,8 @@
             "name": "Near Far Area to Hub Room",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hub Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -2009,8 +1997,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Symmetry Room - NEAR, FAR",
+                    445204,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -2078,8 +2070,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Symmetry Room - WARTS, STRAW",
+                    445212,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -2147,8 +2143,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Symmetry Room - LEAF, FEEL",
+                    445213,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -2231,18 +2231,8 @@
             "name": "Outside The Agreeable to Compass Room",
             "connected_region": "Compass Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Compass Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -2291,54 +2281,24 @@
             "name": "Outside The Agreeable to Welcome Back Area",
             "connected_region": "Welcome Back Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Welcome Back Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Outside The Agreeable to Directional Gallery (through Sunwarps - 6 Sunwarp)",
             "connected_region": "Directional Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Directional Gallery"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Outside The Agreeable to Hallway Room (1)",
             "connected_region": "Hallway Room (1)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hallway Room (1)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -2351,8 +2311,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Agreeable - MASSACRED",
+                    444496,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -2371,8 +2335,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Agreeable - BLACK",
+                    444497,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -2391,8 +2359,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Agreeable - CLOSE",
+                    444498,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -2411,8 +2383,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Agreeable - RIGHT",
+                    444501,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -2432,36 +2408,16 @@
             "name": "Compass Room to Outside The Agreeable",
             "connected_region": "Outside The Agreeable",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Agreeable"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Compass Room to Outside The Bold",
             "connected_region": "Outside The Bold",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Bold"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -2495,8 +2451,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Agreeable - Lookout Panels",
+                    445271,
+                    "rooms={'Elements Area', 'Outside The Bold', 'Orange Tower Fifth Floor', 'Suits Area'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -2564,8 +2524,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Dread Hallway - DREAD",
+                    444516,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -2633,8 +2597,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Agreeable - Achievement",
+                    444517,
+                    "rooms={'Outside The Agreeable'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -2653,8 +2621,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Agreeable - BYE",
+                    444518,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -2695,18 +2667,8 @@
             "name": "Hedge Maze to Outside The Agreeable",
             "connected_region": "Outside The Agreeable",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Agreeable"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -2818,18 +2780,8 @@
             "name": "Hedge Maze to Color Hallways",
             "connected_region": "Color Hallways",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Color Hallways"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -2842,8 +2794,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hedge Maze - DOWN",
+                    444530,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -2862,8 +2818,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hedge Maze - Hide and Seek",
+                    445215,
+                    "rooms={'Outside The Agreeable'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -2883,36 +2843,16 @@
             "name": "The Perceptive to Hedge Maze",
             "connected_region": "Hedge Maze",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hedge Maze"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "The Perceptive to The Fearless (First Floor)",
             "connected_region": "The Fearless (First Floor)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Fearless (First Floor)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -2925,8 +2865,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Perceptive - Achievement",
+                    444546,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -2945,8 +2889,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Perceptive - GAZE",
+                    444547,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -3014,8 +2962,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Fearless - First Floor Puzzles",
+                    445216,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -3040,8 +2992,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Fearless - Second Floor Puzzles",
+                    445217,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -3066,8 +3022,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Fearless - Achievement",
+                    444560,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -3108,36 +3068,16 @@
             "name": "The Observant to The Incomparable",
             "connected_region": "The Incomparable",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Incomparable"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "The Observant to Welcome Back Area",
             "connected_region": "Welcome Back Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Welcome Back Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -3171,8 +3111,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Observant - Achievement",
+                    444565,
+                    "rooms={'The Observant'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -3191,8 +3135,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Observant - SIX",
+                    444569,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -3211,8 +3159,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Observant - FOUR (1), FOUR (2)",
+                    445218,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -3253,18 +3205,8 @@
             "name": "The Incomparable to The Observant",
             "connected_region": "The Observant",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Observant"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -3298,8 +3240,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Incomparable - Achievement",
+                    444585,
+                    "rooms={'Courtyard', 'Eight Room', 'Elements Area'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -3318,8 +3264,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Giant Sevens",
+                    445219,
+                    "rooms={'Courtyard', 'Elements Area'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -3360,18 +3310,8 @@
             "name": "Eight Alcove to Eight Room",
             "connected_region": "Eight Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Eight Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -3405,18 +3345,8 @@
             "name": "Eight Room to The Incomparable",
             "connected_region": "The Incomparable",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Incomparable"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -3476,18 +3406,8 @@
             "name": "Orange Tower First Floor to Outside The Undeterred (through Sunwarps - 4 Sunwarp)",
             "connected_region": "Outside The Undeterred",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Undeterred"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -3542,8 +3462,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower First Floor - SECRET",
+                    444602,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -3562,8 +3486,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower First Floor - DADS + ALE",
+                    444603,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -3582,8 +3510,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower First Floor - Salt Pepper Door",
+                    445220,
+                    "rooms={'Directional Gallery'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -3645,18 +3577,8 @@
             "name": "Orange Tower Second Floor to Outside The Undeterred",
             "connected_region": "Outside The Undeterred",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Undeterred"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -3669,18 +3591,8 @@
             "name": "Orange Tower Third Floor to Starting Room",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Starting Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -3729,18 +3641,8 @@
             "name": "Orange Tower Third Floor to Outside The Initiated (through Sunwarps - 3 Sunwarp)",
             "connected_region": "Outside The Initiated",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Initiated"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -3789,18 +3691,8 @@
             "name": "Orange Tower Third Floor to Art Gallery",
             "connected_region": "Art Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Art Gallery"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -3834,8 +3726,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower Third Floor - DEER + WREN",
+                    444606,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -3854,8 +3750,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Color Barriers - RED and YELLOW",
+                    445221,
+                    "rooms={'Directional Gallery', 'Color Hunt'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -3875,18 +3775,8 @@
             "name": "Orange Tower Fourth Floor to Crossroads",
             "connected_region": "Crossroads",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Crossroads"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -3977,18 +3867,8 @@
             "name": "Orange Tower Fourth Floor to Courtyard",
             "connected_region": "Courtyard",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Courtyard"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -4016,36 +3896,16 @@
             "name": "Orange Tower Fourth Floor to Color Hunt (through Sunwarps - 5 Sunwarp)",
             "connected_region": "Color Hunt",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Color Hunt"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Orange Tower Fourth Floor to Room Room",
             "connected_region": "Room Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Room Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -4058,8 +3918,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower Fourth Floor - LEARNS + UNSEW",
+                    444609,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -4078,8 +3942,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower Fourth Floor - HOT CRUSTS",
+                    444610,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -4098,8 +3966,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower Fourth Floor - IRK HORN",
+                    444611,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -4119,18 +3991,8 @@
             "name": "Hot Crusts Area to Orange Tower Third Floor (through Sunwarps - 2 Sunwarp)",
             "connected_region": "Orange Tower Third Floor",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Orange Tower Third Floor"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -4158,18 +4020,8 @@
             "name": "Hot Crusts Area to The Artistic (Smiley)",
             "connected_region": "The Artistic (Smiley)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Artistic (Smiley)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -4293,8 +4145,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower Fifth Floor - DRAWL + RUNS",
+                    444615,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -4313,8 +4169,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Orange Tower Fifth Floor - SIZE (Small), SIZE (Big)",
+                    445222,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -4334,36 +4194,16 @@
             "name": "Orange Tower Sixth Floor to Starting Room",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Starting Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Orange Tower Sixth Floor to The Incomparable",
             "connected_region": "The Incomparable",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Incomparable"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -4433,72 +4273,32 @@
             "name": "Orange Tower Sixth Floor to Owl Hallway",
             "connected_region": "Owl Hallway",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Owl Hallway"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Orange Tower Sixth Floor to The Artistic (Panda)",
             "connected_region": "The Artistic (Panda)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Artistic (Panda)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Orange Tower Sixth Floor to The Artistic (Apple)",
             "connected_region": "The Artistic (Apple)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Artistic (Apple)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Orange Tower Sixth Floor to Outside The Wise",
             "connected_region": "Outside The Wise",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Wise"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -4538,8 +4338,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The End (Solved)",
+                    null,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -4559,18 +4363,8 @@
             "name": "Orange Tower Seventh Floor to Roof",
             "connected_region": "Roof",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Roof"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -4583,612 +4377,272 @@
             "name": "Roof to Hub Room",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hub Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Crossroads",
             "connected_region": "Crossroads",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Crossroads"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Suits Area",
             "connected_region": "Suits Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Suits Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Hedge Maze",
             "connected_region": "Hedge Maze",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hedge Maze"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Orange Tower First Floor",
             "connected_region": "Orange Tower First Floor",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Orange Tower First Floor"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Orange Tower Third Floor",
             "connected_region": "Orange Tower Third Floor",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Orange Tower Third Floor"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Orange Tower Fourth Floor",
             "connected_region": "Orange Tower Fourth Floor",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Orange Tower Fourth Floor"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Hot Crusts Area",
             "connected_region": "Hot Crusts Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hot Crusts Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Behind A Smile",
             "connected_region": "Behind A Smile",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Behind A Smile"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Sixteen Colorful Squares",
             "connected_region": "Sixteen Colorful Squares",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Sixteen Colorful Squares"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Among Treetops",
             "connected_region": "Among Treetops",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Among Treetops"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Horizon's Edge",
             "connected_region": "Horizon's Edge",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Horizon's Edge"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Beneath The Lookout",
             "connected_region": "Beneath The Lookout",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Beneath The Lookout"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Rooftop Staircase",
             "connected_region": "Rooftop Staircase",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Rooftop Staircase"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Courtyard",
             "connected_region": "Courtyard",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Courtyard"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Yellow Backside Area",
             "connected_region": "Yellow Backside Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Yellow Backside Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to The Colorful",
             "connected_region": "The Colorful",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Colorful"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Directional Gallery",
             "connected_region": "Directional Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Directional Gallery"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Color Hunt",
             "connected_region": "Color Hunt",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Color Hunt"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to The Bearer",
             "connected_region": "The Bearer",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to The Bearer (East)",
             "connected_region": "The Bearer (East)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer (East)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to The Bearer (North)",
             "connected_region": "The Bearer (North)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer (North)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to The Bearer (South)",
             "connected_region": "The Bearer (South)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer (South)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to The Bearer (West)",
             "connected_region": "The Bearer (West)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer (West)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Bearer Side Area",
             "connected_region": "Bearer Side Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Bearer Side Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Cross Tower (East)",
             "connected_region": "Cross Tower (East)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Cross Tower (East)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Cross Tower (North)",
             "connected_region": "Cross Tower (North)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Cross Tower (North)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Cross Tower (West)",
             "connected_region": "Cross Tower (West)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Cross Tower (West)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Arrow Garden",
             "connected_region": "Arrow Garden",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Arrow Garden"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Elements Area",
             "connected_region": "Elements Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Elements Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Outside The Wanderer",
             "connected_region": "Outside The Wanderer",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Wanderer"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to The Red",
             "connected_region": "The Red",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Red"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to The Ecstatic",
             "connected_region": "The Ecstatic",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Ecstatic"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Roof to Outside The Scientific",
             "connected_region": "Outside The Scientific",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Scientific"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -5231,18 +4685,8 @@
             "name": "Orange Tower Basement to Starting Room",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Starting Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -5255,18 +4699,8 @@
             "name": "Courtyard to Orange Tower Fourth Floor",
             "connected_region": "Orange Tower Fourth Floor",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Orange Tower Fourth Floor"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -5315,36 +4749,16 @@
             "name": "Courtyard to First Second Third Fourth",
             "connected_region": "First Second Third Fourth",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "First Second Third Fourth"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Courtyard to The Colorful (White)",
             "connected_region": "The Colorful (White)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Colorful (White)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -5378,54 +4792,24 @@
             "name": "Yellow Backside Area to First Second Third Fourth",
             "connected_region": "First Second Third Fourth",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "First Second Third Fourth"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Yellow Backside Area to Color Hallways",
             "connected_region": "Color Hallways",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Color Hallways"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Yellow Backside Area to Outside The Undeterred",
             "connected_region": "Outside The Undeterred",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Undeterred"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -5443,8 +4827,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Courtyard - FIRST, SECOND, THIRD, FOURTH",
+                    445224,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -5464,18 +4852,8 @@
             "name": "The Colorful (White) to Courtyard",
             "connected_region": "Courtyard",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Courtyard"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -5509,8 +4887,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - White",
+                    445225,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -5578,8 +4960,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Black",
+                    445226,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -5647,8 +5033,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Red",
+                    445227,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -5716,8 +5106,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Yellow",
+                    445228,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -5785,8 +5179,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Blue",
+                    445229,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -5854,8 +5252,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Purple",
+                    445230,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -5923,8 +5325,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Orange",
+                    445231,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -5992,8 +5398,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Green",
+                    445232,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -6061,8 +5471,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Brown",
+                    445233,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -6130,8 +5544,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Gray",
+                    445234,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -6151,18 +5569,8 @@
             "name": "The Colorful to Starting Room",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Starting Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -6196,8 +5604,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Colorful - Achievement",
+                    444652,
+                    "rooms={'The Colorful (Black"
+                  ]
                 }
               ]
             },
@@ -6286,8 +5698,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Welcome Back Area - WELCOME BACK",
+                    444653,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -6306,8 +5722,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Welcome Back Area - CLOCKWISE",
+                    444655,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -6327,36 +5747,16 @@
             "name": "Owl Hallway to Starting Room",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Starting Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Owl Hallway to Hub Room",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hub Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -6390,8 +5790,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Owl Hallway - STRAYS",
+                    444656,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -6410,8 +5814,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Owl Hallway - READS + RUST",
+                    444657,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -6515,18 +5923,8 @@
             "name": "Outside The Initiated to The Optimistic",
             "connected_region": "The Optimistic",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Optimistic"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -6575,18 +5973,8 @@
             "name": "Outside The Initiated to The Artistic (Smiley)",
             "connected_region": "The Artistic (Smiley)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Artistic (Smiley)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -6614,18 +6002,8 @@
             "name": "Outside The Initiated to Outside The Wise",
             "connected_region": "Outside The Wise",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Wise"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -6638,8 +6016,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Initiated - UNCOVER",
+                    444664,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -6658,8 +6040,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Initiated - OXEN",
+                    444665,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -6678,8 +6064,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Color Barriers - BLUE and YELLOW",
+                    445235,
+                    "rooms={'Directional Gallery', 'Color Hunt'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -6698,8 +6088,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Color Barriers - RED and BLUE",
+                    445236,
+                    "rooms={'Orange Tower Third Floor', 'Color Hunt'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -6718,8 +6112,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Color Barriers - GREEN, ORANGE and PURPLE",
+                    445237,
+                    "rooms={'Orange Tower Third Floor', 'Outside The Agreeable', 'Directional Gallery', 'Courtyard', 'Outside The Initiated', 'Color Hunt'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -6744,8 +6142,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Initiated - Achievement",
+                    444676,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -6765,36 +6167,16 @@
             "name": "The Optimistic to Outside The Initiated",
             "connected_region": "Outside The Initiated",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Initiated"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "The Optimistic to Color Hallways",
             "connected_region": "Color Hallways",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Color Hallways"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -6807,8 +6189,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Optimistic - Achievement",
+                    444667,
+                    "rooms={'Yellow Backside Area', 'Directional Gallery', 'The Bearer', 'The Observant'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -6876,8 +6262,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Traveled - Achievement",
+                    444693,
+                    "rooms={'Hub Room'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -6896,8 +6286,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Traveled - HELLO",
+                    444698,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -6917,36 +6311,16 @@
             "name": "Color Hallways to Crossroads",
             "connected_region": "Crossroads",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Crossroads"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Color Hallways to Hedge Maze",
             "connected_region": "Hedge Maze",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hedge Maze"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -6974,36 +6348,16 @@
             "name": "Color Hallways to Outside The Bold",
             "connected_region": "Outside The Bold",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Bold"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Color Hallways to Outside The Undeterred",
             "connected_region": "Outside The Undeterred",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Undeterred"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -7016,18 +6370,8 @@
             "name": "Outside The Bold to Color Hallways",
             "connected_region": "Color Hallways",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Color Hallways"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -7166,8 +6510,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Bold - UNOPEN",
+                    444711,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -7186,8 +6534,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Bold - BEGIN",
+                    444712,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -7212,8 +6564,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Bold - Achievement",
+                    444725,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -7254,54 +6610,24 @@
             "name": "Outside The Undeterred to Orange Tower Second Floor",
             "connected_region": "Orange Tower Second Floor",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Orange Tower Second Floor"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Outside The Undeterred to Welcome Back Area",
             "connected_region": "Welcome Back Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Welcome Back Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Outside The Undeterred to Color Hallways",
             "connected_region": "Color Hallways",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Color Hallways"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -7377,8 +6703,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Undeterred - ART + ART",
+                    444743,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -7397,8 +6727,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Undeterred - PEN",
+                    444744,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -7417,8 +6751,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Undeterred - RAINY",
+                    444750,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -7437,8 +6775,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Undeterred - ZERO",
+                    444751,
+                    "rooms={'Yellow Backside Area', 'Crossroads', 'Outside The Undeterred', 'Outside The Initiated', 'The Bearer (South"
+                  ]
                 }
               ]
             },
@@ -7457,8 +6799,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Undeterred - ONE",
+                    444752,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -7477,8 +6823,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Twos",
+                    445238,
+                    "rooms={'Outside The Undeterred'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -7497,8 +6847,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Threes",
+                    445239,
+                    "rooms={'Outside The Undeterred'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -7517,8 +6871,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Fours",
+                    445240,
+                    "rooms={'Hub Room', 'Outside The Undeterred', 'Dead End Area', 'The Traveled'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -7543,8 +6901,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Undeterred - Achievement",
+                    444759,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -7654,8 +7016,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Fives",
+                    445241,
+                    "rooms={'Hub Room', 'Outside The Agreeable', 'Outside The Undeterred', 'Directional Gallery', 'The Traveled', 'Dead End Area'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -7674,8 +7040,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Sixes",
+                    445242,
+                    "rooms={'Hub Room', 'Outside The Agreeable', 'The Bearer (East"
+                  ]
                 }
               ]
             },
@@ -7694,8 +7064,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Sevens",
+                    445243,
+                    "rooms={'Outside The Undeterred', 'Outside The Initiated', 'The Bearer (South"
+                  ]
                 }
               ]
             },
@@ -7714,8 +7088,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Eights",
+                    445244,
+                    "rooms={'Crossroads', 'Outside The Undeterred', 'Outside The Initiated', 'The Bearer (South"
+                  ]
                 }
               ]
             },
@@ -7734,8 +7112,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Nines",
+                    445245,
+                    "rooms={'Yellow Backside Area', 'Crossroads', 'Outside The Undeterred', 'Outside The Initiated', 'The Bearer (South"
+                  ]
                 }
               ]
             },
@@ -7776,18 +7158,8 @@
             "name": "Directional Gallery to Color Hallways",
             "connected_region": "Color Hallways",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Color Hallways"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -7857,90 +7229,40 @@
             "name": "Directional Gallery to The Artistic (Smiley)",
             "connected_region": "The Artistic (Smiley)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Artistic (Smiley)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Directional Gallery to The Artistic (Lattice)",
             "connected_region": "The Artistic (Lattice)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Artistic (Lattice)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Directional Gallery to The Artistic (Apple)",
             "connected_region": "The Artistic (Apple)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Artistic (Apple)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Directional Gallery to The Eyes They See",
             "connected_region": "The Eyes They See",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Eyes They See"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Directional Gallery to Wondrous Lobby",
             "connected_region": "Wondrous Lobby",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Wondrous Lobby"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -7953,8 +7275,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Directional Gallery - 834283054",
+                    444792,
+                    "rooms={'Hub Room', 'Outside The Agreeable', 'Number Hunt', 'Outside The Undeterred', 'Directional Gallery', 'Dead End Area', 'The Traveled'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -7973,8 +7299,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Directional Gallery - PARANOID",
+                    444793,
+                    "rooms={'Hub Room', 'Outside The Agreeable', 'Number Hunt', 'Outside The Undeterred', 'Directional Gallery', 'Dead End Area', 'The Traveled'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -7993,8 +7323,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Directional Gallery - WADED + WEE",
+                    444795,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -8013,8 +7347,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Directional Gallery - TURN, LEARN",
+                    445246,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -8034,18 +7372,8 @@
             "name": "Color Hunt to Starting Room",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Starting Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -8100,8 +7428,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - EXIT",
+                    444806,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -8120,8 +7452,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - RED",
+                    444808,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -8140,8 +7476,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - BLUE",
+                    444809,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -8160,8 +7500,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - YELLOW",
+                    444810,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -8180,8 +7524,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - GREEN",
+                    444811,
+                    "rooms={'Outside The Initiated', 'Directional Gallery', 'Color Hunt'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -8200,8 +7548,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - PURPLE",
+                    444812,
+                    "rooms={'Outside The Initiated', 'Orange Tower Third Floor', 'Color Hunt'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -8220,8 +7572,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Color Hunt - ORANGE",
+                    444813,
+                    "rooms={'Orange Tower Third Floor', 'Directional Gallery', 'Color Hunt'}, doors=set("
+                  ]
                 }
               ]
             },
@@ -8268,8 +7624,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Champion's Rest - YOU",
+                    444814,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -8400,8 +7760,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Bearer - Achievement",
+                    444819,
+                    "rooms={'The Bearer (North"
+                  ]
                 }
               ]
             },
@@ -8420,8 +7784,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Bearer - MIDDLE",
+                    444820,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -8440,8 +7808,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Bearer - FARTHER",
+                    444821,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -8461,18 +7833,8 @@
             "name": "The Bearer (East) to The Bearer",
             "connected_region": "The Bearer",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -8527,18 +7889,8 @@
             "name": "The Bearer (North) to The Bearer",
             "connected_region": "The Bearer",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -8572,18 +7924,8 @@
             "name": "The Bearer (South) to The Bearer",
             "connected_region": "The Bearer",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -8617,18 +7959,8 @@
             "name": "The Bearer (West) to The Bearer",
             "connected_region": "The Bearer",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -8794,8 +8126,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Bearer - SHORTCUT",
+                    445247,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -8815,18 +8151,8 @@
             "name": "Cross Tower (East) to The Bearer (East)",
             "connected_region": "The Bearer (East)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer (East)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -8839,18 +8165,8 @@
             "name": "Cross Tower (North) to The Bearer (North)",
             "connected_region": "The Bearer (North)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer (North)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -8863,18 +8179,8 @@
             "name": "Cross Tower (South) to The Bearer (South)",
             "connected_region": "The Bearer (South)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer (South)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -8887,18 +8193,8 @@
             "name": "Cross Tower (West) to The Bearer (West)",
             "connected_region": "The Bearer (West)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Bearer (West)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -9160,18 +8456,8 @@
             "name": "The Steady (Sunflower) to The Steady (Lime)",
             "connected_region": "The Steady (Lime)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Steady (Lime)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -9778,18 +9064,8 @@
             "name": "The Steady (Emerald) to The Steady (Lemon)",
             "connected_region": "The Steady (Lemon)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Steady (Lemon)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -10035,8 +9311,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Steady - Achievement",
+                    444859,
+                    "rooms={'The Steady (Lemon"
+                  ]
                 }
               ]
             },
@@ -10247,8 +9527,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Knight Night Room - TRUSTED",
+                    445248,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -10310,72 +9594,32 @@
             "name": "Knight Night Exit to Knight Night (Outer Ring)",
             "connected_region": "Knight Night (Outer Ring)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Knight Night (Outer Ring)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Knight Night Exit to Knight Night (Right Upper Segment)",
             "connected_region": "Knight Night (Right Upper Segment)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Knight Night (Right Upper Segment)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Knight Night Exit to Knight Night (Right Lower Segment)",
             "connected_region": "Knight Night (Right Lower Segment)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Knight Night (Right Lower Segment)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Knight Night Exit to Knight Night (Final)",
             "connected_region": "Knight Night (Final)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Knight Night (Final)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -10388,18 +9632,8 @@
             "name": "The Artistic (Smiley) to Outside The Undeterred",
             "connected_region": "Outside The Undeterred",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Undeterred"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -10475,8 +9709,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Artistic - Achievement",
+                    444885,
+                    "rooms={'The Artistic (Panda"
+                  ]
                 }
               ]
             },
@@ -10495,8 +9733,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Artistic - Smiley and Panda",
+                    445249,
+                    "rooms={'The Artistic (Panda"
+                  ]
                 }
               ]
             },
@@ -10516,18 +9758,8 @@
             "name": "The Artistic (Panda) to Outside The Undeterred",
             "connected_region": "Outside The Undeterred",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Undeterred"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -10582,8 +9814,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Artistic - Panda and Lattice",
+                    445250,
+                    "rooms={'The Artistic (Lattice"
+                  ]
                 }
               ]
             },
@@ -10603,18 +9839,8 @@
             "name": "The Artistic (Lattice) to Outside The Undeterred",
             "connected_region": "Outside The Undeterred",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Undeterred"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -10690,8 +9916,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Artistic - Lattice and Apple",
+                    445251,
+                    "rooms={'The Artistic (Apple"
+                  ]
                 }
               ]
             },
@@ -10711,18 +9941,8 @@
             "name": "The Artistic (Apple) to Outside The Undeterred",
             "connected_region": "Outside The Undeterred",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Undeterred"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -10777,8 +9997,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Artistic - Apple and Smiley",
+                    445252,
+                    "rooms={'The Artistic (Smiley"
+                  ]
                 }
               ]
             },
@@ -10808,8 +10032,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Discerning - Achievement",
+                    444920,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -10829,36 +10057,16 @@
             "name": "The Eyes They See to The Artistic (Smiley)",
             "connected_region": "The Artistic (Smiley)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Artistic (Smiley)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "The Eyes They See to Far Window",
             "connected_region": "Far Window",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Far Window"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -10892,8 +10100,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Eyes They See - NEAR",
+                    444937,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -10918,18 +10130,8 @@
             "name": "Wondrous Lobby to Starting Room",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Starting Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -10957,18 +10159,8 @@
             "name": "Wondrous Lobby to Outside The Wondrous",
             "connected_region": "Outside The Wondrous",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Wondrous"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -10981,18 +10173,8 @@
             "name": "Outside The Wondrous to Welcome Back Area",
             "connected_region": "Welcome Back Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Welcome Back Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -11026,8 +10208,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Wondrous - SHRINK",
+                    444940,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -11068,36 +10254,16 @@
             "name": "The Wondrous (Doorknob) to The Wondrous (Bookcase)",
             "connected_region": "The Wondrous (Bookcase)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Wondrous (Bookcase)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "The Wondrous (Doorknob) to The Wondrous (Table)",
             "connected_region": "The Wondrous (Table)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Wondrous (Table)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -11110,36 +10276,16 @@
             "name": "The Wondrous (Bookcase) to The Wondrous (Chandelier)",
             "connected_region": "The Wondrous (Chandelier)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Wondrous (Chandelier)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "The Wondrous (Bookcase) to The Wondrous (Window)",
             "connected_region": "The Wondrous (Window)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Wondrous (Window)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -11152,18 +10298,8 @@
             "name": "The Wondrous (Chandelier) to The Wondrous (Doorknob)",
             "connected_region": "The Wondrous (Doorknob)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Wondrous (Doorknob)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -11176,18 +10312,8 @@
             "name": "The Wondrous (Window) to Outside The Wondrous",
             "connected_region": "Outside The Wondrous",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Wondrous"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -11200,36 +10326,16 @@
             "name": "The Wondrous (Table) to The Wondrous (Doorknob)",
             "connected_region": "The Wondrous (Doorknob)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Wondrous (Doorknob)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "The Wondrous (Table) to The Wondrous",
             "connected_region": "The Wondrous",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Wondrous"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -11263,18 +10369,8 @@
             "name": "The Wondrous to The Wondrous (Table)",
             "connected_region": "The Wondrous (Table)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Wondrous (Table)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -11308,8 +10404,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Wondrous - Achievement",
+                    444947,
+                    "rooms={'The Wondrous (Window"
+                  ]
                 }
               ]
             },
@@ -11329,18 +10429,8 @@
             "name": "Arrow Garden to Courtyard",
             "connected_region": "Courtyard",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Courtyard"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -11374,36 +10464,16 @@
             "name": "Hallway Room (1) to Outside The Agreeable",
             "connected_region": "Outside The Agreeable",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Agreeable"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Hallway Room (1) to The Artistic (Panda)",
             "connected_region": "The Artistic (Panda)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Artistic (Panda)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -11437,8 +10507,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hallway Room (1) - OUT",
+                    444505,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -11457,8 +10531,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hallway Room - First Room",
+                    445214,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -11478,18 +10556,8 @@
             "name": "Hallway Room (2) to Hallway Room (1)",
             "connected_region": "Hallway Room (1)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hallway Room (1)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -11523,8 +10591,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hallway Room - Second Room",
+                    445253,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -11544,18 +10616,8 @@
             "name": "Hallway Room (3) to Hallway Room (1)",
             "connected_region": "Hallway Room (1)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hallway Room (1)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -11589,8 +10651,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hallway Room - Third Room",
+                    445254,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -11610,18 +10676,8 @@
             "name": "Hallway Room (4) to Hallway Room (1)",
             "connected_region": "Hallway Room (1)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hallway Room (1)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -11655,8 +10711,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Hallway Room - Fourth Room",
+                    445255,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -11697,36 +10757,16 @@
             "name": "Elements Area to Hallway Room (2)",
             "connected_region": "Hallway Room (2)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hallway Room (2)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Elements Area to Hallway Room (4)",
             "connected_region": "Hallway Room (4)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Hallway Room (4)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -11739,8 +10779,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Elements Area - UNDISTRACTED",
+                    444961,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -11781,18 +10825,8 @@
             "name": "Outside The Wanderer to Welcome Back Area",
             "connected_region": "Welcome Back Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Welcome Back Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -11826,8 +10860,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Wanderer - WANDERLUST",
+                    444966,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -11852,8 +10890,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Wanderer - Achievement",
+                    444967,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -11873,36 +10915,16 @@
             "name": "Art Gallery to Orange Tower Third Floor",
             "connected_region": "Orange Tower Third Floor",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Orange Tower Third Floor"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Art Gallery to Welcome Back Area",
             "connected_region": "Welcome Back Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Welcome Back Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -11930,36 +10952,16 @@
             "name": "Art Gallery to The Artistic (Smiley)",
             "connected_region": "The Artistic (Smiley)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "The Artistic (Smiley)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Art Gallery to Art Gallery (First Floor)",
             "connected_region": "Art Gallery (First Floor)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Art Gallery (First Floor)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -12035,8 +11037,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Art Gallery - ORDER",
+                    444981,
+                    "rooms={'Art Gallery (Fourth Floor"
+                  ]
                 }
               ]
             },
@@ -12056,18 +11062,8 @@
             "name": "Art Gallery (First Floor) to Art Gallery",
             "connected_region": "Art Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Art Gallery"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -12080,8 +11076,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Art Gallery - First Floor Puzzles",
+                    445256,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -12101,18 +11101,8 @@
             "name": "Art Gallery (Second Floor) to Art Gallery",
             "connected_region": "Art Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Art Gallery"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -12125,8 +11115,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Art Gallery - Second Floor Puzzles",
+                    445257,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -12146,18 +11140,8 @@
             "name": "Art Gallery (Third Floor) to Art Gallery",
             "connected_region": "Art Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Art Gallery"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -12170,8 +11154,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Art Gallery - Third Floor Puzzles",
+                    445258,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -12191,18 +11179,8 @@
             "name": "Art Gallery (Fourth Floor) to Art Gallery",
             "connected_region": "Art Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Art Gallery"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -12215,8 +11193,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Art Gallery - Fourth Floor Puzzles",
+                    445259,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -12305,8 +11287,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room (Smiley) - Puzzles Toward Target",
+                    445260,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -12347,18 +11333,8 @@
             "name": "Rhyme Room (Cross) to Rhyme Room (Smiley)",
             "connected_region": "Rhyme Room (Smiley)",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Rhyme Room (Smiley)"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -12392,8 +11368,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room (Cross) - Exit Puzzles",
+                    445261,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -12413,18 +11393,8 @@
             "name": "Rhyme Room (Circle) to Starting Room",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Starting Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -12479,8 +11449,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room - Circle/Smiley Wall",
+                    445262,
+                    "rooms={'Rhyme Room (Smiley"
+                  ]
                 }
               ]
             },
@@ -12590,8 +11564,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room - Circle/Looped Square Wall",
+                    445263,
+                    "rooms={'Rhyme Room (Circle"
+                  ]
                 }
               ]
             },
@@ -12610,8 +11588,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room - Cross/Looped Square Wall",
+                    445264,
+                    "rooms={'Rhyme Room (Cross"
+                  ]
                 }
               ]
             },
@@ -12630,8 +11612,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room - Target/Looped Square Wall",
+                    445265,
+                    "rooms={'Rhyme Room (Target"
+                  ]
                 }
               ]
             },
@@ -12651,18 +11637,8 @@
             "name": "Rhyme Room (Target) to Starting Room",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Starting Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -12717,8 +11693,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Rhyme Room (Target) - Puzzles Toward Cross",
+                    445266,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -12738,18 +11718,8 @@
             "name": "Room Room to Outside The Bold",
             "connected_region": "Outside The Bold",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Outside The Bold"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -12783,8 +11753,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Room Room - BASE",
+                    445076,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -12846,18 +11820,8 @@
             "name": "Cellar to Welcome Back Area",
             "connected_region": "Welcome Back Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Welcome Back Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -12870,18 +11834,8 @@
             "name": "Outside The Wise to Starting Room",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Starting Room"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -12915,8 +11869,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Outside The Wise - KITTEN, CAT",
+                    445267,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -12941,8 +11899,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "The Wise - Achievement",
+                    445086,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -12999,36 +11961,16 @@
             "name": "The Scientific to Orange Tower Sixth Floor",
             "connected_region": "Orange Tower Sixth Floor",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Orange Tower Sixth Floor"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "The Scientific to Welcome Back Area",
             "connected_region": "Welcome Back Area",
             "access_rule": {
-              "type": "helper",
-              "name": "lingo_can_use_entrance",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Welcome Back Area"
-                },
-                {
-                  "type": "name",
-                  "name": "door"
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -13110,8 +12052,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Challenge Room - WELCOME",
+                    445176,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
@@ -13130,8 +12076,12 @@
               "name": "lingo_can_use_location",
               "args": [
                 {
-                  "type": "name",
-                  "name": "location"
+                  "type": "constant",
+                  "value": [
+                    "Challenge Room - Achievement",
+                    445178,
+                    "rooms=set("
+                  ]
                 }
               ]
             },
