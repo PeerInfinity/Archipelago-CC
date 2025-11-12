@@ -3923,5 +3923,51 @@
         "total_seeds_tested": 10
       }
     }
+  },
+  "sm64ex": {
+    "name": "Super Mario 64",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Super Mario 64"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_P1_Player1.apsm64ex",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      }
+    },
+    "test_result": {
+      "status": "failed",
+      "generation_errors": 2,
+      "generation_warnings": 0,
+      "sphere_reached": 0.1,
+      "max_spheres": 2.41,
+      "progress_percent": 4.1,
+      "has_custom_exporter": false,
+      "has_custom_game_logic": false,
+      "timestamp": "2025-10-09T23:46:31.937385",
+      "processing_time": {
+        "generation_seconds": 5.15,
+        "spoiler_test_seconds": 5.06,
+        "total_seconds": 10.21
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
+      }
+    }
   }
 }
