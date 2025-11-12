@@ -212,7 +212,10 @@ class LADXGameExportHandler(GenericGameExportHandler):
             return self._parse_ladxr_item(condition_str)
 
     def _map_ladxr_item_name(self, item_str: str) -> str:
-        """Map LADXR internal item names to Archipelago item names."""
+        """Map LADXR internal item names to Archipelago item names.
+
+        These mappings must match the actual item names in worlds/ladx/Items.py
+        """
         item_name_mapping = {
             'POWER_BRACELET': 'Progressive Power Bracelet',
             'SWORD': 'Progressive Sword',
@@ -220,7 +223,7 @@ class LADXGameExportHandler(GenericGameExportHandler):
             'MAGIC_POWDER': 'Magic Powder',
             'MAGIC_ROD': 'Magic Rod',
             'OCARINA': 'Ocarina',
-            'FEATHER': 'Roc\'s Feather',
+            'FEATHER': 'Feather',  # Not "Roc's Feather" - that's just the description
             'HOOKSHOT': 'Hookshot',
             'PEGASUS_BOOTS': 'Pegasus Boots',
             'SHOVEL': 'Shovel',
