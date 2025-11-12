@@ -4,7 +4,7 @@
     "batch_processing_time_minutes": 65.4,
     "batch_processing_time_seconds": 3922.8,
     "created": "2025-10-14T13:24:10.253834",
-    "last_updated": "2025-11-12T06:26:04.197896",
+    "last_updated": "2025-11-12T08:37:16.828046",
     "script_version": "1.0.0"
   },
   "results": {
@@ -8832,7 +8832,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.43,
+            "processing_time_seconds": 4.49,
             "return_code": 0,
             "success": true,
             "warning_count": 2
@@ -8855,7 +8855,7 @@
             "warning_count": 0
           },
           "template_name": "Donkey Kong Country 3.yaml",
-          "timestamp": "2025-11-12T05:40:30.949598",
+          "timestamp": "2025-11-12T08:36:44.759036",
           "world_info": {
             "exporter_path": "exporter/games/dkc3.py",
             "game_logic_path": null,
@@ -9185,7 +9185,7 @@
         "failure_rate": 0.9
       },
       "template_name": "Donkey Kong Country 3.yaml",
-      "timestamp": "2025-11-12T05:40:27.129630",
+      "timestamp": "2025-11-12T08:36:44.690307",
       "total_seeds_tested": 10
     },
     "Factorio.yaml": {
@@ -15170,7 +15170,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.84,
+            "processing_time_seconds": 6.08,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -15193,7 +15193,7 @@
             "warning_count": 0
           },
           "template_name": "Links Awakening DX.yaml",
-          "timestamp": "2025-11-12T05:51:35.346286",
+          "timestamp": "2025-11-12T08:37:10.540713",
           "world_info": {
             "exporter_path": "exporter/games/ladx.py",
             "game_logic_path": null,
@@ -15611,7 +15611,7 @@
         "failure_rate": 1.0
       },
       "template_name": "Links Awakening DX.yaml",
-      "timestamp": "2025-11-12T05:51:35.315511",
+      "timestamp": "2025-11-12T08:37:10.540713",
       "total_seeds_tested": 10
     },
     "Lufia II Ancient Cave.yaml": {

@@ -119,6 +119,53 @@ class LADXGameExportHandler(GenericGameExportHandler):
             else:
                 return None
 
+        elif class_name == 'COUNT':
+            # COUNT checks if you have >= amount of an item in current inventory
+            # Access private attributes using name mangling
+            item = getattr(condition, '_COUNT__item', None)
+            amount = getattr(condition, '_COUNT__amount', 1)
+
+            if item is None:
+                logger.warning(f"COUNT condition missing item attribute")
+                return None
+
+            # Map LADXR item name to Archipelago item name
+            mapped_item = self._map_ladxr_item_name(item)
+
+            logger.debug(f"LADX COUNT condition: {item} (mapped to {mapped_item}) >= {amount}")
+            return {
+                'type': 'item_check',
+                'item': mapped_item,
+                'count': {
+                    'type': 'constant',
+                    'value': amount
+                }
+            }
+
+        elif class_name == 'FOUND':
+            # FOUND checks if you have collected >= amount of an item total (current + used)
+            # For now, treat it the same as COUNT since we don't track "used" items
+            # Access private attributes using name mangling
+            item = getattr(condition, '_FOUND__item', None)
+            amount = getattr(condition, '_FOUND__amount', 1)
+
+            if item is None:
+                logger.warning(f"FOUND condition missing item attribute")
+                return None
+
+            # Map LADXR item name to Archipelago item name
+            mapped_item = self._map_ladxr_item_name(item)
+
+            logger.debug(f"LADX FOUND condition: {item} (mapped to {mapped_item}) >= {amount}")
+            return {
+                'type': 'item_check',
+                'item': mapped_item,
+                'count': {
+                    'type': 'constant',
+                    'value': amount
+                }
+            }
+
         else:
             # Unknown condition type
             logger.warning(f"Unknown LADXR condition type: {class_name}")
@@ -164,10 +211,8 @@ class LADXGameExportHandler(GenericGameExportHandler):
             # Simple item name
             return self._parse_ladxr_item(condition_str)
 
-    def _parse_ladxr_item(self, item_str: str) -> Dict[str, Any]:
-        """Parse a single LADXR item string into an item_check rule."""
-        # LADXR uses internal item names like POWER_BRACELET
-        # We need to convert these to the Archipelago item names
+    def _map_ladxr_item_name(self, item_str: str) -> str:
+        """Map LADXR internal item names to Archipelago item names."""
         item_name_mapping = {
             'POWER_BRACELET': 'Progressive Power Bracelet',
             'SWORD': 'Progressive Sword',
@@ -183,12 +228,14 @@ class LADXGameExportHandler(GenericGameExportHandler):
             'BOOMERANG': 'Boomerang',
             'BOW': 'Bow',
             'ROOSTER': 'Rooster',
+            'RUPEES': 'RUPEES',  # Special case for currency
             # Add more mappings as needed
         }
+        return item_name_mapping.get(item_str, item_str)
 
-        # Try to map the item name
-        mapped_name = item_name_mapping.get(item_str, item_str)
-
+    def _parse_ladxr_item(self, item_str: str) -> Dict[str, Any]:
+        """Parse a single LADXR item string into an item_check rule."""
+        mapped_name = self._map_ladxr_item_name(item_str)
         return {
             'type': 'item_check',
             'item': mapped_name
