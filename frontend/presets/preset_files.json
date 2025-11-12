@@ -4027,6 +4027,54 @@
           "AP_00679259829289197625_rules.json",
           "AP_00679259829289197625_spheres_log.jsonl"
         ]
+      },
+      "AP_35931773795037525048": {
+        "seed": 7,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Donkey Kong Country 3"
+          }
+        ],
+        "files": [
+          "AP_35931773795037525048.archipelago",
+          "AP_35931773795037525048_Spoiler.txt",
+          "AP_35931773795037525048_rules.json",
+          "AP_35931773795037525048_spheres_log.jsonl"
+        ]
+      },
+      "AP_20777137877808592492": {
+        "seed": 8,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Donkey Kong Country 3"
+          }
+        ],
+        "files": [
+          "AP_20777137877808592492.archipelago",
+          "AP_20777137877808592492_Spoiler.txt",
+          "AP_20777137877808592492_rules.json",
+          "AP_20777137877808592492_spheres_log.jsonl"
+        ]
+      },
+      "AP_48205312626925217390": {
+        "seed": 9,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Donkey Kong Country 3"
+          }
+        ],
+        "files": [
+          "AP_48205312626925217390.archipelago",
+          "AP_48205312626925217390_Spoiler.txt",
+          "AP_48205312626925217390_rules.json",
+          "AP_48205312626925217390_spheres_log.jsonl"
+        ]
       }
     }
   }
