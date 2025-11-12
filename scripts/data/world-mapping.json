@@ -231,23 +231,23 @@
     "world_directory": "kdl3"
   },
   "Landstalker - The Treasures of King Nole": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/landstalker.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "landstalker"
   },
   "Lingo": {
     "exporter_path": "exporter/games/lingo.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "lingo"
   },
   "Links Awakening DX": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/ladx.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "ladx"
   },
