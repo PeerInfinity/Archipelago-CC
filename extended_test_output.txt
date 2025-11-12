@@ -1,0 +1,81 @@
+[WARNING] HTTP development server not running!
+
+The spoiler tests require a local development server.
+Starting server automatically: python -m http.server 8000
+
+Waiting for server to start... Server started successfully!
+Server running at: http://localhost:8000/frontend/
+Server PID: 15277
+
+Retest mode: Found 11 templates to test
+  - Donkey Kong Country 3.yaml: will test seed 2 (and continue to seed 10 if it passes)
+  - Hylics 2.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Jak and Daxter The Precursor Legacy.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Links Awakening DX.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Ocarina of Time.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Sonic Adventure 2 Battle.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Super Mario 64.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Super Mario World.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - VVVVVV.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Yacht Dice.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - shapez.yaml: will test seed 1 (and continue to seed 10 if it passes)
+Found 79 template files (11 testable, 68 filtered by retest mode (11 templates))
+Skipping: 68 files (too many to list)
+Backup of existing results saved to: test-results_backup_2025-11-12_08-41-32.json
+Results will be saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+Timestamped backup will be saved to: test-results_2025-11-12_08-41-32.json
+Testing templates from: /home/user/Archipelago-CC/Players/Templates
+Building world mapping...
+World mapping built successfully
+Using seed 1 -> AP_14089154938208861744
+Starting batch processing of 11 templates...
+
+[1/11] Processing Donkey Kong Country 3.yaml
+Testing seeds 2-10 (failing seed + continue)
+
+=== Testing Donkey Kong Country 3.yaml with 9 seeds ===
+
+--- Seed 2 (1/9) ---
+
+=== Testing Donkey Kong Country 3.yaml ===
+Running Generate.py for Donkey Kong Country 3.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 2
+Rules file not found: /home/user/Archipelago-CC/frontend/presets/dkc3/AP_01043188731678011336/AP_01043188731678011336_rules.json
+❌ Seed 2 FAILED
+Stopping at first failure (seed 2)
+
+=== Seed Range Summary for Donkey Kong Country 3.yaml ===
+Seeds tested: 1
+Passed: 0
+Failed: 1
+First failure at seed: 2
+Consecutive passes before failure: 0
+Failure reason: Test failed at sphere 0
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Processing full spoiler test results...
+  ✓ Full spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-full.md
+  Processing multiplayer test results...
+  ✓ Multiplayer chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiplayer.md
+  Processing multiworld test results...
+  ✓ Multiworld chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiworld.md
+  Processing multitemplate minimal test results...
+  ✓ Multitemplate minimal chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-minimal.md
+  Processing multitemplate full test results...
+  ✓ Multitemplate full chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-full.md
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+❌ Donkey Kong Country 3.yaml still failing. Stopping retest.
+
+Retest stopped at first still-failing test: Donkey Kong Country 3.yaml
+Timestamped results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results_2025-11-12_08-41-32.json

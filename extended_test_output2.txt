@@ -1,0 +1,353 @@
+Retest mode: Found 11 templates to test
+  - Donkey Kong Country 3.yaml: will test seed 2 (and continue to seed 10 if it passes)
+  - Hylics 2.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Jak and Daxter The Precursor Legacy.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Links Awakening DX.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Ocarina of Time.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Sonic Adventure 2 Battle.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Super Mario 64.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Super Mario World.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - VVVVVV.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Yacht Dice.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - shapez.yaml: will test seed 1 (and continue to seed 10 if it passes)
+Found 79 template files (11 testable, 68 filtered by retest mode (11 templates))
+Skipping: 68 files (too many to list)
+Backup of existing results saved to: test-results_backup_2025-11-12_08-45-26.json
+Results will be saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+Timestamped backup will be saved to: test-results_2025-11-12_08-45-26.json
+Testing templates from: /home/user/Archipelago-CC/Players/Templates
+Building world mapping...
+World mapping built successfully
+Using seed 1 -> AP_14089154938208861744
+Starting batch processing of 11 templates...
+
+[1/11] Processing Donkey Kong Country 3.yaml
+Testing seeds 2-10 (failing seed + continue)
+
+=== Testing Donkey Kong Country 3.yaml with 9 seeds ===
+
+--- Seed 2 (1/9) ---
+
+=== Testing Donkey Kong Country 3.yaml ===
+Running Generate.py for Donkey Kong Country 3.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 2
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=dkc3 --seed=2
+Running test analysis...
+Completed Donkey Kong Country 3.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=4.1, Max Spheres=4.1
+✅ Seed 2 PASSED
+
+--- Seed 3 (2/9) ---
+
+=== Testing Donkey Kong Country 3.yaml ===
+Running Generate.py for Donkey Kong Country 3.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 3
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=dkc3 --seed=3
+Running test analysis...
+Completed Donkey Kong Country 3.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=3.1, Max Spheres=3.1
+✅ Seed 3 PASSED
+
+--- Seed 4 (3/9) ---
+
+=== Testing Donkey Kong Country 3.yaml ===
+Running Generate.py for Donkey Kong Country 3.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 4
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=dkc3 --seed=4
+Running test analysis...
+Completed Donkey Kong Country 3.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=4.1, Max Spheres=4.1
+✅ Seed 4 PASSED
+
+--- Seed 5 (4/9) ---
+
+=== Testing Donkey Kong Country 3.yaml ===
+Running Generate.py for Donkey Kong Country 3.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 5
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=dkc3 --seed=5
+Running test analysis...
+Completed Donkey Kong Country 3.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=4.1, Max Spheres=4.1
+✅ Seed 5 PASSED
+
+--- Seed 6 (5/9) ---
+
+=== Testing Donkey Kong Country 3.yaml ===
+Running Generate.py for Donkey Kong Country 3.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 6
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=dkc3 --seed=6
+Running test analysis...
+Completed Donkey Kong Country 3.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=4.1, Max Spheres=4.1
+✅ Seed 6 PASSED
+
+--- Seed 7 (6/9) ---
+
+=== Testing Donkey Kong Country 3.yaml ===
+Running Generate.py for Donkey Kong Country 3.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 7
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=dkc3 --seed=7
+Running test analysis...
+Completed Donkey Kong Country 3.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=4.1, Max Spheres=4.1
+✅ Seed 7 PASSED
+
+--- Seed 8 (7/9) ---
+
+=== Testing Donkey Kong Country 3.yaml ===
+Running Generate.py for Donkey Kong Country 3.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 8
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=dkc3 --seed=8
+Running test analysis...
+Completed Donkey Kong Country 3.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=4.1, Max Spheres=4.1
+✅ Seed 8 PASSED
+
+--- Seed 9 (8/9) ---
+
+=== Testing Donkey Kong Country 3.yaml ===
+Running Generate.py for Donkey Kong Country 3.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 9
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=dkc3 --seed=9
+Running test analysis...
+Completed Donkey Kong Country 3.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=3.1, Max Spheres=3.1
+✅ Seed 9 PASSED
+
+--- Seed 10 (9/9) ---
+
+=== Testing Donkey Kong Country 3.yaml ===
+Running Generate.py for Donkey Kong Country 3.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 10
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=dkc3 --seed=10
+Running test analysis...
+Completed Donkey Kong Country 3.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=4.1, Max Spheres=4.1
+✅ Seed 10 PASSED
+
+=== Seed Range Summary for Donkey Kong Country 3.yaml ===
+Seeds tested: 9
+Passed: 9
+Failed: 0
+🎉 All 9 seeds passed!
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Processing full spoiler test results...
+  ✓ Full spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-full.md
+  Processing multiplayer test results...
+  ✓ Multiplayer chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiplayer.md
+  Processing multiworld test results...
+  ✓ Multiworld chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiworld.md
+  Processing multitemplate minimal test results...
+  ✓ Multitemplate minimal chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-minimal.md
+  Processing multitemplate full test results...
+  ✓ Multitemplate full chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-full.md
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+✅ Donkey Kong Country 3.yaml is now passing! Continuing to next failed test...
+
+[2/11] Processing Hylics 2.yaml
+Testing seeds 1-10 (failing seed + continue)
+
+=== Testing Hylics 2.yaml with 10 seeds ===
+
+--- Seed 1 (1/10) ---
+
+=== Testing Hylics 2.yaml ===
+Running Generate.py for Hylics 2.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 1
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=hylics2 --seed=1
+Running test analysis...
+Completed Hylics 2.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=7.2, Max Spheres=7.2
+✅ Seed 1 PASSED
+
+--- Seed 2 (2/10) ---
+
+=== Testing Hylics 2.yaml ===
+Running Generate.py for Hylics 2.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 2
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=hylics2 --seed=2
+Running test analysis...
+Completed Hylics 2.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=3.3, Max Spheres=3.3
+✅ Seed 2 PASSED
+
+--- Seed 3 (3/10) ---
+
+=== Testing Hylics 2.yaml ===
+Running Generate.py for Hylics 2.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 3
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=hylics2 --seed=3
+Running test analysis...
+Completed Hylics 2.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=6.1, Max Spheres=6.1
+✅ Seed 3 PASSED
+
+--- Seed 4 (4/10) ---
+
+=== Testing Hylics 2.yaml ===
+Running Generate.py for Hylics 2.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 4
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=hylics2 --seed=4
+Running test analysis...
+Completed Hylics 2.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=5.1, Max Spheres=5.1
+✅ Seed 4 PASSED
+
+--- Seed 5 (5/10) ---
+
+=== Testing Hylics 2.yaml ===
+Running Generate.py for Hylics 2.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 5
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=hylics2 --seed=5
+Running test analysis...
+Completed Hylics 2.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=6.5, Max Spheres=6.5
+✅ Seed 5 PASSED
+
+--- Seed 6 (6/10) ---
+
+=== Testing Hylics 2.yaml ===
+Running Generate.py for Hylics 2.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 6
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=hylics2 --seed=6
+Running test analysis...
+Completed Hylics 2.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=6.1, Max Spheres=6.1
+✅ Seed 6 PASSED
+
+--- Seed 7 (7/10) ---
+
+=== Testing Hylics 2.yaml ===
+Running Generate.py for Hylics 2.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 7
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=hylics2 --seed=7
+Running test analysis...
+Completed Hylics 2.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=7.2, Max Spheres=7.2
+✅ Seed 7 PASSED
+
+--- Seed 8 (8/10) ---
+
+=== Testing Hylics 2.yaml ===
+Running Generate.py for Hylics 2.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 8
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=hylics2 --seed=8
+Running test analysis...
+Completed Hylics 2.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=7.1, Max Spheres=7.1
+✅ Seed 8 PASSED
+
+--- Seed 9 (9/10) ---
+
+=== Testing Hylics 2.yaml ===
+Running Generate.py for Hylics 2.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 9
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=hylics2 --seed=9
+Running test analysis...
+Completed Hylics 2.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=7.1, Max Spheres=7.1
+✅ Seed 9 PASSED
+
+--- Seed 10 (10/10) ---
+
+=== Testing Hylics 2.yaml ===
+Running Generate.py for Hylics 2.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 10
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=hylics2 --seed=10
+Running test analysis...
+Completed Hylics 2.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=5.1, Max Spheres=5.1
+✅ Seed 10 PASSED
+
+=== Seed Range Summary for Hylics 2.yaml ===
+Seeds tested: 10
+Passed: 10
+Failed: 0
+🎉 All 10 seeds passed!
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Processing full spoiler test results...
+  ✓ Full spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-full.md
+  Processing multiplayer test results...
+  ✓ Multiplayer chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiplayer.md
+  Processing multiworld test results...
+  ✓ Multiworld chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiworld.md
+  Processing multitemplate minimal test results...
+  ✓ Multitemplate minimal chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-minimal.md
+  Processing multitemplate full test results...
+  ✓ Multitemplate full chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-full.md
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+✅ Hylics 2.yaml is now passing! Continuing to next failed test...
+
+[3/11] Processing Jak and Daxter The Precursor Legacy.yaml
+Testing seeds 1-10 (failing seed + continue)
+
+=== Testing Jak and Daxter The Precursor Legacy.yaml with 10 seeds ===
+
+--- Seed 1 (1/10) ---
+
+=== Testing Jak and Daxter The Precursor Legacy.yaml ===
+Running Generate.py for Jak and Daxter The Precursor Legacy.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Jak and Daxter The Precursor Legacy.yaml --multi 1 --seed 1
+Rules file not found: /home/user/Archipelago-CC/frontend/presets/jakanddaxter/AP_14089154938208861744/AP_14089154938208861744_rules.json
+❌ Seed 1 FAILED
+Stopping at first failure (seed 1)
+
+=== Seed Range Summary for Jak and Daxter The Precursor Legacy.yaml ===
+Seeds tested: 1
+Passed: 0
+Failed: 1
+First failure at seed: 1
+Consecutive passes before failure: 0
+Failure reason: Test failed at sphere 0
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Processing full spoiler test results...
+  ✓ Full spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-full.md
+  Processing multiplayer test results...
+  ✓ Multiplayer chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiplayer.md
+  Processing multiworld test results...
+  ✓ Multiworld chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiworld.md
+  Processing multitemplate minimal test results...
+  ✓ Multitemplate minimal chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-minimal.md
+  Processing multitemplate full test results...
+  ✓ Multitemplate full chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-full.md
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+❌ Jak and Daxter The Precursor Legacy.yaml still failing. Stopping retest.
+
+Retest stopped at first still-failing test: Jak and Daxter The Precursor Legacy.yaml
+Timestamped results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results_2025-11-12_08-45-26.json
