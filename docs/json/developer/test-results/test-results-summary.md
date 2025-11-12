@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-04 22:15:41
+**Generated:** 2025-11-12 05:49:58
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,7 +12,7 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 27/79 passed (34.2%)
+- **Minimal Test:** 28/79 passed (35.4%)
 - **Full Test:** 21/79 passed (26.6%)
 - **Multiplayer Test:** 28/79 passed (35.4%)
 - **Multiworld Test:** 14/79 passed (17.7%)
@@ -22,8 +22,8 @@ This summary combines results from four types of tests:
 - **Templates passing all 4 tests:** 14/79 (17.7%)
 - **Templates passing 3 tests:** 5/79 (6.3%)
 - **Templates passing 2 tests:** 8/79 (10.1%)
-- **Templates passing 1 test:** 3/79 (3.8%)
-- **Templates passing 0 tests:** 49/79 (62.0%)
+- **Templates passing 1 test:** 4/79 (5.1%)
+- **Templates passing 0 tests:** 48/79 (60.8%)
 
 ## Test Results
 
@@ -35,7 +35,7 @@ This summary combines results from four types of tests:
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | ArchipIDLE | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
-| Blasphemous | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Blasphemous | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
@@ -115,4 +115,4 @@ These tests check multiple template configurations for the same game.
 
 | Game Name | Minimal Link (Templates Passed) | Full Link (Templates Passed) |
 |-----------|----------------------------------|-------------------------------|
-| A Link to the Past | [138/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | ❓ N/A |
+| A Link to the Past | [138/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [166/174 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
