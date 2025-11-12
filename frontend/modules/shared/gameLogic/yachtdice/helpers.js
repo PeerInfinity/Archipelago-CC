@@ -5,6 +5,61 @@
  * if a player can reach a specific score based on their collected items.
  */
 
+// yacht_weights will be loaded asynchronously
+let yachtWeights = {};
+let yachtWeightsLoaded = false;
+let yachtWeightsLoading = false;
+
+/**
+ * Load yacht_weights data from JSON file
+ */
+async function loadYachtWeights() {
+    if (yachtWeightsLoaded || yachtWeightsLoading) {
+        return;
+    }
+
+    yachtWeightsLoading = true;
+
+    try {
+        // Dynamically import the JSON data
+        const response = await fetch(new URL('./yacht_weights.json', import.meta.url));
+        const yachtWeightsData = await response.json();
+
+        // Parse yacht_weights data into a usable format
+        // Keys are "CategoryName,numDice,numRolls", values are score distributions
+        for (const [key, distribution] of Object.entries(yachtWeightsData)) {
+            const [categoryName, numDiceStr, numRollsStr] = key.split(',');
+            const numDice = parseInt(numDiceStr);
+            const numRolls = parseInt(numRollsStr);
+
+            // Create nested structure for easy lookup
+            if (!yachtWeights[categoryName]) {
+                yachtWeights[categoryName] = {};
+            }
+            if (!yachtWeights[categoryName][numDice]) {
+                yachtWeights[categoryName][numDice] = {};
+            }
+
+            // Convert string keys back to integers
+            const parsedDistribution = {};
+            for (const [score, probability] of Object.entries(distribution)) {
+                parsedDistribution[parseInt(score)] = parseInt(probability);
+            }
+
+            yachtWeights[categoryName][numDice][numRolls] = parsedDistribution;
+        }
+
+        yachtWeightsLoaded = true;
+        console.log('[YachtDice] yacht_weights data loaded successfully');
+    } catch (error) {
+        console.error('[YachtDice] Failed to load yacht_weights:', error);
+        yachtWeightsLoading = false;
+    }
+}
+
+// Start loading immediately
+loadYachtWeights();
+
 /**
  * Calculate the maximum achievable score based on current state
  *
@@ -139,35 +194,62 @@ function diceSimulationStrings(categories, numDice, numRolls, fixedMult, stepMul
         return 0;
     }
 
-    // Sort categories by estimated mean score (simplified)
+    // Get percentile return values based on difficulty
+    // perc_return determines what percentiles to average
+    const percReturn = [[0], [0.1, 0.5], [0.3, 0.7], [0.55, 0.85], [0.85, 0.95]][difficulty];
+    const diffDivide = [0, 9, 7, 3, 2][difficulty];
+
+    // Sort categories by mean score (using actual probability data or fallback)
     categories.sort((a, b) => {
-        const scoreA = estimateMeanScore(a.name, numDice, numRolls);
-        const scoreB = estimateMeanScore(b.name, numDice, numRolls);
+        const distA = getScoreDistribution(a.name, numDice, numRolls);
+        const distB = getScoreDistribution(b.name, numDice, numRolls);
+
+        const scoreA = distA ? getMeanFromDistribution(distA) : fallbackEstimateMeanScore(a.name, numDice, numRolls);
+        const scoreB = distB ? getMeanFromDistribution(distB) : fallbackEstimateMeanScore(b.name, numDice, numRolls);
+
         return scoreA - scoreB;
     });
 
-    // Calculate total score with multipliers
+    // Calculate total score using percentiles
     let totalScore = 0;
-    const diffDivide = [0, 9, 7, 3, 2][difficulty];
 
     for (let j = 0; j < categories.length; j++) {
         const category = categories[j];
-        const baseScore = estimateMeanScore(category.name, numDice, numRolls);
 
-        // Apply category quantity multiplier
+        // Get the distribution for this category
+        const dist = getScoreDistribution(category.name, numDice, numRolls);
+
+        // Use fallback if distribution not available
+        if (!dist) {
+            const fallbackScore = fallbackEstimateMeanScore(category.name, numDice, numRolls);
+            totalScore += fallbackScore;
+            continue;
+        }
+
+        // Calculate category multiplier for multiple copies
         const catMult = Math.pow(2, category.quantity - 1);
 
-        // Apply step multiplier based on position
+        // For higher difficulties, simulation gets multiple tries
         const maxTries = Math.floor(j / diffDivide);
-        let bestMultiplier = 1;
-        for (let ii = Math.max(0, j - maxTries); ii <= j; ii++) {
-            const mult = (1 + fixedMult + stepMult * ii) * catMult;
-            if (mult > bestMultiplier) {
-                bestMultiplier = mult;
+
+        // Calculate the best possible score with multipliers
+        let bestScore = 0;
+        for (const percentile of percReturn) {
+            const baseScore = percentileDistribution(dist, percentile);
+
+            // Try different multiplier combinations
+            for (let ii = Math.max(0, j - maxTries); ii <= j; ii++) {
+                const mult = (1 + fixedMult + stepMult * ii) * catMult;
+                const score = baseScore * mult;
+                if (score > bestScore) {
+                    bestScore = score;
+                }
             }
         }
 
-        totalScore += baseScore * bestMultiplier;
+        // Average the percentiles
+        totalScore += bestScore / percReturn.length;
+
     }
 
     // Ensure minimum score of 5
@@ -175,27 +257,76 @@ function diceSimulationStrings(categories, numDice, numRolls, fixedMult, stepMul
 }
 
 /**
- * Estimate mean score for a category (simplified version)
- * This is a rough approximation until we have the full yacht_weights data
+ * Calculate mean from a probability distribution
+ */
+function getMeanFromDistribution(distribution) {
+    let mean = 0;
+    for (const [score, probability] of Object.entries(distribution)) {
+        mean += parseInt(score) * (probability / 100000);
+    }
+    return mean;
+}
+
+/**
+ * Get score distribution for a category using actual probability data
  *
  * @param {string} categoryName - Name of the category
  * @param {number} numDice - Number of dice
  * @param {number} numRolls - Number of rolls
- * @returns {number} Estimated mean score
+ * @returns {Object} Score distribution {score: probability}
  */
-function estimateMeanScore(categoryName, numDice, numRolls) {
-    // Limit dice and rolls to maximum of 8
-    numDice = Math.min(8, numDice);
-    numRolls = Math.min(8, numRolls);
+function getScoreDistribution(categoryName, numDice, numRolls) {
+    // Limit dice and rolls to maximum of 8 (data availability)
+    numDice = Math.min(8, Math.max(0, numDice));
+    numRolls = Math.min(8, Math.max(0, numRolls));
 
-    // Very basic estimation based on category type and dice/rolls
-    // This is TEMPORARY and should be replaced with yacht_weights lookup
-    // Using VERY conservative estimates to match Python's percentile-based logic
+    if (numDice <= 0 || numRolls <= 0) {
+        return {0: 100000};
+    }
 
+    // If data not loaded yet, return empty distribution
+    if (!yachtWeightsLoaded) {
+        return null;
+    }
+
+    // Look up the probability distribution
+    const distribution = yachtWeights[categoryName]?.[numDice]?.[numRolls];
+
+    if (!distribution) {
+        return null;
+    }
+
+    return distribution;
+}
+
+/**
+ * Calculate percentile value from a probability distribution
+ *
+ * @param {Object} distribution - Score distribution {score: probability}
+ * @param {number} percentile - Percentile to calculate (0.0 to 1.0)
+ * @returns {number} Score at the given percentile
+ */
+function percentileDistribution(distribution, percentile) {
+    const sortedScores = Object.keys(distribution).map(Number).sort((a, b) => a - b);
+    let cumulativeProb = 0;
+
+    for (const score of sortedScores) {
+        cumulativeProb += distribution[score] / 100000;
+        if (cumulativeProb >= percentile) {
+            return score;
+        }
+    }
+
+    // Return the last value if percentile is higher than all probabilities
+    return sortedScores[sortedScores.length - 1] || 0;
+}
+
+/**
+ * Fallback estimation when yacht_weights data is not available
+ */
+function fallbackEstimateMeanScore(categoryName, numDice, numRolls) {
     const baseFactor = Math.pow(numDice, 0.6) * Math.pow(numRolls, 0.3);
 
-    // Different categories have different expected values
-    // These are intentionally low to avoid overestimating accessibility
     if (categoryName.includes("Choice") || categoryName.includes("Inverse")) {
         return baseFactor * 2.0;
     } else if (categoryName.includes("Ones") || categoryName.includes("Twos")) {
