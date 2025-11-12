@@ -81,3 +81,10 @@ export function can_reach_orbs(snapshot, staticData, requiredOrbs) {
   const reachableOrbs = snapshot.inventory['Reachable Orbs'] || 0;
   return reachableOrbs >= requiredOrbs;
 }
+
+// Helper function registry
+export const helperFunctions = {
+  has,
+  count,
+  can_reach_orbs,
+};

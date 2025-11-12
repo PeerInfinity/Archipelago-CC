@@ -337,7 +337,7 @@ const GAME_REGISTRY = {
   },
   'Jak and Daxter: The Precursor Legacy': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: jak_and_daxter__the_precursor_legacyLogic,
+    helperFunctions: jak_and_daxter__the_precursor_legacyLogic.helperFunctions,
     worldClasses: ['JakAndDaxterWorld'],
     aliases: ['Jak and Daxter: The Precursor Legacy', 'Jak and Daxter']
   },

@@ -1,30 +1,33 @@
 # Remaining Exporter Issues for Jak and Daxter
 
-## Issue: Reachable Orbs Not Updated When New Orb Regions Become Accessible
+## Issue: Frontend Not Accumulating Reachable Orbs Correctly
 
-**Status:** Not fixed
+**Status:** Partial fix - Exporter fixed, frontend issue remains
 **Priority:** High
 **Sphere where it fails:** 3.15 (step 120)
 
 **Description:**
-The "Reachable Orbs" progressive item is not being updated in the sphere log when new orb-containing regions become accessible. At sphere 3.15, the Snowy Mountain Gondola is collected, which unlocks many Snowy Mountain regions containing orbs. These new orb regions should increase the "Reachable Orbs" count from 288 (from sphere 3.1) to at least 1530 (required for orb trading locations). However, the sphere log at 3.15 does not show an updated "Reachable Orbs" value in the resolved_items.
+The "Reachable Orbs" progressive item was not being updated in the sphere log when new orb-containing regions became accessible. This has been fixed in the exporter, but a frontend accumulation issue remains.
 
-**Current Behavior:**
-- Sphere 3.1: Reachable Orbs = 288
-- Sphere 3.15: Snowy Mountain regions become accessible (no Reachable Orbs update in sphere log)
-- Orb trading locations require 1530 orbs but frontend only sees 288
+**Fix Applied:**
+Modified `exporter/sphere_logger.py` to call `recalculate_reachable_orbs()` before logging each sphere for Jak and Daxter worlds. This ensures that "Reachable Orbs" values are recalculated whenever new orb-containing regions become accessible.
 
-**Expected Behavior:**
-- When new regions with orbs become accessible, the "Reachable Orbs" value should be recalculated and written to the sphere log
+The fix checks if "Reachable Orbs Fresh" is False (indicating a recalculation is needed) and calls the recalculation function before reading the state for logging.
 
-**Python Code Reference:**
-In `worlds/jakanddaxter/rules.py`:
-- `recalculate_reachable_orbs()` (line 34-46) - recalculates orbs based on accessible regions
-- `can_reach_orbs_global()` (line 71-79) - checks if recalculation is needed
-- The Python code sets `Reachable Orbs Fresh` to false to trigger recalculation
+**Verification:**
+The sphere log now correctly shows "Reachable Orbs" updates at all appropriate spheres:
+- Sphere 0: 332 orbs
+- Sphere 0.18: +150 orbs (cumulative: 482)
+- Sphere 0.39: +493 orbs (cumulative: 975)
+- Sphere 1.5: +184 orbs (cumulative: 1159)
+- Sphere 1.43: +12 orbs (cumulative: 1171)
+- Sphere 2.9: +288 orbs (cumulative: 1459)
+- Sphere 3.15: +177 orbs (cumulative: 1636) ← This is enough for 1530 requirement!
 
-**Problem:**
-The sphere log generation or exporter is not capturing the recalculated "Reachable Orbs" values. The sphere log only shows "Reachable Orbs" updates at specific spheres (0.1, 1.1, 2.1, 3.1, 4.1) but not when intermediate regions become accessible.
+**Remaining Issue:**
+The frontend helper function `can_reach_orbs` is now correctly implemented and being called, but the spoiler test still fails at sphere 3.15. The helper should see 1636 orbs (which is enough for the 1530 requirement), but the test indicates the access rules are evaluating to false.
+
+This suggests an issue with how the frontend state manager accumulates the "Reachable Orbs" deltas from the sphere log. The sphere log correctly shows the deltas in `resolved_items`, but the frontend may not be properly summing them into the cumulative `snapshot.inventory['Reachable Orbs']`.
 
 **Affected Locations (at sphere 3.15):**
 - RV: Bring 120 Orbs To The Oracle (1) - requires 1740 orbs
@@ -43,5 +46,13 @@ The sphere log generation or exporter is not capturing the recalculated "Reachab
 - VC: Bring 90 Orbs To The Miners (3) - requires 1530 orbs
 - VC: Bring 90 Orbs To The Miners (4) - requires 1620 orbs
 
-**Potential Fix:**
-The sphere log generation code needs to ensure that when regions are marked as accessible, any progressive items that depend on region accessibility (like "Reachable Orbs") are recalculated and written to the sphere log's resolved_items.
+**Files Modified:**
+- `exporter/sphere_logger.py` - Added game-specific recalculation hook
+- `frontend/modules/shared/gameLogic/jak_and_daxter__the_precursor_legacy/jak_and_daxter__the_precursor_legacyLogic.js` - Implemented helper functions
+- `frontend/modules/shared/gameLogic/gameLogicRegistry.js` - Registered Jak and Daxter game logic
+
+**Next Steps:**
+- Investigate the frontend state manager to understand how it accumulates `resolved_items` from the sphere log
+- Check if there's special handling needed for progressive items like "Reachable Orbs"
+- Consider adding debug logging to the helper function to see what value it's actually receiving
+- The frontend accumulation logic may need to be fixed to properly handle dynamically-calculated progressive items
