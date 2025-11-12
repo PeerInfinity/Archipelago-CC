@@ -1,8 +1,8 @@
 # Ocarina of Time - Remaining Helper Issues
 
-Status: Primary issue identified - need to implement OOT rule parser
+Status: Parser implemented - need to add missing helpers
 
-## Primary Issue: parse_oot_rule Helper Not Implemented
+## ~~Primary Issue: parse_oot_rule Helper Not Implemented~~ ✅ FIXED (Commit c4eda88)
 
 **Background:** The exporter now successfully exports 996 rules using the `parse_oot_rule` helper, which receives the original OOT rule DSL string as an argument. However, this helper function doesn't exist in the frontend yet, so all these rules will fail to evaluate.
 
@@ -32,3 +32,33 @@ Status: Primary issue identified - need to implement OOT rule parser
 3. **Transpiler:** Convert OOT DSL to equivalent JavaScript/JSON rules
 
 **Priority:** High - blocks all test progress until implemented
+
+## Progress Update (Commit c4eda88)
+
+**✅ Implemented:**
+- Created `frontend/modules/shared/gameLogic/oot/ootLogic.js`
+- Implemented `parse_oot_rule()` helper with recursive descent parser
+- Registered OOT in gameLogicRegistry
+- Successfully parses: constants, operators (and/or/not), parentheses, age checks, item checks, function calls, comparisons
+- Fixed infinite recursion bugs in parser
+- Tests now run without "Maximum call stack" errors
+
+**Remaining Work:**
+
+The parser is working but many OOT-specific helpers are not yet implemented. These need to be added to make rules evaluate correctly:
+
+### Missing Helpers (from test warnings):
+1. `can_plant_bean` - Check if player can plant magic beans
+2. `can_blast_or_smash` - Check if player can blast or smash obstacles
+3. `has_bottle` - Check if player has any bottle
+4. `can_summon_gossip_fairy` - Check if can summon gossip stone fairy
+5. `can_cut_shrubs` - Check if player can cut shrubs
+6. `has_explosives` - Check if player has explosives
+7. `logic_*` - Various logic setting checks (e.g., `logic_link_goron_dins`)
+8. Many more from OOT's LogicHelpers.json
+
+### Next Steps:
+1. Extract list of all helpers used in rules
+2. Reference OOT's `LogicHelpers.json` to understand what each helper does
+3. Implement helpers progressively, testing after each batch
+4. May need to implement OOT-specific state management for age switching, time of day, etc.
