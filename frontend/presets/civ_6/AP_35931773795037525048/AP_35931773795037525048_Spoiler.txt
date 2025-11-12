@@ -1,0 +1,260 @@
+﻿Archipelago Version 0.6.4  -  Seed: 7
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Civilization VI
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+Progression Style:               Districts Only
+Shuffle Goody Hut Rewards:       Yes
+Boostsanity:                     No
+Tech/Civic Cost Multiplier:      100
+Tech/Civic Tree pre-hinted Items:
+Hide Item Names:                 No
+Advisor Indicates Progression Items:Yes
+Death Link:                      No
+Death Link Effect:               Unit Killed
+Death Link Effect Percent:       20
+
+
+Locations:
+
+TECH_AP_ANCIENT_00: Military Training
+TECH_AP_ANCIENT_01: Progressive Holy Site
+TECH_AP_ANCIENT_02: Nationalism
+TECH_AP_ANCIENT_03: Progressive Encampment
+TECH_AP_ANCIENT_04: Sailing
+TECH_AP_ANCIENT_05: Irrigation
+TECH_AP_ANCIENT_06: Animal Husbandry
+TECH_AP_ANCIENT_07: State Workforce
+TECH_AP_ANCIENT_08: Ballistics
+TECH_AP_ANCIENT_09: Engineering
+TECH_AP_ANCIENT_10: Progressive Commercial Hub
+CIVIC_AP_ANCIENT_00: Progressive Holy Site
+CIVIC_AP_ANCIENT_01: Mining
+CIVIC_AP_ANCIENT_02: Progressive Campus
+CIVIC_AP_ANCIENT_03: Progressive Encampment
+CIVIC_AP_ANCIENT_04: Foreign Trade
+CIVIC_AP_ANCIENT_05: Guilds
+CIVIC_AP_ANCIENT_06: Progressive Theater
+GOODY_HUT_1: Faith: Medium
+GOODY_HUT_2: Faith: Small
+GOODY_HUT_3: Relic
+GOODY_HUT_4: Gold: Small
+GOODY_HUT_5: Faith: Medium
+GOODY_HUT_6: Gold: Medium
+GOODY_HUT_7: Faith: Medium
+GOODY_HUT_8: Faith: Small
+GOODY_HUT_9: Settler
+GOODY_HUT_10: Envoy
+TECH_AP_CLASSICAL_11: Cultural Hegemony
+TECH_AP_CLASSICAL_12: The Enlightenment
+TECH_AP_CLASSICAL_13: Progressive Diplomatic Quarter
+TECH_AP_CLASSICAL_14: Progressive Entertainment Complex
+TECH_AP_CLASSICAL_15: Machinery
+TECH_AP_CLASSICAL_16: Mobilization
+TECH_AP_CLASSICAL_17: Progressive Commercial Hub
+TECH_AP_CLASSICAL_18: Progressive Industrial Zone
+CIVIC_AP_CLASSICAL_07: Cold War
+CIVIC_AP_CLASSICAL_08: Progressive Harbor
+CIVIC_AP_CLASSICAL_09: Shipbuilding
+CIVIC_AP_CLASSICAL_10: Archery
+CIVIC_AP_CLASSICAL_11: Political Philosophy
+CIVIC_AP_CLASSICAL_12: Sanitation
+CIVIC_AP_CLASSICAL_13: Global Warming Mitigation
+TECH_AP_MEDIEVAL_19: Progressive Theater
+TECH_AP_MEDIEVAL_20: Progressive Neighborhood
+TECH_AP_MEDIEVAL_21: Cartography
+TECH_AP_MEDIEVAL_22: Progressive Entertainment Complex
+TECH_AP_MEDIEVAL_23: Divine Right
+TECH_AP_MEDIEVAL_24: Progressive Preserve
+TECH_AP_MEDIEVAL_25: Cybernetics
+TECH_AP_MEDIEVAL_67: Class Struggle
+CIVIC_AP_MEDIEVAL_14: Exploration
+CIVIC_AP_MEDIEVAL_15: Naval Tradition
+CIVIC_AP_MEDIEVAL_16: Printing
+CIVIC_AP_MEDIEVAL_17: Progressive Campus
+CIVIC_AP_MEDIEVAL_18: Civil Engineering
+CIVIC_AP_MEDIEVAL_19: Astronomy
+CIVIC_AP_MEDIEVAL_20: Space Race
+TECH_AP_RENAISSANCE_26: Progressive Diplomatic Quarter
+TECH_AP_RENAISSANCE_27: Progressive Neighborhood
+TECH_AP_RENAISSANCE_28: Progressive Harbor
+TECH_AP_RENAISSANCE_29: Corporate Libertarianism
+TECH_AP_RENAISSANCE_30: Information Warfare
+TECH_AP_RENAISSANCE_31: Military Tactics
+TECH_AP_RENAISSANCE_32: Progressive Industrial Zone
+TECH_AP_RENAISSANCE_33: Rapid Deployment
+TECH_AP_RENAISSANCE_34: Smart Power Doctrine
+CIVIC_AP_RENAISSANCE_21: Reformed Church
+CIVIC_AP_RENAISSANCE_22: Lasers
+CIVIC_AP_RENAISSANCE_23: Advanced AI
+CIVIC_AP_RENAISSANCE_24: Environmentalism
+CIVIC_AP_RENAISSANCE_25: Seasteads
+CIVIC_AP_RENAISSANCE_26: Predictive Systems
+TECH_AP_INDUSTRIAL_35: Progressive Industrial Zone
+TECH_AP_INDUSTRIAL_36: Progressive Industrial Zone
+TECH_AP_INDUSTRIAL_37: Combined Arms
+TECH_AP_INDUSTRIAL_38: Progressive Commercial Hub
+TECH_AP_INDUSTRIAL_39: Feudalism
+TECH_AP_INDUSTRIAL_40: Cultural Heritage
+TECH_AP_INDUSTRIAL_41: Synthetic Technocracy
+TECH_AP_INDUSTRIAL_42: Near Future Governance
+CIVIC_AP_INDUSTRIAL_27: Metal Casting
+CIVIC_AP_INDUSTRIAL_28: Progressive Encampment
+CIVIC_AP_INDUSTRIAL_29: Mercantilism
+CIVIC_AP_INDUSTRIAL_30: Exodus Imperative
+CIVIC_AP_INDUSTRIAL_31: Scientific Theory
+CIVIC_AP_INDUSTRIAL_32: Construction
+CIVIC_AP_INDUSTRIAL_33: Progressive Theater
+TECH_AP_MODERN_43: Totalitarianism
+TECH_AP_MODERN_44: Nuclear Program
+TECH_AP_MODERN_45: Combustion
+TECH_AP_MODERN_46: Suffrage
+TECH_AP_MODERN_47: Advanced Power Cells
+TECH_AP_MODERN_48: Refining
+TECH_AP_MODERN_49: Steam Power
+TECH_AP_MODERN_68: Computers
+CIVIC_AP_MODERN_34: Colonialism
+CIVIC_AP_MODERN_35: Guidance Systems
+CIVIC_AP_MODERN_36: Progressive Aerodrome
+CIVIC_AP_MODERN_37: Progressive Neighborhood
+CIVIC_AP_MODERN_38: Military Tradition
+CIVIC_AP_MODERN_39: Horseback Riding
+CIVIC_AP_MODERN_40: Recorded History
+CIVIC_AP_MODERN_41: Progressive Campus
+CIVIC_AP_MODERN_42: Progressive Aerodrome
+TECH_AP_ATOMIC_50: Future Civic
+TECH_AP_ATOMIC_51: Social Media
+TECH_AP_ATOMIC_52: Synthetic Materials
+TECH_AP_ATOMIC_53: Plastics
+TECH_AP_ATOMIC_54: Progressive Entertainment Complex
+TECH_AP_ATOMIC_55: Iron Working
+TECH_AP_ATOMIC_56: Progressive Space Port
+TECH_AP_ATOMIC_57: Stirrups
+CIVIC_AP_ATOMIC_43: Civil Service
+CIVIC_AP_ATOMIC_44: Mercenaries
+CIVIC_AP_ATOMIC_45: Craftsmanship
+CIVIC_AP_ATOMIC_46: Code of Laws
+CIVIC_AP_ATOMIC_47: Square Rigging
+TECH_AP_INFORMATION_58: Progressive Space Port
+TECH_AP_INFORMATION_59: Siege Tactics
+TECH_AP_INFORMATION_60: Steel
+TECH_AP_INFORMATION_61: Buttress
+TECH_AP_INFORMATION_62: Early Empire
+TECH_AP_INFORMATION_63: Scorched Earth
+TECH_AP_INFORMATION_64: Gunpowder
+TECH_AP_INFORMATION_65: Digital Democracy
+TECH_AP_INFORMATION_66: Progressive Space Port
+CIVIC_AP_INFORMATION_48: Stealth Technology
+CIVIC_AP_INFORMATION_49: Progressive Space Port
+CIVIC_AP_INFORMATION_51: Masonry
+CIVIC_AP_INFORMATION_52: Composites
+CIVIC_AP_INFORMATION_53: Rifling
+CIVIC_AP_INFORMATION_54: Castles
+CIVIC_AP_INFORMATION_55: The Wheel
+TECH_AP_FUTURE_69: Opera and Ballet
+TECH_AP_FUTURE_70: Future Tech
+TECH_AP_FUTURE_71: Pottery
+TECH_AP_FUTURE_72: Ideology
+TECH_AP_FUTURE_73: Nuclear Fusion
+TECH_AP_FUTURE_74: Telecommunications
+TECH_AP_FUTURE_75: Robotics
+TECH_AP_FUTURE_76: Progressive Space Port
+CIVIC_AP_FUTURE_50: Globalization
+CIVIC_AP_FUTURE_56: Progressive Preserve
+CIVIC_AP_FUTURE_57: Mass Media
+CIVIC_AP_FUTURE_58: Advanced Ballistics
+CIVIC_AP_FUTURE_59: Medieval Faires
+CIVIC_AP_FUTURE_60: Defensive Tactics
+Complete a victory type: Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  CIVIC_AP_ANCIENT_00: Progressive Holy Site
+  CIVIC_AP_ANCIENT_01: Mining
+  CIVIC_AP_ANCIENT_02: Progressive Campus
+  CIVIC_AP_ANCIENT_03: Progressive Encampment
+  CIVIC_AP_ANCIENT_04: Foreign Trade
+  CIVIC_AP_ANCIENT_06: Progressive Theater
+  TECH_AP_ANCIENT_01: Progressive Holy Site
+  TECH_AP_ANCIENT_02: Nationalism
+  TECH_AP_ANCIENT_03: Progressive Encampment
+  TECH_AP_ANCIENT_04: Sailing
+  TECH_AP_ANCIENT_05: Irrigation
+  TECH_AP_ANCIENT_06: Animal Husbandry
+  TECH_AP_ANCIENT_07: State Workforce
+  TECH_AP_ANCIENT_10: Progressive Commercial Hub
+}
+2: {
+  CIVIC_AP_CLASSICAL_08: Progressive Harbor
+  CIVIC_AP_CLASSICAL_09: Shipbuilding
+  CIVIC_AP_CLASSICAL_11: Political Philosophy
+  TECH_AP_CLASSICAL_13: Progressive Diplomatic Quarter
+  TECH_AP_CLASSICAL_14: Progressive Entertainment Complex
+  TECH_AP_CLASSICAL_17: Progressive Commercial Hub
+  TECH_AP_CLASSICAL_18: Progressive Industrial Zone
+}
+3: {
+  CIVIC_AP_MEDIEVAL_14: Exploration
+  CIVIC_AP_MEDIEVAL_17: Progressive Campus
+  TECH_AP_MEDIEVAL_19: Progressive Theater
+  TECH_AP_MEDIEVAL_21: Cartography
+  TECH_AP_MEDIEVAL_22: Progressive Entertainment Complex
+  TECH_AP_MEDIEVAL_23: Divine Right
+  TECH_AP_MEDIEVAL_67: Class Struggle
+}
+4: {
+  CIVIC_AP_RENAISSANCE_21: Reformed Church
+  TECH_AP_RENAISSANCE_26: Progressive Diplomatic Quarter
+  TECH_AP_RENAISSANCE_28: Progressive Harbor
+  TECH_AP_RENAISSANCE_29: Corporate Libertarianism
+  TECH_AP_RENAISSANCE_32: Progressive Industrial Zone
+}
+5: {
+  CIVIC_AP_INDUSTRIAL_28: Progressive Encampment
+  CIVIC_AP_INDUSTRIAL_33: Progressive Theater
+  TECH_AP_INDUSTRIAL_35: Progressive Industrial Zone
+  TECH_AP_INDUSTRIAL_36: Progressive Industrial Zone
+  TECH_AP_INDUSTRIAL_37: Combined Arms
+  TECH_AP_INDUSTRIAL_38: Progressive Commercial Hub
+  TECH_AP_INDUSTRIAL_41: Synthetic Technocracy
+}
+6: {
+  CIVIC_AP_MODERN_36: Progressive Aerodrome
+  CIVIC_AP_MODERN_41: Progressive Campus
+  CIVIC_AP_MODERN_42: Progressive Aerodrome
+  TECH_AP_MODERN_43: Totalitarianism
+  TECH_AP_MODERN_46: Suffrage
+  TECH_AP_MODERN_48: Refining
+}
+7: {
+  TECH_AP_ATOMIC_53: Plastics
+  TECH_AP_ATOMIC_54: Progressive Entertainment Complex
+  TECH_AP_ATOMIC_56: Progressive Space Port
+}
+8: {
+  CIVIC_AP_INFORMATION_49: Progressive Space Port
+  TECH_AP_INFORMATION_58: Progressive Space Port
+  TECH_AP_INFORMATION_65: Digital Democracy
+  TECH_AP_INFORMATION_66: Progressive Space Port
+}
+9: {
+  Complete a victory type: Victory
+  TECH_AP_FUTURE_76: Progressive Space Port
+}
