@@ -218,9 +218,9 @@
   },
   "Kingdom Hearts 2": {
     "exporter_path": "exporter/games/kh2.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "kh2"
   },
   "Kirby's Dream Land 3": {

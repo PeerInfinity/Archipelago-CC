@@ -25,39 +25,15 @@ class KH2GameExportHandler(BaseGameExportHandler):
             # final_form_region_access has complex logic - leave as helper
             # valor, wisdom, master forms need investigation
         }
-        
-        # Special handling for form_list_unlock
-        if helper_name == 'form_list_unlock' and args and len(args) >= 2:
-            # Extract the form name from the first argument
-            form_arg = args[0]
-            level_arg = args[1] if len(args) > 1 else {'type': 'constant', 'value': 0}
-            
-            # Get the form item name
-            form_name = None
-            if form_arg.get('type') == 'attribute':
-                form_name = form_arg.get('attr')
-            elif form_arg.get('type') == 'constant':
-                form_name = form_arg.get('value')
-            
-            # Get the level requirement
-            level_required = 0
-            if level_arg.get('type') == 'constant':
-                level_required = level_arg.get('value')
-            
-            # For level 0, just check if we have the form
-            if level_required == 0 and form_name:
-                return {'type': 'item_check', 'item': form_name}
-            
-            # For higher levels, just require the form itself for now
-            # TODO: Implement proper form level counting logic
-            if form_name:
-                # Simplified: just require the form item
-                # The actual logic needs to count total forms available
-                return {'type': 'item_check', 'item': form_name}
-        
+
+        # form_list_unlock should be kept as a helper call for JavaScript evaluation
+        # Don't expand it - let it be processed as a helper in the frontend
+        if helper_name == 'form_list_unlock':
+            return None  # Return None to preserve as helper
+
         if helper_name in helper_map:
             return helper_map[helper_name]
-            
+
         # For now, preserve helper nodes as-is until we identify specific helpers
         return None
         

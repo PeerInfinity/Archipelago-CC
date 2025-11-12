@@ -446,7 +446,26 @@ class ASTVisitorMixin:
                 # Simplify handling based on method name
                 if method == 'has' and len(filtered_args) >= 1:
                     logging.debug(f"Processing state.has with {len(filtered_args)} filtered args: {filtered_args}")
-                    result = {'type': 'item_check', 'item': filtered_args[0]}
+
+                    # Try to resolve the item name expression to get the actual string value
+                    first_arg = filtered_args[0]
+                    item_value = first_arg
+                    if isinstance(first_arg, dict):
+                        # Try to resolve the expression (e.g., ItemName.MasterForm -> "Master Form")
+                        resolved_item = self.expression_resolver.resolve_expression(first_arg)
+                        if resolved_item is not None and isinstance(resolved_item, str):
+                            # Successfully resolved to a string value
+                            logging.debug(f"Resolved item name: {first_arg} -> {resolved_item}")
+                            item_value = {'type': 'constant', 'value': resolved_item}
+                        elif first_arg.get('type') == 'constant':
+                            # Already a constant, use as-is
+                            item_value = first_arg
+                        else:
+                            # Could not resolve to a constant value, keep as-is
+                            logging.debug(f"Could not resolve item name: {first_arg}")
+                            item_value = first_arg
+
+                    result = {'type': 'item_check', 'item': item_value}
                     # Check for count parameter (now in position 1 after filtering)
                     if len(filtered_args) >= 2:
                         second_arg = filtered_args[1]
