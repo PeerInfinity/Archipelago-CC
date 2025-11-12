@@ -238,6 +238,7 @@ import * as hylics2Logic from './hylics_2/hylics2Logic.js';
 import { hylics2StateModule } from './hylics_2/hylics2Logic.js';
 import * as inscryptionLogic from './inscryption/inscryptionLogic.js';
 import { inscryptionStateModule } from './inscryption/inscryptionLogic.js';
+import * as jak_and_daxter__the_precursor_legacyLogic from './jak_and_daxter__the_precursor_legacy/jak_and_daxter__the_precursor_legacyLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
 import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
 import * as kdl3Logic from './kdl3/kdl3Logic.js';
@@ -333,6 +334,12 @@ const GAME_REGISTRY = {
     helperFunctions: inscryptionLogic.helperFunctions,
     worldClasses: ['InscryptionWorld'],
     aliases: ['Inscryption']
+  },
+  'Jak and Daxter: The Precursor Legacy': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: jak_and_daxter__the_precursor_legacyLogic.helperFunctions,
+    worldClasses: ['JakAndDaxterWorld'],
+    aliases: ['Jak and Daxter: The Precursor Legacy', 'Jak and Daxter']
   },
   'Kingdom Hearts': {
     logicModule: genericLogic.genericStateModule,
