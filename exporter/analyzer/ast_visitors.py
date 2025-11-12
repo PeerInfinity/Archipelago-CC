@@ -467,6 +467,24 @@ class ASTVisitorMixin:
                                 result['count'] = second_arg
                 elif method == 'has_group' and len(filtered_args) >= 1:
                     result = {'type': 'group_check', 'group': filtered_args[0]}
+                    # Check for count parameter (now in position 1 after filtering)
+                    if len(filtered_args) >= 2:
+                        second_arg = filtered_args[1]
+                        if isinstance(second_arg, dict):
+                            # Try to resolve the expression to a concrete value
+                            resolved_value = self.expression_resolver.resolve_expression(second_arg)
+                            if resolved_value is not None and isinstance(resolved_value, int):
+                                # Successfully resolved to an integer value
+                                logging.debug(f"Resolved group count parameter: {second_arg} -> {resolved_value}")
+                                result['count'] = {'type': 'constant', 'value': resolved_value}
+                            elif second_arg.get('type') == 'constant' and isinstance(second_arg.get('value'), int):
+                                # Already a constant, use as-is
+                                logging.debug(f"Found constant group count parameter: {second_arg}")
+                                result['count'] = second_arg
+                            else:
+                                # Could not resolve to a constant value, keep as-is
+                                logging.debug(f"Found unresolved group count parameter: {second_arg}")
+                                result['count'] = second_arg
                 elif method == 'has_any' and len(filtered_args) >= 1 and isinstance(filtered_args[0], list):
                     result = {'type': 'or', 'conditions': [{'type': 'item_check', 'item': item} for item in filtered_args[0]]}
                 elif method == '_lttp_has_key' and len(filtered_args) >= 1:
