@@ -203,9 +203,9 @@
     "world_directory": "inscryption"
   },
   "Jak and Daxter: The Precursor Legacy": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/jakanddaxter.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "jakanddaxter"
   },
@@ -225,9 +225,9 @@
   },
   "Kirby's Dream Land 3": {
     "exporter_path": "exporter/games/kdl3.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "kdl3"
   },
   "Landstalker - The Treasures of King Nole": {
