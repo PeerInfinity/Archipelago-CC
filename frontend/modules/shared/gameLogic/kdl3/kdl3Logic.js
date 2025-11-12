@@ -257,6 +257,134 @@ export function can_reach_boss(snapshot, staticData, level, open_world, ow_boss_
   }
 }
 
+/**
+ * Check if player can assemble R.O.B (specific enemy/ability combination check)
+ * Corresponds to can_assemble_rob in worlds/kdl3/rules.py:89
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {Object} copy_abilities - Dictionary mapping enemy names to their abilities
+ * @returns {boolean} True if player can assemble R.O.B
+ */
+export function can_assemble_rob(snapshot, staticData, copy_abilities) {
+  // Check animal requirements: must have both Coo and Kine
+  if (!can_reach_coo(snapshot, staticData) || !can_reach_kine(snapshot, staticData)) {
+    return false;
+  }
+
+  // Enemy restrictive requirements from worlds/kdl3/names/enemy_abilities.py:810-822
+  // This is indices 1-4 of the enemy_restrictive array (Python's [1:5])
+  const enemy_restrictive = [
+    // Index 1: Parasol OR Cutter from Bukisets
+    {
+      abilities: ['Parasol Ability', 'Cutter Ability'],
+      bukisets: ['Bukiset (Parasol)', 'Bukiset (Cutter)']
+    },
+    // Index 2: Spark OR Clean from Bukisets
+    {
+      abilities: ['Spark Ability', 'Clean Ability'],
+      bukisets: ['Bukiset (Spark)', 'Bukiset (Clean)']
+    },
+    // Index 3: Ice OR Needle from Bukisets
+    {
+      abilities: ['Ice Ability', 'Needle Ability'],
+      bukisets: ['Bukiset (Ice)', 'Bukiset (Needle)']
+    },
+    // Index 4: Stone OR Burning from Bukisets
+    {
+      abilities: ['Stone Ability', 'Burning Ability'],
+      bukisets: ['Bukiset (Stone)', 'Bukiset (Burning)']
+    }
+  ];
+
+  // Ability map: maps ability names to their check functions
+  const ability_map = {
+    'No Ability': () => true,
+    'Burning Ability': can_reach_burning,
+    'Stone Ability': can_reach_stone,
+    'Ice Ability': can_reach_ice,
+    'Needle Ability': can_reach_needle,
+    'Clean Ability': can_reach_clean,
+    'Parasol Ability': can_reach_parasol,
+    'Spark Ability': can_reach_spark,
+    'Cutter Ability': can_reach_cutter
+  };
+
+  // Check each restrictive requirement
+  for (const {abilities, bukisets} of enemy_restrictive) {
+    // Find bukisets where the copy ability is in the required abilities list
+    const matching_bukisets = bukisets.filter(bukiset =>
+      copy_abilities[bukiset] && abilities.includes(copy_abilities[bukiset])
+    );
+
+    // Check if we can reach any of the matching abilities
+    let can_reach_any = false;
+    for (const bukiset of matching_bukisets) {
+      const ability = copy_abilities[bukiset];
+      const ability_checker = ability_map[ability];
+      if (ability_checker && ability_checker(snapshot, staticData)) {
+        can_reach_any = true;
+        break;
+      }
+    }
+
+    // If we can't reach any of the required abilities for this group, fail
+    if (!can_reach_any) {
+      return false;
+    }
+  }
+
+  // Finally, must have both Parasol and Stone abilities
+  return can_reach_parasol(snapshot, staticData) && can_reach_stone(snapshot, staticData);
+}
+
+/**
+ * Check if player can fix Angel Wings (specific enemy/ability combination check)
+ * Corresponds to can_fix_angel_wings in worlds/kdl3/rules.py:106
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {Object} copy_abilities - Dictionary mapping enemy names to their abilities
+ * @returns {boolean} True if player can fix Angel Wings
+ */
+export function can_fix_angel_wings(snapshot, staticData, copy_abilities) {
+  // Must be able to reach the abilities of these specific enemies
+  const required_enemies = [
+    'Sparky', 'Blocky', 'Jumper Shoot', 'Yuki',
+    'Sir Kibble', 'Haboki', 'Boboo', 'Captain Stitch'
+  ];
+
+  // Ability map: maps ability names to their check functions
+  const ability_map = {
+    'No Ability': () => true,
+    'Burning Ability': can_reach_burning,
+    'Stone Ability': can_reach_stone,
+    'Ice Ability': can_reach_ice,
+    'Needle Ability': can_reach_needle,
+    'Clean Ability': can_reach_clean,
+    'Parasol Ability': can_reach_parasol,
+    'Spark Ability': can_reach_spark,
+    'Cutter Ability': can_reach_cutter
+  };
+
+  // Check if we can reach all required abilities
+  for (const enemy of required_enemies) {
+    const ability = copy_abilities[enemy];
+    if (!ability) {
+      return false; // Enemy not found in mapping
+    }
+
+    const ability_checker = ability_map[ability];
+    if (!ability_checker) {
+      return false; // Unknown ability
+    }
+
+    if (!ability_checker(snapshot, staticData)) {
+      return false; // Can't reach this ability
+    }
+  }
+
+  return true;
+}
+
 // Helper function registry
 export const helperFunctions = {
   // Core inventory functions
@@ -283,4 +411,8 @@ export const helperFunctions = {
 
   // Boss access helper
   can_reach_boss,
+
+  // Complex enemy/ability helpers
+  can_assemble_rob,
+  can_fix_angel_wings,
 };

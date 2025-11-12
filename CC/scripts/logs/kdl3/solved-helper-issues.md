@@ -25,19 +25,38 @@ Successfully implemented the following helper functions in `frontend/modules/sha
 ### Boss Access Helper
 - `can_reach_boss` - Check if player can reach a boss (supports both open world and standard modes)
 
+### Complex Enemy/Ability Helpers
+- `can_assemble_rob` - Check if player can assemble R.O.B (requires Coo, Kine, specific Bukiset abilities, Parasol, and Stone)
+- `can_fix_angel_wings` - Check if player can fix Angel Wings (requires specific enemy abilities)
+
 ## Test Progress
 
-**Before helpers:**
-- Failing at sphere 0.17
+**Initial state:**
+- Failing at sphere 0.14
 - Events processed: 14/342 (4.1%)
+- Error: Event items not exported
+
+**After exporter fix:**
+- Failing at sphere 0.17
+- Events processed: 18/342 (5.3%)
 - Error: can_reach_chuchu not found
 
-**After implementing helpers:**
+**After basic helpers:**
 - Failing at sphere 7.57
 - Events processed: 241/342 (70.5%)
-- Next error: can_assemble_rob not found
+- Error: can_assemble_rob not found
 
-**Improvement:**
-- +227 events processed
-- +66.4% completion rate
-- Progressed through 7+ major game areas
+**After can_assemble_rob:**
+- Failing at sphere 10.1
+- Events processed: 338/342 (98.8%)
+- Error: can_fix_angel_wings not found
+
+**Final state:**
+- ✅ **ALL TESTS PASSING**
+- Events processed: 342/342 (100%)
+- Spoiler test completed successfully
+
+**Total improvement:**
+- +328 events processed
+- +95.9% completion rate
+- All 342 sphere events passing
