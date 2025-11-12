@@ -255,6 +255,8 @@ import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import { helperFunctions as mm2HelperFunctions } from './mm2/mm2Logic.js';
 import * as ootLogic from './oot/ootLogic.js';
 import { ootStateModule } from './oot/ootLogic.js';
+import * as sm64exLogic from './sm64ex/sm64exLogic.js';
+import { sm64exStateModule } from './sm64ex/sm64exLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -409,6 +411,12 @@ const GAME_REGISTRY = {
     helperFunctions: ootLogic.helperFunctions,
     worldClasses: ['OOTWorld'],
     aliases: ['Ocarina of Time', 'OOT', 'Zelda: Ocarina of Time']
+  },
+  'Super Mario 64': {
+    logicModule: sm64exLogic.sm64exStateModule,
+    helperFunctions: sm64exLogic.helperFunctions,
+    worldClasses: ['SM64World'],
+    aliases: ['Super Mario 64', 'SM64', 'sm64ex']
   },
   // Add more games here as they're implemented
   'Generic': {
