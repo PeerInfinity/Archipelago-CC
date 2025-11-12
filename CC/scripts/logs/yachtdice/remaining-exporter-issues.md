@@ -53,7 +53,20 @@ The `dice_simulation_state_change` function in `/worlds/yachtdice/Rules.py` is a
 - `YachtWeights.py` contains `yacht_weights` dictionary with pre-computed probability distributions
 - The simulation algorithm is complex and requires probability calculations
 
-**Status:** Identified, not yet fixed
+**Status:** Partially fixed - Sphere 0 passing, needs yacht_weights data for full accuracy
+
+**Progress:**
+- ✅ Helper function created and registered in gameLogicRegistry
+- ✅ Correctly extracts items from snapshot.inventory
+- ✅ Sphere 0 (initial state) now passes all tests
+- ⚠️ Sphere 0.2+ failing - estimation too conservative with more items
+- ❌ Full yacht_weights probability data not yet ported to JavaScript
+
+**Next Steps:**
+1. Export yacht_weights dictionary from `worlds/yachtdice/YachtWeights.py` to JSON
+2. Load yacht_weights data in JavaScript helper
+3. Replace estimation function with actual probability lookups
+4. Test full game progression through all spheres
 
 ---
 *Last updated: 2025-11-12*
