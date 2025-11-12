@@ -4075,6 +4075,22 @@
           "AP_48205312626925217390_rules.json",
           "AP_48205312626925217390_spheres_log.jsonl"
         ]
+      },
+      "AP_55941320597534372051": {
+        "seed": 10,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Donkey Kong Country 3"
+          }
+        ],
+        "files": [
+          "AP_55941320597534372051.archipelago",
+          "AP_55941320597534372051_Spoiler.txt",
+          "AP_55941320597534372051_rules.json",
+          "AP_55941320597534372051_spheres_log.jsonl"
+        ]
       }
     }
   }
