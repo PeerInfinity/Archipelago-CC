@@ -253,6 +253,8 @@ import { mmbn3StateModule } from './mmbn3/mmbn3Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import { helperFunctions as mm2HelperFunctions } from './mm2/mm2Logic.js';
+import * as ootLogic from './oot/ootLogic.js';
+import { ootStateModule } from './oot/ootLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -401,6 +403,12 @@ const GAME_REGISTRY = {
     helperFunctions: mm2HelperFunctions,
     worldClasses: ['MM2World'],
     aliases: ['Mega Man 2', 'MM2', 'Megaman 2']
+  },
+  'Ocarina of Time': {
+    logicModule: ootLogic.ootStateModule,
+    helperFunctions: ootLogic.helperFunctions,
+    worldClasses: ['OOTWorld'],
+    aliases: ['Ocarina of Time', 'OOT', 'Zelda: Ocarina of Time']
   },
   // Add more games here as they're implemented
   'Generic': {

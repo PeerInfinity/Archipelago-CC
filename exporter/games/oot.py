@@ -1,13 +1,86 @@
 """Ocarina of Time game-specific export handler."""
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
 class OOTGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Ocarina of Time'
+
+    def __init__(self):
+        super().__init__()
+        self.rule_string_map = {}  # Maps rule_target_name -> rule_string
+        self.world = None
+
+    def build_rule_string_map(self, world):
+        """Build a mapping of location/entrance names to their rule strings."""
+        self.world = world
+        self.rule_string_map = {}
+
+        # Collect rule strings from all locations
+        for region in world.get_regions():
+            for location in region.locations:
+                if hasattr(location, 'rule_string') and location.rule_string:
+                    self.rule_string_map[location.name] = location.rule_string
+
+            # Collect rule strings from all exits/entrances
+            for exit in region.exits:
+                if hasattr(exit, 'rule_string') and exit.rule_string:
+                    self.rule_string_map[exit.name] = exit.rule_string
+
+        logger.info(f"OOT: Built rule string map with {len(self.rule_string_map)} entries")
+
+    def override_rule_analysis(self, rule_func, rule_target_name: str = None) -> Optional[Dict[str, Any]]:
+        """Override rule analysis to use OOT's rule strings instead of analyzing lambdas."""
+        if not rule_target_name:
+            return None
+
+        # Look up the rule string for this location/entrance
+        rule_string = self.rule_string_map.get(rule_target_name)
+        if not rule_string:
+            logger.debug(f"OOT: No rule string found for {rule_target_name}")
+            return None
+
+        # Remove comments and strip
+        rule_string = rule_string.split('#', 1)[0].strip()
+
+        logger.debug(f"OOT: Parsing rule string for {rule_target_name}: {rule_string[:100]}")
+
+        try:
+            # Parse the rule string into a JSON-compatible format
+            return self.parse_oot_rule_string(rule_string)
+        except Exception as e:
+            logger.error(f"OOT: Failed to parse rule string for {rule_target_name}: {e}")
+            logger.debug(f"OOT: Rule string was: {rule_string}")
+            return None
+
+    def parse_oot_rule_string(self, rule_string: str) -> Dict[str, Any]:
+        """
+        Parse OOT's custom rule DSL into JSON format.
+
+        Examples:
+        - "True" -> {"type": "constant", "value": True}
+        - "is_adult" -> {"type": "helper", "name": "is_adult"}
+        - "is_adult and Hover_Boots" -> {"type": "and", "conditions": [...]}
+        """
+        # Handle simple constants
+        if rule_string == "True":
+            return {"type": "constant", "value": True}
+        if rule_string == "False":
+            return {"type": "constant", "value": False}
+
+        # For now, return a placeholder helper that includes the original rule string
+        # This will allow us to see what rules are being used and implement them progressively
+        return {
+            "type": "helper",
+            "name": "parse_oot_rule",
+            "args": [
+                {"type": "constant", "value": rule_string}
+            ]
+        }
 
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Expand OOT-specific rules, handling special closure variables."""
