@@ -168,12 +168,15 @@ Playthrough:
 1: {
   New Muldul: Flag Banana: WORM ROOM KEY
   New Muldul: Shop Ceiling Pot 1: UPPER HOUSE KEY
+  Waynehouse: Toilet: CLICKER
 }
 2: {
   New Muldul: Upper House Chest 1: SKULL BOMB
 }
 3: {
+  Sage Labyrinth: 2F Sarcophagus: CAVE KEY
   Sage Labyrinth: B1 Enemy Chest: PADDLE
+  Sage Labyrinth: B1 Hole Chest: SAGE TOKEN
   Sage Labyrinth: B2 Hidden Sarcophagus 2: DEEP KEY
 }
 4: {
@@ -188,9 +191,16 @@ Playthrough:
   Foglast: West Sarcophagus: PNEUMATOPHORE
 }
 7: {
+  Arcade 1: Burrito Alcove 2: PAPER CUP
   Arcade 1: Coin Dash: PAPER CUP
   Arcade 2: Double Banana 1: VESSEL ROOM KEY
+  Arcade 2: Peak Muscle Applique: SAGE TOKEN
+  Drill Castle: Island Banana: TOWER KEY
+  New Muldul: Vault Left Chest: SAGE TOKEN
+  Viewax's Edifice: Sage Item 1: PAPER CUP
+  Viewax's Edifice: Talk to Dedusmuln: JAIL KEY
 }
 8: {
   Defeat Gibby: Victory
+  Hylemxylem: Lower Reservoir Hole Pot 2: HOUSE KEY
 }

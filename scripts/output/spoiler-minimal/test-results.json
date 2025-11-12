@@ -4,7 +4,7 @@
     "batch_processing_time_minutes": 65.4,
     "batch_processing_time_seconds": 3922.8,
     "created": "2025-10-14T13:24:10.253834",
-    "last_updated": "2025-11-12T06:26:04.197896",
+    "last_updated": "2025-11-12T08:49:45.597432",
     "script_version": "1.0.0"
   },
   "results": {
@@ -8730,9 +8730,9 @@
       "total_seeds_tested": 10
     },
     "Donkey Kong Country 3.yaml": {
-      "consecutive_passes_before_failure": 1,
-      "first_failure_reason": "Test failed at sphere 0",
-      "first_failure_seed": 2,
+      "consecutive_passes_before_failure": 10,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "individual_results": {
         "1": {
           "analysis": {
@@ -8781,37 +8781,37 @@
         "10": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "donkey_kong_country_3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.43,
+            "processing_time_seconds": 4.8,
             "return_code": 0,
             "success": true,
             "warning_count": 2
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/dkc3/AP_55941320597534372051/AP_55941320597534372051_rules.json",
+            "size_bytes": 100815,
+            "size_mb": 0.1
           },
           "seed": "10",
           "seed_id": "AP_55941320597534372051",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.13,
+            "return_code": 0,
+            "sphere_reached": 4.1,
+            "success": true,
+            "total_spheres": 4.1,
             "warning_count": 0
           },
           "template_name": "Donkey Kong Country 3.yaml",
-          "timestamp": "2025-11-12T05:40:50.624725",
+          "timestamp": "2025-11-12T08:47:01.174289",
           "world_info": {
             "exporter_path": "exporter/games/dkc3.py",
             "game_logic_path": null,
@@ -8825,37 +8825,37 @@
         "2": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "donkey_kong_country_3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.43,
+            "processing_time_seconds": 4.99,
             "return_code": 0,
             "success": true,
             "warning_count": 2
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/dkc3/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 100805,
+            "size_mb": 0.1
           },
           "seed": "2",
           "seed_id": "AP_01043188731678011336",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.14,
+            "return_code": 0,
+            "sphere_reached": 4.1,
+            "success": true,
+            "total_spheres": 4.1,
             "warning_count": 0
           },
           "template_name": "Donkey Kong Country 3.yaml",
-          "timestamp": "2025-11-12T05:40:30.949598",
+          "timestamp": "2025-11-12T08:44:57.388472",
           "world_info": {
             "exporter_path": "exporter/games/dkc3.py",
             "game_logic_path": null,
@@ -8869,37 +8869,37 @@
         "3": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "donkey_kong_country_3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.43,
+            "processing_time_seconds": 4.86,
             "return_code": 0,
             "success": true,
             "warning_count": 2
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/dkc3/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 100805,
+            "size_mb": 0.1
           },
           "seed": "3",
           "seed_id": "AP_84719271504320872445",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.92,
+            "return_code": 0,
+            "sphere_reached": 3.1,
+            "success": true,
+            "total_spheres": 3.1,
             "warning_count": 0
           },
           "template_name": "Donkey Kong Country 3.yaml",
-          "timestamp": "2025-11-12T05:40:33.405748",
+          "timestamp": "2025-11-12T08:45:12.988607",
           "world_info": {
             "exporter_path": "exporter/games/dkc3.py",
             "game_logic_path": null,
@@ -8913,37 +8913,37 @@
         "4": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "donkey_kong_country_3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.43,
+            "processing_time_seconds": 4.94,
             "return_code": 0,
             "success": true,
             "warning_count": 2
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/dkc3/AP_05594871498841892311/AP_05594871498841892311_rules.json",
+            "size_bytes": 100808,
+            "size_mb": 0.1
           },
           "seed": "4",
           "seed_id": "AP_05594871498841892311",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.73,
+            "return_code": 0,
+            "sphere_reached": 4.1,
+            "success": true,
+            "total_spheres": 4.1,
             "warning_count": 0
           },
           "template_name": "Donkey Kong Country 3.yaml",
-          "timestamp": "2025-11-12T05:40:35.861816",
+          "timestamp": "2025-11-12T08:45:28.265884",
           "world_info": {
             "exporter_path": "exporter/games/dkc3.py",
             "game_logic_path": null,
@@ -8957,37 +8957,37 @@
         "5": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "donkey_kong_country_3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.44,
+            "processing_time_seconds": 5.43,
             "return_code": 0,
             "success": true,
             "warning_count": 2
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/dkc3/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 100808,
+            "size_mb": 0.1
           },
           "seed": "5",
           "seed_id": "AP_96945849220684217413",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.86,
+            "return_code": 0,
+            "sphere_reached": 4.1,
+            "success": true,
+            "total_spheres": 4.1,
             "warning_count": 0
           },
           "template_name": "Donkey Kong Country 3.yaml",
-          "timestamp": "2025-11-12T05:40:38.318702",
+          "timestamp": "2025-11-12T08:45:43.501807",
           "world_info": {
             "exporter_path": "exporter/games/dkc3.py",
             "game_logic_path": null,
@@ -9001,37 +9001,37 @@
         "6": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "donkey_kong_country_3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.44,
+            "processing_time_seconds": 4.86,
             "return_code": 0,
             "success": true,
             "warning_count": 2
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/dkc3/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+            "size_bytes": 100802,
+            "size_mb": 0.1
           },
           "seed": "6",
           "seed_id": "AP_00679259829289197625",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.99,
+            "return_code": 0,
+            "sphere_reached": 4.1,
+            "success": true,
+            "total_spheres": 4.1,
             "warning_count": 0
           },
           "template_name": "Donkey Kong Country 3.yaml",
-          "timestamp": "2025-11-12T05:40:40.785014",
+          "timestamp": "2025-11-12T08:45:59.314496",
           "world_info": {
             "exporter_path": "exporter/games/dkc3.py",
             "game_logic_path": null,
@@ -9045,37 +9045,37 @@
         "7": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "donkey_kong_country_3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.43,
+            "processing_time_seconds": 5.18,
             "return_code": 0,
             "success": true,
             "warning_count": 2
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/dkc3/AP_35931773795037525048/AP_35931773795037525048_rules.json",
+            "size_bytes": 100826,
+            "size_mb": 0.1
           },
           "seed": "7",
           "seed_id": "AP_35931773795037525048",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.92,
+            "return_code": 0,
+            "sphere_reached": 4.1,
+            "success": true,
+            "total_spheres": 4.1,
             "warning_count": 0
           },
           "template_name": "Donkey Kong Country 3.yaml",
-          "timestamp": "2025-11-12T05:40:43.245113",
+          "timestamp": "2025-11-12T08:46:14.676557",
           "world_info": {
             "exporter_path": "exporter/games/dkc3.py",
             "game_logic_path": null,
@@ -9089,37 +9089,37 @@
         "8": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "donkey_kong_country_3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.45,
+            "processing_time_seconds": 4.92,
             "return_code": 0,
             "success": true,
             "warning_count": 2
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/dkc3/AP_20777137877808592492/AP_20777137877808592492_rules.json",
+            "size_bytes": 100823,
+            "size_mb": 0.1
           },
           "seed": "8",
           "seed_id": "AP_20777137877808592492",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.88,
+            "return_code": 0,
+            "sphere_reached": 4.1,
+            "success": true,
+            "total_spheres": 4.1,
             "warning_count": 0
           },
           "template_name": "Donkey Kong Country 3.yaml",
-          "timestamp": "2025-11-12T05:40:45.698784",
+          "timestamp": "2025-11-12T08:46:30.280592",
           "world_info": {
             "exporter_path": "exporter/games/dkc3.py",
             "game_logic_path": null,
@@ -9133,37 +9133,37 @@
         "9": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "donkey_kong_country_3",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.43,
+            "processing_time_seconds": 4.84,
             "return_code": 0,
             "success": true,
             "warning_count": 2
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/dkc3/AP_48205312626925217390/AP_48205312626925217390_rules.json",
+            "size_bytes": 100823,
+            "size_mb": 0.1
           },
           "seed": "9",
           "seed_id": "AP_48205312626925217390",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.26,
+            "return_code": 0,
+            "sphere_reached": 3.1,
+            "success": true,
+            "total_spheres": 3.1,
             "warning_count": 0
           },
           "template_name": "Donkey Kong Country 3.yaml",
-          "timestamp": "2025-11-12T05:40:48.168586",
+          "timestamp": "2025-11-12T08:46:45.580545",
           "world_info": {
             "exporter_path": "exporter/games/dkc3.py",
             "game_logic_path": null,
@@ -9176,16 +9176,16 @@
         }
       },
       "seed_range": "1-10",
-      "seeds_failed": 9,
-      "seeds_passed": 1,
+      "seeds_failed": 0,
+      "seeds_passed": 10,
       "stop_on_failure": true,
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 0.9
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_name": "Donkey Kong Country 3.yaml",
-      "timestamp": "2025-11-12T05:40:27.129630",
+      "timestamp": "2025-11-12T08:44:57.320074",
       "total_seeds_tested": 10
     },
     "Factorio.yaml": {
@@ -11484,44 +11484,44 @@
       "total_seeds_tested": 10
     },
     "Hylics 2.yaml": {
-      "consecutive_passes_before_failure": 0,
-      "first_failure_reason": "Test failed at sphere 0",
-      "first_failure_seed": 1,
+      "consecutive_passes_before_failure": 10,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "individual_results": {
         "1": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "hylics_2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.48,
+            "processing_time_seconds": 4.69,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/hylics2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 97906,
+            "size_mb": 0.09
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.65,
+            "return_code": 0,
+            "sphere_reached": 7.2,
+            "success": true,
+            "total_spheres": 7.2,
             "warning_count": 0
           },
           "template_name": "Hylics 2.yaml",
-          "timestamp": "2025-11-12T05:46:16.532554",
+          "timestamp": "2025-11-12T08:47:16.777013",
           "world_info": {
             "exporter_path": "exporter/games/hylics2.py",
             "game_logic_path": null,
@@ -11535,37 +11535,37 @@
         "10": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "hylics_2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.47,
+            "processing_time_seconds": 5.15,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/hylics2/AP_55941320597534372051/AP_55941320597534372051_rules.json",
+            "size_bytes": 97907,
+            "size_mb": 0.09
           },
           "seed": "10",
           "seed_id": "AP_55941320597534372051",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.88,
+            "return_code": 0,
+            "sphere_reached": 5.1,
+            "success": true,
+            "total_spheres": 5.1,
             "warning_count": 0
           },
           "template_name": "Hylics 2.yaml",
-          "timestamp": "2025-11-12T05:46:39.030985",
+          "timestamp": "2025-11-12T08:49:25.812398",
           "world_info": {
             "exporter_path": "exporter/games/hylics2.py",
             "game_logic_path": null,
@@ -11579,37 +11579,37 @@
         "2": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "hylics_2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.48,
+            "processing_time_seconds": 5.08,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/hylics2/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 97906,
+            "size_mb": 0.09
           },
           "seed": "2",
           "seed_id": "AP_01043188731678011336",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.75,
+            "return_code": 0,
+            "sphere_reached": 3.3,
+            "success": true,
+            "total_spheres": 3.3,
             "warning_count": 0
           },
           "template_name": "Hylics 2.yaml",
-          "timestamp": "2025-11-12T05:46:19.033138",
+          "timestamp": "2025-11-12T08:47:30.623785",
           "world_info": {
             "exporter_path": "exporter/games/hylics2.py",
             "game_logic_path": null,
@@ -11623,37 +11623,37 @@
         "3": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "hylics_2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.47,
+            "processing_time_seconds": 4.82,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/hylics2/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 97906,
+            "size_mb": 0.09
           },
           "seed": "3",
           "seed_id": "AP_84719271504320872445",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.77,
+            "return_code": 0,
+            "sphere_reached": 6.1,
+            "success": true,
+            "total_spheres": 6.1,
             "warning_count": 0
           },
           "template_name": "Hylics 2.yaml",
-          "timestamp": "2025-11-12T05:46:21.533735",
+          "timestamp": "2025-11-12T08:47:44.921075",
           "world_info": {
             "exporter_path": "exporter/games/hylics2.py",
             "game_logic_path": null,
@@ -11667,37 +11667,37 @@
         "4": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "hylics_2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.49,
+            "processing_time_seconds": 4.97,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/hylics2/AP_05594871498841892311/AP_05594871498841892311_rules.json",
+            "size_bytes": 97906,
+            "size_mb": 0.09
           },
           "seed": "4",
           "seed_id": "AP_05594871498841892311",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.72,
+            "return_code": 0,
+            "sphere_reached": 5.1,
+            "success": true,
+            "total_spheres": 5.1,
             "warning_count": 0
           },
           "template_name": "Hylics 2.yaml",
-          "timestamp": "2025-11-12T05:46:24.026457",
+          "timestamp": "2025-11-12T08:47:59.008219",
           "world_info": {
             "exporter_path": "exporter/games/hylics2.py",
             "game_logic_path": null,
@@ -11711,37 +11711,37 @@
         "5": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "hylics_2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.47,
+            "processing_time_seconds": 5.17,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/hylics2/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 97906,
+            "size_mb": 0.09
           },
           "seed": "5",
           "seed_id": "AP_96945849220684217413",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.16,
+            "return_code": 0,
+            "sphere_reached": 6.5,
+            "success": true,
+            "total_spheres": 6.5,
             "warning_count": 0
           },
           "template_name": "Hylics 2.yaml",
-          "timestamp": "2025-11-12T05:46:26.534084",
+          "timestamp": "2025-11-12T08:48:13.181148",
           "world_info": {
             "exporter_path": "exporter/games/hylics2.py",
             "game_logic_path": null,
@@ -11755,37 +11755,37 @@
         "6": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "hylics_2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.48,
+            "processing_time_seconds": 5.14,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/hylics2/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+            "size_bytes": 97906,
+            "size_mb": 0.09
           },
           "seed": "6",
           "seed_id": "AP_00679259829289197625",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.06,
+            "return_code": 0,
+            "sphere_reached": 6.1,
+            "success": true,
+            "total_spheres": 6.1,
             "warning_count": 0
           },
           "template_name": "Hylics 2.yaml",
-          "timestamp": "2025-11-12T05:46:29.023909",
+          "timestamp": "2025-11-12T08:48:28.020678",
           "world_info": {
             "exporter_path": "exporter/games/hylics2.py",
             "game_logic_path": null,
@@ -11799,37 +11799,37 @@
         "7": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "hylics_2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.47,
+            "processing_time_seconds": 5.15,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/hylics2/AP_35931773795037525048/AP_35931773795037525048_rules.json",
+            "size_bytes": 97906,
+            "size_mb": 0.09
           },
           "seed": "7",
           "seed_id": "AP_35931773795037525048",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.84,
+            "return_code": 0,
+            "sphere_reached": 7.2,
+            "success": true,
+            "total_spheres": 7.2,
             "warning_count": 0
           },
           "template_name": "Hylics 2.yaml",
-          "timestamp": "2025-11-12T05:46:31.523985",
+          "timestamp": "2025-11-12T08:48:42.749343",
           "world_info": {
             "exporter_path": "exporter/games/hylics2.py",
             "game_logic_path": null,
@@ -11843,37 +11843,37 @@
         "8": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "hylics_2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.47,
+            "processing_time_seconds": 4.79,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/hylics2/AP_20777137877808592492/AP_20777137877808592492_rules.json",
+            "size_bytes": 97906,
+            "size_mb": 0.09
           },
           "seed": "8",
           "seed_id": "AP_20777137877808592492",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.01,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
+            "total_spheres": 7.1,
             "warning_count": 0
           },
           "template_name": "Hylics 2.yaml",
-          "timestamp": "2025-11-12T05:46:34.012819",
+          "timestamp": "2025-11-12T08:48:57.238248",
           "world_info": {
             "exporter_path": "exporter/games/hylics2.py",
             "game_logic_path": null,
@@ -11887,37 +11887,37 @@
         "9": {
           "analysis": {
             "error_count": 0,
-            "success": false,
+            "success": true,
             "warning_count": 0
           },
           "game_name": "hylics_2",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.51,
+            "processing_time_seconds": 4.99,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
-            "path": null,
-            "size_bytes": 0,
-            "size_mb": 0.0
+            "path": "frontend/presets/hylics2/AP_48205312626925217390/AP_48205312626925217390_rules.json",
+            "size_bytes": 97906,
+            "size_mb": 0.09
           },
           "seed": "9",
           "seed_id": "AP_48205312626925217390",
           "spoiler_test": {
-            "error_count": 1,
-            "pass_fail": "unknown",
-            "processing_time_seconds": 0,
-            "return_code": null,
-            "sphere_reached": 0,
-            "success": false,
-            "total_spheres": 0,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.78,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
+            "total_spheres": 7.1,
             "warning_count": 0
           },
           "template_name": "Hylics 2.yaml",
-          "timestamp": "2025-11-12T05:46:36.506744",
+          "timestamp": "2025-11-12T08:49:11.520762",
           "world_info": {
             "exporter_path": "exporter/games/hylics2.py",
             "game_logic_path": null,
@@ -11930,16 +11930,16 @@
         }
       },
       "seed_range": "1-10",
-      "seeds_failed": 10,
-      "seeds_passed": 0,
+      "seeds_failed": 0,
+      "seeds_passed": 10,
       "stop_on_failure": true,
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 1.0
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_name": "Hylics 2.yaml",
-      "timestamp": "2025-11-12T05:46:16.513322",
+      "timestamp": "2025-11-12T08:47:16.708227",
       "total_seeds_tested": 10
     },
     "Inscryption.yaml": {
@@ -12416,7 +12416,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.78,
+            "processing_time_seconds": 5.09,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -12439,7 +12439,7 @@
             "warning_count": 0
           },
           "template_name": "Jak and Daxter The Precursor Legacy.yaml",
-          "timestamp": "2025-11-12T05:47:19.031776",
+          "timestamp": "2025-11-12T08:49:40.505063",
           "world_info": {
             "exporter_path": "exporter/games/jakanddaxter.py",
             "game_logic_path": null,
@@ -12857,7 +12857,7 @@
         "failure_rate": 1.0
       },
       "template_name": "Jak and Daxter The Precursor Legacy.yaml",
-      "timestamp": "2025-11-12T05:47:19.001024",
+      "timestamp": "2025-11-12T08:49:40.432907",
       "total_seeds_tested": 10
     },
     "Kingdom Hearts 2.yaml": {

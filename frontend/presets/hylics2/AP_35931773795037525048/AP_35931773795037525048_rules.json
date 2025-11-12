@@ -1,9 +1,9 @@
 {
   "schema_version": 3,
   "game_name": "Hylics 2",
-  "game_directory": "hylics_2",
+  "game_directory": "hylics2",
   "archipelago_version": "0.6.4",
-  "generation_seed": 1,
+  "generation_seed": 7,
   "player_names": {
     "1": "Player1"
   },
@@ -158,7 +158,7 @@
               "value": true
             },
             "item": {
-              "name": "BURRITO",
+              "name": "SINGLE GLOVE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -172,9 +172,9 @@
               "value": true
             },
             "item": {
-              "name": "CLOUD GERM",
+              "name": "PAPER CUP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -186,7 +186,7 @@
               "value": true
             },
             "item": {
-              "name": "COOKIE",
+              "name": "MUSCLE APPLIQUE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -201,9 +201,9 @@
               "args": []
             },
             "item": {
-              "name": "BANANA",
+              "name": "WORM ROOM KEY",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -238,7 +238,7 @@
               "value": true
             },
             "item": {
-              "name": "CLICKER",
+              "name": "SKULL BOMB",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -252,7 +252,7 @@
               "value": true
             },
             "item": {
-              "name": "MULTI STEM CELL",
+              "name": "MULTI SOUL SPONGE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -266,7 +266,7 @@
               "value": true
             },
             "item": {
-              "name": "MULTI SOUL SPONGE",
+              "name": "FADED PONCHO",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -280,7 +280,7 @@
               "value": true
             },
             "item": {
-              "name": "JUICE",
+              "name": "MULTI SOUL SPONGE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -294,7 +294,7 @@
               "value": true
             },
             "item": {
-              "name": "BANANA",
+              "name": "BURRITO",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -308,7 +308,7 @@
               "value": true
             },
             "item": {
-              "name": "SINGLE GLOVE",
+              "name": "100 Bones",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -548,9 +548,9 @@
               "value": true
             },
             "item": {
-              "name": "UPPER HOUSE KEY",
+              "name": "MULTI STEM CELL",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -562,7 +562,7 @@
               "value": true
             },
             "item": {
-              "name": "BOOTS",
+              "name": "BANANA",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -576,9 +576,9 @@
               "value": true
             },
             "item": {
-              "name": "WORM ROOM KEY",
+              "name": "RANCHER PONCHO",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -590,7 +590,7 @@
               "value": true
             },
             "item": {
-              "name": "BURRITO",
+              "name": "BANANA",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -605,7 +605,7 @@
               "args": []
             },
             "item": {
-              "name": "FATE SANDBOX",
+              "name": "BURRITO",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -619,9 +619,9 @@
               "value": true
             },
             "item": {
-              "name": "MULTI-JUICE",
+              "name": "DEEP KEY",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -634,7 +634,7 @@
               "args": []
             },
             "item": {
-              "name": "MUSCLE APPLIQUE",
+              "name": "COFFEE CHIP",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -648,7 +648,7 @@
               "value": true
             },
             "item": {
-              "name": "CLOUD GERM",
+              "name": "LONG GLOVES",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -662,7 +662,7 @@
               "value": true
             },
             "item": {
-              "name": "BANANA",
+              "name": "MUSCLE APPLIQUE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -677,7 +677,7 @@
               "args": []
             },
             "item": {
-              "name": "SKULL BOMB",
+              "name": "TOWER KEY",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -692,9 +692,9 @@
               "args": []
             },
             "item": {
-              "name": "BOMBO - GENESIS",
+              "name": "DOCK KEY",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -706,7 +706,7 @@
               "value": true
             },
             "item": {
-              "name": "STEM CELL",
+              "name": "LONG GLOVES",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -761,7 +761,7 @@
               ]
             },
             "item": {
-              "name": "CLOUD GERM",
+              "name": "BURRITO",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -831,7 +831,7 @@
               "args": []
             },
             "item": {
-              "name": "TARP",
+              "name": "BANANA",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -861,9 +861,9 @@
               "args": []
             },
             "item": {
-              "name": "SAGE TOKEN",
+              "name": "MEAT",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -876,9 +876,9 @@
               "args": []
             },
             "item": {
-              "name": "MATERIEL MITTS",
+              "name": "HOUSE KEY",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -891,7 +891,7 @@
               "args": []
             },
             "item": {
-              "name": "BURRITO",
+              "name": "COFFEE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -928,9 +928,9 @@
               "value": true
             },
             "item": {
-              "name": "DUBIOUS BERRY",
+              "name": "CLICKER",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -942,7 +942,7 @@
               "value": true
             },
             "item": {
-              "name": "CUPCAKE",
+              "name": "BANANA",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -956,7 +956,7 @@
               "value": true
             },
             "item": {
-              "name": "LONG GLOVES",
+              "name": "BANANA",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -970,9 +970,9 @@
               "value": true
             },
             "item": {
-              "name": "JAIL KEY",
+              "name": "LOOPED DOME",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -985,7 +985,7 @@
               "args": []
             },
             "item": {
-              "name": "TARP",
+              "name": "MULTI SOUL SPONGE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1000,7 +1000,7 @@
               "args": []
             },
             "item": {
-              "name": "BANANA",
+              "name": "CUPCAKE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1025,7 +1025,7 @@
               ]
             },
             "item": {
-              "name": "LINK MOLLUSC",
+              "name": "MUSCLE APPLIQUE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1040,9 +1040,9 @@
               "args": []
             },
             "item": {
-              "name": "BANANA",
+              "name": "CHARGE UP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1055,7 +1055,7 @@
               "args": []
             },
             "item": {
-              "name": "SOUL CRISPER",
+              "name": "TIME SIGIL",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1080,9 +1080,9 @@
               ]
             },
             "item": {
-              "name": "BURRITO",
+              "name": "UPPER CHAMBER KEY",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1095,7 +1095,7 @@
               "args": []
             },
             "item": {
-              "name": "TENDRIL HAND",
+              "name": "CUPCAKE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1110,9 +1110,9 @@
               "args": []
             },
             "item": {
-              "name": "PAPER CUP",
+              "name": "BURRITO",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1125,7 +1125,7 @@
               "args": []
             },
             "item": {
-              "name": "50 Bones",
+              "name": "BANANA",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1140,7 +1140,7 @@
               "args": []
             },
             "item": {
-              "name": "SOUL SPONGE",
+              "name": "BANANA",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1155,7 +1155,7 @@
               "args": []
             },
             "item": {
-              "name": "BURRITO",
+              "name": "CLOUD GERM",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1170,7 +1170,7 @@
               "args": []
             },
             "item": {
-              "name": "FADED PONCHO",
+              "name": "TENDRIL HAND",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1185,9 +1185,9 @@
               "args": []
             },
             "item": {
-              "name": "PAPER CUP",
+              "name": "MUSCLE APPLIQUE",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1200,7 +1200,7 @@
               "args": []
             },
             "item": {
-              "name": "LOOPED DOME",
+              "name": "CLOUD GERM",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1215,9 +1215,9 @@
               "args": []
             },
             "item": {
-              "name": "PAPER CUP",
+              "name": "SOUL SPONGE",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1230,7 +1230,7 @@
               "args": []
             },
             "item": {
-              "name": "ORGAN FORT",
+              "name": "MULTI STEM CELL",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1245,7 +1245,7 @@
               "args": []
             },
             "item": {
-              "name": "POOLWINE",
+              "name": "MEAT",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1260,7 +1260,7 @@
               "args": []
             },
             "item": {
-              "name": "NEMATODE INTERFACE",
+              "name": "SOUL SPONGE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1275,7 +1275,7 @@
               "args": []
             },
             "item": {
-              "name": "CONVERTER WORM",
+              "name": "COOKIE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1300,7 +1300,7 @@
               ]
             },
             "item": {
-              "name": "BANANA",
+              "name": "STEM CELL",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1330,9 +1330,9 @@
               "args": []
             },
             "item": {
-              "name": "CHARGE UP",
+              "name": "BANANA",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -1359,7 +1359,7 @@
               "value": true
             },
             "item": {
-              "name": "LONG GLOVES",
+              "name": "LINK MOLLUSC",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1373,9 +1373,9 @@
               "value": true
             },
             "item": {
-              "name": "BANANA",
+              "name": "PAPER CUP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1387,7 +1387,7 @@
               "value": true
             },
             "item": {
-              "name": "TELEDENUDATE",
+              "name": "JUICE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1401,9 +1401,9 @@
               "value": true
             },
             "item": {
-              "name": "SAGE TOKEN",
+              "name": "MULTI-JUICE",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1415,7 +1415,7 @@
               "value": true
             },
             "item": {
-              "name": "VESSEL ROOM KEY",
+              "name": "CAVE KEY",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1429,7 +1429,7 @@
               "value": true
             },
             "item": {
-              "name": "MULTI STEM CELL",
+              "name": "MULTI SOUL SPONGE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1443,7 +1443,7 @@
               "value": true
             },
             "item": {
-              "name": "BURRITO",
+              "name": "MULTI-JUICE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1480,9 +1480,9 @@
               "value": true
             },
             "item": {
-              "name": "UPPER CHAMBER KEY",
+              "name": "MULTI STEM CELL",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -1509,9 +1509,9 @@
               "value": true
             },
             "item": {
-              "name": "PEPTIDE BODKINS",
+              "name": "PNEUMATOPHORE",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1537,7 +1537,7 @@
               "value": true
             },
             "item": {
-              "name": "SOUL SPONGE",
+              "name": "BOTTOMLESS JUICE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1551,7 +1551,7 @@
               "value": true
             },
             "item": {
-              "name": "BURRITO",
+              "name": "SOUL SPONGE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1565,7 +1565,7 @@
               "value": true
             },
             "item": {
-              "name": "BANANA",
+              "name": "CUPCAKE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1579,7 +1579,7 @@
               "value": true
             },
             "item": {
-              "name": "MUSCLE APPLIQUE",
+              "name": "MULTI-JUICE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1662,7 +1662,7 @@
               "value": true
             },
             "item": {
-              "name": "PLEATHER GAGE",
+              "name": "CLOUD GERM",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1699,9 +1699,9 @@
               "value": true
             },
             "item": {
-              "name": "PNEUMATOPHORE",
+              "name": "BANANA",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1714,7 +1714,7 @@
               "args": []
             },
             "item": {
-              "name": "MULTI SOUL SPONGE",
+              "name": "BURRITO",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1729,7 +1729,7 @@
               "args": []
             },
             "item": {
-              "name": "LONG GLOVES",
+              "name": "TARP",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1744,7 +1744,7 @@
               "args": []
             },
             "item": {
-              "name": "MULTI SOUL SPONGE",
+              "name": "MULTI-JUICE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1774,7 +1774,7 @@
               "args": []
             },
             "item": {
-              "name": "COOKIE",
+              "name": "MULTI SOUL SPONGE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1799,7 +1799,7 @@
               ]
             },
             "item": {
-              "name": "STEM CELL",
+              "name": "BURRITO",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1824,7 +1824,7 @@
               ]
             },
             "item": {
-              "name": "TIME SIGIL",
+              "name": "MUSCLE APPLIQUE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1849,7 +1849,7 @@
               ]
             },
             "item": {
-              "name": "MULTI SOUL SPONGE",
+              "name": "PSYCHIC KNUCKLE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1874,7 +1874,7 @@
               ]
             },
             "item": {
-              "name": "MULTI-JUICE",
+              "name": "BURRITO",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1899,7 +1899,7 @@
               ]
             },
             "item": {
-              "name": "MUSCLE APPLIQUE",
+              "name": "SOUL SPONGE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1924,7 +1924,7 @@
               ]
             },
             "item": {
-              "name": "CUPCAKE",
+              "name": "CURSED GLOVES",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1949,7 +1949,7 @@
               ]
             },
             "item": {
-              "name": "MULTI STEM CELL",
+              "name": "SOUL SPONGE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1974,7 +1974,7 @@
               ]
             },
             "item": {
-              "name": "BURRITO",
+              "name": "LOOPED DOME",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2012,7 +2012,7 @@
               "value": true
             },
             "item": {
-              "name": "MULTI SOUL SPONGE",
+              "name": "BANANA",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2027,9 +2027,9 @@
               "args": []
             },
             "item": {
-              "name": "TOWER KEY",
+              "name": "MUSCLE APPLIQUE",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2042,7 +2042,7 @@
               "args": []
             },
             "item": {
-              "name": "POROMER BLEB",
+              "name": "BOMBO - GENESIS",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2057,7 +2057,7 @@
               "args": []
             },
             "item": {
-              "name": "PSYCHIC KNUCKLE",
+              "name": "LONG GLOVES",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2086,9 +2086,9 @@
               "args": []
             },
             "item": {
-              "name": "LONG GLOVES",
+              "name": "PADDLE",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -2137,7 +2137,7 @@
               "value": true
             },
             "item": {
-              "name": "TELESCOPIC SLEEVE",
+              "name": "MULTI SOUL SPONGE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2151,9 +2151,9 @@
               "value": true
             },
             "item": {
-              "name": "MUSCLE APPLIQUE",
+              "name": "BRIDGE KEY",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2165,7 +2165,7 @@
               "value": true
             },
             "item": {
-              "name": "JUICE",
+              "name": "BRAIN DIGITS",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2179,9 +2179,9 @@
               "value": true
             },
             "item": {
-              "name": "CUPCAKE",
+              "name": "SAGE TOKEN",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2193,7 +2193,7 @@
               "value": true
             },
             "item": {
-              "name": "MULTI SOUL SPONGE",
+              "name": "BURRITO",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2207,7 +2207,7 @@
               "value": true
             },
             "item": {
-              "name": "MEAT",
+              "name": "DUBIOUS BERRY",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2221,7 +2221,7 @@
               "value": true
             },
             "item": {
-              "name": "PADDLE",
+              "name": "PAPER CUP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2235,7 +2235,7 @@
               "value": true
             },
             "item": {
-              "name": "100 Bones",
+              "name": "SOUL CRISPER",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2249,9 +2249,9 @@
               "value": true
             },
             "item": {
-              "name": "SAGE TOKEN",
+              "name": "JUMPSUIT",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2263,7 +2263,7 @@
               "value": true
             },
             "item": {
-              "name": "MULTI-JUICE",
+              "name": "TARP",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2277,9 +2277,9 @@
               "value": true
             },
             "item": {
-              "name": "DEEP KEY",
+              "name": "BOOTS",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2291,9 +2291,9 @@
               "value": true
             },
             "item": {
-              "name": "CAVE KEY",
+              "name": "TELEDENUDATE",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2305,9 +2305,9 @@
               "value": true
             },
             "item": {
-              "name": "BANANA",
+              "name": "UPPER HOUSE KEY",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2319,7 +2319,7 @@
               "value": true
             },
             "item": {
-              "name": "BANANA",
+              "name": "BURRITO",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2344,7 +2344,7 @@
               ]
             },
             "item": {
-              "name": "BURRITO",
+              "name": "MULTI-COFFEE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2359,9 +2359,9 @@
               "args": []
             },
             "item": {
-              "name": "DOCK KEY",
+              "name": "JUICE",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2374,9 +2374,9 @@
               "args": []
             },
             "item": {
-              "name": "BRIDGE KEY",
+              "name": "50 Bones",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2389,7 +2389,7 @@
               "args": []
             },
             "item": {
-              "name": "BRAIN DIGITS",
+              "name": "BURRITO",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2404,7 +2404,7 @@
               "args": []
             },
             "item": {
-              "name": "MULTI-JUICE",
+              "name": "BANANA",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2419,9 +2419,9 @@
               "args": []
             },
             "item": {
-              "name": "COFFEE",
+              "name": "SAGE TOKEN",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2434,7 +2434,7 @@
               "args": []
             },
             "item": {
-              "name": "BURRITO",
+              "name": "SOUL SPONGE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2463,7 +2463,7 @@
               "value": true
             },
             "item": {
-              "name": "MEAT",
+              "name": "POROMER BLEB",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2477,7 +2477,7 @@
               "value": true
             },
             "item": {
-              "name": "JUMPSUIT",
+              "name": "ORGAN FORT",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2491,7 +2491,7 @@
               "value": true
             },
             "item": {
-              "name": "RANCHER PONCHO",
+              "name": "COOKIE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2506,9 +2506,9 @@
               "args": []
             },
             "item": {
-              "name": "BANANA",
+              "name": "JAIL KEY",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -2543,7 +2543,7 @@
               "value": true
             },
             "item": {
-              "name": "MUSCLE APPLIQUE",
+              "name": "BANANA",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2557,7 +2557,7 @@
               "value": true
             },
             "item": {
-              "name": "MULTI-COFFEE",
+              "name": "JUICE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2571,9 +2571,9 @@
               "value": true
             },
             "item": {
-              "name": "JUICE",
+              "name": "VESSEL ROOM KEY",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2585,7 +2585,7 @@
               "value": true
             },
             "item": {
-              "name": "BOTTOMLESS JUICE",
+              "name": "STEM CELL",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2599,7 +2599,7 @@
               "value": true
             },
             "item": {
-              "name": "SOUL SPONGE",
+              "name": "TELESCOPIC SLEEVE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2614,7 +2614,7 @@
               "args": []
             },
             "item": {
-              "name": "BANANA",
+              "name": "NEMATODE INTERFACE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2629,7 +2629,7 @@
               "args": []
             },
             "item": {
-              "name": "JUICE",
+              "name": "BURRITO",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2644,9 +2644,9 @@
               "args": []
             },
             "item": {
-              "name": "CURSED GLOVES",
+              "name": "SAGE TOKEN",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2659,7 +2659,7 @@
               "args": []
             },
             "item": {
-              "name": "MUSCLE APPLIQUE",
+              "name": "LONG GLOVES",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2674,7 +2674,7 @@
               "args": []
             },
             "item": {
-              "name": "BURRITO",
+              "name": "FATE SANDBOX",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2689,7 +2689,7 @@
               "args": []
             },
             "item": {
-              "name": "MUSCLE APPLIQUE",
+              "name": "PEPTIDE BODKINS",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2704,9 +2704,9 @@
               "args": []
             },
             "item": {
-              "name": "HOUSE KEY",
+              "name": "PLEATHER GAGE",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2719,7 +2719,7 @@
               "args": []
             },
             "item": {
-              "name": "SOUL SPONGE",
+              "name": "JUICE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2734,7 +2734,7 @@
               "args": []
             },
             "item": {
-              "name": "SOUL SPONGE",
+              "name": "JUICE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2749,7 +2749,7 @@
               "args": []
             },
             "item": {
-              "name": "JUICE",
+              "name": "CONVERTER WORM",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2764,7 +2764,7 @@
               "args": []
             },
             "item": {
-              "name": "LOOPED DOME",
+              "name": "MATERIEL MITTS",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2779,7 +2779,7 @@
               "args": []
             },
             "item": {
-              "name": "COFFEE CHIP",
+              "name": "POOLWINE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2794,7 +2794,7 @@
               "args": []
             },
             "item": {
-              "name": "SOUL SPONGE",
+              "name": "MUSCLE APPLIQUE",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3558,32 +3558,6 @@
         "type": null,
         "max_count": 4
       },
-      "100 Bones": {
-        "name": "100 Bones",
-        "id": 200686,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "50 Bones": {
-        "name": "50 Bones",
-        "id": 200687,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
       "POROMER BLEB": {
         "name": "POROMER BLEB",
         "id": 200678,
@@ -3688,6 +3662,32 @@
         "type": null,
         "max_count": 2
       },
+      "100 Bones": {
+        "name": "100 Bones",
+        "id": 200686,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "50 Bones": {
+        "name": "50 Bones",
+        "id": 200687,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
       "NEMATODE INTERFACE": {
         "name": "NEMATODE INTERFACE",
         "id": 200688,
@@ -3751,6 +3751,19 @@
         "trap": false,
         "event": false,
         "type": null,
+        "max_count": 1
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
         "max_count": 1
       }
     }

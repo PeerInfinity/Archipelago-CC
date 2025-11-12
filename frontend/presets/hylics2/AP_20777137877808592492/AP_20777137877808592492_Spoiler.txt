@@ -1,0 +1,206 @@
+﻿Archipelago Version 0.6.4  -  Seed: 8
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Hylics 2
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Shuffle Party Members:           No
+Shuffle Gestures:                Anywhere
+Shuffle Red Medallions:          No
+Start Location:                  Waynehouse
+Extra Items in Logic:            Yes
+Death Link:                      No
+
+
+Locations:
+
+Waynehouse: Toilet: TIME SIGIL
+Waynehouse: Basement Pot 1: MUSCLE APPLIQUE
+Waynehouse: Basement Pot 2: UPPER HOUSE KEY
+Waynehouse: Basement Pot 3: BOMBO - GENESIS
+Waynehouse: Sarcophagus: BURRITO
+Afterlife: Mangled Wayne: MULTI SOUL SPONGE
+Afterlife: Jar near Mangled Wayne: RANCHER PONCHO
+Afterlife: Jar under Pool: DOCK KEY
+New Muldul: Shop Ceiling Pot 1: CONVERTER WORM
+New Muldul: Shop Ceiling Pot 2: BANANA
+New Muldul: Flag Banana: BANANA
+New Muldul: Pot near Vault: COFFEE
+New Muldul: Pot above Vault: JAIL KEY
+New Muldul: Underground Pot: COOKIE
+New Muldul: Underground Chest: HOUSE KEY
+New Muldul: Juice Trade: WORM ROOM KEY
+New Muldul: Basement Suitcase: PAPER CUP
+New Muldul: Upper House Chest 1: PADDLE
+New Muldul: Upper House Chest 2: BURRITO
+New Muldul: Talk to Pongorma: MUSCLE APPLIQUE
+New Muldul: Rescued Blerol 1: CURSED GLOVES
+New Muldul: Rescued Blerol 2: PAPER CUP
+New Muldul: Vault Left Chest: NEMATODE INTERFACE
+New Muldul: Vault Right Chest: BANANA
+New Muldul: Vault Bomb: MUSCLE APPLIQUE
+Viewax's Edifice: Fountain Banana: MULTI SOUL SPONGE
+Viewax's Edifice: Dedusmuln's Suitcase: BANANA
+Viewax's Edifice: Dedusmuln's Campfire: TELEDENUDATE
+Viewax's Edifice: Talk to Dedusmuln: TELESCOPIC SLEEVE
+Viewax's Edifice: Canopic Jar: BANANA
+Viewax's Edifice: Cave Sarcophagus: TARP
+Viewax's Edifice: Shielded Key: MEAT
+Viewax's Edifice: Tower Pot: LOOPED DOME
+Viewax's Edifice: Tower Jar: MULTI STEM CELL
+Viewax's Edifice: Tower Chest: BURRITO
+Viewax's Edifice: Sage Fridge: JUICE
+Viewax's Edifice: Sage Item 1: STEM CELL
+Viewax's Edifice: Sage Item 2: 50 Bones
+Viewax's Edifice: Viewax Pot: BURRITO
+Viewax's Edifice: Defeat Viewax: LINK MOLLUSC
+Arcade 1: Key: TOWER KEY
+Arcade 1: Coin Dash: SINGLE GLOVE
+Arcade 1: Burrito Alcove 1: JUICE
+Arcade 1: Burrito Alcove 2: SOUL SPONGE
+Arcade 1: Behind Spikes Banana: LONG GLOVES
+Arcade 1: Pyramid Banana: MULTI-JUICE
+Arcade 1: Moving Platforms Muscle Applique: SOUL SPONGE
+Arcade 1: Bed Banana: TENDRIL HAND
+Airship: Talk to Somsnosa: BANANA
+Arcade Island: Shielded Key: TARP
+Arcade 2: Flying Machine Banana: MUSCLE APPLIQUE
+Arcade 2: Paper Cup Detour: BANANA
+Arcade 2: Peak Muscle Applique: STEM CELL
+Arcade 2: Double Banana 1: BANANA
+Arcade 2: Double Banana 2: MATERIEL MITTS
+Arcade 2: Cave Burrito: BURRITO
+Juice Ranch: Juice 1: JUICE
+Juice Ranch: Juice 2: LOOPED DOME
+Juice Ranch: Juice 3: BURRITO
+Juice Ranch: Ledge Rancher: BANANA
+Juice Ranch: Battle with Somsnosa: BURRITO
+Juice Ranch: Fridge: SKULL BOMB
+Worm Pod: Key: PLEATHER GAGE
+Foglast: West Sarcophagus: PSYCHIC KNUCKLE
+Foglast: Underground Sarcophagus: DEEP KEY
+Foglast: Shielded Key: JUICE
+Foglast: Buy Clicker: MULTI STEM CELL
+Foglast: Shielded Chest: JUICE
+Foglast: Cave Fridge: POROMER BLEB
+Foglast: Roof Sarcophagus: BOOTS
+Foglast: Under Lair Sarcophagus 1: COOKIE
+Foglast: Under Lair Sarcophagus 2: BANANA
+Foglast: Under Lair Sarcophagus 3: MUSCLE APPLIQUE
+Foglast: Sage Sarcophagus: MULTI-COFFEE
+Foglast: Sage Item 1: SOUL SPONGE
+Foglast: Sage Item 2: MULTI SOUL SPONGE
+Drill Castle: Ledge Banana: CHARGE UP
+Drill Castle: Island Banana: JUICE
+Drill Castle: Island Pot: SOUL CRISPER
+Drill Castle: Cave Sarcophagus: BURRITO
+Drill Castle: Roof Banana: CLOUD GERM
+Sage Labyrinth: 1F Chest Near Fountain: SAGE TOKEN
+Sage Labyrinth: 1F Hidden Sarcophagus: SAGE TOKEN
+Sage Labyrinth: 1F Four Statues Chest 1: UPPER CHAMBER KEY
+Sage Labyrinth: 1F Four Statues Chest 2: SOUL SPONGE
+Sage Labyrinth: B1 Double Chest 1: MULTI STEM CELL
+Sage Labyrinth: B1 Double Chest 2: LONG GLOVES
+Sage Labyrinth: B1 Single Chest: CUPCAKE
+Sage Labyrinth: B1 Enemy Chest: CUPCAKE
+Sage Labyrinth: B1 Hidden Sarcophagus: MEAT
+Sage Labyrinth: B1 Hole Chest: CLOUD GERM
+Sage Labyrinth: B2 Hidden Sarcophagus 1: COFFEE CHIP
+Sage Labyrinth: B2 Hidden Sarcophagus 2: MULTI SOUL SPONGE
+Sage Labyrinth: 2F Sarcophagus: FATE SANDBOX
+Sage Labyrinth: Boss Secret Chest 1: SOUL SPONGE
+Sage Labyrinth: Boss Secret Chest 2: ORGAN FORT
+Sage Labyrinth: Motor Hunter Sarcophagus: SAGE TOKEN
+Sage Labyrinth: Sage Item 1: SOUL SPONGE
+Sage Labyrinth: Sage Item 2: PEPTIDE BODKINS
+Sage Labyrinth: Sage Left Arm: BRIDGE KEY
+Sage Labyrinth: Sage Right Arm: BANANA
+Sage Labyrinth: Sage Left Leg: BANANA
+Sage Labyrinth: Sage Right Leg: LONG GLOVES
+Sage Airship: Bottom Level Pot: BANANA
+Sage Airship: Flesh Pot: MULTI-JUICE
+Sage Airship: Top Jar: CLICKER
+Hylemxylem: Jar: PAPER CUP
+Hylemxylem: Lower Reservoir Key: LONG GLOVES
+Hylemxylem: Fountain Banana: MULTI SOUL SPONGE
+Hylemxylem: East Island Banana: MUSCLE APPLIQUE
+Hylemxylem: East Island Chest: DUBIOUS BERRY
+Hylemxylem: Upper Chamber Banana: CUPCAKE
+Hylemxylem: Across Upper Reservoir Chest: FADED PONCHO
+Hylemxylem: Drained Lower Reservoir Chest: BURRITO
+Hylemxylem: Drained Lower Reservoir Burrito 1: DUCTILE HABIT
+Hylemxylem: Drained Lower Reservoir Burrito 2: BOTTOMLESS JUICE
+Hylemxylem: Lower Reservoir Hole Pot 1: MULTI-JUICE
+Hylemxylem: Lower Reservoir Hole Pot 2: BANANA
+Hylemxylem: Lower Reservoir Hole Pot 3: MUSCLE APPLIQUE
+Hylemxylem: Lower Reservoir Hole Sarcophagus: BURRITO
+Hylemxylem: Drained Upper Reservoir Burrito 1: LONG GLOVES
+Hylemxylem: Drained Upper Reservoir Burrito 2: MULTI-JUICE
+Hylemxylem: Drained Upper Reservoir Burrito 3: VESSEL ROOM KEY
+Hylemxylem: Upper Reservoir Hole Key: CAVE KEY
+Waynehouse: TV: MULTI SOUL SPONGE
+Afterlife: TV: BURRITO
+New Muldul: TV: 100 Bones
+Viewax's Edifice: TV: JUMPSUIT
+TV Island: TV: COOKIE
+Juice Ranch: TV: CLOUD GERM
+Foglast: TV: POOLWINE
+Drill Castle: TV: BRAIN DIGITS
+Sage Airship: TV: PNEUMATOPHORE
+Defeat Gibby: Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Afterlife: Jar under Pool: DOCK KEY
+  Drill Castle: Ledge Banana: CHARGE UP
+  New Muldul: Basement Suitcase: PAPER CUP
+  New Muldul: Juice Trade: WORM ROOM KEY
+  Waynehouse: Basement Pot 2: UPPER HOUSE KEY
+}
+2: {
+  Juice Ranch: Fridge: SKULL BOMB
+  New Muldul: Upper House Chest 1: PADDLE
+}
+3: {
+  Sage Airship: Top Jar: CLICKER
+  Sage Labyrinth: 1F Chest Near Fountain: SAGE TOKEN
+  Sage Labyrinth: 1F Four Statues Chest 1: UPPER CHAMBER KEY
+  Sage Labyrinth: 1F Hidden Sarcophagus: SAGE TOKEN
+  Sage Labyrinth: Motor Hunter Sarcophagus: SAGE TOKEN
+}
+4: {
+  Sage Airship: TV: PNEUMATOPHORE
+}
+5: {
+  Arcade 1: Key: TOWER KEY
+  Foglast: Underground Sarcophagus: DEEP KEY
+  New Muldul: Pot above Vault: JAIL KEY
+  New Muldul: Underground Chest: HOUSE KEY
+}
+6: {
+  New Muldul: Rescued Blerol 2: PAPER CUP
+  Sage Labyrinth: Sage Left Arm: BRIDGE KEY
+}
+7: {
+  Hylemxylem: Drained Upper Reservoir Burrito 3: VESSEL ROOM KEY
+  Hylemxylem: Jar: PAPER CUP
+  Hylemxylem: Upper Reservoir Hole Key: CAVE KEY
+}
+8: {
+  Defeat Gibby: Victory
+}
