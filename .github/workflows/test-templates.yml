@@ -244,20 +244,26 @@ jobs:
 
                       for template, result in results.items():
                           if isinstance(result, dict):
-                              # Check spoiler test
-                              if result.get('spoiler_test', {}).get('pass_fail') == 'failed':
-                                  print(f'❌ {template} failed spoiler test')
-                                  failed = True
-                              # Check multiplayer test
-                              elif not result.get('multiplayer_test', {}).get('success', True):
-                                  print(f'❌ {template} failed multiplayer test')
-                                  failed = True
-                              # Check multiworld test
-                              elif not result.get('multiworld_test', {}).get('success', True):
-                                  print(f'❌ {template} failed multiworld test')
-                                  failed = True
-                              # Check generation
-                              elif not result.get('generation', {}).get('success', True):
+                              # Check spoiler test (only if it exists)
+                              if 'spoiler_test' in result:
+                                  if result['spoiler_test'].get('pass_fail') == 'failed':
+                                      print(f'❌ {template} failed spoiler test')
+                                      failed = True
+
+                              # Check multiplayer test (only if it exists)
+                              if 'multiplayer_test' in result:
+                                  if not result['multiplayer_test'].get('success', False):
+                                      print(f'❌ {template} failed multiplayer test')
+                                      failed = True
+
+                              # Check multiworld test (only if it exists)
+                              if 'multiworld_test' in result:
+                                  if not result['multiworld_test'].get('success', False):
+                                      print(f'❌ {template} failed multiworld test')
+                                      failed = True
+
+                              # Check generation (always check this)
+                              if not result.get('generation', {}).get('success', False):
                                   print(f'❌ {template} failed generation')
                                   failed = True
 

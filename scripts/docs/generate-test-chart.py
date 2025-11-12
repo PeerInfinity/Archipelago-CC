@@ -763,7 +763,8 @@ def main():
 
     args = parser.parse_args()
 
-    project_root = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    # Script is at scripts/docs/generate-test-chart.py, go up 3 levels to reach project root
+    project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
     # Single file mode
     if args.input_file or args.output_file:
