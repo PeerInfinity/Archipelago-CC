@@ -4,31 +4,20 @@ This file tracks outstanding helper function issues that need to be fixed.
 
 ## Issues
 
-### 1. RUPEES Currency Tracking
+### 1. Forest Heart Piece / Write's House Access
 
 **Status**: Needs Investigation
 
-**Description**: The rule engine needs to handle "RUPEES" as a cumulative counter, not a regular item. Regions like "Fishing Game Heart Piece" and "Trendy Game" require RUPEES >= 20 and RUPEES >= 50 respectively. The issue is that "RUPEES" is computed from collected rupee items (50 Rupees, 100 Rupees, etc.), not a direct item.
+**Description**: Test fails at Sphere 1.4. Regions related to "Forest Heart Piece" and "Write" areas are not accessible.
 
-**Location**: Failed at Sphere 1.3
+**Location**: Failed at Sphere 1.4
 
 **Test Output**:
 ```
-Locations accessible in LOG but NOT in STATE: Fishing Game Heart Piece (Mabe Village), Trendy Game (Mabe Village)
-Region Fishing Game Heart Piece (Mabe Village) is not reachable
-Region Trendy Game (Mabe Village) is not reachable
+Regions accessible in LOG but NOT in STATE: Forest Heart Piece, Graveyard, No Name 59, No Name 60, No Name 61, Outside Write's House, Write Cave West (Goponga Swamp), Write's Cave, Write's House
 ```
 
-**Sphere Log Shows**:
-```json
-"sphere_index": "1.3",
-"new_inventory_details": {
-  "base_items": {"50 Rupees": 1},
-  "resolved_items": {"50 Rupees": 1, "RUPEES": 50}
-}
-```
-
-**Possible Solutions**:
-1. Create a LADX helper function to compute RUPEES from collected rupee items
-2. Add special handling in the rule engine for cumulative items
-3. Export RUPEES as a progressive item with appropriate mapping
+**Next Steps**:
+- Check what item was collected in sphere 1.4
+- Examine Forest Heart Piece access requirements (likely ROOSTER, FEATHER, HOOKSHOT, or BOOMERANG)
+- Investigate if this is another exporter issue with LADXR condition types

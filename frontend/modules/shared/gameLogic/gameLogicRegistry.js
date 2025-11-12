@@ -241,6 +241,7 @@ import { inscryptionStateModule } from './inscryption/inscryptionLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
 import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
 import * as kdl3Logic from './kdl3/kdl3Logic.js';
+import * as ladxLogic from './ladx/ladxLogic.js';
 import * as landstalkerLogic from './landstalker/landstalkerLogic.js';
 import { landstalkerStateModule } from './landstalker/landstalkerLogic.js';
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
@@ -381,6 +382,12 @@ const GAME_REGISTRY = {
     helperFunctions: lingoHelperFunctions,
     worldClasses: ['LingoWorld'],
     aliases: ['Lingo']
+  },
+  'Links Awakening DX': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: ladxLogic.helperFunctions,
+    worldClasses: ['LinksAwakeningWorld'],
+    aliases: ['Links Awakening DX', 'LADX', 'links_awakening_dx']
   },
   'Mega Man 2': {
     logicModule: genericLogic.genericStateModule,
