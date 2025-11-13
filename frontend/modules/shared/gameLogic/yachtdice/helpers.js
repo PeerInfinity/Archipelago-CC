@@ -5,26 +5,20 @@
  * if a player can reach a specific score based on their collected items.
  */
 
-// yacht_weights will be loaded asynchronously
+// Import yacht_weights data synchronously
+import { yachtWeightsData } from './yacht_weights.js';
+
+// Parse yacht_weights data into a usable format (loaded synchronously at module initialization)
 let yachtWeights = {};
 let yachtWeightsLoaded = false;
-let yachtWeightsLoading = false;
 
-/**
- * Load yacht_weights data from JSON file
- */
-async function loadYachtWeights() {
-    if (yachtWeightsLoaded || yachtWeightsLoading) {
+// Initialize yacht_weights synchronously
+function initializeYachtWeights() {
+    if (yachtWeightsLoaded) {
         return;
     }
 
-    yachtWeightsLoading = true;
-
     try {
-        // Dynamically import the JSON data
-        const response = await fetch(new URL('./yacht_weights.json', import.meta.url));
-        const yachtWeightsData = await response.json();
-
         // Parse yacht_weights data into a usable format
         // Keys are "CategoryName,numDice,numRolls", values are score distributions
         for (const [key, distribution] of Object.entries(yachtWeightsData)) {
@@ -52,13 +46,16 @@ async function loadYachtWeights() {
         yachtWeightsLoaded = true;
         console.log('[YachtDice] yacht_weights data loaded successfully');
     } catch (error) {
-        console.error('[YachtDice] Failed to load yacht_weights:', error);
-        yachtWeightsLoading = false;
+        console.error('[YachtDice] Failed to initialize yacht_weights:', error);
+        throw error;
     }
 }
 
-// Start loading immediately
-loadYachtWeights();
+// Initialize immediately (synchronous)
+initializeYachtWeights();
+
+// Log that the module is loaded
+console.log('[YachtDice] helpers.js module loaded and initialized');
 
 /**
  * Calculate the maximum achievable score based on current state
@@ -75,6 +72,15 @@ loadYachtWeights();
  * @returns {number} The maximum achievable score
  */
 export function dice_simulation_state_change(snapshot, staticData, fragsPerDice, fragsPerRoll, allowedCategories, difficulty) {
+    // ALWAYS log when called for debugging
+    console.log('[YachtDice] dice_simulation_state_change CALLED with args:', {
+        fragsPerDice,
+        fragsPerRoll,
+        difficulty,
+        allowedCategoriesCount: allowedCategories?.length,
+        snapshotKeys: Object.keys(snapshot || {}).slice(0, 10)
+    });
+
     // Create a cache key based on the current inventory state
     // Don't cache across different states!
     const inventoryKey = JSON.stringify(snapshot?.items || {});
@@ -86,12 +92,21 @@ export function dice_simulation_state_change(snapshot, staticData, fragsPerDice,
     }
 
     if (snapshot.__yachtDiceScoreCache[cacheKey] !== undefined) {
+        console.log('[YachtDice] Returning cached result:', snapshot.__yachtDiceScoreCache[cacheKey]);
         return snapshot.__yachtDiceScoreCache[cacheKey];
     }
 
     // Extract progression from current state
     const progression = extractProgression(snapshot, fragsPerDice, fragsPerRoll, allowedCategories);
     const {categories, numDice, numRolls, fixedMult, stepMult, extraPoints} = progression;
+
+    console.log('[YachtDice] Extracted progression:', {
+        numDice,
+        numRolls,
+        categoriesCount: categories.length,
+        categories: categories.map(c => c.name),
+        extraPoints
+    });
 
     // Calculate the simulated score
     const simulatedScore = diceSimulationStrings(
@@ -103,11 +118,7 @@ export function dice_simulation_state_change(snapshot, staticData, fragsPerDice,
     // Cache the result with proper key
     snapshot.__yachtDiceScoreCache[cacheKey] = maxScore;
 
-    // Debug logging (can be removed later)
-    if (typeof console !== 'undefined' && console.log) {
-        console.log(`[YachtDice] dice_simulation_state_change: numDice=${numDice}, numRolls=${numRolls}, ` +
-                    `categories=${categories.length}, maxScore=${maxScore}`);
-    }
+    console.log('[YachtDice] Final result: simulatedScore=' + simulatedScore + ', maxScore=' + maxScore);
 
     return maxScore;
 }
@@ -138,6 +149,9 @@ function extractProgression(snapshot, fragsPerDice, fragsPerRoll, allowedCategor
     const rollFrags = (items["Roll Fragment"] || 0);
     const numDice = (items["Dice"] || 0) + Math.floor(diceFrags / fragsPerDice);
     const numRolls = (items["Roll"] || 0) + Math.floor(rollFrags / fragsPerRoll);
+
+    // ALWAYS log the dice/roll counts for debugging
+    console.log('[YachtDice] Item counts: Dice=' + items["Dice"] + ', DiceFrags=' + diceFrags + ', Roll=' + items["Roll"] + ', RollFrags=' + rollFrags + ', numDice=' + numDice + ', numRolls=' + numRolls);
 
     // Count multipliers
     const numFixedMults = items["Fixed Score Multiplier"] || 0;
