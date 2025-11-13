@@ -255,6 +255,8 @@ import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import { helperFunctions as mm2HelperFunctions } from './mm2/mm2Logic.js';
 import * as ootLogic from './oot/ootLogic.js';
 import { ootStateModule } from './oot/ootLogic.js';
+import * as raftLogic from './raft/raftLogic.js';
+import { raftStateModule } from './raft/raftLogic.js';
 import * as sm64exLogic from './sm64ex/sm64exLogic.js';
 import { sm64exStateModule } from './sm64ex/sm64exLogic.js';
 import * as v6Logic from './v6/v6Logic.js';
@@ -415,6 +417,12 @@ const GAME_REGISTRY = {
     helperFunctions: ootLogic.helperFunctions,
     worldClasses: ['OOTWorld'],
     aliases: ['Ocarina of Time', 'OOT', 'Zelda: Ocarina of Time']
+  },
+  'Raft': {
+    logicModule: raftLogic.raftStateModule,
+    helperFunctions: raftLogic.helperFunctions,
+    worldClasses: ['RaftWorld'],
+    aliases: ['Raft']
   },
   'Super Mario 64': {
     logicModule: sm64exLogic.sm64exStateModule,
