@@ -327,6 +327,12 @@ export function createStateSnapshotInterface(
           }
           return undefined;
         default:
+          // Check if this is a game-specific constant (e.g., OPTIONS for shapez)
+          const gameLogic = getGameLogic(gameName);
+          if (gameLogic.constants && gameLogic.constants[name]) {
+            return gameLogic.constants[name];
+          }
+
           // Game-specific location variable extraction hook
           // For variables not found in context, try to extract from location name
           if (contextVariables && contextVariables.location) {

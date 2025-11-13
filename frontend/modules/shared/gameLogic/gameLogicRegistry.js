@@ -271,6 +271,7 @@ import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
 import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
 import * as paintLogic from './paint/paintLogic.js';
 import * as soeLogic from './soe/soeLogic.js';
+import * as shapezLogic from './shapez/shapezLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -486,6 +487,13 @@ const GAME_REGISTRY = {
     worldClasses: ['SoEWorld'],
     aliases: ['Secret of Evermore', 'SOE', 'soe']
   },
+  'shapez': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: shapezLogic.helpers,
+    constants: shapezLogic.default.constants,
+    worldClasses: ['ShapezWorld'],
+    aliases: ['shapez']
+  },
   // Add more games here as they're implemented
   'Generic': {
     logicModule: genericLogic.genericStateModule,
@@ -537,7 +545,7 @@ export function detectGameFromWorldClass(worldClass) {
 /**
  * Get logic configuration for a game
  * @param {string} gameName - The name of the game
- * @returns {Object} Object containing logicModule and helperFunctions
+ * @returns {Object} Object containing logicModule, helperFunctions, and optional constants
  */
 export function getGameLogic(gameName) {
   const config = GAME_REGISTRY[gameName];
@@ -547,14 +555,16 @@ export function getGameLogic(gameName) {
     return {
       logicModule: GAME_REGISTRY['Generic'].logicModule,
       helperFunctions: GAME_REGISTRY['Generic'].helperFunctions,
-      stateModule: GAME_REGISTRY['Generic'].logicModule
+      stateModule: GAME_REGISTRY['Generic'].logicModule,
+      constants: GAME_REGISTRY['Generic'].constants
     };
   }
 
   return {
     logicModule: config.logicModule,
     helperFunctions: config.helperFunctions,
-    stateModule: config.logicModule // Expose stateModule for hooks
+    stateModule: config.logicModule, // Expose stateModule for hooks
+    constants: config.constants
   };
 }
 
@@ -629,7 +639,7 @@ export function determineGameName({ gameName, settings, worldClass }) {
  * @param {string} options.gameName - Direct game name from rules
  * @param {Object} options.settings - Game settings object
  * @param {string} options.worldClass - World class from Archipelago data
- * @returns {Object} Object containing logicModule, helperFunctions, and detectedGame
+ * @returns {Object} Object containing logicModule, helperFunctions, constants, and detectedGame
  */
 export function initializeGameLogic({ gameName, settings, worldClass }) {
   const detectedGame = determineGameName({ gameName, settings, worldClass });
@@ -638,6 +648,7 @@ export function initializeGameLogic({ gameName, settings, worldClass }) {
   return {
     logicModule: logic.logicModule,
     helperFunctions: logic.helperFunctions,
+    constants: logic.constants,
     detectedGame: detectedGame
   };
 }
