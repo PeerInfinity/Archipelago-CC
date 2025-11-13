@@ -261,6 +261,7 @@ import * as v6Logic from './v6/v6Logic.js';
 import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
+import * as smz3Logic from './smz3/smz3Logic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -433,6 +434,12 @@ const GAME_REGISTRY = {
     helperFunctions: yachtdiceLogic.helperFunctions,
     worldClasses: ['YachtDiceWorld'],
     aliases: ['Yacht Dice', 'yacht_dice']
+  },
+  'SMZ3': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: smz3Logic,
+    worldClasses: ['SMZ3World'],
+    aliases: ['SMZ3', 'Super Metroid and A Link to the Past Combo Randomizer']
   },
   // Add more games here as they're implemented
   'Generic': {
