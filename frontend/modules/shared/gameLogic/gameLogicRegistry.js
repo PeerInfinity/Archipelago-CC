@@ -261,6 +261,7 @@ import * as v6Logic from './v6/v6Logic.js';
 import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
+import { helperFunctions as smHelperFunctions } from './super_metroid/smLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -433,6 +434,12 @@ const GAME_REGISTRY = {
     helperFunctions: yachtdiceLogic.helperFunctions,
     worldClasses: ['YachtDiceWorld'],
     aliases: ['Yacht Dice', 'yacht_dice']
+  },
+  'Super Metroid': {
+    logicModule: genericLogic.genericStateModule, // Using generic state module
+    helperFunctions: smHelperFunctions,
+    worldClasses: ['SMWorld'],
+    aliases: ['Super Metroid', 'SM']
   },
   // Add more games here as they're implemented
   'Generic': {
