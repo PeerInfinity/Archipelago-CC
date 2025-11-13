@@ -78,9 +78,9 @@
   },
   "Castlevania 64": {
     "exporter_path": "exporter/games/cv64.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/cv64/cv64Logic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "cv64"
   },
   "Celeste 64": {
