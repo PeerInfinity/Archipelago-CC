@@ -261,6 +261,7 @@ import * as v6Logic from './v6/v6Logic.js';
 import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
+import * as cv64Logic from './cv64/cv64Logic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -319,6 +320,12 @@ const GAME_REGISTRY = {
     helperFunctions: cvcotmHelperFunctions,
     worldClasses: ['CVCotMWorld'],
     aliases: ['Castlevania - Circle of the Moon', 'CvCotM', 'cvcotm']
+  },
+  'Castlevania 64': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: cv64Logic.helperFunctions,
+    worldClasses: ['CV64World'],
+    aliases: ['Castlevania 64', 'CV64', 'cv64']
   },
   'DLCQuest': {
     logicModule: dlcquestLogic.dlcquestStateModule,
