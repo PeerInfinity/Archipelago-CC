@@ -766,20 +766,23 @@ def main():
     # Ensure output directory exists
     os.makedirs(os.path.dirname(results_file), exist_ok=True)
 
-    # Generate timestamped filename
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    output_dir = os.path.dirname(results_file)
-    output_basename = os.path.basename(results_file)
-    # Insert timestamp before file extension
-    name_parts = output_basename.rsplit('.', 1)
-    if len(name_parts) == 2:
-        timestamped_basename = f"{name_parts[0]}_{timestamp}.{name_parts[1]}"
-    else:
-        timestamped_basename = f"{output_basename}_{timestamp}"
-    timestamped_file = os.path.join(output_dir, timestamped_basename)
+    # Generate timestamped filename (unless disabled by --no-backup)
+    timestamped_file = None
+    if not args.no_backup:
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        output_dir = os.path.dirname(results_file)
+        output_basename = os.path.basename(results_file)
+        # Insert timestamp before file extension
+        name_parts = output_basename.rsplit('.', 1)
+        if len(name_parts) == 2:
+            timestamped_basename = f"{name_parts[0]}_{timestamp}.{name_parts[1]}"
+        else:
+            timestamped_basename = f"{output_basename}_{timestamp}"
+        timestamped_file = os.path.join(output_dir, timestamped_basename)
 
     print(f"Results will be saved to: {results_file}")
-    print(f"Timestamped backup will be saved to: {timestamped_basename}")
+    if timestamped_file:
+        print(f"Timestamped backup will be saved to: {os.path.basename(timestamped_file)}")
     print(f"Testing templates from: {templates_dir}")
     
     # Build world mapping once at startup
@@ -1030,12 +1033,13 @@ def main():
                         print(f"\nRetest stopped at first still-failing test: {yaml_file}")
                         # Save timestamped partial results (snapshot of this retest run only)
                         # Note: Don't save to results_file here - incremental_merged was already saved above
-                        try:
-                            with open(timestamped_file, 'w') as f:
-                                json.dump(results, f, indent=2, sort_keys=True)
-                            print(f"Timestamped results saved to: {timestamped_file}")
-                        except IOError as e:
-                            print(f"Error saving timestamped results: {e}")
+                        if timestamped_file:
+                            try:
+                                with open(timestamped_file, 'w') as f:
+                                    json.dump(results, f, indent=2, sort_keys=True)
+                                print(f"Timestamped results saved to: {timestamped_file}")
+                            except IOError as e:
+                                print(f"Error saving timestamped results: {e}")
                         sys.exit(0)
 
         except KeyboardInterrupt:
@@ -1043,8 +1047,9 @@ def main():
             templates_tested_so_far = list(results['results'].keys())
             incremental_merged = merge_results(existing_results, results, templates_tested_so_far, update_metadata)
             save_results(incremental_merged, results_file)
-            # Also save timestamped partial results
-            save_results(results, results_file, timestamped_file=timestamped_file)
+            # Also save timestamped partial results (if enabled)
+            if timestamped_file:
+                save_results(results, results_file, timestamped_file=timestamped_file)
             sys.exit(1)
         except Exception as e:
             print(f"Error processing {yaml_file}: {e}")
@@ -1064,8 +1069,9 @@ def main():
     batch_end_time = time.time()
     total_batch_time = batch_end_time - batch_start_time
 
-    # Save timestamped results file (snapshot of this run only)
-    save_results(results, results_file, total_batch_time, timestamped_file)
+    # Save timestamped results file (snapshot of this run only, if enabled)
+    if timestamped_file:
+        save_results(results, results_file, total_batch_time, timestamped_file)
 
     # Merge this run's results into the existing results
     # Use the actual templates tested (from results dict) rather than yaml_files
@@ -1087,7 +1093,8 @@ def main():
     if len(yaml_files) > 0:
         avg_time_per_template = total_batch_time / len(yaml_files)
         print(f"Average time per template: {avg_time_per_template:.1f} seconds")
-    print(f"Timestamped results saved to: {timestamped_file}")
+    if timestamped_file:
+        print(f"Timestamped results saved to: {timestamped_file}")
     print(f"Merged results saved to: {results_file}")
     
     # Print summary based on mode and seed range

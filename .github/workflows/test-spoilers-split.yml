@@ -94,9 +94,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-seed-${{ matrix.seed }}
-          path: |
-            scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-${{ matrix.seed }}.json
-            scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-${{ matrix.seed }}_*.json
+          path: scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-${{ matrix.seed }}.json
           retention-days: 7
 
   # Combine results job - runs after all seed tests complete
@@ -132,6 +130,7 @@ jobs:
         run: |
           # Create temporary directory for merged results
           mkdir -p /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}
+          mkdir -p /tmp/merged-results/docs/json/developer/test-results
 
           # Combine all per-seed test results into one file
           # Note: artifacts are downloaded to artifacts/test-results-seed-N/ directories
@@ -143,6 +142,22 @@ jobs:
           # List what was created
           echo "=== Combined Results ==="
           ls -lh /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+
+      - name: Generate test charts
+        run: |
+          # Copy combined results to repository location so generate-test-chart.py can find them
+          mkdir -p scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}
+          cp /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json \
+             scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+
+          # Generate test charts and documentation
+          python scripts/docs/generate-test-chart.py
+
+          # Copy generated docs to temp directory for committing
+          cp -r docs/json/developer/test-results/*.md /tmp/merged-results/docs/json/developer/test-results/ 2>/dev/null || true
+
+          echo "=== Generated Documentation ==="
+          ls -lh /tmp/merged-results/docs/json/developer/test-results/
 
       - name: Create or switch to test-results-update branch
         run: |
@@ -170,8 +185,12 @@ jobs:
           cp /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json \
              scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
 
+          # Copy generated documentation
+          cp /tmp/merged-results/docs/json/developer/test-results/*.md docs/json/developer/test-results/ 2>/dev/null || true
+
           echo "=== Files in repository after copy ==="
           ls -lh scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+          ls -lh docs/json/developer/test-results/*.md 2>/dev/null || echo "No markdown files"
 
       - name: Commit and push results
         run: |
@@ -180,6 +199,7 @@ jobs:
 
           # Add the specific files we want to commit
           git add scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+          git add docs/json/developer/test-results/*.md || true
 
           # Check if there are changes to commit
           if git diff --staged --quiet; then
@@ -194,6 +214,7 @@ jobs:
             - Seeds: 1-10 (10 parallel jobs)
             - Spoiler type: ${{ github.event.inputs.spoiler_type }}
             - Templates: Adventure.yaml (testing only)
+            - Includes generated test documentation
             "
 
             git push origin test-results-update
