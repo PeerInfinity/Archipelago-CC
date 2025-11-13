@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-13 05:09:26
+**Generated:** 2025-11-13 05:09:43
 
 **Source Data Created:** 2025-11-13T04:47:57.704948
 
-**Source Data Last Updated:** 2025-11-13T05:09:26.555613
+**Source Data Last Updated:** 2025-11-13T05:09:43.039021
 
 ## Summary
 
-- **Total Games:** 74
-- **Passed:** 36 (48.6%)
-- **Failed:** 38 (51.4%)
+- **Total Games:** 75
+- **Passed:** 36 (48.0%)
+- **Failed:** 39 (52.0%)
 
 ## Test Results
 
@@ -94,6 +94,7 @@
 | Wargroove | ❌ Failed | 0 | 0 | 9.1 | 🔴 0.0% | ⚫ | ⚫ |
 | WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ⚫ | ⚫ |
 | Yacht Dice | ❌ Failed | 0 | 0.2 | 21.1 | 🟠 0.9% | ✅ | ✅ |
+| Yoshi's Island | ❌ Failed | 0 | 0 | 12.4 | 🔴 0.0% | ⚫ | ⚫ |
 
 ## Notes
 

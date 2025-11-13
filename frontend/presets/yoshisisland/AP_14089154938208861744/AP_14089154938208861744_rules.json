@@ -7329,20 +7329,6 @@
         "type": null,
         "max_count": 10
       },
-      "Secret Lens": {
-        "name": "Secret Lens",
-        "id": 3154049,
-        "groups": [
-          "Everything",
-          "Items"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "World 1 Gate": {
         "name": "World 1 Gate",
         "id": 3154030,
@@ -7601,6 +7587,20 @@
         "groups": [
           "Everything",
           "Panels"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Secret Lens": {
+        "name": "Secret Lens",
+        "id": 3154049,
+        "groups": [
+          "Everything",
+          "Items"
         ],
         "advancement": false,
         "useful": false,
