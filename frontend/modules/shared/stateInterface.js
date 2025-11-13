@@ -326,6 +326,56 @@ export function createStateSnapshotInterface(
             return logicObject;
           }
           return undefined;
+        case 'hm_rules':
+          // Pokemon Emerald: Build hm_rules dictionary from hm_requirements
+          // hm_requirements maps HM names to either a list of badge names or a count
+          const hmPlayerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+          const hmRequirements = staticData?.game_info?.[hmPlayerSlot]?.hm_requirements ||
+                                staticData?.settings?.[hmPlayerSlot]?.hm_requirements;
+
+          if (!hmRequirements) {
+            return undefined;
+          }
+
+          // Build a dictionary where each HM maps to a rule object
+          const hmRulesDict = {};
+          for (const [hmName, badges] of Object.entries(hmRequirements)) {
+            // Create rule: has(HM) AND (has_all(badges) OR has_group_unique("Badge", count))
+            const hasHmRule = {
+              type: 'item_check',
+              item: { type: 'constant', value: hmName }
+            };
+
+            let badgeRule;
+            if (Array.isArray(badges)) {
+              // badges is a list of badge names - use has_all
+              badgeRule = {
+                type: 'and',
+                conditions: badges.map(badgeName => ({
+                  type: 'item_check',
+                  item: { type: 'constant', value: badgeName }
+                }))
+              };
+            } else {
+              // badges is a number - use has_group_unique
+              badgeRule = {
+                type: 'state_method',
+                method: 'has_group_unique',
+                args: [
+                  { type: 'constant', value: 'Badge' },
+                  { type: 'constant', value: badges }
+                ]
+              };
+            }
+
+            // Combine with AND
+            hmRulesDict[hmName] = {
+              type: 'and',
+              conditions: [hasHmRule, badgeRule]
+            };
+          }
+
+          return hmRulesDict;
         default:
           // Game-specific location variable extraction
           // For variables not found in context, try to extract from location name
