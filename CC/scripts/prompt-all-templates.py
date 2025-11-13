@@ -343,9 +343,11 @@ def main():
         with open(output_file, 'w') as f:
             for i, prompt in enumerate(collected_prompts):
                 f.write(prompt)
-                # Add three newlines between prompts (but not after the last one)
+                # Add 10 empty lines with equals signs in the middle (but not after the last one)
                 if i < len(collected_prompts) - 1:
-                    f.write("\n\n\n")
+                    f.write("\n\n\n\n\n")
+                    f.write("=" * 80)
+                    f.write("\n\n\n\n\n")
 
         print(f"Created {output_file} with {len(collected_prompts)} prompts")
 
