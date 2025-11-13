@@ -15355,799 +15355,6 @@
         "type": null,
         "max_count": 1
       },
-      "MapHC": {
-        "name": "MapHC",
-        "id": 84127,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "MapEP": {
-        "name": "MapEP",
-        "id": 84125,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "MapDP": {
-        "name": "MapDP",
-        "id": 84124,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "MapTH": {
-        "name": "MapTH",
-        "id": 84117,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "MapPD": {
-        "name": "MapPD",
-        "id": 84121,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "MapSP": {
-        "name": "MapSP",
-        "id": 84122,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "MapSW": {
-        "name": "MapSW",
-        "id": 84119,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "MapTT": {
-        "name": "MapTT",
-        "id": 84116,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "MapIP": {
-        "name": "MapIP",
-        "id": 84118,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "MapMM": {
-        "name": "MapMM",
-        "id": 84120,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "MapTR": {
-        "name": "MapTR",
-        "id": 84115,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "MapGT": {
-        "name": "MapGT",
-        "id": 84114,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "CompassEP": {
-        "name": "CompassEP",
-        "id": 84141,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "CompassDP": {
-        "name": "CompassDP",
-        "id": 84140,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "CompassTH": {
-        "name": "CompassTH",
-        "id": 84133,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "CompassPD": {
-        "name": "CompassPD",
-        "id": 84137,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "CompassSP": {
-        "name": "CompassSP",
-        "id": 84138,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "CompassSW": {
-        "name": "CompassSW",
-        "id": 84135,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "CompassTT": {
-        "name": "CompassTT",
-        "id": 84132,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "CompassIP": {
-        "name": "CompassIP",
-        "id": 84134,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "CompassMM": {
-        "name": "CompassMM",
-        "id": 84136,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "CompassTR": {
-        "name": "CompassTR",
-        "id": 84131,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "CompassGT": {
-        "name": "CompassGT",
-        "id": 84130,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BigKeyEP": {
-        "name": "BigKeyEP",
-        "id": 84157,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BigKeyDP": {
-        "name": "BigKeyDP",
-        "id": 84156,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BigKeyTH": {
-        "name": "BigKeyTH",
-        "id": 84149,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BigKeyPD": {
-        "name": "BigKeyPD",
-        "id": 84153,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BigKeySP": {
-        "name": "BigKeySP",
-        "id": 84154,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BigKeySW": {
-        "name": "BigKeySW",
-        "id": 84151,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BigKeyTT": {
-        "name": "BigKeyTT",
-        "id": 84148,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BigKeyIP": {
-        "name": "BigKeyIP",
-        "id": 84150,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BigKeyMM": {
-        "name": "BigKeyMM",
-        "id": 84152,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BigKeyTR": {
-        "name": "BigKeyTR",
-        "id": 84147,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BigKeyGT": {
-        "name": "BigKeyGT",
-        "id": 84146,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "KeyHC": {
-        "name": "KeyHC",
-        "id": 84160,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "KeyCT": {
-        "name": "KeyCT",
-        "id": 84164,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "KeyDP": {
-        "name": "KeyDP",
-        "id": 84163,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "KeyTH": {
-        "name": "KeyTH",
-        "id": 84170,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "KeyPD": {
-        "name": "KeyPD",
-        "id": 84166,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 6
-      },
-      "KeySP": {
-        "name": "KeySP",
-        "id": 84165,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "KeySW": {
-        "name": "KeySW",
-        "id": 84168,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 3
-      },
-      "KeyTT": {
-        "name": "KeyTT",
-        "id": 84171,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "KeyIP": {
-        "name": "KeyIP",
-        "id": 84169,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "KeyMM": {
-        "name": "KeyMM",
-        "id": 84167,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 3
-      },
-      "KeyTR": {
-        "name": "KeyTR",
-        "id": 84172,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "KeyGT": {
-        "name": "KeyGT",
-        "id": 84173,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "Key": {
-        "name": "Key",
-        "id": 84036,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Compass": {
-        "name": "Compass",
-        "id": 84037,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BigKey": {
-        "name": "BigKey",
-        "id": 84050,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Map": {
-        "name": "Map",
-        "id": 84051,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Something": {
-        "name": "Something",
-        "id": 84107,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "ProgressiveTunic": {
-        "name": "ProgressiveTunic",
-        "id": 84096,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "ProgressiveShield": {
-        "name": "ProgressiveShield",
-        "id": 84095,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 6
-      },
-      "ProgressiveSword": {
-        "name": "ProgressiveSword",
-        "id": 84094,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 8
-      },
-      "Bow": {
-        "name": "Bow",
-        "id": 84011,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "SilverArrows": {
-        "name": "SilverArrows",
-        "id": 84088,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "BlueBoomerang": {
-        "name": "BlueBoomerang",
-        "id": 84012,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "RedBoomerang": {
-        "name": "RedBoomerang",
-        "id": 84042,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Hookshot": {
-        "name": "Hookshot",
-        "id": 84010,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Mushroom": {
-        "name": "Mushroom",
-        "id": 84041,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Powder": {
-        "name": "Powder",
-        "id": 84013,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
       "Firerod": {
         "name": "Firerod",
         "id": 84007,
@@ -16173,6 +15380,84 @@
         "event": false,
         "type": null,
         "max_count": 2
+      },
+      "Hammer": {
+        "name": "Hammer",
+        "id": 84009,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Hookshot": {
+        "name": "Hookshot",
+        "id": 84010,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Bow": {
+        "name": "Bow",
+        "id": 84011,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "BlueBoomerang": {
+        "name": "BlueBoomerang",
+        "id": 84012,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Powder": {
+        "name": "Powder",
+        "id": 84013,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "BeeContent": {
+        "name": "BeeContent",
+        "id": 84014,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
       },
       "Bombos": {
         "name": "Bombos",
@@ -16226,19 +15511,6 @@
         "type": null,
         "max_count": 2
       },
-      "Hammer": {
-        "name": "Hammer",
-        "id": 84009,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
       "Shovel": {
         "name": "Shovel",
         "id": 84019,
@@ -16265,22 +15537,9 @@
         "type": null,
         "max_count": 2
       },
-      "Bugnet": {
-        "name": "Bugnet",
-        "id": 84033,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Book": {
-        "name": "Book",
-        "id": 84029,
+      "Somaria": {
+        "name": "Somaria",
+        "id": 84021,
         "groups": [
           "Everything"
         ],
@@ -16304,18 +15563,18 @@
         "type": null,
         "max_count": 8
       },
-      "Somaria": {
-        "name": "Somaria",
-        "id": 84021,
+      "HeartPiece": {
+        "name": "HeartPiece",
+        "id": 84023,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 44
       },
       "Byrna": {
         "name": "Byrna",
@@ -16356,9 +15615,9 @@
         "type": null,
         "max_count": 2
       },
-      "Boots": {
-        "name": "Boots",
-        "id": 84075,
+      "Book": {
+        "name": "Book",
+        "id": 84029,
         "groups": [
           "Everything"
         ],
@@ -16368,19 +15627,6 @@
         "event": false,
         "type": null,
         "max_count": 2
-      },
-      "ProgressiveGlove": {
-        "name": "ProgressiveGlove",
-        "id": 84097,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
       },
       "Flippers": {
         "name": "Flippers",
@@ -16408,9 +15654,9 @@
         "type": null,
         "max_count": 2
       },
-      "HalfMagic": {
-        "name": "HalfMagic",
-        "id": 84078,
+      "Bugnet": {
+        "name": "Bugnet",
+        "id": 84033,
         "groups": [
           "Everything"
         ],
@@ -16421,9 +15667,9 @@
         "type": null,
         "max_count": 2
       },
-      "HeartPiece": {
-        "name": "HeartPiece",
-        "id": 84023,
+      "Key": {
+        "name": "Key",
+        "id": 84036,
         "groups": [
           "Everything"
         ],
@@ -16432,33 +15678,20 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 44
+        "max_count": 1
       },
-      "HeartContainer": {
-        "name": "HeartContainer",
-        "id": 84062,
+      "Compass": {
+        "name": "Compass",
+        "id": 84037,
         "groups": [
           "Everything"
         ],
         "advancement": false,
-        "useful": true,
+        "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 20
-      },
-      "HeartContainerRefill": {
-        "name": "HeartContainerRefill",
-        "id": 84063,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "ThreeBombs": {
         "name": "ThreeBombs",
@@ -16473,22 +15706,35 @@
         "type": null,
         "max_count": 26
       },
-      "Arrow": {
-        "name": "Arrow",
-        "id": 84067,
+      "Mushroom": {
+        "name": "Mushroom",
+        "id": 84041,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
         "max_count": 2
       },
-      "TenArrows": {
-        "name": "TenArrows",
-        "id": 84068,
+      "RedBoomerang": {
+        "name": "RedBoomerang",
+        "id": 84042,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "BottleWithRedPotion": {
+        "name": "BottleWithRedPotion",
+        "id": 84043,
         "groups": [
           "Everything"
         ],
@@ -16497,7 +15743,98 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 16
+        "max_count": 1
+      },
+      "BottleWithGreenPotion": {
+        "name": "BottleWithGreenPotion",
+        "id": 84044,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BottleWithBluePotion": {
+        "name": "BottleWithBluePotion",
+        "id": 84045,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "RedContent": {
+        "name": "RedContent",
+        "id": 84046,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "GreenContent": {
+        "name": "GreenContent",
+        "id": 84047,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BlueContent": {
+        "name": "BlueContent",
+        "id": 84048,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BigKey": {
+        "name": "BigKey",
+        "id": 84050,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Map": {
+        "name": "Map",
+        "id": 84051,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
       },
       "OneRupee": {
         "name": "OneRupee",
@@ -16538,9 +15875,9 @@
         "type": null,
         "max_count": 49
       },
-      "TwentyRupees2": {
-        "name": "TwentyRupees2",
-        "id": 84071,
+      "BottleWithBee": {
+        "name": "BottleWithBee",
+        "id": 84060,
         "groups": [
           "Everything"
         ],
@@ -16551,9 +15888,9 @@
         "type": null,
         "max_count": 1
       },
-      "FiftyRupees": {
-        "name": "FiftyRupees",
-        "id": 84065,
+      "BottleWithFairy": {
+        "name": "BottleWithFairy",
+        "id": 84061,
         "groups": [
           "Everything"
         ],
@@ -16562,7 +15899,33 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 13
+        "max_count": 1
+      },
+      "HeartContainer": {
+        "name": "HeartContainer",
+        "id": 84062,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 20
+      },
+      "HeartContainerRefill": {
+        "name": "HeartContainerRefill",
+        "id": 84063,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
       },
       "OneHundredRupees": {
         "name": "OneHundredRupees",
@@ -16577,6 +15940,45 @@
         "type": null,
         "max_count": 2
       },
+      "FiftyRupees": {
+        "name": "FiftyRupees",
+        "id": 84065,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 13
+      },
+      "Arrow": {
+        "name": "Arrow",
+        "id": 84067,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "TenArrows": {
+        "name": "TenArrows",
+        "id": 84068,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 16
+      },
       "ThreeHundredRupees": {
         "name": "ThreeHundredRupees",
         "id": 84070,
@@ -16589,6 +15991,58 @@
         "event": false,
         "type": null,
         "max_count": 9
+      },
+      "TwentyRupees2": {
+        "name": "TwentyRupees2",
+        "id": 84071,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BottleWithGoldBee": {
+        "name": "BottleWithGoldBee",
+        "id": 84072,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Boots": {
+        "name": "Boots",
+        "id": 84075,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HalfMagic": {
+        "name": "HalfMagic",
+        "id": 84078,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
       },
       "BombUpgrade5": {
         "name": "BombUpgrade5",
@@ -16632,6 +16086,1007 @@
       "ArrowUpgrade10": {
         "name": "ArrowUpgrade10",
         "id": 84084,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SilverArrows": {
+        "name": "SilverArrows",
+        "id": 84088,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "ProgressiveSword": {
+        "name": "ProgressiveSword",
+        "id": 84094,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 8
+      },
+      "ProgressiveShield": {
+        "name": "ProgressiveShield",
+        "id": 84095,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 6
+      },
+      "ProgressiveTunic": {
+        "name": "ProgressiveTunic",
+        "id": 84096,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "ProgressiveGlove": {
+        "name": "ProgressiveGlove",
+        "id": 84097,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Something": {
+        "name": "Something",
+        "id": 84107,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MapGT": {
+        "name": "MapGT",
+        "id": 84114,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MapTR": {
+        "name": "MapTR",
+        "id": 84115,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MapTT": {
+        "name": "MapTT",
+        "id": 84116,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MapTH": {
+        "name": "MapTH",
+        "id": 84117,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MapIP": {
+        "name": "MapIP",
+        "id": 84118,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MapSW": {
+        "name": "MapSW",
+        "id": 84119,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MapMM": {
+        "name": "MapMM",
+        "id": 84120,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MapPD": {
+        "name": "MapPD",
+        "id": 84121,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MapSP": {
+        "name": "MapSP",
+        "id": 84122,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MapDP": {
+        "name": "MapDP",
+        "id": 84124,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MapEP": {
+        "name": "MapEP",
+        "id": 84125,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "MapHC": {
+        "name": "MapHC",
+        "id": 84127,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CompassGT": {
+        "name": "CompassGT",
+        "id": 84130,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CompassTR": {
+        "name": "CompassTR",
+        "id": 84131,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CompassTT": {
+        "name": "CompassTT",
+        "id": 84132,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CompassTH": {
+        "name": "CompassTH",
+        "id": 84133,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CompassIP": {
+        "name": "CompassIP",
+        "id": 84134,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CompassSW": {
+        "name": "CompassSW",
+        "id": 84135,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CompassMM": {
+        "name": "CompassMM",
+        "id": 84136,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CompassPD": {
+        "name": "CompassPD",
+        "id": 84137,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CompassSP": {
+        "name": "CompassSP",
+        "id": 84138,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CompassDP": {
+        "name": "CompassDP",
+        "id": 84140,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CompassEP": {
+        "name": "CompassEP",
+        "id": 84141,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BigKeyGT": {
+        "name": "BigKeyGT",
+        "id": 84146,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BigKeyTR": {
+        "name": "BigKeyTR",
+        "id": 84147,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BigKeyTT": {
+        "name": "BigKeyTT",
+        "id": 84148,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BigKeyTH": {
+        "name": "BigKeyTH",
+        "id": 84149,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BigKeyIP": {
+        "name": "BigKeyIP",
+        "id": 84150,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BigKeySW": {
+        "name": "BigKeySW",
+        "id": 84151,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BigKeyMM": {
+        "name": "BigKeyMM",
+        "id": 84152,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BigKeyPD": {
+        "name": "BigKeyPD",
+        "id": 84153,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BigKeySP": {
+        "name": "BigKeySP",
+        "id": 84154,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BigKeyDP": {
+        "name": "BigKeyDP",
+        "id": 84156,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BigKeyEP": {
+        "name": "BigKeyEP",
+        "id": 84157,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "KeyHC": {
+        "name": "KeyHC",
+        "id": 84160,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "KeyDP": {
+        "name": "KeyDP",
+        "id": 84163,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "KeyCT": {
+        "name": "KeyCT",
+        "id": 84164,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "KeySP": {
+        "name": "KeySP",
+        "id": 84165,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "KeyPD": {
+        "name": "KeyPD",
+        "id": 84166,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 6
+      },
+      "KeyMM": {
+        "name": "KeyMM",
+        "id": 84167,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "KeySW": {
+        "name": "KeySW",
+        "id": 84168,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 3
+      },
+      "KeyIP": {
+        "name": "KeyIP",
+        "id": 84169,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "KeyTH": {
+        "name": "KeyTH",
+        "id": 84170,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "KeyTT": {
+        "name": "KeyTT",
+        "id": 84171,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "KeyTR": {
+        "name": "KeyTR",
+        "id": 84172,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "KeyGT": {
+        "name": "KeyGT",
+        "id": 84173,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Grapple": {
+        "name": "Grapple",
+        "id": 84176,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "XRay": {
+        "name": "XRay",
+        "id": 84177,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Varia": {
+        "name": "Varia",
+        "id": 84178,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "SpringBall": {
+        "name": "SpringBall",
+        "id": 84179,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Morph": {
+        "name": "Morph",
+        "id": 84180,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "ScrewAttack": {
+        "name": "ScrewAttack",
+        "id": 84181,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Gravity": {
+        "name": "Gravity",
+        "id": 84182,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HiJump": {
+        "name": "HiJump",
+        "id": 84183,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "SpaceJump": {
+        "name": "SpaceJump",
+        "id": 84184,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Bombs": {
+        "name": "Bombs",
+        "id": 84185,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "SpeedBooster": {
+        "name": "SpeedBooster",
+        "id": 84186,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Charge": {
+        "name": "Charge",
+        "id": 84187,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Ice": {
+        "name": "Ice",
+        "id": 84188,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Wave": {
+        "name": "Wave",
+        "id": 84189,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Spazer": {
+        "name": "Spazer",
+        "id": 84190,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Plasma": {
+        "name": "Plasma",
+        "id": 84191,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "ETank": {
+        "name": "ETank",
+        "id": 84192,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 28
+      },
+      "ReserveTank": {
+        "name": "ReserveTank",
+        "id": 84193,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 8
+      },
+      "Missile": {
+        "name": "Missile",
+        "id": 84194,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 78
+      },
+      "Super": {
+        "name": "Super",
+        "id": 84195,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 31
+      },
+      "PowerBomb": {
+        "name": "PowerBomb",
+        "id": 84196,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 17
+      },
+      "SmMapBrinstar": {
+        "name": "SmMapBrinstar",
+        "id": 84202,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SmMapWreckedShip": {
+        "name": "SmMapWreckedShip",
+        "id": 84203,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SmMapMaridia": {
+        "name": "SmMapMaridia",
+        "id": 84204,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SmMapLowerNorfair": {
+        "name": "SmMapLowerNorfair",
+        "id": 84205,
         "groups": [
           "Everything"
         ],
@@ -16840,461 +17295,6 @@
       "CardLowerNorfairBoss": {
         "name": "CardLowerNorfairBoss",
         "id": 84223,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "SmMapBrinstar": {
-        "name": "SmMapBrinstar",
-        "id": 84202,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "SmMapWreckedShip": {
-        "name": "SmMapWreckedShip",
-        "id": 84203,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "SmMapMaridia": {
-        "name": "SmMapMaridia",
-        "id": 84204,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "SmMapLowerNorfair": {
-        "name": "SmMapLowerNorfair",
-        "id": 84205,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Missile": {
-        "name": "Missile",
-        "id": 84194,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 78
-      },
-      "Super": {
-        "name": "Super",
-        "id": 84195,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 31
-      },
-      "PowerBomb": {
-        "name": "PowerBomb",
-        "id": 84196,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 17
-      },
-      "Grapple": {
-        "name": "Grapple",
-        "id": 84176,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "XRay": {
-        "name": "XRay",
-        "id": 84177,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "ETank": {
-        "name": "ETank",
-        "id": 84192,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 28
-      },
-      "ReserveTank": {
-        "name": "ReserveTank",
-        "id": 84193,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 8
-      },
-      "Charge": {
-        "name": "Charge",
-        "id": 84187,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Ice": {
-        "name": "Ice",
-        "id": 84188,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Wave": {
-        "name": "Wave",
-        "id": 84189,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Spazer": {
-        "name": "Spazer",
-        "id": 84190,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Plasma": {
-        "name": "Plasma",
-        "id": 84191,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Varia": {
-        "name": "Varia",
-        "id": 84178,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Gravity": {
-        "name": "Gravity",
-        "id": 84182,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Morph": {
-        "name": "Morph",
-        "id": 84180,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Bombs": {
-        "name": "Bombs",
-        "id": 84185,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "SpringBall": {
-        "name": "SpringBall",
-        "id": 84179,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "ScrewAttack": {
-        "name": "ScrewAttack",
-        "id": 84181,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HiJump": {
-        "name": "HiJump",
-        "id": 84183,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "SpaceJump": {
-        "name": "SpaceJump",
-        "id": 84184,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "SpeedBooster": {
-        "name": "SpeedBooster",
-        "id": 84186,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "BottleWithRedPotion": {
-        "name": "BottleWithRedPotion",
-        "id": 84043,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BottleWithGreenPotion": {
-        "name": "BottleWithGreenPotion",
-        "id": 84044,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BottleWithBluePotion": {
-        "name": "BottleWithBluePotion",
-        "id": 84045,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BottleWithFairy": {
-        "name": "BottleWithFairy",
-        "id": 84061,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BottleWithBee": {
-        "name": "BottleWithBee",
-        "id": 84060,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BottleWithGoldBee": {
-        "name": "BottleWithGoldBee",
-        "id": 84072,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "RedContent": {
-        "name": "RedContent",
-        "id": 84046,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "GreenContent": {
-        "name": "GreenContent",
-        "id": 84047,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BlueContent": {
-        "name": "BlueContent",
-        "id": 84048,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BeeContent": {
-        "name": "BeeContent",
-        "id": 84014,
         "groups": [
           "Everything"
         ],

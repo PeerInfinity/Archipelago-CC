@@ -33094,58 +33094,6 @@
         "type": null,
         "max_count": 2
       },
-      "Plasma Beam": {
-        "name": "Plasma Beam",
-        "id": 83015,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Grappling Beam": {
-        "name": "Grappling Beam",
-        "id": 83016,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Morph Ball": {
-        "name": "Morph Ball",
-        "id": 83019,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Reserve Tank": {
-        "name": "Reserve Tank",
-        "id": 83020,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 8
-      },
       "Gravity Suit": {
         "name": "Gravity Suit",
         "id": 83013,
@@ -33162,6 +33110,32 @@
       "X-Ray Scope": {
         "name": "X-Ray Scope",
         "id": 83014,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Plasma Beam": {
+        "name": "Plasma Beam",
+        "id": 83015,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Grappling Beam": {
+        "name": "Grappling Beam",
+        "id": 83016,
         "groups": [
           "Everything"
         ],
@@ -33198,6 +33172,45 @@
         "type": null,
         "max_count": 2
       },
+      "Morph Ball": {
+        "name": "Morph Ball",
+        "id": 83019,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Reserve Tank": {
+        "name": "Reserve Tank",
+        "id": 83020,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 8
+      },
+      "Generic": {
+        "name": "Generic",
+        "id": 83021,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Nothing": {
         "name": "Nothing",
         "id": 83022,
@@ -33214,19 +33227,6 @@
       "No Energy": {
         "name": "No Energy",
         "id": 83023,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Generic": {
-        "name": "Generic",
-        "id": 83021,
         "groups": [
           "Everything"
         ],

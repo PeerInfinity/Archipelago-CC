@@ -1,0 +1,895 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:07] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: ladx
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=ladx&seed=1
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:25] "GET /frontend/?mode=test-spoilers&game=ladx&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:25] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:25] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:25] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:25] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:25] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:25] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:25] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modes.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+BROWSER LOG (warning): [04:47:26.453] [WARN] [init] Game "ladx" not found in preset_files.json
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: fallback)
+BROWSER LOG (info): [04:47:26.477] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/hylics_2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/jak_and_daxter__the_precursor_legacy/jak_and_daxter__the_precursor_legacyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/oot/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+BROWSER LOG (info): [04:47:26.900] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [04:47:26.901] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:26] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [04:47:27.017] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [04:47:27.018] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [04:47:27.018] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [04:47:27.019] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: fallback)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [04:47:27.022] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/presets/adventure/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:47:27] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Full in-app test results: {
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 1,
+    "failedCount": 0
+  },
+  "testDetails": [
+    {
+      "id": "test_spoiler_full_run",
+      "name": "Test Spoilers Panel - Full Run",
+      "status": "passed",
+      "category": "Test Spoilers Panel",
+      "startTime": "2025-11-13T04:47:27.427Z",
+      "endTime": "2025-11-13T04:47:30.043Z",
+      "durationMs": 2616,
+      "conditions": [
+        {
+          "description": "Test started",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:47:27.428Z"
+        },
+        {
+          "description": "Test Spoilers panel found in DOM",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:47:27.931Z"
+        },
+        {
+          "description": "\"Load Suggested Log\" button found and enabled",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:47:28.182Z"
+        },
+        {
+          "description": "\"Run Full Test\" button appeared",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:47:28.936Z"
+        },
+        {
+          "description": "Full spoiler test completed",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:47:30.041Z"
+        },
+        {
+          "description": "Spoiler test passed all checks",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:47:30.041Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[spoilers-full-run-1763009247428] Starting testSpoilersPanelFullRun...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:27.428Z"
+        },
+        {
+          "message": "Condition: \"Test started\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:27.428Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009247428] Activating testSpoilersPanel panel...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:27.428Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel initialization\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:27.428Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel initialization\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:27.680Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel DOM element\" (timeout: 5000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:27.680Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel DOM element\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:27.931Z"
+        },
+        {
+          "message": "Condition: \"Test Spoilers panel found in DOM\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:27.931Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Load Suggested Log\" button to be available\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:27.931Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Load Suggested Log\" button to be available\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:28.182Z"
+        },
+        {
+          "message": "Condition: \"\"Load Suggested Log\" button found and enabled\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:28.182Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009247428] Clicking \"Load Suggested Log\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:28.183Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Spoiler log loading completion\" (timeout: 15000ms, interval: 500ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:28.185Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Spoiler log loading completion\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:28.686Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Run Full Test\" button to appear\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:28.686Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Run Full Test\" button to appear\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:28.936Z"
+        },
+        {
+          "message": "Condition: \"\"Run Full Test\" button appeared\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:28.936Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009247428] Clicking \"Run Full Test\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:28.936Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test to start processing\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:28.939Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test to start processing\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:29.040Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009247428] Waiting for full spoiler test to complete...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:29.041Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test completion with detailed results\" (timeout: 300000ms, interval: 1000ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:29.041Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009247428] Polling: buttonReady=true, hasDetailedResults=true, processedEvents=10/10",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:30.041Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009247428] DEBUG detailedResults: {\"passed\":true,\"totalEvents\":10,\"processedEvents\":10,\"errorCount\":0,\"sphereCount\":10,\"testLogPath\":\"presets/adventure/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:30.041Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test completion with detailed results\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:30.041Z"
+        },
+        {
+          "message": "Condition: \"Full spoiler test completed\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:30.041Z"
+        },
+        {
+          "message": "Condition: \"Spoiler test passed all checks\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:30.041Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009247428] Spoiler test results stored in window.__spoilerTestResults__",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:30.041Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009247428] Spoiler test results stored in localStorage",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:30.042Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009247428] testSpoilersPanelFullRun finished. Overall Result: true.",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:30.043Z"
+        },
+        {
+          "message": "Test completion signal: PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:47:30.043Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T04:47:30.043Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T04:47:30.043Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T04:47:30.044Z"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2025-11-13T04:47:30.145Z"
+}
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2025-11-13T04-47-30.json
+PW DEBUG: No test case results found in localStorage.
+PW DEBUG: Spoiler test overview: passed=true, processed=undefined/undefined
+PW DEBUG: No mismatch details found.
+PW DEBUG: Detailed spoiler test results from localStorage: {
+  "passed": true,
+  "logEntries": [
+    "[4:47:28 AM] Preparing test for: presets/adventure/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+    "[4:47:28 AM] Using 10 events from selected log: presets/adventure/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+    "[4:47:28 AM] Skipping explicit rule loading. Assuming StateManager has current rules.",
+    "[4:47:28 AM] Set sphereState player ID to: 1",
+    "[4:47:28 AM] Loading sphere log into sphereState: presets/adventure/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+    "[4:47:28 AM] Sphere log successfully loaded into sphereState",
+    "[4:47:28 AM] [TestOrchestrator] Disabled auto-collect events for test duration.",
+    "[4:47:28 AM] [TestOrchestrator] Enabled spoiler test mode for test duration.",
+    "[4:47:28 AM] Preparation complete. Ready to run or step.",
+    "[4:47:28 AM] 4. Processing all log events...",
+    "[4:47:28 AM] Processing Event 1/10: Type 'state_update'",
+    "[4:47:28 AM] Fresh snapshot has 0 checked locations",
+    "[4:47:28 AM] ✓ Sphere 0 passed: 10 locations match",
+    "[4:47:28 AM] Processing Event 2/10: Type 'state_update'",
+    "[4:47:28 AM] 📦 Recently added item: Black Key",
+    "[4:47:28 AM] Checking 1 locations from sphere 0.1",
+    "[4:47:28 AM]   Checking \"Black Castle Gate\" (contains: Black Key)",
+    "[4:47:29 AM] Completed checking 1 locations for sphere 0.1",
+    "[4:47:29 AM] Fresh snapshot has 1 checked locations",
+    "[4:47:29 AM] ✓ Sphere 0.1 passed: 13 locations match",
+    "[4:47:29 AM] Processing Event 3/10: Type 'state_update'",
+    "[4:47:29 AM] 📦 Recently added item: Sword",
+    "[4:47:29 AM] Checking 1 locations from sphere 0.2",
+    "[4:47:29 AM]   Checking \"Catacombs\" (contains: Sword)",
+    "[4:47:29 AM] Completed checking 1 locations for sphere 0.2",
+    "[4:47:29 AM] Fresh snapshot has 2 checked locations",
+    "[4:47:29 AM] ✓ Sphere 0.2 passed: 13 locations match",
+    "[4:47:29 AM] Processing Event 4/10: Type 'state_update'",
+    "[4:47:29 AM] 📦 Recently added item: Bridge",
+    "[4:47:29 AM] Checking 1 locations from sphere 1.1",
+    "[4:47:29 AM]   Checking \"Black Castle Foyer\" (contains: Bridge)",
+    "[4:47:29 AM] Completed checking 1 locations for sphere 1.1",
+    "[4:47:29 AM] Fresh snapshot has 3 checked locations",
+    "[4:47:29 AM] ✓ Sphere 1.1 passed: 15 locations match",
+    "[4:47:29 AM] Processing Event 5/10: Type 'state_update'",
+    "[4:47:29 AM] 📦 Recently added item: Right Difficulty Switch",
+    "[4:47:29 AM] Checking 1 locations from sphere 1.2",
+    "[4:47:29 AM]   Checking \"Dungeon1\" (contains: Right Difficulty Switch)",
+    "[4:47:29 AM] Completed checking 1 locations for sphere 1.2",
+    "[4:47:29 AM] Fresh snapshot has 4 checked locations",
+    "[4:47:29 AM] ✓ Sphere 1.2 passed: 17 locations match",
+    "[4:47:29 AM] Processing Event 6/10: Type 'state_update'",
+    "[4:47:29 AM] 📦 Recently added item: White Key",
+    "[4:47:29 AM] Checking 1 locations from sphere 2.1",
+    "[4:47:29 AM]   Checking \"Dungeon Vault\" (contains: White Key)",
+    "[4:47:29 AM] Completed checking 1 locations for sphere 2.1",
+    "[4:47:29 AM] Fresh snapshot has 5 checked locations",
+    "[4:47:29 AM] ✓ Sphere 2.1 passed: 22 locations match",
+    "[4:47:29 AM] Processing Event 7/10: Type 'state_update'",
+    "[4:47:29 AM] 📦 Recently added item: Yellow Key",
+    "[4:47:29 AM] Checking 1 locations from sphere 3.1",
+    "[4:47:29 AM]   Checking \"Slay Grundle\" (contains: Yellow Key)",
+    "[4:47:29 AM] Completed checking 1 locations for sphere 3.1",
+    "[4:47:29 AM] Fresh snapshot has 6 checked locations",
+    "[4:47:29 AM] ✓ Sphere 3.1 passed: 23 locations match",
+    "[4:47:29 AM] Processing Event 8/10: Type 'state_update'",
+    "[4:47:29 AM] 📦 Recently added item: Magnet",
+    "[4:47:29 AM] Checking 1 locations from sphere 4.1",
+    "[4:47:29 AM]   Checking \"Inside Yellow Castle\" (contains: Magnet)",
+    "[4:47:29 AM] Completed checking 1 locations for sphere 4.1",
+    "[4:47:29 AM] Fresh snapshot has 7 checked locations",
+    "[4:47:29 AM] ✓ Sphere 4.1 passed: 24 locations match",
+    "[4:47:29 AM] Processing Event 9/10: Type 'state_update'",
+    "[4:47:29 AM] 📦 Recently added item: Chalice",
+    "[4:47:29 AM] Checking 1 locations from sphere 5.1",
+    "[4:47:29 AM]   Checking \"Credits Right Side\" (contains: Chalice)",
+    "[4:47:29 AM] Completed checking 1 locations for sphere 5.1",
+    "[4:47:29 AM] Fresh snapshot has 8 checked locations",
+    "[4:47:29 AM] ✓ Sphere 5.1 passed: 25 locations match",
+    "[4:47:29 AM] Processing Event 10/10: Type 'state_update'",
+    "[4:47:29 AM] 📦 Recently added item: Victory",
+    "[4:47:29 AM] Checking 1 locations from sphere 6.1",
+    "[4:47:29 AM]   Checking \"Chalice Home\" (contains: Victory)",
+    "[4:47:29 AM] Completed checking 1 locations for sphere 6.1",
+    "[4:47:29 AM] Fresh snapshot has 9 checked locations",
+    "[4:47:29 AM] ✓ Sphere 6.1 passed: 25 locations match",
+    "[4:47:29 AM] Spoiler test completed successfully. All events matched.",
+    "[4:47:29 AM] Detailed spoiler test results stored in window.__spoilerTestResults__",
+    "[4:47:29 AM] [TestOrchestrator] Re-enabled auto-collect events after full test run.",
+    "[4:47:29 AM] [TestOrchestrator] Disabled spoiler test mode after full test run."
+  ],
+  "errorMessages": [],
+  "detailedResults": {
+    "passed": true,
+    "logEntries": [
+      "[4:47:28 AM] Preparing test for: presets/adventure/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+      "[4:47:28 AM] Using 10 events from selected log: presets/adventure/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+      "[4:47:28 AM] Skipping explicit rule loading. Assuming StateManager has current rules.",
+      "[4:47:28 AM] Set sphereState player ID to: 1",
+      "[4:47:28 AM] Loading sphere log into sphereState: presets/adventure/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+      "[4:47:28 AM] Sphere log successfully loaded into sphereState",
+      "[4:47:28 AM] [TestOrchestrator] Disabled auto-collect events for test duration.",
+      "[4:47:28 AM] [TestOrchestrator] Enabled spoiler test mode for test duration.",
+      "[4:47:28 AM] Preparation complete. Ready to run or step.",
+      "[4:47:28 AM] 4. Processing all log events...",
+      "[4:47:28 AM] Processing Event 1/10: Type 'state_update'",
+      "[4:47:28 AM] Fresh snapshot has 0 checked locations",
+      "[4:47:28 AM] ✓ Sphere 0 passed: 10 locations match",
+      "[4:47:28 AM] Processing Event 2/10: Type 'state_update'",
+      "[4:47:28 AM] 📦 Recently added item: Black Key",
+      "[4:47:28 AM] Checking 1 locations from sphere 0.1",
+      "[4:47:28 AM]   Checking \"Black Castle Gate\" (contains: Black Key)",
+      "[4:47:29 AM] Completed checking 1 locations for sphere 0.1",
+      "[4:47:29 AM] Fresh snapshot has 1 checked locations",
+      "[4:47:29 AM] ✓ Sphere 0.1 passed: 13 locations match",
+      "[4:47:29 AM] Processing Event 3/10: Type 'state_update'",
+      "[4:47:29 AM] 📦 Recently added item: Sword",
+      "[4:47:29 AM] Checking 1 locations from sphere 0.2",
+      "[4:47:29 AM]   Checking \"Catacombs\" (contains: Sword)",
+      "[4:47:29 AM] Completed checking 1 locations for sphere 0.2",
+      "[4:47:29 AM] Fresh snapshot has 2 checked locations",
+      "[4:47:29 AM] ✓ Sphere 0.2 passed: 13 locations match",
+      "[4:47:29 AM] Processing Event 4/10: Type 'state_update'",
+      "[4:47:29 AM] 📦 Recently added item: Bridge",
+      "[4:47:29 AM] Checking 1 locations from sphere 1.1",
+      "[4:47:29 AM]   Checking \"Black Castle Foyer\" (contains: Bridge)",
+      "[4:47:29 AM] Completed checking 1 locations for sphere 1.1",
+      "[4:47:29 AM] Fresh snapshot has 3 checked locations",
+      "[4:47:29 AM] ✓ Sphere 1.1 passed: 15 locations match",
+      "[4:47:29 AM] Processing Event 5/10: Type 'state_update'",
+      "[4:47:29 AM] 📦 Recently added item: Right Difficulty Switch",
+      "[4:47:29 AM] Checking 1 locations from sphere 1.2",
+      "[4:47:29 AM]   Checking \"Dungeon1\" (contains: Right Difficulty Switch)",
+      "[4:47:29 AM] Completed checking 1 locations for sphere 1.2",
+      "[4:47:29 AM] Fresh snapshot has 4 checked locations",
+      "[4:47:29 AM] ✓ Sphere 1.2 passed: 17 locations match",
+      "[4:47:29 AM] Processing Event 6/10: Type 'state_update'",
+      "[4:47:29 AM] 📦 Recently added item: White Key",
+      "[4:47:29 AM] Checking 1 locations from sphere 2.1",
+      "[4:47:29 AM]   Checking \"Dungeon Vault\" (contains: White Key)",
+      "[4:47:29 AM] Completed checking 1 locations for sphere 2.1",
+      "[4:47:29 AM] Fresh snapshot has 5 checked locations",
+      "[4:47:29 AM] ✓ Sphere 2.1 passed: 22 locations match",
+      "[4:47:29 AM] Processing Event 7/10: Type 'state_update'",
+      "[4:47:29 AM] 📦 Recently added item: Yellow Key",
+      "[4:47:29 AM] Checking 1 locations from sphere 3.1",
+      "[4:47:29 AM]   Checking \"Slay Grundle\" (contains: Yellow Key)",
+      "[4:47:29 AM] Completed checking 1 locations for sphere 3.1",
+      "[4:47:29 AM] Fresh snapshot has 6 checked locations",
+      "[4:47:29 AM] ✓ Sphere 3.1 passed: 23 locations match",
+      "[4:47:29 AM] Processing Event 8/10: Type 'state_update'",
+      "[4:47:29 AM] 📦 Recently added item: Magnet",
+      "[4:47:29 AM] Checking 1 locations from sphere 4.1",
+      "[4:47:29 AM]   Checking \"Inside Yellow Castle\" (contains: Magnet)",
+      "[4:47:29 AM] Completed checking 1 locations for sphere 4.1",
+      "[4:47:29 AM] Fresh snapshot has 7 checked locations",
+      "[4:47:29 AM] ✓ Sphere 4.1 passed: 24 locations match",
+      "[4:47:29 AM] Processing Event 9/10: Type 'state_update'",
+      "[4:47:29 AM] 📦 Recently added item: Chalice",
+      "[4:47:29 AM] Checking 1 locations from sphere 5.1",
+      "[4:47:29 AM]   Checking \"Credits Right Side\" (contains: Chalice)",
+      "[4:47:29 AM] Completed checking 1 locations for sphere 5.1",
+      "[4:47:29 AM] Fresh snapshot has 8 checked locations",
+      "[4:47:29 AM] ✓ Sphere 5.1 passed: 25 locations match",
+      "[4:47:29 AM] Processing Event 10/10: Type 'state_update'",
+      "[4:47:29 AM] 📦 Recently added item: Victory",
+      "[4:47:29 AM] Checking 1 locations from sphere 6.1",
+      "[4:47:29 AM]   Checking \"Chalice Home\" (contains: Victory)",
+      "[4:47:29 AM] Completed checking 1 locations for sphere 6.1",
+      "[4:47:29 AM] Fresh snapshot has 9 checked locations",
+      "[4:47:29 AM] ✓ Sphere 6.1 passed: 25 locations match",
+      "[4:47:29 AM] Spoiler test completed successfully. All events matched."
+    ],
+    "errorMessages": [],
+    "sphereResults": [
+      {
+        "eventIndex": 0,
+        "sphereIndex": 0,
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 1 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 0,
+          "sphereIndex": 0,
+          "playerId": "1",
+          "newlyAddedItems": null
+        }
+      },
+      {
+        "eventIndex": 1,
+        "sphereIndex": "0.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 2 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 1,
+          "sphereIndex": "0.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Black Key"
+          ]
+        }
+      },
+      {
+        "eventIndex": 2,
+        "sphereIndex": "0.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 3 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 2,
+          "sphereIndex": "0.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Sword"
+          ]
+        }
+      },
+      {
+        "eventIndex": 3,
+        "sphereIndex": "1.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 4 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 3,
+          "sphereIndex": "1.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Bridge"
+          ]
+        }
+      },
+      {
+        "eventIndex": 4,
+        "sphereIndex": "1.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 5 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 4,
+          "sphereIndex": "1.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Right Difficulty Switch"
+          ]
+        }
+      },
+      {
+        "eventIndex": 5,
+        "sphereIndex": "2.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 6 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 5,
+          "sphereIndex": "2.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "White Key"
+          ]
+        }
+      },
+      {
+        "eventIndex": 6,
+        "sphereIndex": "3.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 7 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 6,
+          "sphereIndex": "3.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Yellow Key"
+          ]
+        }
+      },
+      {
+        "eventIndex": 7,
+        "sphereIndex": "4.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 8 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 7,
+          "sphereIndex": "4.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Magnet"
+          ]
+        }
+      },
+      {
+        "eventIndex": 8,
+        "sphereIndex": "5.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 9 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 8,
+          "sphereIndex": "5.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Chalice"
+          ]
+        }
+      },
+      {
+        "eventIndex": 9,
+        "sphereIndex": "6.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 10 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 9,
+          "sphereIndex": "6.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Victory"
+          ]
+        }
+      }
+    ],
+    "mismatchDetails": [],
+    "totalEvents": 10,
+    "processedEvents": 10,
+    "testLogPath": "presets/adventure/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+    "playerId": "1",
+    "completedAt": "2025-11-13T04:47:29.048Z"
+  },
+  "sphereResults": [
+    {
+      "eventIndex": 0,
+      "sphereIndex": 0,
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 1 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 0,
+        "sphereIndex": 0,
+        "playerId": "1",
+        "newlyAddedItems": null
+      }
+    },
+    {
+      "eventIndex": 1,
+      "sphereIndex": "0.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 2 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 1,
+        "sphereIndex": "0.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Black Key"
+        ]
+      }
+    },
+    {
+      "eventIndex": 2,
+      "sphereIndex": "0.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 3 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 2,
+        "sphereIndex": "0.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Sword"
+        ]
+      }
+    },
+    {
+      "eventIndex": 3,
+      "sphereIndex": "1.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 4 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 3,
+        "sphereIndex": "1.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Bridge"
+        ]
+      }
+    },
+    {
+      "eventIndex": 4,
+      "sphereIndex": "1.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 5 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 4,
+        "sphereIndex": "1.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Right Difficulty Switch"
+        ]
+      }
+    },
+    {
+      "eventIndex": 5,
+      "sphereIndex": "2.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 6 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 5,
+        "sphereIndex": "2.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "White Key"
+        ]
+      }
+    },
+    {
+      "eventIndex": 6,
+      "sphereIndex": "3.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 7 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 6,
+        "sphereIndex": "3.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Yellow Key"
+        ]
+      }
+    },
+    {
+      "eventIndex": 7,
+      "sphereIndex": "4.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 8 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 7,
+        "sphereIndex": "4.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Magnet"
+        ]
+      }
+    },
+    {
+      "eventIndex": 8,
+      "sphereIndex": "5.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 9 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 8,
+        "sphereIndex": "5.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Chalice"
+        ]
+      }
+    },
+    {
+      "eventIndex": 9,
+      "sphereIndex": "6.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 10 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 9,
+        "sphereIndex": "6.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Victory"
+        ]
+      }
+    }
+  ],
+  "mismatchDetails": []
+}
+PW DEBUG: All Playwright assertions passed.
+  ✓  1 tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results (7.3s)
+
+  1 passed (23.3s)

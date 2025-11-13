@@ -1560,6 +1560,19 @@
   },
   "items": {
     "1": {
+      "Music Sheet": {
+        "name": "Music Sheet",
+        "id": 2900000,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 18
+      },
       "Bad Apple Trap": {
         "name": "Bad Apple Trap",
         "id": 2900001,
@@ -10953,19 +10966,6 @@
         "event": false,
         "type": null,
         "max_count": 1
-      },
-      "Music Sheet": {
-        "name": "Music Sheet",
-        "id": 2900000,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 18
       }
     }
   },

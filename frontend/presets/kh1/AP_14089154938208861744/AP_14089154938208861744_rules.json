@@ -444,8 +444,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -517,8 +521,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -585,8 +593,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -653,8 +665,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -721,8 +737,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -789,8 +809,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -857,8 +881,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -925,8 +953,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -993,8 +1025,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -1193,8 +1229,12 @@
                   "name": "has_emblems",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 },
@@ -1214,8 +1254,12 @@
                       "value": 5
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -1272,8 +1316,12 @@
                       "value": 7
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -3349,8 +3397,12 @@
                   "value": 5
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -6140,8 +6192,12 @@
                   "name": "has_oogie_manor",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "advanced_logic"
                     }
                   ]
                 }
@@ -6178,8 +6234,12 @@
                   "name": "has_oogie_manor",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "advanced_logic"
                     }
                   ]
                 }
@@ -6216,8 +6276,12 @@
                   "name": "has_oogie_manor",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "advanced_logic"
                     }
                   ]
                 }
@@ -6254,8 +6318,12 @@
                   "name": "has_oogie_manor",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "advanced_logic"
                     }
                   ]
                 }
@@ -6316,8 +6384,12 @@
                   "name": "has_oogie_manor",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "advanced_logic"
                     }
                   ]
                 }
@@ -6354,8 +6426,12 @@
                   "name": "has_oogie_manor",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "advanced_logic"
                     }
                   ]
                 }
@@ -6758,8 +6834,12 @@
                   "name": "has_oogie_manor",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "advanced_logic"
                     }
                   ]
                 }
@@ -6819,8 +6899,12 @@
                   "name": "has_oogie_manor",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "advanced_logic"
                     }
                   ]
                 }
@@ -6857,8 +6941,12 @@
                   "name": "has_oogie_manor",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "advanced_logic"
                     }
                   ]
                 }
@@ -6895,8 +6983,12 @@
                   "name": "has_oogie_manor",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "advanced_logic"
                     }
                   ]
                 }
@@ -7366,8 +7458,12 @@
                   "name": "has_emblems",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 },
@@ -7430,8 +7526,12 @@
                       "name": "has_emblems",
                       "args": [
                         {
-                          "type": "constant",
-                          "value": 0
+                          "type": "attribute",
+                          "object": {
+                            "type": "name",
+                            "name": "options"
+                          },
+                          "attr": "keyblades_unlock_chests"
                         }
                       ]
                     },
@@ -7513,8 +7613,12 @@
                   "name": "has_emblems",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 },
@@ -7564,8 +7668,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -7584,8 +7692,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -7604,8 +7716,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -7624,8 +7740,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -7658,8 +7778,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -7727,8 +7851,12 @@
                   "name": "has_emblems",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -7773,8 +7901,12 @@
                       "name": "has_emblems",
                       "args": [
                         {
-                          "type": "constant",
-                          "value": 0
+                          "type": "attribute",
+                          "object": {
+                            "type": "name",
+                            "name": "options"
+                          },
+                          "attr": "keyblades_unlock_chests"
                         }
                       ]
                     }
@@ -7859,8 +7991,12 @@
                   "name": "has_emblems",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -7905,8 +8041,12 @@
                       "name": "has_emblems",
                       "args": [
                         {
-                          "type": "constant",
-                          "value": 0
+                          "type": "attribute",
+                          "object": {
+                            "type": "name",
+                            "name": "options"
+                          },
+                          "attr": "keyblades_unlock_chests"
                         }
                       ]
                     }
@@ -7962,8 +8102,12 @@
                       "name": "has_emblems",
                       "args": [
                         {
-                          "type": "constant",
-                          "value": 0
+                          "type": "attribute",
+                          "object": {
+                            "type": "name",
+                            "name": "options"
+                          },
+                          "attr": "keyblades_unlock_chests"
                         }
                       ]
                     }
@@ -7986,8 +8130,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8006,8 +8154,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8026,8 +8178,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8046,8 +8202,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8066,8 +8226,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8096,8 +8260,12 @@
                   "name": "has_emblems",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -8128,8 +8296,12 @@
                   "name": "has_emblems",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -8150,8 +8322,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8212,8 +8388,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8232,8 +8412,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8290,8 +8474,12 @@
                   "name": "has_emblems",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -8322,8 +8510,12 @@
                   "name": "has_emblems",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -8381,8 +8573,12 @@
                   "name": "has_emblems",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 },
@@ -8508,8 +8704,12 @@
                       "name": "has_emblems",
                       "args": [
                         {
-                          "type": "constant",
-                          "value": 0
+                          "type": "attribute",
+                          "object": {
+                            "type": "name",
+                            "name": "options"
+                          },
+                          "attr": "keyblades_unlock_chests"
                         }
                       ]
                     }
@@ -8566,8 +8766,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8617,8 +8821,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8637,8 +8845,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8657,8 +8869,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8677,8 +8893,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -8697,8 +8917,12 @@
               "name": "has_emblems",
               "args": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9254,12 +9478,20 @@
                   "value": 4
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 },
                 {
-                  "type": "constant",
-                  "value": 1
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "puppies"
                 }
               ]
             },
@@ -9319,8 +9551,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9369,8 +9605,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9419,8 +9659,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9469,8 +9713,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9519,8 +9767,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9569,8 +9821,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9619,8 +9875,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9669,8 +9929,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9719,8 +9983,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9769,8 +10037,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9819,8 +10091,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9869,8 +10145,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9919,8 +10199,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -9969,8 +10253,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10019,8 +10307,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10069,8 +10361,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10119,8 +10415,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10169,8 +10469,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10219,8 +10523,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10269,8 +10577,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10319,8 +10631,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10369,8 +10685,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10419,8 +10739,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10469,8 +10793,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10519,8 +10847,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10569,8 +10901,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10619,8 +10955,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10669,8 +11009,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10719,8 +11063,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10769,8 +11117,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10819,8 +11171,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10869,8 +11225,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10919,8 +11279,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -10969,8 +11333,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11019,8 +11387,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11069,8 +11441,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11119,8 +11495,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11169,8 +11549,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11219,8 +11603,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11269,8 +11657,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11319,8 +11711,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11369,8 +11765,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11419,8 +11819,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11469,8 +11873,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11519,8 +11927,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11569,8 +11981,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11619,8 +12035,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11669,8 +12089,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11719,8 +12143,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11769,8 +12197,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11819,8 +12251,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11869,8 +12305,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11919,8 +12359,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -11969,8 +12413,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12019,8 +12467,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12069,8 +12521,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12119,8 +12575,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12169,8 +12629,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12219,8 +12683,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12269,8 +12737,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12319,8 +12791,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12369,8 +12845,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12419,8 +12899,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12469,8 +12953,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12519,8 +13007,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12569,8 +13061,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12619,8 +13115,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12669,8 +13169,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12719,8 +13223,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12769,8 +13277,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12819,8 +13331,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12869,8 +13385,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12919,8 +13439,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -12969,8 +13493,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13019,8 +13547,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13069,8 +13601,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13119,8 +13655,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13169,8 +13709,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13219,8 +13763,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13269,8 +13817,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13319,8 +13871,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13369,8 +13925,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13419,8 +13979,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13469,8 +14033,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13519,8 +14087,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13569,8 +14141,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13619,8 +14195,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13669,8 +14249,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13719,8 +14303,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13769,8 +14357,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13819,8 +14411,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13869,8 +14465,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13919,8 +14519,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -13969,8 +14573,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -14019,8 +14627,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -14069,8 +14681,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -14119,8 +14735,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -14169,8 +14789,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -14219,8 +14843,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -14269,8 +14897,12 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "options"
+                  },
+                  "attr": "keyblades_unlock_chests"
                 }
               ]
             },
@@ -14308,8 +14940,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -14338,8 +14974,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -14368,8 +15008,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -14398,8 +15042,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -14428,8 +15076,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -14466,8 +15118,12 @@
                       "value": 2
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -14496,8 +15152,12 @@
                       "value": 3
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -14526,8 +15186,12 @@
                       "value": 5
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 }
@@ -14549,8 +15213,12 @@
                       "value": 7
                     },
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "options"
+                      },
+                      "attr": "keyblades_unlock_chests"
                     }
                   ]
                 },

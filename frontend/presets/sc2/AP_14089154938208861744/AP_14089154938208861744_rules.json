@@ -394,6 +394,10 @@
                   "group": {
                     "type": "constant",
                     "value": "WoL Missions"
+                  },
+                  "count": {
+                    "type": "name",
+                    "name": "mission_count"
                   }
                 },
                 {
@@ -417,6 +421,10 @@
                   "group": {
                     "type": "constant",
                     "value": "WoL Missions"
+                  },
+                  "count": {
+                    "type": "name",
+                    "name": "mission_count"
                   }
                 },
                 {
@@ -1223,6 +1231,10 @@
                   "group": {
                     "type": "constant",
                     "value": "WoL Missions"
+                  },
+                  "count": {
+                    "type": "name",
+                    "name": "mission_count"
                   }
                 },
                 {
@@ -1246,6 +1258,10 @@
                   "group": {
                     "type": "constant",
                     "value": "WoL Missions"
+                  },
+                  "count": {
+                    "type": "name",
+                    "name": "mission_count"
                   }
                 },
                 {
@@ -2834,6 +2850,10 @@
                   "group": {
                     "type": "constant",
                     "value": "WoL Missions"
+                  },
+                  "count": {
+                    "type": "name",
+                    "name": "mission_count"
                   }
                 },
                 {
@@ -3282,6 +3302,10 @@
                   "group": {
                     "type": "constant",
                     "value": "WoL Missions"
+                  },
+                  "count": {
+                    "type": "name",
+                    "name": "mission_count"
                   }
                 },
                 {
@@ -4252,6 +4276,10 @@
                   "group": {
                     "type": "constant",
                     "value": "WoL Missions"
+                  },
+                  "count": {
+                    "type": "name",
+                    "name": "mission_count"
                   }
                 },
                 {
@@ -5764,6 +5792,10 @@
                   "group": {
                     "type": "constant",
                     "value": "WoL Missions"
+                  },
+                  "count": {
+                    "type": "name",
+                    "name": "mission_count"
                   }
                 },
                 {
@@ -5787,6 +5819,10 @@
                   "group": {
                     "type": "constant",
                     "value": "WoL Missions"
+                  },
+                  "count": {
+                    "type": "name",
+                    "name": "mission_count"
                   }
                 },
                 {

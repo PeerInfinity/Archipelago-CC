@@ -139,8 +139,16 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 6
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "options"
+                  },
+                  "attr": "required_golden_coins"
                 }
               ]
             }

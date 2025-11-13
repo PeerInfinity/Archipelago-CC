@@ -4688,6 +4688,19 @@
   },
   "items": {
     "1": {
+      "Dio's Best Friend": {
+        "name": "Dio's Best Friend",
+        "id": 37001,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 15
+      },
       "Common Item": {
         "name": "Common Item",
         "id": 37002,
@@ -4743,6 +4756,20 @@
         "event": false,
         "type": null,
         "max_count": 6
+      },
+      "Lunar Item": {
+        "name": "Lunar Item",
+        "id": 37006,
+        "groups": [
+          "Everything",
+          "Traps"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": true,
+        "event": false,
+        "type": null,
+        "max_count": 16
       },
       "Equipment": {
         "name": "Equipment",
@@ -4828,19 +4855,6 @@
         "type": null,
         "max_count": 1
       },
-      "Dio's Best Friend": {
-        "name": "Dio's Best Friend",
-        "id": 37001,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 15
-      },
       "Beads of Fealty": {
         "name": "Beads of Fealty",
         "id": 37013,
@@ -4908,20 +4922,6 @@
         "event": false,
         "type": null,
         "max_count": 44
-      },
-      "Lunar Item": {
-        "name": "Lunar Item",
-        "id": 37006,
-        "groups": [
-          "Everything",
-          "Traps"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 16
       },
       "Mountain Trap": {
         "name": "Mountain Trap",
@@ -5049,177 +5049,23 @@
         "type": null,
         "max_count": 8
       },
-      "Distant Roost": {
-        "name": "Distant Roost",
-        "id": 37707,
+      "Aphelian Sanctuary": {
+        "name": "Aphelian Sanctuary",
+        "id": 37703,
         "groups": [
           "Environments",
           "Everything"
         ],
-        "advancement": true,
+        "advancement": false,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Distant Roost (2)": {
-        "name": "Distant Roost (2)",
-        "id": 37708,
-        "groups": [
-          "Environments",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Titanic Plains": {
-        "name": "Titanic Plains",
-        "id": 37715,
-        "groups": [
-          "Environments",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Titanic Plains (2)": {
-        "name": "Titanic Plains (2)",
-        "id": 37716,
-        "groups": [
-          "Environments",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Verdant Falls": {
-        "name": "Verdant Falls",
-        "id": 37728,
-        "groups": [
-          "Environments",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Abandoned Aqueduct": {
-        "name": "Abandoned Aqueduct",
-        "id": 37717,
-        "groups": [
-          "Environments",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Wetland Aspect": {
-        "name": "Wetland Aspect",
-        "id": 37712,
-        "groups": [
-          "Environments",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Rallypoint Delta": {
-        "name": "Rallypoint Delta",
-        "id": 37713,
-        "groups": [
-          "Environments",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Scorched Acres": {
-        "name": "Scorched Acres",
-        "id": 37747,
-        "groups": [
-          "Environments",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Abyssal Depths": {
-        "name": "Abyssal Depths",
-        "id": 37710,
-        "groups": [
-          "Environments",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Siren's Call": {
-        "name": "Siren's Call",
-        "id": 37737,
-        "groups": [
-          "Environments",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Sundered Grove": {
-        "name": "Sundered Grove",
-        "id": 37735,
-        "groups": [
-          "Environments",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Sky Meadow": {
-        "name": "Sky Meadow",
-        "id": 37738,
+      "Void Fields": {
+        "name": "Void Fields",
+        "id": 37704,
         "groups": [
           "Environments",
           "Everything"
@@ -5259,6 +5105,76 @@
         "type": null,
         "max_count": 2
       },
+      "Distant Roost": {
+        "name": "Distant Roost",
+        "id": 37707,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Distant Roost (2)": {
+        "name": "Distant Roost (2)",
+        "id": 37708,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Abyssal Depths": {
+        "name": "Abyssal Depths",
+        "id": 37710,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Wetland Aspect": {
+        "name": "Wetland Aspect",
+        "id": 37712,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Rallypoint Delta": {
+        "name": "Rallypoint Delta",
+        "id": 37713,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
       "Hidden Realm: Gilded Coast": {
         "name": "Hidden Realm: Gilded Coast",
         "id": 37714,
@@ -5268,6 +5184,48 @@
         ],
         "advancement": false,
         "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Titanic Plains": {
+        "name": "Titanic Plains",
+        "id": 37715,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Titanic Plains (2)": {
+        "name": "Titanic Plains (2)",
+        "id": 37716,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Abandoned Aqueduct": {
+        "name": "Abandoned Aqueduct",
+        "id": 37717,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
         "trap": false,
         "event": false,
         "type": null,
@@ -5287,23 +5245,9 @@
         "type": null,
         "max_count": 2
       },
-      "Hidden Realm: A Moment, Fractured": {
-        "name": "Hidden Realm: A Moment, Fractured",
-        "id": 37733,
-        "groups": [
-          "Environments",
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Void Fields": {
-        "name": "Void Fields",
-        "id": 37704,
+      "Verdant Falls": {
+        "name": "Verdant Falls",
+        "id": 37728,
         "groups": [
           "Environments",
           "Everything"
@@ -5329,23 +5273,65 @@
         "type": null,
         "max_count": 2
       },
-      "Siphoned Forest": {
-        "name": "Siphoned Forest",
-        "id": 37739,
+      "Hidden Realm: A Moment, Fractured": {
+        "name": "Hidden Realm: A Moment, Fractured",
+        "id": 37733,
         "groups": [
           "Environments",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
-      "Aphelian Sanctuary": {
-        "name": "Aphelian Sanctuary",
-        "id": 37703,
+      "Sundered Grove": {
+        "name": "Sundered Grove",
+        "id": 37735,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Siren's Call": {
+        "name": "Siren's Call",
+        "id": 37737,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Sky Meadow": {
+        "name": "Sky Meadow",
+        "id": 37738,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Siphoned Forest": {
+        "name": "Siphoned Forest",
+        "id": 37739,
         "groups": [
           "Environments",
           "Everything"
@@ -5371,6 +5357,20 @@
         "type": null,
         "max_count": 1
       },
+      "The Planetarium": {
+        "name": "The Planetarium",
+        "id": 37745,
+        "groups": [
+          "Environments",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Void Locus": {
         "name": "Void Locus",
         "id": 37746,
@@ -5385,19 +5385,19 @@
         "type": null,
         "max_count": 1
       },
-      "The Planetarium": {
-        "name": "The Planetarium",
-        "id": 37745,
+      "Scorched Acres": {
+        "name": "Scorched Acres",
+        "id": 37747,
         "groups": [
           "Environments",
           "Everything"
         ],
-        "advancement": false,
+        "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Stage 5": {
         "name": "Stage 5",

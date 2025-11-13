@@ -6055,62 +6055,6 @@
         "type": null,
         "max_count": 4
       },
-      "SubPET": {
-        "name": "SubPET",
-        "id": 11735217,
-        "groups": [
-          "Everything",
-          "Key Items"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Needle": {
-        "name": "Needle",
-        "id": 11735218,
-        "groups": [
-          "Everything",
-          "Key Items"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "PETCase": {
-        "name": "PETCase",
-        "id": 11735219,
-        "groups": [
-          "Everything",
-          "Key Items"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Hammer": {
-        "name": "Hammer",
-        "id": 11735263,
-        "groups": [
-          "Everything",
-          "Key Items"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
       "Unlocker": {
         "name": "Unlocker",
         "id": 11735064,
@@ -6180,21 +6124,6 @@
         "event": false,
         "type": null,
         "max_count": 6
-      },
-      "SneakRun": {
-        "name": "SneakRun",
-        "id": 11735189,
-        "groups": [
-          "Everything",
-          "Programs",
-          "Subchips"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
       },
       "AirShoes *": {
         "name": "AirShoes *",
@@ -7624,6 +7553,567 @@
         "type": null,
         "max_count": 2
       },
+      "Airshoes": {
+        "name": "Airshoes",
+        "id": 11735172,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Attack+1 (White)": {
+        "name": "Attack+1 (White)",
+        "id": 11735173,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Attack+1 (Pink)": {
+        "name": "Attack+1 (Pink)",
+        "id": 11735174,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "BrkChrg": {
+        "name": "BrkChrg",
+        "id": 11735175,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Charge+1 (Pink)": {
+        "name": "Charge+1 (Pink)",
+        "id": 11735176,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Charge+1 (White)": {
+        "name": "Charge+1 (White)",
+        "id": 11735177,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Collect": {
+        "name": "Collect",
+        "id": 11735178,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "GigFldr1": {
+        "name": "GigFldr1",
+        "id": 11735179,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HP+100 (Pink)": {
+        "name": "HP+100 (Pink)",
+        "id": 11735180,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "HP+100 (Yellow)": {
+        "name": "HP+100 (Yellow)",
+        "id": 11735181,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HP+200 (Yellow)": {
+        "name": "HP+200 (Yellow)",
+        "id": 11735182,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HP+500 (Yellow)": {
+        "name": "HP+500 (Yellow)",
+        "id": 11735183,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HubBatc": {
+        "name": "HubBatc",
+        "id": 11735184,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Jungle": {
+        "name": "Jungle",
+        "id": 11735185,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "OilBody": {
+        "name": "OilBody",
+        "id": 11735186,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "QuickGge": {
+        "name": "QuickGge",
+        "id": 11735187,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "SetSand": {
+        "name": "SetSand",
+        "id": 11735188,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "SneakRun": {
+        "name": "SneakRun",
+        "id": 11735189,
+        "groups": [
+          "Everything",
+          "Programs",
+          "Subchips"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Speed+1 (Yellow)": {
+        "name": "Speed+1 (Yellow)",
+        "id": 11735190,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "WpnLV+1 (White)": {
+        "name": "WpnLV+1 (White)",
+        "id": 11735191,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "WpnLV+1 (Pink)": {
+        "name": "WpnLV+1 (Pink)",
+        "id": 11735192,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "WpnLV+1 (Yellow)": {
+        "name": "WpnLV+1 (Yellow)",
+        "id": 11735193,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Press": {
+        "name": "Press",
+        "id": 11735194,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "200z": {
+        "name": "200z",
+        "id": 11735195,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "500z": {
+        "name": "500z",
+        "id": 11735196,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "600z": {
+        "name": "600z",
+        "id": 11735197,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "800z": {
+        "name": "800z",
+        "id": 11735198,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "900z": {
+        "name": "900z",
+        "id": 11735199,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "1000z": {
+        "name": "1000z",
+        "id": 11735200,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "1200z": {
+        "name": "1200z",
+        "id": 11735201,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "1400z": {
+        "name": "1400z",
+        "id": 11735202,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "1600z": {
+        "name": "1600z",
+        "id": 11735203,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "1800z": {
+        "name": "1800z",
+        "id": 11735204,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "2000z": {
+        "name": "2000z",
+        "id": 11735205,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "3000z": {
+        "name": "3000z",
+        "id": 11735206,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "9000z": {
+        "name": "9000z",
+        "id": 11735207,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "10000z": {
+        "name": "10000z",
+        "id": 11735208,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "30000z": {
+        "name": "30000z",
+        "id": 11735209,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "50000z": {
+        "name": "50000z",
+        "id": 11735210,
+        "groups": [
+          "Everything",
+          "Zenny"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "30 BugFrags": {
+        "name": "30 BugFrags",
+        "id": 11735211,
+        "groups": [
+          "BugFrags",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "SonicWav W": {
         "name": "SonicWav W",
         "id": 11735212,
@@ -7689,6 +8179,90 @@
         ],
         "advancement": true,
         "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "SubPET": {
+        "name": "SubPET",
+        "id": 11735217,
+        "groups": [
+          "Everything",
+          "Key Items"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Needle": {
+        "name": "Needle",
+        "id": 11735218,
+        "groups": [
+          "Everything",
+          "Key Items"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "PETCase": {
+        "name": "PETCase",
+        "id": 11735219,
+        "groups": [
+          "Everything",
+          "Key Items"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "10 BugFrags": {
+        "name": "10 BugFrags",
+        "id": 11735221,
+        "groups": [
+          "BugFrags",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 6
+      },
+      "1 BugFrag": {
+        "name": "1 BugFrag",
+        "id": 11735222,
+        "groups": [
+          "BugFrags",
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 12
+      },
+      "UnderSht": {
+        "name": "UnderSht",
+        "id": 11735223,
+        "groups": [
+          "Everything",
+          "Programs"
+        ],
+        "advancement": false,
+        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
@@ -8279,323 +8853,15 @@
         "type": null,
         "max_count": 2
       },
-      "Airshoes": {
-        "name": "Airshoes",
-        "id": 11735172,
+      "Hammer": {
+        "name": "Hammer",
+        "id": 11735263,
         "groups": [
           "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Attack+1 (White)": {
-        "name": "Attack+1 (White)",
-        "id": 11735173,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Attack+1 (Pink)": {
-        "name": "Attack+1 (Pink)",
-        "id": 11735174,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "BrkChrg": {
-        "name": "BrkChrg",
-        "id": 11735175,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Charge+1 (Pink)": {
-        "name": "Charge+1 (Pink)",
-        "id": 11735176,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "Charge+1 (White)": {
-        "name": "Charge+1 (White)",
-        "id": 11735177,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "Collect": {
-        "name": "Collect",
-        "id": 11735178,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "GigFldr1": {
-        "name": "GigFldr1",
-        "id": 11735179,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HP+100 (Pink)": {
-        "name": "HP+100 (Pink)",
-        "id": 11735180,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "HP+100 (Yellow)": {
-        "name": "HP+100 (Yellow)",
-        "id": 11735181,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HP+200 (Yellow)": {
-        "name": "HP+200 (Yellow)",
-        "id": 11735182,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HP+500 (Yellow)": {
-        "name": "HP+500 (Yellow)",
-        "id": 11735183,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HubBatc": {
-        "name": "HubBatc",
-        "id": 11735184,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Jungle": {
-        "name": "Jungle",
-        "id": 11735185,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "OilBody": {
-        "name": "OilBody",
-        "id": 11735186,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "QuickGge": {
-        "name": "QuickGge",
-        "id": 11735187,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "SetSand": {
-        "name": "SetSand",
-        "id": 11735188,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Speed+1 (Yellow)": {
-        "name": "Speed+1 (Yellow)",
-        "id": 11735190,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "WpnLV+1 (White)": {
-        "name": "WpnLV+1 (White)",
-        "id": 11735191,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "WpnLV+1 (Pink)": {
-        "name": "WpnLV+1 (Pink)",
-        "id": 11735192,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "WpnLV+1 (Yellow)": {
-        "name": "WpnLV+1 (Yellow)",
-        "id": 11735193,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Press": {
-        "name": "Press",
-        "id": 11735194,
-        "groups": [
-          "Everything",
-          "Programs"
+          "Key Items"
         ],
         "advancement": true,
         "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "UnderSht": {
-        "name": "UnderSht",
-        "id": 11735223,
-        "groups": [
-          "Everything",
-          "Programs"
-        ],
-        "advancement": false,
-        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
@@ -8628,272 +8894,6 @@
         "event": false,
         "type": null,
         "max_count": 2
-      },
-      "200z": {
-        "name": "200z",
-        "id": 11735195,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "500z": {
-        "name": "500z",
-        "id": 11735196,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "600z": {
-        "name": "600z",
-        "id": 11735197,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "800z": {
-        "name": "800z",
-        "id": 11735198,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "900z": {
-        "name": "900z",
-        "id": 11735199,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "1000z": {
-        "name": "1000z",
-        "id": 11735200,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "1200z": {
-        "name": "1200z",
-        "id": 11735201,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "1400z": {
-        "name": "1400z",
-        "id": 11735202,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "1600z": {
-        "name": "1600z",
-        "id": 11735203,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "1800z": {
-        "name": "1800z",
-        "id": 11735204,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "2000z": {
-        "name": "2000z",
-        "id": 11735205,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "3000z": {
-        "name": "3000z",
-        "id": 11735206,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "9000z": {
-        "name": "9000z",
-        "id": 11735207,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "10000z": {
-        "name": "10000z",
-        "id": 11735208,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "30000z": {
-        "name": "30000z",
-        "id": 11735209,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "50000z": {
-        "name": "50000z",
-        "id": 11735210,
-        "groups": [
-          "Everything",
-          "Zenny"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "30 BugFrags": {
-        "name": "30 BugFrags",
-        "id": 11735211,
-        "groups": [
-          "BugFrags",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "10 BugFrags": {
-        "name": "10 BugFrags",
-        "id": 11735221,
-        "groups": [
-          "BugFrags",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 6
-      },
-      "1 BugFrag": {
-        "name": "1 BugFrag",
-        "id": 11735222,
-        "groups": [
-          "BugFrags",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 12
       },
       "Victory": {
         "name": "Victory",

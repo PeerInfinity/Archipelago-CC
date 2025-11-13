@@ -8275,6 +8275,28 @@
         "advancement": true,
         "useful": false,
         "trap": false
+      },
+      "Chapter Completed": {
+        "name": "Chapter Completed",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 4
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
       }
     }
   },

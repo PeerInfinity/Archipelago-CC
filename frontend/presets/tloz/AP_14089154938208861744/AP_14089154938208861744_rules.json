@@ -268,8 +268,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": "Level 1 Boss"
+                      "type": "name",
+                      "name": "b"
                     },
                     {
                       "type": "constant",
@@ -1777,8 +1777,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "constant",
-                          "value": "Level 2 Boss"
+                          "type": "name",
+                          "name": "b"
                         },
                         {
                           "type": "constant",
@@ -3512,8 +3512,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "constant",
-                          "value": "Level 3 Boss"
+                          "type": "name",
+                          "name": "b"
                         },
                         {
                           "type": "constant",
@@ -5319,8 +5319,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "constant",
-                                  "value": "Level 4 Boss"
+                                  "type": "name",
+                                  "name": "b"
                                 },
                                 {
                                   "type": "constant",
@@ -8030,8 +8030,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "constant",
-                                  "value": "Level 5 Boss"
+                                  "type": "name",
+                                  "name": "b"
                                 },
                                 {
                                   "type": "constant",
@@ -10213,8 +10213,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "constant",
-                                  "value": "Level 6 Boss"
+                                  "type": "name",
+                                  "name": "b"
                                 },
                                 {
                                   "type": "constant",
@@ -13814,8 +13814,8 @@
                                   "method": "can_reach",
                                   "args": [
                                     {
-                                      "type": "constant",
-                                      "value": "Level 7 Boss"
+                                      "type": "name",
+                                      "name": "b"
                                     },
                                     {
                                       "type": "constant",
@@ -17389,8 +17389,8 @@
                                   "method": "can_reach",
                                   "args": [
                                     {
-                                      "type": "constant",
-                                      "value": "Level 8 Boss"
+                                      "type": "name",
+                                      "name": "b"
                                     },
                                     {
                                       "type": "constant",

@@ -231,6 +231,7 @@ class LADXGameExportHandler(GenericGameExportHandler):
             'BOOMERANG': 'Boomerang',
             'BOW': 'Bow',
             'ROOSTER': 'Rooster',
+            'FLIPPERS': 'Flippers',
             'RUPEES': 'RUPEES',  # Special case for currency
             # Add more mappings as needed
         }

@@ -26,6 +26,10 @@
                   "group": {
                     "type": "constant",
                     "value": "PSI Keys"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
                   }
                 },
                 {
@@ -33,6 +37,10 @@
                   "group": {
                     "type": "constant",
                     "value": "Important Artifacts"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               ]
@@ -406,6 +414,10 @@
                   "group": {
                     "type": "constant",
                     "value": "PSI Keys"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
                   }
                 },
                 {
@@ -413,6 +425,10 @@
                   "group": {
                     "type": "constant",
                     "value": "Important Artifacts"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
                   }
                 }
               ]
@@ -786,6 +802,10 @@
                   "group": {
                     "type": "constant",
                     "value": "PSI Keys"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 3
                   }
                 },
                 {
@@ -793,6 +813,10 @@
                   "group": {
                     "type": "constant",
                     "value": "Important Artifacts"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 3
                   }
                 }
               ]

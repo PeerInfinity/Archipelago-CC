@@ -32,6 +32,14 @@
             }
           },
           {
+            "name": "To Statement 3",
+            "connected_region": "Prove Statement 3",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
             "name": "To Statement 4",
             "connected_region": "Prove Statement 4",
             "access_rule": {
@@ -46,14 +54,6 @@
               "type": "constant",
               "value": true
             }
-          },
-          {
-            "name": "To Statement 6",
-            "connected_region": "Prove Statement 6",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
           }
         ],
         "locations": []
@@ -62,73 +62,41 @@
         "name": "Prove Statement 1",
         "exits": [
           {
-            "name": "From Statement 1 to Statement 3",
-            "connected_region": "Prove Statement 3",
+            "name": "From Statement 1 to Statement 6",
+            "connected_region": "Prove Statement 6",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Statement 1"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Statement 2"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Statement 1"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             }
           }
         ],
         "locations": [],
-        "label1": "2cn",
-        "label2": "|- 2 e. CC"
+        "label1": "df-2",
+        "label2": "2 = (1 + 1)"
       },
       "Prove Statement 2": {
         "name": "Prove Statement 2",
         "exits": [
           {
-            "name": "From Statement 2 to Statement 3",
-            "connected_region": "Prove Statement 3",
+            "name": "From Statement 2 to Statement 7",
+            "connected_region": "Prove Statement 7",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Statement 1"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Statement 2"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Statement 2"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             }
           }
         ],
@@ -147,19 +115,19 @@
               "type": "None"
             },
             "statement_id": 2,
-            "label1": "ax-1cn",
-            "label2": "|- 1 e. CC"
+            "label1": "df-3",
+            "label2": "3 = (2 + 1)"
           }
         ],
-        "label1": "ax-1cn",
-        "label2": "|- 1 e. CC"
+        "label1": "df-3",
+        "label2": "3 = (2 + 1)"
       },
       "Prove Statement 3": {
         "name": "Prove Statement 3",
         "exits": [
           {
-            "name": "From Statement 3 to Statement 8",
-            "connected_region": "Prove Statement 8",
+            "name": "From Statement 3 to Statement 9",
+            "connected_region": "Prove Statement 9",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -178,7 +146,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Statement 6"
+                    "value": "Statement 7"
                   },
                   "count": {
                     "type": "constant",
@@ -189,7 +157,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Statement 7"
+                    "value": "Statement 8"
                   },
                   "count": {
                     "type": "constant",
@@ -205,13 +173,37 @@
             "name": "Prove Statement 3",
             "id": 234790003,
             "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Statement 3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "statement_id": 3,
+            "label1": "df-4",
+            "label2": "4 = (3 + 1)"
+          }
+        ],
+        "label1": "df-4",
+        "label2": "4 = (3 + 1)"
+      },
+      "Prove Statement 4": {
+        "name": "Prove Statement 4",
+        "exits": [
+          {
+            "name": "From Statement 4 to Statement 8",
+            "connected_region": "Prove Statement 8",
+            "access_rule": {
               "type": "and",
               "conditions": [
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Statement 1"
+                    "value": "Statement 4"
                   },
                   "count": {
                     "type": "constant",
@@ -222,7 +214,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Statement 2"
+                    "value": "Statement 5"
                   },
                   "count": {
                     "type": "constant",
@@ -230,41 +222,6 @@
                   }
                 }
               ]
-            },
-            "item": {
-              "name": "Statement 3",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "statement_id": 3,
-            "label1": "addassi",
-            "label2": "|- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-            "required_items": [
-              "Statement 1",
-              "Statement 2"
-            ]
-          }
-        ],
-        "label1": "addassi",
-        "label2": "|- ( ( A + B ) + C ) = ( A + ( B + C ) )"
-      },
-      "Prove Statement 4": {
-        "name": "Prove Statement 4",
-        "exits": [
-          {
-            "name": "From Statement 4 to Statement 9",
-            "connected_region": "Prove Statement 9",
-            "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Statement 4"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
             }
           }
         ],
@@ -283,29 +240,45 @@
               "type": "None"
             },
             "statement_id": 4,
-            "label1": "df-2",
-            "label2": "|- 2 = ( 1 + 1 )"
+            "label1": "ax-1cn",
+            "label2": "1 \u2208 \u2102"
           }
         ],
-        "label1": "df-2",
-        "label2": "|- 2 = ( 1 + 1 )"
+        "label1": "ax-1cn",
+        "label2": "1 \u2208 \u2102"
       },
       "Prove Statement 5": {
         "name": "Prove Statement 5",
         "exits": [
           {
-            "name": "From Statement 5 to Statement 7",
-            "connected_region": "Prove Statement 7",
+            "name": "From Statement 5 to Statement 8",
+            "connected_region": "Prove Statement 8",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Statement 5"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 4"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 5"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
+              ]
             }
           }
         ],
@@ -324,164 +297,18 @@
               "type": "None"
             },
             "statement_id": 5,
-            "label1": "df-3",
-            "label2": "|- 3 = ( 2 + 1 )"
+            "label1": "2cn",
+            "label2": "2 \u2208 \u2102"
           }
         ],
-        "label1": "df-3",
-        "label2": "|- 3 = ( 2 + 1 )"
+        "label1": "2cn",
+        "label2": "2 \u2208 \u2102"
       },
       "Prove Statement 6": {
         "name": "Prove Statement 6",
         "exits": [
           {
-            "name": "From Statement 6 to Statement 8",
-            "connected_region": "Prove Statement 8",
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Statement 3"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Statement 6"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Statement 7"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Prove Statement 6",
-            "id": 234790006,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Statement 6",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "statement_id": 6,
-            "label1": "df-4",
-            "label2": "|- 4 = ( 3 + 1 )"
-          }
-        ],
-        "label1": "df-4",
-        "label2": "|- 4 = ( 3 + 1 )"
-      },
-      "Prove Statement 7": {
-        "name": "Prove Statement 7",
-        "exits": [
-          {
-            "name": "From Statement 7 to Statement 8",
-            "connected_region": "Prove Statement 8",
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Statement 3"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Statement 6"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Statement 7"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "Prove Statement 7",
-            "id": 234790007,
-            "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Statement 5"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
-            },
-            "item": {
-              "name": "Statement 7",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "statement_id": 7,
-            "label1": "oveq1i",
-            "label2": "|- ( A F C ) = ( B F C )",
-            "required_items": [
-              "Statement 5"
-            ]
-          }
-        ],
-        "label1": "oveq1i",
-        "label2": "|- ( A F C ) = ( B F C )"
-      },
-      "Prove Statement 8": {
-        "name": "Prove Statement 8",
-        "exits": [
-          {
-            "name": "From Statement 8 to Statement 10",
+            "name": "From Statement 6 to Statement 10",
             "connected_region": "Prove Statement 10",
             "access_rule": {
               "type": "and",
@@ -490,7 +317,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Statement 8"
+                    "value": "Statement 6"
                   },
                   "count": {
                     "type": "constant",
@@ -514,8 +341,42 @@
         ],
         "locations": [
           {
-            "name": "Prove Statement 8",
-            "id": 234790008,
+            "name": "Prove Statement 6",
+            "id": 234790006,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Statement 1"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
+            },
+            "item": {
+              "name": "Statement 6",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "statement_id": 6,
+            "label1": "oveq2i",
+            "label2": "(2 + 2) = (2 + (1 + 1))",
+            "required_items": [
+              "Statement 1"
+            ]
+          }
+        ],
+        "label1": "oveq2i",
+        "label2": "(2 + 2) = (2 + (1 + 1))"
+      },
+      "Prove Statement 7": {
+        "name": "Prove Statement 7",
+        "exits": [
+          {
+            "name": "From Statement 7 to Statement 9",
+            "connected_region": "Prove Statement 9",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -534,7 +395,74 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Statement 6"
+                    "value": "Statement 7"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 8"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Prove Statement 7",
+            "id": 234790007,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Statement 2"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
+            },
+            "item": {
+              "name": "Statement 7",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "statement_id": 7,
+            "label1": "oveq1i",
+            "label2": "(3 + 1) = ((2 + 1) + 1)",
+            "required_items": [
+              "Statement 2"
+            ]
+          }
+        ],
+        "label1": "oveq1i",
+        "label2": "(3 + 1) = ((2 + 1) + 1)"
+      },
+      "Prove Statement 8": {
+        "name": "Prove Statement 8",
+        "exits": [
+          {
+            "name": "From Statement 8 to Statement 9",
+            "connected_region": "Prove Statement 9",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 3"
                   },
                   "count": {
                     "type": "constant",
@@ -551,6 +479,50 @@
                     "type": "constant",
                     "value": 1
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 8"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Prove Statement 8",
+            "id": 234790008,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 4"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 5"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
                 }
               ]
             },
@@ -561,17 +533,16 @@
               "type": "None"
             },
             "statement_id": 8,
-            "label1": "3eqtri",
-            "label2": "|- A = D",
+            "label1": "addassi",
+            "label2": "((2 + 1) + 1) = (2 + (1 + 1))",
             "required_items": [
-              "Statement 3",
-              "Statement 6",
-              "Statement 7"
+              "Statement 4",
+              "Statement 5"
             ]
           }
         ],
-        "label1": "3eqtri",
-        "label2": "|- A = D"
+        "label1": "addassi",
+        "label2": "((2 + 1) + 1) = (2 + (1 + 1))"
       },
       "Prove Statement 9": {
         "name": "Prove Statement 9",
@@ -586,7 +557,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Statement 8"
+                    "value": "Statement 6"
                   },
                   "count": {
                     "type": "constant",
@@ -613,15 +584,42 @@
             "name": "Prove Statement 9",
             "id": 234790009,
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Statement 4"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 3"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 7"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Statement 8"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Statement 9",
@@ -630,15 +628,17 @@
               "type": "None"
             },
             "statement_id": 9,
-            "label1": "oveq2i",
-            "label2": "|- ( C F A ) = ( C F B )",
+            "label1": "3eqtri",
+            "label2": "4 = (2 + (1 + 1))",
             "required_items": [
-              "Statement 4"
+              "Statement 3",
+              "Statement 7",
+              "Statement 8"
             ]
           }
         ],
-        "label1": "oveq2i",
-        "label2": "|- ( C F A ) = ( C F B )"
+        "label1": "3eqtri",
+        "label2": "4 = (2 + (1 + 1))"
       },
       "Prove Statement 10": {
         "name": "Prove Statement 10",
@@ -654,7 +654,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Statement 8"
+                    "value": "Statement 6"
                   },
                   "count": {
                     "type": "constant",
@@ -682,15 +682,15 @@
             },
             "statement_id": 10,
             "label1": "eqtr4i",
-            "label2": "|- A = C",
+            "label2": "(2 + 2) = 4",
             "required_items": [
-              "Statement 8",
+              "Statement 6",
               "Statement 9"
             ]
           }
         ],
         "label1": "eqtr4i",
-        "label2": "|- A = C"
+        "label2": "(2 + 2) = 4"
       }
     }
   },
@@ -716,8 +716,8 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "label1": "2cn",
-        "label2": "|- 2 e. CC",
+        "label1": "df-2",
+        "label2": "2 = (1 + 1)",
         "id": 234790000
       },
       "Statement 2": {
@@ -732,8 +732,8 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "label1": "ax-1cn",
-        "label2": "|- 1 e. CC",
+        "label1": "df-3",
+        "label2": "3 = (2 + 1)",
         "id": 234790001
       },
       "Statement 3": {
@@ -748,8 +748,8 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "label1": "addassi",
-        "label2": "|- ( ( A + B ) + C ) = ( A + ( B + C ) )",
+        "label1": "df-4",
+        "label2": "4 = (3 + 1)",
         "id": 234790002
       },
       "Statement 4": {
@@ -764,8 +764,8 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "label1": "df-2",
-        "label2": "|- 2 = ( 1 + 1 )",
+        "label1": "ax-1cn",
+        "label2": "1 \u2208 \u2102",
         "id": 234790003
       },
       "Statement 5": {
@@ -780,8 +780,8 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "label1": "df-3",
-        "label2": "|- 3 = ( 2 + 1 )",
+        "label1": "2cn",
+        "label2": "2 \u2208 \u2102",
         "id": 234790004
       },
       "Statement 6": {
@@ -796,8 +796,8 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "label1": "df-4",
-        "label2": "|- 4 = ( 3 + 1 )",
+        "label1": "oveq2i",
+        "label2": "(2 + 2) = (2 + (1 + 1))",
         "id": 234790005
       },
       "Statement 7": {
@@ -813,7 +813,7 @@
         "type": null,
         "max_count": 1,
         "label1": "oveq1i",
-        "label2": "|- ( A F C ) = ( B F C )",
+        "label2": "(3 + 1) = ((2 + 1) + 1)",
         "id": 234790006
       },
       "Statement 8": {
@@ -828,8 +828,8 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "label1": "3eqtri",
-        "label2": "|- A = D",
+        "label1": "addassi",
+        "label2": "((2 + 1) + 1) = (2 + (1 + 1))",
         "id": 234790007
       },
       "Statement 9": {
@@ -844,8 +844,8 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "label1": "oveq2i",
-        "label2": "|- ( C F A ) = ( C F B )",
+        "label1": "3eqtri",
+        "label2": "4 = (2 + (1 + 1))",
         "id": 234790008
       },
       "Statement 10": {
@@ -861,7 +861,7 @@
         "type": null,
         "max_count": 1,
         "label1": "eqtr4i",
-        "label2": "|- A = C",
+        "label2": "(2 + 2) = 4",
         "id": 234790009
       },
       "Statement 11": {
@@ -2285,145 +2285,145 @@
     "1": {
       "statements": {
         "1": {
-          "label": "2cn",
-          "expression": "|- 2 e. CC",
+          "label": "df-2",
+          "expression": "2 = (1 + 1)",
           "dependencies": [],
-          "full_text": "2cn: The number 2 is a complex number.  (Contributed by NM, 30-Jul-2004.) Reduce dependencies on axioms.  (Revised by Steven Nguyen, 4-Oct-2022.) (|- 2 e. CC)"
+          "full_text": "df-2: Define the number 2. (2 = (1 + 1))"
         },
         "2": {
-          "label": "ax-1cn",
-          "expression": "|- 1 e. CC",
+          "label": "df-3",
+          "expression": "3 = (2 + 1)",
           "dependencies": [],
-          "full_text": "ax-1cn: $j restatement 'ax-resscn' of 'axresscn'; $) $( 1 is a complex number.  Axiom 2 of 22 for real and complex numbers, justified by Theorem ~ ax1cn .  (Contributed by NM, 1-Mar-1995.) (|- 1 e. CC)"
+          "full_text": "df-3: Define the number 3. (3 = (2 + 1))"
         },
         "3": {
-          "label": "addassi",
-          "expression": "|- ( ( A + B ) + C ) = ( A + ( B + C ) )",
-          "dependencies": [
-            1,
-            2
-          ],
-          "full_text": "addassi: Associative law for addition.  (Contributed by NM, 23-Nov-1994.) (|- ( ( A + B ) + C ) = ( A + ( B + C ) ))"
+          "label": "df-4",
+          "expression": "4 = (3 + 1)",
+          "dependencies": [],
+          "full_text": "df-4: Define the number 4. (4 = (3 + 1))"
         },
         "4": {
-          "label": "df-2",
-          "expression": "|- 2 = ( 1 + 1 )",
+          "label": "ax-1cn",
+          "expression": "1 \u2208 \u2102",
           "dependencies": [],
-          "full_text": "df-2: Define the number 2.  (Contributed by NM, 27-May-1999.) (|- 2 = ( 1 + 1 ))"
+          "full_text": "ax-1cn: 1 is a complex number. (1 \u2208 \u2102)"
         },
         "5": {
-          "label": "df-3",
-          "expression": "|- 3 = ( 2 + 1 )",
+          "label": "2cn",
+          "expression": "2 \u2208 \u2102",
           "dependencies": [],
-          "full_text": "df-3: Define the number 3.  (Contributed by NM, 27-May-1999.) (|- 3 = ( 2 + 1 ))"
+          "full_text": "2cn: 2 is a complex number. (2 \u2208 \u2102)"
         },
         "6": {
-          "label": "df-4",
-          "expression": "|- 4 = ( 3 + 1 )",
-          "dependencies": [],
-          "full_text": "df-4: Define the number 4.  (Contributed by NM, 27-May-1999.) (|- 4 = ( 3 + 1 ))"
+          "label": "oveq2i",
+          "expression": "(2 + 2) = (2 + (1 + 1))",
+          "dependencies": [
+            1
+          ],
+          "full_text": "oveq2i: Equality of operation value. ((2 + 2) = (2 + (1 + 1)))"
         },
         "7": {
           "label": "oveq1i",
-          "expression": "|- ( A F C ) = ( B F C )",
+          "expression": "(3 + 1) = ((2 + 1) + 1)",
           "dependencies": [
-            5
+            2
           ],
-          "full_text": "oveq1i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.) (|- ( A F C ) = ( B F C ))"
+          "full_text": "oveq1i: Equality of operation value. ((3 + 1) = ((2 + 1) + 1))"
         },
         "8": {
-          "label": "3eqtri",
-          "expression": "|- A = D",
+          "label": "addassi",
+          "expression": "((2 + 1) + 1) = (2 + (1 + 1))",
           "dependencies": [
-            3,
-            6,
-            7
+            4,
+            5
           ],
-          "full_text": "3eqtri: Register '=' as an equality for its type (class). $) $( $j equality 'wceq' from 'eqid' 'eqcomi' 'eqtri'; $) ${ 3eqtri.1 $e |- A = B $. 3eqtri.2 $e |- B = C $. 3eqtri.3 $e |- C = D $. $( An inference from three chained equalities.  (Contributed by NM, 29-Aug-1993.) (|- A = D)"
+          "full_text": "addassi: Associative law for addition. (((2 + 1) + 1) = (2 + (1 + 1)))"
         },
         "9": {
-          "label": "oveq2i",
-          "expression": "|- ( C F A ) = ( C F B )",
+          "label": "3eqtri",
+          "expression": "4 = (2 + (1 + 1))",
           "dependencies": [
-            4
+            3,
+            7,
+            8
           ],
-          "full_text": "oveq2i: Equality inference for operation value.  (Contributed by NM, 28-Feb-1995.) (|- ( C F A ) = ( C F B ))"
+          "full_text": "3eqtri: Transitive equality. (4 = (2 + (1 + 1)))"
         },
         "10": {
           "label": "eqtr4i",
-          "expression": "|- A = C",
+          "expression": "(2 + 2) = 4",
           "dependencies": [
-            8,
+            6,
             9
           ],
-          "full_text": "eqtr4i: An equality transitivity inference.  (Contributed by NM, 26-May-1993.) (|- A = C)"
+          "full_text": "eqtr4i: Transitive equality. ((2 + 2) = 4)"
         }
       },
       "dependency_graph": {
         "1": [],
         "2": [],
-        "3": [
-          1,
-          2
-        ],
+        "3": [],
         "4": [],
         "5": [],
-        "6": [],
+        "6": [
+          1
+        ],
         "7": [
-          5
+          2
         ],
         "8": [
-          3,
-          6,
-          7
+          4,
+          5
         ],
         "9": [
-          4
+          3,
+          7,
+          8
         ],
         "10": [
-          8,
+          6,
           9
         ]
       },
       "reverse_dependencies": {
         "1": [
-          3
+          6
         ],
         "2": [
-          3
-        ],
-        "3": [
-          8
-        ],
-        "4": [
-          9
-        ],
-        "5": [
           7
         ],
-        "6": [
+        "3": [
+          9
+        ],
+        "4": [
           8
+        ],
+        "5": [
+          8
+        ],
+        "6": [
+          10
         ],
         "7": [
-          8
+          9
         ],
         "8": [
-          10
+          9
         ],
         "9": [
           10
         ]
       },
       "label_to_index": {
-        "2cn": 1,
-        "ax-1cn": 2,
-        "addassi": 3,
-        "df-2": 4,
-        "df-3": 5,
-        "df-4": 6,
+        "df-2": 1,
+        "df-3": 2,
+        "df-4": 3,
+        "ax-1cn": 4,
+        "2cn": 5,
+        "oveq2i": 6,
         "oveq1i": 7,
-        "3eqtri": 8,
-        "oveq2i": 9,
+        "addassi": 8,
+        "3eqtri": 9,
         "eqtr4i": 10
       }
     }

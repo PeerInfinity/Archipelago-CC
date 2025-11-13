@@ -6547,19 +6547,6 @@
         "type": null,
         "max_count": 2
       },
-      "Torch": {
-        "name": "Torch",
-        "id": 509342556,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Hourglass": {
         "name": "Hourglass",
         "id": 509342433,
@@ -7304,62 +7291,6 @@
       "Money x1": {
         "name": "Money x1",
         "id": 509342486,
-        "groups": [
-          "Everything",
-          "Money"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Money x2": {
-        "name": "Money x2",
-        "id": 509342552,
-        "groups": [
-          "Everything",
-          "Money"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Money x3": {
-        "name": "Money x3",
-        "id": 509342553,
-        "groups": [
-          "Everything",
-          "Money"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Money x4": {
-        "name": "Money x4",
-        "id": 509342554,
-        "groups": [
-          "Everything",
-          "Money"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Money x5": {
-        "name": "Money x5",
-        "id": 509342555,
         "groups": [
           "Everything",
           "Money"
@@ -8284,6 +8215,75 @@
       "Grass": {
         "name": "Grass",
         "id": 509342551,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money x2": {
+        "name": "Money x2",
+        "id": 509342552,
+        "groups": [
+          "Everything",
+          "Money"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money x3": {
+        "name": "Money x3",
+        "id": 509342553,
+        "groups": [
+          "Everything",
+          "Money"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money x4": {
+        "name": "Money x4",
+        "id": 509342554,
+        "groups": [
+          "Everything",
+          "Money"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Money x5": {
+        "name": "Money x5",
+        "id": 509342555,
+        "groups": [
+          "Everything",
+          "Money"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Torch": {
+        "name": "Torch",
+        "id": 509342556,
         "groups": [
           "Everything"
         ],
