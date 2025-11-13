@@ -283,34 +283,43 @@ export function _addItemToInventory(sm, itemName, count = 1) {
     }
   }
 
-  // Handle prog_items for games like DLCQuest that use coin accumulation
-  // Pattern: "4 coins", "46 coins", etc. accumulate into " coins" or " coins freemium"
-  const coinMatch = itemName.match(/^(\d+) coins?$/);
-  if (coinMatch && sm.prog_items) {
-    const coinAmount = parseInt(coinMatch[1], 10);
+  // Handle prog_items accumulation based on game metadata (generic for all games)
+  const gameInfo = sm.gameInfo?.[String(sm.playerSlot)];
+  if (gameInfo?.accumulator_rules && sm.prog_items) {
     const playerId = String(sm.playerSlot);
 
-    // Ensure player's prog_items structure exists
-    if (!sm.prog_items[playerId]) {
-      sm.prog_items[playerId] = {};
+    for (const rule of gameInfo.accumulator_rules) {
+      const match = itemName.match(new RegExp(rule.pattern));
+      if (match) {
+        // Extract value (default to count if not extracting from pattern)
+        const extractedValue = rule.extract_value && match[1]
+          ? parseInt(match[1], 10)
+          : 1;
+        const totalValue = extractedValue * count;
+
+        // Determine target accumulator (could be dynamic based on discriminator)
+        const target = rule.discriminator
+          ? rule.discriminator(itemName, sm)
+          : rule.target;
+
+        // Ensure structure exists
+        if (!sm.prog_items[playerId]) {
+          sm.prog_items[playerId] = {};
+        }
+        if (!(target in sm.prog_items[playerId])) {
+          sm.prog_items[playerId][target] = 0;
+        }
+
+        // Accumulate
+        sm.prog_items[playerId][target] += totalValue;
+
+        sm._logDebug(
+          `[InventoryManager] Accumulated ${totalValue} into prog_items["${playerId}"]["${target}"] (now ${sm.prog_items[playerId][target]})`
+        );
+
+        break; // Only apply first matching rule
+      }
     }
-
-    // Determine which accumulator to use based on the item's type or groups
-    // For now, default to " coins" (basic campaign)
-    // TODO: Check if item belongs to freemium campaign and use " coins freemium" instead
-    const accumulatorName = ' coins';
-
-    // Initialize accumulator if needed
-    if (!(accumulatorName in sm.prog_items[playerId])) {
-      sm.prog_items[playerId][accumulatorName] = 0;
-    }
-
-    // Accumulate the coins
-    sm.prog_items[playerId][accumulatorName] += coinAmount * count;
-
-    sm._logDebug(
-      `[InventoryManager] Accumulated ${coinAmount * count} coins into prog_items["${playerId}"]["${accumulatorName}"] (now ${sm.prog_items[playerId][accumulatorName]})`
-    );
   }
 }
 
@@ -353,28 +362,43 @@ export function _removeItemFromInventory(sm, itemName, count = 1) {
     }
   }
 
-  // Handle prog_items removal for games like DLCQuest
-  const coinMatch = itemName.match(/^(\d+) coins?$/);
-  if (coinMatch && sm.prog_items) {
-    const coinAmount = parseInt(coinMatch[1], 10);
+  // Handle prog_items removal based on game metadata (generic for all games)
+  const gameInfo = sm.gameInfo?.[String(sm.playerSlot)];
+  if (gameInfo?.accumulator_rules && sm.prog_items) {
     const playerId = String(sm.playerSlot);
 
-    // Ensure player's prog_items structure exists
-    if (!sm.prog_items[playerId]) {
-      sm.prog_items[playerId] = {};
-    }
+    for (const rule of gameInfo.accumulator_rules) {
+      const match = itemName.match(new RegExp(rule.pattern));
+      if (match) {
+        // Extract value (default to count if not extracting from pattern)
+        const extractedValue = rule.extract_value && match[1]
+          ? parseInt(match[1], 10)
+          : 1;
+        const totalValue = extractedValue * count;
 
-    const accumulatorName = ' coins';
+        // Determine target accumulator
+        const target = rule.discriminator
+          ? rule.discriminator(itemName, sm)
+          : rule.target;
 
-    if (accumulatorName in sm.prog_items[playerId]) {
-      sm.prog_items[playerId][accumulatorName] = Math.max(
-        0,
-        sm.prog_items[playerId][accumulatorName] - (coinAmount * count)
-      );
+        // Ensure structure exists
+        if (!sm.prog_items[playerId]) {
+          sm.prog_items[playerId] = {};
+        }
 
-      sm._logDebug(
-        `[InventoryManager] Removed ${coinAmount * count} coins from prog_items["${playerId}"]["${accumulatorName}"] (now ${sm.prog_items[playerId][accumulatorName]})`
-      );
+        if (target in sm.prog_items[playerId]) {
+          sm.prog_items[playerId][target] = Math.max(
+            0,
+            sm.prog_items[playerId][target] - totalValue
+          );
+
+          sm._logDebug(
+            `[InventoryManager] Removed ${totalValue} from prog_items["${playerId}"]["${target}"] (now ${sm.prog_items[playerId][target]})`
+          );
+        }
+
+        break; // Only apply first matching rule
+      }
     }
   }
 }

@@ -182,7 +182,7 @@ function loadPlayerData(sm, jsonData, selectedPlayerId) {
   sm.progressionMapping = jsonData.progression_mapping?.[selectedPlayerId] || {};
   sm.gameInfo = jsonData.game_info || {};
 
-  // Initialize prog_items for games that use accumulated/progressive items (e.g., DLCQuest coins)
+  // Initialize prog_items for games that use accumulated/progressive items
   // Structure: prog_items[playerId][itemName] = accumulated_count
   if (!sm.prog_items) {
     sm.prog_items = {};
@@ -191,12 +191,15 @@ function loadPlayerData(sm, jsonData, selectedPlayerId) {
     sm.prog_items[selectedPlayerId] = {};
   }
 
-  // For DLCQuest specifically, initialize coin accumulator items to 0
-  // This ensures they're always defined when access rules check them
-  if (sm.rules?.game_name === 'DLCQuest' || sm.settings?.game === 'DLCQuest') {
-    sm.prog_items[selectedPlayerId][' coins'] = 0;
-    sm.prog_items[selectedPlayerId][' coins freemium'] = 0;
-    sm._logDebug('[Initialization] Initialized DLCQuest coin accumulators to 0');
+  // Initialize accumulators from game_info metadata (generic for all games)
+  const gameInfo = jsonData.game_info?.[selectedPlayerId];
+  if (gameInfo?.prog_items_init) {
+    for (const [accumulatorName, initialValue] of Object.entries(gameInfo.prog_items_init)) {
+      if (!(accumulatorName in sm.prog_items[selectedPlayerId])) {
+        sm.prog_items[selectedPlayerId][accumulatorName] = initialValue;
+      }
+    }
+    sm._logDebug(`[Initialization] Initialized ${Object.keys(gameInfo.prog_items_init).length} prog_items accumulators from game_info`);
   }
 
   sm._logDebug('[Initialization] Initialized prog_items structure');

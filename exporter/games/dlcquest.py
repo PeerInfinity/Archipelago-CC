@@ -10,12 +10,37 @@ logger = logging.getLogger(__name__)
 class DLCQuestGameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'DLCQuest'
     """Handle DLCQuest-specific rule expansions and coin item export."""
-    
+
     def __init__(self, world=None):
         super().__init__()
         self.world = world
         self.coin_items = {}  # Track coin items we find
-        
+
+    def get_game_info(self, world):
+        """Export DLCQuest game info including accumulator rules."""
+        game_info = super().get_game_info(world)
+
+        # Define accumulator rules for coin items
+        # Pattern matches items like "4 coins", "46 coins", etc.
+        # and accumulates their values into " coins" or " coins freemium"
+        game_info['accumulator_rules'] = [
+            {
+                'pattern': r'^(\d+) coins?$',   # Regex to match coin items
+                'extract_value': True,           # Extract numeric value from group 1
+                'target': ' coins',              # Target accumulator name
+                'discriminator': None            # No dynamic target selection
+            }
+        ]
+
+        # Initialize accumulator targets to 0
+        # This ensures they're always defined when access rules check them
+        game_info['prog_items_init'] = {
+            ' coins': 0,
+            ' coins freemium': 0
+        }
+
+        return game_info
+
     def expand_helper(self, helper_name: str):
         """Expand DLCQuest-specific helpers."""
         return None  # No special helpers for now
