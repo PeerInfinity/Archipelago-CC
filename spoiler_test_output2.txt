@@ -1,0 +1,2796 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:46] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: soe
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=soe&seed=1
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/?mode=test-spoilers&game=soe&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:48] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modes.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [04:53:49.089] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/hylics_2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/jak_and_daxter__the_precursor_legacy/jak_and_daxter__the_precursor_legacyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/oot/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.json HTTP/1.1" 200 -
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [04:53:49.405] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [04:53:49.407] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [04:53:49.425] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [04:53:49.426] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [04:53:49.427] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [04:53:49.427] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [04:53:49.440] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/presets/soe/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:53:49] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+BROWSER LOG (error): [04:53:51.358] [ERROR] [testSpoilerUI] STATE MISMATCH found for: {"type":"state_update","sphere_number":"0.1","player_id":"1"}
+BROWSER LOG (error): [04:53:51.360] [ERROR] [testSpoilerUI:ComparisonEngine] STATE MISMATCH found for: {"type":"state_update","sphere_number":"0.1","player_id":"1"}
+BROWSER LOG (error): [04:53:51.365] [ERROR] [testSpoilerUI]  > Locations accessible in LOG but NOT in STATE (or checked): Arena Holding #100, Arena Holding #101, Arena Holding #102, Arena Holding #95, Arena Holding #96, Arena Holding #97, Arena Holding #98, Arena Holding #99, Atlas, Bad Boys, Blimp's Cave #109, Blimp's Cave #110, Blimp's Hut #10, Blimp's Hut #11, Blimp's Hut #12, Cave Raptors, Coleoptera, Corrosion, Crush, Crustacia Interior #111, Crustacia Interior #112, Crustacia Interior #113, Crustacia Interior #114, Crustacia Interior #115, Crustacia Interior #116, Cure, Drain, Drain Cave #180, Drain Cave #181, Ebon Dining #252, Ebon Houses #207, Ebon Houses #209, Ebon Houses #211, Ebon Houses #213, Ebon Houses #215, Ebon Houses #217, Ebon Houses #219, Ebon Houses #221, Ebon Houses #223, Ebon Houses #225, Ebon Houses #227, Ebon Houses #229, Ebon Houses #231, Ebon Houses #233, Ebon Houses #235, Ebon Houses #237, Ebon Houses #239, Ebon Houses #241, Ebon Houses #243, Ebon Houses #245, Ebon Houses #247, Ebon Houses #248, Ebon Sewers #190, Ebon Sewers #191, Ebon Sewers #192, Ebon Sewers #193, Ebon Sewers #194, Ebon Storage #271, Ebon Storage #272, Ebon Storage #273, Explosion, Fire Power, Footknight, Gomi's Tower #195, Gomi's Tower #196, Gomi's Tower #197, Gomi's Tower #198, Heal, Ivor Dining #253, Ivor Dining #254, Ivor East #255, Ivor East #256, Ivor East #257, Ivor East #258, Ivor East #259, Ivor East #260, Ivor Houses #203, Ivor Houses #204, Ivor Houses #205, Ivor Houses #206, Ivor Houses #208, Ivor Houses #210, Ivor Houses #212, Ivor Houses #214, Ivor Houses #216, Ivor Houses #218, Ivor Houses #220, Ivor Houses #222, Ivor Houses #224, Ivor Houses #226, Ivor Houses #228, Ivor Houses #230, Ivor Houses #232, Ivor Houses #234, Ivor Houses #236, Ivor Houses #238, Ivor Houses #240, Ivor Houses #242, Ivor Houses #244, Ivor Houses #246, Ivor Sewers #263, Ivor Sewers #264, Ivor Sewers #265, Ivor Sewers #266, Ivor Sewers #267, Ivor Sewers #268, Ivor Sewers #269, Ivor Sewers #270, Ivor Upper Floor #261, Ivor Upper Floor #262, Lance, Levitate, Lightning Storm, Mammoth Viper, Miracle Cure, Mungola, N. Jungle #55, N. Jungle #56, Naris #249, Naris #250, One Up, Outside Ivor #199, Outside Ivor #200, Outside Ivor #201, Outside Ivor #202, Regrowth, Revealer, Revive, S. Jungle w/ weapon #2, S. Jungle w/ weapon #3, S. Jungle w/ weapon #5, Salabog, Slow Burn, Sting, Strongheart's Hut #6, Strongheart's Hut #7, Strongheart's Hut #8, Super Heal, Swamp #64, Swamp #65, Swamp #66, Swamp #67, Swamp #68, Swamp #69, Swamp #70, Timberdrake, Tinker #251, Verminator, Vigor, Volcano Path #58, Volcano Path #59, Volcano Path #60, Volcano Path #61, Volcano Path Cave #182, Volcano Path Cave #183, Volcano Shop #71, Volcano Shop #72, W. Crustacia #103, W. Crustacia #104, W. Crustacia #105, W. Crustacia #106, West of Swamp #62, West of Swamp #63
+BROWSER LOG (error): [04:53:51.366] [ERROR] [testSpoilerUI:ComparisonEngine]  > Locations accessible in LOG but NOT in STATE (or checked): Arena Holding #100, Arena Holding #101, Arena Holding #102, Arena Holding #95, Arena Holding #96, Arena Holding #97, Arena Holding #98, Arena Holding #99, Atlas, Bad Boys, Blimp's Cave #109, Blimp's Cave #110, Blimp's Hut #10, Blimp's Hut #11, Blimp's Hut #12, Cave Raptors, Coleoptera, Corrosion, Crush, Crustacia Interior #111, Crustacia Interior #112, Crustacia Interior #113, Crustacia Interior #114, Crustacia Interior #115, Crustacia Interior #116, Cure, Drain, Drain Cave #180, Drain Cave #181, Ebon Dining #252, Ebon Houses #207, Ebon Houses #209, Ebon Houses #211, Ebon Houses #213, Ebon Houses #215, Ebon Houses #217, Ebon Houses #219, Ebon Houses #221, Ebon Houses #223, Ebon Houses #225, Ebon Houses #227, Ebon Houses #229, Ebon Houses #231, Ebon Houses #233, Ebon Houses #235, Ebon Houses #237, Ebon Houses #239, Ebon Houses #241, Ebon Houses #243, Ebon Houses #245, Ebon Houses #247, Ebon Houses #248, Ebon Sewers #190, Ebon Sewers #191, Ebon Sewers #192, Ebon Sewers #193, Ebon Sewers #194, Ebon Storage #271, Ebon Storage #272, Ebon Storage #273, Explosion, Fire Power, Footknight, Gomi's Tower #195, Gomi's Tower #196, Gomi's Tower #197, Gomi's Tower #198, Heal, Ivor Dining #253, Ivor Dining #254, Ivor East #255, Ivor East #256, Ivor East #257, Ivor East #258, Ivor East #259, Ivor East #260, Ivor Houses #203, Ivor Houses #204, Ivor Houses #205, Ivor Houses #206, Ivor Houses #208, Ivor Houses #210, Ivor Houses #212, Ivor Houses #214, Ivor Houses #216, Ivor Houses #218, Ivor Houses #220, Ivor Houses #222, Ivor Houses #224, Ivor Houses #226, Ivor Houses #228, Ivor Houses #230, Ivor Houses #232, Ivor Houses #234, Ivor Houses #236, Ivor Houses #238, Ivor Houses #240, Ivor Houses #242, Ivor Houses #244, Ivor Houses #246, Ivor Sewers #263, Ivor Sewers #264, Ivor Sewers #265, Ivor Sewers #266, Ivor Sewers #267, Ivor Sewers #268, Ivor Sewers #269, Ivor Sewers #270, Ivor Upper Floor #261, Ivor Upper Floor #262, Lance, Levitate, Lightning Storm, Mammoth Viper, Miracle Cure, Mungola, N. Jungle #55, N. Jungle #56, Naris #249, Naris #250, One Up, Outside Ivor #199, Outside Ivor #200, Outside Ivor #201, Outside Ivor #202, Regrowth, Revealer, Revive, S. Jungle w/ weapon #2, S. Jungle w/ weapon #3, S. Jungle w/ weapon #5, Salabog, Slow Burn, Sting, Strongheart's Hut #6, Strongheart's Hut #7, Strongheart's Hut #8, Super Heal, Swamp #64, Swamp #65, Swamp #66, Swamp #67, Swamp #68, Swamp #69, Swamp #70, Timberdrake, Tinker #251, Verminator, Vigor, Volcano Path #58, Volcano Path #59, Volcano Path #60, Volcano Path #61, Volcano Path Cave #182, Volcano Path Cave #183, Volcano Shop #71, Volcano Shop #72, W. Crustacia #103, W. Crustacia #104, W. Crustacia #105, W. Crustacia #106, West of Swamp #62, West of Swamp #63
+BROWSER LOG (error): [MISMATCH DETAIL] Missing from state (163): [Arena Holding #100, Arena Holding #101, Arena Holding #102, Arena Holding #95, Arena Holding #96, Arena Holding #97, Arena Holding #98, Arena Holding #99, Atlas, Bad Boys, Blimp's Cave #109, Blimp's Cave #110, Blimp's Hut #10, Blimp's Hut #11, Blimp's Hut #12, Cave Raptors, Coleoptera, Corrosion, Crush, Crustacia Interior #111, Crustacia Interior #112, Crustacia Interior #113, Crustacia Interior #114, Crustacia Interior #115, Crustacia Interior #116, Cure, Drain, Drain Cave #180, Drain Cave #181, Ebon Dining #252, Ebon Houses #207, Ebon Houses #209, Ebon Houses #211, Ebon Houses #213, Ebon Houses #215, Ebon Houses #217, Ebon Houses #219, Ebon Houses #221, Ebon Houses #223, Ebon Houses #225, Ebon Houses #227, Ebon Houses #229, Ebon Houses #231, Ebon Houses #233, Ebon Houses #235, Ebon Houses #237, Ebon Houses #239, Ebon Houses #241, Ebon Houses #243, Ebon Houses #245, Ebon Houses #247, Ebon Houses #248, Ebon Sewers #190, Ebon Sewers #191, Ebon Sewers #192, Ebon Sewers #193, Ebon Sewers #194, Ebon Storage #271, Ebon Storage #272, Ebon Storage #273, Explosion, Fire Power, Footknight, Gomi's Tower #195, Gomi's Tower #196, Gomi's Tower #197, Gomi's Tower #198, Heal, Ivor Dining #253, Ivor Dining #254, Ivor East #255, Ivor East #256, Ivor East #257, Ivor East #258, Ivor East #259, Ivor East #260, Ivor Houses #203, Ivor Houses #204, Ivor Houses #205, Ivor Houses #206, Ivor Houses #208, Ivor Houses #210, Ivor Houses #212, Ivor Houses #214, Ivor Houses #216, Ivor Houses #218, Ivor Houses #220, Ivor Houses #222, Ivor Houses #224, Ivor Houses #226, Ivor Houses #228, Ivor Houses #230, Ivor Houses #232, Ivor Houses #234, Ivor Houses #236, Ivor Houses #238, Ivor Houses #240, Ivor Houses #242, Ivor Houses #244, Ivor Houses #246]
+BROWSER LOG (error): [04:53:51.372] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.374] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.377] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.378] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.380] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.381] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.384] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.386] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.389] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.391] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.394] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.396] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.399] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.401] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.405] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.407] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.411] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.414] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.418] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.421] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.425] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.428] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.434] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.437] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.443] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.446] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.452] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.455] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.463] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.467] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.474] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.478] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.486] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.491] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.501] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.505] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.516] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.520] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.532] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.537] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.548] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.556] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.568] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.576] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.593] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.598] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.614] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.621] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.637] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.648] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.664] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.671] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.690] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.698] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.722] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.732] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.751] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.762] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.784] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.794] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.821] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.834] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.861] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.873] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.893] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.898] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.908] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.913] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.925] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.931] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.945] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.952] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.966] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.973] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:51.990] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:51.998] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.017] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.025] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.045] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.054] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.076] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.086] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.109] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.120] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.144] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.155] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.182] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.194] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.225] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.238] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.269] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.283] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.318] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.324] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.338] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.344] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.360] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.368] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.389] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.403] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.414] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.422] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.432] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.436] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.446] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.451] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.462] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.467] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.479] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.484] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.496] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.501] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.514] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.521] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.534] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.540] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.553] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.559] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.572] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.578] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.609] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.614] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.628] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.633] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.640] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.651] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.656] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.667] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.673] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.687] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.693] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.705] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.711] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.724] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.730] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.744] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.751] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.766] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.773] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.799] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.808] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.824] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.831] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.839] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.854] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.861] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.869] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.884] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.891] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.899] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.916] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.922] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.931] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.950] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.958] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:52.968] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:52.988] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.004] [ERROR] [testSpoilerUI]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.013] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.028] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.034] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.051] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.060] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.077] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.084] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.101] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.110] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.128] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.136] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.155] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.164] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.194] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.203] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.219] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.226] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.242] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.249] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.265] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.272] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.292] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.300] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.319] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.327] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.347] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.357] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.387] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.396] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.414] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.422] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.441] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.450] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.469] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.478] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.498] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.507] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.526] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.536] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.567] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.578] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.598] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.607] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.628] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.637] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.661] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.670] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.690] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.700] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.719] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.729] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.754] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.771] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.793] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.804] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.826] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.836] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.858] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.867] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.889] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.899] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.920] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.930] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.953] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:53.975] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:53.996] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.006] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.029] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.040] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.066] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.076] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.099] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.109] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.130] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.140] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.170] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.188] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.213] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.226] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.249] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.260] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.285] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.296] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.320] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.331] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.357] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.369] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.405] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.419] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.442] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.453] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.478] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.491] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.517] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.529] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.560] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.573] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.601] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.613] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.654] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.666] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.690] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.703] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.730] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.741] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.768] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.781] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.809] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.821] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.848] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.870] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.899] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.912] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.939] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.953] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:54.981] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:54.992] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.021] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.035] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.064] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.078] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.119] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.131] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.159] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.171] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.199] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.213] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.243] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.256] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.286] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.298] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.329] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.353] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.384] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.398] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.427] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.443] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.480] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.493] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.521] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.536] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.568] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.582] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.625] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.640] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.669] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.683] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.713] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.728] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.760] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.774] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.807] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.821] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.858] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.883] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.918] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.932] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:55.965] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:55.979] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.011] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.026] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.063] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.080] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.127] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.143] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.173] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.187] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.220] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.235] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.268] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.284] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.318] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.345] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.378] [ERROR] [testSpoilerUI]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.392] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.400] [ERROR] [testSpoilerUI] Test failed at step 2: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [04:53:56.404] [ERROR] [testSpoilerUI] Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed
+BROWSER LOG (warning): [04:53:56.410] [WARN] [testSpoilerUI] Test run halted due to "Stop on first error" being enabled.
+BROWSER LOG (error): [04:53:56.413] [ERROR] [testSpoilerUI] Spoiler test completed with 1 mismatch(es). See logs above for details.
+BROWSER LOG (error): [04:53:56.452] [ERROR] [TestRunner/test_spoiler_full_run] [spoilers-full-run-1763009629685] Spoiler test failed. Mismatches found in log:
+BROWSER LOG (error): [04:53:56.453] [ERROR] [TestRunner/test_spoiler_full_run]   - Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed
+BROWSER LOG (error): [04:53:56.453] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM] STATE MISMATCH found for: {"type":"state_update","sphere_number":"0.1","player_id":"1"}
+BROWSER LOG (error): [04:53:56.454] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM] > Locations accessible in LOG but NOT in STATE (or checked): Arena Holding #100, Arena Holding #101, Arena Holding #102, Arena Holding #95, Arena Holding #96, Arena Holding #97, Arena Holding #98, Arena Holding #99, Atlas, Bad Boys, Blimp&#039;s Cave #109, Blimp&#039;s Cave #110, Blimp&#039;s Hut #10, Blimp&#039;s Hut #11, Blimp&#039;s Hut #12, Cave Raptors, Coleoptera, Corrosion, Crush, Crustacia Interior #111, Crustacia Interior #112, Crustacia Interior #113, Crustacia Interior #114, Crustacia Interior #115, Crustacia Interior #116, Cure, Drain, Drain Cave #180, Drain Cave #181, Ebon Dining #252, Ebon Houses #207, Ebon Houses #209, Ebon Houses #211, Ebon Houses #213, Ebon Houses #215, Ebon Houses #217, Ebon Houses #219, Ebon Houses #221, Ebon Houses #223, Ebon Houses #225, Ebon Houses #227, Ebon Houses #229, Ebon Houses #231, Ebon Houses #233, Ebon Houses #235, Ebon Houses #237, Ebon Houses #239, Ebon Houses #241, Ebon Houses #243, Ebon Houses #245, Ebon Houses #247, Ebon Houses #248, Ebon Sewers #190, Ebon Sewers #191, Ebon Sewers #192, Ebon Sewers #193, Ebon Sewers #194, Ebon Storage #271, Ebon Storage #272, Ebon Storage #273, Explosion, Fire Power, Footknight, Gomi&#039;s Tower #195, Gomi&#039;s Tower #196, Gomi&#039;s Tower #197, Gomi&#039;s Tower #198, Heal, Ivor Dining #253, Ivor Dining #254, Ivor East #255, Ivor East #256, Ivor East #257, Ivor East #258, Ivor East #259, Ivor East #260, Ivor Houses #203, Ivor Houses #204, Ivor Houses #205, Ivor Houses #206, Ivor Houses #208, Ivor Houses #210, Ivor Houses #212, Ivor Houses #214, Ivor Houses #216, Ivor Houses #218, Ivor Houses #220, Ivor Houses #222, Ivor Houses #224, Ivor Houses #226, Ivor Houses #228, Ivor Houses #230, Ivor Houses #232, Ivor Houses #234, Ivor Houses #236, Ivor Houses #238, Ivor Houses #240, Ivor Houses #242, Ivor Houses #244, Ivor Houses #246, Ivor Sewers #263, Ivor Sewers #264, Ivor Sewers #265, Ivor Sewers #266, Ivor Sewers #267, Ivor Sewers #268, Ivor Sewers #269, Ivor Sewers #270, Ivor Upper Floor #261, Ivor Upper Floor #262, Lance, Levitate, Lightning Storm, Mammoth Viper, Miracle Cure, Mungola, N. Jungle #55, N. Jungle #56, Naris #249, Naris #250, One Up, Outside Ivor #199, Outside Ivor #200, Outside Ivor #201, Outside Ivor #202, Regrowth, Revealer, Revive, S. Jungle w/ weapon #2, S. Jungle w/ weapon #3, S. Jungle w/ weapon #5, Salabog, Slow Burn, Sting, Strongheart&#039;s Hut #6, Strongheart&#039;s Hut #7, Strongheart&#039;s Hut #8, Super Heal, Swamp #64, Swamp #65, Swamp #66, Swamp #67, Swamp #68, Swamp #69, Swamp #70, Timberdrake, Tinker #251, Verminator, Vigor, Volcano Path #58, Volcano Path #59, Volcano Path #60, Volcano Path #61, Volcano Path Cave #182, Volcano Path Cave #183, Volcano Shop #71, Volcano Shop #72, W. Crustacia #103, W. Crustacia #104, W. Crustacia #105, W. Crustacia #106, West of Swamp #62, West of Swamp #63
+BROWSER LOG (error): [04:53:56.454] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.454] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.455] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.455] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.456] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.456] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.456] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.456] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.456] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.456] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.457] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.457] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.457] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.461] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.461] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.461] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.461] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.462] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.463] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.463] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.463] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.463] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.463] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.463] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.464] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.465] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.467] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.467] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.467] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.467] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.467] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.467] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.467] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.467] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.467] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.468] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.468] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.468] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.468] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.468] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.468] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.468] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.468] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.469] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.469] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.469] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.469] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.469] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.469] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.469] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.469] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.469] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.469] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.470] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.470] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.470] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.470] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.470] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.470] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.470] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.470] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.470] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.471] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:51 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.471] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.471] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.471] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.472] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.472] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.472] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.472] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.472] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.472] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.472] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.472] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.472] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.473] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.473] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.473] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.473] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.473] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.473] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.474] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.474] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.474] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.474] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.474] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.474] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.474] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.474] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.475] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.475] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.475] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.475] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.475] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.475] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.475] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.475] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.476] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.476] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.476] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.476] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.476] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.476] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.477] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.477] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.477] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.477] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.477] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.477] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.477] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.477] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.478] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.478] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.478] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.478] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.478] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.478] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.478] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.479] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.479] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.479] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.479] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.479] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.479] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.479] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.479] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.479] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.480] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.480] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.480] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.480] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.480] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.480] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.480] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.480] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.481] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.481] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.481] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.481] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.481] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.482] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.482] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.482] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.482] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:52 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.483] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]           Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.483] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.483] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.484] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.484] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.484] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.484] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.484] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.485] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.485] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.485] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.485] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.485] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.485] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.485] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.486] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.486] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.486] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.486] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.486] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.486] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.486] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.486] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.486] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.487] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.488] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.488] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.488] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.488] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.488] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.489] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.489] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.489] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.489] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.489] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.489] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.489] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.489] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.489] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.489] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.490] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.490] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.490] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.490] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.490] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.490] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.491] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.491] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.491] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.491] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.491] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.491] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.491] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.491] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:53 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.491] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.492] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.492] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.492] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.492] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.492] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.492] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.492] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.492] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.492] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.493] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.493] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.493] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.493] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.493] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.493] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.493] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.493] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.493] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.493] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.494] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.494] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.494] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.494] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.494] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.494] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.494] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.494] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.495] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:54 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.496] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.497] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.497] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.497] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.497] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.497] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.497] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.497] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.497] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.497] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.497] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.497] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.498] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.498] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.498] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.498] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.498] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.498] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.498] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.498] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.498] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.499] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.499] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.499] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.499] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.500] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.500] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.501] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.501] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.501] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.501] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.501] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.502] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.502] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.502] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.502] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.502] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:55 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.502] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.502] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.502] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.502] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.502] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.502] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.502] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.503] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.503] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.503] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.503] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.503] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.503] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.504] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.504] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]         Helper function "has" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:53:56.504] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [04:53:56.504] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM] Test failed at step 2: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [04:53:56.504] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM] Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed
+BROWSER LOG (error): [04:53:56.504] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:53:56 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Full in-app test results: {
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 0,
+    "failedCount": 1
+  },
+  "testDetails": [
+    {
+      "id": "test_spoiler_full_run",
+      "name": "Test Spoilers Panel - Full Run",
+      "status": "failed",
+      "category": "Test Spoilers Panel",
+      "startTime": "2025-11-13T04:53:49.685Z",
+      "endTime": "2025-11-13T04:53:56.520Z",
+      "durationMs": 6835,
+      "conditions": [
+        {
+          "description": "Test started",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:53:49.685Z"
+        },
+        {
+          "description": "Test Spoilers panel found in DOM",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:53:50.188Z"
+        },
+        {
+          "description": "\"Load Suggested Log\" button found and enabled",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:53:50.439Z"
+        },
+        {
+          "description": "\"Run Full Test\" button appeared",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:53:51.194Z"
+        },
+        {
+          "description": "Full spoiler test completed",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:53:56.448Z"
+        },
+        {
+          "description": "Spoiler test passed all checks",
+          "status": "failed",
+          "timestamp": "2025-11-13T04:53:56.452Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[spoilers-full-run-1763009629685] Starting testSpoilersPanelFullRun...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:49.685Z"
+        },
+        {
+          "message": "Condition: \"Test started\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:49.685Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009629685] Activating testSpoilersPanel panel...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:49.686Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel initialization\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:49.686Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel initialization\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:49.937Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel DOM element\" (timeout: 5000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:49.937Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel DOM element\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:50.188Z"
+        },
+        {
+          "message": "Condition: \"Test Spoilers panel found in DOM\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:50.188Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Load Suggested Log\" button to be available\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:50.188Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Load Suggested Log\" button to be available\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:50.439Z"
+        },
+        {
+          "message": "Condition: \"\"Load Suggested Log\" button found and enabled\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:50.439Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009629685] Clicking \"Load Suggested Log\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:50.439Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Spoiler log loading completion\" (timeout: 15000ms, interval: 500ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:50.442Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Spoiler log loading completion\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:50.943Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Run Full Test\" button to appear\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:50.943Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Run Full Test\" button to appear\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:51.194Z"
+        },
+        {
+          "message": "Condition: \"\"Run Full Test\" button appeared\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:51.194Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009629685] Clicking \"Run Full Test\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:51.194Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test to start processing\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:51.197Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test to start processing\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:51.309Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009629685] Waiting for full spoiler test to complete...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:51.309Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test completion with detailed results\" (timeout: 300000ms, interval: 1000ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:51.309Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009629685] Polling: buttonReady=true, hasDetailedResults=true, processedEvents=1/20",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:56.448Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009629685] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":20,\"processedEvents\":1,\"errorCount\":1,\"sphereCount\":2,\"testLogPath\":\"presets/soe/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:56.448Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test completion with detailed results\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:56.448Z"
+        },
+        {
+          "message": "Condition: \"Full spoiler test completed\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:56.448Z"
+        },
+        {
+          "message": "Condition: \"Spoiler test passed all checks\" - FAILED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:56.452Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009629685] Spoiler test failed. Mismatches found in log:",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.452Z"
+        },
+        {
+          "message": "  - Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.453Z"
+        },
+        {
+          "message": "  - [4:53:51 AM] STATE MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":\"0.1\",\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.453Z"
+        },
+        {
+          "message": "  - [4:53:51 AM] > Locations accessible in LOG but NOT in STATE (or checked): Arena Holding #100, Arena Holding #101, Arena Holding #102, Arena Holding #95, Arena Holding #96, Arena Holding #97, Arena Holding #98, Arena Holding #99, Atlas, Bad Boys, Blimp&#039;s Cave #109, Blimp&#039;s Cave #110, Blimp&#039;s Hut #10, Blimp&#039;s Hut #11, Blimp&#039;s Hut #12, Cave Raptors, Coleoptera, Corrosion, Crush, Crustacia Interior #111, Crustacia Interior #112, Crustacia Interior #113, Crustacia Interior #114, Crustacia Interior #115, Crustacia Interior #116, Cure, Drain, Drain Cave #180, Drain Cave #181, Ebon Dining #252, Ebon Houses #207, Ebon Houses #209, Ebon Houses #211, Ebon Houses #213, Ebon Houses #215, Ebon Houses #217, Ebon Houses #219, Ebon Houses #221, Ebon Houses #223, Ebon Houses #225, Ebon Houses #227, Ebon Houses #229, Ebon Houses #231, Ebon Houses #233, Ebon Houses #235, Ebon Houses #237, Ebon Houses #239, Ebon Houses #241, Ebon Houses #243, Ebon Houses #245, Ebon Houses #247, Ebon Houses #248, Ebon Sewers #190, Ebon Sewers #191, Ebon Sewers #192, Ebon Sewers #193, Ebon Sewers #194, Ebon Storage #271, Ebon Storage #272, Ebon Storage #273, Explosion, Fire Power, Footknight, Gomi&#039;s Tower #195, Gomi&#039;s Tower #196, Gomi&#039;s Tower #197, Gomi&#039;s Tower #198, Heal, Ivor Dining #253, Ivor Dining #254, Ivor East #255, Ivor East #256, Ivor East #257, Ivor East #258, Ivor East #259, Ivor East #260, Ivor Houses #203, Ivor Houses #204, Ivor Houses #205, Ivor Houses #206, Ivor Houses #208, Ivor Houses #210, Ivor Houses #212, Ivor Houses #214, Ivor Houses #216, Ivor Houses #218, Ivor Houses #220, Ivor Houses #222, Ivor Houses #224, Ivor Houses #226, Ivor Houses #228, Ivor Houses #230, Ivor Houses #232, Ivor Houses #234, Ivor Houses #236, Ivor Houses #238, Ivor Houses #240, Ivor Houses #242, Ivor Houses #244, Ivor Houses #246, Ivor Sewers #263, Ivor Sewers #264, Ivor Sewers #265, Ivor Sewers #266, Ivor Sewers #267, Ivor Sewers #268, Ivor Sewers #269, Ivor Sewers #270, Ivor Upper Floor #261, Ivor Upper Floor #262, Lance, Levitate, Lightning Storm, Mammoth Viper, Miracle Cure, Mungola, N. Jungle #55, N. Jungle #56, Naris #249, Naris #250, One Up, Outside Ivor #199, Outside Ivor #200, Outside Ivor #201, Outside Ivor #202, Regrowth, Revealer, Revive, S. Jungle w/ weapon #2, S. Jungle w/ weapon #3, S. Jungle w/ weapon #5, Salabog, Slow Burn, Sting, Strongheart&#039;s Hut #6, Strongheart&#039;s Hut #7, Strongheart&#039;s Hut #8, Super Heal, Swamp #64, Swamp #65, Swamp #66, Swamp #67, Swamp #68, Swamp #69, Swamp #70, Timberdrake, Tinker #251, Verminator, Vigor, Volcano Path #58, Volcano Path #59, Volcano Path #60, Volcano Path #61, Volcano Path Cave #182, Volcano Path Cave #183, Volcano Shop #71, Volcano Shop #72, W. Crustacia #103, W. Crustacia #104, W. Crustacia #105, W. Crustacia #106, West of Swamp #62, West of Swamp #63",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.454Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.454Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.454Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.455Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.455Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.456Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.456Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.456Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.456Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.456Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.456Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.457Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.457Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.457Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.461Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.461Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.461Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.461Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.462Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.463Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.463Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.463Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.463Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.463Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.464Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.465Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.467Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.467Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.467Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.467Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.467Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.467Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.467Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.467Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.467Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.468Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.468Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.468Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.468Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.468Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.468Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.468Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.468Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.469Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.469Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.469Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.469Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.469Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.469Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.469Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.469Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.469Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.469Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.470Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.470Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.470Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.470Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.470Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.470Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.470Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.470Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.470Z"
+        },
+        {
+          "message": "  - [4:53:51 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.471Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.471Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.471Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.471Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.472Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.472Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.472Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.472Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.472Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.472Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.472Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.472Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.472Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.473Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.473Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.473Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.473Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.473Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.473Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.474Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.474Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.474Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.474Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.474Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.474Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.474Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.474Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.475Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.475Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.475Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.475Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.475Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.475Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.475Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.475Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.476Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.476Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.476Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.476Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.476Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.476Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.477Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.477Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.477Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.477Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.477Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.477Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.477Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.477Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.478Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.478Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.478Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.478Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.478Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.478Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.478Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.479Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.479Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.479Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.479Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.479Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.479Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.479Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.479Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.479Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.480Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.480Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.480Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.480Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.480Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.480Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.480Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.480Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.481Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.481Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.481Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.481Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.481Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.482Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.482Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.482Z"
+        },
+        {
+          "message": "  - [4:53:52 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.482Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]           Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.482Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.483Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.483Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.484Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.484Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.484Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.484Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.484Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.485Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.485Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.485Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.485Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.485Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.485Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.485Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.486Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.486Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.486Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.486Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.486Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.486Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.486Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.486Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.486Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.487Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.488Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.488Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.488Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.488Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.488Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.489Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.489Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.489Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.489Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.489Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.489Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.489Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.489Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.489Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.489Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.490Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.490Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.490Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.490Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.490Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.490Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.491Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.491Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.491Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.491Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.491Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.491Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.491Z"
+        },
+        {
+          "message": "  - [4:53:53 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.491Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.491Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.492Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.492Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.492Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.492Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.492Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.492Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.492Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.492Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.492Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.493Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.493Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.493Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.493Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.493Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.493Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.493Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.493Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.493Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.493Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.494Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.494Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.494Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.494Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.494Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.494Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.494Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.494Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.495Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:54 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.496Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.497Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.497Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.497Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.497Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.497Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.497Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.497Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.497Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.497Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.497Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.497Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.498Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.498Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.498Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.498Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.498Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.498Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.498Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.498Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.498Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.499Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.499Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.499Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.499Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.500Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.500Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.501Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.501Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.501Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.501Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.501Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.502Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.502Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.502Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.502Z"
+        },
+        {
+          "message": "  - [4:53:55 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.502Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.502Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.502Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.502Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.502Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.502Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.502Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.502Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.503Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.503Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.503Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.503Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.503Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.503Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.504Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]         Helper function \"has\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.504Z"
+        },
+        {
+          "message": "  - [4:53:56 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.504Z"
+        },
+        {
+          "message": "  - [4:53:56 AM] Test failed at step 2: Comparison failed for event type 'state_update'.",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.504Z"
+        },
+        {
+          "message": "  - [4:53:56 AM] Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.504Z"
+        },
+        {
+          "message": "  - [4:53:56 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.",
+          "type": "error",
+          "timestamp": "2025-11-13T04:53:56.504Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009629685] Spoiler test results stored in window.__spoilerTestResults__",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:56.504Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009629685] Spoiler test results stored in localStorage",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:56.518Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009629685] testSpoilersPanelFullRun finished. Overall Result: false.",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:56.518Z"
+        },
+        {
+          "message": "Test completion signal: FAILED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:53:56.518Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T04:53:56.519Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T04:53:56.520Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T04:53:56.520Z"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2025-11-13T04:53:56.621Z"
+}
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2025-11-13T04-53-56.json
+  ✘  1 tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results (8.5s)
+
+
+  1) tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m0[39m
+    Received: [31m1[39m
+
+      141 |
+      142 |     // The test system should complete successfully regardless of whether tests run
+    > 143 |     expect(results.summary.failedCount).toBe(0);
+          |                                         ^
+      144 |     
+      145 |     // If tests actually ran, they should pass
+      146 |     if (results.summary.totalRun > 0) {
+        at /home/user/Archipelago-CC/tests/e2e/app.spec.js:143:41
+
+    Error Context: test-results/app-Application-End-to-End-a086e-app-tests-and-check-results/error-context.md
+
+  1 failed
+    tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results ─

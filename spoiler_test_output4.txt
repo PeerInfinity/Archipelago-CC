@@ -1,0 +1,1607 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:12] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: soe
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=soe&seed=1
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/?mode=test-spoilers&game=soe&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/modes.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:14] "GET /frontend/presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [05:00:15.016] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/hylics_2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/jak_and_daxter__the_precursor_legacy/jak_and_daxter__the_precursor_legacyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/oot/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/soe/soeLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.json HTTP/1.1" 200 -
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [05:00:15.312] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [05:00:15.314] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [05:00:15.331] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [05:00:15.331] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [05:00:15.332] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [05:00:15.332] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [05:00:15.341] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/presets/soe/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:00:15] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+BROWSER LOG (error): [05:00:17.760] [ERROR] [testSpoilerUI] STATE MISMATCH found for: {"type":"state_update","sphere_number":"0.1","player_id":"1"}
+BROWSER LOG (error): [05:00:17.761] [ERROR] [testSpoilerUI:ComparisonEngine] STATE MISMATCH found for: {"type":"state_update","sphere_number":"0.1","player_id":"1"}
+BROWSER LOG (error): [05:00:17.766] [ERROR] [testSpoilerUI]  > Locations accessible in LOG but NOT in STATE (or checked): Arena Holding #100, Arena Holding #101, Arena Holding #102, Arena Holding #95, Arena Holding #96, Arena Holding #97, Arena Holding #98, Arena Holding #99, Atlas, Bad Boys, Blimp's Cave #109, Blimp's Cave #110, Blimp's Hut #10, Blimp's Hut #11, Blimp's Hut #12, Cave Raptors, Coleoptera, Corrosion, Crush, Crustacia Interior #111, Crustacia Interior #112, Crustacia Interior #113, Crustacia Interior #114, Crustacia Interior #115, Crustacia Interior #116, Cure, Drain, Drain Cave #180, Drain Cave #181, Ebon Dining #252, Ebon Houses #207, Ebon Houses #209, Ebon Houses #211, Ebon Houses #213, Ebon Houses #215, Ebon Houses #217, Ebon Houses #219, Ebon Houses #221, Ebon Houses #223, Ebon Houses #225, Ebon Houses #227, Ebon Houses #229, Ebon Houses #231, Ebon Houses #233, Ebon Houses #235, Ebon Houses #237, Ebon Houses #239, Ebon Houses #241, Ebon Houses #243, Ebon Houses #245, Ebon Houses #247, Ebon Houses #248, Ebon Sewers #190, Ebon Sewers #191, Ebon Sewers #192, Ebon Sewers #193, Ebon Sewers #194, Ebon Storage #271, Ebon Storage #272, Ebon Storage #273, Explosion, Fire Power, Footknight, Gomi's Tower #195, Gomi's Tower #196, Gomi's Tower #197, Gomi's Tower #198, Heal, Ivor Dining #253, Ivor Dining #254, Ivor East #255, Ivor East #256, Ivor East #257, Ivor East #258, Ivor East #259, Ivor East #260, Ivor Houses #203, Ivor Houses #204, Ivor Houses #205, Ivor Houses #206, Ivor Houses #208, Ivor Houses #210, Ivor Houses #212, Ivor Houses #214, Ivor Houses #216, Ivor Houses #218, Ivor Houses #220, Ivor Houses #222, Ivor Houses #224, Ivor Houses #226, Ivor Houses #228, Ivor Houses #230, Ivor Houses #232, Ivor Houses #234, Ivor Houses #236, Ivor Houses #238, Ivor Houses #240, Ivor Houses #242, Ivor Houses #244, Ivor Houses #246, Ivor Sewers #263, Ivor Sewers #264, Ivor Sewers #265, Ivor Sewers #266, Ivor Sewers #267, Ivor Sewers #268, Ivor Sewers #269, Ivor Sewers #270, Ivor Upper Floor #261, Ivor Upper Floor #262, Lance, Levitate, Lightning Storm, Mammoth Viper, Miracle Cure, Mungola, N. Jungle #55, N. Jungle #56, Naris #249, Naris #250, One Up, Outside Ivor #199, Outside Ivor #200, Outside Ivor #201, Outside Ivor #202, Regrowth, Revealer, Revive, S. Jungle w/ weapon #2, S. Jungle w/ weapon #3, S. Jungle w/ weapon #5, Salabog, Slow Burn, Sting, Strongheart's Hut #6, Strongheart's Hut #7, Strongheart's Hut #8, Super Heal, Swamp #64, Swamp #65, Swamp #66, Swamp #67, Swamp #68, Swamp #69, Swamp #70, Timberdrake, Tinker #251, Verminator, Vigor, Volcano Path #58, Volcano Path #59, Volcano Path #60, Volcano Path #61, Volcano Path Cave #182, Volcano Path Cave #183, Volcano Shop #71, Volcano Shop #72, W. Crustacia #103, W. Crustacia #104, W. Crustacia #105, W. Crustacia #106, West of Swamp #62, West of Swamp #63
+BROWSER LOG (error): [05:00:17.767] [ERROR] [testSpoilerUI:ComparisonEngine]  > Locations accessible in LOG but NOT in STATE (or checked): Arena Holding #100, Arena Holding #101, Arena Holding #102, Arena Holding #95, Arena Holding #96, Arena Holding #97, Arena Holding #98, Arena Holding #99, Atlas, Bad Boys, Blimp's Cave #109, Blimp's Cave #110, Blimp's Hut #10, Blimp's Hut #11, Blimp's Hut #12, Cave Raptors, Coleoptera, Corrosion, Crush, Crustacia Interior #111, Crustacia Interior #112, Crustacia Interior #113, Crustacia Interior #114, Crustacia Interior #115, Crustacia Interior #116, Cure, Drain, Drain Cave #180, Drain Cave #181, Ebon Dining #252, Ebon Houses #207, Ebon Houses #209, Ebon Houses #211, Ebon Houses #213, Ebon Houses #215, Ebon Houses #217, Ebon Houses #219, Ebon Houses #221, Ebon Houses #223, Ebon Houses #225, Ebon Houses #227, Ebon Houses #229, Ebon Houses #231, Ebon Houses #233, Ebon Houses #235, Ebon Houses #237, Ebon Houses #239, Ebon Houses #241, Ebon Houses #243, Ebon Houses #245, Ebon Houses #247, Ebon Houses #248, Ebon Sewers #190, Ebon Sewers #191, Ebon Sewers #192, Ebon Sewers #193, Ebon Sewers #194, Ebon Storage #271, Ebon Storage #272, Ebon Storage #273, Explosion, Fire Power, Footknight, Gomi's Tower #195, Gomi's Tower #196, Gomi's Tower #197, Gomi's Tower #198, Heal, Ivor Dining #253, Ivor Dining #254, Ivor East #255, Ivor East #256, Ivor East #257, Ivor East #258, Ivor East #259, Ivor East #260, Ivor Houses #203, Ivor Houses #204, Ivor Houses #205, Ivor Houses #206, Ivor Houses #208, Ivor Houses #210, Ivor Houses #212, Ivor Houses #214, Ivor Houses #216, Ivor Houses #218, Ivor Houses #220, Ivor Houses #222, Ivor Houses #224, Ivor Houses #226, Ivor Houses #228, Ivor Houses #230, Ivor Houses #232, Ivor Houses #234, Ivor Houses #236, Ivor Houses #238, Ivor Houses #240, Ivor Houses #242, Ivor Houses #244, Ivor Houses #246, Ivor Sewers #263, Ivor Sewers #264, Ivor Sewers #265, Ivor Sewers #266, Ivor Sewers #267, Ivor Sewers #268, Ivor Sewers #269, Ivor Sewers #270, Ivor Upper Floor #261, Ivor Upper Floor #262, Lance, Levitate, Lightning Storm, Mammoth Viper, Miracle Cure, Mungola, N. Jungle #55, N. Jungle #56, Naris #249, Naris #250, One Up, Outside Ivor #199, Outside Ivor #200, Outside Ivor #201, Outside Ivor #202, Regrowth, Revealer, Revive, S. Jungle w/ weapon #2, S. Jungle w/ weapon #3, S. Jungle w/ weapon #5, Salabog, Slow Burn, Sting, Strongheart's Hut #6, Strongheart's Hut #7, Strongheart's Hut #8, Super Heal, Swamp #64, Swamp #65, Swamp #66, Swamp #67, Swamp #68, Swamp #69, Swamp #70, Timberdrake, Tinker #251, Verminator, Vigor, Volcano Path #58, Volcano Path #59, Volcano Path #60, Volcano Path #61, Volcano Path Cave #182, Volcano Path Cave #183, Volcano Shop #71, Volcano Shop #72, W. Crustacia #103, W. Crustacia #104, W. Crustacia #105, W. Crustacia #106, West of Swamp #62, West of Swamp #63
+BROWSER LOG (error): [MISMATCH DETAIL] Missing from state (163): [Arena Holding #100, Arena Holding #101, Arena Holding #102, Arena Holding #95, Arena Holding #96, Arena Holding #97, Arena Holding #98, Arena Holding #99, Atlas, Bad Boys, Blimp's Cave #109, Blimp's Cave #110, Blimp's Hut #10, Blimp's Hut #11, Blimp's Hut #12, Cave Raptors, Coleoptera, Corrosion, Crush, Crustacia Interior #111, Crustacia Interior #112, Crustacia Interior #113, Crustacia Interior #114, Crustacia Interior #115, Crustacia Interior #116, Cure, Drain, Drain Cave #180, Drain Cave #181, Ebon Dining #252, Ebon Houses #207, Ebon Houses #209, Ebon Houses #211, Ebon Houses #213, Ebon Houses #215, Ebon Houses #217, Ebon Houses #219, Ebon Houses #221, Ebon Houses #223, Ebon Houses #225, Ebon Houses #227, Ebon Houses #229, Ebon Houses #231, Ebon Houses #233, Ebon Houses #235, Ebon Houses #237, Ebon Houses #239, Ebon Houses #241, Ebon Houses #243, Ebon Houses #245, Ebon Houses #247, Ebon Houses #248, Ebon Sewers #190, Ebon Sewers #191, Ebon Sewers #192, Ebon Sewers #193, Ebon Sewers #194, Ebon Storage #271, Ebon Storage #272, Ebon Storage #273, Explosion, Fire Power, Footknight, Gomi's Tower #195, Gomi's Tower #196, Gomi's Tower #197, Gomi's Tower #198, Heal, Ivor Dining #253, Ivor Dining #254, Ivor East #255, Ivor East #256, Ivor East #257, Ivor East #258, Ivor East #259, Ivor East #260, Ivor Houses #203, Ivor Houses #204, Ivor Houses #205, Ivor Houses #206, Ivor Houses #208, Ivor Houses #210, Ivor Houses #212, Ivor Houses #214, Ivor Houses #216, Ivor Houses #218, Ivor Houses #220, Ivor Houses #222, Ivor Houses #224, Ivor Houses #226, Ivor Houses #228, Ivor Houses #230, Ivor Houses #232, Ivor Houses #234, Ivor Houses #236, Ivor Houses #238, Ivor Houses #240, Ivor Houses #242, Ivor Houses #244, Ivor Houses #246]
+BROWSER LOG (error): [05:00:17.773] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.777] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.780] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.784] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.788] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.794] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.799] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.805] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.812] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.818] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.826] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.835] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.844] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.856] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.868] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.880] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.897] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.912] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.929] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.948] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.967] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:17.991] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.016] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.042] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.067] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.094] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.125] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.164] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.175] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.185] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.195] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.207] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.218] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.229] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.241] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.253] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.266] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.278] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.292] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.305] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.320] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.341] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.362] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.373] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.386] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.397] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.411] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.423] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.435] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.448] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.465] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.482] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.502] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.530] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.545] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.561] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.587] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.614] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.641] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.658] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.675] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.703] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.738] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.755] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.772] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.790] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.810] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.829] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.847] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.882] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.922] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:18.973] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.002] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.035] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.077] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.126] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.162] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.194] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.217] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.241] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.269] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.299] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.334] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.375] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.407] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.431] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.458] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.484] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.522] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.553] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.599] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.628] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.655] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.686] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.715] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.746] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.775] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.814] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.850] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.881] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.918] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.951] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:19.982] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.025] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.057] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.089] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.122] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.155] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.193] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.240] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.274] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.309] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.346] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.379] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.415] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.464] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.496] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.531] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.568] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.605] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.643] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.694] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.728] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.764] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.802] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.842] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.882] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.932] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:20.970] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.008] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.048] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.088] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.131] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.184] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.221] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.260] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.300] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.345] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.398] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.437] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.477] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.519] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.561] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.608] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.661] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.701] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.746] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.793] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.839] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.898] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.944] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:21.991] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.041] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.086] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.145] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.191] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.237] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.286] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.338] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.395] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.444] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.490] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.539] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.547] [ERROR] [testSpoilerUI] Test failed at step 2: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [05:00:22.552] [ERROR] [testSpoilerUI] Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed
+BROWSER LOG (warning): [05:00:22.556] [WARN] [testSpoilerUI] Test run halted due to "Stop on first error" being enabled.
+BROWSER LOG (error): [05:00:22.559] [ERROR] [testSpoilerUI] Spoiler test completed with 1 mismatch(es). See logs above for details.
+BROWSER LOG (error): [05:00:22.588] [ERROR] [TestRunner/test_spoiler_full_run] [spoilers-full-run-1763010015569] Spoiler test failed. Mismatches found in log:
+BROWSER LOG (error): [05:00:22.589] [ERROR] [TestRunner/test_spoiler_full_run]   - Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed
+BROWSER LOG (error): [05:00:22.590] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM] STATE MISMATCH found for: {"type":"state_update","sphere_number":"0.1","player_id":"1"}
+BROWSER LOG (error): [05:00:22.590] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM] > Locations accessible in LOG but NOT in STATE (or checked): Arena Holding #100, Arena Holding #101, Arena Holding #102, Arena Holding #95, Arena Holding #96, Arena Holding #97, Arena Holding #98, Arena Holding #99, Atlas, Bad Boys, Blimp&#039;s Cave #109, Blimp&#039;s Cave #110, Blimp&#039;s Hut #10, Blimp&#039;s Hut #11, Blimp&#039;s Hut #12, Cave Raptors, Coleoptera, Corrosion, Crush, Crustacia Interior #111, Crustacia Interior #112, Crustacia Interior #113, Crustacia Interior #114, Crustacia Interior #115, Crustacia Interior #116, Cure, Drain, Drain Cave #180, Drain Cave #181, Ebon Dining #252, Ebon Houses #207, Ebon Houses #209, Ebon Houses #211, Ebon Houses #213, Ebon Houses #215, Ebon Houses #217, Ebon Houses #219, Ebon Houses #221, Ebon Houses #223, Ebon Houses #225, Ebon Houses #227, Ebon Houses #229, Ebon Houses #231, Ebon Houses #233, Ebon Houses #235, Ebon Houses #237, Ebon Houses #239, Ebon Houses #241, Ebon Houses #243, Ebon Houses #245, Ebon Houses #247, Ebon Houses #248, Ebon Sewers #190, Ebon Sewers #191, Ebon Sewers #192, Ebon Sewers #193, Ebon Sewers #194, Ebon Storage #271, Ebon Storage #272, Ebon Storage #273, Explosion, Fire Power, Footknight, Gomi&#039;s Tower #195, Gomi&#039;s Tower #196, Gomi&#039;s Tower #197, Gomi&#039;s Tower #198, Heal, Ivor Dining #253, Ivor Dining #254, Ivor East #255, Ivor East #256, Ivor East #257, Ivor East #258, Ivor East #259, Ivor East #260, Ivor Houses #203, Ivor Houses #204, Ivor Houses #205, Ivor Houses #206, Ivor Houses #208, Ivor Houses #210, Ivor Houses #212, Ivor Houses #214, Ivor Houses #216, Ivor Houses #218, Ivor Houses #220, Ivor Houses #222, Ivor Houses #224, Ivor Houses #226, Ivor Houses #228, Ivor Houses #230, Ivor Houses #232, Ivor Houses #234, Ivor Houses #236, Ivor Houses #238, Ivor Houses #240, Ivor Houses #242, Ivor Houses #244, Ivor Houses #246, Ivor Sewers #263, Ivor Sewers #264, Ivor Sewers #265, Ivor Sewers #266, Ivor Sewers #267, Ivor Sewers #268, Ivor Sewers #269, Ivor Sewers #270, Ivor Upper Floor #261, Ivor Upper Floor #262, Lance, Levitate, Lightning Storm, Mammoth Viper, Miracle Cure, Mungola, N. Jungle #55, N. Jungle #56, Naris #249, Naris #250, One Up, Outside Ivor #199, Outside Ivor #200, Outside Ivor #201, Outside Ivor #202, Regrowth, Revealer, Revive, S. Jungle w/ weapon #2, S. Jungle w/ weapon #3, S. Jungle w/ weapon #5, Salabog, Slow Burn, Sting, Strongheart&#039;s Hut #6, Strongheart&#039;s Hut #7, Strongheart&#039;s Hut #8, Super Heal, Swamp #64, Swamp #65, Swamp #66, Swamp #67, Swamp #68, Swamp #69, Swamp #70, Timberdrake, Tinker #251, Verminator, Vigor, Volcano Path #58, Volcano Path #59, Volcano Path #60, Volcano Path #61, Volcano Path Cave #182, Volcano Path Cave #183, Volcano Shop #71, Volcano Shop #72, W. Crustacia #103, W. Crustacia #104, W. Crustacia #105, W. Crustacia #106, West of Swamp #62, West of Swamp #63
+BROWSER LOG (error): [05:00:22.591] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.591] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.591] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.592] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.592] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.592] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.592] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.592] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.592] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.592] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.593] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.593] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.593] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.593] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.593] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.593] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.594] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.594] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.594] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.594] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.594] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.594] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:17 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.594] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.595] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.595] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.595] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.596] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.596] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.597] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.597] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.597] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.597] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.598] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.598] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.598] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.599] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.599] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.599] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.599] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.599] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.600] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.600] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.600] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.600] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.600] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.600] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.600] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.601] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.601] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.601] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.601] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.602] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.602] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.602] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.603] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.603] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.603] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.603] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.603] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.604] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.604] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.604] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.604] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.604] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.604] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.604] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.605] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.605] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.605] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.605] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.605] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.605] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:18 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.605] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.606] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.606] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.606] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.606] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.606] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.607] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.607] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.607] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.607] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.607] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.608] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.608] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.609] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.609] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.609] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.609] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.609] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.609] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.610] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.610] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.610] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.610] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.610] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.610] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.610] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.610] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.610] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.611] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.611] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.611] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:19 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.612] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.612] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.612] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.612] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.612] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.612] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.612] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.612] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.612] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.613] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.613] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.613] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.613] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.613] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.613] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.613] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.614] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.614] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.614] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.614] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.614] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.614] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.614] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.614] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.614] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.614] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:20 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.615] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.615] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.615] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.615] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.615] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.615] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.615] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.615] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.615] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.615] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.616] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.621] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.621] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.621] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.621] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.621] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.621] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.622] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.622] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.622] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.622] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.622] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.622] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:21 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.622] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.622] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.623] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.623] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.623] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.623] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.623] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.623] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.624] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.624] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.624] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:00:22.625] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM] Test failed at step 2: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [05:00:22.625] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM] Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed
+BROWSER LOG (error): [05:00:22.625] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:00:22 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Full in-app test results: {
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 0,
+    "failedCount": 1
+  },
+  "testDetails": [
+    {
+      "id": "test_spoiler_full_run",
+      "name": "Test Spoilers Panel - Full Run",
+      "status": "failed",
+      "category": "Test Spoilers Panel",
+      "startTime": "2025-11-13T05:00:15.568Z",
+      "endTime": "2025-11-13T05:00:22.638Z",
+      "durationMs": 7070,
+      "conditions": [
+        {
+          "description": "Test started",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:00:15.569Z"
+        },
+        {
+          "description": "Test Spoilers panel found in DOM",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:00:16.072Z"
+        },
+        {
+          "description": "\"Load Suggested Log\" button found and enabled",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:00:16.323Z"
+        },
+        {
+          "description": "\"Run Full Test\" button appeared",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:00:17.078Z"
+        },
+        {
+          "description": "Full spoiler test completed",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:00:22.584Z"
+        },
+        {
+          "description": "Spoiler test passed all checks",
+          "status": "failed",
+          "timestamp": "2025-11-13T05:00:22.588Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[spoilers-full-run-1763010015569] Starting testSpoilersPanelFullRun...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:15.569Z"
+        },
+        {
+          "message": "Condition: \"Test started\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:15.569Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010015569] Activating testSpoilersPanel panel...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:15.569Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel initialization\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:15.570Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel initialization\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:15.820Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel DOM element\" (timeout: 5000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:15.820Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel DOM element\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:16.072Z"
+        },
+        {
+          "message": "Condition: \"Test Spoilers panel found in DOM\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:16.072Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Load Suggested Log\" button to be available\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:16.072Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Load Suggested Log\" button to be available\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:16.322Z"
+        },
+        {
+          "message": "Condition: \"\"Load Suggested Log\" button found and enabled\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:16.323Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010015569] Clicking \"Load Suggested Log\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:16.323Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Spoiler log loading completion\" (timeout: 15000ms, interval: 500ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:16.325Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Spoiler log loading completion\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:16.826Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Run Full Test\" button to appear\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:16.826Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Run Full Test\" button to appear\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:17.078Z"
+        },
+        {
+          "message": "Condition: \"\"Run Full Test\" button appeared\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:17.078Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010015569] Clicking \"Run Full Test\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:17.078Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test to start processing\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:17.080Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test to start processing\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:17.181Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010015569] Waiting for full spoiler test to complete...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:17.181Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test completion with detailed results\" (timeout: 300000ms, interval: 1000ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:17.181Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010015569] Polling: buttonReady=true, hasDetailedResults=true, processedEvents=1/20",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:22.583Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010015569] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":20,\"processedEvents\":1,\"errorCount\":1,\"sphereCount\":2,\"testLogPath\":\"presets/soe/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:22.584Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test completion with detailed results\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:22.584Z"
+        },
+        {
+          "message": "Condition: \"Full spoiler test completed\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:22.584Z"
+        },
+        {
+          "message": "Condition: \"Spoiler test passed all checks\" - FAILED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:22.588Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010015569] Spoiler test failed. Mismatches found in log:",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.588Z"
+        },
+        {
+          "message": "  - Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.589Z"
+        },
+        {
+          "message": "  - [5:00:17 AM] STATE MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":\"0.1\",\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.590Z"
+        },
+        {
+          "message": "  - [5:00:17 AM] > Locations accessible in LOG but NOT in STATE (or checked): Arena Holding #100, Arena Holding #101, Arena Holding #102, Arena Holding #95, Arena Holding #96, Arena Holding #97, Arena Holding #98, Arena Holding #99, Atlas, Bad Boys, Blimp&#039;s Cave #109, Blimp&#039;s Cave #110, Blimp&#039;s Hut #10, Blimp&#039;s Hut #11, Blimp&#039;s Hut #12, Cave Raptors, Coleoptera, Corrosion, Crush, Crustacia Interior #111, Crustacia Interior #112, Crustacia Interior #113, Crustacia Interior #114, Crustacia Interior #115, Crustacia Interior #116, Cure, Drain, Drain Cave #180, Drain Cave #181, Ebon Dining #252, Ebon Houses #207, Ebon Houses #209, Ebon Houses #211, Ebon Houses #213, Ebon Houses #215, Ebon Houses #217, Ebon Houses #219, Ebon Houses #221, Ebon Houses #223, Ebon Houses #225, Ebon Houses #227, Ebon Houses #229, Ebon Houses #231, Ebon Houses #233, Ebon Houses #235, Ebon Houses #237, Ebon Houses #239, Ebon Houses #241, Ebon Houses #243, Ebon Houses #245, Ebon Houses #247, Ebon Houses #248, Ebon Sewers #190, Ebon Sewers #191, Ebon Sewers #192, Ebon Sewers #193, Ebon Sewers #194, Ebon Storage #271, Ebon Storage #272, Ebon Storage #273, Explosion, Fire Power, Footknight, Gomi&#039;s Tower #195, Gomi&#039;s Tower #196, Gomi&#039;s Tower #197, Gomi&#039;s Tower #198, Heal, Ivor Dining #253, Ivor Dining #254, Ivor East #255, Ivor East #256, Ivor East #257, Ivor East #258, Ivor East #259, Ivor East #260, Ivor Houses #203, Ivor Houses #204, Ivor Houses #205, Ivor Houses #206, Ivor Houses #208, Ivor Houses #210, Ivor Houses #212, Ivor Houses #214, Ivor Houses #216, Ivor Houses #218, Ivor Houses #220, Ivor Houses #222, Ivor Houses #224, Ivor Houses #226, Ivor Houses #228, Ivor Houses #230, Ivor Houses #232, Ivor Houses #234, Ivor Houses #236, Ivor Houses #238, Ivor Houses #240, Ivor Houses #242, Ivor Houses #244, Ivor Houses #246, Ivor Sewers #263, Ivor Sewers #264, Ivor Sewers #265, Ivor Sewers #266, Ivor Sewers #267, Ivor Sewers #268, Ivor Sewers #269, Ivor Sewers #270, Ivor Upper Floor #261, Ivor Upper Floor #262, Lance, Levitate, Lightning Storm, Mammoth Viper, Miracle Cure, Mungola, N. Jungle #55, N. Jungle #56, Naris #249, Naris #250, One Up, Outside Ivor #199, Outside Ivor #200, Outside Ivor #201, Outside Ivor #202, Regrowth, Revealer, Revive, S. Jungle w/ weapon #2, S. Jungle w/ weapon #3, S. Jungle w/ weapon #5, Salabog, Slow Burn, Sting, Strongheart&#039;s Hut #6, Strongheart&#039;s Hut #7, Strongheart&#039;s Hut #8, Super Heal, Swamp #64, Swamp #65, Swamp #66, Swamp #67, Swamp #68, Swamp #69, Swamp #70, Timberdrake, Tinker #251, Verminator, Vigor, Volcano Path #58, Volcano Path #59, Volcano Path #60, Volcano Path #61, Volcano Path Cave #182, Volcano Path Cave #183, Volcano Shop #71, Volcano Shop #72, W. Crustacia #103, W. Crustacia #104, W. Crustacia #105, W. Crustacia #106, West of Swamp #62, West of Swamp #63",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.590Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.591Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.591Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.591Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.592Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.592Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.592Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.592Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.592Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.592Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.592Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.593Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.593Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.593Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.593Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.593Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.593Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.594Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.594Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.594Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.594Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.594Z"
+        },
+        {
+          "message": "  - [5:00:17 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.594Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.594Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.595Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.595Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.595Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.595Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.596Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.597Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.597Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.597Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.597Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.598Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.598Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.598Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.599Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.599Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.599Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.599Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.599Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.600Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.600Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.600Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.600Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.600Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.600Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.600Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.601Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.601Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.601Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.601Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.602Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.602Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.602Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.603Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.603Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.603Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.603Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.603Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.604Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.604Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.604Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.604Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.604Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.604Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.604Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.605Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.605Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.605Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.605Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.605Z"
+        },
+        {
+          "message": "  - [5:00:18 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.605Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.605Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.606Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.606Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.606Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.606Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.606Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.606Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.607Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.607Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.607Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.607Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.608Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.608Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.609Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.609Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.609Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.609Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.609Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.609Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.610Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.610Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.610Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.610Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.610Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.610Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.610Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.610Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.610Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.611Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.611Z"
+        },
+        {
+          "message": "  - [5:00:19 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.611Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.612Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.612Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.612Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.612Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.612Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.612Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.612Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.612Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.612Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.613Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.613Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.613Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.613Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.613Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.613Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.613Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.614Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.614Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.614Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.614Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.614Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.614Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.614Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.614Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.614Z"
+        },
+        {
+          "message": "  - [5:00:20 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.614Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.614Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.615Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.615Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.615Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.615Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.615Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.615Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.615Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.615Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.615Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.616Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.621Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.621Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.621Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.621Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.621Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.621Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.622Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.622Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.622Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.622Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.622Z"
+        },
+        {
+          "message": "  - [5:00:21 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.622Z"
+        },
+        {
+          "message": "  - [5:00:22 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.622Z"
+        },
+        {
+          "message": "  - [5:00:22 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.622Z"
+        },
+        {
+          "message": "  - [5:00:22 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.623Z"
+        },
+        {
+          "message": "  - [5:00:22 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.623Z"
+        },
+        {
+          "message": "  - [5:00:22 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.623Z"
+        },
+        {
+          "message": "  - [5:00:22 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.623Z"
+        },
+        {
+          "message": "  - [5:00:22 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.623Z"
+        },
+        {
+          "message": "  - [5:00:22 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.623Z"
+        },
+        {
+          "message": "  - [5:00:22 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.624Z"
+        },
+        {
+          "message": "  - [5:00:22 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.624Z"
+        },
+        {
+          "message": "  - [5:00:22 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.624Z"
+        },
+        {
+          "message": "  - [5:00:22 AM] Test failed at step 2: Comparison failed for event type 'state_update'.",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.625Z"
+        },
+        {
+          "message": "  - [5:00:22 AM] Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.625Z"
+        },
+        {
+          "message": "  - [5:00:22 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.",
+          "type": "error",
+          "timestamp": "2025-11-13T05:00:22.625Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010015569] Spoiler test results stored in window.__spoilerTestResults__",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:22.626Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010015569] Spoiler test results stored in localStorage",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:22.636Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010015569] testSpoilersPanelFullRun finished. Overall Result: false.",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:22.636Z"
+        },
+        {
+          "message": "Test completion signal: FAILED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:00:22.636Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T05:00:22.637Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T05:00:22.638Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T05:00:22.638Z"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2025-11-13T05:00:22.739Z"
+}
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2025-11-13T05-00-23.json
+  ✘  1 tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results (8.7s)
+
+
+  1) tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m0[39m
+    Received: [31m1[39m
+
+      141 |
+      142 |     // The test system should complete successfully regardless of whether tests run
+    > 143 |     expect(results.summary.failedCount).toBe(0);
+          |                                         ^
+      144 |     
+      145 |     // If tests actually ran, they should pass
+      146 |     if (results.summary.totalRun > 0) {
+        at /home/user/Archipelago-CC/tests/e2e/app.spec.js:143:41
+
+    Error Context: test-results/app-Application-End-to-End-a086e-app-tests-and-check-results/error-context.md
+
+  1 failed
+    tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results ─
