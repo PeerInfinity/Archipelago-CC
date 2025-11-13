@@ -59,3 +59,24 @@
 
 **Result:** Test now passes Sphere 0 through Sphere 2.5 and stops at Sphere 2.6 with a different issue.
 
+
+## Issue 4: Location and region reachability exported as helper instead of state_method
+
+**Location:** `DDD: Pole-Jumping for Red Coins` (and other locations using `{{location}}` or `{region}` syntax)
+
+**Sphere:** 2.6
+
+**Problem:** The exporter was converting `{{location}}` and `{region}` syntax to custom `helper` function calls (`can_reach_location` and `can_reach_region`) instead of the core `state_method` calls that match the Python implementation.
+
+**Expected behavior:** `{{location}}` should export as `state.can_reach(location, 'Location')` and `{region}` should export as `state.can_reach(region, 'Region')`, using the `state_method` rule type.
+
+**Actual behavior:** Rules were exported as `helper` type with custom function names, which either didn't exist or didn't match the core state engine behavior.
+
+**Rule in Python:** `"{{Bowser in the Fire Sea Key}}"` becomes `lambda state: state.can_reach("Bowser in the Fire Sea Key", "Location", player)`
+
+**Fix:** Modified `parse_token_expression` to export `{{location}}` and `{region}` as `state_method` calls with the `can_reach` method, matching the Python implementation exactly.
+
+**Files changed:** `exporter/games/sm64ex.py`
+
+**Result:** Test now passes all spheres (121 events, 5.4 spheres). Super Mario 64 is fully working!
+

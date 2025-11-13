@@ -216,20 +216,26 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
 
         # Handle region reachability: {region name} or {{location name}}
         if token_expr.startswith('{{') and token_expr.endswith('}}'):
-            # Location reachability
+            # Location reachability - use state_method to match Python's state.can_reach()
             location_name = token_expr[2:-2].strip()
             return {
-                'type': 'helper',
-                'name': 'can_reach_location',
-                'args': [{'type': 'constant', 'value': location_name}]
+                'type': 'state_method',
+                'method': 'can_reach',
+                'args': [
+                    {'type': 'constant', 'value': location_name},
+                    {'type': 'constant', 'value': 'Location'}
+                ]
             }
         elif token_expr.startswith('{') and token_expr.endswith('}'):
-            # Region reachability
+            # Region reachability - use state_method to match Python's state.can_reach()
             region_name = token_expr[1:-1].strip()
             return {
-                'type': 'helper',
-                'name': 'can_reach_region',
-                'args': [{'type': 'constant', 'value': region_name}]
+                'type': 'state_method',
+                'method': 'can_reach',
+                'args': [
+                    {'type': 'constant', 'value': region_name},
+                    {'type': 'constant', 'value': 'Region'}
+                ]
             }
 
         # Handle + (has_all) - items required together

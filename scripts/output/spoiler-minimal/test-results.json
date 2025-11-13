@@ -1,7 +1,7 @@
 {
   "metadata": {
     "created": "2025-11-13T05:05:24.331421",
-    "last_updated": "2025-11-13T05:05:38.582226",
+    "last_updated": "2025-11-13T05:30:57.698484",
     "script_version": "1.0.0"
   },
   "results": {
@@ -15,30 +15,30 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.63,
+        "processing_time_seconds": 4.27,
         "return_code": 0,
         "success": true,
         "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/sm64ex/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 94249,
+        "size_bytes": 94473,
         "size_mb": 0.09
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 8.49,
-        "return_code": 1,
-        "sphere_reached": 2.6,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 9.37,
+        "return_code": 0,
+        "sphere_reached": 5.4,
+        "success": true,
         "total_spheres": 5.4,
         "warning_count": 0
       },
       "template_name": "Super Mario 64.yaml",
-      "timestamp": "2025-11-13T05:05:24.823791",
+      "timestamp": "2025-11-13T05:30:43.464322",
       "world_info": {
         "exporter_path": "exporter/games/sm64ex.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js",

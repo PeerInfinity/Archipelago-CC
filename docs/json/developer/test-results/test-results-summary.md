@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-13 05:05:38
+**Generated:** 2025-11-13 05:30:57
 
 This summary combines results from three types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -11,7 +11,7 @@ This summary combines results from three types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 0/1 passed (0.0%)
+- **Minimal Test:** 1/1 passed (100.0%)
 - **Full Test:** 0/0 passed (0.0%)
 - **Multiplayer Test:** 0/0 passed (0.0%)
 
@@ -19,14 +19,14 @@ This summary combines results from three types of tests:
 
 - **Templates passing all 3 tests:** 0/1 (0.0%)
 - **Templates passing 2 tests:** 0/1 (0.0%)
-- **Templates passing 1 test:** 0/1 (0.0%)
-- **Templates passing 0 tests:** 1/1 (100.0%)
+- **Templates passing 1 test:** 1/1 (100.0%)
+- **Templates passing 0 tests:** 0/1 (0.0%)
 
 ## Test Results
 
 | Game Name | Minimal Test | Full Test | Multiplayer Test | Custom Exporter | Custom GameLogic |
 |-----------|--------------|-----------|------------------|-----------------|------------------|
-| Super Mario 64 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
+| Super Mario 64 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
 
 ## Excluded Games
 

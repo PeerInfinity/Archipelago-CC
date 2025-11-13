@@ -573,12 +573,16 @@
             "name": "WF: Fall onto the Caged Island",
             "id": 3626011,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_region",
+              "type": "state_method",
+              "method": "can_reach",
               "args": [
                 {
                   "type": "constant",
                   "value": "WF: Tower"
+                },
+                {
+                  "type": "constant",
+                  "value": "Region"
                 }
               ]
             },
@@ -1827,12 +1831,16 @@
             "name": "DDD: Pole-Jumping for Red Coins",
             "id": 3626058,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_location",
+              "type": "state_method",
+              "method": "can_reach",
               "args": [
                 {
                   "type": "constant",
                   "value": "Bowser in the Fire Sea Key"
+                },
+                {
+                  "type": "constant",
+                  "value": "Location"
                 }
               ]
             },
