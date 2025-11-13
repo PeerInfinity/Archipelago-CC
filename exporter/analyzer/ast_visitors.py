@@ -642,6 +642,30 @@ class ASTVisitorMixin:
                     serialized = list(value)
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to NamedTuple as list: {serialized}")
                     return {'type': 'constant', 'value': serialized}
+                # Handle lists (including lists of Region objects)
+                elif isinstance(value, list):
+                    # Try to serialize the list
+                    serialized_list = []
+                    for item in value:
+                        # If item has a 'code' attribute (like LandstalkerRegion), use that
+                        if hasattr(item, 'code'):
+                            serialized_list.append(item.code)
+                        # If item is a simple type, use it directly
+                        elif isinstance(item, (int, float, str, bool, type(None))):
+                            serialized_list.append(item)
+                        # If item has a 'value' attribute (enum), use that
+                        elif hasattr(item, 'value') and isinstance(item.value, (int, float, str, bool)):
+                            serialized_list.append(item.value)
+                        # If item is a NamedTuple, convert to list
+                        elif hasattr(item, '_fields'):
+                            serialized_list.append(list(item))
+                        else:
+                            # For other types, try to use their string representation
+                            # This is a fallback that might not always work
+                            logging.warning(f"visit_Name: Cannot serialize list item of type {type(item).__name__}, using str()")
+                            serialized_list.append(str(item))
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to list: {serialized_list}")
+                    return {'type': 'constant', 'value': serialized_list}
 
             # Also check function defaults for lambda parameters
             if name not in self.closure_vars:
