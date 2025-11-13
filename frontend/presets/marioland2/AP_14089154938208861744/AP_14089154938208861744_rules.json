@@ -139,8 +139,16 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 6
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "options"
+                  },
+                  "attr": "required_golden_coins"
                 }
               ]
             }
@@ -278,7 +286,7 @@
             "id": 6,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_2_normal_exit",
               "args": []
             },
             "item": {
@@ -293,7 +301,7 @@
             "id": 7,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_2_secret_exit",
               "args": []
             },
             "item": {
@@ -308,7 +316,7 @@
             "id": 8,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_2_midway_bell",
               "args": []
             },
             "item": {
@@ -338,7 +346,7 @@
             "id": 9,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_3_normal_exit",
               "args": []
             },
             "item": {
@@ -370,7 +378,7 @@
             "id": 10,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_4_normal_exit",
               "args": []
             },
             "item": {
@@ -385,7 +393,7 @@
             "id": 11,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_4_midway_bell",
               "args": []
             },
             "item": {
@@ -406,7 +414,7 @@
             "id": 12,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_5_boss",
               "args": []
             },
             "item": {
@@ -460,9 +468,47 @@
             "name": "Hippo Zone - Normal or Secret Exit",
             "id": 15,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Hippo Bubble",
+                        "Water Physics"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Carrot"
+                      }
+                    },
+                    {
+                      "type": "not",
+                      "condition": {
+                        "type": "helper",
+                        "name": "is_auto_scroll",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Hippo Zone"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -504,7 +550,7 @@
             "id": 16,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "space_zone_1_normal_exit",
               "args": []
             },
             "item": {
@@ -519,7 +565,7 @@
             "id": 17,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "space_zone_1_secret_exit",
               "args": []
             },
             "item": {
@@ -573,9 +619,28 @@
             "name": "Space Zone 2 - Boss",
             "id": 20,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "helper",
+                "name": "has_pipe_right",
+                "args": []
+              },
+              "if_true": {
+                "type": "conditional",
+                "test": {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Space Physics"
+                  }
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": true
+                },
+                "if_false": null
+              },
+              "if_false": null
             },
             "item": {
               "name": "Space Coin",
@@ -589,7 +654,7 @@
             "id": 21,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "space_zone_2_midway_bell",
               "args": []
             },
             "item": {
@@ -632,7 +697,7 @@
             "id": 22,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "macro_zone_1_normal_exit",
               "args": []
             },
             "item": {
@@ -647,7 +712,7 @@
             "id": 23,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "macro_zone_1_secret_exit",
               "args": []
             },
             "item": {
@@ -662,7 +727,7 @@
             "id": 24,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "macro_zone_1_midway_bell",
               "args": []
             },
             "item": {
@@ -694,7 +759,7 @@
             "id": 25,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "macro_zone_2_normal_exit",
               "args": []
             },
             "item": {
@@ -709,7 +774,7 @@
             "id": 26,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "macro_zone_2_midway_bell",
               "args": []
             },
             "item": {
@@ -740,9 +805,33 @@
             "name": "Macro Zone 3 - Normal Exit",
             "id": 27,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Pipe_Down",
+                      "inferred": true,
+                      "description": "Requires having Pipe Down"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pipe_Up",
+                      "inferred": true,
+                      "description": "Requires having Pipe Up"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Macro Zone 3 Midway Bell"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -755,9 +844,33 @@
             "name": "Macro Zone 3 - Midway Bell",
             "id": 28,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Pipe_Down",
+                      "inferred": true,
+                      "description": "Requires having Pipe Down"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pipe_Up",
+                      "inferred": true,
+                      "description": "Requires having Pipe Up"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Macro Zone 3 Midway Bell"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -788,9 +901,10 @@
             "name": "Macro Zone 4 - Boss",
             "id": 29,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "item_check",
+              "item": "Pipe_Right",
+              "inferred": true,
+              "description": "Requires having Pipe Right"
             },
             "item": {
               "name": "Macro Coin",
@@ -867,7 +981,7 @@
             "id": 32,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "pumpkin_zone_1_normal_exit",
               "args": []
             },
             "item": {
@@ -882,7 +996,7 @@
             "id": 33,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "pumpkin_zone_1_midway_bell",
               "args": []
             },
             "item": {
@@ -925,7 +1039,7 @@
             "id": 34,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "pumpkin_zone_2_normal_exit",
               "args": []
             },
             "item": {
@@ -940,7 +1054,7 @@
             "id": 35,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "pumpkin_zone_2_secret_exit",
               "args": []
             },
             "item": {
@@ -1011,7 +1125,7 @@
             "id": 38,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "pumpkin_zone_3_secret_exit",
               "args": []
             },
             "item": {
@@ -1046,7 +1160,7 @@
             "id": 40,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "pumpkin_zone_4_boss",
               "args": []
             },
             "item": {
@@ -1132,7 +1246,7 @@
             "id": 44,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "mario_zone_1_normal_exit",
               "args": []
             },
             "item": {
@@ -1147,7 +1261,7 @@
             "id": 45,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "mario_zone_1_midway_bell",
               "args": []
             },
             "item": {
@@ -1258,7 +1372,7 @@
             "id": 50,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "mario_zone_4_boss",
               "args": []
             },
             "item": {
@@ -1304,7 +1418,7 @@
             "id": 52,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "turtle_zone_1_normal_exit",
               "args": []
             },
             "item": {
@@ -1361,7 +1475,7 @@
             "id": 54,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "turtle_zone_2_normal_exit",
               "args": []
             },
             "item": {
@@ -1375,9 +1489,35 @@
             "name": "Turtle Zone 2 - Secret Exit",
             "id": 55,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Pipe_Up",
+                  "inferred": true,
+                  "description": "Requires having Pipe Up"
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Physics"
+                  }
+                },
+                {
+                  "type": "not",
+                  "condition": {
+                    "type": "helper",
+                    "name": "is_auto_scroll",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Turtle Zone 2"
+                      }
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Hippo Bubble",
@@ -1391,7 +1531,7 @@
             "id": 56,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "turtle_zone_2_midway_bell",
               "args": []
             },
             "item": {
@@ -1411,9 +1551,10 @@
             "name": "Turtle Zone 3 - Boss",
             "id": 57,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "item_check",
+              "item": "Pipe_Right",
+              "inferred": true,
+              "description": "Requires having Pipe Right"
             },
             "item": {
               "name": "Turtle Coin",
@@ -1447,7 +1588,7 @@
             "id": 59,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "turtle_zone_secret_course_normal_exit",
               "args": []
             },
             "item": {
@@ -1467,9 +1608,33 @@
             "name": "Mario's Castle - Wario",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Pipe_Right",
+                      "inferred": true,
+                      "description": "Requires having Pipe Right"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pipe_Left",
+                      "inferred": true,
+                      "description": "Requires having Pipe Left"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Mario's Castle Midway Bell"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Wario Defeated",
