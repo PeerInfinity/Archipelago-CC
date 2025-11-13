@@ -261,6 +261,7 @@ import * as v6Logic from './v6/v6Logic.js';
 import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
+import * as shapezLogic from './shapez/shapezLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -433,6 +434,12 @@ const GAME_REGISTRY = {
     helperFunctions: yachtdiceLogic.helperFunctions,
     worldClasses: ['YachtDiceWorld'],
     aliases: ['Yacht Dice', 'yacht_dice']
+  },
+  'shapez': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: shapezLogic.helpers,
+    worldClasses: ['ShapezWorld'],
+    aliases: ['shapez']
   },
   // Add more games here as they're implemented
   'Generic': {
