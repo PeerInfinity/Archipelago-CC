@@ -82,6 +82,53 @@ class OOTGameExportHandler(GenericGameExportHandler):
             ]
         }
 
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export OOT-specific settings needed for logic evaluation."""
+        # Start with common settings from base handler
+        settings_dict = super().get_settings_data(world, multiworld, player)
+
+        # OOT-specific settings that affect logic
+        oot_settings = [
+            'starting_age',           # Critical: determines initial age state
+            'open_forest',            # Affects Kokiri Forest access
+            'shuffle_child_trade',    # Affects child trade item locations
+            'shuffle_dungeon_entrances', # Affects dungeon access
+            'entrance_shuffle',       # General entrance shuffle setting
+            'bombchus_in_logic',      # Whether bombchus are required logic
+            'plant_beans',            # Whether beans are planted
+            'logic_no_night_tokens_without_suns_song', # Night token logic
+            'logic_rules',            # Overall logic difficulty
+            'logic_tricks',           # Enabled logic tricks
+            'big_poe_count',          # Required big poe count
+            'shuffle_medigoron_carpet_salesman',
+            'shuffle_grotto_entrances',
+            'shuffle_interior_entrances',
+            'shuffle_overworld_entrances',
+            'shuffle_scrubs',
+            'shuffle_pots',
+            'shuffle_crates',
+            'shuffle_cows',
+            'shuffle_beehives',
+            'warp_songs',
+            'spawn_positions',
+            'owl_drops',
+        ]
+
+        # Extract settings from world object
+        for setting_name in oot_settings:
+            if hasattr(world, setting_name):
+                value = getattr(world, setting_name)
+                # Handle Option objects vs direct values
+                if hasattr(value, 'value'):
+                    settings_dict[setting_name] = value.value
+                elif hasattr(value, 'current_key'):
+                    settings_dict[setting_name] = value.current_key
+                else:
+                    settings_dict[setting_name] = value
+                logger.debug(f"OOT: Exported setting {setting_name} = {settings_dict[setting_name]}")
+
+        return settings_dict
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Expand OOT-specific rules, handling special closure variables."""
         if not rule:

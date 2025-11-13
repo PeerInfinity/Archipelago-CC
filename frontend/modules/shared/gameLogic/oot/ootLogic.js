@@ -22,7 +22,12 @@ export const ootStateModule = {
    * Load settings into game state
    */
   loadSettings(gameState, settings) {
-    return { ...gameState };
+    // Initialize age based on starting_age setting
+    const startingAge = settings?.starting_age || 'child';
+    return {
+      ...gameState,
+      age: startingAge,
+    };
   },
 
   /**
@@ -103,17 +108,171 @@ function createEvaluationContext(snapshot, staticData) {
     },
 
     // Age checks
-    is_adult: () => snapshot?.age === 'adult' || !snapshot?.age, // Default to adult if age not set
+    is_adult: () => snapshot?.age === 'adult',
     is_child: () => snapshot?.age === 'child',
     is_starting_age: () => {
       const startingAge = settings?.starting_age || 'child';
-      return snapshot?.age === startingAge || !snapshot?.age;
+      return snapshot?.age === startingAge;
     },
 
     // Time of day checks (placeholder - need to implement properly)
     at_night: () => true, // TODO: Implement time of day logic
     at_day: () => true,
     at_dampe: () => true,
+    at_dampe_time: () => true, // Alias for at_dampe
+
+    // Helper to get item count
+    countItem: (itemName) => {
+      const normalizedName = itemName.replace(/_/g, ' ');
+      return snapshot?.inventory?.[normalizedName] || 0;
+    },
+
+    // Helper to check group
+    hasGroup: (groupName) => {
+      // Check if player has any item from this group
+      const items = staticData?.items?.[1] || {};
+      for (const [itemName, itemData] of Object.entries(items)) {
+        if (itemData.groups && itemData.groups.includes(groupName)) {
+          if ((snapshot?.inventory?.[itemName] || 0) > 0) {
+            return true;
+          }
+        }
+      }
+      return false;
+    },
+
+    // Explosives helpers
+    has_bombchus: () => {
+      const ctx = context;
+      const buyBombchu = ctx.hasItem('Buy_Bombchu_5') || ctx.hasItem('Buy_Bombchu_10') ||
+                         ctx.hasItem('Buy_Bombchu_20') || ctx.hasItem('Bombchu_Drop');
+      const bombchusInLogic = settings?.bombchus_in_logic || false;
+      const hasBombBag = ctx.hasItem('Bomb_Bag');
+      return buyBombchu && (bombchusInLogic || hasBombBag);
+    },
+    has_explosives: () => {
+      const ctx = context;
+      const bombchusInLogic = settings?.bombchus_in_logic || false;
+      return ctx.hasItem('Bombs') || (bombchusInLogic && ctx.has_bombchus());
+    },
+    can_blast_or_smash: () => {
+      const ctx = context;
+      return ctx.has_explosives() || (ctx.is_adult() && ctx.hasItem('Megaton_Hammer'));
+    },
+
+    // Combat and interaction helpers
+    can_break_crate: () => {
+      const ctx = context;
+      const canBonk = true; // Simplified - deadly_bonks logic not fully implemented
+      return canBonk || ctx.can_blast_or_smash();
+    },
+    can_cut_shrubs: () => {
+      const ctx = context;
+      return ctx.is_adult() || ctx.hasItem('Sticks') || ctx.hasItem('Kokiri_Sword') ||
+             ctx.hasItem('Boomerang') || ctx.has_explosives();
+    },
+    can_dive: () => {
+      return context.hasItem('Progressive_Scale');
+    },
+
+    // Bottle helper
+    has_bottle: () => {
+      return context.hasGroup('logic_bottles');
+    },
+
+    // Bean and bug helpers
+    can_plant_bean: () => {
+      const ctx = context;
+      const plantBeans = settings?.plant_beans || false;
+      if (plantBeans) return true;
+      // Check if child and has beans
+      if (!ctx.is_child()) return false;
+      return ctx.hasItem('Magic_Bean_Pack') || ctx.hasItem('Buy_Magic_Bean') ||
+             ctx.countItem('Magic_Bean') >= 10;
+    },
+    can_plant_bugs: () => {
+      const ctx = context;
+      return ctx.is_child() && (ctx.hasItem('Bugs') || ctx.hasItem('Buy_Bottle_Bug'));
+    },
+
+    // Grotto helpers
+    can_open_bomb_grotto: () => {
+      const ctx = context;
+      const logicGrottosWithoutAgony = settings?.logic_grottos_without_agony || false;
+      return ctx.can_blast_or_smash() && (ctx.hasItem('Stone_of_Agony') || logicGrottosWithoutAgony);
+    },
+    can_open_storm_grotto: () => {
+      const ctx = context;
+      const logicGrottosWithoutAgony = settings?.logic_grottos_without_agony || false;
+      const canPlaySOS = ctx.hasItem('Ocarina') && ctx.hasItem('Song_of_Storms');
+      return canPlaySOS && (ctx.hasItem('Stone_of_Agony') || logicGrottosWithoutAgony);
+    },
+
+    // Fairy summon helpers
+    can_summon_gossip_fairy: () => {
+      const ctx = context;
+      if (!ctx.hasItem('Ocarina')) return false;
+      return ctx.hasItem('Zeldas_Lullaby') || ctx.hasItem('Eponas_Song') ||
+             ctx.hasItem('Song_of_Time') || ctx.hasItem('Suns_Song');
+    },
+    can_summon_gossip_fairy_without_suns: () => {
+      const ctx = context;
+      if (!ctx.hasItem('Ocarina')) return false;
+      return ctx.hasItem('Zeldas_Lullaby') || ctx.hasItem('Eponas_Song') ||
+             ctx.hasItem('Song_of_Time');
+    },
+
+    // Epona helper
+    can_ride_epona: () => {
+      const ctx = context;
+      if (!ctx.is_adult() || !ctx.hasItem('Epona')) return false;
+      const canPlayEponasSong = ctx.hasItem('Ocarina') && ctx.hasItem('Eponas_Song');
+      return canPlayEponasSong; // Simplified - skipping is_glitched and can_hover
+    },
+
+    // Bridge and LACS helpers (simplified - full logic is complex)
+    can_build_rainbow_bridge: () => {
+      const bridge = settings?.bridge || 'vanilla';
+      if (bridge === 'open') return true;
+      // Simplified - just check for open bridge
+      // Full implementation would check medallions, stones, etc.
+      return false;
+    },
+    can_trigger_lacs: () => {
+      const lacsCondition = settings?.lacs_condition || 'vanilla';
+      // Simplified - full implementation would check condition requirements
+      return false;
+    },
+    can_finish_GerudoFortress: () => {
+      const gerudoFortress = settings?.gerudo_fortress || 'normal';
+      // Simplified - check if gerudo fortress is set to something other than normal/fast
+      return gerudoFortress !== 'normal' && gerudoFortress !== 'fast';
+    },
+
+    // Setting checks
+    shuffle_dungeon_entrances: () => {
+      return settings?.shuffle_dungeon_entrances || false;
+    },
+    entrance_shuffle: () => {
+      return settings?.entrance_shuffle || false;
+    },
+    dodongos_cavern_shortcuts: () => {
+      const dungeonShortcuts = settings?.dungeon_shortcuts || [];
+      return dungeonShortcuts.includes('Dodongos Cavern');
+    },
+
+    // Logic trick helpers (all default to false for safety)
+    logic_visible_collisions: () => false,
+    logic_kakariko_rooftop_gs: () => false,
+    logic_man_on_roof: () => false,
+    logic_mido_backflip: () => false,
+    logic_dmt_climb_hovers: () => false,
+    logic_adult_kokiri_gs: () => false,
+    logic_lab_diving: () => false,
+    logic_windmill_poh: () => false,
+    logic_graveyard_poh: () => false,
+    logic_zora_river_lower: () => false,
+    logic_link_goron_dins: () => false,
   };
 }
 
@@ -194,6 +353,21 @@ function evaluateRuleString(ruleString, context) {
     return evaluateComparison(ruleString, context);
   }
 
+  // Handle item count checks (e.g., "Progressive_Scale, 2" or "(Gold_Skulltula_Token, bridge_tokens)")
+  const countMatch = ruleString.match(/^\(?([A-Z][a-zA-Z0-9_]*)\s*,\s*(\w+)\)?$/);
+  if (countMatch) {
+    const [, itemName, countStr] = countMatch;
+    // countStr could be a number or a setting name
+    let requiredCount;
+    if (/^\d+$/.test(countStr)) {
+      requiredCount = parseInt(countStr, 10);
+    } else {
+      // It's a setting reference
+      requiredCount = context.settings[countStr] || 0;
+    }
+    return context.countItem(itemName) >= requiredCount;
+  }
+
   // Handle simple item names (with underscores)
   // If it looks like an item name (starts with capital), check inventory
   if (/^[A-Z][a-zA-Z0-9_]*$/.test(ruleString)) {
@@ -201,10 +375,13 @@ function evaluateRuleString(ruleString, context) {
   }
 
   // Handle helper-like identifiers (lowercase with underscores, like can_plant_bean)
-  // These are OOT-specific helpers that we haven't implemented yet
+  // These are OOT-specific helpers that we may have implemented
   if (/^[a-z][a-z0-9_]*$/.test(ruleString)) {
-    // For now, treat unknown helpers as always false (location not accessible)
-    // This is safer than returning true
+    // Check if this helper exists in our context
+    if (typeof context[ruleString] === 'function') {
+      return context[ruleString]();
+    }
+    // Unknown helper - log and return false
     console.warn(`[OOT] Unknown helper: ${ruleString}`);
     return false;
   }
