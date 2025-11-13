@@ -460,3 +460,49 @@ export function has_from_list(sm, items, count) {
 
   return itemsFound >= count;
 }
+
+/**
+ * Checks if inventory has at least N unique items from a group
+ * Counts each item type only once (ignores duplicates)
+ * Python equivalent: state.has_group_unique("groupName", player, count)
+ *
+ * DATA FLOW:
+ *   Input: groupName, required count
+ *   Processing: Count unique items from group where count > 0
+ *   Output: True if unique count >= required count
+ *
+ * @param {Object} sm - StateManager instance
+ * @param {string} groupName - Name of the item group
+ * @param {number} count - Minimum number of unique items required
+ * @returns {boolean} True if unique items from group >= count
+ */
+export function has_group_unique(sm, groupName, count = 1) {
+  if (typeof groupName !== 'string') {
+    console.warn('[InventoryManager has_group_unique] groupName is not a string:', groupName);
+    return false;
+  }
+  if (typeof count !== 'number' || count < 0) {
+    console.warn('[InventoryManager has_group_unique] count is not a valid number:', count);
+    return false;
+  }
+
+  // Count unique items from the group (items with count > 0)
+  let uniqueItemsFound = 0;
+  if (sm.itemData) {
+    for (const itemName in sm.itemData) {
+      const itemInfo = sm.itemData[itemName];
+      if (itemInfo?.groups?.includes(groupName)) {
+        const itemCount = sm.inventory[itemName] || 0;
+        if (itemCount > 0) {
+          uniqueItemsFound++;
+          // Early exit if we've found enough unique items
+          if (uniqueItemsFound >= count) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  return uniqueItemsFound >= count;
+}

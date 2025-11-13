@@ -13205,6 +13205,665 @@
           }
         ]
       },
+      "REGION_SOUTHERN_ISLAND_EXTERIOR/MAIN": {
+        "name": "REGION_SOUTHERN_ISLAND_EXTERIOR/MAIN",
+        "exits": [
+          {
+            "name": "REGION_SOUTHERN_ISLAND_EXTERIOR/MAIN -> REGION_LILYCOVE_CITY_HARBOR/MAIN",
+            "connected_region": "REGION_LILYCOVE_CITY_HARBOR/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_SOUTHERN_ISLAND_EXTERIOR:0,1/MAP_SOUTHERN_ISLAND_INTERIOR:0,1",
+            "connected_region": "REGION_SOUTHERN_ISLAND_INTERIOR/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_SOUTHERN_ISLAND_INTERIOR/MAIN": {
+        "name": "REGION_SOUTHERN_ISLAND_INTERIOR/MAIN",
+        "exits": [
+          {
+            "name": "MAP_SOUTHERN_ISLAND_INTERIOR:0,1/MAP_SOUTHERN_ISLAND_EXTERIOR:0,1",
+            "connected_region": "REGION_SOUTHERN_ISLAND_EXTERIOR/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "EVENT_ENCOUNTER_LATIAS",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "EVENT_ENCOUNTER_LATIAS",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "REGION_FARAWAY_ISLAND_ENTRANCE/MAIN": {
+        "name": "REGION_FARAWAY_ISLAND_ENTRANCE/MAIN",
+        "exits": [
+          {
+            "name": "REGION_FARAWAY_ISLAND_ENTRANCE/MAIN -> REGION_LILYCOVE_CITY_HARBOR/MAIN",
+            "connected_region": "REGION_LILYCOVE_CITY_HARBOR/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_FARAWAY_ISLAND_ENTRANCE:0,1/MAP_FARAWAY_ISLAND_INTERIOR:0,1",
+            "connected_region": "REGION_FARAWAY_ISLAND_INTERIOR/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_FARAWAY_ISLAND_INTERIOR/MAIN": {
+        "name": "REGION_FARAWAY_ISLAND_INTERIOR/MAIN",
+        "exits": [
+          {
+            "name": "MAP_FARAWAY_ISLAND_INTERIOR:0,1/MAP_FARAWAY_ISLAND_ENTRANCE:0,1",
+            "connected_region": "REGION_FARAWAY_ISLAND_ENTRANCE/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "EVENT_ENCOUNTER_MEW",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "EVENT_ENCOUNTER_MEW",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "REGION_BIRTH_ISLAND_HARBOR/MAIN": {
+        "name": "REGION_BIRTH_ISLAND_HARBOR/MAIN",
+        "exits": [
+          {
+            "name": "REGION_BIRTH_ISLAND_HARBOR/MAIN -> REGION_LILYCOVE_CITY_HARBOR/MAIN",
+            "connected_region": "REGION_LILYCOVE_CITY_HARBOR/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_BIRTH_ISLAND_HARBOR:0/MAP_BIRTH_ISLAND_EXTERIOR:0",
+            "connected_region": "REGION_BIRTH_ISLAND_EXTERIOR/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_BIRTH_ISLAND_EXTERIOR/MAIN": {
+        "name": "REGION_BIRTH_ISLAND_EXTERIOR/MAIN",
+        "exits": [
+          {
+            "name": "MAP_BIRTH_ISLAND_EXTERIOR:0/MAP_BIRTH_ISLAND_HARBOR:0",
+            "connected_region": "REGION_BIRTH_ISLAND_HARBOR/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "EVENT_ENCOUNTER_DEOXYS",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "EVENT_ENCOUNTER_DEOXYS",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "REGION_NAVEL_ROCK_HARBOR/MAIN": {
+        "name": "REGION_NAVEL_ROCK_HARBOR/MAIN",
+        "exits": [
+          {
+            "name": "REGION_NAVEL_ROCK_HARBOR/MAIN -> REGION_LILYCOVE_CITY_HARBOR/MAIN",
+            "connected_region": "REGION_LILYCOVE_CITY_HARBOR/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_HARBOR:0/MAP_NAVEL_ROCK_EXTERIOR:0",
+            "connected_region": "REGION_NAVEL_ROCK_EXTERIOR/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_EXTERIOR/MAIN": {
+        "name": "REGION_NAVEL_ROCK_EXTERIOR/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_EXTERIOR:0/MAP_NAVEL_ROCK_HARBOR:0",
+            "connected_region": "REGION_NAVEL_ROCK_HARBOR/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_EXTERIOR:1/MAP_NAVEL_ROCK_ENTRANCE:1",
+            "connected_region": "REGION_NAVEL_ROCK_ENTRANCE/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_ENTRANCE/MAIN": {
+        "name": "REGION_NAVEL_ROCK_ENTRANCE/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_ENTRANCE:0/MAP_NAVEL_ROCK_B1F:0",
+            "connected_region": "REGION_NAVEL_ROCK_B1F/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_ENTRANCE:1/MAP_NAVEL_ROCK_EXTERIOR:1",
+            "connected_region": "REGION_NAVEL_ROCK_EXTERIOR/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_B1F/MAIN": {
+        "name": "REGION_NAVEL_ROCK_B1F/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_B1F:0/MAP_NAVEL_ROCK_ENTRANCE:0",
+            "connected_region": "REGION_NAVEL_ROCK_ENTRANCE/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_B1F:1/MAP_NAVEL_ROCK_FORK:1",
+            "connected_region": "REGION_NAVEL_ROCK_FORK/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_FORK/MAIN": {
+        "name": "REGION_NAVEL_ROCK_FORK/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_FORK:0/MAP_NAVEL_ROCK_UP1:0",
+            "connected_region": "REGION_NAVEL_ROCK_UP1/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_FORK:1/MAP_NAVEL_ROCK_B1F:1",
+            "connected_region": "REGION_NAVEL_ROCK_B1F/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_FORK:2/MAP_NAVEL_ROCK_DOWN01:0",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN01/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_DOWN01/MAIN": {
+        "name": "REGION_NAVEL_ROCK_DOWN01/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN01:0/MAP_NAVEL_ROCK_FORK:2",
+            "connected_region": "REGION_NAVEL_ROCK_FORK/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN01:1/MAP_NAVEL_ROCK_DOWN02:0",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN02/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_DOWN02/MAIN": {
+        "name": "REGION_NAVEL_ROCK_DOWN02/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN02:0/MAP_NAVEL_ROCK_DOWN01:1",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN01/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN02:1/MAP_NAVEL_ROCK_DOWN03:0",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN03/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_DOWN03/MAIN": {
+        "name": "REGION_NAVEL_ROCK_DOWN03/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN03:0/MAP_NAVEL_ROCK_DOWN02:1",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN02/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN03:1/MAP_NAVEL_ROCK_DOWN04:0",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN04/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_DOWN04/MAIN": {
+        "name": "REGION_NAVEL_ROCK_DOWN04/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN04:0/MAP_NAVEL_ROCK_DOWN03:1",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN03/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN04:1/MAP_NAVEL_ROCK_DOWN05:0",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN05/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_DOWN05/MAIN": {
+        "name": "REGION_NAVEL_ROCK_DOWN05/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN05:0/MAP_NAVEL_ROCK_DOWN04:1",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN04/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN05:1/MAP_NAVEL_ROCK_DOWN06:0",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN06/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_DOWN06/MAIN": {
+        "name": "REGION_NAVEL_ROCK_DOWN06/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN06:0/MAP_NAVEL_ROCK_DOWN05:1",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN05/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN06:1/MAP_NAVEL_ROCK_DOWN07:0",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN07/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_DOWN07/MAIN": {
+        "name": "REGION_NAVEL_ROCK_DOWN07/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN07:0/MAP_NAVEL_ROCK_DOWN06:1",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN06/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN07:1/MAP_NAVEL_ROCK_DOWN08:0",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN08/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_DOWN08/MAIN": {
+        "name": "REGION_NAVEL_ROCK_DOWN08/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN08:0/MAP_NAVEL_ROCK_DOWN07:1",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN07/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN08:1/MAP_NAVEL_ROCK_DOWN09:0",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN09/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_DOWN09/MAIN": {
+        "name": "REGION_NAVEL_ROCK_DOWN09/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN09:0/MAP_NAVEL_ROCK_DOWN08:1",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN08/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN09:1/MAP_NAVEL_ROCK_DOWN10:0",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN10/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_DOWN10/MAIN": {
+        "name": "REGION_NAVEL_ROCK_DOWN10/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN10:0/MAP_NAVEL_ROCK_DOWN09:1",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN09/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN10:1/MAP_NAVEL_ROCK_DOWN11:1",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN11/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_DOWN11/MAIN": {
+        "name": "REGION_NAVEL_ROCK_DOWN11/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN11:0/MAP_NAVEL_ROCK_BOTTOM:0",
+            "connected_region": "REGION_NAVEL_ROCK_BOTTOM/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_DOWN11:1/MAP_NAVEL_ROCK_DOWN10:1",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN10/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_BOTTOM/MAIN": {
+        "name": "REGION_NAVEL_ROCK_BOTTOM/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_BOTTOM:0/MAP_NAVEL_ROCK_DOWN11:0",
+            "connected_region": "REGION_NAVEL_ROCK_DOWN11/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "EVENT_ENCOUNTER_LUGIA",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "EVENT_ENCOUNTER_LUGIA",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "REGION_NAVEL_ROCK_UP1/MAIN": {
+        "name": "REGION_NAVEL_ROCK_UP1/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_UP1:0/MAP_NAVEL_ROCK_FORK:0",
+            "connected_region": "REGION_NAVEL_ROCK_FORK/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_UP1:1/MAP_NAVEL_ROCK_UP2:0",
+            "connected_region": "REGION_NAVEL_ROCK_UP2/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_UP2/MAIN": {
+        "name": "REGION_NAVEL_ROCK_UP2/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_UP2:0/MAP_NAVEL_ROCK_UP1:1",
+            "connected_region": "REGION_NAVEL_ROCK_UP1/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_UP2:1/MAP_NAVEL_ROCK_UP3:0",
+            "connected_region": "REGION_NAVEL_ROCK_UP3/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_UP3/MAIN": {
+        "name": "REGION_NAVEL_ROCK_UP3/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_UP3:0/MAP_NAVEL_ROCK_UP2:1",
+            "connected_region": "REGION_NAVEL_ROCK_UP2/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_UP3:1/MAP_NAVEL_ROCK_UP4:0",
+            "connected_region": "REGION_NAVEL_ROCK_UP4/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_UP4/MAIN": {
+        "name": "REGION_NAVEL_ROCK_UP4/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_UP4:0/MAP_NAVEL_ROCK_UP3:1",
+            "connected_region": "REGION_NAVEL_ROCK_UP3/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "MAP_NAVEL_ROCK_UP4:1/MAP_NAVEL_ROCK_TOP:0",
+            "connected_region": "REGION_NAVEL_ROCK_TOP/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "REGION_NAVEL_ROCK_TOP/MAIN": {
+        "name": "REGION_NAVEL_ROCK_TOP/MAIN",
+        "exits": [
+          {
+            "name": "MAP_NAVEL_ROCK_TOP:0/MAP_NAVEL_ROCK_UP4:1",
+            "connected_region": "REGION_NAVEL_ROCK_UP4/MAIN",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "EVENT_ENCOUNTER_HO_OH",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "EVENT_ENCOUNTER_HO_OH",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
       "REGION_PETALBURG_WOODS/WEST_PATH": {
         "name": "REGION_PETALBURG_WOODS/WEST_PATH",
         "exits": [
@@ -32191,665 +32850,6 @@
         ],
         "locations": []
       },
-      "REGION_SOUTHERN_ISLAND_EXTERIOR/MAIN": {
-        "name": "REGION_SOUTHERN_ISLAND_EXTERIOR/MAIN",
-        "exits": [
-          {
-            "name": "REGION_SOUTHERN_ISLAND_EXTERIOR/MAIN -> REGION_LILYCOVE_CITY_HARBOR/MAIN",
-            "connected_region": "REGION_LILYCOVE_CITY_HARBOR/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_SOUTHERN_ISLAND_EXTERIOR:0,1/MAP_SOUTHERN_ISLAND_INTERIOR:0,1",
-            "connected_region": "REGION_SOUTHERN_ISLAND_INTERIOR/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_SOUTHERN_ISLAND_INTERIOR/MAIN": {
-        "name": "REGION_SOUTHERN_ISLAND_INTERIOR/MAIN",
-        "exits": [
-          {
-            "name": "MAP_SOUTHERN_ISLAND_INTERIOR:0,1/MAP_SOUTHERN_ISLAND_EXTERIOR:0,1",
-            "connected_region": "REGION_SOUTHERN_ISLAND_EXTERIOR/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "EVENT_ENCOUNTER_LATIAS",
-            "id": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "EVENT_ENCOUNTER_LATIAS",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          }
-        ]
-      },
-      "REGION_FARAWAY_ISLAND_ENTRANCE/MAIN": {
-        "name": "REGION_FARAWAY_ISLAND_ENTRANCE/MAIN",
-        "exits": [
-          {
-            "name": "REGION_FARAWAY_ISLAND_ENTRANCE/MAIN -> REGION_LILYCOVE_CITY_HARBOR/MAIN",
-            "connected_region": "REGION_LILYCOVE_CITY_HARBOR/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_FARAWAY_ISLAND_ENTRANCE:0,1/MAP_FARAWAY_ISLAND_INTERIOR:0,1",
-            "connected_region": "REGION_FARAWAY_ISLAND_INTERIOR/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_FARAWAY_ISLAND_INTERIOR/MAIN": {
-        "name": "REGION_FARAWAY_ISLAND_INTERIOR/MAIN",
-        "exits": [
-          {
-            "name": "MAP_FARAWAY_ISLAND_INTERIOR:0,1/MAP_FARAWAY_ISLAND_ENTRANCE:0,1",
-            "connected_region": "REGION_FARAWAY_ISLAND_ENTRANCE/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "EVENT_ENCOUNTER_MEW",
-            "id": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "EVENT_ENCOUNTER_MEW",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          }
-        ]
-      },
-      "REGION_BIRTH_ISLAND_HARBOR/MAIN": {
-        "name": "REGION_BIRTH_ISLAND_HARBOR/MAIN",
-        "exits": [
-          {
-            "name": "REGION_BIRTH_ISLAND_HARBOR/MAIN -> REGION_LILYCOVE_CITY_HARBOR/MAIN",
-            "connected_region": "REGION_LILYCOVE_CITY_HARBOR/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_BIRTH_ISLAND_HARBOR:0/MAP_BIRTH_ISLAND_EXTERIOR:0",
-            "connected_region": "REGION_BIRTH_ISLAND_EXTERIOR/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_BIRTH_ISLAND_EXTERIOR/MAIN": {
-        "name": "REGION_BIRTH_ISLAND_EXTERIOR/MAIN",
-        "exits": [
-          {
-            "name": "MAP_BIRTH_ISLAND_EXTERIOR:0/MAP_BIRTH_ISLAND_HARBOR:0",
-            "connected_region": "REGION_BIRTH_ISLAND_HARBOR/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "EVENT_ENCOUNTER_DEOXYS",
-            "id": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "EVENT_ENCOUNTER_DEOXYS",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          }
-        ]
-      },
-      "REGION_NAVEL_ROCK_HARBOR/MAIN": {
-        "name": "REGION_NAVEL_ROCK_HARBOR/MAIN",
-        "exits": [
-          {
-            "name": "REGION_NAVEL_ROCK_HARBOR/MAIN -> REGION_LILYCOVE_CITY_HARBOR/MAIN",
-            "connected_region": "REGION_LILYCOVE_CITY_HARBOR/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_HARBOR:0/MAP_NAVEL_ROCK_EXTERIOR:0",
-            "connected_region": "REGION_NAVEL_ROCK_EXTERIOR/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_EXTERIOR/MAIN": {
-        "name": "REGION_NAVEL_ROCK_EXTERIOR/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_EXTERIOR:0/MAP_NAVEL_ROCK_HARBOR:0",
-            "connected_region": "REGION_NAVEL_ROCK_HARBOR/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_EXTERIOR:1/MAP_NAVEL_ROCK_ENTRANCE:1",
-            "connected_region": "REGION_NAVEL_ROCK_ENTRANCE/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_ENTRANCE/MAIN": {
-        "name": "REGION_NAVEL_ROCK_ENTRANCE/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_ENTRANCE:0/MAP_NAVEL_ROCK_B1F:0",
-            "connected_region": "REGION_NAVEL_ROCK_B1F/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_ENTRANCE:1/MAP_NAVEL_ROCK_EXTERIOR:1",
-            "connected_region": "REGION_NAVEL_ROCK_EXTERIOR/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_B1F/MAIN": {
-        "name": "REGION_NAVEL_ROCK_B1F/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_B1F:0/MAP_NAVEL_ROCK_ENTRANCE:0",
-            "connected_region": "REGION_NAVEL_ROCK_ENTRANCE/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_B1F:1/MAP_NAVEL_ROCK_FORK:1",
-            "connected_region": "REGION_NAVEL_ROCK_FORK/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_FORK/MAIN": {
-        "name": "REGION_NAVEL_ROCK_FORK/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_FORK:0/MAP_NAVEL_ROCK_UP1:0",
-            "connected_region": "REGION_NAVEL_ROCK_UP1/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_FORK:1/MAP_NAVEL_ROCK_B1F:1",
-            "connected_region": "REGION_NAVEL_ROCK_B1F/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_FORK:2/MAP_NAVEL_ROCK_DOWN01:0",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN01/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_DOWN01/MAIN": {
-        "name": "REGION_NAVEL_ROCK_DOWN01/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN01:0/MAP_NAVEL_ROCK_FORK:2",
-            "connected_region": "REGION_NAVEL_ROCK_FORK/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN01:1/MAP_NAVEL_ROCK_DOWN02:0",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN02/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_DOWN02/MAIN": {
-        "name": "REGION_NAVEL_ROCK_DOWN02/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN02:0/MAP_NAVEL_ROCK_DOWN01:1",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN01/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN02:1/MAP_NAVEL_ROCK_DOWN03:0",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN03/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_DOWN03/MAIN": {
-        "name": "REGION_NAVEL_ROCK_DOWN03/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN03:0/MAP_NAVEL_ROCK_DOWN02:1",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN02/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN03:1/MAP_NAVEL_ROCK_DOWN04:0",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN04/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_DOWN04/MAIN": {
-        "name": "REGION_NAVEL_ROCK_DOWN04/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN04:0/MAP_NAVEL_ROCK_DOWN03:1",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN03/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN04:1/MAP_NAVEL_ROCK_DOWN05:0",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN05/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_DOWN05/MAIN": {
-        "name": "REGION_NAVEL_ROCK_DOWN05/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN05:0/MAP_NAVEL_ROCK_DOWN04:1",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN04/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN05:1/MAP_NAVEL_ROCK_DOWN06:0",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN06/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_DOWN06/MAIN": {
-        "name": "REGION_NAVEL_ROCK_DOWN06/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN06:0/MAP_NAVEL_ROCK_DOWN05:1",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN05/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN06:1/MAP_NAVEL_ROCK_DOWN07:0",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN07/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_DOWN07/MAIN": {
-        "name": "REGION_NAVEL_ROCK_DOWN07/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN07:0/MAP_NAVEL_ROCK_DOWN06:1",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN06/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN07:1/MAP_NAVEL_ROCK_DOWN08:0",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN08/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_DOWN08/MAIN": {
-        "name": "REGION_NAVEL_ROCK_DOWN08/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN08:0/MAP_NAVEL_ROCK_DOWN07:1",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN07/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN08:1/MAP_NAVEL_ROCK_DOWN09:0",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN09/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_DOWN09/MAIN": {
-        "name": "REGION_NAVEL_ROCK_DOWN09/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN09:0/MAP_NAVEL_ROCK_DOWN08:1",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN08/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN09:1/MAP_NAVEL_ROCK_DOWN10:0",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN10/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_DOWN10/MAIN": {
-        "name": "REGION_NAVEL_ROCK_DOWN10/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN10:0/MAP_NAVEL_ROCK_DOWN09:1",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN09/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN10:1/MAP_NAVEL_ROCK_DOWN11:1",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN11/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_DOWN11/MAIN": {
-        "name": "REGION_NAVEL_ROCK_DOWN11/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN11:0/MAP_NAVEL_ROCK_BOTTOM:0",
-            "connected_region": "REGION_NAVEL_ROCK_BOTTOM/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_DOWN11:1/MAP_NAVEL_ROCK_DOWN10:1",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN10/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_BOTTOM/MAIN": {
-        "name": "REGION_NAVEL_ROCK_BOTTOM/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_BOTTOM:0/MAP_NAVEL_ROCK_DOWN11:0",
-            "connected_region": "REGION_NAVEL_ROCK_DOWN11/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "EVENT_ENCOUNTER_LUGIA",
-            "id": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "EVENT_ENCOUNTER_LUGIA",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          }
-        ]
-      },
-      "REGION_NAVEL_ROCK_UP1/MAIN": {
-        "name": "REGION_NAVEL_ROCK_UP1/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_UP1:0/MAP_NAVEL_ROCK_FORK:0",
-            "connected_region": "REGION_NAVEL_ROCK_FORK/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_UP1:1/MAP_NAVEL_ROCK_UP2:0",
-            "connected_region": "REGION_NAVEL_ROCK_UP2/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_UP2/MAIN": {
-        "name": "REGION_NAVEL_ROCK_UP2/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_UP2:0/MAP_NAVEL_ROCK_UP1:1",
-            "connected_region": "REGION_NAVEL_ROCK_UP1/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_UP2:1/MAP_NAVEL_ROCK_UP3:0",
-            "connected_region": "REGION_NAVEL_ROCK_UP3/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_UP3/MAIN": {
-        "name": "REGION_NAVEL_ROCK_UP3/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_UP3:0/MAP_NAVEL_ROCK_UP2:1",
-            "connected_region": "REGION_NAVEL_ROCK_UP2/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_UP3:1/MAP_NAVEL_ROCK_UP4:0",
-            "connected_region": "REGION_NAVEL_ROCK_UP4/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_UP4/MAIN": {
-        "name": "REGION_NAVEL_ROCK_UP4/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_UP4:0/MAP_NAVEL_ROCK_UP3:1",
-            "connected_region": "REGION_NAVEL_ROCK_UP3/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "MAP_NAVEL_ROCK_UP4:1/MAP_NAVEL_ROCK_TOP:0",
-            "connected_region": "REGION_NAVEL_ROCK_TOP/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": []
-      },
-      "REGION_NAVEL_ROCK_TOP/MAIN": {
-        "name": "REGION_NAVEL_ROCK_TOP/MAIN",
-        "exits": [
-          {
-            "name": "MAP_NAVEL_ROCK_TOP:0/MAP_NAVEL_ROCK_UP4:1",
-            "connected_region": "REGION_NAVEL_ROCK_UP4/MAIN",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          }
-        ],
-        "locations": [
-          {
-            "name": "EVENT_ENCOUNTER_HO_OH",
-            "id": null,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "EVENT_ENCOUNTER_HO_OH",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          }
-        ]
-      },
       "REGION_BATTLE_FRONTIER_RECEPTION_GATE/MAIN": {
         "name": "REGION_BATTLE_FRONTIER_RECEPTION_GATE/MAIN",
         "exits": [
@@ -41468,707 +41468,6 @@
   },
   "items": {
     "1": {
-      "Stone Badge": {
-        "name": "Stone Badge",
-        "id": 3860226,
-        "groups": [
-          "Badge",
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Knuckle Badge": {
-        "name": "Knuckle Badge",
-        "id": 3860227,
-        "groups": [
-          "Badge",
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Dynamo Badge": {
-        "name": "Dynamo Badge",
-        "id": 3860228,
-        "groups": [
-          "Badge",
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Heat Badge": {
-        "name": "Heat Badge",
-        "id": 3860229,
-        "groups": [
-          "Badge",
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Balance Badge": {
-        "name": "Balance Badge",
-        "id": 3860230,
-        "groups": [
-          "Badge",
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Feather Badge": {
-        "name": "Feather Badge",
-        "id": 3860231,
-        "groups": [
-          "Badge",
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Mind Badge": {
-        "name": "Mind Badge",
-        "id": 3860232,
-        "groups": [
-          "Badge",
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Rain Badge": {
-        "name": "Rain Badge",
-        "id": 3860233,
-        "groups": [
-          "Badge",
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HM01 Cut": {
-        "name": "HM01 Cut",
-        "id": 3860339,
-        "groups": [
-          "Everything",
-          "HM",
-          "HM01",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HM02 Fly": {
-        "name": "HM02 Fly",
-        "id": 3860340,
-        "groups": [
-          "Everything",
-          "HM",
-          "HM02",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HM03 Surf": {
-        "name": "HM03 Surf",
-        "id": 3860341,
-        "groups": [
-          "Everything",
-          "HM",
-          "HM03",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HM04 Strength": {
-        "name": "HM04 Strength",
-        "id": 3860342,
-        "groups": [
-          "Everything",
-          "HM",
-          "HM04",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HM05 Flash": {
-        "name": "HM05 Flash",
-        "id": 3860343,
-        "groups": [
-          "Everything",
-          "HM",
-          "HM05",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HM06 Rock Smash": {
-        "name": "HM06 Rock Smash",
-        "id": 3860344,
-        "groups": [
-          "Everything",
-          "HM",
-          "HM06",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HM07 Waterfall": {
-        "name": "HM07 Waterfall",
-        "id": 3860345,
-        "groups": [
-          "Everything",
-          "HM",
-          "HM07",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "HM08 Dive": {
-        "name": "HM08 Dive",
-        "id": 3860346,
-        "groups": [
-          "Everything",
-          "HM",
-          "HM08",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Mach Bike": {
-        "name": "Mach Bike",
-        "id": 3860259,
-        "groups": [
-          "Bike",
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Acro Bike": {
-        "name": "Acro Bike",
-        "id": 3860272,
-        "groups": [
-          "Bike",
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Devon Goods": {
-        "name": "Devon Goods",
-        "id": 3860269,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Letter": {
-        "name": "Letter",
-        "id": 3860274,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Itemfinder": {
-        "name": "Itemfinder",
-        "id": 3860261,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Meteorite": {
-        "name": "Meteorite",
-        "id": 3860280,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Go Goggles": {
-        "name": "Go Goggles",
-        "id": 3860279,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Room 1 Key": {
-        "name": "Room 1 Key",
-        "id": 3860281,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Room 2 Key": {
-        "name": "Room 2 Key",
-        "id": 3860282,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Room 4 Key": {
-        "name": "Room 4 Key",
-        "id": 3860283,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Room 6 Key": {
-        "name": "Room 6 Key",
-        "id": 3860284,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Storage Key": {
-        "name": "Storage Key",
-        "id": 3860285,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Scanner": {
-        "name": "Scanner",
-        "id": 3860278,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Basement Key": {
-        "name": "Basement Key",
-        "id": 3860271,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Devon Scope": {
-        "name": "Devon Scope",
-        "id": 3860288,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Magma Emblem": {
-        "name": "Magma Emblem",
-        "id": 3860375,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Pokeblock Case": {
-        "name": "Pokeblock Case",
-        "id": 3860273,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "S.S. Ticket": {
-        "name": "S.S. Ticket",
-        "id": 3860265,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Wailmer Pail": {
-        "name": "Wailmer Pail",
-        "id": 3860268,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Powder Jar": {
-        "name": "Powder Jar",
-        "id": 3860372,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Coin Case": {
-        "name": "Coin Case",
-        "id": 3860260,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Contest Pass": {
-        "name": "Contest Pass",
-        "id": 3860266,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Soot Sack": {
-        "name": "Soot Sack",
-        "id": 3860270,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Root Fossil": {
-        "name": "Root Fossil",
-        "id": 3860286,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Claw Fossil": {
-        "name": "Claw Fossil",
-        "id": 3860287,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Eon Ticket": {
-        "name": "Eon Ticket",
-        "id": 3860275,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Old Sea Map": {
-        "name": "Old Sea Map",
-        "id": 3860376,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mystic Ticket": {
-        "name": "Mystic Ticket",
-        "id": 3860370,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Aurora Ticket": {
-        "name": "Aurora Ticket",
-        "id": 3860371,
-        "groups": [
-          "Everything",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Old Rod": {
-        "name": "Old Rod",
-        "id": 3860262,
-        "groups": [
-          "Everything",
-          "Rod",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Good Rod": {
-        "name": "Good Rod",
-        "id": 3860263,
-        "groups": [
-          "Everything",
-          "Rod",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Super Rod": {
-        "name": "Super Rod",
-        "id": 3860264,
-        "groups": [
-          "Everything",
-          "Rod",
-          "Unique"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Master Ball": {
         "name": "Master Ball",
         "id": 3860001,
@@ -42701,6 +42000,76 @@
         "type": null,
         "max_count": 1
       },
+      "Blue Flute": {
+        "name": "Blue Flute",
+        "id": 3860039,
+        "groups": [
+          "Everything",
+          "Misc"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Yellow Flute": {
+        "name": "Yellow Flute",
+        "id": 3860040,
+        "groups": [
+          "Everything",
+          "Misc"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Red Flute": {
+        "name": "Red Flute",
+        "id": 3860041,
+        "groups": [
+          "Everything",
+          "Misc"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Black Flute": {
+        "name": "Black Flute",
+        "id": 3860042,
+        "groups": [
+          "Everything",
+          "Misc"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "White Flute": {
+        "name": "White Flute",
+        "id": 3860043,
+        "groups": [
+          "Everything",
+          "Misc"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Berry Juice": {
         "name": "Berry Juice",
         "id": 3860044,
@@ -42883,19 +42252,19 @@
         "type": null,
         "max_count": 4
       },
-      "Zinc": {
-        "name": "Zinc",
-        "id": 3860070,
+      "Rare Candy": {
+        "name": "Rare Candy",
+        "id": 3860068,
         "groups": [
-          "Everything",
-          "Vitamin"
+          "Candy",
+          "Everything"
         ],
         "advancement": false,
-        "useful": false,
+        "useful": true,
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 16
       },
       "PP Up": {
         "name": "PP Up",
@@ -42911,6 +42280,20 @@
         "type": null,
         "max_count": 14
       },
+      "Zinc": {
+        "name": "Zinc",
+        "id": 3860070,
+        "groups": [
+          "Everything",
+          "Vitamin"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 6
+      },
       "PP Max": {
         "name": "PP Max",
         "id": 3860071,
@@ -42924,20 +42307,6 @@
         "event": false,
         "type": null,
         "max_count": 2
-      },
-      "Rare Candy": {
-        "name": "Rare Candy",
-        "id": 3860068,
-        "groups": [
-          "Candy",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 16
       },
       "Guard Spec": {
         "name": "Guard Spec",
@@ -43037,9 +42406,9 @@
         "type": null,
         "max_count": 2
       },
-      "Repel": {
-        "name": "Repel",
-        "id": 3860086,
+      "Poke Doll": {
+        "name": "Poke Doll",
+        "id": 3860080,
         "groups": [
           "Everything",
           "Misc"
@@ -43049,7 +42418,21 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 1
+      },
+      "Fluffy Tail": {
+        "name": "Fluffy Tail",
+        "id": 3860081,
+        "groups": [
+          "Everything",
+          "Misc"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
       },
       "Super Repel": {
         "name": "Super Repel",
@@ -43079,34 +42462,6 @@
         "type": null,
         "max_count": 2
       },
-      "Poke Doll": {
-        "name": "Poke Doll",
-        "id": 3860080,
-        "groups": [
-          "Everything",
-          "Misc"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Fluffy Tail": {
-        "name": "Fluffy Tail",
-        "id": 3860081,
-        "groups": [
-          "Everything",
-          "Misc"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Escape Rope": {
         "name": "Escape Rope",
         "id": 3860085,
@@ -43121,9 +42476,9 @@
         "type": null,
         "max_count": 8
       },
-      "Blue Flute": {
-        "name": "Blue Flute",
-        "id": 3860039,
+      "Repel": {
+        "name": "Repel",
+        "id": 3860086,
         "groups": [
           "Everything",
           "Misc"
@@ -43133,77 +42488,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
-      },
-      "Yellow Flute": {
-        "name": "Yellow Flute",
-        "id": 3860040,
-        "groups": [
-          "Everything",
-          "Misc"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Red Flute": {
-        "name": "Red Flute",
-        "id": 3860041,
-        "groups": [
-          "Everything",
-          "Misc"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Black Flute": {
-        "name": "Black Flute",
-        "id": 3860042,
-        "groups": [
-          "Everything",
-          "Misc"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "White Flute": {
-        "name": "White Flute",
-        "id": 3860043,
-        "groups": [
-          "Everything",
-          "Misc"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Heart Scale": {
-        "name": "Heart Scale",
-        "id": 3860111,
-        "groups": [
-          "Everything",
-          "Misc"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
+        "max_count": 4
       },
       "Sun Stone": {
         "name": "Sun Stone",
@@ -43386,6 +42671,20 @@
         "event": false,
         "type": null,
         "max_count": 12
+      },
+      "Heart Scale": {
+        "name": "Heart Scale",
+        "id": 3860111,
+        "groups": [
+          "Everything",
+          "Misc"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
       },
       "Orange Mail": {
         "name": "Orange Mail",
@@ -44807,6 +44106,126 @@
         "type": null,
         "max_count": 1
       },
+      "Stone Badge": {
+        "name": "Stone Badge",
+        "id": 3860226,
+        "groups": [
+          "Badge",
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Knuckle Badge": {
+        "name": "Knuckle Badge",
+        "id": 3860227,
+        "groups": [
+          "Badge",
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Dynamo Badge": {
+        "name": "Dynamo Badge",
+        "id": 3860228,
+        "groups": [
+          "Badge",
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Heat Badge": {
+        "name": "Heat Badge",
+        "id": 3860229,
+        "groups": [
+          "Badge",
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Balance Badge": {
+        "name": "Balance Badge",
+        "id": 3860230,
+        "groups": [
+          "Badge",
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Feather Badge": {
+        "name": "Feather Badge",
+        "id": 3860231,
+        "groups": [
+          "Badge",
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Mind Badge": {
+        "name": "Mind Badge",
+        "id": 3860232,
+        "groups": [
+          "Badge",
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Rain Badge": {
+        "name": "Rain Badge",
+        "id": 3860233,
+        "groups": [
+          "Badge",
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
       "Red Scarf": {
         "name": "Red Scarf",
         "id": 3860254,
@@ -44876,6 +44295,389 @@
         "event": false,
         "type": null,
         "max_count": 1
+      },
+      "Mach Bike": {
+        "name": "Mach Bike",
+        "id": 3860259,
+        "groups": [
+          "Bike",
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Coin Case": {
+        "name": "Coin Case",
+        "id": 3860260,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Itemfinder": {
+        "name": "Itemfinder",
+        "id": 3860261,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Old Rod": {
+        "name": "Old Rod",
+        "id": 3860262,
+        "groups": [
+          "Everything",
+          "Rod",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Good Rod": {
+        "name": "Good Rod",
+        "id": 3860263,
+        "groups": [
+          "Everything",
+          "Rod",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Super Rod": {
+        "name": "Super Rod",
+        "id": 3860264,
+        "groups": [
+          "Everything",
+          "Rod",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "S.S. Ticket": {
+        "name": "S.S. Ticket",
+        "id": 3860265,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Contest Pass": {
+        "name": "Contest Pass",
+        "id": 3860266,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wailmer Pail": {
+        "name": "Wailmer Pail",
+        "id": 3860268,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Devon Goods": {
+        "name": "Devon Goods",
+        "id": 3860269,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Soot Sack": {
+        "name": "Soot Sack",
+        "id": 3860270,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Basement Key": {
+        "name": "Basement Key",
+        "id": 3860271,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Acro Bike": {
+        "name": "Acro Bike",
+        "id": 3860272,
+        "groups": [
+          "Bike",
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Pokeblock Case": {
+        "name": "Pokeblock Case",
+        "id": 3860273,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Letter": {
+        "name": "Letter",
+        "id": 3860274,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Eon Ticket": {
+        "name": "Eon Ticket",
+        "id": 3860275,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Scanner": {
+        "name": "Scanner",
+        "id": 3860278,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Go Goggles": {
+        "name": "Go Goggles",
+        "id": 3860279,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Meteorite": {
+        "name": "Meteorite",
+        "id": 3860280,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Room 1 Key": {
+        "name": "Room 1 Key",
+        "id": 3860281,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Room 2 Key": {
+        "name": "Room 2 Key",
+        "id": 3860282,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Room 4 Key": {
+        "name": "Room 4 Key",
+        "id": 3860283,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Room 6 Key": {
+        "name": "Room 6 Key",
+        "id": 3860284,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Storage Key": {
+        "name": "Storage Key",
+        "id": 3860285,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Root Fossil": {
+        "name": "Root Fossil",
+        "id": 3860286,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Claw Fossil": {
+        "name": "Claw Fossil",
+        "id": 3860287,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Devon Scope": {
+        "name": "Devon Scope",
+        "id": 3860288,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
       },
       "TM01": {
         "name": "TM01",
@@ -45575,6 +45377,269 @@
         "trap": false,
         "event": false,
         "type": null,
+        "max_count": 1
+      },
+      "HM01 Cut": {
+        "name": "HM01 Cut",
+        "id": 3860339,
+        "groups": [
+          "Everything",
+          "HM",
+          "HM01",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HM02 Fly": {
+        "name": "HM02 Fly",
+        "id": 3860340,
+        "groups": [
+          "Everything",
+          "HM",
+          "HM02",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HM03 Surf": {
+        "name": "HM03 Surf",
+        "id": 3860341,
+        "groups": [
+          "Everything",
+          "HM",
+          "HM03",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HM04 Strength": {
+        "name": "HM04 Strength",
+        "id": 3860342,
+        "groups": [
+          "Everything",
+          "HM",
+          "HM04",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HM05 Flash": {
+        "name": "HM05 Flash",
+        "id": 3860343,
+        "groups": [
+          "Everything",
+          "HM",
+          "HM05",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HM06 Rock Smash": {
+        "name": "HM06 Rock Smash",
+        "id": 3860344,
+        "groups": [
+          "Everything",
+          "HM",
+          "HM06",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HM07 Waterfall": {
+        "name": "HM07 Waterfall",
+        "id": 3860345,
+        "groups": [
+          "Everything",
+          "HM",
+          "HM07",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "HM08 Dive": {
+        "name": "HM08 Dive",
+        "id": 3860346,
+        "groups": [
+          "Everything",
+          "HM",
+          "HM08",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Mystic Ticket": {
+        "name": "Mystic Ticket",
+        "id": 3860370,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Aurora Ticket": {
+        "name": "Aurora Ticket",
+        "id": 3860371,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Powder Jar": {
+        "name": "Powder Jar",
+        "id": 3860372,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Magma Emblem": {
+        "name": "Magma Emblem",
+        "id": 3860375,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Old Sea Map": {
+        "name": "Old Sea Map",
+        "id": 3860376,
+        "groups": [
+          "Everything",
+          "Unique"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "EVENT_ENCOUNTER_LATIAS": {
+        "name": "EVENT_ENCOUNTER_LATIAS",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "EVENT_ENCOUNTER_MEW": {
+        "name": "EVENT_ENCOUNTER_MEW",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "EVENT_ENCOUNTER_DEOXYS": {
+        "name": "EVENT_ENCOUNTER_DEOXYS",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "EVENT_ENCOUNTER_LUGIA": {
+        "name": "EVENT_ENCOUNTER_LUGIA",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
+      "EVENT_ENCOUNTER_HO_OH": {
+        "name": "EVENT_ENCOUNTER_HO_OH",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
         "max_count": 1
       },
       "CATCH_SPECIES_POOCHYENA": {
@@ -47565,71 +47630,6 @@
         "event": true,
         "type": "Event",
         "max_count": 3
-      },
-      "EVENT_ENCOUNTER_LATIAS": {
-        "name": "EVENT_ENCOUNTER_LATIAS",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "EVENT_ENCOUNTER_MEW": {
-        "name": "EVENT_ENCOUNTER_MEW",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "EVENT_ENCOUNTER_DEOXYS": {
-        "name": "EVENT_ENCOUNTER_DEOXYS",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "EVENT_ENCOUNTER_LUGIA": {
-        "name": "EVENT_ENCOUNTER_LUGIA",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "EVENT_ENCOUNTER_HO_OH": {
-        "name": "EVENT_ENCOUNTER_HO_OH",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
       },
       "CATCH_SPECIES_SMEARGLE": {
         "name": "CATCH_SPECIES_SMEARGLE",
