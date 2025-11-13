@@ -273,6 +273,7 @@ import * as paintLogic from './paint/paintLogic.js';
 import * as soeLogic from './soe/soeLogic.js';
 import * as shapezLogic from './shapez/shapezLogic.js';
 import * as shiversLogic from './shivers/shiversLogic.js';
+import * as smz3Logic from './smz3/smz3Logic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -500,6 +501,12 @@ const GAME_REGISTRY = {
     helperFunctions: shiversLogic.helperFunctions,
     worldClasses: ['ShiversWorld'],
     aliases: ['Shivers']
+  },
+  'SMZ3': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: smz3Logic,
+    worldClasses: ['SMZ3World'],
+    aliases: ['SMZ3', 'Super Metroid and A Link to the Past Combo Randomizer']
   },
   // Add more games here as they're implemented
   'Generic': {
