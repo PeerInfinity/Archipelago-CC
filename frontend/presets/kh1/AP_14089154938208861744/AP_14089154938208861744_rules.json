@@ -118,12 +118,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -417,12 +413,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -485,12 +477,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -558,12 +546,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -626,12 +610,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -694,12 +674,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -762,12 +738,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -830,12 +802,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -898,12 +866,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -966,12 +930,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -1552,12 +1512,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "or",
@@ -1607,12 +1563,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -1668,12 +1620,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -3043,12 +2991,8 @@
                   ]
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -3076,12 +3020,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "or",
@@ -3418,12 +3358,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "state_method",
@@ -3489,12 +3425,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "state_method",
@@ -3560,12 +3492,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "state_method",
@@ -3609,12 +3537,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -4153,12 +4077,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -4375,12 +4295,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -4612,12 +4528,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -4729,12 +4641,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -4749,12 +4657,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "helper",
@@ -4852,12 +4756,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -4901,12 +4801,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -5121,12 +5017,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "helper",
@@ -5184,12 +5076,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "or",
@@ -5227,12 +5115,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -5266,12 +5150,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -5487,12 +5367,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -5517,12 +5393,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -5547,12 +5419,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -5645,12 +5513,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -5684,12 +5548,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -5723,12 +5583,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -5796,12 +5652,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -6027,12 +5879,8 @@
                       }
                     },
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 }
@@ -6075,12 +5923,8 @@
                       }
                     },
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 }
@@ -6399,12 +6243,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "helper",
@@ -6417,12 +6257,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -6462,12 +6298,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -6494,12 +6326,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -6552,12 +6380,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -6584,12 +6408,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -7386,12 +7206,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "helper",
@@ -7439,12 +7255,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -7470,12 +7282,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "helper",
@@ -7533,12 +7341,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "helper",
@@ -7812,12 +7616,8 @@
                       }
                     },
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 }
@@ -7945,12 +7745,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "helper",
@@ -8519,12 +8315,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -9023,12 +8815,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -9110,12 +8898,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "helper",
@@ -19941,7 +19725,43 @@
   "settings": {
     "1": {
       "game": "Kingdom Hearts",
-      "assume_bidirectional_exits": false
+      "assume_bidirectional_exits": false,
+      "goal": 3,
+      "end_of_the_world_unlock": 1,
+      "final_rest_door": 0,
+      "required_reports_eotw": 4,
+      "required_reports_door": 4,
+      "reports_in_pool": 4,
+      "super_bosses": 0,
+      "atlantica": 0,
+      "hundred_acre_wood": 0,
+      "cups": 0,
+      "puppies": 1,
+      "starting_worlds": 0,
+      "keyblades_unlock_chests": 0,
+      "interact_in_battle": 0,
+      "exp_multiplier": 16,
+      "advanced_logic": 0,
+      "extra_shared_abilities": 0,
+      "exp_zero_in_pool": 0,
+      "vanilla_emblem_pieces": 1,
+      "donald_death_link": 0,
+      "goofy_death_link": 0,
+      "randomize_keyblade_stats": 1,
+      "bad_starting_weapons": 0,
+      "keyblade_min_str": 3,
+      "keyblade_max_str": 14,
+      "keyblade_min_mp": -2,
+      "keyblade_max_mp": 3,
+      "level_checks": 100,
+      "force_stats_on_levels": 1,
+      "strength_increase": 24,
+      "defense_increase": 24,
+      "hp_increase": 23,
+      "ap_increase": 18,
+      "mp_increase": 7,
+      "accessory_slot_increase": 1,
+      "item_slot_increase": 3
     }
   },
   "game_info": {
