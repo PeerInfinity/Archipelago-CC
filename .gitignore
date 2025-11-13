@@ -35,7 +35,6 @@
 
 setups
 build
-!scripts/build/
 bundle/components.wxs
 dist
 /prof/
@@ -54,7 +53,7 @@ _persistent_storage.yaml
 mystery_result_*.yaml
 *-errors.txt
 success.txt
-/output/
+output/
 Output Logs/
 /factorio/
 /WebHostLib/static/generated
@@ -78,14 +77,12 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
-!scripts/build/
 develop-eggs/
 dist/
 downloads/
 eggs/
 .eggs/
 lib/
-!scripts/lib/
 lib64/
 parts/
 sdist/
@@ -167,9 +164,6 @@ shell.nix
 # mkdocs documentation
 /site
 
-# JSDoc generated API documentation
-/docs/json/api/
-
 # mypy
 .mypy_cache/
 .dmypy.json
@@ -201,6 +195,9 @@ _speedups.html
 .LSOverride
 Thumbs.db
 [Dd]esktop.ini
+
+# JSDoc generated API documentation
+/docs/json/api/
 
 # Don't ignore these in frontend and its subfolders
 !frontend/**/*.archipelago
@@ -238,6 +235,11 @@ trash/*
 node_modules/*
 test-results/*
 set.mm
+
+/output/
+
+!scripts/build/
+!scripts/lib/
 
 # Ignore everything in output directories
 scripts/output/spoiler-minimal/*

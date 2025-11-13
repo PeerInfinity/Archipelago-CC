@@ -1,6 +1,21 @@
 """
 Force vanilla item placements for A Link to the Past.
 This module places all items in their vanilla locations using the consolidated data from scripts/vanilla-alttp.
+
+IMPORTANT: TO USE THIS SCRIPT
+============================
+This file must be moved to worlds/alttp/VanillaPlacement.py in order to function properly.
+
+Requirements for use:
+1. Move this file to: worlds/alttp/VanillaPlacement.py
+2. The relative import on line 8 (from .Regions import key_drop_data) requires the file
+   to be in the worlds/alttp/ package
+3. Main.py imports this as: from worlds.alttp.VanillaPlacement import overwrite_with_vanilla_items
+4. The file needs access to world.create_event() and world.create_item() methods which are
+   specific to the ALTTP world implementation
+
+This file is stored in scripts/vanilla-alttp/ for organizational purposes alongside the
+vanilla placement data and analysis scripts, but it cannot run from this location.
 """
 
 import json
