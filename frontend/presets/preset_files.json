@@ -645,6 +645,23 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      },
+      "AP_96945849220684217413": {
+        "seed": 5,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Castlevania - Circle of the Moon"
+          }
+        ],
+        "files": [
+          "AP_96945849220684217413.archipelago",
+          "AP_96945849220684217413_P1_Player1.apcvcotm",
+          "AP_96945849220684217413_Spoiler.txt",
+          "AP_96945849220684217413_rules.json",
+          "AP_96945849220684217413_spheres_log.jsonl"
+        ]
       }
     },
     "test_result": {

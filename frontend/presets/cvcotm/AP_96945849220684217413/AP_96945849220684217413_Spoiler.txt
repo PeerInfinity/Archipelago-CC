@@ -1,0 +1,201 @@
+﻿Archipelago Version 0.6.4  -  Seed: 5
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Castlevania - Circle of the Moon
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+Completion Goal:                 Dracula
+Ignore Cleansing:                No
+Auto Run:                        No
+DSS Patch:                       No
+Always Allow Speed Dash:         No
+Iron Maiden Behavior:            Vanilla
+Required Last Keys:              1
+Available Last Keys:             1
+Buff Ranged Familiars:           No
+Buff Sub-weapons:                No
+Buff Shooter Strength:           No
+Item Drop Randomization:         Normal
+Halve DSS Cards Placed:          No
+Countdown:                       None
+Sub-weapon Shuffle:              No
+Disable Battle Arena MP Drain:   No
+Required Skirmishes:             None
+DSS Pluto and Griffin Run Speed in Air:No
+Skip Cutscene Dialogue:          No
+Skip Magic Item Tutorials:       No
+Nerf Roc Wing:                   No
+Early Escape Item:               Double
+Battle Arena Music:              Nothing
+Death Link:                      Off
+
+
+Locations:
+
+Sealed Room: Main shaft left fake wall: HP Max Up
+Catacomb: Push crate treasure room: MP Max Up
+Catacomb: Fleamen brain room - Lower: HP Max Up
+Catacomb: Fleamen brain room - Upper: MP Max Up
+Catacomb: Earth Demon dash room: HP Max Up
+Catacomb: Tackle block treasure room: MP Max Up
+Catacomb: Earth Demon bone pit - Lower: MP Max Up
+Catacomb: Earth Demon bone pit - Upper: HP Max Up
+Catacomb: Below right column save room: HP Max Up
+Catacomb: Right column fake wall: Heart Max Up
+Catacomb: Right column Spirit room: Double
+Catacomb: Muddy Mudman platforms room - Lower: Heart Max Up
+Catacomb: Muddy Mudman platforms room - Upper: Kick Boots
+Catacomb: Slide space zone: Heart Max Up
+Catacomb: Pre-Cerberus lone Skeleton room: Tackle
+Catacomb: Pre-Cerberus Hopper treasure room: HP Max Up
+Catacomb: Behind Cerberus: Griffin Card
+Catacomb: Mummies' fake wall: MP Max Up
+Abyss Staircase: Lower fake wall: Golem Card
+Abyss Staircase: Loopback drop: MP Max Up
+Abyss Staircase: Roc ledge: Neptune Card
+Abyss Staircase: Upper fake wall: HP Max Up
+Audience Room: Skeleton foyer fake wall: Uranus Card
+Audience Room: Main gallery fake wall: Serpent Card
+Audience Room: Below coyote jump: Heart Max Up
+Audience Room: Push crate gallery: HP Max Up
+Audience Room: Past coyote jump: HP Max Up
+Audience Room: Tackle block gallery: HP Max Up
+Audience Room: Wicked roc chamber - Lower: Heart Max Up
+Audience Room: Wicked roc chamber - Upper: HP Max Up
+Audience Room: Upper Devil Tower hallway: MP Max Up
+Audience Room: Right exterior - Lower: MP Max Up
+Audience Room: Right exterior - Upper: HP Max Up
+Audience Room: Right exterior fake wall: HP Max Up
+Audience Room: 100 meter skelly dash hallway: MP Max Up
+Audience Room: Lower Devil Tower hallway fake wall: MP Max Up
+Audience Room: Behind Necromancer: Heart Max Up
+Audience Room: Below Machine Tower roc ledge: HP Max Up
+Audience Room: Below Machine Tower push crate room: HP Max Up
+Audience Room: Roc horse jaguar armory - Left: Heart Max Up
+Audience Room: Roc horse jaguar armory - Right: HP Max Up
+Outer Wall: Left roc ledge: MP Max Up
+Outer Wall: Right-brained ledge: Cockatrice Card
+Outer Wall: Fake Nightmare floor: HP Max Up
+Triumph Hallway: Skeleton slopes fake wall: Maiden Detonator
+Triumph Hallway: Entrance Flame Armor climb: MP Max Up
+Machine Tower: Foxy platforms ledge: Heart Max Up
+Machine Tower: Knight fox meeting room: Last Key
+Machine Tower: Boneheaded argument wall kicks room: Thunderbird Card
+Machine Tower: Foxy fake wall: MP Max Up
+Machine Tower: Skelly-rang wall kicks room: HP Max Up
+Machine Tower: Fake Lilim wall: Saturn Card
+Machine Tower: Thunderous zone fake wall: HP Max Up
+Machine Tower: Thunderous zone lone Stone Armor room: Cleansing
+Machine Tower: Top lone Stone Armor room: Salamander Card
+Machine Tower: Stone fox hallway: Heart Max Up
+Machine Tower: Pre-Iron Golem fake wall: Manticore Card
+Machine Tower: Behind Iron Golem: Mars Card
+Eternal Corridor: Midway fake wall: HP Max Up
+Eternal Corridor: Skelly-rang wall kicks room: HP Max Up
+Eternal Corridor: Skelly-rang fake wall: MP Max Up
+Chapel Tower: Flame Armor climb room: Apollo Card
+Chapel Tower: Lower chapel push crate room: MP Max Up
+Chapel Tower: Lower chapel fake wall: MP Max Up
+Chapel Tower: Beastly wall kicks room - Brain side: Heavy Ring
+Chapel Tower: Beastly wall kicks room - Brawn side: MP Max Up
+Chapel Tower: Middle chapel fake wall: Heart Max Up
+Chapel Tower: Middle chapel push crate room: MP Max Up
+Chapel Tower: Sharp mind climb room: HP Max Up
+Chapel Tower: Upper chapel fake wall: Heart Max Up
+Chapel Tower: Upper chapel Marionette wall kicks: HP Max Up
+Chapel Tower: Upper belfry fake wall: HP Max Up
+Chapel Tower: Iron maiden switch: Maiden Detonator
+Chapel Tower: Behind Adramelech iron maiden: Heart Max Up
+Chapel Tower: Outside Battle Arena - Upper: HP Max Up
+Chapel Tower: Outside Battle Arena - Lower: MP Max Up
+Underground Gallery: Conveyor platform ride: Heart Max Up
+Underground Gallery: Conveyor upper push crate room: Venus Card
+Underground Gallery: Conveyor lower push crate room: Heart Max Up
+Underground Gallery: Harpy climb room - Lower: Pluto Card
+Underground Gallery: Harpy climb room - Upper: MP Max Up
+Underground Gallery: Harpy mantis tackle hallway: MP Max Up
+Underground Gallery: Handy bee hallway: Heart Max Up
+Underground Gallery: Myconid fake wall: Heart Max Up
+Underground Gallery: Crumble bridge fake wall: MP Max Up
+Underground Gallery: Behind Dragon Zombies: Heart Max Up
+Underground Warehouse: Entrance push crate room: Roc Wing
+Underground Warehouse: Forever pushing room: HP Max Up
+Underground Warehouse: Crate-nudge fox room: Heart Max Up
+Underground Warehouse: Crate-nudge fake wall: MP Max Up
+Underground Warehouse: Succubus shaft roc ledge: Heart Max Up
+Underground Warehouse: Fake Lilith wall: Heart Max Up
+Underground Warehouse: Optional puzzle ceiling fake wall: Unicorn Card
+Underground Warehouse: Holy fox hideout - Left: Heart Max Up
+Underground Warehouse: Holy fox hideout - Right roc ledge: MP Max Up
+Underground Warehouse: Forest Armor's domain fake wall: HP Max Up
+Underground Warehouse: Behind Death: MP Max Up
+Underground Warehouse: Behind Death fake wall: Mandragora Card
+Underground Warehouse: Dryad expulsion chamber: MP Max Up
+Underground Waterway: Entrance fake wall: Heart Max Up
+Underground Waterway: Before illusory wall: HP Max Up
+Underground Waterway: Beyond illusory wall: HP Max Up
+Underground Waterway: Ice Armor's domain fake wall: HP Max Up
+Underground Waterway: Brain freeze room: Heart Max Up
+Underground Waterway: Middle lone Ice Armor room: HP Max Up
+Underground Waterway: Roc fake ceiling: Heart Max Up
+Underground Waterway: Wicked Fishhead moat - Bottom: HP Max Up
+Underground Waterway: Wicked Fishhead moat - Top: Heart Max Up
+Underground Waterway: Lizard-man turf - Bottom: MP Max Up
+Underground Waterway: Lizard-man turf - Top: MP Max Up
+Underground Waterway: Roc exit shaft: Heart Max Up
+Underground Waterway: Behind Camilla: HP Max Up
+Underground Waterway: Roc exit shaft fake wall: MP Max Up
+Observation Tower: Wind Armor rampart: MP Max Up
+Observation Tower: Legion plaza fake wall: Black Dog Card
+Observation Tower: Legion plaza Minotaur hallway: MP Max Up
+Observation Tower: Siren balcony fake wall: Jupiter Card
+Observation Tower: Evil Pillar pit fake wall: HP Max Up
+Observation Tower: Alraune garden: Diana Card
+Observation Tower: Dark Armor's domain fake wall: Mercury Card
+Observation Tower: Catoblepeas hallway: MP Max Up
+Observation Tower: Near warp room fake wall: HP Max Up
+Observation Tower: Behind Hugh: HP Max Up
+Ceremonial Room: Fake floor: MP Max Up
+Dracula: The Count Downed
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Catacomb: Pre-Cerberus lone Skeleton room: Tackle
+  Catacomb: Right column Spirit room: Double
+}
+2: {
+  Audience Room: Main gallery fake wall: Serpent Card
+  Catacomb: Muddy Mudman platforms room - Upper: Kick Boots
+  Machine Tower: Behind Iron Golem: Mars Card
+  Machine Tower: Knight fox meeting room: Last Key
+  Machine Tower: Thunderous zone lone Stone Armor room: Cleansing
+  Triumph Hallway: Skeleton slopes fake wall: Maiden Detonator
+}
+3: {
+  Chapel Tower: Beastly wall kicks room - Brain side: Heavy Ring
+  Chapel Tower: Iron maiden switch: Maiden Detonator
+  Outer Wall: Right-brained ledge: Cockatrice Card
+}
+4: {
+  Underground Warehouse: Entrance push crate room: Roc Wing
+}
+5: {
+  Dracula: The Count Downed
+  Observation Tower: Dark Armor's domain fake wall: Mercury Card
+}
