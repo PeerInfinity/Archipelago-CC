@@ -17,6 +17,7 @@ Created comprehensive helper function implementation at `frontend/modules/shared
 **Implemented Helpers:**
 - Terran helpers: terran_early_tech, terran_common_unit, terran_air, terran_air_anti_air, terran_competent_ground_to_air, terran_competent_anti_air, terran_bio_heal, terran_basic_anti_air, terran_competent_comp
 - Protoss helpers: protoss_common_unit, protoss_competent_anti_air, protoss_basic_anti_air, protoss_anti_armor_anti_air, protoss_anti_light_anti_air, protoss_has_blink, protoss_can_attack_behind_chasm, protoss_fleet, protoss_basic_splash, protoss_static_defense, protoss_hybrid_counter, protoss_competent_comp, protoss_heal, protoss_stalker_upgrade
+- Mission-specific helpers: brothers_in_arms_requirement
 
 **Files Created:**
 - `frontend/modules/shared/gameLogic/sc2/helpers.js` - Core helper implementations
@@ -29,8 +30,12 @@ Created comprehensive helper function implementation at `frontend/modules/shared
 - Initial test: Failed at Sphere 0.3 (event 4) - terran_early_tech missing
 - After Terran helpers: Failed at Sphere 0.4 (event 5) - protoss_common_unit missing
 - After Protoss helpers: Progressed to Sphere 3.6 (event 25) - significant progress!
+- After exporter fixes and brothers_in_arms_requirement: Progressed to Sphere 4.2 (event 27)!
 
 **Remaining Work:**
 - Zerg helpers still need implementation (currently stubs)
-- Mission-specific requirement helpers need implementation
-- Additional specialized helpers for later missions
+- Additional mission-specific requirement helpers need implementation
+- Some specialized helpers for later missions (terran_defense_rating, etc.)
+
+**Current Status:**
+Test now fails at Sphere 4.2 with Lab Rat mission locations. This is likely due to missing or incorrectly implemented helper functions.

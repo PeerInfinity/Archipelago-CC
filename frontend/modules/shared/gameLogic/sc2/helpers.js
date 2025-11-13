@@ -398,7 +398,36 @@ export default {
     the_escape_first_stage_requirement: () => false,
     the_escape_requirement: () => false,
     the_escape_stuff_granted: () => false,
-    brothers_in_arms_requirement: () => false,
+    /**
+     * Brothers in Arms mission requirement
+     */
+    brothers_in_arms_requirement: (snapshot, staticData) => {
+        const take_over_ai_allies = staticData?.settings?.take_over_ai_allies || staticData?.settings?.['1']?.take_over_ai_allies || false;
+
+        return (
+            protoss_common_unit(snapshot, staticData)
+            && protoss_anti_armor_anti_air(snapshot, staticData)
+            && protoss_hybrid_counter(snapshot, staticData)
+        ) || (
+            take_over_ai_allies
+            && (
+                terran_common_unit(snapshot, staticData)
+                || protoss_common_unit(snapshot, staticData)
+            )
+            && (
+                terran_competent_anti_air(snapshot, staticData)
+                || protoss_anti_armor_anti_air(snapshot, staticData)
+            )
+            && (
+                protoss_hybrid_counter(snapshot, staticData)
+                || has_any(snapshot, ['Battlecruiser', 'Liberator', 'Siege Tank'])
+                || has_all(snapshot, ['Spectre', 'Spectre Psionic Lash'])
+                || (has(snapshot, 'Immortal')
+                    && has_any(snapshot, ['Marine', 'Marauder'])
+                    && terran_bio_heal(snapshot, staticData))
+            )
+        );
+    },
     dark_skies_requirement: () => false,
     last_stand_requirement: () => false,
     end_game_requirement: () => false,

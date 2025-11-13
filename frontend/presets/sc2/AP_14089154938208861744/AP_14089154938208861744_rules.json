@@ -418,15 +418,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -506,15 +499,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -626,15 +612,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -671,15 +650,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -716,15 +688,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -909,15 +874,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -1082,15 +1040,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -1143,15 +1094,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -1204,15 +1148,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -1265,15 +1202,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -1326,15 +1256,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -1387,15 +1310,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -1448,15 +1364,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -1509,15 +1418,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -1570,15 +1472,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -1853,15 +1748,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -1903,15 +1791,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -1953,15 +1834,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -2003,15 +1877,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -2128,15 +1995,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -2178,15 +2038,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -2228,15 +2081,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -2278,15 +2124,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -2694,15 +2533,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -2723,15 +2555,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -2786,15 +2611,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -2849,15 +2667,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -2912,15 +2723,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -2999,15 +2803,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -3067,15 +2864,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -3096,15 +2886,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -3164,15 +2947,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -3193,15 +2969,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -3261,15 +3030,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -3290,15 +3052,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -3358,15 +3113,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -3387,15 +3135,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -5470,7 +5211,7 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "logic"
+                        "name": "self"
                       },
                       "attr": "terran_basic_anti_air"
                     }
@@ -5611,7 +5352,7 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "logic"
+                        "name": "self"
                       },
                       "attr": "terran_basic_anti_air"
                     }
@@ -6245,15 +5986,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -6290,15 +6024,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -6335,15 +6062,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -6380,15 +6100,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -6425,15 +6138,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -6470,15 +6176,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -6515,15 +6214,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -6560,15 +6252,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -6605,15 +6290,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -6650,15 +6328,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -6695,15 +6366,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -6740,15 +6404,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -6785,15 +6442,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "terran_defense_rating"
-                    },
+                    "type": "helper",
+                    "name": "terran_defense_rating",
                     "args": [
                       {
                         "type": "constant",
@@ -8242,7 +7892,7 @@
                   "type": "attribute",
                   "object": {
                     "type": "name",
-                    "name": "logic"
+                    "name": "self"
                   },
                   "attr": "story_tech_granted"
                 }
@@ -8274,7 +7924,7 @@
                   "type": "attribute",
                   "object": {
                     "type": "name",
-                    "name": "logic"
+                    "name": "self"
                   },
                   "attr": "story_tech_granted"
                 }
@@ -8348,7 +7998,7 @@
                   "type": "attribute",
                   "object": {
                     "type": "name",
-                    "name": "logic"
+                    "name": "self"
                   },
                   "attr": "story_tech_granted"
                 }
@@ -8380,7 +8030,7 @@
                   "type": "attribute",
                   "object": {
                     "type": "name",
-                    "name": "logic"
+                    "name": "self"
                   },
                   "attr": "story_tech_granted"
                 }
@@ -9094,7 +8744,7 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "logic"
+                        "name": "self"
                       },
                       "attr": "story_tech_granted"
                     },
@@ -9232,7 +8882,7 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "logic"
+                        "name": "self"
                       },
                       "attr": "story_tech_granted"
                     },
@@ -11955,7 +11605,7 @@
                           "type": "attribute",
                           "object": {
                             "type": "name",
-                            "name": "logic"
+                            "name": "self"
                           },
                           "attr": "story_tech_granted"
                         }
@@ -12026,7 +11676,7 @@
                           "type": "attribute",
                           "object": {
                             "type": "name",
-                            "name": "logic"
+                            "name": "self"
                           },
                           "attr": "story_tech_granted"
                         }
@@ -12121,7 +11771,7 @@
                           "type": "attribute",
                           "object": {
                             "type": "name",
-                            "name": "logic"
+                            "name": "self"
                           },
                           "attr": "story_tech_granted"
                         }
@@ -14141,7 +13791,7 @@
                   "type": "attribute",
                   "object": {
                     "type": "name",
-                    "name": "logic"
+                    "name": "self"
                   },
                   "attr": "take_over_ai_allies"
                 }
@@ -14172,7 +13822,7 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "logic"
+                        "name": "self"
                       },
                       "attr": "take_over_ai_allies"
                     },
@@ -14180,7 +13830,7 @@
                       "type": "attribute",
                       "object": {
                         "type": "name",
-                        "name": "logic"
+                        "name": "self"
                       },
                       "attr": "advanced_tactics"
                     },
@@ -15379,7 +15029,7 @@
                   "type": "attribute",
                   "object": {
                     "type": "name",
-                    "name": "logic"
+                    "name": "self"
                   },
                   "attr": "advanced_tactics"
                 },

@@ -15,7 +15,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
         Recursively expand rule functions with SC2-specific logic pattern recognition.
 
         SC2 uses a logic object with helper methods (e.g., logic.terran_early_tech())
-        These need to be converted from function_call + attribute patterns to helper calls.
+        and attributes (e.g., logic.take_over_ai_allies, logic.advanced_tactics).
+        These need to be converted to helper calls or settings access.
         """
         if not rule or not isinstance(rule, dict):
             return rule
@@ -38,7 +39,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 if obj.get('type') == 'name' and obj.get('name') == 'logic':
                     # This is a logic.method_name() call - convert to helper
                     method_name = function.get('attr')
-                    args = rule.get('args', [])
+                    # Recursively process args first
+                    args = [self.expand_rule(arg) for arg in rule.get('args', [])]
 
                     logger.debug(f"[SC2] Converting logic.{method_name}() to helper call")
 
@@ -49,8 +51,46 @@ class SC2GameExportHandler(GenericGameExportHandler):
                         'args': args
                     }
 
-                    # Continue expanding in case args contain nested rules
+                    # Continue expanding the converted rule
                     return super().expand_rule(converted_rule)
+
+            # For other function_calls, recursively process args
+            if 'args' in rule:
+                rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
+
+        # Check for the pattern: attribute access on "logic" (not a function call)
+        # This pattern looks like:
+        # {
+        #   "type": "attribute",
+        #   "object": {"type": "name", "name": "logic"},
+        #   "attr": "attribute_name"
+        # }
+        # These are SC2Logic instance attributes that map to world settings
+        if rule.get('type') == 'attribute':
+            obj = rule.get('object', {})
+            if obj.get('type') == 'name' and obj.get('name') == 'logic':
+                # This is a logic.attribute_name access - convert to self.attribute_name
+                # The rule engine knows how to resolve self.attribute from settings
+                attr_name = rule.get('attr')
+
+                logger.debug(f"[SC2] Converting logic.{attr_name} to self.{attr_name} (settings access)")
+
+                # Convert to self attribute access which the rule engine resolves from settings
+                converted_rule = {
+                    'type': 'attribute',
+                    'object': {'type': 'name', 'name': 'self'},
+                    'attr': attr_name
+                }
+
+                # Continue expanding
+                return super().expand_rule(converted_rule)
+
+        # Handle compare operations - recursively process left and right operands
+        if rule.get('type') == 'compare':
+            if 'left' in rule:
+                rule['left'] = self.expand_rule(rule['left'])
+            if 'right' in rule:
+                rule['right'] = self.expand_rule(rule['right'])
 
         # For all other rule types, use the parent class's expand_rule
         return super().expand_rule(rule)
