@@ -253,6 +253,8 @@ import * as mmbn3Logic from './mmbn3/mmbn3Logic.js';
 import { mmbn3StateModule } from './mmbn3/mmbn3Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
+import * as pokemon_emeraldLogic from './pokemon_emerald/pokemon_emeraldLogic.js';
+import { pokemon_emeraldStateModule } from './pokemon_emerald/pokemon_emeraldLogic.js';
 import { helperFunctions as mm2HelperFunctions } from './mm2/mm2Logic.js';
 import * as ootLogic from './oot/ootLogic.js';
 import { ootStateModule } from './oot/ootLogic.js';
@@ -396,6 +398,12 @@ const GAME_REGISTRY = {
     helperFunctions: pokemon_rbLogic.helperFunctions,
     worldClasses: ['PokemonRedBlueWorld'],
     aliases: ['Pokemon Red and Blue', 'Pokemon RB', 'pokemon_rb']
+  },
+  'Pokemon Emerald': {
+    logicModule: pokemon_emeraldLogic.pokemon_emeraldStateModule,
+    helperFunctions: pokemon_emeraldLogic.helperFunctions,
+    worldClasses: ['PokemonEmeraldWorld'],
+    aliases: ['Pokemon Emerald', 'pokemon_emerald']
   },
   'Landstalker - The Treasures of King Nole': {
     logicModule: landstalkerLogic.landstalkerStateModule,

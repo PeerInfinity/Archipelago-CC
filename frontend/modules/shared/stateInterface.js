@@ -648,6 +648,72 @@ export function createStateSnapshotInterface(
         return itemsFound >= count;
       }
 
+      // Handle has_group_unique - counts unique items from a group (ignores duplicates)
+      if (methodName === 'has_group_unique' && args.length >= 2) {
+        const groupName = args[0];
+        const requiredCount = args[1];
+        if (typeof groupName !== 'string') return false;
+        if (typeof requiredCount !== 'number' || requiredCount < 0) return false;
+
+        const playerSlot = snapshot?.player?.slot || '1';
+        const playerItemGroups = staticData?.item_groups?.[playerSlot] || staticData?.item_groups;
+
+        let uniqueItemsFound = 0;
+
+        if (Array.isArray(playerItemGroups)) {
+          // ALTTP-style with group names as array
+          const playerItemsData = staticData.itemsByPlayer && staticData.itemsByPlayer[playerSlot];
+          if (playerItemsData) {
+            for (const itemName in playerItemsData) {
+              if (playerItemsData[itemName]?.groups?.includes(groupName)) {
+                const itemCount = snapshot.inventory[itemName] || 0;
+                if (itemCount > 0) {
+                  uniqueItemsFound++;
+                  if (uniqueItemsFound >= requiredCount) {
+                    return true;
+                  }
+                }
+              }
+            }
+          }
+        } else if (
+          typeof playerItemGroups === 'object' &&
+          playerItemGroups[groupName] &&
+          Array.isArray(playerItemGroups[groupName])
+        ) {
+          // Item_groups is an object { groupName: [itemNames...] }
+          for (const itemInGroup of playerItemGroups[groupName]) {
+            const itemCount = snapshot.inventory[itemInGroup] || 0;
+            if (itemCount > 0) {
+              uniqueItemsFound++;
+              if (uniqueItemsFound >= requiredCount) {
+                return true;
+              }
+            }
+          }
+        } else if (staticData?.groups) {
+          // Fallback to old groups structure if available
+          const playerGroups = staticData.groups[playerSlot] || staticData.groups;
+          if (
+            typeof playerGroups === 'object' &&
+            playerGroups[groupName] &&
+            Array.isArray(playerGroups[groupName])
+          ) {
+            for (const itemInGroup of playerGroups[groupName]) {
+              const itemCount = snapshot.inventory[itemInGroup] || 0;
+              if (itemCount > 0) {
+                uniqueItemsFound++;
+                if (uniqueItemsFound >= requiredCount) {
+                  return true;
+                }
+              }
+            }
+          }
+        }
+
+        return uniqueItemsFound >= requiredCount;
+      }
+
       // Use game-specific agnostic helpers for all helper methods
       const selectedHelpers = getHelperFunctions(gameName);
 

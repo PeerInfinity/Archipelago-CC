@@ -767,6 +767,10 @@ export class StateManager {
     return InventoryModule.has_from_list(this, items, count);
   }
 
+  has_group_unique(groupName, count = 1) {
+    return InventoryModule.has_group_unique(this, groupName, count);
+  }
+
   applyRuntimeState(payload) {
     StatePersistenceModule.applyRuntimeState(this, payload);
   }

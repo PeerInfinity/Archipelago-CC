@@ -336,17 +336,17 @@
     "world_directory": "overcooked2"
   },
   "Paint": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/paint.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/paint/paintLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "paint"
   },
   "Pokemon Emerald": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/pokemon_emerald.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "pokemon_emerald"
   },
   "Pokemon Red and Blue": {
