@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-13 05:08:11
+**Generated:** 2025-11-13 05:08:55
 
 **Source Data Created:** 2025-11-13T04:47:57.704948
 
-**Source Data Last Updated:** 2025-11-13T05:08:11.174324
+**Source Data Last Updated:** 2025-11-13T05:08:55.516487
 
 ## Summary
 
-- **Total Games:** 69
-- **Passed:** 34 (49.3%)
-- **Failed:** 35 (50.7%)
+- **Total Games:** 72
+- **Passed:** 35 (48.6%)
+- **Failed:** 37 (51.4%)
 
 ## Test Results
 
@@ -89,6 +89,9 @@
 | The Wind Waker | ❌ Failed | 0 | 0 | 18.1 | 🔴 0.0% | ⚫ | ⚫ |
 | The Witness | ❌ Failed | 0 | 0 | 9.1 | 🔴 0.0% | ⚫ | ⚫ |
 | Timespinner | ❌ Failed | 0 | 0.1 | 8.6 | 🟠 1.2% | ⚫ | ⚫ |
+| Undertale | ❌ Failed | 0 | 3.2 | 4.3 | 🟡 74.4% | ⚫ | ⚫ |
+| VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | ✅ | ✅ |
+| Wargroove | ❌ Failed | 0 | 0 | 9.1 | 🔴 0.0% | ⚫ | ⚫ |
 
 ## Notes
 

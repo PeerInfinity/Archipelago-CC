@@ -1,7 +1,7 @@
 {
   "metadata": {
     "created": "2025-11-13T04:47:57.704948",
-    "last_updated": "2025-11-13T05:08:11.174324",
+    "last_updated": "2025-11-13T05:08:55.516487",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3039,6 +3039,138 @@
         "has_custom_game_logic": false,
         "normalized_name": "timespinner",
         "world_directory": "timespinner"
+      }
+    },
+    "Undertale.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name": "undertale",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 5.4,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/undertale/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 64135,
+        "size_mb": 0.06
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 8,
+        "pass_fail": "failed",
+        "processing_time_seconds": 8.91,
+        "return_code": 1,
+        "sphere_reached": 3.2,
+        "success": false,
+        "total_spheres": 4.3,
+        "warning_count": 0
+      },
+      "template_name": "Undertale.yaml",
+      "timestamp": "2025-11-13T05:08:11.511301",
+      "world_info": {
+        "exporter_path": null,
+        "game_logic_path": null,
+        "game_name_from_yaml": "Undertale",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "normalized_name": "undertale",
+        "world_directory": "undertale"
+      }
+    },
+    "VVVVVV.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name": "vvvvvv",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 4.94,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/v6/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 26657,
+        "size_mb": 0.03
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 8.92,
+        "return_code": 0,
+        "sphere_reached": 2.4,
+        "success": true,
+        "total_spheres": 2.4,
+        "warning_count": 0
+      },
+      "template_name": "VVVVVV.yaml",
+      "timestamp": "2025-11-13T05:08:26.596432",
+      "world_info": {
+        "exporter_path": "exporter/games/v6.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/v6/v6Logic.js",
+        "game_name_from_yaml": "VVVVVV",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "normalized_name": "vvvvvv",
+        "world_directory": "v6"
+      }
+    },
+    "Wargroove.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name": "wargroove",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 4.67,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/wargroove/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 70773,
+        "size_mb": 0.07
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 8,
+        "pass_fail": "failed",
+        "processing_time_seconds": 9.15,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 9.1,
+        "warning_count": 0
+      },
+      "template_name": "Wargroove.yaml",
+      "timestamp": "2025-11-13T05:08:41.186137",
+      "world_info": {
+        "exporter_path": null,
+        "game_logic_path": null,
+        "game_name_from_yaml": "Wargroove",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "normalized_name": "wargroove",
+        "world_directory": "wargroove"
       }
     }
   }

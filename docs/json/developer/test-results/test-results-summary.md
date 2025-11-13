@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-13 05:08:11
+**Generated:** 2025-11-13 05:08:55
 
 This summary combines results from three types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -11,16 +11,16 @@ This summary combines results from three types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 34/69 passed (49.3%)
+- **Minimal Test:** 35/72 passed (48.6%)
 - **Full Test:** 0/0 passed (0.0%)
 - **Multiplayer Test:** 0/0 passed (0.0%)
 
 ### Combined Test Results
 
-- **Templates passing all 3 tests:** 0/69 (0.0%)
-- **Templates passing 2 tests:** 0/69 (0.0%)
-- **Templates passing 1 test:** 34/69 (49.3%)
-- **Templates passing 0 tests:** 35/69 (50.7%)
+- **Templates passing all 3 tests:** 0/72 (0.0%)
+- **Templates passing 2 tests:** 0/72 (0.0%)
+- **Templates passing 1 test:** 35/72 (48.6%)
+- **Templates passing 0 tests:** 37/72 (51.4%)
 
 ## Test Results
 
@@ -95,6 +95,9 @@ This summary combines results from three types of tests:
 | The Wind Waker | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
 | The Witness | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
 | Timespinner | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
+| Undertale | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
+| VVVVVV | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
+| Wargroove | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
 
 ## Excluded Games
 
