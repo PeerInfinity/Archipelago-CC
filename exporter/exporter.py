@@ -185,7 +185,71 @@ def get_world_directory_name(game_name: str) -> str:
                     found_game_name = match.group(1)
                     if found_game_name == game_name:
                         return world_dir_name
-                        
+
+                # NEW: Handle case where game = CONSTANT_NAME (e.g., game = LINKS_AWAKENING)
+                # First, look for game = <identifier> (not a string)
+                pattern = r'game\s*=\s*([A-Z_][A-Z0-9_]*)\s*(?:#|$)'
+                match = re.search(pattern, content, re.MULTILINE)
+
+                if match:
+                    constant_name = match.group(1)
+
+                    # Try to find the constant definition in the same file
+                    const_pattern = rf'{constant_name}\s*=\s*"([^"]*)"'
+                    const_match = re.search(const_pattern, content)
+
+                    if const_match:
+                        found_game_name = const_match.group(1)
+                        if found_game_name == game_name:
+                            return world_dir_name
+
+                    # Try to find the constant in imported modules within the same world directory
+                    # Look for: from .ModuleName import CONSTANT_NAME, from .ModuleName import *, or from . import ModuleName
+                    # Pattern 1: Specific import - from .ModuleName import CONSTANT_NAME
+                    import_pattern = rf'from\s+\.(\w+)\s+import.*\b{constant_name}\b'
+                    import_match = re.search(import_pattern, content)
+
+                    if import_match:
+                        module_name = import_match.group(1)
+                        module_file = os.path.join(world_path, f'{module_name}.py')
+
+                        if os.path.exists(module_file):
+                            try:
+                                with open(module_file, 'r', encoding='utf-8') as mf:
+                                    module_content = mf.read()
+                                    const_pattern = rf'{constant_name}\s*=\s*"([^"]*)"'
+                                    const_match = re.search(const_pattern, module_content)
+
+                                    if const_match:
+                                        found_game_name = const_match.group(1)
+                                        if found_game_name == game_name:
+                                            return world_dir_name
+                            except (IOError, UnicodeDecodeError):
+                                pass
+
+                    # Pattern 2: Wildcard import - from .ModuleName import *
+                    # Find all wildcard imports and check each module
+                    wildcard_pattern = r'from\s+\.(\w+)\s+import\s+\*'
+                    wildcard_matches = re.finditer(wildcard_pattern, content)
+
+                    for wc_match in wildcard_matches:
+                        module_name = wc_match.group(1)
+                        module_file = os.path.join(world_path, f'{module_name}.py')
+
+                        if os.path.exists(module_file):
+                            try:
+                                with open(module_file, 'r', encoding='utf-8') as mf:
+                                    module_content = mf.read()
+                                    const_pattern = rf'{constant_name}\s*=\s*"([^"]*)"'
+                                    const_match = re.search(const_pattern, module_content)
+
+                                    if const_match:
+                                        found_game_name = const_match.group(1)
+                                        if found_game_name == game_name:
+                                            return world_dir_name
+                            except (IOError, UnicodeDecodeError):
+                                pass
+
             except (IOError, UnicodeDecodeError):
                 continue
         
