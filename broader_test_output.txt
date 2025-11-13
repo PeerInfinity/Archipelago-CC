@@ -2169,3 +2169,60 @@ Running Generate.py for WebDevJourney.yaml...
   [Memory] WebDevJourney.yaml - after generation: 62.7 MB RSS
 Running spoiler test...
   Command: npm test --mode=test-spoilers --game=codingadventure --seed=1
+  [Memory] WebDevJourney.yaml - after spoiler test: 62.7 MB RSS
+Running test analysis...
+Completed WebDevJourney.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=10.1, Max Spheres=10.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[74/78] Processing Yacht Dice.yaml
+
+=== Testing Yacht Dice.yaml ===
+  [Memory] Yacht Dice.yaml - start: 62.7 MB RSS
+Running Generate.py for Yacht Dice.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Yacht Dice.yaml --multi 1 --seed 1
+  [Memory] Yacht Dice.yaml - after generation: 62.7 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=yachtdice --seed=1
+  [Memory] Yacht Dice.yaml - after spoiler test: 62.7 MB RSS
+Running test analysis...
+Completed Yacht Dice.yaml: Generation=[PASS], Test=[FAIL], Gen Errors=0, Sphere Reached=0.2, Max Spheres=21.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[75/78] Processing Yoshi's Island.yaml
+
+=== Testing Yoshi's Island.yaml ===
+  [Memory] Yoshi's Island.yaml - start: 62.7 MB RSS
+Running Generate.py for Yoshi's Island.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Yoshi's Island.yaml --multi 1 --seed 1

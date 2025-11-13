@@ -1,7 +1,7 @@
 {
   "metadata": {
     "created": "2025-11-13T04:47:57.704948",
-    "last_updated": "2025-11-13T05:08:55.516487",
+    "last_updated": "2025-11-13T05:09:26.555613",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3171,6 +3171,94 @@
         "has_custom_game_logic": false,
         "normalized_name": "wargroove",
         "world_directory": "wargroove"
+      }
+    },
+    "WebDevJourney.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name": "codingadventure",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 5.43,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/codingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 59532,
+        "size_mb": 0.06
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 9.19,
+        "return_code": 0,
+        "sphere_reached": 10.1,
+        "success": true,
+        "total_spheres": 10.1,
+        "warning_count": 0
+      },
+      "template_name": "WebDevJourney.yaml",
+      "timestamp": "2025-11-13T05:08:55.854227",
+      "world_info": {
+        "exporter_path": null,
+        "game_logic_path": null,
+        "game_name_from_yaml": "WebDevJourney",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "normalized_name": "codingadventure",
+        "world_directory": "codingadventure"
+      }
+    },
+    "Yacht Dice.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "game_name": "yacht_dice",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 5.38,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "rules_file": {
+        "path": "frontend/presets/yachtdice/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 180070,
+        "size_mb": 0.17
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 8,
+        "pass_fail": "failed",
+        "processing_time_seconds": 9.37,
+        "return_code": 1,
+        "sphere_reached": 0.2,
+        "success": false,
+        "total_spheres": 21.1,
+        "warning_count": 0
+      },
+      "template_name": "Yacht Dice.yaml",
+      "timestamp": "2025-11-13T05:09:11.257626",
+      "world_info": {
+        "exporter_path": "exporter/games/yachtdice.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js",
+        "game_name_from_yaml": "Yacht Dice",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "normalized_name": "yacht_dice",
+        "world_directory": "yachtdice"
       }
     }
   }

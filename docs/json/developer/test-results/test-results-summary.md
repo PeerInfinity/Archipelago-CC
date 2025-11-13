@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-13 05:08:55
+**Generated:** 2025-11-13 05:09:26
 
 This summary combines results from three types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -11,16 +11,16 @@ This summary combines results from three types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 35/72 passed (48.6%)
+- **Minimal Test:** 36/74 passed (48.6%)
 - **Full Test:** 0/0 passed (0.0%)
 - **Multiplayer Test:** 0/0 passed (0.0%)
 
 ### Combined Test Results
 
-- **Templates passing all 3 tests:** 0/72 (0.0%)
-- **Templates passing 2 tests:** 0/72 (0.0%)
-- **Templates passing 1 test:** 35/72 (48.6%)
-- **Templates passing 0 tests:** 37/72 (51.4%)
+- **Templates passing all 3 tests:** 0/74 (0.0%)
+- **Templates passing 2 tests:** 0/74 (0.0%)
+- **Templates passing 1 test:** 36/74 (48.6%)
+- **Templates passing 0 tests:** 38/74 (51.4%)
 
 ## Test Results
 
@@ -98,6 +98,8 @@ This summary combines results from three types of tests:
 | Undertale | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
 | VVVVVV | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
 | Wargroove | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
+| WebDevJourney | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
+| Yacht Dice | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
 
 ## Excluded Games
 

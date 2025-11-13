@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-13 05:08:55
+**Generated:** 2025-11-13 05:09:26
 
 **Source Data Created:** 2025-11-13T04:47:57.704948
 
-**Source Data Last Updated:** 2025-11-13T05:08:55.516487
+**Source Data Last Updated:** 2025-11-13T05:09:26.555613
 
 ## Summary
 
-- **Total Games:** 72
-- **Passed:** 35 (48.6%)
-- **Failed:** 37 (51.4%)
+- **Total Games:** 74
+- **Passed:** 36 (48.6%)
+- **Failed:** 38 (51.4%)
 
 ## Test Results
 
@@ -92,6 +92,8 @@
 | Undertale | ❌ Failed | 0 | 3.2 | 4.3 | 🟡 74.4% | ⚫ | ⚫ |
 | VVVVVV | ✅ Passed | 0 | 2.4 | 2.4 | 🟢 Complete | ✅ | ✅ |
 | Wargroove | ❌ Failed | 0 | 0 | 9.1 | 🔴 0.0% | ⚫ | ⚫ |
+| WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ⚫ | ⚫ |
+| Yacht Dice | ❌ Failed | 0 | 0.2 | 21.1 | 🟠 0.9% | ✅ | ✅ |
 
 ## Notes
 
