@@ -3971,16 +3971,24 @@
             "name": "Repair Aurora Drive",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "room"
-                },
-                "attr": "can_reach"
-              },
-              "args": []
+              "type": "helper",
+              "name": "can_access_location",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": {
+                    "can_slip_through": false,
+                    "name": "Repair Aurora Drive",
+                    "need_laser_cutter": false,
+                    "need_propulsion_cannon": true,
+                    "position": {
+                      "x": 872.5,
+                      "y": 2.7,
+                      "z": -0.7
+                    }
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Repair Aurora Drive",

@@ -160,8 +160,9 @@ export function has_ultra_glide_fins(snapshot, staticData) {
 export function get_max_swim_depth(snapshot, staticData) {
     // Get swim_rule option from settings
     // Player ID is typically "1" for single player
+    // Default is option_easy (0): base_depth=200, consider_items=false
     const settings = staticData?.settings?.["1"];
-    const swimRule = settings?.swim_rule || { base_depth: 200, consider_items: true };
+    const swimRule = settings?.swim_rule || { base_depth: 200, consider_items: false };
 
     let depth = swimRule.base_depth;
 
@@ -298,6 +299,45 @@ export function can_scan_creature(snapshot, staticData, creature) {
     // This may need to be enhanced with actual creature data
     const creatureDepth = getCreatureDepth(creature);
     return get_max_depth(snapshot, staticData) >= creatureDepth;
+}
+
+// Helper to check if a location is reachable
+// Used for location dependencies like "Repair Aurora Drive" depending on "Aurora Drive Room - Upgrade Console"
+export function can_reach_location(snapshot, staticData, locationName) {
+    // A location is reachable if it appears in the accessible locations list
+    // This is set by the reachability engine when evaluating location access rules
+    // For now, we check if it's in the snapshot's accessible locations
+    // Note: This may need to be enhanced to actually evaluate the location's access rule
+    // But typically this helper is called after reachability has been computed
+
+    // Check if location is in accessible locations (already computed by reachability engine)
+    if (snapshot?.reachableLocations) {
+        return snapshot.reachableLocations.has(locationName) || snapshot.reachableLocations.includes(locationName);
+    }
+
+    // Fallback: try to find and evaluate the location's access rule
+    // This requires accessing the locations data from staticData
+    const locations = staticData?.locations;
+    if (!locations) {
+        return false;
+    }
+
+    // Find the location
+    let location = null;
+    if (Array.isArray(locations)) {
+        location = locations.find(loc => loc?.name === locationName);
+    } else if (typeof locations === 'object') {
+        location = locations[locationName];
+    }
+
+    if (!location) {
+        return false;
+    }
+
+    // If location has access_rule, evaluate it
+    // But we can't evaluate it here without recursion
+    // So we return false if it's not in reachableLocations
+    return false;
 }
 
 // Helper function to get creature depths

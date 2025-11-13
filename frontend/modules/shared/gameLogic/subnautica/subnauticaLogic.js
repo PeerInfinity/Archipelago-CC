@@ -64,6 +64,7 @@ export const helperFunctions = {
     is_radiated: helpers.is_radiated,
     can_access_location: helpers.can_access_location,
     can_scan_creature: helpers.can_scan_creature,
+    can_reach_location: helpers.can_reach_location,
 };
 
 /**

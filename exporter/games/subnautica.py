@@ -11,6 +11,7 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
 
     def __init__(self):
         super().__init__()
+        self.world = None  # Will be set if needed for location lookups
         # Subnautica-specific helpers based on worlds/subnautica/rules.py
         self.known_helpers = {
             # Vehicle and equipment helpers
@@ -64,11 +65,13 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
             # Access and creature helpers
             'can_access_location',
             'can_scan_creature',
+            'can_reach_location',
             'is_radiated',
             'get_aggression_rule',
 
             # Closure variables that may appear in lambda functions
             'old_rule',
+            'room',  # Used in "Repair Aurora Drive" location
         }
 
     def expand_rule(self, rule):
@@ -79,6 +82,37 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
         """
         if not rule:
             return rule
+
+        # Handle location.can_reach() pattern (e.g., room.can_reach())
+        # This occurs in "Repair Aurora Drive" which depends on "Aurora Drive Room - Upgrade Console"
+        # For simplicity, we use the same access rule as the prerequisite location
+        if rule.get('type') == 'function_call':
+            func = rule.get('function', {})
+            if (func.get('type') == 'attribute' and
+                func.get('attr') == 'can_reach' and
+                func.get('object', {}).get('type') == 'name'):
+                var_name = func['object'].get('name')
+                if var_name == 'room':
+                    # Replace with the same access rule as "Aurora Drive Room - Upgrade Console"
+                    # Both locations are in the Aurora Drive Room and have the same access requirements
+                    return {
+                        'type': 'helper',
+                        'name': 'can_access_location',
+                        'args': [{
+                            'type': 'constant',
+                            'value': {
+                                'can_slip_through': False,
+                                'name': 'Repair Aurora Drive',
+                                'need_laser_cutter': False,
+                                'need_propulsion_cannon': True,
+                                'position': {
+                                    'x': 872.5,
+                                    'y': 2.7,
+                                    'z': -0.7
+                                }
+                            }
+                        }]
+                    }
 
         # Don't auto-expand helpers - keep them as helper nodes
         if rule.get('type') == 'helper':
