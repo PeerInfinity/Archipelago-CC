@@ -346,20 +346,67 @@ def run_command(cmd: List[str], cwd: str = None, timeout: int = 300, env: Dict =
     """
     Run a command and return (return_code, stdout, stderr).
     Closes stdin to prevent the subprocess from waiting for user input.
+    Uses process groups to ensure all child processes are terminated on timeout.
     """
+    import signal
+    import os as os_module
+
     try:
-        result = subprocess.run(
-            cmd,
-            cwd=cwd,
-            env=env,
-            stdin=subprocess.DEVNULL,
-            capture_output=True,
-            text=True,
-            timeout=timeout
-        )
-        return result.returncode, result.stdout, result.stderr
-    except subprocess.TimeoutExpired:
-        return -1, "", "Command timed out"
+        # On Unix systems, use process groups to ensure we can kill the entire process tree
+        if os_module.name != 'nt':  # Unix/Linux/Mac
+            process = subprocess.Popen(
+                cmd,
+                cwd=cwd,
+                env=env,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                preexec_fn=os_module.setpgrp  # Create new process group
+            )
+        else:  # Windows
+            process = subprocess.Popen(
+                cmd,
+                cwd=cwd,
+                env=env,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP
+            )
+
+        try:
+            stdout, stderr = process.communicate(timeout=timeout)
+            return process.returncode, stdout, stderr
+        except subprocess.TimeoutExpired:
+            # Kill the entire process group on timeout
+            if os_module.name != 'nt':  # Unix/Linux/Mac
+                try:
+                    os_module.killpg(os_module.getpgid(process.pid), signal.SIGTERM)
+                    # Give it 5 seconds to terminate gracefully
+                    try:
+                        process.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        # Force kill if still running
+                        os_module.killpg(os_module.getpgid(process.pid), signal.SIGKILL)
+                except ProcessLookupError:
+                    pass  # Process already terminated
+            else:  # Windows
+                process.terminate()
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+
+            # Try to get any output that was generated before timeout
+            try:
+                stdout, stderr = process.communicate(timeout=1)
+            except:
+                stdout, stderr = "", ""
+
+            return -1, stdout, f"Command timed out after {timeout} seconds\n{stderr}"
+
     except Exception as e:
         return -1, "", str(e)
 
