@@ -1,31 +1,42 @@
 # Remaining Helper Issues for Yacht Dice
 
-## Issue 1: Inventory state not updating correctly during test
+## Issue 1: Score calculation returns 5 instead of >= 8 with 2 Dice
 
-**Status:** Under Investigation - Appears to be test framework issue
+**Status:** Under Active Investigation
 
 **Error:** Locations "10 score", "8 score", "9 score" are accessible in LOG (sphere 0.2) but NOT in STATE
 
-**Root Cause Analysis:**
-- The helper function `dice_simulation_state_change` IS being called correctly
-- The yacht_weights data IS loading successfully (fixed async loading issue)
-- The helper IS calculating scores correctly based on the inventory it receives
-- **PROBLEM**: The helper always sees only 1 Dice in inventory, even at sphere 0.2 when there should be 2
+**Progress Made:**
+- ✅ Fixed cache key bug - helper now sees correct inventory
+- ✅ Inventory updates correctly at sphere 0.2 (Dice goes from 1 to 2)
+- ✅ Helper correctly reads Dice=2 from inventory
+- ✅ Helper correctly calculates numDice=2, numRolls=1
+
+**Current Issue:**
+Despite correct inventory and numDice calculation, the helper still returns score=5.
+Expected: With 2 Dice and 2 categories (Category Choice, Category Inverse Choice), score should be >= 8.
+Actual: score=5 (same as with 1 Dice)
 
 **Evidence from logs:**
-```Browser logs show:
-- Sphere 0: Dice=1 (correct - starting item)
-- Sphere 0.2: Should have Dice=2 (1 starting + 1 added), but helper still sees Dice=1
-- Helper calculates: numDice=1, numRolls=1, score=5 (correct for 1 Dice)
-- Locations require score >= 8, which needs 2 Dice
+```
+[YachtDice] Item counts: Dice=2, DiceFrags=0, Roll=1, RollFrags=0, numDice=2, numRolls=1
+[YachtDice extractProgression] Calculated numDice=2, numRolls=1 from fragsPerDice=4, fragsPerRoll=4
+[YachtDice] Final result: simulatedScore=5, maxScore=5
 ```
 
-**Actual Issue:**
-The test framework appears to be checking location accessibility BEFORE applying the inventory update from sphere 0.2, or the snapshot is stale/cached. This is NOT a helper function issue - the helper is working correctly with the inventory it receives.
+**Possible Causes:**
+1. `diceSimulationStrings` function not using numDice correctly
+2. yacht_weights data missing entry for 2 Dice, 1 Roll
+3. Category counting logic incorrect
+4. Difficulty parameter affecting calculation unexpectedly
 
-**Next Steps:**
-1. Investigate test framework's sphere update mechanism
-2. Check how inventory is updated between spheres
-3. Verify snapshot invalidation/refresh logic
-4. Possible issue in `testSpoilers.js` or state manager's sphere progression
+**Next Investigation Steps:**
+1. Check yacht_weights.json for entries with numDice=2, numRolls=1
+2. Add logging to diceSimulationStrings to see lookup keys and results
+3. Verify category list includes Category Choice and Category Inverse Choice
+4. Check if difficulty parameter is correct
+
+**Files Involved:**
+- `frontend/modules/shared/gameLogic/yachtdice/helpers.js` (diceSimulationStrings function)
+- `frontend/modules/shared/gameLogic/yachtdice/yacht_weights.json`
 
