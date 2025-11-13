@@ -274,6 +274,7 @@ import * as soeLogic from './soe/soeLogic.js';
 import * as shapezLogic from './shapez/shapezLogic.js';
 import * as shiversLogic from './shivers/shiversLogic.js';
 import * as smz3Logic from './smz3/smz3Logic.js';
+import * as sc2Logic from './sc2/sc2Logic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -452,6 +453,12 @@ const GAME_REGISTRY = {
     helperFunctions: raftLogic.helperFunctions,
     worldClasses: ['RaftWorld'],
     aliases: ['Raft']
+  },
+  'Starcraft 2': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: sc2Logic.helperFunctions,
+    worldClasses: ['SC2World'],
+    aliases: ['Starcraft 2', 'SC2', 'StarCraft 2', 'StarCraft II']
   },
   'Super Mario 64': {
     logicModule: sm64exLogic.sm64exStateModule,
