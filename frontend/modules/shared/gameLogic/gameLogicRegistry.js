@@ -261,6 +261,7 @@ import * as v6Logic from './v6/v6Logic.js';
 import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
+import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -433,6 +434,12 @@ const GAME_REGISTRY = {
     helperFunctions: yachtdiceLogic.helperFunctions,
     worldClasses: ['YachtDiceWorld'],
     aliases: ['Yacht Dice', 'yacht_dice']
+  },
+  'Subnautica': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: subnauticaLogic.helperFunctions,
+    worldClasses: ['SubnauticaWorld'],
+    aliases: ['Subnautica']
   },
   // Add more games here as they're implemented
   'Generic': {
