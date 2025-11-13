@@ -148,22 +148,6 @@ jobs:
           echo "=== Combined Results ==="
           ls -lh /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
 
-      - name: Generate test charts
-        run: |
-          # Copy combined results to repository location so generate-test-chart.py can find them
-          mkdir -p scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}
-          cp /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json \
-             scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
-
-          # Generate test charts and documentation
-          python scripts/docs/generate-test-chart.py
-
-          # Copy generated docs to temp directory for committing
-          cp -r docs/json/developer/test-results/*.md /tmp/merged-results/docs/json/developer/test-results/ 2>/dev/null || true
-
-          echo "=== Generated Documentation ==="
-          ls -lh /tmp/merged-results/docs/json/developer/test-results/
-
       - name: Create or switch to test-results-update branch
         run: |
           git config user.name "github-actions[bot]"
@@ -182,18 +166,20 @@ jobs:
             git checkout -b test-results-update
           fi
 
-          # Now copy the merged results from temp location
-          echo "Copying merged results to repository..."
+      - name: Generate test charts and copy results
+        run: |
+          # Copy combined results to repository location so generate-test-chart.py can find them
           mkdir -p scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}
-          mkdir -p docs/json/developer/test-results
-
           cp /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json \
              scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
 
-          # Copy generated documentation
-          cp /tmp/merged-results/docs/json/developer/test-results/*.md docs/json/developer/test-results/ 2>/dev/null || true
+          # Generate test charts and documentation
+          python scripts/docs/generate-test-chart.py
 
-          echo "=== Files in repository after copy ==="
+          echo "=== Generated Documentation ==="
+          ls -lh docs/json/developer/test-results/
+
+          echo "=== Files ready for commit ==="
           ls -lh scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
           ls -lh docs/json/developer/test-results/*.md 2>/dev/null || echo "No markdown files"
 
