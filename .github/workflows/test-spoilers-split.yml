@@ -83,7 +83,6 @@ jobs:
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
-            --include-list "Adventure.yaml" \
             --seed ${{ matrix.seed }} \
             --output-file scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-${{ matrix.seed }}.json \
             --no-backup \
@@ -204,7 +203,6 @@ jobs:
             Test results from parallel seed testing:
             - Seeds: 1-10 (10 parallel jobs)
             - Spoiler type: ${{ github.event.inputs.spoiler_type }}
-            - Templates: Adventure.yaml (testing only)
             - Includes generated test documentation
             "
 

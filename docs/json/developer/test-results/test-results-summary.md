@@ -1,119 +1,117 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-13 04:48:37
+**Generated:** 2025-11-13 22:35:45
 
-This summary combines results from three types of tests:
+This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
 - **Full Spoiler Test:** Tests with all locations - [View Details](./test-results-spoilers-full.md)
 - **Multiplayer Test:** Tests in multiplayer mode - [View Details](./test-results-multiplayer.md)
+- **Multiworld Test:** Tests in multiworld mode with multiple games - [View Details](./test-results-multiworld.md)
 
 ## Summary Statistics
 
 ### Individual Test Results
 
-- **Minimal Test:** 0/0 passed (0.0%)
-- **Full Test:** 37/78 passed (47.4%)
-- **Multiplayer Test:** 0/0 passed (0.0%)
+- **Minimal Test:** 1/1 passed (100.0%)
+- **Full Test:** 30/78 passed (38.5%)
+- **Multiplayer Test:** 30/78 passed (38.5%)
+- **Multiworld Test:** 29/78 passed (37.2%)
 
 ### Combined Test Results
 
-- **Templates passing all 3 tests:** 0/78 (0.0%)
-- **Templates passing 2 tests:** 0/78 (0.0%)
-- **Templates passing 1 test:** 37/78 (47.4%)
+- **Templates passing all 4 tests:** 1/78 (1.3%)
+- **Templates passing 3 tests:** 22/78 (28.2%)
+- **Templates passing 2 tests:** 6/78 (7.7%)
+- **Templates passing 1 test:** 8/78 (10.3%)
 - **Templates passing 0 tests:** 41/78 (52.6%)
 
 ## Test Results
 
-| Game Name | Minimal Test | Full Test | Multiplayer Test | Custom Exporter | Custom GameLogic |
-|-----------|--------------|-----------|------------------|-----------------|------------------|
-| A Hat in Time | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| A Link to the Past | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| A Short Hike | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Adventure | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Aquaria | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| ArchipIDLE | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Blasphemous | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Bomb Rush Cyberfunk | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Bumper Stickers | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Castlevania - Circle of the Moon | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Castlevania 64 | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Celeste 64 | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| ChecksFinder | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| ChocolateChipCookies | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Civilization VI | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| DLCQuest | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| DOOM 1993 | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| DOOM II | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Dark Souls III | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Donkey Kong Country 3 | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Factorio | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Faxanadu | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Final Fantasy Mystic Quest | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Heretic | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Hylics 2 | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Inscryption | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Jak and Daxter: The Precursor Legacy | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Kingdom Hearts | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Kingdom Hearts 2 | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Kirby's Dream Land 3 | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Landstalker - The Treasures of King Nole | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Lingo | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Links Awakening DX | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Lufia II Ancient Cave | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Mario & Luigi Superstar Saga | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| MathProof2p2e4 | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Mega Man 2 | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| MegaMan Battle Network 3 | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Meritous | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Metamath | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Muse Dash | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Noita | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Ocarina of Time | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Old School Runescape | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Overcooked! 2 | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Paint | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Pokemon Emerald | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Pokemon Red and Blue | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Raft | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Risk of Rain 2 | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| SMZ3 | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Saving Princess | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Secret of Evermore | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Shivers | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Sonic Adventure 2 Battle | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Starcraft 2 | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Stardew Valley | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Subnautica | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Super Mario 64 | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Super Mario Land 2 | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Super Mario World | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Super Metroid | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| TUNIC | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Terraria | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| The Legend of Zelda | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| The Messenger | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| The Wind Waker | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| The Witness | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Timespinner | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Undertale | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| VVVVVV | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Wargroove | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| WebDevJourney | ❓ N/A | ✅ Passed | ❓ N/A | ⚫ | ⚫ |
-| Yacht Dice | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Yoshi's Island | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Yu-Gi-Oh! 2006 | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| Zillion | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
-| shapez | ❓ N/A | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
+| Game Name | Minimal Test | Full Test | Multiplayer Test | Multiworld Test | Custom Exporter | Custom GameLogic |
+|-----------|--------------|-----------|------------------|-----------------|-----------------|------------------|
+| A Hat in Time | ❓ N/A | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ |
+| A Link to the Past | ❓ N/A | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ⚫ |
+| A Short Hike | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Aquaria | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| ArchipIDLE | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Blasphemous | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Bomb Rush Cyberfunk | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Bumper Stickers | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Castlevania - Circle of the Moon | ❓ N/A | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ⚫ |
+| Castlevania 64 | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Celeste 64 | ❓ N/A | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ |
+| ChecksFinder | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| ChocolateChipCookies | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Civilization VI | ❓ N/A | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ |
+| DLCQuest | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| DOOM 1993 | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| DOOM II | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Dark Souls III | ❓ N/A | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ |
+| Donkey Kong Country 3 | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Factorio | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Faxanadu | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Final Fantasy Mystic Quest | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Heretic | ❓ N/A | ❌ Failed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Hylics 2 | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Inscryption | ❓ N/A | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ |
+| Jak and Daxter: The Precursor Legacy | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Kingdom Hearts | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Kingdom Hearts 2 | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Kirby's Dream Land 3 | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Landstalker - The Treasures of King Nole | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Lingo | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Links Awakening DX | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Lufia II Ancient Cave | ❓ N/A | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Mario & Luigi Superstar Saga | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| MathProof2p2e4 | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Mega Man 2 | ❓ N/A | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ⚫ |
+| MegaMan Battle Network 3 | ❓ N/A | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Meritous | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Metamath | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Muse Dash | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Noita | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Ocarina of Time | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Old School Runescape | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Overcooked! 2 | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Paint | ❓ N/A | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
+| Pokemon Emerald | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Pokemon Red and Blue | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Raft | ❓ N/A | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
+| Risk of Rain 2 | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| SMZ3 | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Saving Princess | ❓ N/A | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
+| Secret of Evermore | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Shivers | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Sonic Adventure 2 Battle | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Starcraft 2 | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Stardew Valley | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Subnautica | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Super Mario 64 | ❓ N/A | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Super Mario Land 2 | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Super Mario World | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Super Metroid | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| TUNIC | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Terraria | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| The Legend of Zelda | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| The Messenger | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| The Wind Waker | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| The Witness | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Timespinner | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Undertale | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| VVVVVV | ❓ N/A | ❌ Failed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Wargroove | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| WebDevJourney | ❓ N/A | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Yacht Dice | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Yoshi's Island | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Yu-Gi-Oh! 2006 | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Zillion | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| shapez | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 
-## Excluded Games
+## Multi-Template Test Results
 
-The following games are excluded from automated testing:
+These tests check multiple template configurations for the same game.
 
-| Game | Reason |
-|------|--------|
-| Archipelago | Not a game |
-| Final Fantasy | Requires manual configuration and is not compatible with automated testing |
-| Hollow Knight | The spoiler test currently freezes |
-| Sudoku | Cannot be used for generating worlds |
-| Universal Tracker | Not a game |
-
+| Game Name | Minimal Link (Templates Passed) | Full Link (Templates Passed) |
+|-----------|----------------------------------|-------------------------------|
+| A Link to the Past | [119/152 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [56/90 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
