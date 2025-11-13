@@ -14,6 +14,7 @@ from typing import Optional, Callable, Dict, Any
 from .rule_analyzer import RuleAnalyzer
 from .source_extraction import _clean_source
 from .utils import make_json_serializable
+from .stardew_rule_serializer import is_stardew_rule, serialize_stardew_rule
 
 
 def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
@@ -69,6 +70,23 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
         # --- Option 2: Analyze a function object (existing logic) ---
         elif rule_func:
             logging.debug(f"Rule function: {rule_func}")
+
+            # --- Check for StardewRule objects ---
+            if is_stardew_rule(rule_func):
+                logging.debug(f"Detected StardewRule object: {type(rule_func).__name__}")
+                serialized = serialize_stardew_rule(rule_func, player_context)
+                if serialized:
+                    logging.debug(f"Successfully serialized StardewRule to: {serialized}")
+                    return serialized
+                else:
+                    logging.error(f"Failed to serialize StardewRule: {rule_func}")
+                    return {
+                        'type': 'error',
+                        'message': f'Failed to serialize StardewRule of type {type(rule_func).__name__}',
+                        'subtype': 'stardew_serialization',
+                        'debug_log': [],
+                        'error_log': []
+                    }
 
             func_id = id(rule_func)
             # More permissive recursion check

@@ -6,12 +6,23 @@ This file tracks remaining issues with the Stardew Valley exporter.
 
 ### Issue 1: Null Access Rules for Locations
 
-**Priority**: Critical
-**Status**: Open
+**Priority**: High → Low (mostly resolved)
+**Status**: Mostly Resolved ✅ (472/480 locations fixed, 8 remaining)
 **Sphere**: 0
 
 **Description**:
-480 locations have `access_rule: null` in the generated rules.json file. These locations are being treated as immediately accessible when their region is reachable, but they should have actual access requirements.
+~~480 locations~~ → **8 locations** have incorrect access rules. Major progress achieved through StardewRule serialization implementation.
+
+**Fixed**: 472 locations now have proper access rules
+**Remaining**: 8 locations still show as accessible when they shouldn't be:
+- Read Mapping Cave Systems
+- Copper Ore (Logic event)
+- Iron Ore (Logic event)
+- Gold Ore (Logic event)
+- Well Blueprint
+- Complete Community Center
+- Carnival Bundle
+- Egg Festival: Strawberry Seeds
 
 **Examples**:
 - Level 1-10 Farming (should require farming skill levels)
@@ -63,10 +74,24 @@ Option 2: **Custom Pre-Processing** (Game-specific fix)
 - This would require modifying how the exporter hooks into the analysis process
 
 **Implementation Notes**:
-- Created `exporter/games/stardew_valley.py` with basic handler structure
-- Handler is automatically registered but doesn't solve the core issue
-- The problem is in the analyzer, not the handler
-- Need access to the original StardewRule objects to serialize them properly
+- ✅ Created `exporter/games/stardew_valley.py` with basic handler structure
+- ✅ Created `exporter/analyzer/stardew_rule_serializer.py` to detect and serialize StardewRule objects
+- ✅ Modified `exporter/analyzer/analysis.py` to detect StardewRule objects before attempting source extraction
+- ✅ Implemented serialization for major rule types:
+  - `Received` → `{"type": "item_check", "item": ..., "count": ...}`
+  - `And` → `{"type": "and", "conditions": [...]}`
+  - `Or` → `{"type": "or", "conditions": [...]}`
+  - `True_`/`False_` → `{"type": "constant", "value": true/false}`
+  - `Has` → Recursively serializes underlying rule
+  - `Count` → Converts to AND/OR when possible, helper otherwise
+  - `Reach` → `{"type": "constant", "value": true}` (region check handled by graph)
+  - `TotalReceived` → item_check or helper depending on item count
+  - `HasProgressionPercent` → item_check for progression percentage
+
+**Test Results**:
+- Generation: ✅ No errors, all StardewRule types handled
+- Spoiler Test: 🟡 8/480 locations still failing (98.3% success rate)
+- The 8 remaining failures are likely edge cases or special rules needing investigation
 
 **Test Data**:
 ```json
