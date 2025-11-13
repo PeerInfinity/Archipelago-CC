@@ -1,0 +1,468 @@
+{
+  "metadata": {
+    "created": "2025-11-13T05:00:34.223620",
+    "last_updated": "2025-11-13T05:04:37.834829",
+    "script_version": "1.0.0"
+  },
+  "results": {
+    "Saving Princess.yaml": {
+      "consecutive_passes_before_failure": 10,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "saving_princess",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.19,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/saving_princess/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 34793,
+            "size_mb": 0.03
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.5,
+            "return_code": 0,
+            "sphere_reached": 5.1,
+            "success": true,
+            "total_spheres": 5.1,
+            "warning_count": 0
+          },
+          "template_name": "Saving Princess.yaml",
+          "timestamp": "2025-11-13T05:02:22.285401",
+          "world_info": {
+            "exporter_path": "exporter/games/saving_princess.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Saving Princess",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "saving_princess",
+            "world_directory": "saving_princess"
+          }
+        },
+        "10": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "saving_princess",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 4.37,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/saving_princess/AP_55941320597534372051/AP_55941320597534372051_rules.json",
+            "size_bytes": 34848,
+            "size_mb": 0.03
+          },
+          "seed": "10",
+          "seed_id": "AP_55941320597534372051",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.44,
+            "return_code": 0,
+            "sphere_reached": 5.1,
+            "success": true,
+            "total_spheres": 5.1,
+            "warning_count": 0
+          },
+          "template_name": "Saving Princess.yaml",
+          "timestamp": "2025-11-13T05:04:24.390218",
+          "world_info": {
+            "exporter_path": "exporter/games/saving_princess.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Saving Princess",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "saving_princess",
+            "world_directory": "saving_princess"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "saving_princess",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 4.4,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/saving_princess/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 34842,
+            "size_mb": 0.03
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.38,
+            "return_code": 0,
+            "sphere_reached": 6.1,
+            "success": true,
+            "total_spheres": 6.1,
+            "warning_count": 0
+          },
+          "template_name": "Saving Princess.yaml",
+          "timestamp": "2025-11-13T05:02:36.447620",
+          "world_info": {
+            "exporter_path": "exporter/games/saving_princess.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Saving Princess",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "saving_princess",
+            "world_directory": "saving_princess"
+          }
+        },
+        "3": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "saving_princess",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 4.8,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/saving_princess/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 34837,
+            "size_mb": 0.03
+          },
+          "seed": "3",
+          "seed_id": "AP_84719271504320872445",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.55,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
+            "total_spheres": 7.1,
+            "warning_count": 0
+          },
+          "template_name": "Saving Princess.yaml",
+          "timestamp": "2025-11-13T05:02:49.742628",
+          "world_info": {
+            "exporter_path": "exporter/games/saving_princess.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Saving Princess",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "saving_princess",
+            "world_directory": "saving_princess"
+          }
+        },
+        "4": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "saving_princess",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 4.24,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/saving_princess/AP_05594871498841892311/AP_05594871498841892311_rules.json",
+            "size_bytes": 34870,
+            "size_mb": 0.03
+          },
+          "seed": "4",
+          "seed_id": "AP_05594871498841892311",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.37,
+            "return_code": 0,
+            "sphere_reached": 5.1,
+            "success": true,
+            "total_spheres": 5.1,
+            "warning_count": 0
+          },
+          "template_name": "Saving Princess.yaml",
+          "timestamp": "2025-11-13T05:03:03.638265",
+          "world_info": {
+            "exporter_path": "exporter/games/saving_princess.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Saving Princess",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "saving_princess",
+            "world_directory": "saving_princess"
+          }
+        },
+        "5": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "saving_princess",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 4.4,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/saving_princess/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 34839,
+            "size_mb": 0.03
+          },
+          "seed": "5",
+          "seed_id": "AP_96945849220684217413",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.49,
+            "return_code": 0,
+            "sphere_reached": 5.1,
+            "success": true,
+            "total_spheres": 5.1,
+            "warning_count": 0
+          },
+          "template_name": "Saving Princess.yaml",
+          "timestamp": "2025-11-13T05:03:16.733568",
+          "world_info": {
+            "exporter_path": "exporter/games/saving_princess.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Saving Princess",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "saving_princess",
+            "world_directory": "saving_princess"
+          }
+        },
+        "6": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "saving_princess",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 4.42,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/saving_princess/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+            "size_bytes": 34832,
+            "size_mb": 0.03
+          },
+          "seed": "6",
+          "seed_id": "AP_00679259829289197625",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.36,
+            "return_code": 0,
+            "sphere_reached": 6.1,
+            "success": true,
+            "total_spheres": 6.1,
+            "warning_count": 0
+          },
+          "template_name": "Saving Princess.yaml",
+          "timestamp": "2025-11-13T05:03:30.127631",
+          "world_info": {
+            "exporter_path": "exporter/games/saving_princess.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Saving Princess",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "saving_princess",
+            "world_directory": "saving_princess"
+          }
+        },
+        "7": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "saving_princess",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 4.27,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/saving_princess/AP_35931773795037525048/AP_35931773795037525048_rules.json",
+            "size_bytes": 34856,
+            "size_mb": 0.03
+          },
+          "seed": "7",
+          "seed_id": "AP_35931773795037525048",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.47,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
+            "total_spheres": 7.1,
+            "warning_count": 0
+          },
+          "template_name": "Saving Princess.yaml",
+          "timestamp": "2025-11-13T05:03:43.375035",
+          "world_info": {
+            "exporter_path": "exporter/games/saving_princess.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Saving Princess",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "saving_princess",
+            "world_directory": "saving_princess"
+          }
+        },
+        "8": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "saving_princess",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 4.65,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/saving_princess/AP_20777137877808592492/AP_20777137877808592492_rules.json",
+            "size_bytes": 34815,
+            "size_mb": 0.03
+          },
+          "seed": "8",
+          "seed_id": "AP_20777137877808592492",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.4,
+            "return_code": 0,
+            "sphere_reached": 5.1,
+            "success": true,
+            "total_spheres": 5.1,
+            "warning_count": 0
+          },
+          "template_name": "Saving Princess.yaml",
+          "timestamp": "2025-11-13T05:03:56.596377",
+          "world_info": {
+            "exporter_path": "exporter/games/saving_princess.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Saving Princess",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "saving_princess",
+            "world_directory": "saving_princess"
+          }
+        },
+        "9": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "saving_princess",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.05,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/saving_princess/AP_48205312626925217390/AP_48205312626925217390_rules.json",
+            "size_bytes": 34879,
+            "size_mb": 0.03
+          },
+          "seed": "9",
+          "seed_id": "AP_48205312626925217390",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.64,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
+            "total_spheres": 7.1,
+            "warning_count": 0
+          },
+          "template_name": "Saving Princess.yaml",
+          "timestamp": "2025-11-13T05:04:10.196400",
+          "world_info": {
+            "exporter_path": "exporter/games/saving_princess.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Saving Princess",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "saving_princess",
+            "world_directory": "saving_princess"
+          }
+        }
+      },
+      "seed_range": "1-10",
+      "seeds_failed": 0,
+      "seeds_passed": 10,
+      "stop_on_failure": false,
+      "summary": {
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
+      },
+      "template_name": "Saving Princess.yaml",
+      "timestamp": "2025-11-13T05:02:22.212166",
+      "total_seeds_tested": 10
+    }
+  }
+}

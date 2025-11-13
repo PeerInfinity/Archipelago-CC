@@ -1,0 +1,2 @@
+No templates need retesting!
+All templates have either failed tests or have been tested through seed 10.

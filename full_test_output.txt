@@ -1,0 +1,52 @@
+Found 82 template files (1 testable, 81 filtered by include list (1 requested))
+Not included: 81 files (too many to list)
+Results will be saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+Timestamped backup will be saved to: test-results_2025-11-13_05-00-34.json
+Testing templates from: /home/user/Archipelago-CC/Players/Templates
+Building world mapping...
+World mapping built successfully
+Using seed 1 -> AP_14089154938208861744
+Starting batch processing of 1 templates...
+
+[1/1] Processing Saving Princess.yaml
+
+=== Testing Saving Princess.yaml ===
+  [Memory] Saving Princess.yaml - start: 33.3 MB RSS
+Running Generate.py for Saving Princess.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Saving Princess.yaml --multi 1 --seed 1
+  [Memory] Saving Princess.yaml - after generation: 33.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=saving_princess --seed=1
+  [Memory] Saving Princess.yaml - after spoiler test: 33.5 MB RSS
+Running test analysis...
+Completed Saving Princess.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=5.1, Max Spheres=5.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+Timestamped results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results_2025-11-13_05-00-34.json
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Testing Complete ===
+Processed 1 templates
+Total batch processing time: 14.0 seconds (0.2 minutes)
+Average time per template: 14.0 seconds
+Timestamped results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results_2025-11-13_05-00-34.json
+Merged results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Final Summary ===
+Single Seed Test Summary: 1 passed, 0 failed, 0 errors

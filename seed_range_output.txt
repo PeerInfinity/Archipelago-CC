@@ -1,0 +1,197 @@
+Found 82 template files (1 testable, 81 filtered by include list (1 requested))
+Not included: 81 files (too many to list)
+Backup of existing results saved to: test-results_backup_2025-11-13_05-02-21.json
+Results will be saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+Timestamped backup will be saved to: test-results_2025-11-13_05-02-21.json
+Testing templates from: /home/user/Archipelago-CC/Players/Templates
+Building world mapping...
+World mapping built successfully
+Testing seed range: 1-10 (10 seeds)
+Will test all seeds regardless of failures
+Starting batch processing of 1 templates...
+
+[1/1] Processing Saving Princess.yaml
+
+=== Testing Saving Princess.yaml with 10 seeds ===
+
+--- Seed 1 (1/10) ---
+
+=== Testing Saving Princess.yaml ===
+  [Memory] Saving Princess.yaml - start: 33.2 MB RSS
+Running Generate.py for Saving Princess.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Saving Princess.yaml --multi 1 --seed 1
+  [Memory] Saving Princess.yaml - after generation: 33.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=saving_princess --seed=1
+  [Memory] Saving Princess.yaml - after spoiler test: 33.4 MB RSS
+Running test analysis...
+Completed Saving Princess.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=5.1, Max Spheres=5.1
+✅ Seed 1 PASSED
+
+--- Seed 2 (2/10) ---
+
+=== Testing Saving Princess.yaml ===
+  [Memory] Saving Princess.yaml - start: 33.4 MB RSS
+Running Generate.py for Saving Princess.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Saving Princess.yaml --multi 1 --seed 2
+  [Memory] Saving Princess.yaml - after generation: 33.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=saving_princess --seed=2
+  [Memory] Saving Princess.yaml - after spoiler test: 33.6 MB RSS
+Running test analysis...
+Completed Saving Princess.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=6.1, Max Spheres=6.1
+✅ Seed 2 PASSED
+
+--- Seed 3 (3/10) ---
+
+=== Testing Saving Princess.yaml ===
+  [Memory] Saving Princess.yaml - start: 33.6 MB RSS
+Running Generate.py for Saving Princess.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Saving Princess.yaml --multi 1 --seed 3
+  [Memory] Saving Princess.yaml - after generation: 33.6 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=saving_princess --seed=3
+  [Memory] Saving Princess.yaml - after spoiler test: 33.6 MB RSS
+Running test analysis...
+Completed Saving Princess.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=7.1, Max Spheres=7.1
+✅ Seed 3 PASSED
+
+--- Seed 4 (4/10) ---
+
+=== Testing Saving Princess.yaml ===
+  [Memory] Saving Princess.yaml - start: 33.6 MB RSS
+Running Generate.py for Saving Princess.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Saving Princess.yaml --multi 1 --seed 4
+  [Memory] Saving Princess.yaml - after generation: 33.6 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=saving_princess --seed=4
+  [Memory] Saving Princess.yaml - after spoiler test: 33.6 MB RSS
+Running test analysis...
+Completed Saving Princess.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=5.1, Max Spheres=5.1
+✅ Seed 4 PASSED
+
+--- Seed 5 (5/10) ---
+
+=== Testing Saving Princess.yaml ===
+  [Memory] Saving Princess.yaml - start: 33.6 MB RSS
+Running Generate.py for Saving Princess.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Saving Princess.yaml --multi 1 --seed 5
+  [Memory] Saving Princess.yaml - after generation: 33.6 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=saving_princess --seed=5
+  [Memory] Saving Princess.yaml - after spoiler test: 33.6 MB RSS
+Running test analysis...
+Completed Saving Princess.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=5.1, Max Spheres=5.1
+✅ Seed 5 PASSED
+
+--- Seed 6 (6/10) ---
+
+=== Testing Saving Princess.yaml ===
+  [Memory] Saving Princess.yaml - start: 33.6 MB RSS
+Running Generate.py for Saving Princess.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Saving Princess.yaml --multi 1 --seed 6
+  [Memory] Saving Princess.yaml - after generation: 33.6 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=saving_princess --seed=6
+  [Memory] Saving Princess.yaml - after spoiler test: 33.6 MB RSS
+Running test analysis...
+Completed Saving Princess.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=6.1, Max Spheres=6.1
+✅ Seed 6 PASSED
+
+--- Seed 7 (7/10) ---
+
+=== Testing Saving Princess.yaml ===
+  [Memory] Saving Princess.yaml - start: 33.6 MB RSS
+Running Generate.py for Saving Princess.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Saving Princess.yaml --multi 1 --seed 7
+  [Memory] Saving Princess.yaml - after generation: 33.6 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=saving_princess --seed=7
+  [Memory] Saving Princess.yaml - after spoiler test: 33.6 MB RSS
+Running test analysis...
+Completed Saving Princess.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=7.1, Max Spheres=7.1
+✅ Seed 7 PASSED
+
+--- Seed 8 (8/10) ---
+
+=== Testing Saving Princess.yaml ===
+  [Memory] Saving Princess.yaml - start: 33.6 MB RSS
+Running Generate.py for Saving Princess.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Saving Princess.yaml --multi 1 --seed 8
+  [Memory] Saving Princess.yaml - after generation: 33.6 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=saving_princess --seed=8
+  [Memory] Saving Princess.yaml - after spoiler test: 33.8 MB RSS
+Running test analysis...
+Completed Saving Princess.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=5.1, Max Spheres=5.1
+✅ Seed 8 PASSED
+
+--- Seed 9 (9/10) ---
+
+=== Testing Saving Princess.yaml ===
+  [Memory] Saving Princess.yaml - start: 33.8 MB RSS
+Running Generate.py for Saving Princess.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Saving Princess.yaml --multi 1 --seed 9
+  [Memory] Saving Princess.yaml - after generation: 33.8 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=saving_princess --seed=9
+  [Memory] Saving Princess.yaml - after spoiler test: 33.8 MB RSS
+Running test analysis...
+Completed Saving Princess.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=7.1, Max Spheres=7.1
+✅ Seed 9 PASSED
+
+--- Seed 10 (10/10) ---
+
+=== Testing Saving Princess.yaml ===
+  [Memory] Saving Princess.yaml - start: 33.8 MB RSS
+Running Generate.py for Saving Princess.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Saving Princess.yaml --multi 1 --seed 10
+  [Memory] Saving Princess.yaml - after generation: 33.8 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=saving_princess --seed=10
+  [Memory] Saving Princess.yaml - after spoiler test: 33.8 MB RSS
+Running test analysis...
+Completed Saving Princess.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=5.1, Max Spheres=5.1
+✅ Seed 10 PASSED
+
+=== Seed Range Summary for Saving Princess.yaml ===
+Seeds tested: 10
+Passed: 10
+Failed: 0
+🎉 All 10 seeds passed!
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+Timestamped results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results_2025-11-13_05-02-21.json
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Testing Complete ===
+Processed 1 templates
+Total batch processing time: 135.6 seconds (2.3 minutes)
+Average time per template: 135.6 seconds
+Timestamped results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results_2025-11-13_05-02-21.json
+Merged results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Final Summary ===
+Seed Range Testing Results (10 seeds per template):
+  ✅ Saving Princess.yaml: All 10 seeds passed
+
+Overall Seed Range Summary:
+  Templates with all seeds passing: 1
+  Templates with some failures: 0
+  Average consecutive passes before failure: 10.0

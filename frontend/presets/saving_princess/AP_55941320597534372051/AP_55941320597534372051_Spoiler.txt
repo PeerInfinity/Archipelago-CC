@@ -1,0 +1,105 @@
+﻿Archipelago Version 0.6.4  -  Seed: 10
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Saving Princess
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+Expanded Item Pool:              Yes
+Trap Chance:                     50
+Death Link:                      No
+Instant Saving:                  Yes
+Sprint Availability:             Available With Jacket
+Cliff Weapon Upgrade:            Always Upgraded
+Ace Weapon Upgrade:              Always Upgraded
+IFrame Duration %:               100
+Screen Shake Intensity %:        50
+Music Shuffle:                   No
+
+
+Locations:
+
+Cave: After Wallboss: Powered Blaster
+Cave: Balcony: Clip Extension
+Cave: Spike pit: Clip Extension
+Cave: Powered Blaster chest: Volt Laser
+Cave: Wallboss (Boss): Faster Reload
+Cave: Guard (Boss): Jacket
+Volcanic: Hot coals: Life Extension
+Volcanic: Under bridge: Life Extension
+Volcanic: Behind wall: Clip Extension
+Volcanic: Flamethrower chest: Cave Key
+Volcanic: Cliff (Boss): Arctic Key
+Arctic: Before pipes: Life Extension
+Arctic: After Guard: Clip Extension
+Arctic: Under snow: Faster Reload
+Arctic: Ice Spreadshot chest: Faster Reload
+Arctic: Jacket chest: Life Extension
+Arctic: Ace (Boss): Quick-fire Mode
+Hub: Hidden near Arctic: Clip Extension
+Hub: Hidden near Cave: Volcanic Key
+Hub: Hidden near Swamp: Faster Reload
+Hub: Console login: Swamp Key
+Hub: Ninja scare (Boss?): Life Extension
+Swamp: Bramble room: Active Camouflage
+Swamp: Down the chimney: Active Camouflage
+Swamp: Wall maze: Shake Trap
+Swamp: Special Extension chest: Active Camouflage
+Swamp: Snake (Boss): Faster Reload
+Elevator: Ninja (Boss): Special Extension
+Electrical: Volt Laser chest: Clip Extension
+Electrical: Generator (Boss): Quick-fire Mode
+Electrical: Tesla orb: System Power
+Electrical: Near generator: Flamethrower
+Electrical: Behind wall: Ice Spreadshot
+Electrical: Before Malakhov: Shake Trap
+Electrical: Malakhov (Boss): Life Extension
+Electrical: BRAINOS (Boss): Faster Reload
+Mission objective: PRINCESS
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Cave: After Wallboss: Powered Blaster
+  Cave: Balcony: Clip Extension
+  Cave: Wallboss (Boss): Faster Reload
+  Hub: Console login: Swamp Key
+  Hub: Hidden near Cave: Volcanic Key
+  Hub: Hidden near Swamp: Faster Reload
+}
+2: {
+  Arctic: Before pipes: Life Extension
+  Cave: Powered Blaster chest: Volt Laser
+  Hub: Hidden near Arctic: Clip Extension
+  Volcanic: Under bridge: Life Extension
+}
+3: {
+  Arctic: Ice Spreadshot chest: Faster Reload
+  Swamp: Snake (Boss): Faster Reload
+  Volcanic: Cliff (Boss): Arctic Key
+  Volcanic: Flamethrower chest: Cave Key
+}
+4: {
+  Electrical: Tesla orb: System Power
+}
+5: {
+  Electrical: Behind wall: Ice Spreadshot
+  Electrical: Near generator: Flamethrower
+}
+6: {
+  Mission objective: PRINCESS
+}
