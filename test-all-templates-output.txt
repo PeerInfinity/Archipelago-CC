@@ -1,0 +1,11 @@
+[WARNING] HTTP development server not running!
+
+The spoiler tests require a local development server.
+Starting server automatically: python -m http.server 8000
+
+Waiting for server to start... Server started successfully!
+Server running at: http://localhost:8000/frontend/
+Server PID: 31408
+
+Error: Cannot use --retest because results file not found: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+Please run a full test first to generate results.
