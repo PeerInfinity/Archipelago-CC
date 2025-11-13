@@ -357,10 +357,10 @@
     "world_directory": "pokemon_rb"
   },
   "Raft": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/raft.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/raft/raftLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "raft"
   },
   "Risk of Rain 2": {
@@ -386,16 +386,16 @@
   },
   "Secret of Evermore": {
     "exporter_path": "exporter/games/soe.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/soe/soeLogic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "soe"
   },
   "Shivers": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/shivers.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/shivers/shiversLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "shivers"
   },
   "Sonic Adventure 2 Battle": {
@@ -567,10 +567,10 @@
     "world_directory": "zillion"
   },
   "shapez": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/shapez.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/shapez/shapezLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "shapez"
   }
 }

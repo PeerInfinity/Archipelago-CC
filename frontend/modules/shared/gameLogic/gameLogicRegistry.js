@@ -272,6 +272,7 @@ import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
 import * as paintLogic from './paint/paintLogic.js';
 import * as soeLogic from './soe/soeLogic.js';
 import * as shapezLogic from './shapez/shapezLogic.js';
+import * as shiversLogic from './shivers/shiversLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -493,6 +494,12 @@ const GAME_REGISTRY = {
     constants: shapezLogic.default.constants,
     worldClasses: ['ShapezWorld'],
     aliases: ['shapez']
+  },
+  'Shivers': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: shiversLogic.helperFunctions,
+    worldClasses: ['ShiversWorld'],
+    aliases: ['Shivers']
   },
   // Add more games here as they're implemented
   'Generic': {
