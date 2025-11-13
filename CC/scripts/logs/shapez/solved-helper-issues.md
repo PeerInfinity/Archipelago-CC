@@ -42,4 +42,37 @@ Created `frontend/modules/shared/gameLogic/shapez/` directory with:
 Test now progresses from sphere 0.6 to sphere 4.9 before encountering issues.
 
 ### Remaining Issues
-The test fails at sphere 4.9 with regions "Levels with X buildings" and "Upgrades with X buildings" not being reachable. This suggests the `has_logic_list_building` helper may need further investigation or there may be additional logic issues.
+The test fails at sphere 4.9 with regions "Levels with X buildings" and "Upgrades with X buildings" not being reachable. Investigation showed this is a state manager issue, not a helper function issue. See `remaining-helper-issues.md` for details.
+
+## Issue 2: OPTIONS constants not resolved - FIXED
+
+**Status:** Fixed
+**Priority:** High
+**Type:** Frontend Name Resolution
+**Date Fixed:** 2025-11-13
+
+### Description
+The access rules for "Levels with X buildings" and "Upgrades with X buildings" regions contained comparisons like `"3_buildings" == OPTIONS.buildings_3`, but OPTIONS was not defined in the frontend context, causing attribute resolution to fail.
+
+### Solution
+Added OPTIONS name resolution to `frontend/modules/shared/stateInterface.js` (lines 329-351):
+- Added case for 'OPTIONS' in resolveName function
+- Returns object with all OPTIONS constants from worlds/shapez/data/strings.py
+- Game-specific check ensures it only applies to shapez
+
+### OPTIONS Constants Supported
+All constants from worlds/shapez/data/strings.py OPTIONS class:
+- Logic options: vanilla, stretched, quick, random_steps, hardcore, dopamine, etc.
+- Early useful: sphere_1, buildings_3, buildings_5
+
+### Files Modified
+- Modified: `frontend/modules/shared/stateInterface.js` - Added OPTIONS case to resolveName
+
+### Verification
+- OPTIONS.buildings_3 now resolves to "3_buildings"
+- OPTIONS.buildings_5 now resolves to "5_buildings"
+- Comparison rules evaluate correctly: `"3_buildings" == OPTIONS.buildings_3` = true
+- Helper functions receive correct includeuseful parameter values
+
+### Result
+Access rule comparisons now evaluate correctly, allowing helper functions to receive the proper parameters.

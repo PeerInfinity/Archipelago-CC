@@ -326,6 +326,29 @@ export function createStateSnapshotInterface(
             return logicObject;
           }
           return undefined;
+        case 'OPTIONS':
+          // shapez-specific: OPTIONS constants from worlds/shapez/data/strings.py
+          // These are used in access rules for logic progression
+          if (gameName === 'shapez') {
+            return {
+              logic_vanilla: 'vanilla',
+              logic_stretched: 'stretched',
+              logic_quick: 'quick',
+              logic_random_steps: 'random_steps',
+              logic_hardcore: 'hardcore',
+              logic_dopamine: 'dopamine',
+              logic_dopamine_overflow: 'dopamine_overflow',
+              logic_vanilla_like: 'vanilla_like',
+              logic_linear: 'linear',
+              logic_category: 'category',
+              logic_category_random: 'category_random',
+              logic_shuffled: 'shuffled',
+              sphere_1: 'sphere_1',
+              buildings_3: '3_buildings',
+              buildings_5: '5_buildings',
+            };
+          }
+          return undefined;
         default:
           // Game-specific location variable extraction
           // For variables not found in context, try to extract from location name
