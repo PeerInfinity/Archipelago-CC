@@ -204,6 +204,17 @@ def main():
         help='Test all players each time (not just the newly added player)'
     )
     parser.add_argument(
+        '--multiworld-max-templates',
+        type=int,
+        default=10,
+        help='Maximum number of templates to keep in multiworld directory (default: 10). When exceeded, oldest templates are removed.'
+    )
+    parser.add_argument(
+        '--dry-run',
+        action='store_true',
+        help='Show what would be done without actually making changes (useful for testing)'
+    )
+    parser.add_argument(
         '--multitemplate',
         action='store_true',
         help='Run tests on multiple template configurations for the same game (requires --templates-dir)'
@@ -228,6 +239,16 @@ def main():
         type=int,
         metavar='MAX_SEED',
         help='When used with --retest, if a failing seed passes, continue testing subsequent seeds up to MAX_SEED (e.g., --retest-continue 10 to test through seed 10)'
+    )
+    parser.add_argument(
+        '--retest-continue-after-failure',
+        action='store_true',
+        help='When used with --retest, continue testing all failed templates instead of stopping at the first one that still fails'
+    )
+    parser.add_argument(
+        '--retest-include-untested',
+        action='store_true',
+        help='When used with --retest, also include templates that have never been tested before'
     )
     parser.add_argument(
         '--include-error-details',
@@ -294,6 +315,14 @@ def main():
 
     if args.retest_continue and args.retest_continue < 1:
         print("Error: --retest-continue MAX_SEED must be at least 1")
+        sys.exit(1)
+
+    if args.retest_continue_after_failure and not args.retest:
+        print("Error: --retest-continue-after-failure can only be used with --retest")
+        sys.exit(1)
+
+    if args.retest_include_untested and not args.retest:
+        print("Error: --retest-include-untested can only be used with --retest")
         sys.exit(1)
 
     # Determine project root early (needed for setup scripts)
@@ -526,6 +555,13 @@ def main():
                                 templates_to_test.add(template)
                         except (ValueError, AttributeError):
                             pass
+
+        # If --retest-include-untested is specified, also include templates not in the results file
+        if args.retest_include_untested:
+            untested_templates = [f for f in all_yaml_files if f not in existing_results['results']]
+            templates_to_test.update(untested_templates)
+            if untested_templates:
+                print(f"Including {len(untested_templates)} untested template(s) in retest mode")
 
         if not templates_to_test:
             print("No templates need retesting!")
@@ -823,7 +859,8 @@ def main():
                             retest_seed_list, export_only=args.export_only, test_only=args.test_only,
                             stop_on_failure=True,  # Stop on first failure in retest mode
                             multiplayer=args.multiplayer, single_client=args.single_client,
-                            headed=args.headed, include_error_details=args.include_error_details
+                            headed=args.headed, include_error_details=args.include_error_details,
+                            dry_run=args.dry_run
                         )
                     else:
                         # Failing seed is >= retest_continue, just test the failing seed
@@ -832,7 +869,8 @@ def main():
                             yaml_file, templates_dir, project_root, world_mapping,
                             str(failing_seed), export_only=args.export_only, test_only=args.test_only,
                             multiplayer=args.multiplayer, single_client=args.single_client,
-                            headed=args.headed, include_error_details=args.include_error_details
+                            headed=args.headed, include_error_details=args.include_error_details,
+                            dry_run=args.dry_run
                         )
                 elif failing_seed:
                     # Test just the failing seed
@@ -841,7 +879,8 @@ def main():
                         yaml_file, templates_dir, project_root, world_mapping,
                         str(failing_seed), export_only=args.export_only, test_only=args.test_only,
                         multiplayer=args.multiplayer, single_client=args.single_client,
-                        headed=args.headed, include_error_details=args.include_error_details
+                        headed=args.headed, include_error_details=args.include_error_details,
+                        dry_run=args.dry_run
                     )
                 elif args.retest_continue and seed_range_tested:
                     # No failing seed, but we have seed range data and --retest-continue
@@ -862,7 +901,8 @@ def main():
                                 retest_seed_list, export_only=args.export_only, test_only=args.test_only,
                                 stop_on_failure=True,  # Stop on first failure in retest mode
                                 multiplayer=args.multiplayer, single_client=args.single_client,
-                                headed=args.headed, include_error_details=args.include_error_details
+                                headed=args.headed, include_error_details=args.include_error_details,
+                                dry_run=args.dry_run
                             )
                         else:
                             # Already tested up to or past retest_continue, nothing to do
@@ -875,7 +915,8 @@ def main():
                             yaml_file, templates_dir, project_root, world_mapping,
                             "1", export_only=args.export_only, test_only=args.test_only,
                             multiplayer=args.multiplayer, single_client=args.single_client,
-                            headed=args.headed, include_error_details=args.include_error_details
+                            headed=args.headed, include_error_details=args.include_error_details,
+                            dry_run=args.dry_run
                         )
                 else:
                     # No seed-specific failure data, test seed 1
@@ -884,7 +925,8 @@ def main():
                         yaml_file, templates_dir, project_root, world_mapping,
                         "1", export_only=args.export_only, test_only=args.test_only,
                         multiplayer=args.multiplayer, single_client=args.single_client,
-                        headed=args.headed, include_error_details=args.include_error_details
+                        headed=args.headed, include_error_details=args.include_error_details,
+                        dry_run=args.dry_run
                     )
             elif args.multiworld:
                 # Multiworld mode - special handling
@@ -901,7 +943,9 @@ def main():
                         keep_templates=args.multiworld_keep_templates,
                         test_all_players=args.multiworld_test_all_players,
                         require_prerequisites=not args.multiworld_skip_prerequisites,
-                        include_error_details=args.include_error_details
+                        include_error_details=args.include_error_details,
+                        max_templates=args.multiworld_max_templates,
+                        dry_run=args.dry_run
                     )
                 else:
                     # Single seed in multiworld mode
@@ -913,7 +957,9 @@ def main():
                         keep_templates=args.multiworld_keep_templates,
                         test_all_players=args.multiworld_test_all_players,
                         require_prerequisites=not args.multiworld_skip_prerequisites,
-                        include_error_details=args.include_error_details
+                        include_error_details=args.include_error_details,
+                        max_templates=args.multiworld_max_templates,
+                        dry_run=args.dry_run
                     )
 
                 # If the test passed AND we're not in keep_templates mode, increment player count for next template
@@ -926,7 +972,8 @@ def main():
                     seed_list, export_only=args.export_only, test_only=args.test_only,
                     stop_on_failure=not args.seed_range_continue_on_failure,
                     multiplayer=args.multiplayer, single_client=args.single_client,
-                    headed=args.headed, include_error_details=args.include_error_details
+                    headed=args.headed, include_error_details=args.include_error_details,
+                    dry_run=args.dry_run
                 )
             else:
                 # Test with single seed (normal mode)
@@ -934,7 +981,8 @@ def main():
                     yaml_file, templates_dir, project_root, world_mapping,
                     str(seed_list[0]), export_only=args.export_only, test_only=args.test_only,
                     multiplayer=args.multiplayer, single_client=args.single_client,
-                    headed=args.headed, include_error_details=args.include_error_details
+                    headed=args.headed, include_error_details=args.include_error_details,
+                    dry_run=args.dry_run
                 )
             
             # Store results - in multitemplate mode, nest by game name → template filename
@@ -970,17 +1018,20 @@ def main():
                 if test_passed:
                     print(f"✅ {yaml_file} is now passing! Continuing to next failed test...")
                 else:
-                    print(f"❌ {yaml_file} still failing. Stopping retest.")
-                    print(f"\nRetest stopped at first still-failing test: {yaml_file}")
-                    # Save timestamped partial results (snapshot of this retest run only)
-                    # Note: Don't save to results_file here - incremental_merged was already saved above
-                    try:
-                        with open(timestamped_file, 'w') as f:
-                            json.dump(results, f, indent=2, sort_keys=True)
-                        print(f"Timestamped results saved to: {timestamped_file}")
-                    except IOError as e:
-                        print(f"Error saving timestamped results: {e}")
-                    sys.exit(0)
+                    if args.retest_continue_after_failure:
+                        print(f"❌ {yaml_file} still failing. Continuing to next failed test (--retest-continue-after-failure mode)...")
+                    else:
+                        print(f"❌ {yaml_file} still failing. Stopping retest.")
+                        print(f"\nRetest stopped at first still-failing test: {yaml_file}")
+                        # Save timestamped partial results (snapshot of this retest run only)
+                        # Note: Don't save to results_file here - incremental_merged was already saved above
+                        try:
+                            with open(timestamped_file, 'w') as f:
+                                json.dump(results, f, indent=2, sort_keys=True)
+                            print(f"Timestamped results saved to: {timestamped_file}")
+                        except IOError as e:
+                            print(f"Error saving timestamped results: {e}")
+                        sys.exit(0)
 
         except KeyboardInterrupt:
             print("\nInterrupted by user. Saving current results...")

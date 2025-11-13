@@ -52,7 +52,7 @@ def log_memory_usage(template_name: str, stage: str):
         print(f"  [Memory] Warning: Could not get memory info: {e}")
 
 
-def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False) -> Dict:
+def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False) -> Dict:
     """Test a single template file and return results."""
     template_name = os.path.basename(template_file)
     game_name = normalize_game_name(template_name)
@@ -143,6 +143,21 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
     # Step 1: Run Generate.py (skip if test_only mode)
     if not test_only:
+        if dry_run:
+            print(f"[DRY RUN] Would run Generate.py for {template_name}...")
+            template_file = template_name if template_name.endswith(('.yaml', '.yml')) else f"{template_name}.yaml"
+            template_path = os.path.join(templates_dir, template_file)
+            generate_cmd = [
+                "python", "Generate.py",
+                "--weights_file_path", template_path,
+                "--multi", "1",
+                "--seed", seed
+            ]
+            print(f"  [DRY RUN] Command: {' '.join(generate_cmd)}")
+            result['generation']['note'] = 'Skipped in dry-run mode'
+            result['dry_run'] = True
+            return result
+
         print(f"Running Generate.py for {template_name}...")
         # Ensure template name has .yaml extension for the file path
         template_file = template_name if template_name.endswith(('.yaml', '.yml')) else f"{template_name}.yaml"
@@ -443,7 +458,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
     return result
 
 
-def test_template_seed_range(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed_list: List[int], export_only: bool = False, test_only: bool = False, stop_on_failure: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False) -> Dict:
+def test_template_seed_range(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed_list: List[int], export_only: bool = False, test_only: bool = False, stop_on_failure: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False) -> Dict:
     """Test a template file with multiple seeds and return aggregated results."""
     template_name = os.path.basename(template_file)
 
@@ -471,6 +486,14 @@ def test_template_seed_range(template_file: str, templates_dir: str, project_roo
 
     consecutive_passes = 0
 
+    # Handle dry-run mode
+    if dry_run:
+        print(f"[DRY RUN] Would test {len(seed_list)} seeds: {seed_list[0]}-{seed_list[-1]}")
+        for i, seed in enumerate(seed_list, 1):
+            print(f"  [DRY RUN] Would test seed {seed} ({i}/{len(seed_list)})")
+        seed_range_result['dry_run'] = True
+        return seed_range_result
+
     for i, seed in enumerate(seed_list, 1):
         print(f"\n--- Seed {seed} ({i}/{len(seed_list)}) ---")
 
@@ -479,7 +502,7 @@ def test_template_seed_range(template_file: str, templates_dir: str, project_roo
             result = test_template_single_seed(
                 template_file, templates_dir, project_root, world_mapping,
                 str(seed), export_only, test_only, multiplayer, single_client, headed,
-                include_error_details
+                include_error_details, dry_run
             )
 
             seed_range_result['individual_results'][str(seed)] = result
@@ -586,7 +609,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
                             test_only: bool = False, headed: bool = False,
                             keep_templates: bool = False, test_all_players: bool = False,
                             require_prerequisites: bool = True,
-                            include_error_details: bool = False) -> Dict:
+                            include_error_details: bool = False, max_templates: int = 10,
+                            dry_run: bool = False) -> Dict:
     """
     Test a single template in multiworld mode.
 
@@ -611,6 +635,9 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         keep_templates: If True, don't copy template to multiworld directory (just test existing templates)
         test_all_players: If True, test all players; if False, only test the newly added player
         require_prerequisites: If True, skip templates that haven't passed other test types (default: True)
+        include_error_details: If True, include first error/warning lines in results
+        max_templates: Maximum number of templates to keep in multiworld directory (default: 10)
+        dry_run: If True, show what would be done without making changes (default: False)
 
     Returns:
         Dictionary with test results
@@ -751,18 +778,60 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
 
     # Copy template to multiworld directory (unless keep_templates is True)
     if not keep_templates:
-        print(f"Copying {template_name} to multiworld directory...")
-        source_path = os.path.join(templates_dir, template_name)
-        dest_path = os.path.join(multiworld_dir, template_name)
+        # Check if we need to remove old templates to stay under the limit
+        existing_templates = [f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')]
 
-        try:
-            shutil.copy2(source_path, dest_path)
-            print(f"  Copied successfully")
-        except Exception as e:
-            print(f"  Error copying template: {e}")
-            result['multiworld_test']['success'] = False
-            result['multiworld_test']['error'] = f"Failed to copy template: {e}"
+        # If adding this template would exceed the limit, remove the oldest templates
+        if len(existing_templates) >= max_templates:
+            # Get file modification times
+            template_times = []
+            for template in existing_templates:
+                template_path = os.path.join(multiworld_dir, template)
+                mtime = os.path.getmtime(template_path)
+                template_times.append((template, mtime))
+
+            # Sort by modification time (oldest first)
+            template_times.sort(key=lambda x: x[1])
+
+            # Calculate how many we need to remove
+            num_to_remove = len(existing_templates) - max_templates + 1
+
+            # Remove the oldest templates
+            print(f"Multiworld directory has {len(existing_templates)} templates (limit: {max_templates})")
+            if dry_run:
+                print(f"[DRY RUN] Would remove {num_to_remove} oldest template(s) to make room...")
+                for i in range(num_to_remove):
+                    old_template = template_times[i][0]
+                    print(f"  [DRY RUN] Would remove {old_template}")
+            else:
+                print(f"Removing {num_to_remove} oldest template(s) to make room...")
+                for i in range(num_to_remove):
+                    old_template = template_times[i][0]
+                    old_template_path = os.path.join(multiworld_dir, old_template)
+                    try:
+                        os.remove(old_template_path)
+                        print(f"  Removed {old_template}")
+                    except Exception as e:
+                        print(f"  Warning: Could not remove {old_template}: {e}")
+
+        if dry_run:
+            print(f"[DRY RUN] Would copy {template_name} to multiworld directory...")
+            print(f"[DRY RUN] Skipping actual file operations and tests")
+            result['multiworld_test']['dry_run'] = True
             return result
+        else:
+            print(f"Copying {template_name} to multiworld directory...")
+            source_path = os.path.join(templates_dir, template_name)
+            dest_path = os.path.join(multiworld_dir, template_name)
+
+            try:
+                shutil.copy2(source_path, dest_path)
+                print(f"  Copied successfully")
+            except Exception as e:
+                print(f"  Error copying template: {e}")
+                result['multiworld_test']['success'] = False
+                result['multiworld_test']['error'] = f"Failed to copy template: {e}"
+                return result
 
         # Return early if export_only mode
         if export_only:
