@@ -328,7 +328,8 @@ export const kh1Logic = {
         const hasHighJump = (snapshot?.inventory?.["High Jump"] || 0);
         const hasGlide = (snapshot?.inventory?.["Progressive Glide"] || 0) > 0;
 
-        return (
+        // Convert to boolean to avoid returning 0 instead of false
+        return !!(
             hasFire ||
             (advanced_logic && hasHighJump >= 2) ||
             (advanced_logic && hasHighJump > 0 && hasGlide)

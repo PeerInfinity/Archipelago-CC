@@ -6,36 +6,36 @@ Last updated: 2025-11-13
 
 ## Issues
 
-### Issue #1: Halloween Town locations accessible too early
+### Issue #2: Missing can_dumbo_skip helper function
 
 **Status:** Identified
 **Priority:** High
 **File:** frontend/modules/shared/gameLogic/kh1/kh1Logic.js
 
 **Description:**
-At Sphere 1.4, Halloween Town Oogie's Manor locations become accessible in the JavaScript frontend but not in the Python backend's sphere log. This includes:
-- Halloween Town Cemetery Behind Grave Chest
-- Halloween Town Cemetery Between Graves Chest
-- Halloween Town Cemetery By Cat Shape Chest
-- Halloween Town Cemetery By Striped Grave Chest
-- Halloween Town Defeat Oogie Boogie Holy Circlet Event
-- Halloween Town Defeat Oogie's Manor Gravity Event
-- Halloween Town Oogie's Manor Hollow Chest
-- Halloween Town Oogie's Manor Lower Iron Cage Chest
-- Halloween Town Oogie's Manor Upper Iron Cage Chest
-- Halloween Town Seal Keyhole Pumpkinhead Event
+At Sphere 6.1, the test reports: `Helper function "can_dumbo_skip" NOT FOUND in snapshotInterface`
+
+This causes 14 locations to be accessible too early:
+- Traverse Town 1st District Blue Trinity Balcony Chest
+- Traverse Town Geppetto's House Chest
+- Traverse Town Geppetto's House Geppetto Reward 1-5
+- Traverse Town Geppetto's House Postcard
+- Traverse Town Geppetto's House Talk to Pinocchio
+- Agrabah Palace Gates High Close to Palace Chest
+- Monstro Defeat Parasite Cage II Stop Event
+- Halloween Town Guillotine Square High Tower Chest
+- Halloween Town Guillotine Square Pumpkin Structure Left/Right Chest
 
 **Root Cause:**
-The `has_oogie_manor` helper function (kh1Logic.js:324-336) may be too permissive or not matching the Python implementation in worlds/kh1/Rules.py.
+The `can_dumbo_skip` helper function is referenced in rules but not implemented in kh1Logic.js
 
 **Investigation Needed:**
-1. Compare Python implementation of Oogie's Manor access logic in worlds/kh1/Rules.py
-2. Verify the `has_oogie_manor` helper function logic
-3. Check if advanced_logic parameter is being passed correctly
-4. Verify Progressive Fire, High Jump, and Glide requirements
+1. Find the Python implementation of can_dumbo_skip in worlds/kh1/Rules.py
+2. Implement the JavaScript equivalent in kh1Logic.js
+3. Verify the logic matches the Python implementation
 
 **Affected Locations:**
-10 locations in Halloween Town (Cemetery and Oogie's Manor)
+14 locations across multiple worlds
 
 **Impact:**
-Test fails at Sphere 1.4 with 10 extra accessible locations
+Test fails at Sphere 6.1 with 14 extra accessible locations
