@@ -263,6 +263,8 @@ import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
 import * as cv64Logic from './cv64/cv64Logic.js';
+import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
+import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -441,6 +443,12 @@ const GAME_REGISTRY = {
     helperFunctions: v6Logic.helperFunctions,
     worldClasses: ['V6World'],
     aliases: ['VVVVVV', 'V6']
+  },
+  'Overcooked! 2': {
+    logicModule: overcooked2Logic.overcooked2StateModule,
+    helperFunctions: overcooked2Logic.helperFunctions,
+    worldClasses: ['Overcooked2World'],
+    aliases: ['Overcooked! 2', 'overcooked2']
   },
   'Yacht Dice': {
     logicModule: yachtdiceLogic.yachtdiceStateModule,
