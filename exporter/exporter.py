@@ -339,6 +339,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'item_groups': {},  # Item groups by player
         'progression_mapping': {},  # Progressive item info
         'settings': {}, # Game settings by player
+        'static_data': {},  # Game-specific static data for frontend
         'start_regions': {},  # Start regions by player
         'itempool_counts': {},  # Complete itempool counts by player
         'game_info': {},  # Game-specific information for frontend
@@ -426,6 +427,18 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
             export_data['settings'][player_str] = {
                 'error': error_msg,
                 'details': "Failed to read game settings. Check logs for more information."
+            }
+
+        # Get Static Data using handler
+        try:
+            static_data = game_handler.get_static_data(world, multiworld, player) # Call the handler method
+            export_data['static_data'][player_str] = static_data
+        except Exception as e:
+            error_msg = f"Error exporting static data for player {player}: {str(e)}"
+            logger.error(error_msg)
+            export_data['static_data'][player_str] = {
+                'error': error_msg,
+                'details': "Failed to read game static data. Check logs for more information."
             }
 
         # Start regions
@@ -1253,6 +1266,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'progression_mapping',
         'starting_items',
         'settings',
+        'static_data',
         'game_info',
         'metamath_data'
     ]
@@ -1260,7 +1274,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     # Player-specific keys contain data nested under player IDs
     player_specific_keys = [
         'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
-        'settings', 'start_regions', 'itempool_counts', 'game_info',
+        'settings', 'static_data', 'start_regions', 'itempool_counts', 'game_info',
         'starting_items', 'metamath_data'
     ]
 

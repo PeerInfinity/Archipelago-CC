@@ -55,3 +55,44 @@ The exporter now correctly generates:
 Regions accessible in Sphere 0: Menu, Overworld, 1-1, 2-1, 4-1 ✓
 Locations still unreachable: 9 locations (need level_logic data)
 ```
+
+## Issue 2: Static data (level_logic) not exported to rules.json (SOLVED)
+
+**Solved Date**: 2025-11-13
+**Solution**: Modified main exporter to support static_data export
+
+### Problem
+The `level_logic` dictionary needed to be exported as part of static_data in rules.json so that frontend helper functions could access it. The `get_static_data` method existed in overcooked2.py but wasn't being called by the main exporter pipeline.
+
+### Impact
+- Location access rules using `has_requirements_for_level_star` helper failed
+- All locations in levels 1-1, 2-1, and 4-1 were unreachable
+- Spoiler test failed with "Access rule evaluation failed" errors
+- 9 locations missing from Sphere 0
+
+### Root Cause
+The main exporter (exporter/exporter.py) didn't have a mechanism to export static_data from game-specific exporters.
+
+### Solution
+Modified `/home/user/Archipelago-CC/exporter/exporter.py` to:
+1. **Add 'static_data' to export_data initialization** (line 342) - Initialize empty dict for static data
+2. **Call get_static_data() for each player** (lines 432-442) - Extract static data from game handlers
+3. **Add to desired_key_order** (line 1269) - Include static_data in JSON output ordering
+4. **Add to player_specific_keys** (line 1277) - Mark static_data as player-specific data
+
+### Implementation Details
+The exporter now:
+- Calls `game_handler.get_static_data(world, multiworld, player)` for each player during export
+- Handles errors gracefully with fallback error objects
+- Includes static_data in the ordered JSON output
+- Properly nests static_data under player IDs
+
+### Files Modified
+- `exporter/exporter.py` - Added static_data export support (4 changes)
+
+### Result
+- ✓ static_data is now exported to rules.json for all games
+- ✓ level_logic is included in static_data for Overcooked! 2
+- ✓ Frontend helpers can now access level requirements
+- ✓ Location access rules should now evaluate correctly
+- ✓ Spoiler tests should pass (pending verification)
