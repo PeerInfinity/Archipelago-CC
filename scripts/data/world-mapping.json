@@ -455,9 +455,9 @@
     "world_directory": "smw"
   },
   "Super Metroid": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/sm.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "sm"
   },

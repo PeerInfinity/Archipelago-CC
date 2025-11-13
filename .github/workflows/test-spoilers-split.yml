@@ -1,0 +1,201 @@
+name: Test Spoilers (Split Seeds)
+
+on:
+  # Allow manual triggering for testing
+  workflow_dispatch:
+    inputs:
+      spoiler_type:
+        description: 'Spoiler type to test'
+        required: true
+        default: 'minimal'
+        type: choice
+        options:
+          - minimal
+          - full
+
+permissions:
+  contents: write  # Allow pushing commits and creating branches
+
+jobs:
+  # Parallel test jobs - one for each seed
+  test-seed:
+    name: Test Seed ${{ matrix.seed }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          if [[ "${{ github.event.inputs.spoiler_type }}" == "full" ]]; then
+            python scripts/setup/update_host_settings.py full-spoilers
+          else
+            python scripts/setup/update_host_settings.py minimal-spoilers
+          fi
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run test for seed ${{ matrix.seed }}
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --include-list "Adventure.yaml" \
+            --seed ${{ matrix.seed }} \
+            --output-file scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-${{ matrix.seed }}.json \
+            --no-backup \
+            -p
+
+      - name: Upload test results for seed ${{ matrix.seed }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-seed-${{ matrix.seed }}
+          path: |
+            scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-${{ matrix.seed }}.json
+            scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-${{ matrix.seed }}_*.json
+          retention-days: 7
+
+  # Combine results job - runs after all seed tests complete
+  combine-results:
+    name: Combine Test Results
+    runs-on: ubuntu-latest
+    needs: test-seed
+    if: always()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: List downloaded artifacts
+        run: |
+          echo "=== Downloaded Artifacts ==="
+          find artifacts -type f -name "*.json" | sort
+
+      - name: Combine test results
+        run: |
+          # Create temporary directory for merged results
+          mkdir -p /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}
+
+          # Combine all per-seed test results into one file
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-seed-*/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-*.json \
+            --output-file /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+
+          # List what was created
+          echo "=== Combined Results ==="
+          ls -lh /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+
+      - name: Create or switch to test-results-update branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Fetch all branches
+          git fetch origin
+
+          # Check if branch exists remotely
+          if git ls-remote --exit-code --heads origin test-results-update; then
+            echo "Branch test-results-update exists, checking it out"
+            git checkout test-results-update
+            git pull origin test-results-update
+          else
+            echo "Creating new branch test-results-update"
+            git checkout -b test-results-update
+          fi
+
+          # Now copy the merged results from temp location
+          echo "Copying merged results to repository..."
+          mkdir -p scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}
+          mkdir -p docs/json/developer/test-results
+
+          cp /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json \
+             scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+
+          echo "=== Files in repository after copy ==="
+          ls -lh scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Add the specific files we want to commit
+          git add scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update ${{ github.event.inputs.spoiler_type }} spoiler test results (split seeds 1-10)
+
+            Generated by workflow run: ${{ github.run_id }}
+            Triggered by: ${{ github.actor }}
+
+            Test results from parallel seed testing:
+            - Seeds: 1-10 (10 parallel jobs)
+            - Spoiler type: ${{ github.event.inputs.spoiler_type }}
+            - Templates: Adventure.yaml (testing only)
+            "
+
+            git push origin test-results-update
+
+            echo "✅ Test results committed to test-results-update branch"
+            echo "View the branch at: ${{ github.server_url }}/${{ github.repository }}/tree/test-results-update"
+          fi

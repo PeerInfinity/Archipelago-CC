@@ -265,6 +265,11 @@ def main():
         action='store_true',
         help='Configure host settings for full spoilers before running tests'
     )
+    parser.add_argument(
+        '--no-backup',
+        action='store_true',
+        help='Disable automatic backup of existing results file'
+    )
 
     args = parser.parse_args()
 
@@ -722,8 +727,8 @@ def main():
 
     results_file = os.path.join(project_root, args.output_file)
 
-    # Save a timestamped backup of the existing results file if it exists
-    if os.path.exists(results_file):
+    # Save a timestamped backup of the existing results file if it exists (unless disabled)
+    if not args.no_backup and os.path.exists(results_file):
         timestamp_backup = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         backup_dir = os.path.dirname(results_file)
         backup_basename = os.path.basename(results_file)
