@@ -134,8 +134,10 @@ jobs:
           mkdir -p /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}
 
           # Combine all per-seed test results into one file
+          # Note: artifacts are downloaded to artifacts/test-results-seed-N/ directories
+          # and contain the JSON files directly (not in a scripts/output subdirectory)
           python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-seed-*/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-*.json \
+            --input-files artifacts/test-results-seed-*/test-results-seed-*.json \
             --output-file /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
 
           # List what was created
