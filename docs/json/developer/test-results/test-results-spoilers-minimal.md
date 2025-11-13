@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-13 05:54:02
+**Generated:** 2025-11-13 05:54:34
 
 **Source Data Created:** 2025-11-13T05:41:04.804505
 
-**Source Data Last Updated:** 2025-11-13T05:54:02.008348
+**Source Data Last Updated:** 2025-11-13T05:54:33.959186
 
 ## Summary
 
-- **Total Games:** 41
-- **Passed:** 29 (70.7%)
-- **Failed:** 12 (29.3%)
+- **Total Games:** 43
+- **Passed:** 30 (69.8%)
+- **Failed:** 13 (30.2%)
 
 ## Test Results
 
@@ -61,6 +61,8 @@
 | Meritous | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ⚫ | ⚫ |
 | Metamath | ❌ Failed | 1 | 3.1 | 3.1 | 🟡 100.0% | ✅ | ⚫ |
 | Muse Dash | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ⚫ | ⚫ |
+| Noita | ✅ Passed | 0 | 0.15 | 0.15 | 🟢 Complete | ⚫ | ⚫ |
+| Ocarina of Time | ❌ Failed | 32 | 22.1 | 22.1 | 🟡 100.0% | ✅ | ✅ |
 
 ## Notes
 

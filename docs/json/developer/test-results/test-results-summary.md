@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-13 05:54:02
+**Generated:** 2025-11-13 05:54:34
 
 This summary combines results from three types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -11,16 +11,16 @@ This summary combines results from three types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 29/41 passed (70.7%)
+- **Minimal Test:** 30/43 passed (69.8%)
 - **Full Test:** 0/0 passed (0.0%)
 - **Multiplayer Test:** 0/0 passed (0.0%)
 
 ### Combined Test Results
 
-- **Templates passing all 3 tests:** 0/41 (0.0%)
-- **Templates passing 2 tests:** 0/41 (0.0%)
-- **Templates passing 1 test:** 29/41 (70.7%)
-- **Templates passing 0 tests:** 12/41 (29.3%)
+- **Templates passing all 3 tests:** 0/43 (0.0%)
+- **Templates passing 2 tests:** 0/43 (0.0%)
+- **Templates passing 1 test:** 30/43 (69.8%)
+- **Templates passing 0 tests:** 13/43 (30.2%)
 
 ## Test Results
 
@@ -67,6 +67,8 @@ This summary combines results from three types of tests:
 | Meritous | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
 | Metamath | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
 | Muse Dash | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
+| Noita | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
+| Ocarina of Time | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
 
 ## Excluded Games
 
