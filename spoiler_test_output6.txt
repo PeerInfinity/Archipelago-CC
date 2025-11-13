@@ -1,0 +1,220 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:28] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: soe
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=soe&seed=1
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/?mode=test-spoilers&game=soe&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modes.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [05:32:30.573] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/hylics_2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/jak_and_daxter__the_precursor_legacy/jak_and_daxter__the_precursor_legacyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/oot/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/soe/soeLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.json HTTP/1.1" 200 -
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [05:32:30.869] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [05:32:30.870] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [05:32:30.887] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [05:32:30.888] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [05:32:30.888] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [05:32:30.888] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [05:32:30.899] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:32:30] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
+BROWSER LOG (error): [SOE] staticData keys: [game_name, game_directory, playerId, locations, regions, exits, dungeons, items, itemsByPlayer, itemData]
+BROWSER LOG (error): [SOE] staticData.items: {15 Moniez: Object, Petal: Object, Nectar: Object, Oil: Object, Progressive helmet: Object}
+BROWSER LOG (error): [SOE] No items found in staticData
