@@ -261,6 +261,7 @@ import * as v6Logic from './v6/v6Logic.js';
 import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
+import * as paintLogic from './paint/paintLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -415,6 +416,12 @@ const GAME_REGISTRY = {
     helperFunctions: ootLogic.helperFunctions,
     worldClasses: ['OOTWorld'],
     aliases: ['Ocarina of Time', 'OOT', 'Zelda: Ocarina of Time']
+  },
+  'Paint': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: paintLogic.helperFunctions,
+    worldClasses: ['PaintWorld'],
+    aliases: ['Paint']
   },
   'Super Mario 64': {
     logicModule: sm64exLogic.sm64exStateModule,

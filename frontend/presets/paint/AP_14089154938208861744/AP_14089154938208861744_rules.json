@@ -52,7 +52,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -75,7 +75,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -98,7 +98,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -121,7 +121,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -236,7 +236,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -259,7 +259,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -282,7 +282,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -305,7 +305,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -328,7 +328,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -351,7 +351,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -374,7 +374,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -397,7 +397,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -420,7 +420,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -443,7 +443,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -466,7 +466,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -489,7 +489,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -512,7 +512,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -535,7 +535,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -558,7 +558,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -581,7 +581,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -604,7 +604,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 2.0
+                "value": 1.0
               }
             },
             "item": {
@@ -627,7 +627,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 27.0
+                "value": 1.0
               }
             },
             "item": {
@@ -1179,7 +1179,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 50.0
+                "value": 50.5
               }
             },
             "item": {
@@ -1225,7 +1225,7 @@
               "op": ">=",
               "right": {
                 "type": "constant",
-                "value": 51.5
+                "value": 51.0
               }
             },
             "item": {
@@ -3419,7 +3419,9 @@
   "settings": {
     "1": {
       "game": "Paint",
-      "assume_bidirectional_exits": false
+      "assume_bidirectional_exits": false,
+      "canvas_size_increment": 100,
+      "logic_percent": 80
     }
   },
   "game_info": {

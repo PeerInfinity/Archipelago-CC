@@ -22,6 +22,29 @@ class PaintGameExportHandler(GenericGameExportHandler):
 
     GAME_NAME = 'Paint'
 
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export Paint-specific settings including canvas_size_increment and logic_percent."""
+        # Get base settings from parent class
+        settings_dict = super().get_settings_data(world, multiworld, player)
+
+        # Add Paint-specific settings
+        try:
+            if hasattr(world, 'options'):
+                # Export canvas_size_increment option
+                if hasattr(world.options, 'canvas_size_increment'):
+                    settings_dict['canvas_size_increment'] = world.options.canvas_size_increment.value
+                    logger.debug(f"Exported canvas_size_increment = {world.options.canvas_size_increment.value}")
+
+                # Export logic_percent option
+                if hasattr(world.options, 'logic_percent'):
+                    settings_dict['logic_percent'] = world.options.logic_percent.value
+                    logger.debug(f"Exported logic_percent = {world.options.logic_percent.value}")
+
+        except Exception as e:
+            logger.warning(f"Failed to export Paint settings: {e}")
+
+        return settings_dict
+
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Override rule analysis for Paint location access rules.
 
