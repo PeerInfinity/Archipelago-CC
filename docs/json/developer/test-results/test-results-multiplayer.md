@@ -4,13 +4,13 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-13 02:07:27
+**Generated:** 2025-11-13 05:32:43
 
 ## Summary
 
-- **Total Games:** 79
-- **Passed:** 33 (41.8%)
-- **Failed:** 46 (58.2%)
+- **Total Games:** 78
+- **Passed:** 33 (42.3%)
+- **Failed:** 45 (57.7%)
 
 ## Test Results
 
@@ -40,7 +40,6 @@
 | Faxanadu | ✅ Passed | 0 | ✅ | 114 | 110 | ✅ | 114 | 114 | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299 | 251 | ✅ | 299 | 299 | ✅ | ⚫ |
 | Heretic | ✅ Passed | 0 | ✅ | 502 | 502 | ✅ | 502 | 502 | ⚫ | ⚫ |
-| Hollow Knight | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134 | 133 | ✅ | 134 | 134 | ✅ | ⚫ |
 | Inscryption | ✅ Passed | 0 | ✅ | 100 | 100 | ✅ | 100 | 100 | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ❌ Failed | 0 | ❌ | 0 | 0 | ❌ | 0 | 0 | ✅ | ⚫ |
