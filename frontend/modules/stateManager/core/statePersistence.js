@@ -386,7 +386,8 @@ export function _createSelfSnapshotInterface(sm) {
       }
 
       // Logic object (game-specific helper functions)
-      if (name === 'logic') {
+      // Handle both 'logic' and 'StateLogic' (MLSS uses 'StateLogic')
+      if (name === 'logic' || name === 'StateLogic') {
         // Get game-specific helpers from the game logic module
         const gameName = sm.rules?.game_name;
         if (gameName) {
