@@ -1,0 +1,183 @@
+﻿Archipelago Version 0.6.4  -  Seed: 2
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Inscryption
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Death Link:                      No
+Start Inventory from Pool:       
+Act 1 Death Link Behaviour:      Sacrificed
+Goal:                            Full Story In Order
+Randomize Codes:                 No
+Randomize Deck:                  Disable
+Randomize Abilities:             Disable
+Optional Death Card:             Deathlink Only
+Skip Tutorial:                   Yes
+Skip Epilogue:                   No
+Epitaph Pieces Randomization:    All Pieces
+Painting Checks Balancing:       Balanced
+
+
+Locations:
+
+Act 1 - Boss Prospector: Pile Of Meat
+Act 1 - Boss Angler: Mycologists Holo Key
+Act 1 - Boss Trapper: Dagger
+Act 1 - Boss Leshy: Epitaph Piece
+Act 1 - Safe: Epitaph Piece
+Act 1 - Clock Main Compartment: Card Pack
+Act 1 - Clock Upper Compartment: Epitaph Piece
+Act 1 - Dagger: Holo Pelt
+Act 1 - Wardrobe Drawer 1: Bone Lord Holo Key
+Act 1 - Wardrobe Drawer 2: Fishbot Card
+Act 1 - Wardrobe Drawer 3: Ant Cards
+Act 1 - Wardrobe Drawer 4: Holo Pelt
+Act 1 - Magnificus Eye: Film Roll
+Act 1 - Painting 1: Epitaph Piece
+Act 1 - Painting 2: Currency
+Act 1 - Painting 3: Currency
+Act 1 - Greater Smoke: Currency
+Act 2 - Boss Leshy: Currency
+Act 2 - Boss Magnificus: Currency
+Act 2 - Boss Grimora: Nano Armor Generator
+Act 2 - Boss P03: Bone Lord Femur
+Act 2 - Battle Prospector: Card Pack
+Act 2 - Battle Angler: Inspectometer Battery
+Act 2 - Battle Trapper: Currency
+Act 2 - Battle Sawyer: Card Pack
+Act 2 - Battle Royal: Currency
+Act 2 - Battle Kaycee: Currency
+Act 2 - Battle Goobert: Currency
+Act 2 - Battle Pike Mage: Stinkbug Card
+Act 2 - Battle Lonely Wizard: Card Pack
+Act 2 - Battle Inspector: Currency
+Act 2 - Battle Melter: Camera Replica
+Act 2 - Battle Dredger: Gems Module
+Act 2 - Dock Chest: Bone Lord Horn
+Act 2 - Forest Cabin Chest: Quill
+Act 2 - Forest Meadow Chest: Currency
+Act 2 - Cabin Wardrobe Drawer: Great Kraken Card
+Act 2 - Cabin Safe: Greater Smoke
+Act 2 - Crypt Casket 1: Epitaph Piece
+Act 2 - Crypt Casket 2: Epitaph Piece
+Act 2 - Crypt Well: Card Pack
+Act 2 - Tower Chest 1: Ourobot Card
+Act 2 - Tower Chest 2: Currency
+Act 2 - Tower Chest 3: Lonely Wizbot Card
+Act 2 - Tentacle: Currency
+Act 2 - Factory Trash Can: Card Pack
+Act 2 - Factory Drawer 1: Card Pack
+Act 2 - Factory Drawer 2: Currency
+Act 2 - Factory Chest 1: Currency
+Act 2 - Factory Chest 2: Currency
+Act 2 - Factory Chest 3: Card Pack
+Act 2 - Factory Chest 4: Card Pack
+Act 2 - Ancient Obol: Bee Figurine
+Act 2 - Bone Lord Femur: Card Pack
+Act 2 - Bone Lord Horn: Card Pack
+Act 2 - Bone Lord Holo Key: Extra Battery
+Act 2 - Mycologists Holo Key: Card Pack
+Act 2 - Camera Replica: Card Pack
+Act 2 - Clover: Card Pack
+Act 2 - Monocle: Caged Wolf Card
+Act 2 - Epitaph Piece 1: Epitaph Piece
+Act 2 - Epitaph Piece 2: Card Pack
+Act 2 - Epitaph Piece 3: Card Pack
+Act 2 - Epitaph Piece 4: Currency
+Act 2 - Epitaph Piece 5: Epitaph Piece
+Act 2 - Epitaph Piece 6: Currency
+Act 2 - Epitaph Piece 7: Extra Candle
+Act 2 - Epitaph Piece 8: Monocle
+Act 2 - Epitaph Piece 9: Epitaph Piece
+Act 3 - Boss Photographer: Salmon Card
+Act 3 - Boss Archivist: Dock's Clover Plant
+Act 3 - Boss Unfinished: Currency
+Act 3 - Boss G0lly: Wardrobe Key
+Act 3 - Boss Mycologists: Squirrel Totem Head
+Act 3 - Bone Lord Room: Card Pack
+Act 3 - Shop Holo Pelt: Currency
+Act 3 - Middle Holo Pelt: Magnificus Eye
+Act 3 - Forest Holo Pelt: Card Pack
+Act 3 - Crypt Holo Pelt: Card Pack
+Act 3 - Tower Holo Pelt: Card Pack
+Act 3 - Trader 1: Currency
+Act 3 - Trader 2: Card Pack
+Act 3 - Trader 3: Currency
+Act 3 - Trader 4: Mrs. Bomb's Remote
+Act 3 - Trader 5: Card Pack
+Act 3 - Drawer 1: Stunted Wolf Card
+Act 3 - Drawer 2: Holo Pelt
+Act 3 - Clock: Holo Pelt
+Act 3 - Extra Battery: Drowned Soul Card
+Act 3 - Nano Armor Generator: Currency
+Act 3 - Chest: Ancient Obol
+Act 3 - Goobert's Painting: Holo Pelt
+Act 3 - Luke's File Entry 1: Card Pack
+Act 3 - Luke's File Entry 2: Card Pack
+Act 3 - Luke's File Entry 3: Currency
+Act 3 - Luke's File Entry 4: Ring
+Act 3 - Inspectometer Battery: Skink Card
+Act 3 - Gems Drone: Currency
+Act 3 - The Great Transcendence: Angler Hook
+Act 3 - Well: Oil Painting's Clover Plant
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Act 1 - Boss Angler: Mycologists Holo Key
+  Act 1 - Boss Leshy: Epitaph Piece
+  Act 1 - Boss Prospector: Pile Of Meat
+  Act 1 - Boss Trapper: Dagger
+  Act 1 - Clock Upper Compartment: Epitaph Piece
+  Act 1 - Painting 1: Epitaph Piece
+  Act 1 - Safe: Epitaph Piece
+}
+2: {
+  Act 1 - Magnificus Eye: Film Roll
+}
+3: {
+  Act 2 - Crypt Casket 1: Epitaph Piece
+  Act 2 - Crypt Casket 2: Epitaph Piece
+  Act 2 - Epitaph Piece 1: Epitaph Piece
+  Act 2 - Epitaph Piece 5: Epitaph Piece
+  Act 2 - Epitaph Piece 8: Monocle
+  Act 2 - Epitaph Piece 9: Epitaph Piece
+  Act 2 - Forest Cabin Chest: Quill
+}
+4: {
+  Act 2 - Battle Dredger: Gems Module
+  Act 2 - Battle Melter: Camera Replica
+  Act 2 - Monocle: Caged Wolf Card
+}
+5: {
+  Act 1 - Dagger: Holo Pelt
+  Act 2 - Battle Angler: Inspectometer Battery
+  Act 3 - Chest: Ancient Obol
+  Act 3 - Drawer 2: Holo Pelt
+}
+6: {
+  Act 3 - Boss G0lly: Wardrobe Key
+  Act 3 - Boss Mycologists: Squirrel Totem Head
+  Act 3 - Clock: Holo Pelt
+  Act 3 - Goobert's Painting: Holo Pelt
+  Act 3 - Middle Holo Pelt: Magnificus Eye
+  Act 3 - Well: Oil Painting's Clover Plant
+}
+7: {
+  Act 1 - Wardrobe Drawer 1: Bone Lord Holo Key
+  Act 1 - Wardrobe Drawer 4: Holo Pelt
+}

@@ -1,0 +1,2784 @@
+{
+  "schema_version": 3,
+  "game_name": "Inscryption",
+  "game_directory": "inscryption",
+  "archipelago_version": "0.6.4",
+  "generation_seed": 2,
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "InscryptionWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Menu -> Act 1",
+            "connected_region": "Act 1",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Menu -> Act 2",
+            "connected_region": "Act 2",
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Film Roll"
+              }
+            }
+          },
+          {
+            "name": "Menu -> Act 3",
+            "connected_region": "Act 3",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_act2_requirements",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_monocle",
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "Menu -> Epilogue",
+            "connected_region": "Epilogue",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_act3_requirements",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_transcendence_requirements",
+                  "args": []
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Act 1": {
+        "name": "Act 1",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Act 1 - Boss Prospector",
+            "id": 147000,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Pile Of Meat",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Boss Angler",
+            "id": 147001,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Mycologists Holo Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Boss Trapper",
+            "id": 147002,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Dagger",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Boss Leshy",
+            "id": 147003,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Epitaph Piece",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Safe",
+            "id": 147004,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Epitaph Piece",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Clock Main Compartment",
+            "id": 147005,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Magnificus Eye"
+              }
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Clock Upper Compartment",
+            "id": 147006,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Epitaph Piece",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Dagger",
+            "id": 147007,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Caged Wolf Card"
+              }
+            },
+            "item": {
+              "name": "Holo Pelt",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Wardrobe Drawer 1",
+            "id": 147008,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Wardrobe Key"
+              }
+            },
+            "item": {
+              "name": "Bone Lord Holo Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Wardrobe Drawer 2",
+            "id": 147009,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Wardrobe Key"
+              }
+            },
+            "item": {
+              "name": "Fishbot Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Wardrobe Drawer 3",
+            "id": 147010,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Wardrobe Key"
+              }
+            },
+            "item": {
+              "name": "Ant Cards",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Wardrobe Drawer 4",
+            "id": 147011,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Wardrobe Key"
+              }
+            },
+            "item": {
+              "name": "Holo Pelt",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Magnificus Eye",
+            "id": 147012,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Dagger"
+              }
+            },
+            "item": {
+              "name": "Film Roll",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Painting 1",
+            "id": 147013,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Epitaph Piece",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Painting 2",
+            "id": 147014,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Oil Painting's Clover Plant",
+                    "Squirrel Totem Head"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Painting 3",
+            "id": 147015,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Oil Painting's Clover Plant",
+                    "Squirrel Totem Head"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 1 - Greater Smoke",
+            "id": 147016,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Act 2": {
+        "name": "Act 2",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Act 2 - Boss Leshy",
+            "id": 147017,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Camera Replica",
+                    "Pile Of Meat"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Boss Magnificus",
+            "id": 147018,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_monocle",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_act2_bridge_requirements",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Boss Grimora",
+            "id": 147019,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Epitaph Piece"
+              },
+              "count": {
+                "type": "constant",
+                "value": 9
+              }
+            },
+            "item": {
+              "name": "Nano Armor Generator",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Boss P03",
+            "id": 147020,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Bone Lord Femur",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Battle Prospector",
+            "id": 147021,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Camera Replica",
+                    "Pile Of Meat"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Battle Angler",
+            "id": 147022,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Camera Replica",
+                    "Pile Of Meat"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Inspectometer Battery",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Battle Trapper",
+            "id": 147023,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Camera Replica",
+                    "Pile Of Meat"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Battle Sawyer",
+            "id": 147024,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Battle Royal",
+            "id": 147025,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Battle Kaycee",
+            "id": 147026,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Battle Goobert",
+            "id": 147027,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_monocle",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_act2_bridge_requirements",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Battle Pike Mage",
+            "id": 147028,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_monocle",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_act2_bridge_requirements",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Stinkbug Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Battle Lonely Wizard",
+            "id": 147029,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_monocle",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_act2_bridge_requirements",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Battle Inspector",
+            "id": 147030,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Battle Melter",
+            "id": 147031,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Camera Replica",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Battle Dredger",
+            "id": 147032,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Gems Module",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Dock Chest",
+            "id": 147033,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bone Lord Horn",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Forest Cabin Chest",
+            "id": 147034,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Quill",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Forest Meadow Chest",
+            "id": 147035,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Camera Replica",
+                    "Pile Of Meat"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Cabin Wardrobe Drawer",
+            "id": 147036,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Great Kraken Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Cabin Safe",
+            "id": 147037,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Greater Smoke",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Crypt Casket 1",
+            "id": 147038,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Epitaph Piece",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Crypt Casket 2",
+            "id": 147039,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Epitaph Piece",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Crypt Well",
+            "id": 147040,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Tower Chest 1",
+            "id": 147041,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Ourobot Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Tower Chest 2",
+            "id": 147042,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_monocle",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_act2_bridge_requirements",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Tower Chest 3",
+            "id": 147043,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_monocle",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_act2_bridge_requirements",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Lonely Wizbot Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Tentacle",
+            "id": 147044,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_monocle",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_act2_bridge_requirements",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Factory Trash Can",
+            "id": 147045,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Factory Drawer 1",
+            "id": 147046,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Factory Drawer 2",
+            "id": 147047,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Factory Chest 1",
+            "id": 147048,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Factory Chest 2",
+            "id": 147049,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Factory Chest 3",
+            "id": 147050,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Factory Chest 4",
+            "id": 147051,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Ancient Obol",
+            "id": 147052,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_monocle",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_act2_bridge_requirements",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Bee Figurine",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Bone Lord Femur",
+            "id": 147053,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Ancient Obol"
+              }
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Bone Lord Horn",
+            "id": 147054,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Ancient Obol"
+              }
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Bone Lord Holo Key",
+            "id": 147055,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Ancient Obol"
+              }
+            },
+            "item": {
+              "name": "Extra Battery",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Mycologists Holo Key",
+            "id": 147056,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_monocle",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_act2_bridge_requirements",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Camera Replica",
+            "id": 147057,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Clover",
+            "id": 147058,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Monocle",
+            "id": 147059,
+            "access_rule": {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_camera_and_meat",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "has_all_epitaph_pieces",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Caged Wolf Card",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Epitaph Piece 1",
+            "id": 147060,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Epitaph Piece",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Epitaph Piece 2",
+            "id": 147061,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Epitaph Piece 3",
+            "id": 147062,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Epitaph Piece 4",
+            "id": 147063,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Epitaph Piece 5",
+            "id": 147064,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Epitaph Piece",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Epitaph Piece 6",
+            "id": 147065,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Epitaph Piece 7",
+            "id": 147066,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Extra Candle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Epitaph Piece 8",
+            "id": 147067,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Monocle",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 2 - Epitaph Piece 9",
+            "id": 147068,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Epitaph Piece",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Act 3": {
+        "name": "Act 3",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Act 3 - Boss Photographer",
+            "id": 147069,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Inspectometer Battery"
+              }
+            },
+            "item": {
+              "name": "Salmon Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Boss Archivist",
+            "id": 147070,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Quill"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_inspectometer_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Dock's Clover Plant",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Boss Unfinished",
+            "id": 147071,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Gems Module"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_inspectometer_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Boss G0lly",
+            "id": 147072,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Gems Module"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_inspectometer_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Wardrobe Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Boss Mycologists",
+            "id": 147073,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Mycologists Holo Key"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_transcendence_requirements",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Squirrel Totem Head",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Bone Lord Room",
+            "id": 147074,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Bone Lord Holo Key"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_inspectometer_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Shop Holo Pelt",
+            "id": 147075,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Gems Module"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_inspectometer_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Middle Holo Pelt",
+            "id": 147076,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Inspectometer Battery"
+              }
+            },
+            "item": {
+              "name": "Magnificus Eye",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Forest Holo Pelt",
+            "id": 147077,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Inspectometer Battery"
+              }
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Crypt Holo Pelt",
+            "id": 147078,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Inspectometer Battery"
+              }
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Tower Holo Pelt",
+            "id": 147079,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Gems Module"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_inspectometer_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Trader 1",
+            "id": 147080,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Holo Pelt"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_gems_and_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Trader 2",
+            "id": 147081,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Holo Pelt"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_gems_and_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Trader 3",
+            "id": 147082,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Holo Pelt"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_gems_and_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Trader 4",
+            "id": 147083,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Holo Pelt"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 4
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_gems_and_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Mrs. Bomb's Remote",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Trader 5",
+            "id": 147084,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Holo Pelt"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 5
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_gems_and_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Drawer 1",
+            "id": 147085,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Stunted Wolf Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Drawer 2",
+            "id": 147086,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Holo Pelt",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Clock",
+            "id": 147087,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Gems Module"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_inspectometer_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Holo Pelt",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Extra Battery",
+            "id": 147088,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Inspectometer Battery"
+              }
+            },
+            "item": {
+              "name": "Drowned Soul Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Nano Armor Generator",
+            "id": 147089,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Gems Module"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_inspectometer_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Chest",
+            "id": 147090,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Ancient Obol",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Goobert's Painting",
+            "id": 147091,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Gems Module"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_inspectometer_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Holo Pelt",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Luke's File Entry 1",
+            "id": 147092,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Quill"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_inspectometer_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Luke's File Entry 2",
+            "id": 147093,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Quill"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_inspectometer_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Card Pack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Luke's File Entry 3",
+            "id": 147094,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Quill"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_inspectometer_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Luke's File Entry 4",
+            "id": 147095,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Quill"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_gems_and_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Inspectometer Battery",
+            "id": 147096,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Skink Card",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Gems Drone",
+            "id": 147097,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Inspectometer Battery"
+              }
+            },
+            "item": {
+              "name": "Currency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - The Great Transcendence",
+            "id": 147098,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Quill"
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "has_gems_and_battery",
+                  "args": []
+                }
+              ]
+            },
+            "item": {
+              "name": "Angler Hook",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Act 3 - Well",
+            "id": 147099,
+            "access_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Inspectometer Battery"
+              }
+            },
+            "item": {
+              "name": "Oil Painting's Clover Plant",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          }
+        ]
+      },
+      "Epilogue": {
+        "name": "Epilogue",
+        "exits": [],
+        "locations": []
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Stinkbug Card": {
+        "name": "Stinkbug Card",
+        "id": 147000,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Stunted Wolf Card": {
+        "name": "Stunted Wolf Card",
+        "id": 147001,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Wardrobe Key": {
+        "name": "Wardrobe Key",
+        "id": 147002,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Skink Card": {
+        "name": "Skink Card",
+        "id": 147003,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Ant Cards": {
+        "name": "Ant Cards",
+        "id": 147004,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Caged Wolf Card": {
+        "name": "Caged Wolf Card",
+        "id": 147005,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Squirrel Totem Head": {
+        "name": "Squirrel Totem Head",
+        "id": 147006,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Dagger": {
+        "name": "Dagger",
+        "id": 147007,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Film Roll": {
+        "name": "Film Roll",
+        "id": 147008,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Ring": {
+        "name": "Ring",
+        "id": 147009,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Magnificus Eye": {
+        "name": "Magnificus Eye",
+        "id": 147010,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Oil Painting's Clover Plant": {
+        "name": "Oil Painting's Clover Plant",
+        "id": 147011,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Extra Candle": {
+        "name": "Extra Candle",
+        "id": 147012,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Bee Figurine": {
+        "name": "Bee Figurine",
+        "id": 147013,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Greater Smoke": {
+        "name": "Greater Smoke",
+        "id": 147014,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Angler Hook": {
+        "name": "Angler Hook",
+        "id": 147015,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Camera Replica": {
+        "name": "Camera Replica",
+        "id": 147016,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Pile Of Meat": {
+        "name": "Pile Of Meat",
+        "id": 147017,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Epitaph Piece": {
+        "name": "Epitaph Piece",
+        "id": 147018,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 18
+      },
+      "Epitaph Pieces": {
+        "name": "Epitaph Pieces",
+        "id": 147019,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Monocle": {
+        "name": "Monocle",
+        "id": 147020,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Bone Lord Femur": {
+        "name": "Bone Lord Femur",
+        "id": 147021,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Bone Lord Horn": {
+        "name": "Bone Lord Horn",
+        "id": 147022,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Bone Lord Holo Key": {
+        "name": "Bone Lord Holo Key",
+        "id": 147023,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Mycologists Holo Key": {
+        "name": "Mycologists Holo Key",
+        "id": 147024,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Ancient Obol": {
+        "name": "Ancient Obol",
+        "id": 147025,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Great Kraken Card": {
+        "name": "Great Kraken Card",
+        "id": 147026,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Drowned Soul Card": {
+        "name": "Drowned Soul Card",
+        "id": 147027,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Salmon Card": {
+        "name": "Salmon Card",
+        "id": 147028,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Dock's Clover Plant": {
+        "name": "Dock's Clover Plant",
+        "id": 147029,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Extra Battery": {
+        "name": "Extra Battery",
+        "id": 147030,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Nano Armor Generator": {
+        "name": "Nano Armor Generator",
+        "id": 147031,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Mrs. Bomb's Remote": {
+        "name": "Mrs. Bomb's Remote",
+        "id": 147032,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Inspectometer Battery": {
+        "name": "Inspectometer Battery",
+        "id": 147033,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Gems Module": {
+        "name": "Gems Module",
+        "id": 147034,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Lonely Wizbot Card": {
+        "name": "Lonely Wizbot Card",
+        "id": 147035,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Fishbot Card": {
+        "name": "Fishbot Card",
+        "id": 147036,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Ourobot Card": {
+        "name": "Ourobot Card",
+        "id": 147037,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Holo Pelt": {
+        "name": "Holo Pelt",
+        "id": 147038,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 10
+      },
+      "Quill": {
+        "name": "Quill",
+        "id": 147039,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 2
+      },
+      "Currency": {
+        "name": "Currency",
+        "id": 147040,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 50
+      },
+      "Card Pack": {
+        "name": "Card Pack",
+        "id": 147041,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 48
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Ancient Obol": 2,
+      "Angler Hook": 2,
+      "Ant Cards": 2,
+      "Bee Figurine": 2,
+      "Bone Lord Femur": 2,
+      "Bone Lord Holo Key": 2,
+      "Bone Lord Horn": 2,
+      "Caged Wolf Card": 2,
+      "Camera Replica": 2,
+      "Card Pack": 48,
+      "Currency": 50,
+      "Dagger": 2,
+      "Dock's Clover Plant": 2,
+      "Drowned Soul Card": 2,
+      "Epitaph Piece": 18,
+      "Extra Battery": 2,
+      "Extra Candle": 2,
+      "Film Roll": 2,
+      "Fishbot Card": 2,
+      "Gems Module": 2,
+      "Great Kraken Card": 2,
+      "Greater Smoke": 2,
+      "Holo Pelt": 10,
+      "Inspectometer Battery": 2,
+      "Lonely Wizbot Card": 2,
+      "Magnificus Eye": 2,
+      "Monocle": 2,
+      "Mrs. Bomb's Remote": 2,
+      "Mycologists Holo Key": 2,
+      "Nano Armor Generator": 2,
+      "Oil Painting's Clover Plant": 2,
+      "Ourobot Card": 2,
+      "Pile Of Meat": 2,
+      "Quill": 2,
+      "Ring": 2,
+      "Salmon Card": 2,
+      "Skink Card": 2,
+      "Squirrel Totem Head": 2,
+      "Stinkbug Card": 2,
+      "Stunted Wolf Card": 2,
+      "Wardrobe Key": 2
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "settings": {
+    "1": {
+      "game": "Inscryption",
+      "assume_bidirectional_exits": false
+    }
+  },
+  "game_info": {
+    "1": {
+      "name": "Inscryption",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  }
+}

@@ -153,13 +153,15 @@ export const helperFunctions = {
 
   /**
    * Check if player has Act 2 bridge requirements
+   * Requires EITHER camera+meat OR all epitaph pieces
    * @param {Object} snapshot - Game state snapshot
    * @param {number} playerId - Player ID
    * @returns {boolean} True if Act 2 bridge requirements are met
    */
   has_act2_bridge_requirements(state, playerId) {
-    // Bridge typically requires having camera and meat
-    return helperFunctions.has_camera_and_meat(state, playerId);
+    // Bridge requires camera+meat OR all epitaph pieces
+    return helperFunctions.has_camera_and_meat(state, playerId) ||
+           helperFunctions.has_all_epitaph_pieces(state, playerId);
   },
 
   /**
