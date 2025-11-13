@@ -441,10 +441,10 @@
     "world_directory": "sm64ex"
   },
   "Super Mario Land 2": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/marioland2.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "marioland2"
   },
   "Super Mario World": {
