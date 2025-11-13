@@ -367,8 +367,7 @@ Energy Tank, Waterway
 Energy Tank, Wrecked Ship
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
-   =>   Moat Left -> Moat Left->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
    =>   Wrecked Ship Main -> Wrecked Ship Main->Wrecked Ship Back
@@ -407,8 +406,7 @@ Grapple Beam
 Gravity Suit
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
-   =>   Moat Left -> Moat Left->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
    =>   Wrecked Ship Main -> Wrecked Ship Main->Gravity Suit
@@ -531,9 +529,10 @@ Missile (green Brinstar below super missile)
    =>   Missile (green Brinstar below super missile)
 Missile (green Brinstar pipe)
         Menu -> StartAP
-   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
-   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
-   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
+   =>   Landing Site -> Landing Site->Lower Mushrooms Left
+   =>   Lower Mushrooms Left -> Lower Mushrooms Left->Green Brinstar Elevator
+   =>   Green Brinstar Elevator -> Green Brinstar Elevator->Big Pink
+   =>   Big Pink -> Big Pink->Green Hill Zone Top Right
    =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Missile (green Brinstar pipe)
    =>   Missile (green Brinstar pipe)
 Missile (green Maridia tatori)
@@ -549,16 +548,14 @@ Missile (green Maridia tatori)
 Missile (outside Wrecked Ship bottom)
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
-   =>   Moat Left -> Moat Left->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Missile (outside Wrecked Ship bottom)
    =>   Missile (outside Wrecked Ship bottom)
 Missile (outside Wrecked Ship top)
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
-   =>   Moat Left -> Moat Left->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
    =>   Wrecked Ship Main -> Wrecked Ship Main->Missile (outside Wrecked Ship top)
@@ -607,8 +604,7 @@ Mother Brain
 Phantoon
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
-   =>   Moat Left -> Moat Left->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
    =>   Wrecked Ship Main -> Wrecked Ship Main->PhantoonRoomOut
@@ -618,8 +614,7 @@ Phantoon
 Plasma Beam
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
-   =>   Moat Left -> Moat Left->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
    =>   Wrecked Ship Main -> Wrecked Ship Main->Wrecked Ship Back
@@ -777,8 +772,7 @@ Spore Spawn
 Spring Ball
         Menu -> StartAP
    =>   Landing Site -> Landing Site->Keyhunter Room Bottom
-   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Left
-   =>   Moat Left -> Moat Left->Moat Right
+   =>   Keyhunter Room Bottom -> Keyhunter Room Bottom->Moat Right
    =>   Moat Right -> Moat Right->West Ocean Left
    =>   West Ocean Left -> West Ocean Left->Wrecked Ship Main
    =>   Wrecked Ship Main -> Wrecked Ship Main->Wrecked Ship Back
