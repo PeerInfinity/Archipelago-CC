@@ -270,6 +270,7 @@ import * as cv64Logic from './cv64/cv64Logic.js';
 import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
 import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
 import * as paintLogic from './paint/paintLogic.js';
+import * as soeLogic from './soe/soeLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -478,6 +479,12 @@ const GAME_REGISTRY = {
     helperFunctions: yachtdiceLogic.helperFunctions,
     worldClasses: ['YachtDiceWorld'],
     aliases: ['Yacht Dice', 'yacht_dice']
+  },
+  'Secret of Evermore': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: soeLogic.helperFunctions,
+    worldClasses: ['SoEWorld'],
+    aliases: ['Secret of Evermore', 'SOE', 'soe']
   },
   // Add more games here as they're implemented
   'Generic': {

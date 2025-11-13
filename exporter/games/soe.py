@@ -112,6 +112,66 @@ class SoEGameExportHandler(BaseGameExportHandler):
 
         return None
 
+    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
+        """
+        Return SOE item data including pyevermizer provides information.
+        """
+        if not self.pyevermizer:
+            return {}
+
+        import itertools
+
+        item_data = {}
+
+        # Get all items including extra items
+        all_items = list(itertools.chain(
+            self.pyevermizer.get_items(),
+            self.pyevermizer.get_extra_items(),
+            self.pyevermizer.get_sniff_items()
+        ))
+
+        # Build item data with provides information
+        for item in all_items:
+            if item.name not in item_data:
+                item_data[item.name] = {
+                    'name': item.name,
+                    'provides': []
+                }
+
+            # Add provides information (list of [count, progress_id])
+            if item.provides:
+                for count, progress_id in item.provides:
+                    progress_name = self.progress_id_to_name.get(progress_id, f"P_{progress_id}")
+                    item_data[item.name]['provides'].append({
+                        'count': count,
+                        'progress_id': progress_id,
+                        'progress_name': progress_name
+                    })
+
+        # Also add logic rules that provide progress when requirements are met
+        # These act like "virtual items" that the frontend can check
+        rules = self.pyevermizer.get_logic()
+        logic_rules = []
+        for i, rule in enumerate(rules):
+            if rule.provides:
+                rule_data = {
+                    'requires': [{'count': count, 'progress_id': pid} for count, pid in rule.requires],
+                    'provides': [{'count': count, 'progress_id': pid} for count, pid in rule.provides]
+                }
+                logic_rules.append(rule_data)
+
+        # Store logic rules in a special metadata section
+        if logic_rules:
+            item_data['__soe_logic_rules__'] = {
+                'name': '__soe_logic_rules__',
+                'rules': logic_rules
+            }
+
+        print(f"[SOE] Exported {len(item_data)} items with provides data")
+        logger.info(f"Exported {len(item_data)} SOE items with provides data")
+
+        return item_data
+
     def get_location_attributes(self, location, world) -> Dict[str, Any]:
         """
         Override to add pyevermizer requirements to locations that don't have Python rules.
@@ -122,9 +182,9 @@ class SoEGameExportHandler(BaseGameExportHandler):
             attrs = super().get_location_attributes(location, world)
             print(f"[SOE] super() returned attrs: {list(attrs.keys()) if attrs else 'empty'}")
 
-            # Only add rules if the location doesn't already have one from Python
-            if hasattr(location, 'access_rule') and location.access_rule:
-                print(f"[SOE] Location {location_name} already has Python access_rule, skipping")
+            # Only skip evermizer rules if the base class successfully analyzed the Python rule
+            if attrs and 'access_rule' in attrs and attrs['access_rule'] is not None:
+                print(f"[SOE] Location {location_name} has analyzed Python access_rule, using it")
                 return attrs
 
             # Try to get evermizer requirements from the raw location data
