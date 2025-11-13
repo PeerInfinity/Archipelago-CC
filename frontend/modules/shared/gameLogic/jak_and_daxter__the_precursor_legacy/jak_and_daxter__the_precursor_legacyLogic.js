@@ -101,9 +101,7 @@ export function can_reach_orbs(snapshot, staticData, requiredOrbs) {
       }
     }
 
-    const result = totalReachableOrbs >= requiredOrbs;
-    console.log(`[can_reach_orbs] Required: ${requiredOrbs}, Reachable: ${totalReachableOrbs}, Result: ${result}`);
-    return result;
+    return totalReachableOrbs >= requiredOrbs;
   } catch (error) {
     console.error('[can_reach_orbs] Error:', error);
     return false;
