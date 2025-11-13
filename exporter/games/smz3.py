@@ -5,9 +5,10 @@ which has its own Region and Progression classes with complex game logic.
 This exporter handles the conversion of SMZ3-specific patterns to JavaScript-compatible rules.
 """
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
 import logging
+import inspect
 
 logger = logging.getLogger(__name__)
 
@@ -19,13 +20,92 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         super().__init__()
         logger.info("SMZ3 exporter initialized")
 
+    def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """
+        Override rule analysis for SMZ3-specific patterns.
+
+        This method is called before the standard rule analysis. It detects
+        SMZ3 location access rules that use loc.Available() and extracts the
+        actual item requirements from the TotalSMZ3 Location object.
+
+        Returns None to fall back to standard analysis, or a dict with the analyzed rule.
+        """
+        # Only handle location access rules (not entrance rules or item rules)
+        if not rule_target_name:
+            return None
+
+        # Skip entrance rules (contain "->") and item rules (contain "Item Rule")
+        if "->" in str(rule_target_name) or "Item Rule" in str(rule_target_name):
+            return None
+
+        logger.info(f"Processing location: {rule_target_name}")
+
+        # Try to extract the 'loc' object from default arguments (SMZ3 uses lambda state, loc=loc: ...)
+        loc_object = None
+        if hasattr(rule_func, '__code__') and hasattr(rule_func, '__defaults__'):
+            # Get the parameter names
+            arg_names = rule_func.__code__.co_varnames[:rule_func.__code__.co_argcount]
+            defaults = rule_func.__defaults__ or ()
+
+            logger.info(f"Function args for {rule_target_name}: {arg_names}, defaults: {len(defaults)}")
+
+            # SMZ3 location rules have signature: lambda state, loc=loc: ...
+            # So 'loc' should be the second parameter with a default value
+            if len(arg_names) >= 2 and 'loc' in arg_names:
+                loc_index = list(arg_names).index('loc')
+                # Defaults are aligned to the end of the parameter list
+                # If we have 2 params and 1 default, the default is for the last param
+                defaults_offset = len(arg_names) - len(defaults)
+                if loc_index >= defaults_offset:
+                    loc_object = defaults[loc_index - defaults_offset]
+                    logger.info(f"Found 'loc' object from defaults: {type(loc_object)}")
+
+        if not loc_object:
+            logger.info(f"No 'loc' object found in defaults for {rule_target_name}")
+            return None
+
+        # Check if this looks like a TotalSMZ3 Location object
+        has_can_access = hasattr(loc_object, 'canAccess')
+        has_available = hasattr(loc_object, 'Available')
+        logger.info(f"loc_object attributes - canAccess: {has_can_access}, Available: {has_available}, type: {type(loc_object)}")
+
+        if not has_can_access or not has_available:
+            logger.info(f"Not a TotalSMZ3 Location object for {rule_target_name}")
+            return None
+
+        logger.info(f"Found TotalSMZ3 Location object for '{rule_target_name}', extracting canAccess logic")
+
+        # Now we have the TotalSMZ3 Location object!
+        # Extract and analyze its canAccess function
+        try:
+            can_access_func = loc_object.canAccess
+
+            # Import the analyzer here to avoid circular imports
+            from exporter.analyzer import analyze_rule
+
+            # Analyze the canAccess function
+            # This function has signature: lambda items: <requirements>
+            # where items is a TotalSMZ3 Progression object
+            analyzed_rule = analyze_rule(can_access_func)
+
+            if analyzed_rule:
+                logger.info(f"Successfully extracted location logic for '{rule_target_name}'")
+                return analyzed_rule
+            else:
+                logger.warning(f"Failed to analyze canAccess for '{rule_target_name}', falling back to default")
+                return None
+
+        except Exception as e:
+            logger.error(f"Error analyzing TotalSMZ3 location logic for '{rule_target_name}': {e}")
+            return None
+
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Post-process SMZ3 rules to handle TotalSMZ3-specific patterns.
 
         Specifically handles:
         1. region.CanEnter(state.smz3state[player]) patterns
-        2. loc.Available(state.smz3state[player]) patterns
+        2. loc.Available(state.smz3state[player]) patterns (if override_rule_analysis didn't handle it)
         3. Custom smz3state collection state access
         """
         if not isinstance(rule, dict):
@@ -64,13 +144,10 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 func['object'].get('type') == 'name' and
                 func['object'].get('name') == 'loc'):
 
-                logger.debug("Found loc.Available pattern - converting to constant true")
+                logger.debug("Found loc.Available pattern - this should have been handled by override_rule_analysis")
 
-                # For locations, the access_rule in Archipelago is always checked
-                # The loc.Available check in SMZ3 includes both region access AND location access
-                # Since we're already handling region access separately, and location-specific
-                # requirements are in the location's own access_rule, we can return true here
-                # TODO: Verify if there are any location-specific checks that need to be preserved
+                # This should have been handled by override_rule_analysis
+                # If we get here, something went wrong, so fall back to constant true
                 return {
                     'type': 'constant',
                     'value': True
