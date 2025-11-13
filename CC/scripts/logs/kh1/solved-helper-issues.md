@@ -47,3 +47,35 @@ return !!(
 - Halloween Town locations now correctly require Progressive Fire
 - Test progressed from failing at Sphere 1.4 to Sphere 6.1
 - 10 locations now have correct access logic
+
+### Issue #2: Missing can_dumbo_skip helper function ✅
+
+**Status:** SOLVED
+**Priority:** High (was blocking 14 locations)
+**File:** frontend/modules/shared/gameLogic/kh1/kh1Logic.js
+**Solved Date:** 2025-11-13
+
+**Description:**
+The `can_dumbo_skip` helper function was referenced in rules but not implemented, causing "Helper function 'can_dumbo_skip' NOT FOUND" errors.
+
+**Root Cause:**
+The helper function was defined in Python (worlds/kh1/Rules.py) but not implemented in the JavaScript helper file.
+
+**Solution Implemented:**
+Implemented can_dumbo_skip helper in kh1Logic.js:
+```javascript
+can_dumbo_skip(snapshot, staticData) {
+    const hasDumbo = (snapshot?.inventory?.["Dumbo"] || 0) > 0;
+    const magicItems = ["Progressive Fire", "Progressive Blizzard", ...];
+    const hasMagic = magicItems.some(item => (snapshot?.inventory?.[item] || 0) > 0);
+    return hasDumbo && hasMagic;
+}
+```
+
+**Files Modified:**
+- frontend/modules/shared/gameLogic/kh1/kh1Logic.js (line 339-364)
+
+**Result:**
+- can_dumbo_skip now properly checks for Dumbo + any Magic item
+- Test progressed from failing at Sphere 6.1 to Sphere 4.6
+- 10+ locations now have correct advanced logic access

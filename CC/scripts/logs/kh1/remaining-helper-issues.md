@@ -6,36 +6,30 @@ Last updated: 2025-11-13
 
 ## Issues
 
-### Issue #2: Missing can_dumbo_skip helper function
+### Issue #3: High locations accessible too early
 
 **Status:** Identified
-**Priority:** High
-**File:** frontend/modules/shared/gameLogic/kh1/kh1Logic.js
+**Priority:** Medium
+**File:** frontend/modules/shared/gameLogic/kh1/kh1Logic.js or rules.json
 
 **Description:**
-At Sphere 6.1, the test reports: `Helper function "can_dumbo_skip" NOT FOUND in snapshotInterface`
-
-This causes 14 locations to be accessible too early:
-- Traverse Town 1st District Blue Trinity Balcony Chest
-- Traverse Town Geppetto's House Chest
-- Traverse Town Geppetto's House Geppetto Reward 1-5
-- Traverse Town Geppetto's House Postcard
-- Traverse Town Geppetto's House Talk to Pinocchio
+At Sphere 4.6, 4 high locations become accessible in the JavaScript frontend but not in the Python backend:
+- Agrabah Cave of Wonders Entrance Tall Tower Chest
+- Agrabah Main Street High Above Palace Gates Entrance Chest
 - Agrabah Palace Gates High Close to Palace Chest
-- Monstro Defeat Parasite Cage II Stop Event
 - Halloween Town Guillotine Square High Tower Chest
-- Halloween Town Guillotine Square Pumpkin Structure Left/Right Chest
 
 **Root Cause:**
-The `can_dumbo_skip` helper function is referenced in rules but not implemented in kh1Logic.js
+Unknown - possibly related to High Jump requirements or other movement abilities
 
 **Investigation Needed:**
-1. Find the Python implementation of can_dumbo_skip in worlds/kh1/Rules.py
-2. Implement the JavaScript equivalent in kh1Logic.js
-3. Verify the logic matches the Python implementation
+1. Check access rules for these locations in rules.json
+2. Verify High Jump, Progressive Glide, or other movement ability requirements
+3. Compare with Python implementation in worlds/kh1/Rules.py
+4. Check if advanced_logic is being used correctly
 
 **Affected Locations:**
-14 locations across multiple worlds
+4 high chest locations in Agrabah and Halloween Town
 
 **Impact:**
-Test fails at Sphere 6.1 with 14 extra accessible locations
+Test fails at Sphere 4.6 with 4 extra accessible locations

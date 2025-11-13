@@ -337,6 +337,33 @@ export const kh1Logic = {
     },
 
     /**
+     * Checks if the player can perform the Dumbo skip
+     * Requires Dumbo summon and at least one Magic item
+     * @param {Object} snapshot - The current game state
+     * @param {Object} staticData - Static game data
+     * @returns {boolean}
+     */
+    can_dumbo_skip(snapshot, staticData) {
+        const hasDumbo = (snapshot?.inventory?.["Dumbo"] || 0) > 0;
+
+        // Check if player has any Magic item
+        // Magic group includes: Progressive Fire, Progressive Blizzard, Progressive Thunder, Progressive Cure, Progressive Gravity, Progressive Stop, Progressive Aero
+        const magicItems = [
+            "Progressive Fire",
+            "Progressive Blizzard",
+            "Progressive Thunder",
+            "Progressive Cure",
+            "Progressive Gravity",
+            "Progressive Stop",
+            "Progressive Aero"
+        ];
+
+        const hasMagic = magicItems.some(item => (snapshot?.inventory?.[item] || 0) > 0);
+
+        return hasDumbo && hasMagic;
+    },
+
+    /**
      * Checks if the player has all magic types at a certain level
      * @param {Object} snapshot - The current game state
      * @param {Object} staticData - Static game data
