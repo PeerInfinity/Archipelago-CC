@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 class SM64EXGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Super Mario 64'
 
-    # Token mapping from RuleFactory
-    TOKEN_TABLE = {
+    # Movement abilities - affected by enable_move_rando
+    MOVEMENT_TOKENS = {
         "TJ": "Triple Jump",
         "DJ": "Triple Jump",
         "LJ": "Long Jump",
@@ -28,11 +28,18 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
         "GP": "Ground Pound",
         "KK": "Kick",
         "CL": "Climb",
-        "LG": "Ledge Grab",
+        "LG": "Ledge Grab"
+    }
+
+    # Cap items - always collectible items, not affected by enable_move_rando
+    CAP_TOKENS = {
         "WC": "Wing Cap",
         "MC": "Metal Cap",
         "VC": "Vanish Cap"
     }
+
+    # Combined token table for backwards compatibility
+    TOKEN_TABLE = {**MOVEMENT_TOKENS, **CAP_TOKENS}
 
     def __init__(self, world=None):
         super().__init__()
@@ -154,11 +161,17 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
         if len(or_parts) > 1:
             # Multiple OR clauses
             conditions = [self.parse_and_expression(part, cannon_area) for part in or_parts]
-            # Filter out True (always accessible)
-            conditions = [c for c in conditions if c.get('type') != 'constant' or c.get('value') != True]
+
+            # Check if any condition is True (OR short-circuits to True)
+            for cond in conditions:
+                if cond.get('type') == 'constant' and cond.get('value') == True:
+                    return {'type': 'constant', 'value': True}
+
+            # Filter out False conditions (they don't affect OR)
+            conditions = [c for c in conditions if c.get('type') != 'constant' or c.get('value') != False]
 
             if not conditions:
-                return {'type': 'constant', 'value': True}
+                return {'type': 'constant', 'value': False}
             if len(conditions) == 1:
                 return conditions[0]
             return {
@@ -176,7 +189,13 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
         if len(and_parts) > 1:
             # Multiple AND clauses
             conditions = [self.parse_token_expression(part, cannon_area) for part in and_parts]
-            # Filter out True
+
+            # Check if any condition is False (AND short-circuits to False)
+            for cond in conditions:
+                if cond.get('type') == 'constant' and cond.get('value') == False:
+                    return {'type': 'constant', 'value': False}
+
+            # Filter out True conditions (they don't affect AND)
             conditions = [c for c in conditions if c.get('type') != 'constant' or c.get('value') != True]
 
             if not conditions:
@@ -197,20 +216,26 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
 
         # Handle region reachability: {region name} or {{location name}}
         if token_expr.startswith('{{') and token_expr.endswith('}}'):
-            # Location reachability
+            # Location reachability - use state_method to match Python's state.can_reach()
             location_name = token_expr[2:-2].strip()
             return {
-                'type': 'helper',
-                'name': 'can_reach_location',
-                'args': [{'type': 'constant', 'value': location_name}]
+                'type': 'state_method',
+                'method': 'can_reach',
+                'args': [
+                    {'type': 'constant', 'value': location_name},
+                    {'type': 'constant', 'value': 'Location'}
+                ]
             }
         elif token_expr.startswith('{') and token_expr.endswith('}'):
-            # Region reachability
+            # Region reachability - use state_method to match Python's state.can_reach()
             region_name = token_expr[1:-1].strip()
             return {
-                'type': 'helper',
-                'name': 'can_reach_region',
-                'args': [{'type': 'constant', 'value': region_name}]
+                'type': 'state_method',
+                'method': 'can_reach',
+                'args': [
+                    {'type': 'constant', 'value': region_name},
+                    {'type': 'constant', 'value': 'Region'}
+                ]
             }
 
         # Handle + (has_all) - items required together
@@ -286,12 +311,16 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
                 return f"Cannon Unlock {cannon_area}"
             return "Cannon"  # Generic cannon item
 
-        # Check if it's a known token
-        if token in self.TOKEN_TABLE:
+        # Check if it's a cap item (always collectible, never "always available")
+        if token in self.CAP_TOKENS:
+            return self.CAP_TOKENS[token]
+
+        # Check if it's a movement ability token
+        if token in self.MOVEMENT_TOKENS:
             # If move randomizer is disabled, all moves are available from the start
             if not self._options.get('enable_move_rando', False):
                 return True  # Move is always available
-            return self.TOKEN_TABLE[token]
+            return self.MOVEMENT_TOKENS[token]
 
         # Unknown token
         logger.warning(f"Unknown SM64 token: {token}")
@@ -304,6 +333,16 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
         If we have the original expression for this location, we parse it
         and return the parsed rule, bypassing the normal analysis.
         """
+        # Skip override for locations that have additional rules applied via add_rule
+        # These locations need the full lambda analysis
+        locations_with_additional_rules = [
+            "MIPS 1", "MIPS 2",
+            "Toad (Basement)", "Toad (Second Floor)", "Toad (Third Floor)"
+        ]
+        if rule_target_name in locations_with_additional_rules:
+            logger.debug(f"Skipping override for {rule_target_name} - using generic analysis for additional rules")
+            return None
+
         # Check if we have the original expression for this location
         if rule_target_name and rule_target_name in self._rule_expressions:
             rule_expr = self._rule_expressions[rule_target_name]
