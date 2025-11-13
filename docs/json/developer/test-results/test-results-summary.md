@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-13 05:11:32
+**Generated:** 2025-11-13 05:13:13
 
 This summary combines results from three types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -11,16 +11,16 @@ This summary combines results from three types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 23/33 passed (69.7%)
+- **Minimal Test:** 28/40 passed (70.0%)
 - **Full Test:** 0/0 passed (0.0%)
 - **Multiplayer Test:** 0/0 passed (0.0%)
 
 ### Combined Test Results
 
-- **Templates passing all 3 tests:** 0/33 (0.0%)
-- **Templates passing 2 tests:** 0/33 (0.0%)
-- **Templates passing 1 test:** 23/33 (69.7%)
-- **Templates passing 0 tests:** 10/33 (30.3%)
+- **Templates passing all 3 tests:** 0/40 (0.0%)
+- **Templates passing 2 tests:** 0/40 (0.0%)
+- **Templates passing 1 test:** 28/40 (70.0%)
+- **Templates passing 0 tests:** 12/40 (30.0%)
 
 ## Test Results
 
@@ -59,6 +59,13 @@ This summary combines results from three types of tests:
 | Landstalker - The Treasures of King Nole | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
 | Lingo | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
 | Links Awakening DX | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
+| Lufia II Ancient Cave | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
+| Mario & Luigi Superstar Saga | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
+| MathProof2p2e4 | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
+| Mega Man 2 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
+| MegaMan Battle Network 3 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
+| Meritous | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
+| Metamath | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
 
 ## Excluded Games
 

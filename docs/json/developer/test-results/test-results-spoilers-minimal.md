@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-13 05:11:32
+**Generated:** 2025-11-13 05:13:13
 
 **Source Data Created:** 2025-11-13T05:00:10.107853
 
-**Source Data Last Updated:** 2025-11-13T05:11:32.665378
+**Source Data Last Updated:** 2025-11-13T05:13:13.236596
 
 ## Summary
 
-- **Total Games:** 33
-- **Passed:** 23 (69.7%)
-- **Failed:** 10 (30.3%)
+- **Total Games:** 40
+- **Passed:** 28 (70.0%)
+- **Failed:** 12 (30.0%)
 
 ## Test Results
 
@@ -53,6 +53,13 @@
 | Landstalker - The Treasures of King Nole | ❌ Failed | 49 | 1.2 | 10.1 | 🟡 11.9% | ✅ | ✅ |
 | Lingo | ❌ Failed | 0 | 0 | 5.1 | 🔴 0.0% | ✅ | ✅ |
 | Links Awakening DX | ❌ Failed | 0 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
+| Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ⚫ | ⚫ |
+| Mario & Luigi Superstar Saga | ❌ Failed | 0 | 0.4 | 7.3 | 🟠 5.5% | ✅ | ✅ |
+| MathProof2p2e4 | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ⚫ | ⚫ |
+| Mega Man 2 | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
+| MegaMan Battle Network 3 | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
+| Meritous | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ⚫ | ⚫ |
+| Metamath | ❌ Failed | 1 | 3.1 | 3.1 | 🟡 100.0% | ✅ | ⚫ |
 
 ## Notes
 

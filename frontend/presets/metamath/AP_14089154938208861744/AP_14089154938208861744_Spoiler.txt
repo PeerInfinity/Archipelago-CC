@@ -19,7 +19,6 @@ Randomize Items:                 No
 Theorem to Prove:                2p2e4
 Proof Complexity:                Moderate
 Starting Statements %:           0
-Hint Frequency %:                10
 Auto-Download Database:          Yes
 
 
@@ -46,17 +45,17 @@ Playthrough:
 }
 1: {
   Prove Statement 2: Statement 2
+  Prove Statement 3: Statement 3
   Prove Statement 4: Statement 4
   Prove Statement 5: Statement 5
   Prove Statement 6: Statement 6
 }
 2: {
-  Prove Statement 3: Statement 3
   Prove Statement 7: Statement 7
-  Prove Statement 9: Statement 9
+  Prove Statement 8: Statement 8
 }
 3: {
-  Prove Statement 8: Statement 8
+  Prove Statement 9: Statement 9
 }
 4: {
   Prove Statement 10: Statement 10
