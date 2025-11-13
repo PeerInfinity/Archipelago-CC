@@ -484,173 +484,83 @@
             "name": "Electrical entrance",
             "connected_region": "Electrical",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "world"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Arctic Key",
+                        "Cave Key",
+                        "Swamp Key",
+                        "Volcanic Key"
+                      ]
+                    }
+                  ]
                 },
-                "attr": "is_pool_expanded"
-              },
-              "if_true": {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
                         "type": "constant",
-                        "value": [
-                          "Arctic Key",
-                          "Cave Key",
-                          "Swamp Key",
-                          "Volcanic Key"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": {
-                          "type": "constant",
-                          "value": "Life Extension"
-                        },
-                        "count": {
-                          "type": "constant",
-                          "value": 2
-                        }
+                        "value": "Life Extension"
                       },
-                      {
-                        "type": "item_check",
-                        "item": {
-                          "type": "constant",
-                          "value": "Clip Extension"
-                        },
-                        "count": {
-                          "type": "constant",
-                          "value": 2
-                        }
-                      },
-                      {
-                        "type": "item_check",
-                        "item": {
-                          "type": "constant",
-                          "value": "Faster Reload"
-                        },
-                        "count": {
-                          "type": "constant",
-                          "value": 4
-                        }
-                      },
-                      {
-                        "type": "item_check",
-                        "item": {
-                          "type": "constant",
-                          "value": "Powered Blaster"
-                        }
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Flamethrower",
-                              "Ice Spreadshot",
-                              "Volt Laser"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              "if_false": {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "state_method",
-                    "method": "has_all",
-                    "args": [
-                      {
+                      "count": {
                         "type": "constant",
-                        "value": [
-                          "Ace neutralized",
-                          "Cliff neutralized",
-                          "Guard neutralized",
-                          "Snake neutralized"
-                        ]
+                        "value": 2
                       }
-                    ]
-                  },
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "item_check",
-                        "item": {
-                          "type": "constant",
-                          "value": "Life Extension"
-                        },
-                        "count": {
-                          "type": "constant",
-                          "value": 2
-                        }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Clip Extension"
                       },
-                      {
-                        "type": "item_check",
-                        "item": {
-                          "type": "constant",
-                          "value": "Clip Extension"
-                        },
-                        "count": {
-                          "type": "constant",
-                          "value": 2
-                        }
-                      },
-                      {
-                        "type": "item_check",
-                        "item": {
-                          "type": "constant",
-                          "value": "Faster Reload"
-                        },
-                        "count": {
-                          "type": "constant",
-                          "value": 4
-                        }
-                      },
-                      {
-                        "type": "item_check",
-                        "item": {
-                          "type": "constant",
-                          "value": "Powered Blaster"
-                        }
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Flamethrower",
-                              "Ice Spreadshot",
-                              "Volt Laser"
-                            ]
-                          }
-                        ]
+                      "count": {
+                        "type": "constant",
+                        "value": 2
                       }
-                    ]
-                  }
-                ]
-              }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Faster Reload"
+                      },
+                      "count": {
+                        "type": "constant",
+                        "value": 4
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Powered Blaster"
+                      }
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Flamethrower",
+                            "Ice Spreadshot",
+                            "Volt Laser"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -896,23 +806,8 @@
             "access_rule": {
               "type": "item_check",
               "item": {
-                "type": "conditional",
-                "test": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "world"
-                  },
-                  "attr": "is_pool_expanded"
-                },
-                "if_true": {
-                  "type": "constant",
-                  "value": "System Power"
-                },
-                "if_false": {
-                  "type": "constant",
-                  "value": "Power restored"
-                }
+                "type": "constant",
+                "value": "System Power"
               }
             }
           }
