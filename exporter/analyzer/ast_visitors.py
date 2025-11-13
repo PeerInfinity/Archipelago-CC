@@ -879,15 +879,36 @@ class ASTVisitorMixin:
         try:
             op_name = type(node.op).__name__.lower()
             logging.debug(f"\n--- visit_UnaryOp: op={op_name} ---")
-            
+
             operand_result = self.visit(node.operand)
             if operand_result is None:
                 logging.error(f"Failed to analyze operand for UnaryOp: {ast.dump(node.operand)}")
                 return None
 
+            # Try to resolve the operand if it's an attribute expression
+            if operand_result.get('type') == 'attribute':
+                resolved_value = self.expression_resolver.resolve_expression(operand_result)
+                if resolved_value is not None and is_simple_value(resolved_value):
+                    # Handle enum values - extract the numeric/boolean value
+                    if hasattr(resolved_value, 'value'):
+                        final_value = resolved_value.value
+                    else:
+                        final_value = resolved_value
+                    # Ensure the final value is JSON-serializable
+                    final_value = make_json_serializable(final_value)
+                    logging.debug(f"Resolved UnaryOp operand attribute to constant: {final_value}")
+                    operand_result = {'type': 'constant', 'value': final_value}
+
             # Handle specific unary operators
             if isinstance(node.op, ast.Not):
-                return {'type': 'not', 'condition': operand_result}
+                # If operand is a constant, evaluate the not operation now
+                if operand_result.get('type') == 'constant':
+                    constant_value = operand_result['value']
+                    result_value = not constant_value
+                    logging.debug(f"Evaluated not {constant_value} = {result_value}")
+                    return {'type': 'constant', 'value': result_value}
+                else:
+                    return {'type': 'not', 'condition': operand_result}
             # Add other unary ops (e.g., UAdd, USub) if needed for rules
             else:
                 logging.error(f"Unhandled unary operator: {op_name}")

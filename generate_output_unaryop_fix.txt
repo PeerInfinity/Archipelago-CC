@@ -1,0 +1,10 @@
+Archipelago (0.6.4) logging initialized on Linux-4.4.0-x86_64-with-glibc2.39 process 15261 running Python 3.11.14
+Generating for 1 player, 14089154938208861744 Seed 1 with plando: connections, texts, bosses
+Traceback (most recent call last):
+  File "/home/user/Archipelago-CC/Generate.py", line 586, in <module>
+    erargs, seed = main()
+                   ^^^^^^
+  File "/home/user/Archipelago-CC/Generate.py", line 164, in main
+    raise Exception(f"No weights found. "
+Exception: No weights found. Provide a general weights file (/home/user/Archipelago-CC/Players/Players/Templates/Pokemon Red and Blue.yaml) or individual player files. A mix is also permitted.
+Press enter to close.

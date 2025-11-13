@@ -1,0 +1,1696 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:27] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: pokemon_rb
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=pokemon_rb&seed=1
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:46] "GET /frontend/?mode=test-spoilers&game=pokemon_rb&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:46] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:46] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:46] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:46] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:46] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:46] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:46] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:46] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modes.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [05:51:47.251] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/hylics_2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/jak_and_daxter__the_precursor_legacy/jak_and_daxter__the_precursor_legacyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/oot/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [05:51:47.676] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [05:51:47.677] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:47] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [05:51:47.807] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [05:51:47.808] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [05:51:47.809] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [05:51:47.809] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [05:51:47.835] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:51:48] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+BROWSER LOG (error): [05:52:00.784] [ERROR] [testSpoilerUI] STATE MISMATCH found for: {"type":"state_update","sphere_number":"5.9","player_id":"1"}
+BROWSER LOG (error): [05:52:00.785] [ERROR] [testSpoilerUI:ComparisonEngine] STATE MISMATCH found for: {"type":"state_update","sphere_number":"5.9","player_id":"1"}
+BROWSER LOG (error): [05:52:00.793] [ERROR] [testSpoilerUI]  > Locations accessible in LOG but NOT in STATE (or checked): Celadon City - Stranded Man, Cinnabar Island, Cinnabar Lab, Cinnabar Lab Fossil Room - Sailor Trade, Cinnabar Lab R&D Room - Lab Scientist, Pokemon Mansion 1F - North Item, Pokemon Mansion 1F - South Item, Pokemon Mansion 1F - Wild Pokemon - 1, Pokemon Mansion 1F - Wild Pokemon - 10, Pokemon Mansion 1F - Wild Pokemon - 2, Pokemon Mansion 1F - Wild Pokemon - 3, Pokemon Mansion 1F - Wild Pokemon - 4, Pokemon Mansion 1F - Wild Pokemon - 5, Pokemon Mansion 1F - Wild Pokemon - 6, Pokemon Mansion 1F - Wild Pokemon - 7, Pokemon Mansion 1F - Wild Pokemon - 8, Pokemon Mansion 1F - Wild Pokemon - 9, Pokemon Mansion 1F-SE - Trainer Parties, Pokemon Mansion 2F - Northeast Item, Pokemon Mansion 2F - Trainer Parties, Pokemon Mansion 2F - Wild Pokemon - 1, Pokemon Mansion 2F - Wild Pokemon - 10, Pokemon Mansion 2F - Wild Pokemon - 2, Pokemon Mansion 2F - Wild Pokemon - 3, Pokemon Mansion 2F - Wild Pokemon - 4, Pokemon Mansion 2F - Wild Pokemon - 5, Pokemon Mansion 2F - Wild Pokemon - 6, Pokemon Mansion 2F - Wild Pokemon - 7, Pokemon Mansion 2F - Wild Pokemon - 8, Pokemon Mansion 2F - Wild Pokemon - 9, Pokemon Mansion 3F - Northeast Item, Pokemon Mansion 3F - Southwest Item, Pokemon Mansion 3F - Wild Pokemon - 1, Pokemon Mansion 3F - Wild Pokemon - 10, Pokemon Mansion 3F - Wild Pokemon - 2, Pokemon Mansion 3F - Wild Pokemon - 3, Pokemon Mansion 3F - Wild Pokemon - 4, Pokemon Mansion 3F - Wild Pokemon - 5, Pokemon Mansion 3F - Wild Pokemon - 6, Pokemon Mansion 3F - Wild Pokemon - 7, Pokemon Mansion 3F - Wild Pokemon - 8, Pokemon Mansion 3F - Wild Pokemon - 9, Pokemon Mansion 3F-SE - Trainer Parties, Pokemon Mansion 3F-SW - Trainer Parties, Pokemon Mansion B1F - North Item, Pokemon Mansion B1F - Northwest Item, Pokemon Mansion B1F - South Item, Pokemon Mansion B1F - Southwest Item, Pokemon Mansion B1F - Trainer Parties, Pokemon Mansion B1F - West Item, Pokemon Mansion B1F - Wild Pokemon - 1, Pokemon Mansion B1F - Wild Pokemon - 10, Pokemon Mansion B1F - Wild Pokemon - 2, Pokemon Mansion B1F - Wild Pokemon - 3, Pokemon Mansion B1F - Wild Pokemon - 4, Pokemon Mansion B1F - Wild Pokemon - 5, Pokemon Mansion B1F - Wild Pokemon - 6, Pokemon Mansion B1F - Wild Pokemon - 7, Pokemon Mansion B1F - Wild Pokemon - 8, Pokemon Mansion B1F - Wild Pokemon - 9, Route 12 - Island Item, Route 19-S - Trainer Parties, Route 19/20 - Surf Pokemon - 1, Route 19/20 - Surf Pokemon - 10, Route 19/20 - Surf Pokemon - 2, Route 19/20 - Surf Pokemon - 3, Route 19/20 - Surf Pokemon - 4, Route 19/20 - Surf Pokemon - 5, Route 19/20 - Surf Pokemon - 6, Route 19/20 - Surf Pokemon - 7, Route 19/20 - Surf Pokemon - 8, Route 19/20 - Surf Pokemon - 9, Route 20-E - Trainer Parties, Route 20-W - Trainer Parties, Route 21 - Surf Pokemon - 1, Route 21 - Surf Pokemon - 10, Route 21 - Surf Pokemon - 2, Route 21 - Surf Pokemon - 3, Route 21 - Surf Pokemon - 4, Route 21 - Surf Pokemon - 5, Route 21 - Surf Pokemon - 6, Route 21 - Surf Pokemon - 7, Route 21 - Surf Pokemon - 8, Route 21 - Surf Pokemon - 9, Route 21 - Trainer Parties, Route 21 - Wild Pokemon - 1, Route 21 - Wild Pokemon - 10, Route 21 - Wild Pokemon - 2, Route 21 - Wild Pokemon - 3, Route 21 - Wild Pokemon - 4, Route 21 - Wild Pokemon - 5, Route 21 - Wild Pokemon - 6, Route 21 - Wild Pokemon - 7, Route 21 - Wild Pokemon - 8, Route 21 - Wild Pokemon - 9, Route 4-Lass - Trainer Parties, Safari Zone Center - Island Item, Seafoam Islands 1F - Seafoam Exit Boulder 1, Seafoam Islands 1F - Seafoam Exit Boulder 2, Seafoam Islands 1F - Wild Pokemon - 1, Seafoam Islands 1F - Wild Pokemon - 10, Seafoam Islands 1F - Wild Pokemon - 2, Seafoam Islands 1F - Wild Pokemon - 3, Seafoam Islands 1F - Wild Pokemon - 4, Seafoam Islands 1F - Wild Pokemon - 5, Seafoam Islands 1F - Wild Pokemon - 6, Seafoam Islands 1F - Wild Pokemon - 7, Seafoam Islands 1F - Wild Pokemon - 8, Seafoam Islands 1F - Wild Pokemon - 9, Seafoam Islands B1F - Seafoam Exit Boulder 1, Seafoam Islands B1F - Seafoam Exit Boulder 2, Seafoam Islands B1F - Wild Pokemon - 1, Seafoam Islands B1F - Wild Pokemon - 10, Seafoam Islands B1F - Wild Pokemon - 2, Seafoam Islands B1F - Wild Pokemon - 3, Seafoam Islands B1F - Wild Pokemon - 4, Seafoam Islands B1F - Wild Pokemon - 5, Seafoam Islands B1F - Wild Pokemon - 6, Seafoam Islands B1F - Wild Pokemon - 7, Seafoam Islands B1F - Wild Pokemon - 8, Seafoam Islands B1F - Wild Pokemon - 9, Seafoam Islands B2F - Seafoam Exit Boulder 1, Seafoam Islands B2F - Seafoam Exit Boulder 2, Seafoam Islands B2F - Wild Pokemon - 1, Seafoam Islands B2F - Wild Pokemon - 10, Seafoam Islands B2F - Wild Pokemon - 2, Seafoam Islands B2F - Wild Pokemon - 3, Seafoam Islands B2F - Wild Pokemon - 4, Seafoam Islands B2F - Wild Pokemon - 5, Seafoam Islands B2F - Wild Pokemon - 6, Seafoam Islands B2F - Wild Pokemon - 7, Seafoam Islands B2F - Wild Pokemon - 8, Seafoam Islands B2F - Wild Pokemon - 9, Seafoam Islands B3F - Seafoam Boss Boulders, Seafoam Islands B3F - Wild Pokemon - 1, Seafoam Islands B3F - Wild Pokemon - 10, Seafoam Islands B3F - Wild Pokemon - 2, Seafoam Islands B3F - Wild Pokemon - 3, Seafoam Islands B3F - Wild Pokemon - 4, Seafoam Islands B3F - Wild Pokemon - 5, Seafoam Islands B3F - Wild Pokemon - 6, Seafoam Islands B3F - Wild Pokemon - 7, Seafoam Islands B3F - Wild Pokemon - 8, Seafoam Islands B3F - Wild Pokemon - 9, Seafoam Islands B4F - Wild Pokemon - 1, Seafoam Islands B4F - Wild Pokemon - 10, Seafoam Islands B4F - Wild Pokemon - 2, Seafoam Islands B4F - Wild Pokemon - 3, Seafoam Islands B4F - Wild Pokemon - 4, Seafoam Islands B4F - Wild Pokemon - 5, Seafoam Islands B4F - Wild Pokemon - 6, Seafoam Islands B4F - Wild Pokemon - 7, Seafoam Islands B4F - Wild Pokemon - 8, Seafoam Islands B4F - Wild Pokemon - 9, Vermilion Dock - Legendary Pokemon, Vermilion Gym - Defeat Lt. Surge, Vermilion Gym - Lt. Surge Prize, Vermilion Gym - Lt. Surge TM, Vermilion Gym - Trainer Parties, Viridian City - Sleepy Guy
+BROWSER LOG (error): [05:52:00.794] [ERROR] [testSpoilerUI:ComparisonEngine]  > Locations accessible in LOG but NOT in STATE (or checked): Celadon City - Stranded Man, Cinnabar Island, Cinnabar Lab, Cinnabar Lab Fossil Room - Sailor Trade, Cinnabar Lab R&D Room - Lab Scientist, Pokemon Mansion 1F - North Item, Pokemon Mansion 1F - South Item, Pokemon Mansion 1F - Wild Pokemon - 1, Pokemon Mansion 1F - Wild Pokemon - 10, Pokemon Mansion 1F - Wild Pokemon - 2, Pokemon Mansion 1F - Wild Pokemon - 3, Pokemon Mansion 1F - Wild Pokemon - 4, Pokemon Mansion 1F - Wild Pokemon - 5, Pokemon Mansion 1F - Wild Pokemon - 6, Pokemon Mansion 1F - Wild Pokemon - 7, Pokemon Mansion 1F - Wild Pokemon - 8, Pokemon Mansion 1F - Wild Pokemon - 9, Pokemon Mansion 1F-SE - Trainer Parties, Pokemon Mansion 2F - Northeast Item, Pokemon Mansion 2F - Trainer Parties, Pokemon Mansion 2F - Wild Pokemon - 1, Pokemon Mansion 2F - Wild Pokemon - 10, Pokemon Mansion 2F - Wild Pokemon - 2, Pokemon Mansion 2F - Wild Pokemon - 3, Pokemon Mansion 2F - Wild Pokemon - 4, Pokemon Mansion 2F - Wild Pokemon - 5, Pokemon Mansion 2F - Wild Pokemon - 6, Pokemon Mansion 2F - Wild Pokemon - 7, Pokemon Mansion 2F - Wild Pokemon - 8, Pokemon Mansion 2F - Wild Pokemon - 9, Pokemon Mansion 3F - Northeast Item, Pokemon Mansion 3F - Southwest Item, Pokemon Mansion 3F - Wild Pokemon - 1, Pokemon Mansion 3F - Wild Pokemon - 10, Pokemon Mansion 3F - Wild Pokemon - 2, Pokemon Mansion 3F - Wild Pokemon - 3, Pokemon Mansion 3F - Wild Pokemon - 4, Pokemon Mansion 3F - Wild Pokemon - 5, Pokemon Mansion 3F - Wild Pokemon - 6, Pokemon Mansion 3F - Wild Pokemon - 7, Pokemon Mansion 3F - Wild Pokemon - 8, Pokemon Mansion 3F - Wild Pokemon - 9, Pokemon Mansion 3F-SE - Trainer Parties, Pokemon Mansion 3F-SW - Trainer Parties, Pokemon Mansion B1F - North Item, Pokemon Mansion B1F - Northwest Item, Pokemon Mansion B1F - South Item, Pokemon Mansion B1F - Southwest Item, Pokemon Mansion B1F - Trainer Parties, Pokemon Mansion B1F - West Item, Pokemon Mansion B1F - Wild Pokemon - 1, Pokemon Mansion B1F - Wild Pokemon - 10, Pokemon Mansion B1F - Wild Pokemon - 2, Pokemon Mansion B1F - Wild Pokemon - 3, Pokemon Mansion B1F - Wild Pokemon - 4, Pokemon Mansion B1F - Wild Pokemon - 5, Pokemon Mansion B1F - Wild Pokemon - 6, Pokemon Mansion B1F - Wild Pokemon - 7, Pokemon Mansion B1F - Wild Pokemon - 8, Pokemon Mansion B1F - Wild Pokemon - 9, Route 12 - Island Item, Route 19-S - Trainer Parties, Route 19/20 - Surf Pokemon - 1, Route 19/20 - Surf Pokemon - 10, Route 19/20 - Surf Pokemon - 2, Route 19/20 - Surf Pokemon - 3, Route 19/20 - Surf Pokemon - 4, Route 19/20 - Surf Pokemon - 5, Route 19/20 - Surf Pokemon - 6, Route 19/20 - Surf Pokemon - 7, Route 19/20 - Surf Pokemon - 8, Route 19/20 - Surf Pokemon - 9, Route 20-E - Trainer Parties, Route 20-W - Trainer Parties, Route 21 - Surf Pokemon - 1, Route 21 - Surf Pokemon - 10, Route 21 - Surf Pokemon - 2, Route 21 - Surf Pokemon - 3, Route 21 - Surf Pokemon - 4, Route 21 - Surf Pokemon - 5, Route 21 - Surf Pokemon - 6, Route 21 - Surf Pokemon - 7, Route 21 - Surf Pokemon - 8, Route 21 - Surf Pokemon - 9, Route 21 - Trainer Parties, Route 21 - Wild Pokemon - 1, Route 21 - Wild Pokemon - 10, Route 21 - Wild Pokemon - 2, Route 21 - Wild Pokemon - 3, Route 21 - Wild Pokemon - 4, Route 21 - Wild Pokemon - 5, Route 21 - Wild Pokemon - 6, Route 21 - Wild Pokemon - 7, Route 21 - Wild Pokemon - 8, Route 21 - Wild Pokemon - 9, Route 4-Lass - Trainer Parties, Safari Zone Center - Island Item, Seafoam Islands 1F - Seafoam Exit Boulder 1, Seafoam Islands 1F - Seafoam Exit Boulder 2, Seafoam Islands 1F - Wild Pokemon - 1, Seafoam Islands 1F - Wild Pokemon - 10, Seafoam Islands 1F - Wild Pokemon - 2, Seafoam Islands 1F - Wild Pokemon - 3, Seafoam Islands 1F - Wild Pokemon - 4, Seafoam Islands 1F - Wild Pokemon - 5, Seafoam Islands 1F - Wild Pokemon - 6, Seafoam Islands 1F - Wild Pokemon - 7, Seafoam Islands 1F - Wild Pokemon - 8, Seafoam Islands 1F - Wild Pokemon - 9, Seafoam Islands B1F - Seafoam Exit Boulder 1, Seafoam Islands B1F - Seafoam Exit Boulder 2, Seafoam Islands B1F - Wild Pokemon - 1, Seafoam Islands B1F - Wild Pokemon - 10, Seafoam Islands B1F - Wild Pokemon - 2, Seafoam Islands B1F - Wild Pokemon - 3, Seafoam Islands B1F - Wild Pokemon - 4, Seafoam Islands B1F - Wild Pokemon - 5, Seafoam Islands B1F - Wild Pokemon - 6, Seafoam Islands B1F - Wild Pokemon - 7, Seafoam Islands B1F - Wild Pokemon - 8, Seafoam Islands B1F - Wild Pokemon - 9, Seafoam Islands B2F - Seafoam Exit Boulder 1, Seafoam Islands B2F - Seafoam Exit Boulder 2, Seafoam Islands B2F - Wild Pokemon - 1, Seafoam Islands B2F - Wild Pokemon - 10, Seafoam Islands B2F - Wild Pokemon - 2, Seafoam Islands B2F - Wild Pokemon - 3, Seafoam Islands B2F - Wild Pokemon - 4, Seafoam Islands B2F - Wild Pokemon - 5, Seafoam Islands B2F - Wild Pokemon - 6, Seafoam Islands B2F - Wild Pokemon - 7, Seafoam Islands B2F - Wild Pokemon - 8, Seafoam Islands B2F - Wild Pokemon - 9, Seafoam Islands B3F - Seafoam Boss Boulders, Seafoam Islands B3F - Wild Pokemon - 1, Seafoam Islands B3F - Wild Pokemon - 10, Seafoam Islands B3F - Wild Pokemon - 2, Seafoam Islands B3F - Wild Pokemon - 3, Seafoam Islands B3F - Wild Pokemon - 4, Seafoam Islands B3F - Wild Pokemon - 5, Seafoam Islands B3F - Wild Pokemon - 6, Seafoam Islands B3F - Wild Pokemon - 7, Seafoam Islands B3F - Wild Pokemon - 8, Seafoam Islands B3F - Wild Pokemon - 9, Seafoam Islands B4F - Wild Pokemon - 1, Seafoam Islands B4F - Wild Pokemon - 10, Seafoam Islands B4F - Wild Pokemon - 2, Seafoam Islands B4F - Wild Pokemon - 3, Seafoam Islands B4F - Wild Pokemon - 4, Seafoam Islands B4F - Wild Pokemon - 5, Seafoam Islands B4F - Wild Pokemon - 6, Seafoam Islands B4F - Wild Pokemon - 7, Seafoam Islands B4F - Wild Pokemon - 8, Seafoam Islands B4F - Wild Pokemon - 9, Vermilion Dock - Legendary Pokemon, Vermilion Gym - Defeat Lt. Surge, Vermilion Gym - Lt. Surge Prize, Vermilion Gym - Lt. Surge TM, Vermilion Gym - Trainer Parties, Viridian City - Sleepy Guy
+BROWSER LOG (error): [MISMATCH DETAIL] Missing from state (160): [Celadon City - Stranded Man, Cinnabar Island, Cinnabar Lab, Cinnabar Lab Fossil Room - Sailor Trade, Cinnabar Lab R&D Room - Lab Scientist, Pokemon Mansion 1F - North Item, Pokemon Mansion 1F - South Item, Pokemon Mansion 1F - Wild Pokemon - 1, Pokemon Mansion 1F - Wild Pokemon - 10, Pokemon Mansion 1F - Wild Pokemon - 2, Pokemon Mansion 1F - Wild Pokemon - 3, Pokemon Mansion 1F - Wild Pokemon - 4, Pokemon Mansion 1F - Wild Pokemon - 5, Pokemon Mansion 1F - Wild Pokemon - 6, Pokemon Mansion 1F - Wild Pokemon - 7, Pokemon Mansion 1F - Wild Pokemon - 8, Pokemon Mansion 1F - Wild Pokemon - 9, Pokemon Mansion 1F-SE - Trainer Parties, Pokemon Mansion 2F - Northeast Item, Pokemon Mansion 2F - Trainer Parties, Pokemon Mansion 2F - Wild Pokemon - 1, Pokemon Mansion 2F - Wild Pokemon - 10, Pokemon Mansion 2F - Wild Pokemon - 2, Pokemon Mansion 2F - Wild Pokemon - 3, Pokemon Mansion 2F - Wild Pokemon - 4, Pokemon Mansion 2F - Wild Pokemon - 5, Pokemon Mansion 2F - Wild Pokemon - 6, Pokemon Mansion 2F - Wild Pokemon - 7, Pokemon Mansion 2F - Wild Pokemon - 8, Pokemon Mansion 2F - Wild Pokemon - 9, Pokemon Mansion 3F - Northeast Item, Pokemon Mansion 3F - Southwest Item, Pokemon Mansion 3F - Wild Pokemon - 1, Pokemon Mansion 3F - Wild Pokemon - 10, Pokemon Mansion 3F - Wild Pokemon - 2, Pokemon Mansion 3F - Wild Pokemon - 3, Pokemon Mansion 3F - Wild Pokemon - 4, Pokemon Mansion 3F - Wild Pokemon - 5, Pokemon Mansion 3F - Wild Pokemon - 6, Pokemon Mansion 3F - Wild Pokemon - 7, Pokemon Mansion 3F - Wild Pokemon - 8, Pokemon Mansion 3F - Wild Pokemon - 9, Pokemon Mansion 3F-SE - Trainer Parties, Pokemon Mansion 3F-SW - Trainer Parties, Pokemon Mansion B1F - North Item, Pokemon Mansion B1F - Northwest Item, Pokemon Mansion B1F - South Item, Pokemon Mansion B1F - Southwest Item, Pokemon Mansion B1F - Trainer Parties, Pokemon Mansion B1F - West Item, Pokemon Mansion B1F - Wild Pokemon - 1, Pokemon Mansion B1F - Wild Pokemon - 10, Pokemon Mansion B1F - Wild Pokemon - 2, Pokemon Mansion B1F - Wild Pokemon - 3, Pokemon Mansion B1F - Wild Pokemon - 4, Pokemon Mansion B1F - Wild Pokemon - 5, Pokemon Mansion B1F - Wild Pokemon - 6, Pokemon Mansion B1F - Wild Pokemon - 7, Pokemon Mansion B1F - Wild Pokemon - 8, Pokemon Mansion B1F - Wild Pokemon - 9, Route 12 - Island Item, Route 19-S - Trainer Parties, Route 19/20 - Surf Pokemon - 1, Route 19/20 - Surf Pokemon - 10, Route 19/20 - Surf Pokemon - 2, Route 19/20 - Surf Pokemon - 3, Route 19/20 - Surf Pokemon - 4, Route 19/20 - Surf Pokemon - 5, Route 19/20 - Surf Pokemon - 6, Route 19/20 - Surf Pokemon - 7, Route 19/20 - Surf Pokemon - 8, Route 19/20 - Surf Pokemon - 9, Route 20-E - Trainer Parties, Route 20-W - Trainer Parties, Route 21 - Surf Pokemon - 1, Route 21 - Surf Pokemon - 10, Route 21 - Surf Pokemon - 2, Route 21 - Surf Pokemon - 3, Route 21 - Surf Pokemon - 4, Route 21 - Surf Pokemon - 5, Route 21 - Surf Pokemon - 6, Route 21 - Surf Pokemon - 7, Route 21 - Surf Pokemon - 8, Route 21 - Surf Pokemon - 9, Route 21 - Trainer Parties, Route 21 - Wild Pokemon - 1, Route 21 - Wild Pokemon - 10, Route 21 - Wild Pokemon - 2, Route 21 - Wild Pokemon - 3, Route 21 - Wild Pokemon - 4, Route 21 - Wild Pokemon - 5, Route 21 - Wild Pokemon - 6, Route 21 - Wild Pokemon - 7, Route 21 - Wild Pokemon - 8, Route 21 - Wild Pokemon - 9, Route 4-Lass - Trainer Parties, Safari Zone Center - Island Item, Seafoam Islands 1F - Seafoam Exit Boulder 1, Seafoam Islands 1F - Seafoam Exit Boulder 2, Seafoam Islands 1F - Wild Pokemon - 1]
+BROWSER LOG (error): [05:52:00.834] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:52:00.862] [ERROR] [testSpoilerUI]     ISSUE: Region Cinnabar Island is not reachable
+BROWSER LOG (error): [05:52:00.893] [ERROR] [testSpoilerUI]     ISSUE: Region Cinnabar Lab is not reachable
+BROWSER LOG (error): [05:52:00.925] [ERROR] [testSpoilerUI]     ISSUE: Region Cinnabar Lab Fossil Room is not reachable
+BROWSER LOG (error): [05:52:00.963] [ERROR] [testSpoilerUI]     ISSUE: Region Cinnabar Lab R&D Room is not reachable
+BROWSER LOG (error): [05:52:01.006] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F is not reachable
+BROWSER LOG (error): [05:52:01.057] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F-SE is not reachable
+BROWSER LOG (error): [05:52:01.108] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:01.164] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:01.225] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:01.285] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:01.353] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:01.425] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:01.501] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:01.585] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:01.668] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:01.751] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:01.855] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 1F-SE is not reachable
+BROWSER LOG (error): [05:52:01.960] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 2F is not reachable
+BROWSER LOG (error): [05:52:02.079] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 2F is not reachable
+BROWSER LOG (error): [05:52:02.197] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:02.320] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:02.445] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:02.570] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:02.706] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:02.846] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:02.994] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.159] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.250] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.274] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.297] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F is not reachable
+BROWSER LOG (error): [05:52:03.323] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-SW is not reachable
+BROWSER LOG (error): [05:52:03.348] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.377] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.408] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.438] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.467] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.496] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.526] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.556] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.588] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.618] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:03.649] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-SE is not reachable
+BROWSER LOG (error): [05:52:03.680] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion 3F-SW is not reachable
+BROWSER LOG (error): [05:52:03.712] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:03.745] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:03.779] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:03.812] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:03.847] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:03.880] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:03.915] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:03.950] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:03.986] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:04.021] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:04.057] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:04.094] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:04.130] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:04.190] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:04.232] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:04.264] [ERROR] [testSpoilerUI]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:04.298] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:52:04.331] [ERROR] [testSpoilerUI]     ISSUE: Region Route 19-S is not reachable
+BROWSER LOG (error): [05:52:04.363] [ERROR] [testSpoilerUI]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:04.395] [ERROR] [testSpoilerUI]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:04.429] [ERROR] [testSpoilerUI]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:04.462] [ERROR] [testSpoilerUI]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:04.497] [ERROR] [testSpoilerUI]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:04.531] [ERROR] [testSpoilerUI]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:04.567] [ERROR] [testSpoilerUI]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:04.601] [ERROR] [testSpoilerUI]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:04.637] [ERROR] [testSpoilerUI]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:04.671] [ERROR] [testSpoilerUI]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:04.704] [ERROR] [testSpoilerUI]     ISSUE: Region Route 20-E is not reachable
+BROWSER LOG (error): [05:52:04.743] [ERROR] [testSpoilerUI]     ISSUE: Region Route 20-W is not reachable
+BROWSER LOG (error): [05:52:04.779] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:04.818] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:04.855] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:04.894] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:04.934] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:04.974] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.014] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.053] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.105] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.161] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.199] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.238] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.278] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.320] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.364] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.403] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.444] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.485] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.525] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.566] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.608] [ERROR] [testSpoilerUI]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:05.650] [ERROR] [testSpoilerUI]     ISSUE: Region Route 4-Lass is not reachable
+BROWSER LOG (error): [05:52:05.693] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone Center-C is not reachable
+BROWSER LOG (error): [05:52:05.736] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands 1F is not reachable
+BROWSER LOG (error): [05:52:05.776] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands 1F is not reachable
+BROWSER LOG (error): [05:52:05.817] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:05.864] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:05.929] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:05.981] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.024] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.066] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.109] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.156] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.202] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.250] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.306] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B1F is not reachable
+BROWSER LOG (error): [05:52:06.364] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B1F-NE is not reachable
+BROWSER LOG (error): [05:52:06.422] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.477] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.533] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.590] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.649] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.720] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.771] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.820] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.868] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.917] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:06.968] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B2F-NW is not reachable
+BROWSER LOG (error): [05:52:07.030] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B2F-NE is not reachable
+BROWSER LOG (error): [05:52:07.081] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.140] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.192] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.245] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.298] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.366] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.428] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.500] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.556] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.610] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.668] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B3F is not reachable
+BROWSER LOG (error): [05:52:07.724] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.781] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.836] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.894] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:07.949] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:08.008] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:08.068] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:08.122] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:08.181] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:08.262] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:08.334] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:08.403] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:08.458] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:08.519] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:08.587] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:08.646] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:08.707] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:08.773] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:08.837] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:08.905] [ERROR] [testSpoilerUI]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:08.970] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:52:09.044] [ERROR] [testSpoilerUI]     ISSUE: Region Vermilion Gym is not reachable
+BROWSER LOG (error): [05:52:09.135] [ERROR] [testSpoilerUI]     ISSUE: Region Vermilion Gym is not reachable
+BROWSER LOG (error): [05:52:09.228] [ERROR] [testSpoilerUI]     ISSUE: Region Vermilion Gym is not reachable
+BROWSER LOG (error): [05:52:09.306] [ERROR] [testSpoilerUI]     ISSUE: Region Vermilion Gym is not reachable
+BROWSER LOG (error): [05:52:09.402] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:52:09.411] [ERROR] [testSpoilerUI] REGION MISMATCH found for: {"type":"state_update","sphere_number":"5.9","player_id":"1"}
+BROWSER LOG (error): [05:52:09.412] [ERROR] [testSpoilerUI:ComparisonEngine] REGION MISMATCH found for: {"type":"state_update","sphere_number":"5.9","player_id":"1"}
+BROWSER LOG (error): [05:52:09.421] [ERROR] [testSpoilerUI]  > Regions accessible in LOG but NOT in STATE: Cerulean City-Water, Cinnabar Island, Cinnabar Island-M, Cinnabar Lab, Cinnabar Lab Fossil Room, Cinnabar Lab R&D Room, Cinnabar Lab Trade Room, Cinnabar Pokemart, Cinnabar Pokemon Center, Pokemon Mansion 1F, Pokemon Mansion 1F-SE, Pokemon Mansion 1F-Wild, Pokemon Mansion 2F, Pokemon Mansion 2F-E, Pokemon Mansion 2F-Wild, Pokemon Mansion 3F, Pokemon Mansion 3F-SE, Pokemon Mansion 3F-SW, Pokemon Mansion 3F-Wild, Pokemon Mansion B1F, Route 19-S, Route 19/20-Water, Route 20-E, Route 20-IE, Route 20-IW, Route 20-W, Route 21, Route 4-Lass, Safari Zone Center-C, Seafoam Islands 1F, Seafoam Islands 1F-SE, Seafoam Islands 1F-Wild, Seafoam Islands B1F, Seafoam Islands B1F-NE, Seafoam Islands B1F-SE, Seafoam Islands B1F-Wild, Seafoam Islands B2F-NE, Seafoam Islands B2F-NW, Seafoam Islands B2F-SE, Seafoam Islands B2F-SW, Seafoam Islands B2F-Wild, Seafoam Islands B3F, Seafoam Islands B3F-NE, Seafoam Islands B3F-SE, Seafoam Islands B3F-Wild, Seafoam Islands B4F, Seafoam Islands B4F-W, Vermilion City-G, Vermilion Gym
+BROWSER LOG (error): [05:52:09.421] [ERROR] [testSpoilerUI:ComparisonEngine]  > Regions accessible in LOG but NOT in STATE: Cerulean City-Water, Cinnabar Island, Cinnabar Island-M, Cinnabar Lab, Cinnabar Lab Fossil Room, Cinnabar Lab R&D Room, Cinnabar Lab Trade Room, Cinnabar Pokemart, Cinnabar Pokemon Center, Pokemon Mansion 1F, Pokemon Mansion 1F-SE, Pokemon Mansion 1F-Wild, Pokemon Mansion 2F, Pokemon Mansion 2F-E, Pokemon Mansion 2F-Wild, Pokemon Mansion 3F, Pokemon Mansion 3F-SE, Pokemon Mansion 3F-SW, Pokemon Mansion 3F-Wild, Pokemon Mansion B1F, Route 19-S, Route 19/20-Water, Route 20-E, Route 20-IE, Route 20-IW, Route 20-W, Route 21, Route 4-Lass, Safari Zone Center-C, Seafoam Islands 1F, Seafoam Islands 1F-SE, Seafoam Islands 1F-Wild, Seafoam Islands B1F, Seafoam Islands B1F-NE, Seafoam Islands B1F-SE, Seafoam Islands B1F-Wild, Seafoam Islands B2F-NE, Seafoam Islands B2F-NW, Seafoam Islands B2F-SE, Seafoam Islands B2F-SW, Seafoam Islands B2F-Wild, Seafoam Islands B3F, Seafoam Islands B3F-NE, Seafoam Islands B3F-SE, Seafoam Islands B3F-Wild, Seafoam Islands B4F, Seafoam Islands B4F-W, Vermilion City-G, Vermilion Gym
+BROWSER LOG (error): [REGION MISMATCH DETAIL] Missing from state (49): [Cerulean City-Water, Cinnabar Island, Cinnabar Island-M, Cinnabar Lab, Cinnabar Lab Fossil Room, Cinnabar Lab R&D Room, Cinnabar Lab Trade Room, Cinnabar Pokemart, Cinnabar Pokemon Center, Pokemon Mansion 1F, Pokemon Mansion 1F-SE, Pokemon Mansion 1F-Wild, Pokemon Mansion 2F, Pokemon Mansion 2F-E, Pokemon Mansion 2F-Wild, Pokemon Mansion 3F, Pokemon Mansion 3F-SE, Pokemon Mansion 3F-SW, Pokemon Mansion 3F-Wild, Pokemon Mansion B1F, Route 19-S, Route 19/20-Water, Route 20-E, Route 20-IE, Route 20-IW, Route 20-W, Route 21, Route 4-Lass, Safari Zone Center-C, Seafoam Islands 1F, Seafoam Islands 1F-SE, Seafoam Islands 1F-Wild, Seafoam Islands B1F, Seafoam Islands B1F-NE, Seafoam Islands B1F-SE, Seafoam Islands B1F-Wild, Seafoam Islands B2F-NE, Seafoam Islands B2F-NW, Seafoam Islands B2F-SE, Seafoam Islands B2F-SW, Seafoam Islands B2F-Wild, Seafoam Islands B3F, Seafoam Islands B3F-NE, Seafoam Islands B3F-SE, Seafoam Islands B3F-Wild, Seafoam Islands B4F, Seafoam Islands B4F-W, Vermilion City-G, Vermilion Gym]
+BROWSER LOG (warning): [05:52:09.554] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Cinnabar Island
+BROWSER LOG (warning): [05:52:09.739] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Cinnabar Island-M
+BROWSER LOG (warning): [05:52:09.828] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Cinnabar Lab
+BROWSER LOG (warning): [05:52:09.947] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Cinnabar Lab Fossil Room
+BROWSER LOG (warning): [05:52:10.020] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Cinnabar Lab R&D Room
+BROWSER LOG (warning): [05:52:10.078] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Cinnabar Lab Trade Room
+BROWSER LOG (warning): [05:52:10.141] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Cinnabar Pokemart
+BROWSER LOG (warning): [05:52:10.201] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Cinnabar Pokemon Center
+BROWSER LOG (warning): [05:52:10.263] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Pokemon Mansion 1F
+BROWSER LOG (warning): [05:52:10.349] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Pokemon Mansion 1F-SE
+BROWSER LOG (warning): [05:52:10.435] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Pokemon Mansion 1F-Wild
+BROWSER LOG (warning): [05:52:10.517] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Pokemon Mansion 2F
+BROWSER LOG (warning): [05:52:10.637] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Pokemon Mansion 2F-E
+BROWSER LOG (warning): [05:52:10.702] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Pokemon Mansion 2F-Wild
+BROWSER LOG (warning): [05:52:10.769] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Pokemon Mansion 3F
+BROWSER LOG (warning): [05:52:10.860] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Pokemon Mansion 3F-SE
+BROWSER LOG (warning): [05:52:10.944] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Pokemon Mansion 3F-SW
+BROWSER LOG (warning): [05:52:11.010] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Pokemon Mansion 3F-Wild
+BROWSER LOG (warning): [05:52:11.103] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Pokemon Mansion B1F
+BROWSER LOG (warning): [05:52:11.264] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 19/20-Water
+BROWSER LOG (warning): [05:52:11.363] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 20-E
+BROWSER LOG (warning): [05:52:11.445] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 20-IE
+BROWSER LOG (warning): [05:52:11.530] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 20-IW
+BROWSER LOG (warning): [05:52:11.612] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 20-W
+BROWSER LOG (warning): [05:52:11.808] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 4-Lass
+BROWSER LOG (warning): [05:52:12.086] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands 1F
+BROWSER LOG (warning): [05:52:12.188] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands 1F-SE
+BROWSER LOG (warning): [05:52:12.276] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands 1F-Wild
+BROWSER LOG (warning): [05:52:12.362] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B1F
+BROWSER LOG (warning): [05:52:12.516] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B1F-NE
+BROWSER LOG (warning): [05:52:12.611] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B1F-SE
+BROWSER LOG (warning): [05:52:12.699] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B1F-Wild
+BROWSER LOG (warning): [05:52:12.810] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B2F-NE
+BROWSER LOG (warning): [05:52:12.899] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B2F-NW
+BROWSER LOG (warning): [05:52:12.989] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B2F-SE
+BROWSER LOG (warning): [05:52:13.080] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B2F-SW
+BROWSER LOG (warning): [05:52:13.191] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B2F-Wild
+BROWSER LOG (warning): [05:52:13.322] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B3F
+BROWSER LOG (warning): [05:52:13.487] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B3F-NE
+BROWSER LOG (warning): [05:52:13.583] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B3F-SE
+BROWSER LOG (warning): [05:52:13.718] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B3F-Wild
+BROWSER LOG (warning): [05:52:13.844] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B4F
+BROWSER LOG (warning): [05:52:13.983] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Seafoam Islands B4F-W
+BROWSER LOG (warning): [05:52:14.282] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Vermilion Gym
+BROWSER LOG (error): [05:52:14.360] [ERROR] [testSpoilerUI] Test failed at step 93: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [05:52:14.367] [ERROR] [testSpoilerUI] Mismatch for event 93 (Sphere 5.9): Comparison for state_update at step 93 Failed
+BROWSER LOG (warning): [05:52:14.375] [WARN] [testSpoilerUI] Test run halted due to "Stop on first error" being enabled.
+BROWSER LOG (error): [05:52:14.382] [ERROR] [testSpoilerUI] Spoiler test completed with 1 mismatch(es). See logs above for details.
+BROWSER LOG (error): [05:52:14.433] [ERROR] [TestRunner/test_spoiler_full_run] [spoilers-full-run-1763013108454] Spoiler test failed. Mismatches found in log:
+BROWSER LOG (error): [05:52:14.433] [ERROR] [TestRunner/test_spoiler_full_run]   - Mismatch for event 93 (Sphere 5.9): Comparison for state_update at step 93 Failed
+BROWSER LOG (error): [05:52:14.433] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:00 AM] STATE MISMATCH found for: {"type":"state_update","sphere_number":"5.9","player_id":"1"}
+BROWSER LOG (error): [05:52:14.434] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:00 AM] > Locations accessible in LOG but NOT in STATE (or checked): Celadon City - Stranded Man, Cinnabar Island, Cinnabar Lab, Cinnabar Lab Fossil Room - Sailor Trade, Cinnabar Lab R&amp;D Room - Lab Scientist, Pokemon Mansion 1F - North Item, Pokemon Mansion 1F - South Item, Pokemon Mansion 1F - Wild Pokemon - 1, Pokemon Mansion 1F - Wild Pokemon - 10, Pokemon Mansion 1F - Wild Pokemon - 2, Pokemon Mansion 1F - Wild Pokemon - 3, Pokemon Mansion 1F - Wild Pokemon - 4, Pokemon Mansion 1F - Wild Pokemon - 5, Pokemon Mansion 1F - Wild Pokemon - 6, Pokemon Mansion 1F - Wild Pokemon - 7, Pokemon Mansion 1F - Wild Pokemon - 8, Pokemon Mansion 1F - Wild Pokemon - 9, Pokemon Mansion 1F-SE - Trainer Parties, Pokemon Mansion 2F - Northeast Item, Pokemon Mansion 2F - Trainer Parties, Pokemon Mansion 2F - Wild Pokemon - 1, Pokemon Mansion 2F - Wild Pokemon - 10, Pokemon Mansion 2F - Wild Pokemon - 2, Pokemon Mansion 2F - Wild Pokemon - 3, Pokemon Mansion 2F - Wild Pokemon - 4, Pokemon Mansion 2F - Wild Pokemon - 5, Pokemon Mansion 2F - Wild Pokemon - 6, Pokemon Mansion 2F - Wild Pokemon - 7, Pokemon Mansion 2F - Wild Pokemon - 8, Pokemon Mansion 2F - Wild Pokemon - 9, Pokemon Mansion 3F - Northeast Item, Pokemon Mansion 3F - Southwest Item, Pokemon Mansion 3F - Wild Pokemon - 1, Pokemon Mansion 3F - Wild Pokemon - 10, Pokemon Mansion 3F - Wild Pokemon - 2, Pokemon Mansion 3F - Wild Pokemon - 3, Pokemon Mansion 3F - Wild Pokemon - 4, Pokemon Mansion 3F - Wild Pokemon - 5, Pokemon Mansion 3F - Wild Pokemon - 6, Pokemon Mansion 3F - Wild Pokemon - 7, Pokemon Mansion 3F - Wild Pokemon - 8, Pokemon Mansion 3F - Wild Pokemon - 9, Pokemon Mansion 3F-SE - Trainer Parties, Pokemon Mansion 3F-SW - Trainer Parties, Pokemon Mansion B1F - North Item, Pokemon Mansion B1F - Northwest Item, Pokemon Mansion B1F - South Item, Pokemon Mansion B1F - Southwest Item, Pokemon Mansion B1F - Trainer Parties, Pokemon Mansion B1F - West Item, Pokemon Mansion B1F - Wild Pokemon - 1, Pokemon Mansion B1F - Wild Pokemon - 10, Pokemon Mansion B1F - Wild Pokemon - 2, Pokemon Mansion B1F - Wild Pokemon - 3, Pokemon Mansion B1F - Wild Pokemon - 4, Pokemon Mansion B1F - Wild Pokemon - 5, Pokemon Mansion B1F - Wild Pokemon - 6, Pokemon Mansion B1F - Wild Pokemon - 7, Pokemon Mansion B1F - Wild Pokemon - 8, Pokemon Mansion B1F - Wild Pokemon - 9, Route 12 - Island Item, Route 19-S - Trainer Parties, Route 19/20 - Surf Pokemon - 1, Route 19/20 - Surf Pokemon - 10, Route 19/20 - Surf Pokemon - 2, Route 19/20 - Surf Pokemon - 3, Route 19/20 - Surf Pokemon - 4, Route 19/20 - Surf Pokemon - 5, Route 19/20 - Surf Pokemon - 6, Route 19/20 - Surf Pokemon - 7, Route 19/20 - Surf Pokemon - 8, Route 19/20 - Surf Pokemon - 9, Route 20-E - Trainer Parties, Route 20-W - Trainer Parties, Route 21 - Surf Pokemon - 1, Route 21 - Surf Pokemon - 10, Route 21 - Surf Pokemon - 2, Route 21 - Surf Pokemon - 3, Route 21 - Surf Pokemon - 4, Route 21 - Surf Pokemon - 5, Route 21 - Surf Pokemon - 6, Route 21 - Surf Pokemon - 7, Route 21 - Surf Pokemon - 8, Route 21 - Surf Pokemon - 9, Route 21 - Trainer Parties, Route 21 - Wild Pokemon - 1, Route 21 - Wild Pokemon - 10, Route 21 - Wild Pokemon - 2, Route 21 - Wild Pokemon - 3, Route 21 - Wild Pokemon - 4, Route 21 - Wild Pokemon - 5, Route 21 - Wild Pokemon - 6, Route 21 - Wild Pokemon - 7, Route 21 - Wild Pokemon - 8, Route 21 - Wild Pokemon - 9, Route 4-Lass - Trainer Parties, Safari Zone Center - Island Item, Seafoam Islands 1F - Seafoam Exit Boulder 1, Seafoam Islands 1F - Seafoam Exit Boulder 2, Seafoam Islands 1F - Wild Pokemon - 1, Seafoam Islands 1F - Wild Pokemon - 10, Seafoam Islands 1F - Wild Pokemon - 2, Seafoam Islands 1F - Wild Pokemon - 3, Seafoam Islands 1F - Wild Pokemon - 4, Seafoam Islands 1F - Wild Pokemon - 5, Seafoam Islands 1F - Wild Pokemon - 6, Seafoam Islands 1F - Wild Pokemon - 7, Seafoam Islands 1F - Wild Pokemon - 8, Seafoam Islands 1F - Wild Pokemon - 9, Seafoam Islands B1F - Seafoam Exit Boulder 1, Seafoam Islands B1F - Seafoam Exit Boulder 2, Seafoam Islands B1F - Wild Pokemon - 1, Seafoam Islands B1F - Wild Pokemon - 10, Seafoam Islands B1F - Wild Pokemon - 2, Seafoam Islands B1F - Wild Pokemon - 3, Seafoam Islands B1F - Wild Pokemon - 4, Seafoam Islands B1F - Wild Pokemon - 5, Seafoam Islands B1F - Wild Pokemon - 6, Seafoam Islands B1F - Wild Pokemon - 7, Seafoam Islands B1F - Wild Pokemon - 8, Seafoam Islands B1F - Wild Pokemon - 9, Seafoam Islands B2F - Seafoam Exit Boulder 1, Seafoam Islands B2F - Seafoam Exit Boulder 2, Seafoam Islands B2F - Wild Pokemon - 1, Seafoam Islands B2F - Wild Pokemon - 10, Seafoam Islands B2F - Wild Pokemon - 2, Seafoam Islands B2F - Wild Pokemon - 3, Seafoam Islands B2F - Wild Pokemon - 4, Seafoam Islands B2F - Wild Pokemon - 5, Seafoam Islands B2F - Wild Pokemon - 6, Seafoam Islands B2F - Wild Pokemon - 7, Seafoam Islands B2F - Wild Pokemon - 8, Seafoam Islands B2F - Wild Pokemon - 9, Seafoam Islands B3F - Seafoam Boss Boulders, Seafoam Islands B3F - Wild Pokemon - 1, Seafoam Islands B3F - Wild Pokemon - 10, Seafoam Islands B3F - Wild Pokemon - 2, Seafoam Islands B3F - Wild Pokemon - 3, Seafoam Islands B3F - Wild Pokemon - 4, Seafoam Islands B3F - Wild Pokemon - 5, Seafoam Islands B3F - Wild Pokemon - 6, Seafoam Islands B3F - Wild Pokemon - 7, Seafoam Islands B3F - Wild Pokemon - 8, Seafoam Islands B3F - Wild Pokemon - 9, Seafoam Islands B4F - Wild Pokemon - 1, Seafoam Islands B4F - Wild Pokemon - 10, Seafoam Islands B4F - Wild Pokemon - 2, Seafoam Islands B4F - Wild Pokemon - 3, Seafoam Islands B4F - Wild Pokemon - 4, Seafoam Islands B4F - Wild Pokemon - 5, Seafoam Islands B4F - Wild Pokemon - 6, Seafoam Islands B4F - Wild Pokemon - 7, Seafoam Islands B4F - Wild Pokemon - 8, Seafoam Islands B4F - Wild Pokemon - 9, Vermilion Dock - Legendary Pokemon, Vermilion Gym - Defeat Lt. Surge, Vermilion Gym - Lt. Surge Prize, Vermilion Gym - Lt. Surge TM, Vermilion Gym - Trainer Parties, Viridian City - Sleepy Guy
+BROWSER LOG (error): [05:52:14.434] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:00 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:52:14.435] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:00 AM]     ISSUE: Region Cinnabar Island is not reachable
+BROWSER LOG (error): [05:52:14.435] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:00 AM]     ISSUE: Region Cinnabar Lab is not reachable
+BROWSER LOG (error): [05:52:14.435] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:00 AM]     ISSUE: Region Cinnabar Lab Fossil Room is not reachable
+BROWSER LOG (error): [05:52:14.436] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:00 AM]     ISSUE: Region Cinnabar Lab R&D Room is not reachable
+BROWSER LOG (error): [05:52:14.436] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F is not reachable
+BROWSER LOG (error): [05:52:14.436] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-SE is not reachable
+BROWSER LOG (error): [05:52:14.436] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.436] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.437] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.437] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.437] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.437] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.437] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.437] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.437] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.438] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.438] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-SE is not reachable
+BROWSER LOG (error): [05:52:14.438] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 2F is not reachable
+BROWSER LOG (error): [05:52:14.438] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F is not reachable
+BROWSER LOG (error): [05:52:14.438] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.438] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.438] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.439] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.439] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.439] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.439] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.439] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.439] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.439] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.439] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F is not reachable
+BROWSER LOG (error): [05:52:14.440] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-SW is not reachable
+BROWSER LOG (error): [05:52:14.440] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.440] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.440] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.440] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.440] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.441] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.441] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.441] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.441] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.441] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.441] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-SE is not reachable
+BROWSER LOG (error): [05:52:14.441] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-SW is not reachable
+BROWSER LOG (error): [05:52:14.441] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.441] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.441] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.442] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.442] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.442] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.442] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.442] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.442] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.442] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.442] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.442] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.442] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.443] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.443] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.443] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable
+BROWSER LOG (error): [05:52:14.443] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:52:14.443] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 19-S is not reachable
+BROWSER LOG (error): [05:52:14.443] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:14.443] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:14.443] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:14.444] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:14.444] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:14.444] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:14.444] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:14.444] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:14.444] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:14.444] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable
+BROWSER LOG (error): [05:52:14.445] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 20-E is not reachable
+BROWSER LOG (error): [05:52:14.445] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 20-W is not reachable
+BROWSER LOG (error): [05:52:14.445] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.445] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.445] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.445] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.445] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.445] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:04 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.445] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.445] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.445] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.446] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.446] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.446] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.446] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.446] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.446] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.446] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.446] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.446] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.446] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.446] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.447] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable
+BROWSER LOG (error): [05:52:14.447] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Route 4-Lass is not reachable
+BROWSER LOG (error): [05:52:14.447] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Safari Zone Center-C is not reachable
+BROWSER LOG (error): [05:52:14.447] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Seafoam Islands 1F is not reachable
+BROWSER LOG (error): [05:52:14.447] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Seafoam Islands 1F is not reachable
+BROWSER LOG (error): [05:52:14.447] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.447] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.447] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.447] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:05 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-NE is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.448] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.449] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.449] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.449] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.449] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.449] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.449] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:06 AM]     ISSUE: Region Seafoam Islands B2F-NW is not reachable
+BROWSER LOG (error): [05:52:14.450] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-NE is not reachable
+BROWSER LOG (error): [05:52:14.450] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.450] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.450] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.450] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.450] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.450] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.450] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.450] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.450] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.451] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.451] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B3F is not reachable
+BROWSER LOG (error): [05:52:14.451] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.451] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.451] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.451] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.451] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:07 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.451] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.451] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.451] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.451] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.451] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:08 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:09 AM]     ISSUE: Region Vermilion Gym is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:09 AM]     ISSUE: Region Vermilion Gym is not reachable
+BROWSER LOG (error): [05:52:14.452] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:09 AM]     ISSUE: Region Vermilion Gym is not reachable
+BROWSER LOG (error): [05:52:14.453] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:09 AM]     ISSUE: Region Vermilion Gym is not reachable
+BROWSER LOG (error): [05:52:14.453] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:09 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:52:14.453] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:09 AM] REGION MISMATCH found for: {"type":"state_update","sphere_number":"5.9","player_id":"1"}
+BROWSER LOG (error): [05:52:14.453] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:09 AM] > Regions accessible in LOG but NOT in STATE: Cerulean City-Water, Cinnabar Island, Cinnabar Island-M, Cinnabar Lab, Cinnabar Lab Fossil Room, Cinnabar Lab R&amp;D Room, Cinnabar Lab Trade Room, Cinnabar Pokemart, Cinnabar Pokemon Center, Pokemon Mansion 1F, Pokemon Mansion 1F-SE, Pokemon Mansion 1F-Wild, Pokemon Mansion 2F, Pokemon Mansion 2F-E, Pokemon Mansion 2F-Wild, Pokemon Mansion 3F, Pokemon Mansion 3F-SE, Pokemon Mansion 3F-SW, Pokemon Mansion 3F-Wild, Pokemon Mansion B1F, Route 19-S, Route 19/20-Water, Route 20-E, Route 20-IE, Route 20-IW, Route 20-W, Route 21, Route 4-Lass, Safari Zone Center-C, Seafoam Islands 1F, Seafoam Islands 1F-SE, Seafoam Islands 1F-Wild, Seafoam Islands B1F, Seafoam Islands B1F-NE, Seafoam Islands B1F-SE, Seafoam Islands B1F-Wild, Seafoam Islands B2F-NE, Seafoam Islands B2F-NW, Seafoam Islands B2F-SE, Seafoam Islands B2F-SW, Seafoam Islands B2F-Wild, Seafoam Islands B3F, Seafoam Islands B3F-NE, Seafoam Islands B3F-SE, Seafoam Islands B3F-Wild, Seafoam Islands B4F, Seafoam Islands B4F-W, Vermilion City-G, Vermilion Gym
+BROWSER LOG (error): [05:52:14.453] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:14 AM] Test failed at step 93: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [05:52:14.454] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:14 AM] Mismatch for event 93 (Sphere 5.9): Comparison for state_update at step 93 Failed
+BROWSER LOG (error): [05:52:14.454] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:52:14 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Full in-app test results: {
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 0,
+    "failedCount": 1
+  },
+  "testDetails": [
+    {
+      "id": "test_spoiler_full_run",
+      "name": "Test Spoilers Panel - Full Run",
+      "status": "failed",
+      "category": "Test Spoilers Panel",
+      "startTime": "2025-11-13T05:51:48.453Z",
+      "endTime": "2025-11-13T05:52:14.472Z",
+      "durationMs": 26019,
+      "conditions": [
+        {
+          "description": "Test started",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:51:48.454Z"
+        },
+        {
+          "description": "Test Spoilers panel found in DOM",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:51:48.956Z"
+        },
+        {
+          "description": "\"Load Suggested Log\" button found and enabled",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:51:49.207Z"
+        },
+        {
+          "description": "\"Run Full Test\" button appeared",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:51:49.961Z"
+        },
+        {
+          "description": "Full spoiler test completed",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:52:14.428Z"
+        },
+        {
+          "description": "Spoiler test passed all checks",
+          "status": "failed",
+          "timestamp": "2025-11-13T05:52:14.433Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[spoilers-full-run-1763013108454] Starting testSpoilersPanelFullRun...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:48.454Z"
+        },
+        {
+          "message": "Condition: \"Test started\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:48.454Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Activating testSpoilersPanel panel...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:48.454Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel initialization\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:48.454Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel initialization\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:48.705Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel DOM element\" (timeout: 5000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:48.705Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel DOM element\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:48.956Z"
+        },
+        {
+          "message": "Condition: \"Test Spoilers panel found in DOM\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:48.956Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Load Suggested Log\" button to be available\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:48.956Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Load Suggested Log\" button to be available\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:49.207Z"
+        },
+        {
+          "message": "Condition: \"\"Load Suggested Log\" button found and enabled\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:49.207Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Clicking \"Load Suggested Log\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:49.207Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Spoiler log loading completion\" (timeout: 15000ms, interval: 500ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:49.210Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Spoiler log loading completion\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:49.710Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Run Full Test\" button to appear\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:49.710Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Run Full Test\" button to appear\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:49.961Z"
+        },
+        {
+          "message": "Condition: \"\"Run Full Test\" button appeared\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:49.961Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Clicking \"Run Full Test\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:49.961Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test to start processing\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:49.964Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test to start processing\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:50.134Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Waiting for full spoiler test to complete...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:50.134Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test completion with detailed results\" (timeout: 300000ms, interval: 1000ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:50.134Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:51.152Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:52.144Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:53.139Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:54.135Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:55.135Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:56.134Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:57.134Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:58.135Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:51:59.135Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:52:00.134Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Polling: buttonReady=true, hasDetailedResults=true, processedEvents=92/199",
+          "type": "info",
+          "timestamp": "2025-11-13T05:52:14.428Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":199,\"processedEvents\":92,\"errorCount\":1,\"sphereCount\":93,\"testLogPath\":\"presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+          "type": "info",
+          "timestamp": "2025-11-13T05:52:14.428Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test completion with detailed results\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:52:14.428Z"
+        },
+        {
+          "message": "Condition: \"Full spoiler test completed\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:52:14.428Z"
+        },
+        {
+          "message": "Condition: \"Spoiler test passed all checks\" - FAILED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:52:14.433Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Spoiler test failed. Mismatches found in log:",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.433Z"
+        },
+        {
+          "message": "  - Mismatch for event 93 (Sphere 5.9): Comparison for state_update at step 93 Failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.433Z"
+        },
+        {
+          "message": "  - [5:52:00 AM] STATE MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":\"5.9\",\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.433Z"
+        },
+        {
+          "message": "  - [5:52:00 AM] > Locations accessible in LOG but NOT in STATE (or checked): Celadon City - Stranded Man, Cinnabar Island, Cinnabar Lab, Cinnabar Lab Fossil Room - Sailor Trade, Cinnabar Lab R&amp;D Room - Lab Scientist, Pokemon Mansion 1F - North Item, Pokemon Mansion 1F - South Item, Pokemon Mansion 1F - Wild Pokemon - 1, Pokemon Mansion 1F - Wild Pokemon - 10, Pokemon Mansion 1F - Wild Pokemon - 2, Pokemon Mansion 1F - Wild Pokemon - 3, Pokemon Mansion 1F - Wild Pokemon - 4, Pokemon Mansion 1F - Wild Pokemon - 5, Pokemon Mansion 1F - Wild Pokemon - 6, Pokemon Mansion 1F - Wild Pokemon - 7, Pokemon Mansion 1F - Wild Pokemon - 8, Pokemon Mansion 1F - Wild Pokemon - 9, Pokemon Mansion 1F-SE - Trainer Parties, Pokemon Mansion 2F - Northeast Item, Pokemon Mansion 2F - Trainer Parties, Pokemon Mansion 2F - Wild Pokemon - 1, Pokemon Mansion 2F - Wild Pokemon - 10, Pokemon Mansion 2F - Wild Pokemon - 2, Pokemon Mansion 2F - Wild Pokemon - 3, Pokemon Mansion 2F - Wild Pokemon - 4, Pokemon Mansion 2F - Wild Pokemon - 5, Pokemon Mansion 2F - Wild Pokemon - 6, Pokemon Mansion 2F - Wild Pokemon - 7, Pokemon Mansion 2F - Wild Pokemon - 8, Pokemon Mansion 2F - Wild Pokemon - 9, Pokemon Mansion 3F - Northeast Item, Pokemon Mansion 3F - Southwest Item, Pokemon Mansion 3F - Wild Pokemon - 1, Pokemon Mansion 3F - Wild Pokemon - 10, Pokemon Mansion 3F - Wild Pokemon - 2, Pokemon Mansion 3F - Wild Pokemon - 3, Pokemon Mansion 3F - Wild Pokemon - 4, Pokemon Mansion 3F - Wild Pokemon - 5, Pokemon Mansion 3F - Wild Pokemon - 6, Pokemon Mansion 3F - Wild Pokemon - 7, Pokemon Mansion 3F - Wild Pokemon - 8, Pokemon Mansion 3F - Wild Pokemon - 9, Pokemon Mansion 3F-SE - Trainer Parties, Pokemon Mansion 3F-SW - Trainer Parties, Pokemon Mansion B1F - North Item, Pokemon Mansion B1F - Northwest Item, Pokemon Mansion B1F - South Item, Pokemon Mansion B1F - Southwest Item, Pokemon Mansion B1F - Trainer Parties, Pokemon Mansion B1F - West Item, Pokemon Mansion B1F - Wild Pokemon - 1, Pokemon Mansion B1F - Wild Pokemon - 10, Pokemon Mansion B1F - Wild Pokemon - 2, Pokemon Mansion B1F - Wild Pokemon - 3, Pokemon Mansion B1F - Wild Pokemon - 4, Pokemon Mansion B1F - Wild Pokemon - 5, Pokemon Mansion B1F - Wild Pokemon - 6, Pokemon Mansion B1F - Wild Pokemon - 7, Pokemon Mansion B1F - Wild Pokemon - 8, Pokemon Mansion B1F - Wild Pokemon - 9, Route 12 - Island Item, Route 19-S - Trainer Parties, Route 19/20 - Surf Pokemon - 1, Route 19/20 - Surf Pokemon - 10, Route 19/20 - Surf Pokemon - 2, Route 19/20 - Surf Pokemon - 3, Route 19/20 - Surf Pokemon - 4, Route 19/20 - Surf Pokemon - 5, Route 19/20 - Surf Pokemon - 6, Route 19/20 - Surf Pokemon - 7, Route 19/20 - Surf Pokemon - 8, Route 19/20 - Surf Pokemon - 9, Route 20-E - Trainer Parties, Route 20-W - Trainer Parties, Route 21 - Surf Pokemon - 1, Route 21 - Surf Pokemon - 10, Route 21 - Surf Pokemon - 2, Route 21 - Surf Pokemon - 3, Route 21 - Surf Pokemon - 4, Route 21 - Surf Pokemon - 5, Route 21 - Surf Pokemon - 6, Route 21 - Surf Pokemon - 7, Route 21 - Surf Pokemon - 8, Route 21 - Surf Pokemon - 9, Route 21 - Trainer Parties, Route 21 - Wild Pokemon - 1, Route 21 - Wild Pokemon - 10, Route 21 - Wild Pokemon - 2, Route 21 - Wild Pokemon - 3, Route 21 - Wild Pokemon - 4, Route 21 - Wild Pokemon - 5, Route 21 - Wild Pokemon - 6, Route 21 - Wild Pokemon - 7, Route 21 - Wild Pokemon - 8, Route 21 - Wild Pokemon - 9, Route 4-Lass - Trainer Parties, Safari Zone Center - Island Item, Seafoam Islands 1F - Seafoam Exit Boulder 1, Seafoam Islands 1F - Seafoam Exit Boulder 2, Seafoam Islands 1F - Wild Pokemon - 1, Seafoam Islands 1F - Wild Pokemon - 10, Seafoam Islands 1F - Wild Pokemon - 2, Seafoam Islands 1F - Wild Pokemon - 3, Seafoam Islands 1F - Wild Pokemon - 4, Seafoam Islands 1F - Wild Pokemon - 5, Seafoam Islands 1F - Wild Pokemon - 6, Seafoam Islands 1F - Wild Pokemon - 7, Seafoam Islands 1F - Wild Pokemon - 8, Seafoam Islands 1F - Wild Pokemon - 9, Seafoam Islands B1F - Seafoam Exit Boulder 1, Seafoam Islands B1F - Seafoam Exit Boulder 2, Seafoam Islands B1F - Wild Pokemon - 1, Seafoam Islands B1F - Wild Pokemon - 10, Seafoam Islands B1F - Wild Pokemon - 2, Seafoam Islands B1F - Wild Pokemon - 3, Seafoam Islands B1F - Wild Pokemon - 4, Seafoam Islands B1F - Wild Pokemon - 5, Seafoam Islands B1F - Wild Pokemon - 6, Seafoam Islands B1F - Wild Pokemon - 7, Seafoam Islands B1F - Wild Pokemon - 8, Seafoam Islands B1F - Wild Pokemon - 9, Seafoam Islands B2F - Seafoam Exit Boulder 1, Seafoam Islands B2F - Seafoam Exit Boulder 2, Seafoam Islands B2F - Wild Pokemon - 1, Seafoam Islands B2F - Wild Pokemon - 10, Seafoam Islands B2F - Wild Pokemon - 2, Seafoam Islands B2F - Wild Pokemon - 3, Seafoam Islands B2F - Wild Pokemon - 4, Seafoam Islands B2F - Wild Pokemon - 5, Seafoam Islands B2F - Wild Pokemon - 6, Seafoam Islands B2F - Wild Pokemon - 7, Seafoam Islands B2F - Wild Pokemon - 8, Seafoam Islands B2F - Wild Pokemon - 9, Seafoam Islands B3F - Seafoam Boss Boulders, Seafoam Islands B3F - Wild Pokemon - 1, Seafoam Islands B3F - Wild Pokemon - 10, Seafoam Islands B3F - Wild Pokemon - 2, Seafoam Islands B3F - Wild Pokemon - 3, Seafoam Islands B3F - Wild Pokemon - 4, Seafoam Islands B3F - Wild Pokemon - 5, Seafoam Islands B3F - Wild Pokemon - 6, Seafoam Islands B3F - Wild Pokemon - 7, Seafoam Islands B3F - Wild Pokemon - 8, Seafoam Islands B3F - Wild Pokemon - 9, Seafoam Islands B4F - Wild Pokemon - 1, Seafoam Islands B4F - Wild Pokemon - 10, Seafoam Islands B4F - Wild Pokemon - 2, Seafoam Islands B4F - Wild Pokemon - 3, Seafoam Islands B4F - Wild Pokemon - 4, Seafoam Islands B4F - Wild Pokemon - 5, Seafoam Islands B4F - Wild Pokemon - 6, Seafoam Islands B4F - Wild Pokemon - 7, Seafoam Islands B4F - Wild Pokemon - 8, Seafoam Islands B4F - Wild Pokemon - 9, Vermilion Dock - Legendary Pokemon, Vermilion Gym - Defeat Lt. Surge, Vermilion Gym - Lt. Surge Prize, Vermilion Gym - Lt. Surge TM, Vermilion Gym - Trainer Parties, Viridian City - Sleepy Guy",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.434Z"
+        },
+        {
+          "message": "  - [5:52:00 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.434Z"
+        },
+        {
+          "message": "  - [5:52:00 AM]     ISSUE: Region Cinnabar Island is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.435Z"
+        },
+        {
+          "message": "  - [5:52:00 AM]     ISSUE: Region Cinnabar Lab is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.435Z"
+        },
+        {
+          "message": "  - [5:52:00 AM]     ISSUE: Region Cinnabar Lab Fossil Room is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.435Z"
+        },
+        {
+          "message": "  - [5:52:00 AM]     ISSUE: Region Cinnabar Lab R&D Room is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.436Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.436Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-SE is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.436Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.436Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.436Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.437Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.437Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.437Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.437Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.437Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.437Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.437Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.438Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 1F-SE is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.438Z"
+        },
+        {
+          "message": "  - [5:52:01 AM]     ISSUE: Region Pokemon Mansion 2F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.438Z"
+        },
+        {
+          "message": "  - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.438Z"
+        },
+        {
+          "message": "  - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.438Z"
+        },
+        {
+          "message": "  - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.438Z"
+        },
+        {
+          "message": "  - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.438Z"
+        },
+        {
+          "message": "  - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.439Z"
+        },
+        {
+          "message": "  - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.439Z"
+        },
+        {
+          "message": "  - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.439Z"
+        },
+        {
+          "message": "  - [5:52:02 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.439Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.439Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.439Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.439Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.439Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-SW is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.440Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.440Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.440Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.440Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.440Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.440Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.441Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.441Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.441Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.441Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.441Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-SE is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.441Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion 3F-SW is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.441Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.441Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.441Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.441Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.442Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.442Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.442Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.442Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.442Z"
+        },
+        {
+          "message": "  - [5:52:03 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.442Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.442Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.442Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.442Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.442Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.443Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.443Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Pokemon Mansion B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.443Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.443Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 19-S is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.443Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.443Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.443Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.443Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.444Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.444Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.444Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.444Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.444Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.444Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 19/20-Water is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.444Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 20-E is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.445Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 20-W is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.445Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.445Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.445Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.445Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.445Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.445Z"
+        },
+        {
+          "message": "  - [5:52:04 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.445Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.445Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.445Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.445Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.446Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.446Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.446Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.446Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.446Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.446Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.446Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.446Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.446Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.446Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.446Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 21 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.446Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Route 4-Lass is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.447Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Safari Zone Center-C is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.447Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Seafoam Islands 1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.447Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Seafoam Islands 1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.447Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.447Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.447Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.447Z"
+        },
+        {
+          "message": "  - [5:52:05 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.447Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands 1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-NE is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.448Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.449Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.449Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.449Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.449Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B1F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.449Z"
+        },
+        {
+          "message": "  - [5:52:06 AM]     ISSUE: Region Seafoam Islands B2F-NW is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.449Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-NE is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.450Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.450Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.450Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.450Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.450Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.450Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.450Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.450Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.450Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.450Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B2F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.451Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B3F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.451Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.451Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.451Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.451Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.451Z"
+        },
+        {
+          "message": "  - [5:52:07 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.451Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.451Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.451Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.451Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.451Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B3F-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.451Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Region Seafoam Islands B4F is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:08 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:09 AM]     ISSUE: Region Vermilion Gym is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:09 AM]     ISSUE: Region Vermilion Gym is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:09 AM]     ISSUE: Region Vermilion Gym is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.452Z"
+        },
+        {
+          "message": "  - [5:52:09 AM]     ISSUE: Region Vermilion Gym is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.453Z"
+        },
+        {
+          "message": "  - [5:52:09 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.453Z"
+        },
+        {
+          "message": "  - [5:52:09 AM] REGION MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":\"5.9\",\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.453Z"
+        },
+        {
+          "message": "  - [5:52:09 AM] > Regions accessible in LOG but NOT in STATE: Cerulean City-Water, Cinnabar Island, Cinnabar Island-M, Cinnabar Lab, Cinnabar Lab Fossil Room, Cinnabar Lab R&amp;D Room, Cinnabar Lab Trade Room, Cinnabar Pokemart, Cinnabar Pokemon Center, Pokemon Mansion 1F, Pokemon Mansion 1F-SE, Pokemon Mansion 1F-Wild, Pokemon Mansion 2F, Pokemon Mansion 2F-E, Pokemon Mansion 2F-Wild, Pokemon Mansion 3F, Pokemon Mansion 3F-SE, Pokemon Mansion 3F-SW, Pokemon Mansion 3F-Wild, Pokemon Mansion B1F, Route 19-S, Route 19/20-Water, Route 20-E, Route 20-IE, Route 20-IW, Route 20-W, Route 21, Route 4-Lass, Safari Zone Center-C, Seafoam Islands 1F, Seafoam Islands 1F-SE, Seafoam Islands 1F-Wild, Seafoam Islands B1F, Seafoam Islands B1F-NE, Seafoam Islands B1F-SE, Seafoam Islands B1F-Wild, Seafoam Islands B2F-NE, Seafoam Islands B2F-NW, Seafoam Islands B2F-SE, Seafoam Islands B2F-SW, Seafoam Islands B2F-Wild, Seafoam Islands B3F, Seafoam Islands B3F-NE, Seafoam Islands B3F-SE, Seafoam Islands B3F-Wild, Seafoam Islands B4F, Seafoam Islands B4F-W, Vermilion City-G, Vermilion Gym",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.453Z"
+        },
+        {
+          "message": "  - [5:52:14 AM] Test failed at step 93: Comparison failed for event type 'state_update'.",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.453Z"
+        },
+        {
+          "message": "  - [5:52:14 AM] Mismatch for event 93 (Sphere 5.9): Comparison for state_update at step 93 Failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.454Z"
+        },
+        {
+          "message": "  - [5:52:14 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.",
+          "type": "error",
+          "timestamp": "2025-11-13T05:52:14.454Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Spoiler test results stored in window.__spoilerTestResults__",
+          "type": "info",
+          "timestamp": "2025-11-13T05:52:14.454Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] Spoiler test results stored in localStorage",
+          "type": "info",
+          "timestamp": "2025-11-13T05:52:14.471Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763013108454] testSpoilersPanelFullRun finished. Overall Result: false.",
+          "type": "info",
+          "timestamp": "2025-11-13T05:52:14.471Z"
+        },
+        {
+          "message": "Test completion signal: FAILED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:52:14.471Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T05:52:14.471Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T05:52:14.472Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T05:52:14.472Z"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2025-11-13T05:52:14.573Z"
+}
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2025-11-13T05-52-14.json
+  ✘  1 tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results (32.1s)
+
+
+  1) tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m0[39m
+    Received: [31m1[39m
+
+      141 |
+      142 |     // The test system should complete successfully regardless of whether tests run
+    > 143 |     expect(results.summary.failedCount).toBe(0);
+          |                                         ^
+      144 |     
+      145 |     // If tests actually ran, they should pass
+      146 |     if (results.summary.totalRun > 0) {
+        at /home/user/Archipelago-CC/tests/e2e/app.spec.js:143:41
+
+    Error Context: test-results/app-Application-End-to-End-a086e-app-tests-and-check-results/error-context.md
+
+  1 failed
+    tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results ─

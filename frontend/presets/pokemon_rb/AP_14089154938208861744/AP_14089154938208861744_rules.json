@@ -4035,23 +4035,8 @@
                   }
                 },
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "world"
-                        },
-                        "attr": "options"
-                      },
-                      "attr": "extra_key_items"
-                    },
-                    "attr": "value"
-                  }
+                  "type": "constant",
+                  "value": true
                 }
               ]
             }
@@ -4158,23 +4143,8 @@
                   }
                 },
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "world"
-                        },
-                        "attr": "options"
-                      },
-                      "attr": "extra_key_items"
-                    },
-                    "attr": "value"
-                  }
+                  "type": "constant",
+                  "value": true
                 }
               ]
             }
@@ -19465,23 +19435,8 @@
                   "args": []
                 },
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "world"
-                        },
-                        "attr": "options"
-                      },
-                      "attr": "extra_strength_boulders"
-                    },
-                    "attr": "value"
-                  }
+                  "type": "constant",
+                  "value": true
                 }
               ]
             }
@@ -19535,23 +19490,8 @@
                   "args": []
                 },
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "world"
-                        },
-                        "attr": "options"
-                      },
-                      "attr": "extra_strength_boulders"
-                    },
-                    "attr": "value"
-                  }
+                  "type": "constant",
+                  "value": true
                 }
               ]
             }
@@ -21491,23 +21431,8 @@
                   }
                 },
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "world"
-                        },
-                        "attr": "options"
-                      },
-                      "attr": "extra_key_items"
-                    },
-                    "attr": "value"
-                  }
+                  "type": "constant",
+                  "value": true
                 }
               ]
             }
@@ -21549,23 +21474,8 @@
                   }
                 },
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "world"
-                        },
-                        "attr": "options"
-                      },
-                      "attr": "extra_key_items"
-                    },
-                    "attr": "value"
-                  }
+                  "type": "constant",
+                  "value": true
                 }
               ]
             }
@@ -28379,23 +28289,8 @@
                   }
                 },
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "world"
-                        },
-                        "attr": "options"
-                      },
-                      "attr": "extra_key_items"
-                    },
-                    "attr": "value"
-                  }
+                  "type": "constant",
+                  "value": true
                 }
               ]
             }
