@@ -12,27 +12,53 @@
 
 **Result**: Generation now succeeds and produces rules.json and sphere log files.
 
-**Code**:
+## Issue 2: `self.evalSMBool()` function calls
+**Status**: ✅ Solved
+
+**Problem**: Rules contained `self.evalSMBool()` function calls where `self` is the Python SMWorld object. The JavaScript rule engine couldn't resolve `self` as a name.
+
+**Solution**: Implemented `expand_rule()` method in SMGameExportHandler that transforms function calls to `self.evalSMBool()` into direct helper calls.
+
+**Transformation**:
+- From: `{"type": "function_call", "function": {"type": "attribute", "object": {"type": "name", "name": "self"}, "attr": "evalSMBool"}, ...}`
+- To: `{"type": "helper", "name": "evalSMBool", ...}`
+
+**Implementation** (in `exporter/games/sm.py`):
 ```python
-"""Super Metroid game-specific export handler."""
+def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    """Recursively expand and transform Super Metroid rules.
 
-from typing import Dict, Any
-from .generic import GenericGameExportHandler
-import logging
-
-logger = logging.getLogger(__name__)
-
-class SMGameExportHandler(GenericGameExportHandler):
-    """Export handler for Super Metroid.
-
-    Super Metroid uses a custom SMBoolManager system for its logic.
-    The rules are wrapped in self.evalSMBool() calls with helper functions.
-    This exporter inherits from GenericGameExportHandler to handle the basic structure.
+    Transforms self.evalSMBool() function calls into direct helper calls
+    that the JavaScript frontend can execute.
     """
-    GAME_NAME = 'Super Metroid'
+    if not rule:
+        return rule
 
-    # Inherit all default behavior from GenericGameExportHandler
-    # The rules for Super Metroid are complex due to the SMBoolManager system
-    # which evaluates "SMBool" objects that have both a boolean value and a difficulty rating.
-    # For now, we'll let the generic handler process these and see what the frontend needs.
+    rule_type = rule.get('type')
+
+    # Transform function_call nodes where function is an attribute access on 'self'
+    if rule_type == 'function_call':
+        function = rule.get('function', {})
+        if function.get('type') == 'attribute':
+            obj = function.get('object', {})
+            attr = function.get('attr')
+
+            # Transform self.evalSMBool(...) into a helper call
+            if obj.get('type') == 'name' and obj.get('name') == 'self' and attr == 'evalSMBool':
+                args = rule.get('args', [])
+                return {
+                    'type': 'helper',
+                    'name': 'evalSMBool',
+                    'args': [self.expand_rule(arg) for arg in args]
+                }
+
+    # ... (recursive processing of nested structures)
+    return rule
 ```
+
+**Result**:
+- No more "Name 'self' NOT FOUND" errors
+- Helper functions are properly found and called
+- Rules are now in a format the frontend can attempt to evaluate
+
+**Test Result**: Test progresses further but now fails on a different issue (references to `state.smbm[player]` - see remaining-exporter-issues.md).
