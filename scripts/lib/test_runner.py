@@ -585,13 +585,14 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
                             current_player_count: int, export_only: bool = False,
                             test_only: bool = False, headed: bool = False,
                             keep_templates: bool = False, test_all_players: bool = False,
-                            require_prerequisites: bool = False,
+                            require_prerequisites: bool = True,
                             include_error_details: bool = False) -> Dict:
     """
     Test a single template in multiworld mode.
 
-    By default, tests all templates. If require_prerequisites is True, only tests
-    templates that have passed spoiler minimal, spoiler full, and multiplayer tests.
+    By default (require_prerequisites=True), only tests templates that have passed
+    spoiler minimal, spoiler full, and multiplayer tests. If require_prerequisites
+    is False, tests all templates regardless of other test results.
     Copies template to the multiworld directory, runs generation with all accumulated
     templates, and tests each player.
 
@@ -609,7 +610,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         headed: If True, run Playwright tests in headed mode
         keep_templates: If True, don't copy template to multiworld directory (just test existing templates)
         test_all_players: If True, test all players; if False, only test the newly added player
-        require_prerequisites: If True, skip templates that haven't passed other test types (default: False)
+        require_prerequisites: If True, skip templates that haven't passed other test types (default: True)
 
     Returns:
         Dictionary with test results

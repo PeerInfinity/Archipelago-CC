@@ -129,14 +129,14 @@ jobs:
           # Minimal spoiler test for all templates, seeds 1-10
           - test_name: "Minimal Spoiler (Seeds 1-10)"
             host_config: "minimal-spoilers"
-            test_command: "python scripts/test/test-all-templates.py --seed-range 1-10 --seed-range-continue-on-failure --start-from \"Heretic.yaml\" -p"
+            test_command: "python scripts/test/test-all-templates.py --seed-range 1-10 --seed-range-continue-on-failure -p"
             output_dir: "spoiler-minimal"
             output_md_file: "test-results-spoilers-minimal.md"
 
           # Full spoiler test for all templates, seeds 1-10
           - test_name: "Full Spoiler (Seeds 1-10)"
             host_config: "full-spoilers"
-            test_command: "python scripts/test/test-all-templates.py --seed-range 1-10 --seed-range-continue-on-failure --start-from \"Heretic.yaml\" -p"
+            test_command: "python scripts/test/test-all-templates.py --seed-range 1-10 --seed-range-continue-on-failure -p"
             output_dir: "spoiler-full"
             output_md_file: "test-results-spoilers-full.md"
 

@@ -91,20 +91,18 @@ def build_and_load_world_mapping(project_root: str) -> Dict[str, Dict]:
     build_script = os.path.join(project_root, 'scripts', 'build', 'build-world-mapping.py')
 
     # Always build the mapping to ensure it's current
-    try:
-        print("Building world mapping...")
-        result = subprocess.run([sys.executable, build_script],
-                              cwd=project_root,
-                              capture_output=True,
-                              text=True)
-        if result.returncode != 0:
-            print(f"Warning: Failed to build world mapping: {result.stderr}")
-            return {}
-        else:
-            print("World mapping built successfully")
-    except Exception as e:
-        print(f"Warning: Failed to build world mapping: {e}")
+    print("Building world mapping...")
+    return_code, stdout, stderr = run_command(
+        [sys.executable, build_script],
+        cwd=project_root,
+        timeout=120  # 2 minute timeout for building world mapping
+    )
+
+    if return_code != 0:
+        print(f"Warning: Failed to build world mapping: {stderr}")
         return {}
+    else:
+        print("World mapping built successfully")
 
     # Load the mapping
     try:
