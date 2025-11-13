@@ -40,17 +40,20 @@ export const helperFunctions = {
     }
 
     // Check if this item is part of a progressive item chain
-    const progressionMapping = staticData?.progression_mapping;
+    const progressionMapping = staticData?.progressionMapping;
     if (progressionMapping) {
       // Look through all progressive items to see if any contain this item
-      for (const [progressiveName, itemList] of Object.entries(progressionMapping)) {
-        const itemIndex = itemList.indexOf(itemName);
-        if (itemIndex !== -1) {
-          // This item is part of a progressive chain
-          // Check if the player has enough of the progressive item to reach this item
-          const progressiveCount = snapshot?.inventory?.[progressiveName] || 0;
-          if (progressiveCount > itemIndex) {
-            return true;
+      for (const [progressiveName, progressionData] of Object.entries(progressionMapping)) {
+        if (progressionData?.items) {
+          // Find this item in the progression chain
+          const itemEntry = progressionData.items.find(item => item.name === itemName);
+          if (itemEntry) {
+            // This item is part of a progressive chain
+            // Check if the player has enough of the progressive item to reach this level
+            const progressiveCount = snapshot?.inventory?.[progressiveName] || 0;
+            if (progressiveCount >= itemEntry.level) {
+              return true;
+            }
           }
         }
       }

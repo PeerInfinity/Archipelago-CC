@@ -74,9 +74,11 @@ class RaftGameExportHandler(GenericGameExportHandler):
             # Build item check conditions
             item_conditions = []
             for item_name in item_requirements:
+                # Sanitize item name for use in helper function name (replace spaces with underscores)
+                sanitized_name = item_name.replace(' ', '_')
                 item_conditions.append({
                     'type': 'helper',
-                    'name': f'raft_itemcheck_{item_name}',
+                    'name': f'raft_itemcheck_{sanitized_name}',
                     'args': [],
                     'description': f'Can access {item_name}'
                 })
@@ -127,4 +129,16 @@ class RaftGameExportHandler(GenericGameExportHandler):
 
     def get_progression_mapping(self, world) -> Dict[str, Any]:
         """Return Raft-specific progression item mapping data."""
-        return self.progressive_mapping
+        # Convert the simple list format to the proper schema format
+        mapping_data = {}
+        for progressive_name, item_list in self.progressive_mapping.items():
+            mapping_data[progressive_name] = {
+                'base_item': progressive_name,
+                'items': []
+            }
+            for level, item_name in enumerate(item_list, start=1):
+                mapping_data[progressive_name]['items'].append({
+                    'name': item_name,
+                    'level': level
+                })
+        return mapping_data

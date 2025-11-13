@@ -2710,7 +2710,7 @@
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Zipline tool",
+                  "name": "raft_itemcheck_Zipline_tool",
                   "args": [],
                   "description": "Can access Zipline tool"
                 }
@@ -7941,110 +7941,356 @@
   },
   "progression_mapping": {
     "1": {
-      "progressive-salve": [
-        "Healing salve",
-        "Good healing salve"
-      ],
-      "progressive-backpack": [
-        "Backpack",
-        "Big backpack"
-      ],
-      "progressive-containers": [
-        "Clay bowl",
-        "Drinking glass"
-      ],
-      "progressive-headlight": [
-        "Head light",
-        "Advanced head light"
-      ],
-      "progressive-biofuel": [
-        "Biofuel refiner",
-        "Advanced biofuel refiner"
-      ],
-      "progressive-bottle": [
-        "Empty bottle",
-        "Empty canteen"
-      ],
-      "progressive-grill": [
-        "Advanced grill",
-        "Electric grill"
-      ],
-      "progressive-purifier": [
-        "Advanced purifier",
-        "Electric purifier"
-      ],
-      "progressive-crop-plot": [
-        "Medium crop plot",
-        "Large crop plot",
-        "Advanced small crop plot",
-        "Advanced medium crop plot",
-        "Advanced large crop plot"
-      ],
-      "progressive-battery": [
-        "Battery",
-        "Battery charger",
-        "Advanced Battery",
-        "Wind turbine"
-      ],
-      "progressive-anchor": [
-        "Stationary anchor",
-        "Advanced stationary anchor"
-      ],
-      "progressive-engine": [
-        "Engine",
-        "Steering Wheel",
-        "Engine controls"
-      ],
-      "progressive-scarecrow": [
-        "Scarecrow",
-        "Advanced Scarecrow"
-      ],
-      "progressive-net": [
-        "Simple collection net",
-        "Advanced collection net"
-      ],
-      "progressive-storage": [
-        "Storage",
-        "Large Storage"
-      ],
-      "progressive-zipline": [
-        "Zipline tool",
-        "Zipline",
-        "Electric zipline tool"
-      ],
-      "progressive-metals": [
-        "Smelter",
-        "Metal detector",
-        "Electric Smelter"
-      ],
-      "progressive-bow": [
-        "Basic bow",
-        "Stone arrow",
-        "Metal arrow",
-        "Titanium arrow"
-      ],
-      "progressive-axe": [
-        "Metal axe",
-        "Titanium axe"
-      ],
-      "progressive-hook": [
-        "Scrap hook",
-        "Titanium hook"
-      ],
-      "progressive-spear": [
-        "Metal spear",
-        "Machete",
-        "Titanium sword"
-      ],
-      "progressive-frequency": [
-        "Vasagatan Frequency",
-        "Balboa Island Frequency",
-        "Caravan Island Frequency",
-        "Tangaroa Frequency",
-        "Varuna Point Frequency",
-        "Temperance Frequency",
-        "Utopia Frequency"
-      ]
+      "progressive-salve": {
+        "base_item": "progressive-salve",
+        "items": [
+          {
+            "name": "Healing salve",
+            "level": 1
+          },
+          {
+            "name": "Good healing salve",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-backpack": {
+        "base_item": "progressive-backpack",
+        "items": [
+          {
+            "name": "Backpack",
+            "level": 1
+          },
+          {
+            "name": "Big backpack",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-containers": {
+        "base_item": "progressive-containers",
+        "items": [
+          {
+            "name": "Clay bowl",
+            "level": 1
+          },
+          {
+            "name": "Drinking glass",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-headlight": {
+        "base_item": "progressive-headlight",
+        "items": [
+          {
+            "name": "Head light",
+            "level": 1
+          },
+          {
+            "name": "Advanced head light",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-biofuel": {
+        "base_item": "progressive-biofuel",
+        "items": [
+          {
+            "name": "Biofuel refiner",
+            "level": 1
+          },
+          {
+            "name": "Advanced biofuel refiner",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-bottle": {
+        "base_item": "progressive-bottle",
+        "items": [
+          {
+            "name": "Empty bottle",
+            "level": 1
+          },
+          {
+            "name": "Empty canteen",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-grill": {
+        "base_item": "progressive-grill",
+        "items": [
+          {
+            "name": "Advanced grill",
+            "level": 1
+          },
+          {
+            "name": "Electric grill",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-purifier": {
+        "base_item": "progressive-purifier",
+        "items": [
+          {
+            "name": "Advanced purifier",
+            "level": 1
+          },
+          {
+            "name": "Electric purifier",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-crop-plot": {
+        "base_item": "progressive-crop-plot",
+        "items": [
+          {
+            "name": "Medium crop plot",
+            "level": 1
+          },
+          {
+            "name": "Large crop plot",
+            "level": 2
+          },
+          {
+            "name": "Advanced small crop plot",
+            "level": 3
+          },
+          {
+            "name": "Advanced medium crop plot",
+            "level": 4
+          },
+          {
+            "name": "Advanced large crop plot",
+            "level": 5
+          }
+        ]
+      },
+      "progressive-battery": {
+        "base_item": "progressive-battery",
+        "items": [
+          {
+            "name": "Battery",
+            "level": 1
+          },
+          {
+            "name": "Battery charger",
+            "level": 2
+          },
+          {
+            "name": "Advanced Battery",
+            "level": 3
+          },
+          {
+            "name": "Wind turbine",
+            "level": 4
+          }
+        ]
+      },
+      "progressive-anchor": {
+        "base_item": "progressive-anchor",
+        "items": [
+          {
+            "name": "Stationary anchor",
+            "level": 1
+          },
+          {
+            "name": "Advanced stationary anchor",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-engine": {
+        "base_item": "progressive-engine",
+        "items": [
+          {
+            "name": "Engine",
+            "level": 1
+          },
+          {
+            "name": "Steering Wheel",
+            "level": 2
+          },
+          {
+            "name": "Engine controls",
+            "level": 3
+          }
+        ]
+      },
+      "progressive-scarecrow": {
+        "base_item": "progressive-scarecrow",
+        "items": [
+          {
+            "name": "Scarecrow",
+            "level": 1
+          },
+          {
+            "name": "Advanced Scarecrow",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-net": {
+        "base_item": "progressive-net",
+        "items": [
+          {
+            "name": "Simple collection net",
+            "level": 1
+          },
+          {
+            "name": "Advanced collection net",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-storage": {
+        "base_item": "progressive-storage",
+        "items": [
+          {
+            "name": "Storage",
+            "level": 1
+          },
+          {
+            "name": "Large Storage",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-zipline": {
+        "base_item": "progressive-zipline",
+        "items": [
+          {
+            "name": "Zipline tool",
+            "level": 1
+          },
+          {
+            "name": "Zipline",
+            "level": 2
+          },
+          {
+            "name": "Electric zipline tool",
+            "level": 3
+          }
+        ]
+      },
+      "progressive-metals": {
+        "base_item": "progressive-metals",
+        "items": [
+          {
+            "name": "Smelter",
+            "level": 1
+          },
+          {
+            "name": "Metal detector",
+            "level": 2
+          },
+          {
+            "name": "Electric Smelter",
+            "level": 3
+          }
+        ]
+      },
+      "progressive-bow": {
+        "base_item": "progressive-bow",
+        "items": [
+          {
+            "name": "Basic bow",
+            "level": 1
+          },
+          {
+            "name": "Stone arrow",
+            "level": 2
+          },
+          {
+            "name": "Metal arrow",
+            "level": 3
+          },
+          {
+            "name": "Titanium arrow",
+            "level": 4
+          }
+        ]
+      },
+      "progressive-axe": {
+        "base_item": "progressive-axe",
+        "items": [
+          {
+            "name": "Metal axe",
+            "level": 1
+          },
+          {
+            "name": "Titanium axe",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-hook": {
+        "base_item": "progressive-hook",
+        "items": [
+          {
+            "name": "Scrap hook",
+            "level": 1
+          },
+          {
+            "name": "Titanium hook",
+            "level": 2
+          }
+        ]
+      },
+      "progressive-spear": {
+        "base_item": "progressive-spear",
+        "items": [
+          {
+            "name": "Metal spear",
+            "level": 1
+          },
+          {
+            "name": "Machete",
+            "level": 2
+          },
+          {
+            "name": "Titanium sword",
+            "level": 3
+          }
+        ]
+      },
+      "progressive-frequency": {
+        "base_item": "progressive-frequency",
+        "items": [
+          {
+            "name": "Vasagatan Frequency",
+            "level": 1
+          },
+          {
+            "name": "Balboa Island Frequency",
+            "level": 2
+          },
+          {
+            "name": "Caravan Island Frequency",
+            "level": 3
+          },
+          {
+            "name": "Tangaroa Frequency",
+            "level": 4
+          },
+          {
+            "name": "Varuna Point Frequency",
+            "level": 5
+          },
+          {
+            "name": "Temperance Frequency",
+            "level": 6
+          },
+          {
+            "name": "Utopia Frequency",
+            "level": 7
+          }
+        ]
+      }
     }
   },
   "starting_items": {
