@@ -96,6 +96,22 @@ class BaseGameExportHandler:
         """Return game-specific progression item mapping data."""
         return {}
         
+    def recalculate_collection_state_if_needed(self, current_collection_state, player_id, world):
+        """
+        Hook for game-specific state recalculations before sphere logging.
+
+        Some games need to recalculate progressive items or state based on
+        accessible regions before logging sphere details. Override this method
+        in game-specific handlers to perform such recalculations.
+
+        Args:
+            current_collection_state: The CollectionState to potentially update
+            player_id: The player ID
+            world: The world instance for this player
+        """
+        # Default implementation: do nothing
+        pass
+
     def get_itempool_counts(self, world, multiworld, player) -> Dict[str, int]:
         """Calculate and return item counts for the player's pool."""
         itempool_counts = collections.defaultdict(int)

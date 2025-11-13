@@ -366,6 +366,19 @@ export const kh1Logic = {
     },
 
     /**
+     * Extract puppies_required from location names like "Return X Puppies"
+     * @param {string} locationName - The location name to parse
+     * @returns {number|null} Number of puppies required, or null if not a puppy location
+     */
+    extractPuppiesRequired(locationName) {
+        const match = locationName.match(/Return (\d+) Puppies/);
+        if (match) {
+            return parseInt(match[1], 10);
+        }
+        return null;
+    },
+
+    /**
      * Checks if the player meets the Final Rest door requirement
      * @param {Object} snapshot - The current game state
      * @param {Object} staticData - Static game data

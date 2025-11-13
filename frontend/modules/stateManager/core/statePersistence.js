@@ -438,22 +438,20 @@ export function _createSelfSnapshotInterface(sm) {
 
       // Core StateManager components often accessed by rules
       if (name === 'inventory') return sm.inventory; // The inventory instance
-      // Return gameStateModule for ALTTP, state for others
+      // Return gameStateModule with optional game-specific transformation
       if (name === 'state') {
-        if (sm.gameStateModule && sm.settings?.game === 'A Link to the Past') {
-          // For ALTTP, return a state object that includes the multiworld structure for compatibility with Python rules
-          return {
-            ...sm.gameStateModule,
-            multiworld: {
-              worlds: {
-                [sm.playerSlot]: {
-                  options: {
-                    ...sm.settings // Include all settings as options (now properly exported from Python)
-                  }
-                }
-              }
-            }
-          };
+        if (sm.gameStateModule && sm.settings?.game) {
+          // Check if the game has a custom state builder hook
+          const gameLogic = getGameLogic(sm.settings.game);
+          if (gameLogic?.stateModule?.buildStateWithMultiworld) {
+            return gameLogic.stateModule.buildStateWithMultiworld(
+              sm.gameStateModule,
+              sm.settings,
+              sm.playerSlot
+            );
+          }
+          // Fallback: return gameStateModule as-is
+          return sm.gameStateModule;
         } else {
           return sm.state; // For other games, return the state instance
         }
@@ -495,18 +493,24 @@ export function _createSelfSnapshotInterface(sm) {
         return sm.settings[name];
       }
 
-      // Game-specific location variable extraction
+      // Game-specific location variable extraction hook
       // For variables not found elsewhere, try to extract from current location name
       const currentLoc = anInterface.currentLocation || anInterface.location;
       if (currentLoc && currentLoc.name) {
         const locationName = currentLoc.name;
         const gameName = sm.rules?.game_name;
 
-        // Kingdom Hearts: Extract puppies_required from "Return X Puppies" locations
-        if (name === 'puppies_required' && gameName === 'Kingdom Hearts') {
-          const match = locationName.match(/Return (\d+) Puppies/);
-          if (match) {
-            return parseInt(match[1], 10);
+        if (gameName) {
+          const gameLogic = getGameLogic(gameName);
+          const selectedHelpers = gameLogic?.helperFunctions;
+
+          // Check if the game has a custom extractor for this variable
+          const extractorName = `extract${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+          if (selectedHelpers && typeof selectedHelpers[extractorName] === 'function') {
+            const extractedValue = selectedHelpers[extractorName](locationName);
+            if (extractedValue !== null && extractedValue !== undefined) {
+              return extractedValue;
+            }
           }
         }
       }

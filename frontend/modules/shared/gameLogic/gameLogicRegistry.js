@@ -489,18 +489,20 @@ export function detectGameFromWorldClass(worldClass) {
  */
 export function getGameLogic(gameName) {
   const config = GAME_REGISTRY[gameName];
-  
+
   if (!config) {
     // Fallback to Generic for unknown games
     return {
       logicModule: GAME_REGISTRY['Generic'].logicModule,
-      helperFunctions: GAME_REGISTRY['Generic'].helperFunctions
+      helperFunctions: GAME_REGISTRY['Generic'].helperFunctions,
+      stateModule: GAME_REGISTRY['Generic'].logicModule
     };
   }
 
   return {
     logicModule: config.logicModule,
-    helperFunctions: config.helperFunctions
+    helperFunctions: config.helperFunctions,
+    stateModule: config.logicModule // Expose stateModule for hooks
   };
 }
 

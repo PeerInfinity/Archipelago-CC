@@ -56,16 +56,14 @@ def log_sphere_details(file_handler, multiworld: "MultiWorld", sphere_index: Uni
 
         # Trigger game-specific state recalculations before logging
         # This ensures progressive items that depend on region accessibility are up-to-date
+        from exporter.games import get_game_export_handler
         for player_id in multiworld.player_ids:
             world = multiworld.worlds[player_id]
-            world_class_name = world.__class__.__name__
-
-            # Jak and Daxter: Recalculate "Reachable Orbs" based on accessible orb regions
-            if world_class_name == "JakAndDaxterWorld":
-                # Check if "Reachable Orbs Fresh" is False, indicating recalculation is needed
-                if not current_collection_state.prog_items[player_id].get("Reachable Orbs Fresh", False):
-                    from worlds.jakanddaxter.rules import recalculate_reachable_orbs
-                    recalculate_reachable_orbs(current_collection_state, player_id, world)
+            game_name = world.game
+            game_handler = get_game_export_handler(game_name, world)
+            game_handler.recalculate_collection_state_if_needed(
+                current_collection_state, player_id, world
+            )
 
         # Collect current state data for all players
         current_state_data = {}

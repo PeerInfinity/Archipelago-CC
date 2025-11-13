@@ -1587,5 +1587,28 @@ export const alttpStateModule = {
    */
   getEvents(gameState) {
     return gameState.events || [];
+  },
+
+  /**
+   * Build state object with multiworld structure for rule compatibility
+   * This creates a state object that matches the structure expected by Python rules
+   * @param {Object} gameState - Current ALTTP game state
+   * @param {Object} settings - Game settings
+   * @param {number} playerSlot - Player slot number
+   * @returns {Object} State object with multiworld structure
+   */
+  buildStateWithMultiworld(gameState, settings, playerSlot) {
+    return {
+      ...gameState,
+      multiworld: {
+        worlds: {
+          [playerSlot]: {
+            options: {
+              ...settings // Include all settings as options (exported from Python)
+            }
+          }
+        }
+      }
+    };
   }
 };

@@ -327,16 +327,18 @@ export function createStateSnapshotInterface(
           }
           return undefined;
         default:
-          // Game-specific location variable extraction
+          // Game-specific location variable extraction hook
           // For variables not found in context, try to extract from location name
           if (contextVariables && contextVariables.location) {
             const locationName = contextVariables.location.name || '';
+            const selectedHelpers = getHelperFunctions(gameName);
 
-            // Kingdom Hearts: Extract puppies_required from "Return X Puppies" locations
-            if (name === 'puppies_required' && gameName === 'Kingdom Hearts') {
-              const match = locationName.match(/Return (\d+) Puppies/);
-              if (match) {
-                return parseInt(match[1], 10);
+            // Check if the game has a custom extractor for this variable
+            const extractorName = `extract${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+            if (selectedHelpers && typeof selectedHelpers[extractorName] === 'function') {
+              const extractedValue = selectedHelpers[extractorName](locationName);
+              if (extractedValue !== null && extractedValue !== undefined) {
+                return extractedValue;
               }
             }
           }
