@@ -82,8 +82,9 @@ export function dice_simulation_state_change(snapshot, staticData, fragsPerDice,
     });
 
     // Create a cache key based on the current inventory state
-    // Don't cache across different states!
-    const inventoryKey = JSON.stringify(snapshot?.items || {});
+    // BUGFIX: Use snapshot.inventory (which exists) instead of snapshot.items (which doesn't)
+    const inventory = snapshot?.items || snapshot?.inventory || {};
+    const inventoryKey = JSON.stringify(inventory);
     const cacheKey = `${inventoryKey}_${fragsPerDice}_${fragsPerRoll}_${difficulty}`;
 
     // Check cache (but create it if doesn't exist)
@@ -137,12 +138,12 @@ function extractProgression(snapshot, fragsPerDice, fragsPerRoll, allowedCategor
     // Different games structure their snapshots differently
     const items = snapshot?.items || snapshot?.inventory || snapshot || {};
 
-    // Debug: Log snapshot structure once
-    if (typeof console !== 'undefined' && console.log && !items.__debugLogged) {
-        console.log('[YachtDice] Snapshot keys:', Object.keys(snapshot || {}).slice(0, 20));
-        console.log('[YachtDice] Items structure:', JSON.stringify(items).substring(0, 200));
-        items.__debugLogged = true;
-    }
+    // Debug: ALWAYS log for deep debugging
+    console.log('[YachtDice extractProgression] Snapshot keys:', Object.keys(snapshot || {}).join(', '));
+    console.log('[YachtDice extractProgression] snapshot.items:', snapshot?.items ? 'exists' : 'missing');
+    console.log('[YachtDice extractProgression] snapshot.inventory:', snapshot?.inventory ? 'exists' : 'missing');
+    console.log('[YachtDice extractProgression] Using items from:', snapshot?.items ? 'snapshot.items' : snapshot?.inventory ? 'snapshot.inventory' : 'snapshot itself');
+    console.log('[YachtDice extractProgression] items.Dice:', items?.["Dice"]);
 
     // Count dice and rolls (including fragments)
     const diceFrags = (items["Dice Fragment"] || 0);
@@ -152,6 +153,7 @@ function extractProgression(snapshot, fragsPerDice, fragsPerRoll, allowedCategor
 
     // ALWAYS log the dice/roll counts for debugging
     console.log('[YachtDice] Item counts: Dice=' + items["Dice"] + ', DiceFrags=' + diceFrags + ', Roll=' + items["Roll"] + ', RollFrags=' + rollFrags + ', numDice=' + numDice + ', numRolls=' + numRolls);
+    console.log('[YachtDice extractProgression] Calculated numDice=' + numDice + ', numRolls=' + numRolls + ' from fragsPerDice=' + fragsPerDice + ', fragsPerRoll=' + fragsPerRoll);
 
     // Count multipliers
     const numFixedMults = items["Fixed Score Multiplier"] || 0;

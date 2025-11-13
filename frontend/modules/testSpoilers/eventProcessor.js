@@ -226,11 +226,15 @@ export class EventProcessor {
             // Single-player processing: check locations normally
             const locationsToCheck = sphereData.locations || [];
             if (locationsToCheck.length > 0) {
-              this.logCallback('info', `Checking ${locationsToCheck.length} locations from sphere ${context.sphere_number}`);
+              console.log(`[EventProcessor] Checking ${locationsToCheck.length} locations from sphere ${context.sphere_number}: ${JSON.stringify(locationsToCheck)}`);
+              this.logCallback('info', `Checking ${locationsToCheck.length} locations from sphere ${context.sphere_number}: ${JSON.stringify(locationsToCheck)}`);
 
               // Get initial snapshot and static data once (for logging)
               const initialSnapshot = await stateManager.getFullSnapshot();
               const staticData = stateManager.getStaticData();
+
+              console.log(`[EventProcessor] Initial inventory before checking locations: ${JSON.stringify(initialSnapshot.inventory)}`);
+              this.logCallback('info', `Initial inventory before checking locations: ${JSON.stringify(initialSnapshot.inventory)}`);
 
               for (const locationName of locationsToCheck) {
                 // Get location definition from static data to see what item we're about to receive (for logging)
@@ -269,6 +273,11 @@ export class EventProcessor {
               }
 
               this.logCallback('info', `Completed checking ${locationsToCheck.length} locations for sphere ${context.sphere_number}`);
+
+              // Get snapshot after checking all locations
+              const afterCheckSnapshot = await stateManager.getFullSnapshot();
+              console.log(`[EventProcessor] Inventory after checking locations: ${JSON.stringify(afterCheckSnapshot.inventory)}`);
+              this.logCallback('info', `Inventory after checking locations: ${JSON.stringify(afterCheckSnapshot.inventory)}`);
             }
           }
 
@@ -307,6 +316,11 @@ export class EventProcessor {
           this.logCallback(
             'info',
             `Fresh snapshot has ${freshSnapshot.checkedLocations?.length || 0} checked locations`
+          );
+          console.log(`[EventProcessor] Inventory in fresh snapshot for comparison: ${JSON.stringify(freshSnapshot.inventory)}`);
+          this.logCallback(
+            'info',
+            `Inventory in fresh snapshot for comparison: ${JSON.stringify(freshSnapshot.inventory)}`
           );
           if (this.verboseMode) {
             this.logCallback(
