@@ -43,31 +43,12 @@
             "name": "Menu to Fossil",
             "connected_region": "Fossil",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "fossil_checks"
-              },
+              "type": "helper",
+              "name": "fossil_checks",
               "args": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "options"
-                    },
-                    "attr": "second_fossil_check_condition"
-                  },
-                  "attr": "value"
+                  "type": "constant",
+                  "value": 3
                 }
               ]
             }
@@ -76,15 +57,8 @@
             "name": "Free Fly Location",
             "connected_region": "Indigo Plateau",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           }
@@ -109,15 +83,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -148,15 +115,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -187,15 +147,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -226,15 +179,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -265,15 +211,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -304,15 +243,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -343,15 +275,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -382,15 +307,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -450,15 +368,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -489,15 +400,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -557,15 +461,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -712,15 +609,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -751,15 +641,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -790,15 +673,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -829,15 +705,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -868,15 +737,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -907,15 +769,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -946,15 +801,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1014,15 +862,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1053,15 +894,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1092,15 +926,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1131,15 +958,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1170,15 +990,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1238,15 +1051,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1277,15 +1083,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1316,15 +1115,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1355,15 +1147,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1394,15 +1179,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1433,15 +1211,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1472,15 +1243,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1511,15 +1275,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1550,15 +1307,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1618,15 +1368,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1657,15 +1400,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1696,15 +1432,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1735,15 +1464,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1774,15 +1496,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1842,15 +1557,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1881,15 +1589,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1920,15 +1621,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1959,15 +1653,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -1998,15 +1685,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -2066,15 +1746,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -2105,15 +1778,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -2144,15 +1810,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "evolve_level"
-                  },
+                  "type": "helper",
+                  "name": "evolve_level",
                   "args": [
                     {
                       "type": "constant",
@@ -2310,15 +1969,8 @@
             "name": "Celadon City to Celadon City-G",
             "connected_region": "Celadon City-G",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -2416,15 +2068,8 @@
             "name": "Celadon City - Stranded Man",
             "id": 172000024,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             },
             "item": {
@@ -2443,15 +2088,8 @@
             "name": "Celadon City-G to Celadon City",
             "connected_region": "Celadon City",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -2459,15 +2097,8 @@
             "name": "Celadon City-G to Celadon City (Fly)",
             "connected_region": "Celadon City",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -2530,15 +2161,8 @@
             "name": "Pallet Town to Route 21",
             "connected_region": "Route 21",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -2637,15 +2261,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_cut"
-                  },
+                  "type": "helper",
+                  "name": "can_cut",
                   "args": []
                 }
               ]
@@ -2692,27 +2309,13 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_cut"
-                  },
+                  "type": "helper",
+                  "name": "can_cut",
                   "args": []
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_surf"
-                  },
+                  "type": "helper",
+                  "name": "can_surf",
                   "args": []
                 }
               ]
@@ -2733,31 +2336,12 @@
             "name": "Viridian City-N to Viridian City-G",
             "connected_region": "Viridian City-G",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "has_badges"
-              },
+              "type": "helper",
+              "name": "has_badges",
               "args": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "options"
-                    },
-                    "attr": "viridian_gym_condition"
-                  },
-                  "attr": "value"
+                  "type": "constant",
+                  "value": 7
                 }
               ]
             }
@@ -2808,15 +2392,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_cut"
-                  },
+                  "type": "helper",
+                  "name": "can_cut",
                   "args": []
                 }
               ]
@@ -2832,31 +2409,12 @@
             "name": "Viridian City-G to Viridian City-N",
             "connected_region": "Viridian City-N",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "has_badges"
-              },
+              "type": "helper",
+              "name": "has_badges",
               "args": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "options"
-                    },
-                    "attr": "viridian_gym_condition"
-                  },
-                  "attr": "value"
+                  "type": "constant",
+                  "value": 7
                 }
               ]
             }
@@ -2887,15 +2445,8 @@
             "name": "Pewter City-E to Route 3",
             "connected_region": "Route 3",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "route"
-              },
+              "type": "helper",
+              "name": "route",
               "args": []
             }
           }
@@ -2947,15 +2498,8 @@
             "name": "Pewter City to Pewter City-M",
             "connected_region": "Pewter City-M",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -3028,15 +2572,8 @@
             "name": "Cerulean City-T to Cerulean City (Fly)",
             "connected_region": "Cerulean City",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -3085,15 +2622,8 @@
             "name": "Cerulean City to Cerulean City-Outskirts",
             "connected_region": "Cerulean City-Outskirts",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -3181,15 +2711,8 @@
             "name": "Cerulean City-Badge House Backyard to Cerulean City",
             "connected_region": "Cerulean City",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -3211,15 +2734,8 @@
             "name": "Cerulean City-Water to Route 24",
             "connected_region": "Route 24",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -3227,15 +2743,8 @@
             "name": "Cerulean City-Water to Route 4-Lass",
             "connected_region": "Route 4-Lass",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -3246,73 +2755,28 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_badges"
-                  },
+                  "type": "helper",
+                  "name": "has_badges",
                   "args": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "cerulean_cave_badges_condition"
-                      },
-                      "attr": "value"
+                      "type": "constant",
+                      "value": 4
                     }
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_key_items"
-                  },
+                  "type": "helper",
+                  "name": "has_key_items",
                   "args": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "cerulean_cave_key_items_condition"
-                      },
-                      "attr": "total"
+                      "type": "constant",
+                      "value": 12
                     }
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_surf"
-                  },
+                  "type": "helper",
+                  "name": "can_surf",
                   "args": []
                 }
               ]
@@ -3331,73 +2795,28 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_badges"
-                  },
+                  "type": "helper",
+                  "name": "has_badges",
                   "args": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "cerulean_cave_badges_condition"
-                      },
-                      "attr": "value"
+                      "type": "constant",
+                      "value": 4
                     }
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_key_items"
-                  },
+                  "type": "helper",
+                  "name": "has_key_items",
                   "args": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "cerulean_cave_key_items_condition"
-                      },
-                      "attr": "total"
+                      "type": "constant",
+                      "value": 12
                     }
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_surf"
-                  },
+                  "type": "helper",
+                  "name": "can_surf",
                   "args": []
                 }
               ]
@@ -3407,15 +2826,8 @@
             "name": "Cerulean City-Cave to Cerulean City",
             "connected_region": "Cerulean City",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -3445,15 +2857,8 @@
             "name": "Cerulean City-Outskirts to Route 9",
             "connected_region": "Route 9",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -3520,27 +2925,13 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_surf"
-                  },
+                  "type": "helper",
+                  "name": "can_surf",
                   "args": []
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_cut"
-                  },
+                  "type": "helper",
+                  "name": "can_cut",
                   "args": []
                 }
               ]
@@ -3626,27 +3017,13 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_surf"
-                  },
+                  "type": "helper",
+                  "name": "can_surf",
                   "args": []
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_cut"
-                  },
+                  "type": "helper",
+                  "name": "can_cut",
                   "args": []
                 }
               ]
@@ -3656,15 +3033,8 @@
             "name": "Vermilion City-G to Vermilion City (Fly)",
             "connected_region": "Vermilion City",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -3697,15 +3067,8 @@
             "name": "Vermilion City-Dock to Vermilion City (Fly)",
             "connected_region": "Vermilion City",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -3832,15 +3195,8 @@
             "name": "Fuchsia City-Good Rod House Backyard to Fuchsia City",
             "connected_region": "Fuchsia City",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -3936,89 +3292,32 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_badges"
-                  },
+                  "type": "helper",
+                  "name": "has_badges",
                   "args": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "elite_four_badges_condition"
-                      },
-                      "attr": "value"
+                      "type": "constant",
+                      "value": 8
                     }
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_pokemon"
-                  },
+                  "type": "helper",
+                  "name": "has_pokemon",
                   "args": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "elite_four_pokedex_condition"
-                      },
-                      "attr": "total"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_key_items"
-                  },
+                  "type": "helper",
+                  "name": "has_key_items",
                   "args": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "elite_four_key_items_condition"
-                      },
-                      "attr": "total"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -4103,89 +3402,32 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_badges"
-                  },
+                  "type": "helper",
+                  "name": "has_badges",
                   "args": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "elite_four_badges_condition"
-                      },
-                      "attr": "value"
+                      "type": "constant",
+                      "value": 8
                     }
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_pokemon"
-                  },
+                  "type": "helper",
+                  "name": "has_pokemon",
                   "args": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "elite_four_pokedex_condition"
-                      },
-                      "attr": "total"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_key_items"
-                  },
+                  "type": "helper",
+                  "name": "has_key_items",
                   "args": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "elite_four_key_items_condition"
-                      },
-                      "attr": "total"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 },
@@ -4267,15 +3509,8 @@
             "name": "Silph Co 4F to Silph Co 4F-N",
             "connected_region": "Silph Co 4F-N",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -4288,15 +3523,8 @@
             "name": "Silph Co 4F to Silph Co 4F-W",
             "connected_region": "Silph Co 4F-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -4370,15 +3598,8 @@
             "name": "Silph Co 4F-N to Silph Co 4F",
             "connected_region": "Silph Co 4F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -4428,15 +3649,8 @@
             "name": "Silph Co 4F-W to Silph Co 4F",
             "connected_region": "Silph Co 4F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -4498,15 +3712,8 @@
             "name": "Silph Co 5F-NW to Silph Co 5F",
             "connected_region": "Silph Co 5F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -4540,15 +3747,8 @@
             "name": "Silph Co 6F-SW to Silph Co 6F",
             "connected_region": "Silph Co 6F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -4596,15 +3796,8 @@
             "name": "Silph Co 5F to Silph Co 5F-NW",
             "connected_region": "Silph Co 5F-NW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -4617,15 +3810,8 @@
             "name": "Silph Co 5F to Silph Co 5F-SW",
             "connected_region": "Silph Co 5F-SW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -4721,15 +3907,8 @@
             "name": "Silph Co 5F-SW to Silph Co 5F",
             "connected_region": "Silph Co 5F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -4771,15 +3950,8 @@
             "name": "Silph Co 6F to Silph Co 6F-SW",
             "connected_region": "Silph Co 6F-SW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -4888,15 +4060,8 @@
             "name": "Cinnabar Island-M to Cinnabar Island (Fly)",
             "connected_region": "Cinnabar Island",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -4929,15 +4094,8 @@
             "name": "Cinnabar Island-G to Cinnabar Island (Fly)",
             "connected_region": "Cinnabar Island",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -4970,15 +4128,8 @@
             "name": "Cinnabar Island to Route 20-W",
             "connected_region": "Route 20-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -5032,15 +4183,8 @@
             "name": "Cinnabar Island to Route 21",
             "connected_region": "Route 21",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -5688,15 +4832,8 @@
             "name": "Vermilion Dock - Legendary Pokemon",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             },
             "item": {
@@ -5862,15 +4999,8 @@
             "name": "Route 5 Gate-S to Route 5 Gate-N",
             "connected_region": "Route 5 Gate-N",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_pass_guards"
-              },
+              "type": "helper",
+              "name": "can_pass_guards",
               "args": []
             }
           },
@@ -5892,15 +5022,8 @@
             "name": "Route 5 Gate-N to Route 5 Gate-S",
             "connected_region": "Route 5 Gate-S",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_pass_guards"
-              },
+              "type": "helper",
+              "name": "can_pass_guards",
               "args": []
             }
           },
@@ -5922,15 +5045,8 @@
             "name": "Route 6 Gate-S to Route 6 Gate-N",
             "connected_region": "Route 6 Gate-N",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_pass_guards"
-              },
+              "type": "helper",
+              "name": "can_pass_guards",
               "args": []
             }
           },
@@ -5952,15 +5068,8 @@
             "name": "Route 6 Gate-N to Route 6 Gate-S",
             "connected_region": "Route 6 Gate-S",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_pass_guards"
-              },
+              "type": "helper",
+              "name": "can_pass_guards",
               "args": []
             }
           },
@@ -5982,15 +5091,8 @@
             "name": "Route 7 Gate-W to Route 7 Gate-E",
             "connected_region": "Route 7 Gate-E",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_pass_guards"
-              },
+              "type": "helper",
+              "name": "can_pass_guards",
               "args": []
             }
           },
@@ -6012,15 +5114,8 @@
             "name": "Route 7 Gate-E to Route 7 Gate-W",
             "connected_region": "Route 7 Gate-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_pass_guards"
-              },
+              "type": "helper",
+              "name": "can_pass_guards",
               "args": []
             }
           },
@@ -6042,15 +5137,8 @@
             "name": "Route 8 Gate-W to Route 8 Gate-E",
             "connected_region": "Route 8 Gate-E",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_pass_guards"
-              },
+              "type": "helper",
+              "name": "can_pass_guards",
               "args": []
             }
           },
@@ -6072,15 +5160,8 @@
             "name": "Route 8 Gate-E to Route 8 Gate-W",
             "connected_region": "Route 8 Gate-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_pass_guards"
-              },
+              "type": "helper",
+              "name": "can_pass_guards",
               "args": []
             }
           },
@@ -6534,31 +5615,12 @@
             "name": "Route 22 Gate-S to Route 22 Gate-N",
             "connected_region": "Route 22 Gate-N",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "has_badges"
-              },
+              "type": "helper",
+              "name": "has_badges",
               "args": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "options"
-                    },
-                    "attr": "route_22_gate_condition"
-                  },
-                  "attr": "value"
+                  "type": "constant",
+                  "value": 7
                 }
               ]
             }
@@ -6581,31 +5643,12 @@
             "name": "Route 22 Gate-N to Route 22 Gate-S",
             "connected_region": "Route 22 Gate-S",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "has_badges"
-              },
+              "type": "helper",
+              "name": "has_badges",
               "args": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "options"
-                    },
-                    "attr": "route_22_gate_condition"
-                  },
-                  "attr": "value"
+                  "type": "constant",
+                  "value": 7
                 }
               ]
             }
@@ -7774,15 +6817,8 @@
             "name": "Rock Tunnel 1F-NE 1 to Rock Tunnel 1F-NE",
             "connected_region": "Rock Tunnel 1F-NE",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -7804,15 +6840,8 @@
             "name": "Rock Tunnel 1F-NE 2 to Rock Tunnel 1F-NE",
             "connected_region": "Rock Tunnel 1F-NE",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -7834,15 +6863,8 @@
             "name": "Rock Tunnel 1F-NW 1 to Rock Tunnel 1F-NW",
             "connected_region": "Rock Tunnel 1F-NW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -7864,15 +6886,8 @@
             "name": "Rock Tunnel 1F-NW 2 to Rock Tunnel 1F-NW",
             "connected_region": "Rock Tunnel 1F-NW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -7894,15 +6909,8 @@
             "name": "Rock Tunnel 1F-S 1 to Rock Tunnel 1F-S",
             "connected_region": "Rock Tunnel 1F-S",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -7924,15 +6932,8 @@
             "name": "Rock Tunnel 1F-S 2 to Rock Tunnel 1F-S",
             "connected_region": "Rock Tunnel 1F-S",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -8246,15 +7247,8 @@
             "name": "Rock Tunnel 1F-NE to Rock Tunnel 1F-NE 1",
             "connected_region": "Rock Tunnel 1F-NE 1",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -8262,15 +7256,8 @@
             "name": "Rock Tunnel 1F-NE to Rock Tunnel 1F-NE 2",
             "connected_region": "Rock Tunnel 1F-NE 2",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -8278,15 +7265,8 @@
             "name": "Rock Tunnel 1F-NE to Rock Tunnel 1F-Wild",
             "connected_region": "Rock Tunnel 1F-Wild",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           }
@@ -8315,15 +7295,8 @@
             "name": "Rock Tunnel 1F-NW to Rock Tunnel 1F-NW 1",
             "connected_region": "Rock Tunnel 1F-NW 1",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -8331,15 +7304,8 @@
             "name": "Rock Tunnel 1F-NW to Rock Tunnel 1F-NW 2",
             "connected_region": "Rock Tunnel 1F-NW 2",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -8347,15 +7313,8 @@
             "name": "Rock Tunnel 1F-NW to Rock Tunnel 1F-Wild",
             "connected_region": "Rock Tunnel 1F-Wild",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           }
@@ -8384,15 +7343,8 @@
             "name": "Rock Tunnel 1F-S to Rock Tunnel 1F-S 1",
             "connected_region": "Rock Tunnel 1F-S 1",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -8400,15 +7352,8 @@
             "name": "Rock Tunnel 1F-S to Rock Tunnel 1F-S 2",
             "connected_region": "Rock Tunnel 1F-S 2",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -8416,15 +7361,8 @@
             "name": "Rock Tunnel 1F-S to Rock Tunnel 1F-Wild",
             "connected_region": "Rock Tunnel 1F-Wild",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           }
@@ -8453,15 +7391,8 @@
             "name": "Rock Tunnel B1F-E to Rock Tunnel B1F-E 1",
             "connected_region": "Rock Tunnel B1F-E 1",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -8469,15 +7400,8 @@
             "name": "Rock Tunnel B1F-E to Rock Tunnel B1F-E 2",
             "connected_region": "Rock Tunnel B1F-E 2",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -8485,15 +7409,8 @@
             "name": "Rock Tunnel B1F-E to Rock Tunnel B1F-Wild",
             "connected_region": "Rock Tunnel B1F-Wild",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           }
@@ -8522,15 +7439,8 @@
             "name": "Rock Tunnel B1F-W to Rock Tunnel B1F-W 1",
             "connected_region": "Rock Tunnel B1F-W 1",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -8538,15 +7448,8 @@
             "name": "Rock Tunnel B1F-W to Rock Tunnel B1F-W 2",
             "connected_region": "Rock Tunnel B1F-W 2",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -8554,15 +7457,8 @@
             "name": "Rock Tunnel B1F-W to Rock Tunnel B1F-Wild",
             "connected_region": "Rock Tunnel B1F-Wild",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           }
@@ -9018,15 +7914,8 @@
             "name": "Victory Road 3F to Victory Road 3F-S",
             "connected_region": "Victory Road 3F-S",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_strength"
-              },
+              "type": "helper",
+              "name": "can_strength",
               "args": []
             }
           },
@@ -9107,15 +7996,8 @@
             "name": "Victory Road 3F-SE to Victory Road 3F-S",
             "connected_region": "Victory Road 3F-S",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_strength"
-              },
+              "type": "helper",
+              "name": "can_strength",
               "args": []
             }
           },
@@ -9153,15 +8035,8 @@
             "name": "Victory Road 3F-S to Victory Road 3F",
             "connected_region": "Victory Road 3F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_strength"
-              },
+              "type": "helper",
+              "name": "can_strength",
               "args": []
             }
           },
@@ -11380,15 +10255,8 @@
             "name": "Safari Zone Center-C to Safari Zone Center-NW",
             "connected_region": "Safari Zone Center-NW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -11396,15 +10264,8 @@
             "name": "Safari Zone Center-C to Safari Zone Center-NE",
             "connected_region": "Safari Zone Center-NE",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -11412,15 +10273,8 @@
             "name": "Safari Zone Center-C to Safari Zone Center-S",
             "connected_region": "Safari Zone Center-S",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           }
@@ -11430,15 +10284,8 @@
             "name": "Safari Zone Center - Island Item",
             "id": 172000142,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             },
             "item": {
@@ -11614,15 +10461,8 @@
             "name": "Safari Zone Center-NW to Safari Zone Center-C",
             "connected_region": "Safari Zone Center-C",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -11663,15 +10503,8 @@
             "name": "Safari Zone Center-NE to Safari Zone Center-C",
             "connected_region": "Safari Zone Center-C",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -11712,15 +10545,8 @@
             "name": "Safari Zone Center-S to Safari Zone Center-C",
             "connected_region": "Safari Zone Center-C",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -12103,15 +10929,8 @@
             "name": "Cerulean Cave B1F to Cerulean Cave B1F-E",
             "connected_region": "Cerulean Cave B1F-E",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -12314,15 +11133,8 @@
             "name": "Cerulean Cave B1F - Legendary Pokemon",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             },
             "item": {
@@ -12341,15 +11153,8 @@
             "name": "Rock Tunnel B1F-E 1 to Rock Tunnel B1F-E",
             "connected_region": "Rock Tunnel B1F-E",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -12371,15 +11176,8 @@
             "name": "Rock Tunnel B1F-E 2 to Rock Tunnel B1F-E",
             "connected_region": "Rock Tunnel B1F-E",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -12401,15 +11199,8 @@
             "name": "Rock Tunnel B1F-W 1 to Rock Tunnel B1F-W",
             "connected_region": "Rock Tunnel B1F-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -12431,15 +11222,8 @@
             "name": "Rock Tunnel B1F-W 2 to Rock Tunnel B1F-W",
             "connected_region": "Rock Tunnel B1F-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "rock_tunnel"
-              },
+              "type": "helper",
+              "name": "rock_tunnel",
               "args": []
             }
           },
@@ -12792,15 +11576,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_strength"
-                  },
+                  "type": "helper",
+                  "name": "can_strength",
                   "args": []
                 },
                 {
@@ -12824,15 +11601,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_strength"
-                  },
+                  "type": "helper",
+                  "name": "can_strength",
                   "args": []
                 },
                 {
@@ -12939,15 +11709,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_strength"
-                  },
+                  "type": "helper",
+                  "name": "can_strength",
                   "args": []
                 },
                 {
@@ -12971,15 +11734,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_strength"
-                  },
+                  "type": "helper",
+                  "name": "can_strength",
                   "args": []
                 },
                 {
@@ -13059,27 +11815,13 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_surf"
-                  },
+                  "type": "helper",
+                  "name": "can_surf",
                   "args": []
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_strength"
-                  },
+                  "type": "helper",
+                  "name": "can_strength",
                   "args": []
                 },
                 {
@@ -13108,15 +11850,8 @@
             "name": "Seafoam Islands B3F to Seafoam Islands B4F-W",
             "connected_region": "Seafoam Islands B4F-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -13172,27 +11907,13 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_surf"
-                  },
+                  "type": "helper",
+                  "name": "can_surf",
                   "args": []
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_strength"
-                  },
+                  "type": "helper",
+                  "name": "can_strength",
                   "args": []
                 },
                 {
@@ -13428,15 +12149,8 @@
             "name": "Seafoam Islands B4F to Seafoam Islands B4F-W",
             "connected_region": "Seafoam Islands B4F-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -13605,15 +12319,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_strength"
-                  },
+                  "type": "helper",
+                  "name": "can_strength",
                   "args": []
                 },
                 {
@@ -14480,15 +13187,8 @@
             "name": "Celadon Gym to Celadon Gym-C",
             "connected_region": "Celadon Gym-C",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -15093,39 +13793,12 @@
             "name": "Route 11 Gate 2F - Oak's Aide",
             "id": 172000023,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "oaks_aide"
-              },
+              "type": "helper",
+              "name": "oaks_aide",
               "args": [
                 {
-                  "type": "binary_op",
-                  "left": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "world"
-                        },
-                        "attr": "options"
-                      },
-                      "attr": "oaks_aide_rt_11"
-                    },
-                    "attr": "value"
-                  },
-                  "op": "+",
-                  "right": {
-                    "type": "constant",
-                    "value": 5
-                  }
+                  "type": "constant",
+                  "value": 25
                 }
               ]
             },
@@ -15268,39 +13941,12 @@
             "name": "Route 15 Gate 2F - Oak's Aide",
             "id": 172000034,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "oaks_aide"
-              },
+              "type": "helper",
+              "name": "oaks_aide",
               "args": [
                 {
-                  "type": "binary_op",
-                  "left": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "world"
-                        },
-                        "attr": "options"
-                      },
-                      "attr": "oaks_aide_rt_15"
-                    },
-                    "attr": "value"
-                  },
-                  "op": "+",
-                  "right": {
-                    "type": "constant",
-                    "value": 5
-                  }
+                  "type": "constant",
+                  "value": 35
                 }
               ]
             },
@@ -16846,15 +15492,8 @@
             "name": "Safari Zone West to Safari Zone West-NW",
             "connected_region": "Safari Zone West-NW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -16940,15 +15579,8 @@
             "name": "Safari Zone West-NW to Safari Zone West",
             "connected_region": "Safari Zone West",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -17423,15 +16055,8 @@
             "name": "Route 20-IW to Route 20-E",
             "connected_region": "Route 20-E",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -17464,15 +16089,8 @@
             "name": "Route 20-IE to Route 20-W",
             "connected_region": "Route 20-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -17494,15 +16112,8 @@
             "name": "Route 20-E to Route 20-IW",
             "connected_region": "Route 20-IW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -17547,15 +16158,8 @@
             "name": "Route 20-W to Cinnabar Island",
             "connected_region": "Cinnabar Island",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -17563,15 +16167,8 @@
             "name": "Route 20-W to Route 20-IE",
             "connected_region": "Route 20-IE",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -17754,15 +16351,8 @@
             "name": "Route 23-S to Route 23-Grass",
             "connected_region": "Route 23-Grass",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -17795,31 +16385,12 @@
             "name": "Route 23-C to Route 23-Grass",
             "connected_region": "Route 23-Grass",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "has_badges"
-              },
+              "type": "helper",
+              "name": "has_badges",
               "args": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "options"
-                    },
-                    "attr": "victory_road_condition"
-                  },
-                  "attr": "value"
+                  "type": "constant",
+                  "value": 7
                 }
               ]
             }
@@ -17864,31 +16435,12 @@
             "name": "Route 23-Grass to Route 23-C",
             "connected_region": "Route 23-C",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "has_badges"
-              },
+              "type": "helper",
+              "name": "has_badges",
               "args": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "options"
-                    },
-                    "attr": "victory_road_condition"
-                  },
-                  "attr": "value"
+                  "type": "constant",
+                  "value": 7
                 }
               ]
             }
@@ -17897,15 +16449,8 @@
             "name": "Route 23-Grass to Route 23-S",
             "connected_region": "Route 23-S",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -18071,15 +16616,8 @@
             "name": "Route 24 to Cerulean City-Water",
             "connected_region": "Cerulean City-Water",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -18332,15 +16870,8 @@
             "name": "Route 25 - Item",
             "id": 172000054,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             },
             "item": {
@@ -18660,15 +17191,8 @@
             "name": "Saffron City-Pidgey to Saffron City (Fly)",
             "connected_region": "Saffron City",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -18701,15 +17225,8 @@
             "name": "Saffron City-Copycat to Saffron City (Fly)",
             "connected_region": "Saffron City",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -18742,15 +17259,8 @@
             "name": "Saffron City-G to Saffron City (Fly)",
             "connected_region": "Saffron City",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -18783,15 +17293,8 @@
             "name": "Saffron City-Silph to Saffron City (Fly)",
             "connected_region": "Saffron City",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_fly"
-              },
+              "type": "helper",
+              "name": "can_fly",
               "args": []
             }
           },
@@ -18851,15 +17354,8 @@
             "name": "Victory Road 2F-W to Victory Road 2F-C",
             "connected_region": "Victory Road 2F-C",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_strength"
-              },
+              "type": "helper",
+              "name": "can_strength",
               "args": []
             }
           },
@@ -18889,15 +17385,8 @@
             "name": "Victory Road 2F-NW to Victory Road 2F-W",
             "connected_region": "Victory Road 2F-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_strength"
-              },
+              "type": "helper",
+              "name": "can_strength",
               "args": []
             }
           },
@@ -18973,15 +17462,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_strength"
-                  },
+                  "type": "helper",
+                  "name": "can_strength",
                   "args": []
                 },
                 {
@@ -19503,15 +17985,8 @@
             "name": "Silph Co 7F to Silph Co 7F-E",
             "connected_region": "Silph Co 7F-E",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -19634,15 +18109,8 @@
             "name": "Silph Co 7F-SE to Silph Co 7F-E",
             "connected_region": "Silph Co 7F-E",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -19684,15 +18152,8 @@
             "name": "Silph Co 7F-E to Silph Co 7F",
             "connected_region": "Silph Co 7F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -19705,15 +18166,8 @@
             "name": "Silph Co 7F-E to Silph Co 7F-SE",
             "connected_region": "Silph Co 7F-SE",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -19747,15 +18201,8 @@
             "name": "Silph Co 11F-C to Silph Co 11F-W",
             "connected_region": "Silph Co 11F-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -19825,15 +18272,8 @@
             "name": "Route 2-NW to Route 2-NE",
             "connected_region": "Route 2-NE",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -19871,15 +18311,8 @@
             "name": "Route 2-SW to Route 2-SE",
             "connected_region": "Route 2-SE",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -19909,15 +18342,8 @@
             "name": "Route 2-NE to Route 2-NW",
             "connected_region": "Route 2-NW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -19925,15 +18351,8 @@
             "name": "Route 2-NE to Route 2-E",
             "connected_region": "Route 2-E",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -19963,15 +18382,8 @@
             "name": "Route 2-E to Route 2-NE",
             "connected_region": "Route 2-NE",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -19993,15 +18405,8 @@
             "name": "Route 2-SE to Route 2-SW",
             "connected_region": "Route 2-SW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -20805,15 +19210,8 @@
             "name": "Route 9 to Cerulean City-Outskirts",
             "connected_region": "Cerulean City-Outskirts",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -21037,15 +19435,8 @@
             "name": "Route 13 to Route 13-Grass",
             "connected_region": "Route 13-Grass",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -21064,27 +19455,13 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_strength"
-                  },
+                  "type": "helper",
+                  "name": "can_strength",
                   "args": []
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_surf"
-                  },
+                  "type": "helper",
+                  "name": "can_surf",
                   "args": []
                 },
                 {
@@ -21148,27 +19525,13 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_strength"
-                  },
+                  "type": "helper",
+                  "name": "can_strength",
                   "args": []
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_surf"
-                  },
+                  "type": "helper",
+                  "name": "can_surf",
                   "args": []
                 },
                 {
@@ -21380,15 +19743,8 @@
             "name": "Route 14 to Route 15-N",
             "connected_region": "Route 15-N",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -21396,15 +19752,8 @@
             "name": "Route 14 to Route 14-Grass",
             "connected_region": "Route 14-Grass",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -21775,15 +20124,8 @@
             "name": "Route 19-S to Route 19-N",
             "connected_region": "Route 19-N",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -21847,15 +20189,8 @@
             "name": "Route 19-N to Route 19-S",
             "connected_region": "Route 19-S",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           }
@@ -21895,15 +20230,8 @@
             "name": "Route 21 to Cinnabar Island",
             "connected_region": "Cinnabar Island",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -21911,15 +20239,8 @@
             "name": "Route 21 to Pallet Town",
             "connected_region": "Pallet Town",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           }
@@ -22367,15 +20688,8 @@
             "name": "Silph Co 8F to Silph Co 8F-W (Card Key)",
             "connected_region": "Silph Co 8F-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -22457,15 +20771,8 @@
             "name": "Silph Co 8F-W to Silph Co 8F (Card Key)",
             "connected_region": "Silph Co 8F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -22740,15 +21047,8 @@
             "name": "Route 8 to Route 8-Grass",
             "connected_region": "Route 8-Grass",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -22947,15 +21247,8 @@
             "name": "Route 10-N to Route 10-C",
             "connected_region": "Route 10-C",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -23237,15 +21530,8 @@
             "name": "Route 10-C to Route 10-N",
             "connected_region": "Route 10-N",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -23342,15 +21628,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_strength"
-                  },
+                  "type": "helper",
+                  "name": "can_strength",
                   "args": []
                 },
                 {
@@ -23569,15 +21848,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "can_strength"
-                  },
+                  "type": "helper",
+                  "name": "can_strength",
                   "args": []
                 },
                 {
@@ -23649,15 +21921,8 @@
             "name": "Route 12-N to Route 12-S",
             "connected_region": "Route 12-S",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -23686,15 +21951,8 @@
             "name": "Route 12 - Island Item",
             "id": 172000050,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             },
             "item": {
@@ -23738,15 +21996,8 @@
             "name": "Route 12-S to Route 12-N",
             "connected_region": "Route 12-N",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -23765,15 +22016,8 @@
             "name": "Route 12-S to Route 12-Grass",
             "connected_region": "Route 12-Grass",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -24287,15 +22531,8 @@
             "name": "Route 16-E to Route 16-NE",
             "connected_region": "Route 16-NE",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -24422,15 +22659,8 @@
             "name": "Route 16-NE to Route 16-E",
             "connected_region": "Route 16-E",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_cut"
-              },
+              "type": "helper",
+              "name": "can_cut",
               "args": []
             }
           },
@@ -24832,15 +23062,8 @@
             "name": "Silph Co 2F-NW to Silph Co 2F",
             "connected_region": "Silph Co 2F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -24882,15 +23105,8 @@
             "name": "Silph Co 2F to Silph Co 2F-NW",
             "connected_region": "Silph Co 2F-NW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -24903,15 +23119,8 @@
             "name": "Silph Co 2F to Silph Co 2F-SW",
             "connected_region": "Silph Co 2F-SW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -24985,15 +23194,8 @@
             "name": "Silph Co 2F-SW to Silph Co 2F",
             "connected_region": "Silph Co 2F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -25035,15 +23237,8 @@
             "name": "Silph Co 3F to Silph Co 3F-C",
             "connected_region": "Silph Co 3F-C",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -25141,15 +23336,8 @@
             "name": "Silph Co 3F-C to Silph Co 3F",
             "connected_region": "Silph Co 3F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -25162,15 +23350,8 @@
             "name": "Silph Co 3F-C to Silph Co 3F-W",
             "connected_region": "Silph Co 3F-W",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -25197,15 +23378,8 @@
             "name": "Silph Co 3F-W to Silph Co 3F-C",
             "connected_region": "Silph Co 3F-C",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -25261,15 +23435,8 @@
             "name": "Silph Co 10F to Silph Co 10F-SE",
             "connected_region": "Silph Co 10F-SE",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -25377,15 +23544,8 @@
             "name": "Silph Co 10F-SE to Silph Co 10F",
             "connected_region": "Silph Co 10F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -26538,39 +24698,12 @@
             "name": "Route 2 Gate - Oak's Aide",
             "id": 172000011,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "oaks_aide"
-              },
+              "type": "helper",
+              "name": "oaks_aide",
               "args": [
                 {
-                  "type": "binary_op",
-                  "left": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "world"
-                        },
-                        "attr": "options"
-                      },
-                      "attr": "oaks_aide_rt_2"
-                    },
-                    "attr": "value"
-                  },
-                  "op": "+",
-                  "right": {
-                    "type": "constant",
-                    "value": 5
-                  }
+                  "type": "constant",
+                  "value": 15
                 }
               ]
             },
@@ -26703,15 +24836,8 @@
             "name": "Silph Co 9F-SW to Silph Co 9F",
             "connected_region": "Silph Co 9F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -26724,15 +24850,8 @@
             "name": "Silph Co 9F-SW to Silph Co 9F-NW",
             "connected_region": "Silph Co 9F-NW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -26751,15 +24870,8 @@
             "name": "Silph Co 9F to Silph Co 9F-SW",
             "connected_region": "Silph Co 9F-SW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -26825,15 +24937,8 @@
             "name": "Silph Co 9F-NW to Silph Co 9F-SW",
             "connected_region": "Silph Co 9F-SW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -26875,15 +24980,8 @@
             "name": "Victory Road 1F-S to Victory Road 1F",
             "connected_region": "Victory Road 1F",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_strength"
-              },
+              "type": "helper",
+              "name": "can_strength",
               "args": []
             }
           },
@@ -26913,15 +25011,8 @@
             "name": "Victory Road 1F to Victory Road 1F-S",
             "connected_region": "Victory Road 1F-S",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_strength"
-              },
+              "type": "helper",
+              "name": "can_strength",
               "args": []
             }
           },
@@ -26947,15 +25038,8 @@
             "name": "Victory Road 1F - Top Item",
             "id": 172000148,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_strength"
-              },
+              "type": "helper",
+              "name": "can_strength",
               "args": []
             },
             "item": {
@@ -26969,15 +25053,8 @@
             "name": "Victory Road 1F - Left Item",
             "id": 172000149,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_strength"
-              },
+              "type": "helper",
+              "name": "can_strength",
               "args": []
             },
             "item": {
@@ -29575,15 +27652,8 @@
             "name": "Silph Co 11F-W to Silph Co 11F-C",
             "connected_region": "Silph Co 11F-C",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "card_key"
-              },
+              "type": "helper",
+              "name": "card_key",
               "args": [
                 {
                   "type": "constant",
@@ -29743,15 +27813,8 @@
             "name": "Cerulean Cave 1F-SE to Cerulean Cave 1F-Water",
             "connected_region": "Cerulean Cave 1F-Water",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -29800,15 +27863,8 @@
             "name": "Cerulean Cave 1F-NE to Cerulean Cave 1F-Water",
             "connected_region": "Cerulean Cave 1F-Water",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -29849,15 +27905,8 @@
             "name": "Cerulean Cave 1F-N to Cerulean Cave 1F-Water",
             "connected_region": "Cerulean Cave 1F-Water",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -29913,15 +27962,8 @@
             "name": "Cerulean Cave 1F-SW to Cerulean Cave 1F-Water",
             "connected_region": "Cerulean Cave 1F-Water",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -30127,15 +28169,8 @@
             "name": "Cerulean Cave 1F-Water to Cerulean Cave 1F-SE",
             "connected_region": "Cerulean Cave 1F-SE",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -30143,15 +28178,8 @@
             "name": "Cerulean Cave 1F-Water to Cerulean Cave 1F-SW",
             "connected_region": "Cerulean Cave 1F-SW",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -30159,15 +28187,8 @@
             "name": "Cerulean Cave 1F-Water to Cerulean Cave 1F-N",
             "connected_region": "Cerulean Cave 1F-N",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           },
@@ -30175,15 +28196,8 @@
             "name": "Cerulean Cave 1F-Water to Cerulean Cave 1F-NE",
             "connected_region": "Cerulean Cave 1F-NE",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_surf"
-              },
+              "type": "helper",
+              "name": "can_surf",
               "args": []
             }
           }
@@ -30335,15 +28349,8 @@
             "name": "Fuchsia Warden's House - Behind Boulder Item",
             "id": 172000066,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "can_strength"
-              },
+              "type": "helper",
+              "name": "can_strength",
               "args": []
             },
             "item": {
@@ -30726,15 +28733,8 @@
             "name": "Cinnabar Lab Fossil Room to Fossil Level",
             "connected_region": "Fossil Level",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "fossil_checks"
-              },
+              "type": "helper",
+              "name": "fossil_checks",
               "args": [
                 {
                   "type": "constant",

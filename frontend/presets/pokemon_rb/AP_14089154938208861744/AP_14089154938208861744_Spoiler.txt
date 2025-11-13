@@ -2831,9 +2831,7 @@ Oak's Lab - Oak's Parcel Reward
    =>   Oak's Lab
 Pallet/Viridian Fishing - Super Rod Pokemon - 2
         Menu -> Menu to Pallet Town
-   =>   Pallet Town -> Pallet Town to Route 1
-   =>   Route 1 -> Route 1 to Viridian City
-   =>   Viridian City -> Viridian City to Pallet/Viridian Fishing
+   =>   Pallet Town -> Pallet Town to Pallet/Viridian Fishing
    =>   Pallet/Viridian Fishing
 Pewter Gym - Brock Prize
         Menu -> Menu to Pallet Town

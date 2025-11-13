@@ -306,10 +306,10 @@ class ASTVisitorMixin:
             }
             logging.debug(f"Created helper result: {result}")
             return result # Return helper result
-        
+
         # 2. State method call (e.g., state.has)
-        elif func_info and func_info.get('type') == 'attribute':
-            if func_info['object'].get('type') == 'name' and func_info['object'].get('name') == 'state':
+        elif (func_info and func_info.get('type') == 'attribute' and
+              func_info['object'].get('type') == 'name' and func_info['object'].get('name') == 'state'):
                 method = func_info['attr']
                 logging.debug(f"Processing state method: {method}")
 

@@ -1,0 +1,1105 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:49] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: pokemon_rb
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=pokemon_rb&seed=1
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:51] "GET /frontend/?mode=test-spoilers&game=pokemon_rb&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:51] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:51] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:51] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:51] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:51] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:51] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:51] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modes.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [05:01:52.270] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/hylics_2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/jak_and_daxter__the_precursor_legacy/jak_and_daxter__the_precursor_legacyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/oot/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.json HTTP/1.1" 200 -
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [05:01:52.544] [INFO] [INIT_STEP] Module import and registration phase completed
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+BROWSER LOG (info): [05:01:52.546] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [05:01:52.560] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [05:01:52.561] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [05:01:52.562] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [05:01:52.562] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [05:01:52.589] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 05:01:52] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+BROWSER LOG (error): [05:01:57.733] [ERROR] [testSpoilerUI] STATE MISMATCH found for: {"type":"state_update","sphere_number":"3.9","player_id":"1"}
+BROWSER LOG (error): [05:01:57.735] [ERROR] [testSpoilerUI:ComparisonEngine] STATE MISMATCH found for: {"type":"state_update","sphere_number":"3.9","player_id":"1"}
+BROWSER LOG (error): [05:01:57.740] [ERROR] [testSpoilerUI]  > Locations accessible in LOG but NOT in STATE (or checked): Fuchsia Good Rod House - Fishing Guru's Brother, Fuchsia Gym - Defeat Koga, Fuchsia Gym - Koga Prize, Fuchsia Gym - Koga TM, Fuchsia Gym - Trainer Parties, Route 11 Gate 2F - Terry Trade, Route 13 - Trainer Parties, Route 14 - Trainer Parties, Route 15 - Trainer Parties, Route 15 - Wild Pokemon - 1, Route 15 - Wild Pokemon - 10, Route 15 - Wild Pokemon - 2, Route 15 - Wild Pokemon - 3, Route 15 - Wild Pokemon - 4, Route 15 - Wild Pokemon - 5, Route 15 - Wild Pokemon - 6, Route 15 - Wild Pokemon - 7, Route 15 - Wild Pokemon - 8, Route 15 - Wild Pokemon - 9, Route 18 - Wild Pokemon - 1, Route 18 - Wild Pokemon - 10, Route 18 - Wild Pokemon - 2, Route 18 - Wild Pokemon - 3, Route 18 - Wild Pokemon - 4, Route 18 - Wild Pokemon - 5, Route 18 - Wild Pokemon - 6, Route 18 - Wild Pokemon - 7, Route 18 - Wild Pokemon - 8, Route 18 - Wild Pokemon - 9, Route 18-E - Trainer Parties, Route 19-N - Trainer Parties, Safari Zone Center - Wild Pokemon - 1, Safari Zone Center - Wild Pokemon - 10, Safari Zone Center - Wild Pokemon - 2, Safari Zone Center - Wild Pokemon - 3, Safari Zone Center - Wild Pokemon - 4, Safari Zone Center - Wild Pokemon - 5, Safari Zone Center - Wild Pokemon - 6, Safari Zone Center - Wild Pokemon - 7, Safari Zone Center - Wild Pokemon - 8, Safari Zone Center - Wild Pokemon - 9, Safari Zone East - Center Item, Safari Zone East - East Item, Safari Zone East - Northeast Item, Safari Zone East - West Item, Safari Zone East - Wild Pokemon - 1, Safari Zone East - Wild Pokemon - 10, Safari Zone East - Wild Pokemon - 2, Safari Zone East - Wild Pokemon - 3, Safari Zone East - Wild Pokemon - 4, Safari Zone East - Wild Pokemon - 5, Safari Zone East - Wild Pokemon - 6, Safari Zone East - Wild Pokemon - 7, Safari Zone East - Wild Pokemon - 8, Safari Zone East - Wild Pokemon - 9, Safari Zone North - North Item, Safari Zone North - Northeast Item, Safari Zone North - Wild Pokemon - 1, Safari Zone North - Wild Pokemon - 10, Safari Zone North - Wild Pokemon - 2, Safari Zone North - Wild Pokemon - 3, Safari Zone North - Wild Pokemon - 4, Safari Zone North - Wild Pokemon - 5, Safari Zone North - Wild Pokemon - 6, Safari Zone North - Wild Pokemon - 7, Safari Zone North - Wild Pokemon - 8, Safari Zone North - Wild Pokemon - 9, Safari Zone Secret House, Safari Zone West - Northeast Item, Safari Zone West - Northwest Item, Safari Zone West - Southeast Item, Safari Zone West - Southwest Item, Safari Zone West - Wild Pokemon - 1, Safari Zone West - Wild Pokemon - 10, Safari Zone West - Wild Pokemon - 2, Safari Zone West - Wild Pokemon - 3, Safari Zone West - Wild Pokemon - 4, Safari Zone West - Wild Pokemon - 5, Safari Zone West - Wild Pokemon - 6, Safari Zone West - Wild Pokemon - 7, Safari Zone West - Wild Pokemon - 8, Safari Zone West - Wild Pokemon - 9
+BROWSER LOG (error): [05:01:57.740] [ERROR] [testSpoilerUI:ComparisonEngine]  > Locations accessible in LOG but NOT in STATE (or checked): Fuchsia Good Rod House - Fishing Guru's Brother, Fuchsia Gym - Defeat Koga, Fuchsia Gym - Koga Prize, Fuchsia Gym - Koga TM, Fuchsia Gym - Trainer Parties, Route 11 Gate 2F - Terry Trade, Route 13 - Trainer Parties, Route 14 - Trainer Parties, Route 15 - Trainer Parties, Route 15 - Wild Pokemon - 1, Route 15 - Wild Pokemon - 10, Route 15 - Wild Pokemon - 2, Route 15 - Wild Pokemon - 3, Route 15 - Wild Pokemon - 4, Route 15 - Wild Pokemon - 5, Route 15 - Wild Pokemon - 6, Route 15 - Wild Pokemon - 7, Route 15 - Wild Pokemon - 8, Route 15 - Wild Pokemon - 9, Route 18 - Wild Pokemon - 1, Route 18 - Wild Pokemon - 10, Route 18 - Wild Pokemon - 2, Route 18 - Wild Pokemon - 3, Route 18 - Wild Pokemon - 4, Route 18 - Wild Pokemon - 5, Route 18 - Wild Pokemon - 6, Route 18 - Wild Pokemon - 7, Route 18 - Wild Pokemon - 8, Route 18 - Wild Pokemon - 9, Route 18-E - Trainer Parties, Route 19-N - Trainer Parties, Safari Zone Center - Wild Pokemon - 1, Safari Zone Center - Wild Pokemon - 10, Safari Zone Center - Wild Pokemon - 2, Safari Zone Center - Wild Pokemon - 3, Safari Zone Center - Wild Pokemon - 4, Safari Zone Center - Wild Pokemon - 5, Safari Zone Center - Wild Pokemon - 6, Safari Zone Center - Wild Pokemon - 7, Safari Zone Center - Wild Pokemon - 8, Safari Zone Center - Wild Pokemon - 9, Safari Zone East - Center Item, Safari Zone East - East Item, Safari Zone East - Northeast Item, Safari Zone East - West Item, Safari Zone East - Wild Pokemon - 1, Safari Zone East - Wild Pokemon - 10, Safari Zone East - Wild Pokemon - 2, Safari Zone East - Wild Pokemon - 3, Safari Zone East - Wild Pokemon - 4, Safari Zone East - Wild Pokemon - 5, Safari Zone East - Wild Pokemon - 6, Safari Zone East - Wild Pokemon - 7, Safari Zone East - Wild Pokemon - 8, Safari Zone East - Wild Pokemon - 9, Safari Zone North - North Item, Safari Zone North - Northeast Item, Safari Zone North - Wild Pokemon - 1, Safari Zone North - Wild Pokemon - 10, Safari Zone North - Wild Pokemon - 2, Safari Zone North - Wild Pokemon - 3, Safari Zone North - Wild Pokemon - 4, Safari Zone North - Wild Pokemon - 5, Safari Zone North - Wild Pokemon - 6, Safari Zone North - Wild Pokemon - 7, Safari Zone North - Wild Pokemon - 8, Safari Zone North - Wild Pokemon - 9, Safari Zone Secret House, Safari Zone West - Northeast Item, Safari Zone West - Northwest Item, Safari Zone West - Southeast Item, Safari Zone West - Southwest Item, Safari Zone West - Wild Pokemon - 1, Safari Zone West - Wild Pokemon - 10, Safari Zone West - Wild Pokemon - 2, Safari Zone West - Wild Pokemon - 3, Safari Zone West - Wild Pokemon - 4, Safari Zone West - Wild Pokemon - 5, Safari Zone West - Wild Pokemon - 6, Safari Zone West - Wild Pokemon - 7, Safari Zone West - Wild Pokemon - 8, Safari Zone West - Wild Pokemon - 9
+BROWSER LOG (error): [MISMATCH DETAIL] Missing from state (82): [Fuchsia Good Rod House - Fishing Guru's Brother, Fuchsia Gym - Defeat Koga, Fuchsia Gym - Koga Prize, Fuchsia Gym - Koga TM, Fuchsia Gym - Trainer Parties, Route 11 Gate 2F - Terry Trade, Route 13 - Trainer Parties, Route 14 - Trainer Parties, Route 15 - Trainer Parties, Route 15 - Wild Pokemon - 1, Route 15 - Wild Pokemon - 10, Route 15 - Wild Pokemon - 2, Route 15 - Wild Pokemon - 3, Route 15 - Wild Pokemon - 4, Route 15 - Wild Pokemon - 5, Route 15 - Wild Pokemon - 6, Route 15 - Wild Pokemon - 7, Route 15 - Wild Pokemon - 8, Route 15 - Wild Pokemon - 9, Route 18 - Wild Pokemon - 1, Route 18 - Wild Pokemon - 10, Route 18 - Wild Pokemon - 2, Route 18 - Wild Pokemon - 3, Route 18 - Wild Pokemon - 4, Route 18 - Wild Pokemon - 5, Route 18 - Wild Pokemon - 6, Route 18 - Wild Pokemon - 7, Route 18 - Wild Pokemon - 8, Route 18 - Wild Pokemon - 9, Route 18-E - Trainer Parties, Route 19-N - Trainer Parties, Safari Zone Center - Wild Pokemon - 1, Safari Zone Center - Wild Pokemon - 10, Safari Zone Center - Wild Pokemon - 2, Safari Zone Center - Wild Pokemon - 3, Safari Zone Center - Wild Pokemon - 4, Safari Zone Center - Wild Pokemon - 5, Safari Zone Center - Wild Pokemon - 6, Safari Zone Center - Wild Pokemon - 7, Safari Zone Center - Wild Pokemon - 8, Safari Zone Center - Wild Pokemon - 9, Safari Zone East - Center Item, Safari Zone East - East Item, Safari Zone East - Northeast Item, Safari Zone East - West Item, Safari Zone East - Wild Pokemon - 1, Safari Zone East - Wild Pokemon - 10, Safari Zone East - Wild Pokemon - 2, Safari Zone East - Wild Pokemon - 3, Safari Zone East - Wild Pokemon - 4, Safari Zone East - Wild Pokemon - 5, Safari Zone East - Wild Pokemon - 6, Safari Zone East - Wild Pokemon - 7, Safari Zone East - Wild Pokemon - 8, Safari Zone East - Wild Pokemon - 9, Safari Zone North - North Item, Safari Zone North - Northeast Item, Safari Zone North - Wild Pokemon - 1, Safari Zone North - Wild Pokemon - 10, Safari Zone North - Wild Pokemon - 2, Safari Zone North - Wild Pokemon - 3, Safari Zone North - Wild Pokemon - 4, Safari Zone North - Wild Pokemon - 5, Safari Zone North - Wild Pokemon - 6, Safari Zone North - Wild Pokemon - 7, Safari Zone North - Wild Pokemon - 8, Safari Zone North - Wild Pokemon - 9, Safari Zone Secret House, Safari Zone West - Northeast Item, Safari Zone West - Northwest Item, Safari Zone West - Southeast Item, Safari Zone West - Southwest Item, Safari Zone West - Wild Pokemon - 1, Safari Zone West - Wild Pokemon - 10, Safari Zone West - Wild Pokemon - 2, Safari Zone West - Wild Pokemon - 3, Safari Zone West - Wild Pokemon - 4, Safari Zone West - Wild Pokemon - 5, Safari Zone West - Wild Pokemon - 6, Safari Zone West - Wild Pokemon - 7, Safari Zone West - Wild Pokemon - 8, Safari Zone West - Wild Pokemon - 9]
+BROWSER LOG (error): [05:01:57.760] [ERROR] [testSpoilerUI]     ISSUE: Region Fuchsia Good Rod House is not reachable
+BROWSER LOG (error): [05:01:57.770] [ERROR] [testSpoilerUI]     ISSUE: Region Fuchsia Gym is not reachable
+BROWSER LOG (error): [05:01:57.782] [ERROR] [testSpoilerUI]     ISSUE: Region Fuchsia Gym is not reachable
+BROWSER LOG (error): [05:01:57.795] [ERROR] [testSpoilerUI]     ISSUE: Region Fuchsia Gym is not reachable
+BROWSER LOG (error): [05:01:57.809] [ERROR] [testSpoilerUI]     ISSUE: Region Fuchsia Gym is not reachable
+BROWSER LOG (error): [05:01:57.823] [ERROR] [testSpoilerUI]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:01:57.840] [ERROR] [testSpoilerUI]     ISSUE: Region Route 13 is not reachable
+BROWSER LOG (error): [05:01:57.858] [ERROR] [testSpoilerUI]     ISSUE: Region Route 14 is not reachable
+BROWSER LOG (error): [05:01:57.878] [ERROR] [testSpoilerUI]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:01:57.899] [ERROR] [testSpoilerUI]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:01:57.922] [ERROR] [testSpoilerUI]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:01:57.953] [ERROR] [testSpoilerUI]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:01:57.979] [ERROR] [testSpoilerUI]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:01:58.012] [ERROR] [testSpoilerUI]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:01:58.045] [ERROR] [testSpoilerUI]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:01:58.079] [ERROR] [testSpoilerUI]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:01:58.121] [ERROR] [testSpoilerUI]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:01:58.160] [ERROR] [testSpoilerUI]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:01:58.202] [ERROR] [testSpoilerUI]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:01:58.251] [ERROR] [testSpoilerUI]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:01:58.297] [ERROR] [testSpoilerUI]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:01:58.347] [ERROR] [testSpoilerUI]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:01:58.401] [ERROR] [testSpoilerUI]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:01:58.455] [ERROR] [testSpoilerUI]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:01:58.520] [ERROR] [testSpoilerUI]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:01:58.579] [ERROR] [testSpoilerUI]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:01:58.638] [ERROR] [testSpoilerUI]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:01:58.704] [ERROR] [testSpoilerUI]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:01:58.769] [ERROR] [testSpoilerUI]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:01:58.843] [ERROR] [testSpoilerUI]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:01:58.926] [ERROR] [testSpoilerUI]     ISSUE: Region Route 19-N is not reachable
+BROWSER LOG (error): [05:01:59.008] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:01:59.096] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:01:59.184] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:01:59.284] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:01:59.376] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:01:59.468] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:01:59.507] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:01:59.533] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:01:59.557] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:01:59.581] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:01:59.610] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:01:59.646] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:01:59.681] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:01:59.717] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:01:59.759] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:01:59.804] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:01:59.856] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:01:59.917] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:01:59.984] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:00.065] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:00.115] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:00.135] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:00.162] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:00.185] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:00.210] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:00.238] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:00.269] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:00.297] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:00.327] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:00.357] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:00.387] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:00.417] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:00.447] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:00.476] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:00.506] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:00.536] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:00.567] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone Secret House is not reachable
+BROWSER LOG (error): [05:02:00.597] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West-NW is not reachable
+BROWSER LOG (error): [05:02:00.629] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West-NW is not reachable
+BROWSER LOG (error): [05:02:00.662] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West is not reachable
+BROWSER LOG (error): [05:02:00.694] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West is not reachable
+BROWSER LOG (error): [05:02:00.727] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:00.759] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:00.793] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:00.827] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:00.865] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:00.898] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:00.933] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:00.969] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:01.006] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:01.048] [ERROR] [testSpoilerUI]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:01.056] [ERROR] [testSpoilerUI] REGION MISMATCH found for: {"type":"state_update","sphere_number":"3.9","player_id":"1"}
+BROWSER LOG (error): [05:02:01.057] [ERROR] [testSpoilerUI:ComparisonEngine] REGION MISMATCH found for: {"type":"state_update","sphere_number":"3.9","player_id":"1"}
+BROWSER LOG (error): [05:02:01.062] [ERROR] [testSpoilerUI]  > Regions accessible in LOG but NOT in STATE: Fuchsia Bill's Grandpa's House, Fuchsia City, Fuchsia City-Good Rod House Backyard, Fuchsia Good Rod House, Fuchsia Gym, Fuchsia Meeting Room, Fuchsia Pokemart, Fuchsia Pokemon Center, Fuchsia Warden's House, Route 13, Route 14, Route 15, Route 15 Gate 1F, Route 15 Gate 2F, Route 15-W, Route 18 Gate 1F-E, Route 18 Gate 2F, Route 18-E, Route 19-N, Safari Zone Center Rest House, Safari Zone Center-NE, Safari Zone Center-NW, Safari Zone Center-S, Safari Zone Center-Wild, Safari Zone East, Safari Zone East Rest House, Safari Zone Gate-N, Safari Zone Gate-S, Safari Zone North, Safari Zone North Rest House, Safari Zone Secret House, Safari Zone West, Safari Zone West Rest House, Safari Zone West-NW, Safari Zone West-Wild
+BROWSER LOG (error): [05:02:01.062] [ERROR] [testSpoilerUI:ComparisonEngine]  > Regions accessible in LOG but NOT in STATE: Fuchsia Bill's Grandpa's House, Fuchsia City, Fuchsia City-Good Rod House Backyard, Fuchsia Good Rod House, Fuchsia Gym, Fuchsia Meeting Room, Fuchsia Pokemart, Fuchsia Pokemon Center, Fuchsia Warden's House, Route 13, Route 14, Route 15, Route 15 Gate 1F, Route 15 Gate 2F, Route 15-W, Route 18 Gate 1F-E, Route 18 Gate 2F, Route 18-E, Route 19-N, Safari Zone Center Rest House, Safari Zone Center-NE, Safari Zone Center-NW, Safari Zone Center-S, Safari Zone Center-Wild, Safari Zone East, Safari Zone East Rest House, Safari Zone Gate-N, Safari Zone Gate-S, Safari Zone North, Safari Zone North Rest House, Safari Zone Secret House, Safari Zone West, Safari Zone West Rest House, Safari Zone West-NW, Safari Zone West-Wild
+BROWSER LOG (error): [REGION MISMATCH DETAIL] Missing from state (35): [Fuchsia Bill's Grandpa's House, Fuchsia City, Fuchsia City-Good Rod House Backyard, Fuchsia Good Rod House, Fuchsia Gym, Fuchsia Meeting Room, Fuchsia Pokemart, Fuchsia Pokemon Center, Fuchsia Warden's House, Route 13, Route 14, Route 15, Route 15 Gate 1F, Route 15 Gate 2F, Route 15-W, Route 18 Gate 1F-E, Route 18 Gate 2F, Route 18-E, Route 19-N, Safari Zone Center Rest House, Safari Zone Center-NE, Safari Zone Center-NW, Safari Zone Center-S, Safari Zone Center-Wild, Safari Zone East, Safari Zone East Rest House, Safari Zone Gate-N, Safari Zone Gate-S, Safari Zone North, Safari Zone North Rest House, Safari Zone Secret House, Safari Zone West, Safari Zone West Rest House, Safari Zone West-NW, Safari Zone West-Wild]
+BROWSER LOG (warning): [05:02:01.095] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Fuchsia Bill's Grandpa's House
+BROWSER LOG (warning): [05:02:01.147] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Fuchsia City
+BROWSER LOG (warning): [05:02:01.323] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Fuchsia City-Good Rod House Backyard
+BROWSER LOG (warning): [05:02:01.356] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Fuchsia Good Rod House
+BROWSER LOG (warning): [05:02:01.395] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Fuchsia Gym
+BROWSER LOG (warning): [05:02:01.427] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Fuchsia Meeting Room
+BROWSER LOG (warning): [05:02:01.457] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Fuchsia Pokemart
+BROWSER LOG (warning): [05:02:01.489] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Fuchsia Pokemon Center
+BROWSER LOG (warning): [05:02:01.521] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Fuchsia Warden's House
+BROWSER LOG (warning): [05:02:01.629] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 14
+BROWSER LOG (warning): [05:02:01.670] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 15
+BROWSER LOG (warning): [05:02:01.710] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 15 Gate 1F
+BROWSER LOG (warning): [05:02:01.759] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 15 Gate 2F
+BROWSER LOG (warning): [05:02:01.793] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 15-W
+BROWSER LOG (warning): [05:02:01.845] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 18 Gate 1F-E
+BROWSER LOG (warning): [05:02:01.903] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 18 Gate 2F
+BROWSER LOG (warning): [05:02:01.939] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 18-E
+BROWSER LOG (warning): [05:02:01.982] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route 19-N
+BROWSER LOG (warning): [05:02:02.027] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone Center Rest House
+BROWSER LOG (warning): [05:02:02.066] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone Center-NE
+BROWSER LOG (warning): [05:02:02.117] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone Center-NW
+BROWSER LOG (warning): [05:02:02.161] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone Center-S
+BROWSER LOG (warning): [05:02:02.230] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone Center-Wild
+BROWSER LOG (warning): [05:02:02.315] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone East
+BROWSER LOG (warning): [05:02:02.401] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone East Rest House
+BROWSER LOG (warning): [05:02:02.438] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone Gate-N
+BROWSER LOG (warning): [05:02:02.484] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone Gate-S
+BROWSER LOG (warning): [05:02:02.521] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone North
+BROWSER LOG (warning): [05:02:02.592] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone North Rest House
+BROWSER LOG (warning): [05:02:02.634] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone Secret House
+BROWSER LOG (warning): [05:02:02.673] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone West
+BROWSER LOG (warning): [05:02:02.746] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone West Rest House
+BROWSER LOG (warning): [05:02:02.785] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone West-NW
+BROWSER LOG (warning): [05:02:02.847] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Safari Zone West-Wild
+BROWSER LOG (error): [05:02:02.891] [ERROR] [testSpoilerUI] Test failed at step 41: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [05:02:02.894] [ERROR] [testSpoilerUI] Mismatch for event 41 (Sphere 3.9): Comparison for state_update at step 41 Failed
+BROWSER LOG (warning): [05:02:02.898] [WARN] [testSpoilerUI] Test run halted due to "Stop on first error" being enabled.
+BROWSER LOG (error): [05:02:02.901] [ERROR] [testSpoilerUI] Spoiler test completed with 1 mismatch(es). See logs above for details.
+BROWSER LOG (error): [05:02:02.930] [ERROR] [TestRunner/test_spoiler_full_run] [spoilers-full-run-1763010112891] Spoiler test failed. Mismatches found in log:
+BROWSER LOG (error): [05:02:02.931] [ERROR] [TestRunner/test_spoiler_full_run]   - Mismatch for event 41 (Sphere 3.9): Comparison for state_update at step 41 Failed
+BROWSER LOG (error): [05:02:02.931] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM] STATE MISMATCH found for: {"type":"state_update","sphere_number":"3.9","player_id":"1"}
+BROWSER LOG (error): [05:02:02.931] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM] > Locations accessible in LOG but NOT in STATE (or checked): Fuchsia Good Rod House - Fishing Guru&#039;s Brother, Fuchsia Gym - Defeat Koga, Fuchsia Gym - Koga Prize, Fuchsia Gym - Koga TM, Fuchsia Gym - Trainer Parties, Route 11 Gate 2F - Terry Trade, Route 13 - Trainer Parties, Route 14 - Trainer Parties, Route 15 - Trainer Parties, Route 15 - Wild Pokemon - 1, Route 15 - Wild Pokemon - 10, Route 15 - Wild Pokemon - 2, Route 15 - Wild Pokemon - 3, Route 15 - Wild Pokemon - 4, Route 15 - Wild Pokemon - 5, Route 15 - Wild Pokemon - 6, Route 15 - Wild Pokemon - 7, Route 15 - Wild Pokemon - 8, Route 15 - Wild Pokemon - 9, Route 18 - Wild Pokemon - 1, Route 18 - Wild Pokemon - 10, Route 18 - Wild Pokemon - 2, Route 18 - Wild Pokemon - 3, Route 18 - Wild Pokemon - 4, Route 18 - Wild Pokemon - 5, Route 18 - Wild Pokemon - 6, Route 18 - Wild Pokemon - 7, Route 18 - Wild Pokemon - 8, Route 18 - Wild Pokemon - 9, Route 18-E - Trainer Parties, Route 19-N - Trainer Parties, Safari Zone Center - Wild Pokemon - 1, Safari Zone Center - Wild Pokemon - 10, Safari Zone Center - Wild Pokemon - 2, Safari Zone Center - Wild Pokemon - 3, Safari Zone Center - Wild Pokemon - 4, Safari Zone Center - Wild Pokemon - 5, Safari Zone Center - Wild Pokemon - 6, Safari Zone Center - Wild Pokemon - 7, Safari Zone Center - Wild Pokemon - 8, Safari Zone Center - Wild Pokemon - 9, Safari Zone East - Center Item, Safari Zone East - East Item, Safari Zone East - Northeast Item, Safari Zone East - West Item, Safari Zone East - Wild Pokemon - 1, Safari Zone East - Wild Pokemon - 10, Safari Zone East - Wild Pokemon - 2, Safari Zone East - Wild Pokemon - 3, Safari Zone East - Wild Pokemon - 4, Safari Zone East - Wild Pokemon - 5, Safari Zone East - Wild Pokemon - 6, Safari Zone East - Wild Pokemon - 7, Safari Zone East - Wild Pokemon - 8, Safari Zone East - Wild Pokemon - 9, Safari Zone North - North Item, Safari Zone North - Northeast Item, Safari Zone North - Wild Pokemon - 1, Safari Zone North - Wild Pokemon - 10, Safari Zone North - Wild Pokemon - 2, Safari Zone North - Wild Pokemon - 3, Safari Zone North - Wild Pokemon - 4, Safari Zone North - Wild Pokemon - 5, Safari Zone North - Wild Pokemon - 6, Safari Zone North - Wild Pokemon - 7, Safari Zone North - Wild Pokemon - 8, Safari Zone North - Wild Pokemon - 9, Safari Zone Secret House, Safari Zone West - Northeast Item, Safari Zone West - Northwest Item, Safari Zone West - Southeast Item, Safari Zone West - Southwest Item, Safari Zone West - Wild Pokemon - 1, Safari Zone West - Wild Pokemon - 10, Safari Zone West - Wild Pokemon - 2, Safari Zone West - Wild Pokemon - 3, Safari Zone West - Wild Pokemon - 4, Safari Zone West - Wild Pokemon - 5, Safari Zone West - Wild Pokemon - 6, Safari Zone West - Wild Pokemon - 7, Safari Zone West - Wild Pokemon - 8, Safari Zone West - Wild Pokemon - 9
+BROWSER LOG (error): [05:02:02.932] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Region Fuchsia Good Rod House is not reachable
+BROWSER LOG (error): [05:02:02.932] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Region Fuchsia Gym is not reachable
+BROWSER LOG (error): [05:02:02.932] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Region Fuchsia Gym is not reachable
+BROWSER LOG (error): [05:02:02.932] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Region Fuchsia Gym is not reachable
+BROWSER LOG (error): [05:02:02.932] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Region Fuchsia Gym is not reachable
+BROWSER LOG (error): [05:02:02.933] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Access rule evaluation failed
+BROWSER LOG (error): [05:02:02.933] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Region Route 13 is not reachable
+BROWSER LOG (error): [05:02:02.933] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Region Route 14 is not reachable
+BROWSER LOG (error): [05:02:02.933] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:02:02.933] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:02:02.933] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:02:02.934] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:02:02.934] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:57 AM]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:02:02.934] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:02:02.934] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:02:02.934] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:02:02.934] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:02:02.934] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:02:02.934] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 15 is not reachable
+BROWSER LOG (error): [05:02:02.935] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:02:02.935] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:02:02.935] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:02:02.935] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:02:02.935] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:02:02.935] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:02:02.935] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:02:02.936] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:02:02.936] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:02:02.936] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:02:02.936] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable
+BROWSER LOG (error): [05:02:02.936] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Route 19-N is not reachable
+BROWSER LOG (error): [05:02:02.936] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:58 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:02:02.937] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:02:02.937] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:02:02.937] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:02:02.937] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:02:02.937] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:02:02.937] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:02:02.937] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:02:02.937] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:02:02.937] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable
+BROWSER LOG (error): [05:02:02.937] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.938] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.938] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.938] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.938] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.938] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.938] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.939] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.939] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.939] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.939] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.939] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.940] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.940] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone East is not reachable
+BROWSER LOG (error): [05:02:02.940] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:02.940] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:02.941] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:02.941] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:02.941] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:02.941] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:02.941] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:02.941] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:02.942] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:02.942] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:02.942] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:02.942] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable
+BROWSER LOG (error): [05:02:02.942] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone Secret House is not reachable
+BROWSER LOG (error): [05:02:02.943] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone West-NW is not reachable
+BROWSER LOG (error): [05:02:02.943] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone West-NW is not reachable
+BROWSER LOG (error): [05:02:02.943] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone West is not reachable
+BROWSER LOG (error): [05:02:02.943] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone West is not reachable
+BROWSER LOG (error): [05:02:02.944] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:02.944] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:02.944] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:02.945] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:02.945] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:02.945] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:02.946] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:02.946] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:02.946] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:01 AM]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:02.946] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:01 AM]     ISSUE: Region Safari Zone West-Wild is not reachable
+BROWSER LOG (error): [05:02:02.946] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:01 AM] REGION MISMATCH found for: {"type":"state_update","sphere_number":"3.9","player_id":"1"}
+BROWSER LOG (error): [05:02:02.946] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:01 AM] > Regions accessible in LOG but NOT in STATE: Fuchsia Bill&#039;s Grandpa&#039;s House, Fuchsia City, Fuchsia City-Good Rod House Backyard, Fuchsia Good Rod House, Fuchsia Gym, Fuchsia Meeting Room, Fuchsia Pokemart, Fuchsia Pokemon Center, Fuchsia Warden&#039;s House, Route 13, Route 14, Route 15, Route 15 Gate 1F, Route 15 Gate 2F, Route 15-W, Route 18 Gate 1F-E, Route 18 Gate 2F, Route 18-E, Route 19-N, Safari Zone Center Rest House, Safari Zone Center-NE, Safari Zone Center-NW, Safari Zone Center-S, Safari Zone Center-Wild, Safari Zone East, Safari Zone East Rest House, Safari Zone Gate-N, Safari Zone Gate-S, Safari Zone North, Safari Zone North Rest House, Safari Zone Secret House, Safari Zone West, Safari Zone West Rest House, Safari Zone West-NW, Safari Zone West-Wild
+BROWSER LOG (error): [05:02:02.946] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:02 AM] Test failed at step 41: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [05:02:02.946] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:02 AM] Mismatch for event 41 (Sphere 3.9): Comparison for state_update at step 41 Failed
+BROWSER LOG (error): [05:02:02.946] [ERROR] [TestRunner/test_spoiler_full_run]   - [5:02:02 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Full in-app test results: {
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 0,
+    "failedCount": 1
+  },
+  "testDetails": [
+    {
+      "id": "test_spoiler_full_run",
+      "name": "Test Spoilers Panel - Full Run",
+      "status": "failed",
+      "category": "Test Spoilers Panel",
+      "startTime": "2025-11-13T05:01:52.891Z",
+      "endTime": "2025-11-13T05:02:02.961Z",
+      "durationMs": 10070,
+      "conditions": [
+        {
+          "description": "Test started",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:01:52.892Z"
+        },
+        {
+          "description": "Test Spoilers panel found in DOM",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:01:53.394Z"
+        },
+        {
+          "description": "\"Load Suggested Log\" button found and enabled",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:01:53.646Z"
+        },
+        {
+          "description": "\"Run Full Test\" button appeared",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:01:54.401Z"
+        },
+        {
+          "description": "Full spoiler test completed",
+          "status": "passed",
+          "timestamp": "2025-11-13T05:02:02.927Z"
+        },
+        {
+          "description": "Spoiler test passed all checks",
+          "status": "failed",
+          "timestamp": "2025-11-13T05:02:02.930Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[spoilers-full-run-1763010112891] Starting testSpoilersPanelFullRun...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:52.891Z"
+        },
+        {
+          "message": "Condition: \"Test started\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:52.891Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] Activating testSpoilersPanel panel...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:52.892Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel initialization\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:52.892Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel initialization\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:53.143Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel DOM element\" (timeout: 5000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:53.144Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel DOM element\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:53.394Z"
+        },
+        {
+          "message": "Condition: \"Test Spoilers panel found in DOM\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:53.394Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Load Suggested Log\" button to be available\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:53.394Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Load Suggested Log\" button to be available\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:53.646Z"
+        },
+        {
+          "message": "Condition: \"\"Load Suggested Log\" button found and enabled\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:53.646Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] Clicking \"Load Suggested Log\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:53.646Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Spoiler log loading completion\" (timeout: 15000ms, interval: 500ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:53.649Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Spoiler log loading completion\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:54.150Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Run Full Test\" button to appear\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:54.150Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Run Full Test\" button to appear\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:54.401Z"
+        },
+        {
+          "message": "Condition: \"\"Run Full Test\" button appeared\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:54.401Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] Clicking \"Run Full Test\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:54.401Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test to start processing\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:54.403Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test to start processing\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:54.521Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] Waiting for full spoiler test to complete...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:54.522Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test completion with detailed results\" (timeout: 300000ms, interval: 1000ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:54.522Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:55.523Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:56.523Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T05:01:57.535Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] Polling: buttonReady=true, hasDetailedResults=true, processedEvents=40/199",
+          "type": "info",
+          "timestamp": "2025-11-13T05:02:02.927Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":199,\"processedEvents\":40,\"errorCount\":1,\"sphereCount\":41,\"testLogPath\":\"presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+          "type": "info",
+          "timestamp": "2025-11-13T05:02:02.927Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test completion with detailed results\".",
+          "type": "info",
+          "timestamp": "2025-11-13T05:02:02.927Z"
+        },
+        {
+          "message": "Condition: \"Full spoiler test completed\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:02:02.927Z"
+        },
+        {
+          "message": "Condition: \"Spoiler test passed all checks\" - FAILED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:02:02.930Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] Spoiler test failed. Mismatches found in log:",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.930Z"
+        },
+        {
+          "message": "  - Mismatch for event 41 (Sphere 3.9): Comparison for state_update at step 41 Failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.931Z"
+        },
+        {
+          "message": "  - [5:01:57 AM] STATE MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":\"3.9\",\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.931Z"
+        },
+        {
+          "message": "  - [5:01:57 AM] > Locations accessible in LOG but NOT in STATE (or checked): Fuchsia Good Rod House - Fishing Guru&#039;s Brother, Fuchsia Gym - Defeat Koga, Fuchsia Gym - Koga Prize, Fuchsia Gym - Koga TM, Fuchsia Gym - Trainer Parties, Route 11 Gate 2F - Terry Trade, Route 13 - Trainer Parties, Route 14 - Trainer Parties, Route 15 - Trainer Parties, Route 15 - Wild Pokemon - 1, Route 15 - Wild Pokemon - 10, Route 15 - Wild Pokemon - 2, Route 15 - Wild Pokemon - 3, Route 15 - Wild Pokemon - 4, Route 15 - Wild Pokemon - 5, Route 15 - Wild Pokemon - 6, Route 15 - Wild Pokemon - 7, Route 15 - Wild Pokemon - 8, Route 15 - Wild Pokemon - 9, Route 18 - Wild Pokemon - 1, Route 18 - Wild Pokemon - 10, Route 18 - Wild Pokemon - 2, Route 18 - Wild Pokemon - 3, Route 18 - Wild Pokemon - 4, Route 18 - Wild Pokemon - 5, Route 18 - Wild Pokemon - 6, Route 18 - Wild Pokemon - 7, Route 18 - Wild Pokemon - 8, Route 18 - Wild Pokemon - 9, Route 18-E - Trainer Parties, Route 19-N - Trainer Parties, Safari Zone Center - Wild Pokemon - 1, Safari Zone Center - Wild Pokemon - 10, Safari Zone Center - Wild Pokemon - 2, Safari Zone Center - Wild Pokemon - 3, Safari Zone Center - Wild Pokemon - 4, Safari Zone Center - Wild Pokemon - 5, Safari Zone Center - Wild Pokemon - 6, Safari Zone Center - Wild Pokemon - 7, Safari Zone Center - Wild Pokemon - 8, Safari Zone Center - Wild Pokemon - 9, Safari Zone East - Center Item, Safari Zone East - East Item, Safari Zone East - Northeast Item, Safari Zone East - West Item, Safari Zone East - Wild Pokemon - 1, Safari Zone East - Wild Pokemon - 10, Safari Zone East - Wild Pokemon - 2, Safari Zone East - Wild Pokemon - 3, Safari Zone East - Wild Pokemon - 4, Safari Zone East - Wild Pokemon - 5, Safari Zone East - Wild Pokemon - 6, Safari Zone East - Wild Pokemon - 7, Safari Zone East - Wild Pokemon - 8, Safari Zone East - Wild Pokemon - 9, Safari Zone North - North Item, Safari Zone North - Northeast Item, Safari Zone North - Wild Pokemon - 1, Safari Zone North - Wild Pokemon - 10, Safari Zone North - Wild Pokemon - 2, Safari Zone North - Wild Pokemon - 3, Safari Zone North - Wild Pokemon - 4, Safari Zone North - Wild Pokemon - 5, Safari Zone North - Wild Pokemon - 6, Safari Zone North - Wild Pokemon - 7, Safari Zone North - Wild Pokemon - 8, Safari Zone North - Wild Pokemon - 9, Safari Zone Secret House, Safari Zone West - Northeast Item, Safari Zone West - Northwest Item, Safari Zone West - Southeast Item, Safari Zone West - Southwest Item, Safari Zone West - Wild Pokemon - 1, Safari Zone West - Wild Pokemon - 10, Safari Zone West - Wild Pokemon - 2, Safari Zone West - Wild Pokemon - 3, Safari Zone West - Wild Pokemon - 4, Safari Zone West - Wild Pokemon - 5, Safari Zone West - Wild Pokemon - 6, Safari Zone West - Wild Pokemon - 7, Safari Zone West - Wild Pokemon - 8, Safari Zone West - Wild Pokemon - 9",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.931Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Region Fuchsia Good Rod House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.932Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Region Fuchsia Gym is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.932Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Region Fuchsia Gym is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.932Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Region Fuchsia Gym is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.932Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Region Fuchsia Gym is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.932Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Access rule evaluation failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.933Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Region Route 13 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.933Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Region Route 14 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.933Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Region Route 15 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.933Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Region Route 15 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.933Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Region Route 15 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.933Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Region Route 15 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.934Z"
+        },
+        {
+          "message": "  - [5:01:57 AM]     ISSUE: Region Route 15 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.934Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 15 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.934Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 15 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.934Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 15 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.934Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 15 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.934Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 15 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.934Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 15 is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.934Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.935Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.935Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.935Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.935Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.935Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.935Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.935Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.936Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.936Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.936Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 18-E is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.936Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Route 19-N is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.936Z"
+        },
+        {
+          "message": "  - [5:01:58 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.936Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.936Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.937Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.937Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.937Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.937Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.937Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.937Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.937Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone Center-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.937Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.937Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.938Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.938Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.938Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.938Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.938Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.938Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.938Z"
+        },
+        {
+          "message": "  - [5:01:59 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.939Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.939Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.939Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.939Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.940Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone East is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.940Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.940Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.940Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.941Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.941Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.941Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.941Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.941Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.941Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.942Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.942Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.942Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone North is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.942Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone Secret House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.942Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone West-NW is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.943Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone West-NW is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.943Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone West is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.943Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone West is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.943Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.944Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.944Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.944Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.945Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.945Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.945Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.945Z"
+        },
+        {
+          "message": "  - [5:02:00 AM]     ISSUE: Region Safari Zone West-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.946Z"
+        },
+        {
+          "message": "  - [5:02:01 AM]     ISSUE: Region Safari Zone West-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.946Z"
+        },
+        {
+          "message": "  - [5:02:01 AM]     ISSUE: Region Safari Zone West-Wild is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.946Z"
+        },
+        {
+          "message": "  - [5:02:01 AM] REGION MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":\"3.9\",\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.946Z"
+        },
+        {
+          "message": "  - [5:02:01 AM] > Regions accessible in LOG but NOT in STATE: Fuchsia Bill&#039;s Grandpa&#039;s House, Fuchsia City, Fuchsia City-Good Rod House Backyard, Fuchsia Good Rod House, Fuchsia Gym, Fuchsia Meeting Room, Fuchsia Pokemart, Fuchsia Pokemon Center, Fuchsia Warden&#039;s House, Route 13, Route 14, Route 15, Route 15 Gate 1F, Route 15 Gate 2F, Route 15-W, Route 18 Gate 1F-E, Route 18 Gate 2F, Route 18-E, Route 19-N, Safari Zone Center Rest House, Safari Zone Center-NE, Safari Zone Center-NW, Safari Zone Center-S, Safari Zone Center-Wild, Safari Zone East, Safari Zone East Rest House, Safari Zone Gate-N, Safari Zone Gate-S, Safari Zone North, Safari Zone North Rest House, Safari Zone Secret House, Safari Zone West, Safari Zone West Rest House, Safari Zone West-NW, Safari Zone West-Wild",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.946Z"
+        },
+        {
+          "message": "  - [5:02:02 AM] Test failed at step 41: Comparison failed for event type 'state_update'.",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.946Z"
+        },
+        {
+          "message": "  - [5:02:02 AM] Mismatch for event 41 (Sphere 3.9): Comparison for state_update at step 41 Failed",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.946Z"
+        },
+        {
+          "message": "  - [5:02:02 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.",
+          "type": "error",
+          "timestamp": "2025-11-13T05:02:02.946Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] Spoiler test results stored in window.__spoilerTestResults__",
+          "type": "info",
+          "timestamp": "2025-11-13T05:02:02.947Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] Spoiler test results stored in localStorage",
+          "type": "info",
+          "timestamp": "2025-11-13T05:02:02.960Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763010112891] testSpoilersPanelFullRun finished. Overall Result: false.",
+          "type": "info",
+          "timestamp": "2025-11-13T05:02:02.960Z"
+        },
+        {
+          "message": "Test completion signal: FAILED",
+          "type": "info",
+          "timestamp": "2025-11-13T05:02:02.960Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T05:02:02.960Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T05:02:02.961Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T05:02:02.961Z"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2025-11-13T05:02:03.061Z"
+}
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2025-11-13T05-02-03.json
+  ✘  1 tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results (11.8s)
+
+
+  1) tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m0[39m
+    Received: [31m1[39m
+
+      141 |
+      142 |     // The test system should complete successfully regardless of whether tests run
+    > 143 |     expect(results.summary.failedCount).toBe(0);
+          |                                         ^
+      144 |     
+      145 |     // If tests actually ran, they should pass
+      146 |     if (results.summary.totalRun > 0) {
+        at /home/user/Archipelago-CC/tests/e2e/app.spec.js:143:41
+
+    Error Context: test-results/app-Application-End-to-End-a086e-app-tests-and-check-results/error-context.md
+
+  1 failed
+    tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results ─
