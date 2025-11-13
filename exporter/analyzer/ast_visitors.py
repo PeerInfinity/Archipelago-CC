@@ -240,9 +240,17 @@ class ASTVisitorMixin:
                     logging.debug(f"all(GeneratorExp): Attempting to resolve iterator '{iterator_name}'")
 
                     resolved_value = self.expression_resolver.resolve_variable(iterator_name)
+
+                    # Convert frozensets/sets/tuples to lists for uniform handling
+                    if resolved_value is not None:
+                        if isinstance(resolved_value, (frozenset, set, tuple)):
+                            resolved_value = list(resolved_value)
+                            logging.debug(f"all(GeneratorExp): Converted {type(resolved_value).__name__} to list")
+
                     if resolved_value is not None and isinstance(resolved_value, list):
                         logging.debug(f"all(GeneratorExp): Resolved '{iterator_name}' to list with {len(resolved_value)} items")
-                        # Try to analyze each item in the list if they're callables
+
+                        # Check if items are callables (old behavior)
                         if all(callable(item) for item in resolved_value):
                             from .analysis import analyze_rule
                             analyzed_items = []
@@ -269,6 +277,36 @@ class ASTVisitorMixin:
                                     return analyzed_items[0]
                                 else:
                                     return {'type': 'and', 'conditions': analyzed_items}
+
+                        # NEW: Handle simple values (strings, numbers, etc.) - expand the comprehension
+                        else:
+                            logging.debug(f"all(GeneratorExp): Iterator contains non-callable values, expanding comprehension")
+                            target_name = iterator_info.get('target', {}).get('name')
+                            if not target_name:
+                                logging.warning(f"all(GeneratorExp): Could not extract target variable name from comprehension")
+                            else:
+                                element_rule = gen_exp['element']
+                                expanded_conditions = []
+
+                                for value in resolved_value:
+                                    # Substitute the target variable with the current value in the element rule
+                                    substituted_rule = self._substitute_variable_in_rule(element_rule, target_name, value)
+                                    if substituted_rule:
+                                        expanded_conditions.append(substituted_rule)
+                                    else:
+                                        logging.warning(f"all(GeneratorExp): Failed to substitute {target_name}={value} in element rule")
+                                        expanded_conditions = None
+                                        break
+
+                                if expanded_conditions:
+                                    logging.debug(f"all(GeneratorExp): Successfully expanded to {len(expanded_conditions)} conditions")
+                                    if len(expanded_conditions) == 0:
+                                        # Empty iterator - all() of empty is True
+                                        return {'type': 'constant', 'value': True}
+                                    elif len(expanded_conditions) == 1:
+                                        return expanded_conditions[0]
+                                    else:
+                                        return {'type': 'and', 'conditions': expanded_conditions}
 
                 # Represent this as a specific 'all_of' rule type
                 result = {
@@ -1092,4 +1130,79 @@ class ASTVisitorMixin:
         except Exception as e:
             logging.error("Error in visit_BinOp", e)
             return None
+
+    def _substitute_variable_in_rule(self, rule: Dict[str, Any], var_name: str, value: Any) -> Optional[Dict[str, Any]]:
+        """
+        Recursively substitute a variable name with a concrete value in a rule structure.
+
+        This is used to expand comprehensions where we have a target variable (e.g., 'ingredient')
+        that needs to be replaced with concrete values from an iterator.
+
+        Args:
+            rule: The rule structure to substitute in
+            var_name: The variable name to replace
+            value: The value to substitute
+
+        Returns:
+            A new rule structure with the variable substituted, or None if substitution fails
+        """
+        import copy
+
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        # Deep copy to avoid modifying the original
+        result = copy.deepcopy(rule)
+
+        def substitute_recursive(node):
+            """Recursively walk and substitute in the rule structure."""
+            if not isinstance(node, dict):
+                return node
+
+            node_type = node.get('type')
+
+            # Handle 'name' type - this is where we substitute
+            if node_type == 'name' and node.get('name') == var_name:
+                # Replace the name reference with a constant value
+                return {'type': 'constant', 'value': value}
+
+            # Handle f_string that might reference the variable
+            if node_type == 'f_string':
+                # Need to process the parts
+                if 'parts' in node:
+                    new_parts = []
+                    for part in node['parts']:
+                        if isinstance(part, dict):
+                            if part.get('type') == 'formatted_value':
+                                # Check if the formatted value references our variable
+                                val = part.get('value', {})
+                                if val.get('type') == 'name' and val.get('name') == var_name:
+                                    # Replace the formatted value with a constant
+                                    new_parts.append({'type': 'constant', 'value': str(value)})
+                                else:
+                                    # Recursively substitute in the formatted value
+                                    new_parts.append({**part, 'value': substitute_recursive(val)})
+                            else:
+                                new_parts.append(substitute_recursive(part))
+                        else:
+                            new_parts.append(part)
+
+                    # Reconstruct the f_string
+                    # If all parts are now constants, we can simplify to a single constant
+                    if all(p.get('type') == 'constant' for p in new_parts):
+                        combined_value = ''.join(str(p['value']) for p in new_parts)
+                        return {'type': 'constant', 'value': combined_value}
+                    else:
+                        return {**node, 'parts': new_parts}
+
+            # Recursively process nested structures
+            for key, val in node.items():
+                if isinstance(val, dict):
+                    node[key] = substitute_recursive(val)
+                elif isinstance(val, list):
+                    node[key] = [substitute_recursive(item) if isinstance(item, dict) else item for item in val]
+
+            return node
+
+        return substitute_recursive(result)
 
