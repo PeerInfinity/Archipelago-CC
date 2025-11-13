@@ -3,39 +3,44 @@
 Test failures at Sphere 0. Locations not accessible: "Energy Tank, Brinstar Ceiling", "Morphing Ball"
 
 ## Root Cause
-Super Metroid uses a custom SMBoolManager system. The rules have complex structures that the frontend doesn't understand:
+Super Metroid uses a custom SMBoolManager system. The rules have complex structures that the frontend doesn't understand.
 
-1. **Missing helper function `any`**: Python's built-in `any()` is used in rules
-2. **Unknown name `self`**: Rules reference `self.evalSMBool()`
-3. **Generator expressions**: Rules use Python generator expressions with `accessFrom.items()`
-4. **Helper functions**: Rules call helpers like `func` and `rule` that operate on `state.smbm[player]`
+## Progress
+1. ✅ Created `frontend/modules/shared/gameLogic/super_metroid/smLogic.js` with stub implementations
+2. ✅ Registered Super Metroid in `gameLogicRegistry.js`
+3. ✅ Helper functions (any, func, rule, evalSMBool) are now being found
 
-## Key Rule Pattern
+## Current Issue: "Name 'self' NOT FOUND in context"
+
+The test still fails because the rules reference `self.evalSMBool()` as a function call:
 ```json
 {
-  "type": "and",
-  "conditions": [
-    {
-      "type": "helper",
-      "name": "any",
-      "args": [generator_expression]
-    },
-    {
-      "type": "function_call",
-      "function": {"type": "attribute", "object": {"type": "name", "name": "self"}, "attr": "evalSMBool"},
-      "args": [helper_func, maxDiff]
-    }
-  ]
+  "type": "function_call",
+  "function": {
+    "type": "attribute",
+    "object": {"type": "name", "name": "self"},
+    "attr": "evalSMBool"
+  },
+  "args": [...]
 }
 ```
 
-## Next Steps
-1. Create `frontend/modules/shared/gameLogic/sm/` directory
-2. Create helper functions to handle:
-   - `any()` - Python's any() builtin
-   - `self.evalSMBool()` - Evaluates SMBool objects
-   - Generator expressions over `accessFrom`
-   - SMBoolManager integration
+The `self` refers to the Python SMWorld object, which doesn't exist in JavaScript. The rule engine is trying to resolve `self` as a name in the evaluation context but can't find it.
 
-## Challenge
-Super Metroid's logic system is fundamentally different from other games. It uses SMBool objects that have both a boolean value AND a difficulty rating. The frontend may need special handling for this game's unique logic system.
+## Possible Solutions
+
+### Option 1: Modify the Exporter (Recommended)
+Transform `self.evalSMBool(...)` calls into direct helper calls:
+- From: `{"type": "function_call", "function": {"type": "attribute", "object": {"type": "name", "name": "self"}, "attr": "evalSMBool"}, ...}`
+- To: `{"type": "helper", "name": "evalSMBool", ...}`
+
+This would require modifying `exporter/games/sm.py` to recognize and transform these patterns.
+
+### Option 2: Modify the Rule Engine
+Add special handling in the rule engine to recognize `self.method` patterns and redirect to helpers. This would be a global change affecting all games.
+
+### Option 3: Synthetic `self` Object
+Provide a `self` object in the evaluation context with methods like `evalSMBool`. This might conflict with other uses of names in rules.
+
+## Next Step
+Implement Option 1 - modify the exporter to transform these rule patterns.
