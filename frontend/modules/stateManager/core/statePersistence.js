@@ -183,6 +183,8 @@ export function getSnapshot(sm) {
     autoCollectEventsEnabled: sm.autoCollectEventsEnabled !== false, // Default true
     eventLocations: eventLocationsObject,
     startRegions: sm.startRegions || ['Menu'],
+    // Progressive items tracking (used by games like DLCQuest for coin accumulation)
+    prog_items: sm.prog_items || {},
 
     // Note: We don't include progressionMapping, itemData, groupData, etc. here
     // because they are static data already available in staticDataCache

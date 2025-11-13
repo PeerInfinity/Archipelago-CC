@@ -183,7 +183,21 @@ export function clearInventory(sm) {
       }
     }
   }
-  sm._logDebug('[InventoryManager] Inventory cleared.');
+
+  // Also clear prog_items accumulator values
+  if (sm.prog_items) {
+    for (const playerId in sm.prog_items) {
+      if (Object.hasOwn(sm.prog_items, playerId)) {
+        for (const itemName in sm.prog_items[playerId]) {
+          if (Object.hasOwn(sm.prog_items[playerId], itemName)) {
+            sm.prog_items[playerId][itemName] = 0;
+          }
+        }
+      }
+    }
+  }
+
+  sm._logDebug('[InventoryManager] Inventory and prog_items cleared.');
 
   // Only invalidate cache and recompute if NOT in batch mode
   if (!sm._batchMode) {
@@ -268,6 +282,36 @@ export function _addItemToInventory(sm, itemName, count = 1) {
       }
     }
   }
+
+  // Handle prog_items for games like DLCQuest that use coin accumulation
+  // Pattern: "4 coins", "46 coins", etc. accumulate into " coins" or " coins freemium"
+  const coinMatch = itemName.match(/^(\d+) coins?$/);
+  if (coinMatch && sm.prog_items) {
+    const coinAmount = parseInt(coinMatch[1], 10);
+    const playerId = String(sm.playerSlot);
+
+    // Ensure player's prog_items structure exists
+    if (!sm.prog_items[playerId]) {
+      sm.prog_items[playerId] = {};
+    }
+
+    // Determine which accumulator to use based on the item's type or groups
+    // For now, default to " coins" (basic campaign)
+    // TODO: Check if item belongs to freemium campaign and use " coins freemium" instead
+    const accumulatorName = ' coins';
+
+    // Initialize accumulator if needed
+    if (!(accumulatorName in sm.prog_items[playerId])) {
+      sm.prog_items[playerId][accumulatorName] = 0;
+    }
+
+    // Accumulate the coins
+    sm.prog_items[playerId][accumulatorName] += coinAmount * count;
+
+    sm._logDebug(
+      `[InventoryManager] Accumulated ${coinAmount * count} coins into prog_items["${playerId}"]["${accumulatorName}"] (now ${sm.prog_items[playerId][accumulatorName]})`
+    );
+  }
 }
 
 /**
@@ -306,6 +350,31 @@ export function _removeItemFromInventory(sm, itemName, count = 1) {
           );
         }
       }
+    }
+  }
+
+  // Handle prog_items removal for games like DLCQuest
+  const coinMatch = itemName.match(/^(\d+) coins?$/);
+  if (coinMatch && sm.prog_items) {
+    const coinAmount = parseInt(coinMatch[1], 10);
+    const playerId = String(sm.playerSlot);
+
+    // Ensure player's prog_items structure exists
+    if (!sm.prog_items[playerId]) {
+      sm.prog_items[playerId] = {};
+    }
+
+    const accumulatorName = ' coins';
+
+    if (accumulatorName in sm.prog_items[playerId]) {
+      sm.prog_items[playerId][accumulatorName] = Math.max(
+        0,
+        sm.prog_items[playerId][accumulatorName] - (coinAmount * count)
+      );
+
+      sm._logDebug(
+        `[InventoryManager] Removed ${coinAmount * count} coins from prog_items["${playerId}"]["${accumulatorName}"] (now ${sm.prog_items[playerId][accumulatorName]})`
+      );
     }
   }
 }
