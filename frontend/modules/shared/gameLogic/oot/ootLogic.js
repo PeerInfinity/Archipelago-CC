@@ -22,7 +22,12 @@ export const ootStateModule = {
    * Load settings into game state
    */
   loadSettings(gameState, settings) {
-    return { ...gameState };
+    // Initialize age based on starting_age setting
+    const startingAge = settings?.starting_age || 'child';
+    return {
+      ...gameState,
+      age: startingAge,
+    };
   },
 
   /**
