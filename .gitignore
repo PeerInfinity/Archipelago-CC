@@ -260,4 +260,4 @@ test2/
 test3/
 test4/
 frontend/modules/mazeGame-iframe/
-.git.disabled/
+.git.disabled/spoiler_test_output*.txt
