@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-13 00:52:50
+**Generated:** 2025-11-13 02:22:32
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -115,7 +115,7 @@ These tests check multiple template configurations for the same game.
 
 | Game Name | Minimal Link (Templates Passed) | Full Link (Templates Passed) |
 |-----------|----------------------------------|-------------------------------|
-| A Link to the Past | [138/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [27/41 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
+| A Link to the Past | [138/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [120/174 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
 
 ## Excluded Games
 
@@ -125,6 +125,7 @@ The following games are excluded from automated testing:
 |------|--------|
 | Archipelago | Not a game |
 | Final Fantasy | Requires manual configuration and is not compatible with automated testing |
+| Hollow Knight | The spoiler test currently freezes |
 | Sudoku | Cannot be used for generating worlds |
 | Universal Tracker | Not a game |
 
