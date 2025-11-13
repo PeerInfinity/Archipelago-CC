@@ -261,6 +261,7 @@ import * as v6Logic from './v6/v6Logic.js';
 import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
+import * as sc2Logic from './sc2/sc2Logic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -415,6 +416,12 @@ const GAME_REGISTRY = {
     helperFunctions: ootLogic.helperFunctions,
     worldClasses: ['OOTWorld'],
     aliases: ['Ocarina of Time', 'OOT', 'Zelda: Ocarina of Time']
+  },
+  'Starcraft 2': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: sc2Logic.helperFunctions,
+    worldClasses: ['SC2World'],
+    aliases: ['Starcraft 2', 'SC2', 'StarCraft 2', 'StarCraft II']
   },
   'Super Mario 64': {
     logicModule: sm64exLogic.sm64exStateModule,
