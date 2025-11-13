@@ -72,15 +72,6 @@ console.log('[YachtDice] helpers.js module loaded and initialized');
  * @returns {number} The maximum achievable score
  */
 export function dice_simulation_state_change(snapshot, staticData, fragsPerDice, fragsPerRoll, allowedCategories, difficulty) {
-    // ALWAYS log when called for debugging
-    console.log('[YachtDice] dice_simulation_state_change CALLED with args:', {
-        fragsPerDice,
-        fragsPerRoll,
-        difficulty,
-        allowedCategoriesCount: allowedCategories?.length,
-        snapshotKeys: Object.keys(snapshot || {}).slice(0, 10)
-    });
-
     // Create a cache key based on the current inventory state
     // BUGFIX: Use snapshot.inventory (which exists) instead of snapshot.items (which doesn't)
     const inventory = snapshot?.items || snapshot?.inventory || {};
@@ -93,21 +84,12 @@ export function dice_simulation_state_change(snapshot, staticData, fragsPerDice,
     }
 
     if (snapshot.__yachtDiceScoreCache[cacheKey] !== undefined) {
-        console.log('[YachtDice] Returning cached result:', snapshot.__yachtDiceScoreCache[cacheKey]);
         return snapshot.__yachtDiceScoreCache[cacheKey];
     }
 
     // Extract progression from current state
     const progression = extractProgression(snapshot, fragsPerDice, fragsPerRoll, allowedCategories);
     const {categories, numDice, numRolls, fixedMult, stepMult, extraPoints} = progression;
-
-    console.log('[YachtDice] Extracted progression:', {
-        numDice,
-        numRolls,
-        categoriesCount: categories.length,
-        categories: categories.map(c => c.name),
-        extraPoints
-    });
 
     // Calculate the simulated score
     const simulatedScore = diceSimulationStrings(
@@ -118,8 +100,6 @@ export function dice_simulation_state_change(snapshot, staticData, fragsPerDice,
 
     // Cache the result with proper key
     snapshot.__yachtDiceScoreCache[cacheKey] = maxScore;
-
-    console.log('[YachtDice] Final result: simulatedScore=' + simulatedScore + ', maxScore=' + maxScore);
 
     return maxScore;
 }
@@ -138,22 +118,11 @@ function extractProgression(snapshot, fragsPerDice, fragsPerRoll, allowedCategor
     // Different games structure their snapshots differently
     const items = snapshot?.items || snapshot?.inventory || snapshot || {};
 
-    // Debug: ALWAYS log for deep debugging
-    console.log('[YachtDice extractProgression] Snapshot keys:', Object.keys(snapshot || {}).join(', '));
-    console.log('[YachtDice extractProgression] snapshot.items:', snapshot?.items ? 'exists' : 'missing');
-    console.log('[YachtDice extractProgression] snapshot.inventory:', snapshot?.inventory ? 'exists' : 'missing');
-    console.log('[YachtDice extractProgression] Using items from:', snapshot?.items ? 'snapshot.items' : snapshot?.inventory ? 'snapshot.inventory' : 'snapshot itself');
-    console.log('[YachtDice extractProgression] items.Dice:', items?.["Dice"]);
-
     // Count dice and rolls (including fragments)
     const diceFrags = (items["Dice Fragment"] || 0);
     const rollFrags = (items["Roll Fragment"] || 0);
     const numDice = (items["Dice"] || 0) + Math.floor(diceFrags / fragsPerDice);
     const numRolls = (items["Roll"] || 0) + Math.floor(rollFrags / fragsPerRoll);
-
-    // ALWAYS log the dice/roll counts for debugging
-    console.log('[YachtDice] Item counts: Dice=' + items["Dice"] + ', DiceFrags=' + diceFrags + ', Roll=' + items["Roll"] + ', RollFrags=' + rollFrags + ', numDice=' + numDice + ', numRolls=' + numRolls);
-    console.log('[YachtDice extractProgression] Calculated numDice=' + numDice + ', numRolls=' + numRolls + ' from fragsPerDice=' + fragsPerDice + ', fragsPerRoll=' + fragsPerRoll);
 
     // Count multipliers
     const numFixedMults = items["Fixed Score Multiplier"] || 0;
@@ -188,10 +157,59 @@ function extractProgression(snapshot, fragsPerDice, fragsPerRoll, allowedCategor
 }
 
 /**
+ * Add two probability distributions (Python's add_distributions)
+ * @param {Object} dist1 - First distribution {value: probability}
+ * @param {Object} dist2 - Second distribution {value: probability}
+ * @returns {Object} Combined distribution
+ */
+function addDistributions(dist1, dist2) {
+    const combinedDist = {};
+    for (const [val2Str, prob2] of Object.entries(dist2)) {
+        const val2 = Number(val2Str);
+        for (const [val1Str, prob1] of Object.entries(dist1)) {
+            const val1 = Number(val1Str);
+            const newVal = val1 + val2;
+            if (combinedDist[newVal] === undefined) {
+                combinedDist[newVal] = 0;
+            }
+            combinedDist[newVal] += prob1 * prob2;
+        }
+    }
+    return combinedDist;
+}
+
+/**
+ * Take the maximum of multiple tries with different multipliers (Python's max_dist)
+ * @param {Object} dist1 - Base distribution {value: probability}
+ * @param {Array<number>} mults - Array of multipliers to try
+ * @returns {Object} Distribution of maximum values
+ */
+function maxDist(dist1, mults) {
+    let newDist = {0: 1};
+    for (const mult of mults) {
+        const tempDist = {};
+        for (const [val1Str, prob1] of Object.entries(newDist)) {
+            const val1 = Number(val1Str);
+            for (const [val2Str, prob2] of Object.entries(dist1)) {
+                const val2 = Number(val2Str);
+                const newVal = Math.floor(Math.max(val1, val2 * mult));
+                const newProb = prob1 * prob2;
+
+                if (tempDist[newVal] === undefined) {
+                    tempDist[newVal] = 0;
+                }
+                tempDist[newVal] += newProb;
+            }
+        }
+        newDist = tempDist;
+    }
+    return newDist;
+}
+
+/**
  * Simulate dice rolling to calculate expected score
  *
- * This is a simplified version of the Python implementation.
- * For now, it uses a basic estimation until we can port the full yacht_weights data.
+ * This matches the Python implementation in worlds/yachtdice/Rules.py
  *
  * @param {Array<Object>} categories - Categories with their quantities
  * @param {number} numDice - Number of dice
@@ -202,10 +220,6 @@ function extractProgression(snapshot, fragsPerDice, fragsPerRoll, allowedCategor
  * @returns {number} Estimated score
  */
 function diceSimulationStrings(categories, numDice, numRolls, fixedMult, stepMult, difficulty) {
-    // TEMPORARY: Basic estimation formula
-    // This needs to be replaced with the full probability-based simulation
-    // once we export the yacht_weights data
-
     if (numDice <= 0 || numRolls <= 0) {
         return 0;
     }
@@ -215,31 +229,37 @@ function diceSimulationStrings(categories, numDice, numRolls, fixedMult, stepMul
     const percReturn = [[0], [0.1, 0.5], [0.3, 0.7], [0.55, 0.85], [0.85, 0.95]][difficulty];
     const diffDivide = [0, 9, 7, 3, 2][difficulty];
 
-    // Sort categories by mean score (using actual probability data or fallback)
+    // Sort categories by mean score (using 4 rolls as in Python implementation)
+    // Note: Python uses 4 rolls for sorting to avoid errors with order changing when obtaining rolls
     categories.sort((a, b) => {
-        const distA = getScoreDistribution(a.name, numDice, numRolls);
-        const distB = getScoreDistribution(b.name, numDice, numRolls);
+        const distA = getScoreDistribution(a.name, numDice, 4);
+        const distB = getScoreDistribution(b.name, numDice, 4);
 
-        const scoreA = distA ? getMeanFromDistribution(distA) : fallbackEstimateMeanScore(a.name, numDice, numRolls);
-        const scoreB = distB ? getMeanFromDistribution(distB) : fallbackEstimateMeanScore(b.name, numDice, numRolls);
+        const scoreA = distA ? getMeanFromDistribution(distA) : fallbackEstimateMeanScore(a.name, numDice, 4);
+        const scoreB = distB ? getMeanFromDistribution(distB) : fallbackEstimateMeanScore(b.name, numDice, 4);
 
         return scoreA - scoreB;
     });
 
-    // Calculate total score using percentiles
-    let totalScore = 0;
+    // Calculate total distribution (matching Python algorithm)
+    let totalDist = {0: 1};
 
     for (let j = 0; j < categories.length; j++) {
         const category = categories[j];
 
         // Get the distribution for this category
-        const dist = getScoreDistribution(category.name, numDice, numRolls);
+        let dist = getScoreDistribution(category.name, numDice, numRolls);
 
         // Use fallback if distribution not available
         if (!dist) {
-            const fallbackScore = fallbackEstimateMeanScore(category.name, numDice, numRolls);
-            totalScore += fallbackScore;
-            continue;
+            // In Python this would use {0: 100000}
+            dist = {0: 100000};
+        }
+
+        // Normalize the distribution (divide by 100000 to get probabilities)
+        const normalizedDist = {};
+        for (const [scoreStr, probability] of Object.entries(dist)) {
+            normalizedDist[scoreStr] = probability / 100000;
         }
 
         // Calculate category multiplier for multiple copies
@@ -248,28 +268,27 @@ function diceSimulationStrings(categories, numDice, numRolls, fixedMult, stepMul
         // For higher difficulties, simulation gets multiple tries
         const maxTries = Math.floor(j / diffDivide);
 
-        // Calculate the best possible score with multipliers
-        let bestScore = 0;
-        for (const percentile of percReturn) {
-            const baseScore = percentileDistribution(dist, percentile);
-
-            // Try different multiplier combinations
-            for (let ii = Math.max(0, j - maxTries); ii <= j; ii++) {
-                const mult = (1 + fixedMult + stepMult * ii) * catMult;
-                const score = baseScore * mult;
-                if (score > bestScore) {
-                    bestScore = score;
-                }
-            }
+        // Build array of multipliers to try
+        const mults = [];
+        for (let ii = Math.max(0, j - maxTries); ii <= j; ii++) {
+            mults.push((1 + fixedMult + stepMult * ii) * catMult);
         }
 
-        // Average the percentiles
-        totalScore += bestScore / percReturn.length;
+        // Apply max_dist to get the best score across tries
+        const distWithMults = maxDist(normalizedDist, mults);
 
+        // Add this category's distribution to the total
+        totalDist = addDistributions(totalDist, distWithMults);
     }
 
+    // Calculate percentiles on the combined distribution
+    const percentileValues = percReturn.map(perc => percentileDistribution(totalDist, perc));
+
+    // Average the percentile values
+    const outcome = percentileValues.reduce((sum, val) => sum + val, 0) / percentileValues.length;
+
     // Ensure minimum score of 5
-    return Math.max(5, Math.floor(totalScore));
+    return Math.max(5, Math.floor(outcome));
 }
 
 /**
@@ -293,6 +312,8 @@ function getMeanFromDistribution(distribution) {
  */
 function getScoreDistribution(categoryName, numDice, numRolls) {
     // Limit dice and rolls to maximum of 8 (data availability)
+    const originalDice = numDice;
+    const originalRolls = numRolls;
     numDice = Math.min(8, Math.max(0, numDice));
     numRolls = Math.min(8, Math.max(0, numRolls));
 
@@ -308,17 +329,13 @@ function getScoreDistribution(categoryName, numDice, numRolls) {
     // Look up the probability distribution
     const distribution = yachtWeights[categoryName]?.[numDice]?.[numRolls];
 
-    if (!distribution) {
-        return null;
-    }
-
-    return distribution;
+    return distribution || null;
 }
 
 /**
  * Calculate percentile value from a probability distribution
  *
- * @param {Object} distribution - Score distribution {score: probability}
+ * @param {Object} distribution - Score distribution {score: probability (0-1)}
  * @param {number} percentile - Percentile to calculate (0.0 to 1.0)
  * @returns {number} Score at the given percentile
  */
@@ -327,7 +344,8 @@ function percentileDistribution(distribution, percentile) {
     let cumulativeProb = 0;
 
     for (const score of sortedScores) {
-        cumulativeProb += distribution[score] / 100000;
+        // Distribution values are already probabilities (0-1), not raw counts
+        cumulativeProb += distribution[score];
         if (cumulativeProb >= percentile) {
             return score;
         }
