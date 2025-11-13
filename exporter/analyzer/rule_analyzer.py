@@ -82,8 +82,31 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
         logging.error(message)
         self.error_log.append(error_entry)
 
+    def _is_state_or_player_or_world_arg(self, arg_node, arg_result):
+        """
+        Check if an argument is the 'state', 'player', or 'world' parameter.
+
+        Args:
+            arg_node: The AST node for the argument
+            arg_result: The analyzed result dict for the argument
+
+        Returns:
+            Tuple of (is_state, is_player, is_world) booleans
+        """
+        # Check for direct 'state', 'player', or 'world' names
+        if isinstance(arg_node, ast.Name):
+            name = arg_node.id
+            return (name == 'state', name == 'player', name == 'world')
+
+        # Check for attribute access like 'world.player', 'self.player', etc.
+        if isinstance(arg_node, ast.Attribute) and arg_node.attr == 'player':
+            return (False, True, False)
+
+        return (False, False, False)
+
     def _is_state_or_player_arg(self, arg_node, arg_result):
         """
+        Legacy method for backward compatibility.
         Check if an argument is the 'state' or 'player' parameter.
 
         Args:
@@ -93,30 +116,22 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
         Returns:
             Tuple of (is_state, is_player) booleans
         """
-        # Check for direct 'state' or 'player' names
-        if isinstance(arg_node, ast.Name):
-            name = arg_node.id
-            return (name == 'state', name == 'player')
-
-        # Check for attribute access like 'world.player', 'self.player', etc.
-        if isinstance(arg_node, ast.Attribute) and arg_node.attr == 'player':
-            return (False, True)
-
-        return (False, False)
+        is_state, is_player, is_world = self._is_state_or_player_or_world_arg(arg_node, arg_result)
+        return (is_state, is_player)
 
     def _filter_special_args(self, args_with_nodes):
         """
-        Filter out state and player arguments.
+        Filter out state, player, and world arguments.
 
         Args:
             args_with_nodes: List of (arg_node, arg_result) tuples
 
         Returns:
-            List of arg_results with state/player filtered out
+            List of arg_results with state/player/world filtered out
         """
         filtered = []
         for arg_node, arg_result in args_with_nodes:
-            is_state, is_player = self._is_state_or_player_arg(arg_node, arg_result)
-            if not (is_state or is_player):
+            is_state, is_player, is_world = self._is_state_or_player_or_world_arg(arg_node, arg_result)
+            if not (is_state or is_player or is_world):
                 filtered.append(arg_result)
         return filtered

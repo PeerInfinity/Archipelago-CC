@@ -388,10 +388,10 @@ class ASTVisitorMixin:
             }
             logging.debug(f"Created helper result: {result}")
             return result # Return helper result
-        
+
         # 2. State method call (e.g., state.has)
-        elif func_info and func_info.get('type') == 'attribute':
-            if func_info['object'].get('type') == 'name' and func_info['object'].get('name') == 'state':
+        elif (func_info and func_info.get('type') == 'attribute' and
+              func_info['object'].get('type') == 'name' and func_info['object'].get('name') == 'state'):
                 method = func_info['attr']
                 logging.debug(f"Processing state method: {method}")
 
@@ -601,10 +601,13 @@ class ASTVisitorMixin:
                 logging.debug(f"State method result: {result}")
                 return result # Return state method result
 
-        # 2.5. Self method call (e.g., self.has_boss_strength)
+        # 2.5. Attribute-based method calls (self.method, logic.method)
         elif func_info and func_info.get('type') == 'attribute':
-            if func_info['object'].get('type') == 'name' and func_info['object'].get('name') == 'self':
-                method_name = func_info['attr']
+            obj_name = func_info['object'].get('name') if func_info['object'].get('type') == 'name' else None
+            method_name = func_info['attr']
+
+            # Handle self.method calls (e.g., self.has_boss_strength)
+            if obj_name == 'self':
                 logging.debug(f"Processing self method call: {method_name}")
 
                 # Filter out state/player arguments
@@ -618,6 +621,76 @@ class ASTVisitorMixin:
                     'args': filtered_args
                 }
                 logging.debug(f"Created helper result for self method: {result}")
+                return result
+
+            # Handle logic.method calls (e.g., logic.oaks_aide, logic.can_surf)
+            elif obj_name == 'logic':
+                logging.debug(f"Processing logic method call: {method_name}")
+
+                # Filter out state/world/player arguments
+                filtered_args = self._filter_special_args(args_with_nodes)
+
+                # Resolve variable references in arguments (e.g., world.options.value expressions)
+                resolved_args = []
+                for arg in filtered_args:
+                    if arg and arg.get('type') == 'binary_op':
+                        # Try to resolve binary operations like world.options.oaks_aide_rt_11.value + 5
+                        resolved_value = self.expression_resolver.resolve_expression(arg)
+                        if resolved_value is not None and is_simple_value(resolved_value):
+                            # Ensure the resolved value is JSON-serializable
+                            resolved_value = make_json_serializable(resolved_value)
+                            logging.debug(f"Resolved logic method binary_op to {resolved_value}")
+                            resolved_args.append({'type': 'constant', 'value': resolved_value})
+                        else:
+                            # Keep unresolved expression as-is
+                            resolved_args.append(arg)
+                    elif arg and arg.get('type') == 'attribute':
+                        # Try to resolve attribute expressions like world.options.some_option.value
+                        resolved_value = self.expression_resolver.resolve_expression(arg)
+                        if resolved_value is not None and is_simple_value(resolved_value):
+                            # Handle enum values - extract the numeric value
+                            if hasattr(resolved_value, 'value'):
+                                final_value = resolved_value.value
+                            else:
+                                final_value = resolved_value
+                            # Ensure the final value is JSON-serializable
+                            final_value = make_json_serializable(final_value)
+                            logging.debug(f"Resolved logic method argument attribute to {final_value}")
+                            resolved_args.append({'type': 'constant', 'value': final_value})
+                        else:
+                            # Keep unresolved or complex objects as attribute references
+                            resolved_args.append(arg)
+                    elif arg and arg.get('type') == 'name':
+                        # Try to resolve the variable (but skip 'world' which should already be filtered)
+                        if arg['name'] == 'world':
+                            logging.debug(f"Skipping resolution of 'world' argument in logic call")
+                            continue
+                        resolved_value = self.expression_resolver.resolve_variable(arg['name'])
+                        if resolved_value is not None and is_simple_value(resolved_value):
+                            # Handle enum values - extract the numeric value
+                            if hasattr(resolved_value, 'value'):
+                                final_value = resolved_value.value
+                            else:
+                                final_value = resolved_value
+                            # Ensure the final value is JSON-serializable
+                            final_value = make_json_serializable(final_value)
+                            logging.debug(f"Resolved logic method argument variable '{arg['name']}' to {final_value}")
+                            resolved_args.append({'type': 'constant', 'value': final_value})
+                        else:
+                            # Keep unresolved or complex objects as name references
+                            resolved_args.append(arg)
+                    else:
+                        resolved_args.append(arg)
+
+                filtered_args = resolved_args
+
+                # Create helper result
+                result = {
+                    'type': 'helper',
+                    'name': method_name,
+                    'args': filtered_args
+                }
+                logging.debug(f"Created helper result for logic method: {result}")
                 return result
 
         # 3. Fallback for other types of calls (e.g., calling result of another function)
@@ -899,15 +972,36 @@ class ASTVisitorMixin:
         try:
             op_name = type(node.op).__name__.lower()
             logging.debug(f"\n--- visit_UnaryOp: op={op_name} ---")
-            
+
             operand_result = self.visit(node.operand)
             if operand_result is None:
                 logging.error(f"Failed to analyze operand for UnaryOp: {ast.dump(node.operand)}")
                 return None
 
+            # Try to resolve the operand if it's an attribute expression
+            if operand_result.get('type') == 'attribute':
+                resolved_value = self.expression_resolver.resolve_expression(operand_result)
+                if resolved_value is not None and is_simple_value(resolved_value):
+                    # Handle enum values - extract the numeric/boolean value
+                    if hasattr(resolved_value, 'value'):
+                        final_value = resolved_value.value
+                    else:
+                        final_value = resolved_value
+                    # Ensure the final value is JSON-serializable
+                    final_value = make_json_serializable(final_value)
+                    logging.debug(f"Resolved UnaryOp operand attribute to constant: {final_value}")
+                    operand_result = {'type': 'constant', 'value': final_value}
+
             # Handle specific unary operators
             if isinstance(node.op, ast.Not):
-                return {'type': 'not', 'condition': operand_result}
+                # If operand is a constant, evaluate the not operation now
+                if operand_result.get('type') == 'constant':
+                    constant_value = operand_result['value']
+                    result_value = not constant_value
+                    logging.debug(f"Evaluated not {constant_value} = {result_value}")
+                    return {'type': 'constant', 'value': result_value}
+                else:
+                    return {'type': 'not', 'condition': operand_result}
             # Add other unary ops (e.g., UAdd, USub) if needed for rules
             else:
                 logging.error(f"Unhandled unary operator: {op_name}")
