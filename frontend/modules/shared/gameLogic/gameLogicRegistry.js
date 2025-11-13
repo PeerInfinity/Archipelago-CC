@@ -265,6 +265,7 @@ import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
 import * as cv64Logic from './cv64/cv64Logic.js';
 import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
 import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
+import * as paintLogic from './paint/paintLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -425,6 +426,12 @@ const GAME_REGISTRY = {
     helperFunctions: ootLogic.helperFunctions,
     worldClasses: ['OOTWorld'],
     aliases: ['Ocarina of Time', 'OOT', 'Zelda: Ocarina of Time']
+  },
+  'Paint': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: paintLogic.helperFunctions,
+    worldClasses: ['PaintWorld'],
+    aliases: ['Paint']
   },
   'Super Mario 64': {
     logicModule: sm64exLogic.sm64exStateModule,
