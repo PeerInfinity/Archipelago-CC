@@ -18,6 +18,14 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
         from worlds.jakanddaxter.items import item_table
         self.item_id_to_name = dict(item_table)
 
+    def get_region_attributes(self, region) -> Dict[str, Any]:
+        """Add orb_count to regions for calculating Reachable Orbs."""
+        attributes = {}
+        # Check if this region has an orb_count attribute
+        if hasattr(region, 'orb_count'):
+            attributes['orb_count'] = region.orb_count
+        return attributes
+
     def _unwrap_constant(self, value: Any) -> Any:
         """Unwrap constant wrappers to get the actual value."""
         if isinstance(value, dict) and value.get('type') == 'constant':
