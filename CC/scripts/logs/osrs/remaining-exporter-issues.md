@@ -1,79 +1,70 @@
 # Remaining Exporter Issues for Old School Runescape
 
-## Issue 1: Unresolved Lambda Default Parameters
+## Issue 1: Location.can_reach() Pattern
 
-**Status**: In Progress (Exporter created, needs debugging)
+**Status**: Not Fixed
 **Priority**: High
-**Test Failure**: Sphere 0 - 3 locations not accessible
+**Test Failure**: Sphere 0.2 - "Points: Misthalin Mystery" not accessible
 
 **Description**:
-The OSRS world code uses lambdas with default parameters to capture variable values:
-- `lambda state, region_required=region_required: state.can_reach(region_required, "Region", self.player)`
-- `lambda state, item_req=item_req: state.has(item_req, self.player)`
-- `lambda state, location_row=location_row: self.quest_points(state) > location_row.qp`
+The OSRS world uses a pattern where Location objects' .can_reach() method is called:
+```python
+add_rule(qp_loc, lambda state, loc=q_loc: (loc.can_reach(state)))
+```
 
-The generic exporter doesn't resolve these default parameters, resulting in rules like:
+The current export produces:
+```json
+{
+  "type": "function_call",
+  "function": {
+    "type": "attribute",
+    "object": {"type": "name", "name": "loc"},
+    "attr": "can_reach"
+  },
+  "args": []
+}
+```
+
+This should be converted to:
 ```json
 {
   "type": "state_method",
   "method": "can_reach",
   "args": [
-    {
-      "type": "name",
-      "name": "region_required"
-    },
-    ...
+    {"type": "constant", "value": "Quest: Misthalin Mystery"},
+    {"type": "constant", "value": "Location"}
   ]
 }
 ```
 
-The frontend can't evaluate `{"type": "name", "name": "region_required"}` because it's an unresolved variable.
-
-**Affected Locations** (at least):
-- "Burn some Oak Logs" - needs Oak Tree region
-- "Burn some Willow Logs" - needs Oak Tree and Willow Tree regions
-- "Kill a Duck" - needs Duck region
-
 **Solution**:
-Create a custom OSRS exporter that:
-1. Detects lambda default parameters
-2. Resolves the actual values (region names, item names, etc.)
-3. Replaces `{"type": "name", "name": "region_required"}` with `{"type": "constant", "value": "Duck"}` (or appropriate region name)
+Need to handle this pattern in the exporter or analyzer. Options:
+1. Add special handling in OSRS exporter's expand_rule
+2. Add generic handling in the analyzer for Location.can_reach() pattern
+3. Modify how Location objects are stored in closures
 
 **Code Location**:
-- `worlds/osrs/__init__.py` lines ~220-230 (location rule creation)
-- Exporter created: `exporter/games/osrs.py` (created, has override_rule_analysis method)
+- `worlds/osrs/__init__.py` line 413
+- Analyzer: `exporter/analyzer/ast_visitors.py`
+- Exporter: `exporter/games/osrs.py`
 
-**Current Implementation**:
-An OSRS exporter has been created at `exporter/games/osrs.py` with an `override_rule_analysis` method that attempts to:
-1. Extract closure variables from the lambda
-2. Convert Region objects to their name strings
-3. Pass the modified closure_vars to analyze_rule
+---
 
-**Remaining Work**:
-The implementation needs debugging - the closure variable conversion is not taking effect in the final rules.json output. Possible approaches:
-1. Modify the analyzer to handle Region objects during serialization
-2. Post-process the analyzed rules to replace "name" type rules with "constant" type
-3. Investigate why the modified closure_vars are being overwritten during analysis
+## ~~Issue: Unresolved Lambda Default Parameters~~ (FIXED ✓)
 
-## Issue 2: Quest Points Helper Function
+**Status**: Fixed in commit 600c367
+**Test Failure**: Sphere 0 - 3 locations not accessible (NOW FIXED)
 
-**Status**: Not Fixed
-**Priority**: High
+**Description** (Historical):
+The OSRS world code used lambdas with default parameters that captured Region objects:
+```python
+lambda state, region_required=region_required: state.can_reach(region_required, "Region", self.player)
+```
 
-**Description**:
-The OSRS world uses a custom method `self.quest_points(state)` to calculate total quest points from QP items in inventory.
+**Solution Implemented**:
+Modified `exporter/analyzer/ast_visitors.py` to detect objects with both `.name` and `.entrances` attributes (Region objects) and automatically extract their `.name` attribute as a constant string value.
 
-This needs to be:
-1. Recognized by the exporter as a helper function
-2. Implemented in the frontend as a JavaScript helper
-
-**Code Location**:
-- Python: `worlds/osrs/__init__.py` - quest_points() method
-- Frontend helper needed: `frontend/modules/shared/gameLogic/osrs/helpers.js` (doesn't exist yet)
-
-**Implementation Notes**:
-The quest_points() method should sum up quest point values from special QP items like:
-- "1 QP (Quest Name)"
-- "3 QP (Quest Name)"
-- etc.
+**Results**:
+- ✅ Fixed: "Burn some Oak Logs" - now has `{\"type\": \"constant\", \"value\": \"Oak Tree\"}`
+- ✅ Fixed: "Burn some Willow Logs" - now has proper region constants
+- ✅ Fixed: "Kill a Duck" - now has `{\"type\": \"constant\", \"value\": \"Duck\"}`

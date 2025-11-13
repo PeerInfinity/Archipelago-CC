@@ -395,8 +395,7 @@ Points: The Corsair Curse
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->Al Kharid
    =>   Al Kharid -> Al Kharid->Port Sarim
-   =>   Port Sarim -> Port Sarim->Falador Farms
-   =>   Falador Farms -> Falador Farms->Rimmington
+   =>   Port Sarim -> Port Sarim->Rimmington
    =>   Rimmington
 Points: The Knight's Sword
         Menu -> Start->Lumbridge
@@ -419,8 +418,7 @@ Points: Witch's Potion
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->Al Kharid
    =>   Al Kharid -> Al Kharid->Port Sarim
-   =>   Port Sarim -> Port Sarim->Falador Farms
-   =>   Falador Farms -> Falador Farms->Rimmington
+   =>   Port Sarim -> Port Sarim->Rimmington
    =>   Rimmington
 Points: X Marks the Spot
         Menu -> Start->Lumbridge
@@ -498,8 +496,7 @@ Quest: The Corsair Curse
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->Al Kharid
    =>   Al Kharid -> Al Kharid->Port Sarim
-   =>   Port Sarim -> Port Sarim->Falador Farms
-   =>   Falador Farms -> Falador Farms->Rimmington
+   =>   Port Sarim -> Port Sarim->Rimmington
    =>   Rimmington
 Quest: The Restless Ghost
         Menu -> Start->Lumbridge

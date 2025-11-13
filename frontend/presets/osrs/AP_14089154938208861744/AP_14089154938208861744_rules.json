@@ -62,15 +62,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "quest_points"
-                },
+                "type": "helper",
+                "name": "quest_points",
                 "args": []
               },
               "op": ">",
@@ -103,15 +96,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "quest_points"
-                },
+                "type": "helper",
+                "name": "quest_points",
                 "args": []
               },
               "op": ">",
@@ -226,15 +212,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
@@ -676,8 +655,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Milk"
                     },
                     {
                       "type": "constant",
@@ -693,8 +672,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Egg"
                         },
                         {
                           "type": "constant",
@@ -710,8 +689,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Windmill"
                             },
                             {
                               "type": "constant",
@@ -727,8 +706,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Wheat"
                                 },
                                 {
                                   "type": "constant",
@@ -741,8 +720,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Lumbridge"
                                 },
                                 {
                                   "type": "constant",
@@ -798,8 +777,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Wizard Tower"
                     },
                     {
                       "type": "constant",
@@ -815,8 +794,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Lumbridge Swamp"
                         },
                         {
                           "type": "constant",
@@ -829,8 +808,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Lumbridge"
                         },
                         {
                           "type": "constant",
@@ -882,8 +861,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Central Varrock"
                     },
                     {
                       "type": "constant",
@@ -899,8 +878,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Wizard Tower"
                         },
                         {
                           "type": "constant",
@@ -913,8 +892,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Lumbridge"
                         },
                         {
                           "type": "constant",
@@ -966,8 +945,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Port Sarim"
                     },
                     {
                       "type": "constant",
@@ -983,8 +962,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Draynor Village"
                         },
                         {
                           "type": "constant",
@@ -997,8 +976,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Lumbridge"
                         },
                         {
                           "type": "constant",
@@ -1140,8 +1119,8 @@
               "method": "can_reach",
               "args": [
                 {
-                  "type": "name",
-                  "name": "region_required"
+                  "type": "constant",
+                  "value": "Lumbridge Swamp"
                 },
                 {
                   "type": "constant",
@@ -1193,8 +1172,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Lumbridge Swamp"
                     },
                     {
                       "type": "constant",
@@ -1400,8 +1379,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Spinning Wheel"
                     },
                     {
                       "type": "constant",
@@ -1414,8 +1393,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Lumbridge Farms West"
                     },
                     {
                       "type": "constant",
@@ -2168,8 +2147,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "South of Varrock"
                     },
                     {
                       "type": "constant",
@@ -2185,8 +2164,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Wizard Tower"
                         },
                         {
                           "type": "constant",
@@ -2202,8 +2181,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Varrock Palace"
                             },
                             {
                               "type": "constant",
@@ -2216,8 +2195,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Central Varrock"
                             },
                             {
                               "type": "constant",
@@ -2271,8 +2250,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "West Varrock"
                     },
                     {
                       "type": "constant",
@@ -2288,8 +2267,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "South of Varrock"
                         },
                         {
                           "type": "constant",
@@ -2305,8 +2284,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Varrock Palace"
                             },
                             {
                               "type": "constant",
@@ -2319,8 +2298,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Central Varrock"
                             },
                             {
                               "type": "constant",
@@ -2374,8 +2353,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "West Varrock"
                     },
                     {
                       "type": "constant",
@@ -2391,8 +2370,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "South of Varrock"
                         },
                         {
                           "type": "constant",
@@ -2408,8 +2387,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Varrock Palace"
                             },
                             {
                               "type": "constant",
@@ -2422,8 +2401,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Central Varrock"
                             },
                             {
                               "type": "constant",
@@ -2477,8 +2456,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Limpwurt Root"
                     },
                     {
                       "type": "constant",
@@ -2494,8 +2473,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Red Spider Eggs"
                         },
                         {
                           "type": "constant",
@@ -2508,8 +2487,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Central Varrock"
                         },
                         {
                           "type": "constant",
@@ -3120,8 +3099,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Cook's Guild"
                     },
                     {
                       "type": "constant",
@@ -3795,8 +3774,8 @@
               "method": "can_reach",
               "args": [
                 {
-                  "type": "name",
-                  "name": "region_required"
+                  "type": "constant",
+                  "value": "Draynor Manor"
                 },
                 {
                   "type": "constant",
@@ -4007,8 +3986,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Bronze Ores"
                         },
                         {
                           "type": "constant",
@@ -4024,8 +4003,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Iron Ore"
                             },
                             {
                               "type": "constant",
@@ -4041,8 +4020,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Clay Ore"
                                 },
                                 {
                                   "type": "constant",
@@ -4055,8 +4034,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Dwarven Mountain Pass"
                                 },
                                 {
                                   "type": "constant",
@@ -4214,15 +4193,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
@@ -4268,8 +4240,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Falador Farms"
                             },
                             {
                               "type": "constant",
@@ -4285,8 +4257,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Ice Mountain"
                                 },
                                 {
                                   "type": "constant",
@@ -4302,8 +4274,8 @@
                                   "method": "can_reach",
                                   "args": [
                                     {
-                                      "type": "name",
-                                      "name": "region_required"
+                                      "type": "constant",
+                                      "value": "Monastery"
                                     },
                                     {
                                       "type": "constant",
@@ -4319,8 +4291,8 @@
                                       "method": "can_reach",
                                       "args": [
                                         {
-                                          "type": "name",
-                                          "name": "region_required"
+                                          "type": "constant",
+                                          "value": "Falador"
                                         },
                                         {
                                           "type": "constant",
@@ -4333,8 +4305,8 @@
                                       "method": "can_reach",
                                       "args": [
                                         {
-                                          "type": "name",
-                                          "name": "region_required"
+                                          "type": "constant",
+                                          "value": "Dwarven Mines"
                                         },
                                         {
                                           "type": "constant",
@@ -4392,15 +4364,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
@@ -4436,8 +4401,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Edgeville"
                         },
                         {
                           "type": "constant",
@@ -4453,8 +4418,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Central Varrock"
                             },
                             {
                               "type": "constant",
@@ -4470,8 +4435,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Falador"
                                 },
                                 {
                                   "type": "constant",
@@ -4487,8 +4452,8 @@
                                   "method": "can_reach",
                                   "args": [
                                     {
-                                      "type": "name",
-                                      "name": "region_required"
+                                      "type": "constant",
+                                      "value": "Barbarian Village"
                                     },
                                     {
                                       "type": "constant",
@@ -4504,8 +4469,8 @@
                                       "method": "can_reach",
                                       "args": [
                                         {
-                                          "type": "name",
-                                          "name": "region_required"
+                                          "type": "constant",
+                                          "value": "Ice Mountain"
                                         },
                                         {
                                           "type": "constant",
@@ -4521,8 +4486,8 @@
                                           "method": "can_reach",
                                           "args": [
                                             {
-                                              "type": "name",
-                                              "name": "region_required"
+                                              "type": "constant",
+                                              "value": "Dwarven Mountain Pass"
                                             },
                                             {
                                               "type": "constant",
@@ -4535,8 +4500,8 @@
                                           "method": "can_reach",
                                           "args": [
                                             {
-                                              "type": "name",
-                                              "name": "region_required"
+                                              "type": "constant",
+                                              "value": "Dwarven Mines"
                                             },
                                             {
                                               "type": "constant",
@@ -4635,8 +4600,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Onion"
                     },
                     {
                       "type": "constant",
@@ -4652,8 +4617,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "South of Varrock"
                         },
                         {
                           "type": "constant",
@@ -4669,8 +4634,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Falador"
                             },
                             {
                               "type": "constant",
@@ -4686,8 +4651,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Draynor Village"
                                 },
                                 {
                                   "type": "constant",
@@ -4700,8 +4665,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Goblin Village"
                                 },
                                 {
                                   "type": "constant",
@@ -4842,8 +4807,8 @@
               "method": "can_reach",
               "args": [
                 {
-                  "type": "name",
-                  "name": "region_required"
+                  "type": "constant",
+                  "value": "Camdozaal"
                 },
                 {
                   "type": "constant",
@@ -5138,8 +5103,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Port Sarim"
                             },
                             {
                               "type": "constant",
@@ -5155,8 +5120,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Pie Dish"
                                 },
                                 {
                                   "type": "constant",
@@ -5172,8 +5137,8 @@
                                   "method": "can_reach",
                                   "args": [
                                     {
-                                      "type": "name",
-                                      "name": "region_required"
+                                      "type": "constant",
+                                      "value": "Windmill"
                                     },
                                     {
                                       "type": "constant",
@@ -5189,8 +5154,8 @@
                                       "method": "can_reach",
                                       "args": [
                                         {
-                                          "type": "name",
-                                          "name": "region_required"
+                                          "type": "constant",
+                                          "value": "South of Varrock"
                                         },
                                         {
                                           "type": "constant",
@@ -5206,8 +5171,8 @@
                                           "method": "can_reach",
                                           "args": [
                                             {
-                                              "type": "name",
-                                              "name": "region_required"
+                                              "type": "constant",
+                                              "value": "Mudskipper Point"
                                             },
                                             {
                                               "type": "constant",
@@ -5223,8 +5188,8 @@
                                               "method": "can_reach",
                                               "args": [
                                                 {
-                                                  "type": "name",
-                                                  "name": "region_required"
+                                                  "type": "constant",
+                                                  "value": "Varrock Palace"
                                                 },
                                                 {
                                                   "type": "constant",
@@ -5237,8 +5202,8 @@
                                               "method": "can_reach",
                                               "args": [
                                                 {
-                                                  "type": "name",
-                                                  "name": "region_required"
+                                                  "type": "constant",
+                                                  "value": "Falador"
                                                 },
                                                 {
                                                   "type": "constant",
@@ -5709,8 +5674,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Central Varrock"
                     },
                     {
                       "type": "constant",
@@ -5726,8 +5691,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Falador"
                         },
                         {
                           "type": "constant",
@@ -5743,8 +5708,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Karamja"
                             },
                             {
                               "type": "constant",
@@ -5757,8 +5722,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Port Sarim"
                             },
                             {
                               "type": "constant",
@@ -6236,15 +6201,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
@@ -6282,8 +6240,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Draynor Village"
                         },
                         {
                           "type": "constant",
@@ -6299,8 +6257,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Port Sarim"
                             },
                             {
                               "type": "constant",
@@ -6316,8 +6274,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Dwarven Mines"
                                 },
                                 {
                                   "type": "constant",
@@ -6333,8 +6291,8 @@
                                   "method": "can_reach",
                                   "args": [
                                     {
-                                      "type": "name",
-                                      "name": "region_required"
+                                      "type": "constant",
+                                      "value": "Monastery"
                                     },
                                     {
                                       "type": "constant",
@@ -6350,8 +6308,8 @@
                                       "method": "can_reach",
                                       "args": [
                                         {
-                                          "type": "name",
-                                          "name": "region_required"
+                                          "type": "constant",
+                                          "value": "Rimmington"
                                         },
                                         {
                                           "type": "constant",
@@ -6367,8 +6325,8 @@
                                           "method": "can_reach",
                                           "args": [
                                             {
-                                              "type": "name",
-                                              "name": "region_required"
+                                              "type": "constant",
+                                              "value": "Lumbridge"
                                             },
                                             {
                                               "type": "constant",
@@ -6384,8 +6342,8 @@
                                               "method": "can_reach",
                                               "args": [
                                                 {
-                                                  "type": "name",
-                                                  "name": "region_required"
+                                                  "type": "constant",
+                                                  "value": "Edgeville"
                                                 },
                                                 {
                                                   "type": "constant",
@@ -6401,8 +6359,8 @@
                                                   "method": "can_reach",
                                                   "args": [
                                                     {
-                                                      "type": "name",
-                                                      "name": "region_required"
+                                                      "type": "constant",
+                                                      "value": "South of Varrock"
                                                     },
                                                     {
                                                       "type": "constant",
@@ -6415,8 +6373,8 @@
                                                   "method": "can_reach",
                                                   "args": [
                                                     {
-                                                      "type": "name",
-                                                      "name": "region_required"
+                                                      "type": "constant",
+                                                      "value": "Crandor"
                                                     },
                                                     {
                                                       "type": "constant",
@@ -6645,8 +6603,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Port Sarim"
                     },
                     {
                       "type": "constant",
@@ -6659,8 +6617,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Rimmington"
                     },
                     {
                       "type": "constant",
@@ -6710,8 +6668,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Corsair Cove"
                     },
                     {
                       "type": "constant",
@@ -6727,8 +6685,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Falador Farms"
                         },
                         {
                           "type": "constant",
@@ -6741,8 +6699,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Rimmington"
                         },
                         {
                           "type": "constant",
@@ -7622,8 +7580,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Draynor Manor"
                     },
                     {
                       "type": "constant",
@@ -7639,8 +7597,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Central Varrock"
                         },
                         {
                           "type": "constant",
@@ -7653,8 +7611,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Draynor Village"
                         },
                         {
                           "type": "constant",
@@ -7703,8 +7661,8 @@
               "method": "can_reach",
               "args": [
                 {
-                  "type": "name",
-                  "name": "region_required"
+                  "type": "constant",
+                  "value": "Draynor Village"
                 },
                 {
                   "type": "constant",
@@ -7764,8 +7722,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Imps"
                     },
                     {
                       "type": "constant",
@@ -7778,8 +7736,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Wizard Tower"
                     },
                     {
                       "type": "constant",
@@ -8025,8 +7983,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Draynor Village"
                     },
                     {
                       "type": "constant",
@@ -8042,8 +8000,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Spinning Wheel"
                         },
                         {
                           "type": "constant",
@@ -8059,8 +8017,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Sheep"
                             },
                             {
                               "type": "constant",
@@ -8076,8 +8034,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Clay Ore"
                                 },
                                 {
                                   "type": "constant",
@@ -8093,8 +8051,8 @@
                                   "method": "can_reach",
                                   "args": [
                                     {
-                                      "type": "name",
-                                      "name": "region_required"
+                                      "type": "constant",
+                                      "value": "Bronze Ores"
                                     },
                                     {
                                       "type": "constant",
@@ -8110,8 +8068,8 @@
                                       "method": "can_reach",
                                       "args": [
                                         {
-                                          "type": "name",
-                                          "name": "region_required"
+                                          "type": "constant",
+                                          "value": "Central Varrock"
                                         },
                                         {
                                           "type": "constant",
@@ -8124,8 +8082,8 @@
                                       "method": "can_reach",
                                       "args": [
                                         {
-                                          "type": "name",
-                                          "name": "region_required"
+                                          "type": "constant",
+                                          "value": "Al Kharid"
                                         },
                                         {
                                           "type": "constant",
@@ -8185,8 +8143,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Port Sarim"
                     },
                     {
                       "type": "constant",
@@ -8199,8 +8157,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Al Kharid"
                     },
                     {
                       "type": "constant",
@@ -8757,15 +8715,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
@@ -9040,8 +8991,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Chisel"
                         },
                         {
                           "type": "constant",
@@ -9069,15 +9020,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
@@ -9352,8 +9296,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Chisel"
                         },
                         {
                           "type": "constant",
@@ -9485,8 +9429,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Furnace"
                             },
                             {
                               "type": "constant",
@@ -9499,8 +9443,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Iron Ore"
                             },
                             {
                               "type": "constant",
@@ -9578,8 +9522,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Silver Ore"
                     },
                     {
                       "type": "constant",
@@ -9616,15 +9560,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
@@ -9765,8 +9702,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Furnace"
                                 },
                                 {
                                   "type": "constant",
@@ -9779,8 +9716,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Gold Ore"
                                 },
                                 {
                                   "type": "constant",
@@ -9870,8 +9807,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Fly Fishing Spot"
                     },
                     {
                       "type": "constant",
@@ -9903,15 +9840,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
@@ -9981,8 +9911,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Lobster Spot"
                         },
                         {
                           "type": "constant",
@@ -10081,8 +10011,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Pie Dish"
                         },
                         {
                           "type": "constant",
@@ -10098,8 +10028,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Windmill"
                             },
                             {
                               "type": "constant",
@@ -10115,8 +10045,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Wheat"
                                 },
                                 {
                                   "type": "constant",
@@ -10129,8 +10059,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Redberry Bush"
                                 },
                                 {
                                   "type": "constant",
@@ -10193,15 +10123,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
@@ -10373,8 +10296,8 @@
                           "method": "can_reach",
                           "args": [
                             {
-                              "type": "name",
-                              "name": "region_required"
+                              "type": "constant",
+                              "value": "Cake Tin"
                             },
                             {
                               "type": "constant",
@@ -10390,8 +10313,8 @@
                               "method": "can_reach",
                               "args": [
                                 {
-                                  "type": "name",
-                                  "name": "region_required"
+                                  "type": "constant",
+                                  "value": "Milk"
                                 },
                                 {
                                   "type": "constant",
@@ -10407,8 +10330,8 @@
                                   "method": "can_reach",
                                   "args": [
                                     {
-                                      "type": "name",
-                                      "name": "region_required"
+                                      "type": "constant",
+                                      "value": "Egg"
                                     },
                                     {
                                       "type": "constant",
@@ -10424,8 +10347,8 @@
                                       "method": "can_reach",
                                       "args": [
                                         {
-                                          "type": "name",
-                                          "name": "region_required"
+                                          "type": "constant",
+                                          "value": "Windmill"
                                         },
                                         {
                                           "type": "constant",
@@ -10438,8 +10361,8 @@
                                       "method": "can_reach",
                                       "args": [
                                         {
-                                          "type": "name",
-                                          "name": "region_required"
+                                          "type": "constant",
+                                          "value": "Wheat"
                                         },
                                         {
                                           "type": "constant",
@@ -10546,8 +10469,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Oak Tree"
                         },
                         {
                           "type": "constant",
@@ -10651,8 +10574,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Willow Tree"
                         },
                         {
                           "type": "constant",
@@ -10702,8 +10625,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Barbarian"
                     },
                     {
                       "type": "constant",
@@ -10741,8 +10664,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Zombie"
                     },
                     {
                       "type": "constant",
@@ -10779,15 +10702,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
@@ -10826,8 +10742,8 @@
                       "method": "can_reach",
                       "args": [
                         {
-                          "type": "name",
-                          "name": "region_required"
+                          "type": "constant",
+                          "value": "Hill Giant"
                         },
                         {
                           "type": "constant",
@@ -10903,8 +10819,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Nature Runes"
                     },
                     {
                       "type": "constant",
@@ -10972,8 +10888,8 @@
                   "method": "can_reach",
                   "args": [
                     {
-                      "type": "name",
-                      "name": "region_required"
+                      "type": "constant",
+                      "value": "Duck"
                     },
                     {
                       "type": "constant",
@@ -11019,8 +10935,8 @@
               "method": "can_reach",
               "args": [
                 {
-                  "type": "name",
-                  "name": "region_required"
+                  "type": "constant",
+                  "value": "Haystack"
                 },
                 {
                   "type": "constant",
