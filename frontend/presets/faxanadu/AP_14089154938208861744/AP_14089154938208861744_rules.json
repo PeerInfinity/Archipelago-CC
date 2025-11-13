@@ -2756,6 +2756,50 @@
         "event": false,
         "type": null,
         "max_count": 4
+      },
+      "Sky Spring Flow": {
+        "name": "Sky Spring Flow",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Joker Spring Flow": {
+        "name": "Joker Spring Flow",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Tower of Fortress Spring Flow": {
+        "name": "Tower of Fortress Spring Flow",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Killed Evil One": {
+        "name": "Killed Evil One",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
       }
     }
   },

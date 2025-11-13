@@ -1,0 +1,3983 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:35] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: shivers
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=shivers&seed=1
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/?mode=test-spoilers&game=shivers&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modes.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/presets/shivers/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/shivers/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [04:59:37.927] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:37] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/hylics_2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/jak_and_daxter__the_precursor_legacy/jak_and_daxter__the_precursor_legacyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/oot/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/shivers/shiversLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/shivers/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.json HTTP/1.1" 200 -
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [04:59:38.270] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [04:59:38.272] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [04:59:38.289] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [04:59:38.290] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [04:59:38.290] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [04:59:38.291] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/shivers/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/shivers/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/shivers/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [04:59:38.298] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/presets/shivers/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:59:38] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Full in-app test results: {
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 1,
+    "failedCount": 0
+  },
+  "testDetails": [
+    {
+      "id": "test_spoiler_full_run",
+      "name": "Test Spoilers Panel - Full Run",
+      "status": "passed",
+      "category": "Test Spoilers Panel",
+      "startTime": "2025-11-13T04:59:38.525Z",
+      "endTime": "2025-11-13T04:59:42.145Z",
+      "durationMs": 3620,
+      "conditions": [
+        {
+          "description": "Test started",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:59:38.526Z"
+        },
+        {
+          "description": "Test Spoilers panel found in DOM",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:59:39.029Z"
+        },
+        {
+          "description": "\"Load Suggested Log\" button found and enabled",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:59:39.281Z"
+        },
+        {
+          "description": "\"Run Full Test\" button appeared",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:59:40.035Z"
+        },
+        {
+          "description": "Full spoiler test completed",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:59:42.139Z"
+        },
+        {
+          "description": "Spoiler test passed all checks",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:59:42.140Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[spoilers-full-run-1763009978526] Starting testSpoilersPanelFullRun...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:38.526Z"
+        },
+        {
+          "message": "Condition: \"Test started\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:38.526Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009978526] Activating testSpoilersPanel panel...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:38.526Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel initialization\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:38.527Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel initialization\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:38.778Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel DOM element\" (timeout: 5000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:38.778Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel DOM element\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:39.029Z"
+        },
+        {
+          "message": "Condition: \"Test Spoilers panel found in DOM\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:39.029Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Load Suggested Log\" button to be available\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:39.029Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Load Suggested Log\" button to be available\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:39.281Z"
+        },
+        {
+          "message": "Condition: \"\"Load Suggested Log\" button found and enabled\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:39.281Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009978526] Clicking \"Load Suggested Log\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:39.281Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Spoiler log loading completion\" (timeout: 15000ms, interval: 500ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:39.284Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Spoiler log loading completion\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:39.784Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Run Full Test\" button to appear\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:39.784Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Run Full Test\" button to appear\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:40.035Z"
+        },
+        {
+          "message": "Condition: \"\"Run Full Test\" button appeared\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:40.035Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009978526] Clicking \"Run Full Test\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:40.035Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test to start processing\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:40.037Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test to start processing\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:40.138Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009978526] Waiting for full spoiler test to complete...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:40.138Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test completion with detailed results\" (timeout: 300000ms, interval: 1000ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:40.138Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009978526] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:41.141Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009978526] Polling: buttonReady=true, hasDetailedResults=true, processedEvents=77/77",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:42.139Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009978526] DEBUG detailedResults: {\"passed\":true,\"totalEvents\":77,\"processedEvents\":77,\"errorCount\":0,\"sphereCount\":77,\"testLogPath\":\"presets/shivers/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:42.139Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test completion with detailed results\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:42.139Z"
+        },
+        {
+          "message": "Condition: \"Full spoiler test completed\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:42.139Z"
+        },
+        {
+          "message": "Condition: \"Spoiler test passed all checks\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:42.140Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009978526] Spoiler test results stored in window.__spoilerTestResults__",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:42.140Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009978526] Spoiler test results stored in localStorage",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:42.144Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009978526] testSpoilersPanelFullRun finished. Overall Result: true.",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:42.144Z"
+        },
+        {
+          "message": "Test completion signal: PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:59:42.144Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T04:59:42.144Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T04:59:42.145Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T04:59:42.145Z"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2025-11-13T04:59:42.246Z"
+}
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2025-11-13T04-59-42.json
+PW DEBUG: No test case results found in localStorage.
+PW DEBUG: Spoiler test overview: passed=true, processed=undefined/undefined
+PW DEBUG: No mismatch details found.
+PW DEBUG: Detailed spoiler test results from localStorage: {
+  "passed": true,
+  "logEntries": [
+    "[4:59:40 AM] Preparing test for: presets/shivers/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+    "[4:59:40 AM] Using 77 events from selected log: presets/shivers/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+    "[4:59:40 AM] Skipping explicit rule loading. Assuming StateManager has current rules.",
+    "[4:59:40 AM] Set sphereState player ID to: 1",
+    "[4:59:40 AM] Loading sphere log into sphereState: presets/shivers/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+    "[4:59:40 AM] Sphere log successfully loaded into sphereState",
+    "[4:59:40 AM] [TestOrchestrator] Disabled auto-collect events for test duration.",
+    "[4:59:40 AM] [TestOrchestrator] Enabled spoiler test mode for test duration.",
+    "[4:59:40 AM] Preparation complete. Ready to run or step.",
+    "[4:59:40 AM] 4. Processing all log events...",
+    "[4:59:40 AM] Processing Event 1/77: Type 'state_update'",
+    "[4:59:40 AM] Fresh snapshot has 0 checked locations",
+    "[4:59:40 AM] ✓ Sphere 0 passed: 10 locations match",
+    "[4:59:40 AM] Processing Event 2/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Office",
+    "[4:59:40 AM] Checking 1 locations from sphere 0.1",
+    "[4:59:40 AM]   Checking \"Puzzle Hint Found: Green Symbol\" (contains: Key for Office)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 0.1",
+    "[4:59:40 AM] Fresh snapshot has 1 checked locations",
+    "[4:59:40 AM] ✓ Sphere 0.1 passed: 10 locations match",
+    "[4:59:40 AM] Processing Event 3/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Underground Lake",
+    "[4:59:40 AM] Checking 1 locations from sphere 0.2",
+    "[4:59:40 AM]   Checking \"Puzzle Hint Found: Orange Symbol\" (contains: Key for Underground Lake)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 0.2",
+    "[4:59:40 AM] Fresh snapshot has 2 checked locations",
+    "[4:59:40 AM] ✓ Sphere 0.2 passed: 13 locations match",
+    "[4:59:40 AM] Processing Event 4/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Shaman Room",
+    "[4:59:40 AM] Checking 1 locations from sphere 0.3",
+    "[4:59:40 AM]   Checking \"Puzzle Hint Found: Silver Symbol\" (contains: Key for Shaman Room)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 0.3",
+    "[4:59:40 AM] Fresh snapshot has 3 checked locations",
+    "[4:59:40 AM] ✓ Sphere 0.3 passed: 13 locations match",
+    "[4:59:40 AM] Processing Event 5/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Cloth Pot Bottom",
+    "[4:59:40 AM] Checking 1 locations from sphere 0.4",
+    "[4:59:40 AM]   Checking \"Puzzle Hint Found: Tan Symbol\" (contains: Cloth Pot Bottom)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 0.4",
+    "[4:59:40 AM] Fresh snapshot has 4 checked locations",
+    "[4:59:40 AM] ✓ Sphere 0.4 passed: 13 locations match",
+    "[4:59:40 AM] Processing Event 6/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Office Elevator",
+    "[4:59:40 AM] Checking 1 locations from sphere 0.5",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Combination Lock\" (contains: Key for Office Elevator)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 0.5",
+    "[4:59:40 AM] Fresh snapshot has 5 checked locations",
+    "[4:59:40 AM] ✓ Sphere 0.5 passed: 20 locations match",
+    "[4:59:40 AM] Processing Event 7/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Bedroom",
+    "[4:59:40 AM] Checking 1 locations from sphere 0.6",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Stone Henge\" (contains: Key for Bedroom)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 0.6",
+    "[4:59:40 AM] Fresh snapshot has 6 checked locations",
+    "[4:59:40 AM] ✓ Sphere 0.6 passed: 20 locations match",
+    "[4:59:40 AM] Processing Event 8/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Crawling",
+    "[4:59:40 AM] Checking 1 locations from sphere 1.1",
+    "[4:59:40 AM]   Checking \"Puzzle Hint Found: Atlantis Map\" (contains: Crawling)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 1.1",
+    "[4:59:40 AM] Fresh snapshot has 7 checked locations",
+    "[4:59:40 AM] ✓ Sphere 1.1 passed: 20 locations match",
+    "[4:59:40 AM] Processing Event 9/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Janitor Closet",
+    "[4:59:40 AM] Checking 1 locations from sphere 1.2",
+    "[4:59:40 AM]   Checking \"Puzzle Hint Found: Tape Recorder Heard\" (contains: Key for Janitor Closet)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 1.2",
+    "[4:59:40 AM] Fresh snapshot has 8 checked locations",
+    "[4:59:40 AM] ✓ Sphere 1.2 passed: 20 locations match",
+    "[4:59:40 AM] Processing Event 10/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Crystal Pot Bottom DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 1.3",
+    "[4:59:40 AM]   Checking \"Storage: Desk Drawer\" (contains: Crystal Pot Bottom DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 1.3",
+    "[4:59:40 AM] Fresh snapshot has 9 checked locations",
+    "[4:59:40 AM] ✓ Sphere 1.3 passed: 20 locations match",
+    "[4:59:40 AM] Processing Event 11/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Water Pot Top DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 1.4",
+    "[4:59:40 AM]   Checking \"Storage: Transforming Mask\" (contains: Water Pot Top DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 1.4",
+    "[4:59:40 AM] Fresh snapshot has 10 checked locations",
+    "[4:59:40 AM] ✓ Sphere 1.4 passed: 20 locations match",
+    "[4:59:40 AM] Processing Event 12/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Viewed Egyptian Hieroglyphics Explained",
+    "[4:59:40 AM] Checking 1 locations from sphere 1.5",
+    "[4:59:40 AM]   Checking \"Windlenot's Body\" (contains: Viewed Egyptian Hieroglyphics Explained)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 1.5",
+    "[4:59:40 AM] Fresh snapshot has 11 checked locations",
+    "[4:59:40 AM] ✓ Sphere 1.5 passed: 30 locations match",
+    "[4:59:40 AM] Processing Event 13/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Ocean Room",
+    "[4:59:40 AM] Checking 1 locations from sphere 2.1",
+    "[4:59:40 AM]   Checking \"Flashback Memory Obtained Black Book\" (contains: Key for Ocean Room)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 2.1",
+    "[4:59:40 AM] Fresh snapshot has 12 checked locations",
+    "[4:59:40 AM] ✓ Sphere 2.1 passed: 30 locations match",
+    "[4:59:40 AM] Processing Event 14/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Egypt Room",
+    "[4:59:40 AM] Checking 1 locations from sphere 2.2",
+    "[4:59:40 AM]   Checking \"Flashback Memory Obtained In Search of the Unexplained\" (contains: Key for Egypt Room)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 2.2",
+    "[4:59:40 AM] Fresh snapshot has 13 checked locations",
+    "[4:59:40 AM] ✓ Sphere 2.2 passed: 46 locations match",
+    "[4:59:40 AM] Processing Event 15/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Three Floor Elevator",
+    "[4:59:40 AM] Checking 1 locations from sphere 2.3",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Library Statue\" (contains: Key for Three Floor Elevator)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 2.3",
+    "[4:59:40 AM] Fresh snapshot has 14 checked locations",
+    "[4:59:40 AM] ✓ Sphere 2.3 passed: 62 locations match",
+    "[4:59:40 AM] Processing Event 16/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Torture Room",
+    "[4:59:40 AM] Checking 1 locations from sphere 2.4",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Theater Door\" (contains: Key for Torture Room)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 2.4",
+    "[4:59:40 AM] Fresh snapshot has 15 checked locations",
+    "[4:59:40 AM] ✓ Sphere 2.4 passed: 65 locations match",
+    "[4:59:40 AM] Processing Event 17/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Oil Pot Top DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 2.5",
+    "[4:59:40 AM]   Checking \"Storage: Library Cabinet\" (contains: Oil Pot Top DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 2.5",
+    "[4:59:40 AM] Fresh snapshot has 16 checked locations",
+    "[4:59:40 AM] ✓ Sphere 2.5 passed: 65 locations match",
+    "[4:59:40 AM] Processing Event 18/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Sand Pot Bottom DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 2.6",
+    "[4:59:40 AM]   Checking \"Storage: Library Statue\" (contains: Sand Pot Bottom DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 2.6",
+    "[4:59:40 AM] Fresh snapshot has 17 checked locations",
+    "[4:59:40 AM] ✓ Sphere 2.6 passed: 65 locations match",
+    "[4:59:40 AM] Processing Event 19/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Ash Pot Bottom",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.1",
+    "[4:59:40 AM]   Checking \"Flashback Memory Obtained Beth's Ghost\" (contains: Ash Pot Bottom)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.1",
+    "[4:59:40 AM] Fresh snapshot has 18 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.1 passed: 65 locations match",
+    "[4:59:40 AM] Processing Event 20/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Sand Pot Top",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.2",
+    "[4:59:40 AM]   Checking \"Flashback Memory Obtained Merrick's Ghost\" (contains: Sand Pot Top)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.2",
+    "[4:59:40 AM] Fresh snapshot has 19 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.2 passed: 65 locations match",
+    "[4:59:40 AM] Processing Event 21/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Set Song",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.3",
+    "[4:59:40 AM]   Checking \"Jukebox\" (contains: Set Song)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.3",
+    "[4:59:40 AM] Fresh snapshot has 20 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.3 passed: 67 locations match",
+    "[4:59:40 AM] Processing Event 22/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for UFO Room",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.4",
+    "[4:59:40 AM]   Checking \"Puzzle Hint Found: Elevator Writing\" (contains: Key for UFO Room)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.4",
+    "[4:59:40 AM] Fresh snapshot has 21 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.4 passed: 67 locations match",
+    "[4:59:40 AM] Processing Event 23/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Prehistoric Room",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.5",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Alchemy\" (contains: Key for Prehistoric Room)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.5",
+    "[4:59:40 AM] Fresh snapshot has 22 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.5 passed: 74 locations match",
+    "[4:59:40 AM] Processing Event 24/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Metal Pot Bottom",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.6",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Burial Door\" (contains: Metal Pot Bottom)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.6",
+    "[4:59:40 AM] Fresh snapshot has 23 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.6 passed: 74 locations match",
+    "[4:59:40 AM] Processing Event 25/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Workshop",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.7",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Columns of RA\" (contains: Key for Workshop)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.7",
+    "[4:59:40 AM] Fresh snapshot has 24 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.7 passed: 77 locations match",
+    "[4:59:40 AM] Processing Event 26/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Bedroom Elevator",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.8",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Lyre\" (contains: Key for Bedroom Elevator)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.8",
+    "[4:59:40 AM] Fresh snapshot has 25 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.8 passed: 81 locations match",
+    "[4:59:40 AM] Processing Event 27/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Sand Pot Bottom",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.9",
+    "[4:59:40 AM]   Checking \"Puzzle Solved UFO Symbols\" (contains: Sand Pot Bottom)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.9",
+    "[4:59:40 AM] Fresh snapshot has 26 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.9 passed: 81 locations match",
+    "[4:59:40 AM] Processing Event 28/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Set Skull Dial: Burial",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.10",
+    "[4:59:40 AM]   Checking \"Set Skull Dial: Burial\" (contains: Set Skull Dial: Burial)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.10",
+    "[4:59:40 AM] Fresh snapshot has 27 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.10 passed: 81 locations match",
+    "[4:59:40 AM] Processing Event 29/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Set Skull Dial: Egypt",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.11",
+    "[4:59:40 AM]   Checking \"Set Skull Dial: Egypt\" (contains: Set Skull Dial: Egypt)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.11",
+    "[4:59:40 AM] Fresh snapshot has 28 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.11 passed: 81 locations match",
+    "[4:59:40 AM] Processing Event 30/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Set Skull Dial: Gods Room",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.12",
+    "[4:59:40 AM]   Checking \"Set Skull Dial: Gods Room\" (contains: Set Skull Dial: Gods Room)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.12",
+    "[4:59:40 AM] Fresh snapshot has 29 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.12 passed: 81 locations match",
+    "[4:59:40 AM] Processing Event 31/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Set Skull Dial: Werewolf",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.13",
+    "[4:59:40 AM]   Checking \"Set Skull Dial: Werewolf\" (contains: Set Skull Dial: Werewolf)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.13",
+    "[4:59:40 AM] Fresh snapshot has 30 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.13 passed: 81 locations match",
+    "[4:59:40 AM] Processing Event 32/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Oil Pot Bottom DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.14",
+    "[4:59:40 AM]   Checking \"Storage: Alchemy\" (contains: Oil Pot Bottom DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.14",
+    "[4:59:40 AM] Fresh snapshot has 31 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.14 passed: 81 locations match",
+    "[4:59:40 AM] Processing Event 33/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Sand Pot Top DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.15",
+    "[4:59:40 AM]   Checking \"Storage: Chinese Solitaire\" (contains: Sand Pot Top DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.15",
+    "[4:59:40 AM] Fresh snapshot has 32 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.15 passed: 82 locations match",
+    "[4:59:40 AM] Processing Event 34/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Cloth Pot Bottom DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.16",
+    "[4:59:40 AM]   Checking \"Storage: Egypt\" (contains: Cloth Pot Bottom DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.16",
+    "[4:59:40 AM] Fresh snapshot has 33 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.16 passed: 82 locations match",
+    "[4:59:40 AM] Processing Event 35/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Crystal Pot Top DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.17",
+    "[4:59:40 AM]   Checking \"Storage: Gallows\" (contains: Crystal Pot Top DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.17",
+    "[4:59:40 AM] Fresh snapshot has 34 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.17 passed: 82 locations match",
+    "[4:59:40 AM] Processing Event 36/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Metal Pot Top DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.18",
+    "[4:59:40 AM]   Checking \"Storage: Lyre\" (contains: Metal Pot Top DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.18",
+    "[4:59:40 AM] Fresh snapshot has 35 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.18 passed: 82 locations match",
+    "[4:59:40 AM] Processing Event 37/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Wood Pot Top DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.19",
+    "[4:59:40 AM]   Checking \"Storage: Skeleton\" (contains: Wood Pot Top DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.19",
+    "[4:59:40 AM] Fresh snapshot has 36 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.19 passed: 82 locations match",
+    "[4:59:40 AM] Processing Event 38/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Wood Pot Bottom DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.20",
+    "[4:59:40 AM]   Checking \"Storage: UFO\" (contains: Wood Pot Bottom DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.20",
+    "[4:59:40 AM] Fresh snapshot has 37 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.20 passed: 82 locations match",
+    "[4:59:40 AM] Processing Event 39/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Viewed Fortune",
+    "[4:59:40 AM] Checking 1 locations from sphere 3.21",
+    "[4:59:40 AM]   Checking \"Viewed Fortune\" (contains: Viewed Fortune)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 3.21",
+    "[4:59:40 AM] Fresh snapshot has 38 checked locations",
+    "[4:59:40 AM] ✓ Sphere 3.21 passed: 84 locations match",
+    "[4:59:40 AM] Processing Event 40/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Set Time",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.1",
+    "[4:59:40 AM]   Checking \"Clock Chains\" (contains: Set Time)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.1",
+    "[4:59:40 AM] Fresh snapshot has 39 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.1 passed: 85 locations match",
+    "[4:59:40 AM] Processing Event 41/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Ash Pot Top",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.2",
+    "[4:59:40 AM]   Checking \"Final Riddle: Planets Aligned\" (contains: Ash Pot Top)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.2",
+    "[4:59:40 AM] Fresh snapshot has 40 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.2 passed: 85 locations match",
+    "[4:59:40 AM] Processing Event 42/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Oil Pot Bottom",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.3",
+    "[4:59:40 AM]   Checking \"Ixupi Captured Sand\" (contains: Oil Pot Bottom)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.3",
+    "[4:59:40 AM] Fresh snapshot has 41 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.3 passed: 85 locations match",
+    "[4:59:40 AM] Processing Event 43/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Aligned Planets",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.4",
+    "[4:59:40 AM]   Checking \"Orrery\" (contains: Aligned Planets)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.4",
+    "[4:59:40 AM] Fresh snapshot has 42 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.4 passed: 87 locations match",
+    "[4:59:40 AM] Processing Event 44/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Cloth Pot Top",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.5",
+    "[4:59:40 AM]   Checking \"Puzzle Hint Found: Basilisk Bone Fragments\" (contains: Cloth Pot Top)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.5",
+    "[4:59:40 AM] Fresh snapshot has 43 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.5 passed: 87 locations match",
+    "[4:59:40 AM] Processing Event 45/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Wax Pot Top",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.6",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Anansi Music Box\" (contains: Wax Pot Top)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.6",
+    "[4:59:40 AM] Fresh snapshot has 44 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.6 passed: 87 locations match",
+    "[4:59:40 AM] Processing Event 46/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Generator Room",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.7",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Atlantis\" (contains: Key for Generator Room)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.7",
+    "[4:59:40 AM] Fresh snapshot has 45 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.7 passed: 87 locations match",
+    "[4:59:40 AM] Processing Event 47/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Water Pot Bottom",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.8",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Bedroom Elevator\" (contains: Water Pot Bottom)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.8",
+    "[4:59:40 AM] Fresh snapshot has 46 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.8 passed: 87 locations match",
+    "[4:59:40 AM] Processing Event 48/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Oil Pot Top",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.9",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Organ\" (contains: Oil Pot Top)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.9",
+    "[4:59:40 AM] Fresh snapshot has 47 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.9 passed: 88 locations match",
+    "[4:59:40 AM] Processing Event 49/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Set Skull Dial: Prehistoric",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.10",
+    "[4:59:40 AM]   Checking \"Set Skull Dial: Prehistoric\" (contains: Set Skull Dial: Prehistoric)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.10",
+    "[4:59:40 AM] Fresh snapshot has 48 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.10 passed: 88 locations match",
+    "[4:59:40 AM] Processing Event 50/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Wax Pot Top DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.11",
+    "[4:59:40 AM]   Checking \"Storage: Eagles Nest\" (contains: Wax Pot Top DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.11",
+    "[4:59:40 AM] Fresh snapshot has 49 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.11 passed: 88 locations match",
+    "[4:59:40 AM] Processing Event 51/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Lightning Pot Top DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.12",
+    "[4:59:40 AM]   Checking \"Storage: Ocean\" (contains: Lightning Pot Top DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.12",
+    "[4:59:40 AM] Fresh snapshot has 50 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.12 passed: 88 locations match",
+    "[4:59:40 AM] Processing Event 52/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Metal Pot Bottom DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 4.13",
+    "[4:59:40 AM]   Checking \"Storage: Workshop Drawers\" (contains: Metal Pot Bottom DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 4.13",
+    "[4:59:40 AM] Fresh snapshot has 51 checked locations",
+    "[4:59:40 AM] ✓ Sphere 4.13 passed: 88 locations match",
+    "[4:59:40 AM] Processing Event 53/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Lightning Pot Top",
+    "[4:59:40 AM] Checking 1 locations from sphere 5.1",
+    "[4:59:40 AM]   Checking \"Ixupi Captured Oil\" (contains: Lightning Pot Top)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 5.1",
+    "[4:59:40 AM] Fresh snapshot has 52 checked locations",
+    "[4:59:40 AM] ✓ Sphere 5.1 passed: 88 locations match",
+    "[4:59:40 AM] Processing Event 54/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Viewed Norse Stone",
+    "[4:59:40 AM] Checking 1 locations from sphere 5.2",
+    "[4:59:40 AM]   Checking \"Norse Stone\" (contains: Viewed Norse Stone)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 5.2",
+    "[4:59:40 AM] Fresh snapshot has 53 checked locations",
+    "[4:59:40 AM] ✓ Sphere 5.2 passed: 90 locations match",
+    "[4:59:40 AM] Processing Event 55/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Water Pot Bottom DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 5.3",
+    "[4:59:40 AM]   Checking \"Storage: Clock Tower\" (contains: Water Pot Bottom DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 5.3",
+    "[4:59:40 AM] Fresh snapshot has 54 checked locations",
+    "[4:59:40 AM] ✓ Sphere 5.3 passed: 90 locations match",
+    "[4:59:40 AM] Processing Event 56/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Viewed Page 17",
+    "[4:59:40 AM] Checking 1 locations from sphere 6.1",
+    "[4:59:40 AM]   Checking \"Beth's Body\" (contains: Viewed Page 17)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 6.1",
+    "[4:59:40 AM] Fresh snapshot has 55 checked locations",
+    "[4:59:40 AM] ✓ Sphere 6.1 passed: 92 locations match",
+    "[4:59:40 AM] Processing Event 57/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Projector Room",
+    "[4:59:40 AM] Checking 1 locations from sphere 6.2",
+    "[4:59:40 AM]   Checking \"Final Riddle: Beth's Body Page 17\" (contains: Key for Projector Room)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 6.2",
+    "[4:59:40 AM] Fresh snapshot has 56 checked locations",
+    "[4:59:40 AM] ✓ Sphere 6.2 passed: 96 locations match",
+    "[4:59:40 AM] Processing Event 58/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Lost Your Head",
+    "[4:59:40 AM] Checking 1 locations from sphere 7.1",
+    "[4:59:40 AM]   Checking \"Guillotine\" (contains: Lost Your Head)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 7.1",
+    "[4:59:40 AM] Fresh snapshot has 57 checked locations",
+    "[4:59:40 AM] ✓ Sphere 7.1 passed: 96 locations match",
+    "[4:59:40 AM] Processing Event 59/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Set Skull Dial: Tar River",
+    "[4:59:40 AM] Checking 1 locations from sphere 7.2",
+    "[4:59:40 AM]   Checking \"Set Skull Dial: Tar River\" (contains: Set Skull Dial: Tar River)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 7.2",
+    "[4:59:40 AM] Fresh snapshot has 58 checked locations",
+    "[4:59:40 AM] ✓ Sphere 7.2 passed: 96 locations match",
+    "[4:59:40 AM] Processing Event 60/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Wax Pot Bottom DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 7.3",
+    "[4:59:40 AM]   Checking \"Storage: Tar River\" (contains: Wax Pot Bottom DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 7.3",
+    "[4:59:40 AM] Fresh snapshot has 59 checked locations",
+    "[4:59:40 AM] ✓ Sphere 7.3 passed: 96 locations match",
+    "[4:59:40 AM] Processing Event 61/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Viewed Theater Movie",
+    "[4:59:40 AM] Checking 1 locations from sphere 7.4",
+    "[4:59:40 AM]   Checking \"Viewed Theater Movie\" (contains: Viewed Theater Movie)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 7.4",
+    "[4:59:40 AM] Fresh snapshot has 60 checked locations",
+    "[4:59:40 AM] ✓ Sphere 7.4 passed: 98 locations match",
+    "[4:59:40 AM] Processing Event 62/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Key for Puzzle Room",
+    "[4:59:40 AM] Checking 1 locations from sphere 8.1",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Maze Door\" (contains: Key for Puzzle Room)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 8.1",
+    "[4:59:40 AM] Fresh snapshot has 61 checked locations",
+    "[4:59:40 AM] ✓ Sphere 8.1 passed: 104 locations match",
+    "[4:59:40 AM] Processing Event 63/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Crystal Pot Top",
+    "[4:59:40 AM] Checking 1 locations from sphere 9.1",
+    "[4:59:40 AM]   Checking \"Puzzle Hint Found: Mastermind Information Plaque\" (contains: Crystal Pot Top)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 9.1",
+    "[4:59:40 AM] Fresh snapshot has 62 checked locations",
+    "[4:59:40 AM] ✓ Sphere 9.1 passed: 104 locations match",
+    "[4:59:40 AM] Processing Event 64/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Wood Pot Top",
+    "[4:59:40 AM] Checking 1 locations from sphere 9.2",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Mastermind\" (contains: Wood Pot Top)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 9.2",
+    "[4:59:40 AM] Fresh snapshot has 63 checked locations",
+    "[4:59:40 AM] ✓ Sphere 9.2 passed: 104 locations match",
+    "[4:59:40 AM] Processing Event 65/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Wax Pot Bottom",
+    "[4:59:40 AM] Checking 1 locations from sphere 9.3",
+    "[4:59:40 AM]   Checking \"Puzzle Solved Skull Dial Door\" (contains: Wax Pot Bottom)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 9.3",
+    "[4:59:40 AM] Fresh snapshot has 64 checked locations",
+    "[4:59:40 AM] ✓ Sphere 9.3 passed: 105 locations match",
+    "[4:59:40 AM] Processing Event 66/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Ash Pot Top DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 9.4",
+    "[4:59:40 AM]   Checking \"Storage: Skull Bridge\" (contains: Ash Pot Top DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 9.4",
+    "[4:59:40 AM] Fresh snapshot has 65 checked locations",
+    "[4:59:40 AM] ✓ Sphere 9.4 passed: 105 locations match",
+    "[4:59:40 AM] Processing Event 67/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Ash Pot Bottom DUPE",
+    "[4:59:40 AM] Checking 1 locations from sphere 9.5",
+    "[4:59:40 AM]   Checking \"Storage: Slide\" (contains: Ash Pot Bottom DUPE)",
+    "[4:59:40 AM] Completed checking 1 locations for sphere 9.5",
+    "[4:59:40 AM] Fresh snapshot has 66 checked locations",
+    "[4:59:40 AM] ✓ Sphere 9.5 passed: 106 locations match",
+    "[4:59:40 AM] Processing Event 68/77: Type 'state_update'",
+    "[4:59:40 AM] 📦 Recently added item: Crystal Pot Bottom",
+    "[4:59:40 AM] Checking 1 locations from sphere 10.1",
+    "[4:59:40 AM]   Checking \"Ixupi Captured Ash\" (contains: Crystal Pot Bottom)",
+    "[4:59:41 AM] Completed checking 1 locations for sphere 10.1",
+    "[4:59:41 AM] Fresh snapshot has 67 checked locations",
+    "[4:59:41 AM] ✓ Sphere 10.1 passed: 107 locations match",
+    "[4:59:41 AM] Processing Event 69/77: Type 'state_update'",
+    "[4:59:41 AM] 📦 Recently added item: Key for Library",
+    "[4:59:41 AM] Checking 1 locations from sphere 10.2",
+    "[4:59:41 AM]   Checking \"Ixupi Captured Wax\" (contains: Key for Library)",
+    "[4:59:41 AM] Completed checking 1 locations for sphere 10.2",
+    "[4:59:41 AM] Fresh snapshot has 68 checked locations",
+    "[4:59:41 AM] ✓ Sphere 10.2 passed: 107 locations match",
+    "[4:59:41 AM] Processing Event 70/77: Type 'state_update'",
+    "[4:59:41 AM] 📦 Recently added item: Wood Pot Bottom",
+    "[4:59:41 AM] Checking 1 locations from sphere 11.1",
+    "[4:59:41 AM]   Checking \"Ixupi Captured Crystal\" (contains: Wood Pot Bottom)",
+    "[4:59:41 AM] Completed checking 1 locations for sphere 11.1",
+    "[4:59:41 AM] Fresh snapshot has 69 checked locations",
+    "[4:59:41 AM] ✓ Sphere 11.1 passed: 108 locations match",
+    "[4:59:41 AM] Processing Event 71/77: Type 'state_update'",
+    "[4:59:41 AM] 📦 Recently added item: Key for Greenhouse",
+    "[4:59:41 AM] Checking 1 locations from sphere 12.1",
+    "[4:59:41 AM]   Checking \"Ixupi Captured Wood\" (contains: Key for Greenhouse)",
+    "[4:59:41 AM] Completed checking 1 locations for sphere 12.1",
+    "[4:59:41 AM] Fresh snapshot has 70 checked locations",
+    "[4:59:41 AM] ✓ Sphere 12.1 passed: 109 locations match",
+    "[4:59:41 AM] Processing Event 72/77: Type 'state_update'",
+    "[4:59:41 AM] 📦 Recently added item: Cloth Pot Top DUPE",
+    "[4:59:41 AM] Checking 1 locations from sphere 13.1",
+    "[4:59:41 AM]   Checking \"Storage: Greenhouse\" (contains: Cloth Pot Top DUPE)",
+    "[4:59:41 AM] Completed checking 1 locations for sphere 13.1",
+    "[4:59:41 AM] Fresh snapshot has 71 checked locations",
+    "[4:59:41 AM] ✓ Sphere 13.1 passed: 111 locations match",
+    "[4:59:41 AM] Processing Event 73/77: Type 'state_update'",
+    "[4:59:41 AM] 📦 Recently added item: Water Pot Top",
+    "[4:59:41 AM] Checking 1 locations from sphere 14.1",
+    "[4:59:41 AM]   Checking \"Ixupi Captured Cloth\" (contains: Water Pot Top)",
+    "[4:59:41 AM] Completed checking 1 locations for sphere 14.1",
+    "[4:59:41 AM] Fresh snapshot has 72 checked locations",
+    "[4:59:41 AM] ✓ Sphere 14.1 passed: 112 locations match",
+    "[4:59:41 AM] Processing Event 74/77: Type 'state_update'",
+    "[4:59:41 AM] 📦 Recently added item: Lightning Pot Bottom DUPE",
+    "[4:59:41 AM] Checking 1 locations from sphere 14.2",
+    "[4:59:41 AM]   Checking \"Storage: Janitor Closet\" (contains: Lightning Pot Bottom DUPE)",
+    "[4:59:41 AM] Completed checking 1 locations for sphere 14.2",
+    "[4:59:41 AM] Fresh snapshot has 73 checked locations",
+    "[4:59:41 AM] ✓ Sphere 14.2 passed: 112 locations match",
+    "[4:59:41 AM] Processing Event 75/77: Type 'state_update'",
+    "[4:59:41 AM] 📦 Recently added item: Metal Pot Top",
+    "[4:59:41 AM] Checking 1 locations from sphere 15.1",
+    "[4:59:41 AM]   Checking \"Ixupi Captured Water\" (contains: Metal Pot Top)",
+    "[4:59:41 AM] Completed checking 1 locations for sphere 15.1",
+    "[4:59:41 AM] Fresh snapshot has 74 checked locations",
+    "[4:59:41 AM] ✓ Sphere 15.1 passed: 113 locations match",
+    "[4:59:41 AM] Processing Event 76/77: Type 'state_update'",
+    "[4:59:41 AM] 📦 Recently added item: Lightning Pot Bottom",
+    "[4:59:41 AM] Checking 1 locations from sphere 16.1",
+    "[4:59:41 AM]   Checking \"Ixupi Captured Metal\" (contains: Lightning Pot Bottom)",
+    "[4:59:41 AM] Completed checking 1 locations for sphere 16.1",
+    "[4:59:41 AM] Fresh snapshot has 75 checked locations",
+    "[4:59:41 AM] ✓ Sphere 16.1 passed: 114 locations match",
+    "[4:59:41 AM] Processing Event 77/77: Type 'state_update'",
+    "[4:59:41 AM] 📦 Recently added item: Mt. Pleasant Tribune: 45 year Old Mystery Solved!",
+    "[4:59:41 AM] Checking 1 locations from sphere 17.1",
+    "[4:59:41 AM]   Checking \"Mystery Solved\" (contains: Mt. Pleasant Tribune: 45 year Old Mystery Solved!)",
+    "[4:59:41 AM] Completed checking 1 locations for sphere 17.1",
+    "[4:59:41 AM] Fresh snapshot has 76 checked locations",
+    "[4:59:41 AM] ✓ Sphere 17.1 passed: 114 locations match",
+    "[4:59:41 AM] Spoiler test completed successfully. All events matched.",
+    "[4:59:41 AM] Detailed spoiler test results stored in window.__spoilerTestResults__",
+    "[4:59:41 AM] [TestOrchestrator] Re-enabled auto-collect events after full test run.",
+    "[4:59:41 AM] [TestOrchestrator] Disabled spoiler test mode after full test run."
+  ],
+  "errorMessages": [],
+  "detailedResults": {
+    "passed": true,
+    "logEntries": [
+      "[4:59:40 AM] Preparing test for: presets/shivers/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+      "[4:59:40 AM] Using 77 events from selected log: presets/shivers/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+      "[4:59:40 AM] Skipping explicit rule loading. Assuming StateManager has current rules.",
+      "[4:59:40 AM] Set sphereState player ID to: 1",
+      "[4:59:40 AM] Loading sphere log into sphereState: presets/shivers/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+      "[4:59:40 AM] Sphere log successfully loaded into sphereState",
+      "[4:59:40 AM] [TestOrchestrator] Disabled auto-collect events for test duration.",
+      "[4:59:40 AM] [TestOrchestrator] Enabled spoiler test mode for test duration.",
+      "[4:59:40 AM] Preparation complete. Ready to run or step.",
+      "[4:59:40 AM] 4. Processing all log events...",
+      "[4:59:40 AM] Processing Event 1/77: Type 'state_update'",
+      "[4:59:40 AM] Fresh snapshot has 0 checked locations",
+      "[4:59:40 AM] ✓ Sphere 0 passed: 10 locations match",
+      "[4:59:40 AM] Processing Event 2/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Office",
+      "[4:59:40 AM] Checking 1 locations from sphere 0.1",
+      "[4:59:40 AM]   Checking \"Puzzle Hint Found: Green Symbol\" (contains: Key for Office)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 0.1",
+      "[4:59:40 AM] Fresh snapshot has 1 checked locations",
+      "[4:59:40 AM] ✓ Sphere 0.1 passed: 10 locations match",
+      "[4:59:40 AM] Processing Event 3/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Underground Lake",
+      "[4:59:40 AM] Checking 1 locations from sphere 0.2",
+      "[4:59:40 AM]   Checking \"Puzzle Hint Found: Orange Symbol\" (contains: Key for Underground Lake)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 0.2",
+      "[4:59:40 AM] Fresh snapshot has 2 checked locations",
+      "[4:59:40 AM] ✓ Sphere 0.2 passed: 13 locations match",
+      "[4:59:40 AM] Processing Event 4/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Shaman Room",
+      "[4:59:40 AM] Checking 1 locations from sphere 0.3",
+      "[4:59:40 AM]   Checking \"Puzzle Hint Found: Silver Symbol\" (contains: Key for Shaman Room)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 0.3",
+      "[4:59:40 AM] Fresh snapshot has 3 checked locations",
+      "[4:59:40 AM] ✓ Sphere 0.3 passed: 13 locations match",
+      "[4:59:40 AM] Processing Event 5/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Cloth Pot Bottom",
+      "[4:59:40 AM] Checking 1 locations from sphere 0.4",
+      "[4:59:40 AM]   Checking \"Puzzle Hint Found: Tan Symbol\" (contains: Cloth Pot Bottom)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 0.4",
+      "[4:59:40 AM] Fresh snapshot has 4 checked locations",
+      "[4:59:40 AM] ✓ Sphere 0.4 passed: 13 locations match",
+      "[4:59:40 AM] Processing Event 6/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Office Elevator",
+      "[4:59:40 AM] Checking 1 locations from sphere 0.5",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Combination Lock\" (contains: Key for Office Elevator)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 0.5",
+      "[4:59:40 AM] Fresh snapshot has 5 checked locations",
+      "[4:59:40 AM] ✓ Sphere 0.5 passed: 20 locations match",
+      "[4:59:40 AM] Processing Event 7/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Bedroom",
+      "[4:59:40 AM] Checking 1 locations from sphere 0.6",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Stone Henge\" (contains: Key for Bedroom)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 0.6",
+      "[4:59:40 AM] Fresh snapshot has 6 checked locations",
+      "[4:59:40 AM] ✓ Sphere 0.6 passed: 20 locations match",
+      "[4:59:40 AM] Processing Event 8/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Crawling",
+      "[4:59:40 AM] Checking 1 locations from sphere 1.1",
+      "[4:59:40 AM]   Checking \"Puzzle Hint Found: Atlantis Map\" (contains: Crawling)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 1.1",
+      "[4:59:40 AM] Fresh snapshot has 7 checked locations",
+      "[4:59:40 AM] ✓ Sphere 1.1 passed: 20 locations match",
+      "[4:59:40 AM] Processing Event 9/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Janitor Closet",
+      "[4:59:40 AM] Checking 1 locations from sphere 1.2",
+      "[4:59:40 AM]   Checking \"Puzzle Hint Found: Tape Recorder Heard\" (contains: Key for Janitor Closet)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 1.2",
+      "[4:59:40 AM] Fresh snapshot has 8 checked locations",
+      "[4:59:40 AM] ✓ Sphere 1.2 passed: 20 locations match",
+      "[4:59:40 AM] Processing Event 10/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Crystal Pot Bottom DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 1.3",
+      "[4:59:40 AM]   Checking \"Storage: Desk Drawer\" (contains: Crystal Pot Bottom DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 1.3",
+      "[4:59:40 AM] Fresh snapshot has 9 checked locations",
+      "[4:59:40 AM] ✓ Sphere 1.3 passed: 20 locations match",
+      "[4:59:40 AM] Processing Event 11/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Water Pot Top DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 1.4",
+      "[4:59:40 AM]   Checking \"Storage: Transforming Mask\" (contains: Water Pot Top DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 1.4",
+      "[4:59:40 AM] Fresh snapshot has 10 checked locations",
+      "[4:59:40 AM] ✓ Sphere 1.4 passed: 20 locations match",
+      "[4:59:40 AM] Processing Event 12/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Viewed Egyptian Hieroglyphics Explained",
+      "[4:59:40 AM] Checking 1 locations from sphere 1.5",
+      "[4:59:40 AM]   Checking \"Windlenot's Body\" (contains: Viewed Egyptian Hieroglyphics Explained)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 1.5",
+      "[4:59:40 AM] Fresh snapshot has 11 checked locations",
+      "[4:59:40 AM] ✓ Sphere 1.5 passed: 30 locations match",
+      "[4:59:40 AM] Processing Event 13/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Ocean Room",
+      "[4:59:40 AM] Checking 1 locations from sphere 2.1",
+      "[4:59:40 AM]   Checking \"Flashback Memory Obtained Black Book\" (contains: Key for Ocean Room)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 2.1",
+      "[4:59:40 AM] Fresh snapshot has 12 checked locations",
+      "[4:59:40 AM] ✓ Sphere 2.1 passed: 30 locations match",
+      "[4:59:40 AM] Processing Event 14/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Egypt Room",
+      "[4:59:40 AM] Checking 1 locations from sphere 2.2",
+      "[4:59:40 AM]   Checking \"Flashback Memory Obtained In Search of the Unexplained\" (contains: Key for Egypt Room)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 2.2",
+      "[4:59:40 AM] Fresh snapshot has 13 checked locations",
+      "[4:59:40 AM] ✓ Sphere 2.2 passed: 46 locations match",
+      "[4:59:40 AM] Processing Event 15/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Three Floor Elevator",
+      "[4:59:40 AM] Checking 1 locations from sphere 2.3",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Library Statue\" (contains: Key for Three Floor Elevator)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 2.3",
+      "[4:59:40 AM] Fresh snapshot has 14 checked locations",
+      "[4:59:40 AM] ✓ Sphere 2.3 passed: 62 locations match",
+      "[4:59:40 AM] Processing Event 16/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Torture Room",
+      "[4:59:40 AM] Checking 1 locations from sphere 2.4",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Theater Door\" (contains: Key for Torture Room)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 2.4",
+      "[4:59:40 AM] Fresh snapshot has 15 checked locations",
+      "[4:59:40 AM] ✓ Sphere 2.4 passed: 65 locations match",
+      "[4:59:40 AM] Processing Event 17/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Oil Pot Top DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 2.5",
+      "[4:59:40 AM]   Checking \"Storage: Library Cabinet\" (contains: Oil Pot Top DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 2.5",
+      "[4:59:40 AM] Fresh snapshot has 16 checked locations",
+      "[4:59:40 AM] ✓ Sphere 2.5 passed: 65 locations match",
+      "[4:59:40 AM] Processing Event 18/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Sand Pot Bottom DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 2.6",
+      "[4:59:40 AM]   Checking \"Storage: Library Statue\" (contains: Sand Pot Bottom DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 2.6",
+      "[4:59:40 AM] Fresh snapshot has 17 checked locations",
+      "[4:59:40 AM] ✓ Sphere 2.6 passed: 65 locations match",
+      "[4:59:40 AM] Processing Event 19/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Ash Pot Bottom",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.1",
+      "[4:59:40 AM]   Checking \"Flashback Memory Obtained Beth's Ghost\" (contains: Ash Pot Bottom)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.1",
+      "[4:59:40 AM] Fresh snapshot has 18 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.1 passed: 65 locations match",
+      "[4:59:40 AM] Processing Event 20/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Sand Pot Top",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.2",
+      "[4:59:40 AM]   Checking \"Flashback Memory Obtained Merrick's Ghost\" (contains: Sand Pot Top)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.2",
+      "[4:59:40 AM] Fresh snapshot has 19 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.2 passed: 65 locations match",
+      "[4:59:40 AM] Processing Event 21/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Set Song",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.3",
+      "[4:59:40 AM]   Checking \"Jukebox\" (contains: Set Song)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.3",
+      "[4:59:40 AM] Fresh snapshot has 20 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.3 passed: 67 locations match",
+      "[4:59:40 AM] Processing Event 22/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for UFO Room",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.4",
+      "[4:59:40 AM]   Checking \"Puzzle Hint Found: Elevator Writing\" (contains: Key for UFO Room)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.4",
+      "[4:59:40 AM] Fresh snapshot has 21 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.4 passed: 67 locations match",
+      "[4:59:40 AM] Processing Event 23/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Prehistoric Room",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.5",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Alchemy\" (contains: Key for Prehistoric Room)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.5",
+      "[4:59:40 AM] Fresh snapshot has 22 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.5 passed: 74 locations match",
+      "[4:59:40 AM] Processing Event 24/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Metal Pot Bottom",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.6",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Burial Door\" (contains: Metal Pot Bottom)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.6",
+      "[4:59:40 AM] Fresh snapshot has 23 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.6 passed: 74 locations match",
+      "[4:59:40 AM] Processing Event 25/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Workshop",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.7",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Columns of RA\" (contains: Key for Workshop)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.7",
+      "[4:59:40 AM] Fresh snapshot has 24 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.7 passed: 77 locations match",
+      "[4:59:40 AM] Processing Event 26/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Bedroom Elevator",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.8",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Lyre\" (contains: Key for Bedroom Elevator)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.8",
+      "[4:59:40 AM] Fresh snapshot has 25 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.8 passed: 81 locations match",
+      "[4:59:40 AM] Processing Event 27/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Sand Pot Bottom",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.9",
+      "[4:59:40 AM]   Checking \"Puzzle Solved UFO Symbols\" (contains: Sand Pot Bottom)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.9",
+      "[4:59:40 AM] Fresh snapshot has 26 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.9 passed: 81 locations match",
+      "[4:59:40 AM] Processing Event 28/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Set Skull Dial: Burial",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.10",
+      "[4:59:40 AM]   Checking \"Set Skull Dial: Burial\" (contains: Set Skull Dial: Burial)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.10",
+      "[4:59:40 AM] Fresh snapshot has 27 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.10 passed: 81 locations match",
+      "[4:59:40 AM] Processing Event 29/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Set Skull Dial: Egypt",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.11",
+      "[4:59:40 AM]   Checking \"Set Skull Dial: Egypt\" (contains: Set Skull Dial: Egypt)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.11",
+      "[4:59:40 AM] Fresh snapshot has 28 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.11 passed: 81 locations match",
+      "[4:59:40 AM] Processing Event 30/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Set Skull Dial: Gods Room",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.12",
+      "[4:59:40 AM]   Checking \"Set Skull Dial: Gods Room\" (contains: Set Skull Dial: Gods Room)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.12",
+      "[4:59:40 AM] Fresh snapshot has 29 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.12 passed: 81 locations match",
+      "[4:59:40 AM] Processing Event 31/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Set Skull Dial: Werewolf",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.13",
+      "[4:59:40 AM]   Checking \"Set Skull Dial: Werewolf\" (contains: Set Skull Dial: Werewolf)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.13",
+      "[4:59:40 AM] Fresh snapshot has 30 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.13 passed: 81 locations match",
+      "[4:59:40 AM] Processing Event 32/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Oil Pot Bottom DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.14",
+      "[4:59:40 AM]   Checking \"Storage: Alchemy\" (contains: Oil Pot Bottom DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.14",
+      "[4:59:40 AM] Fresh snapshot has 31 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.14 passed: 81 locations match",
+      "[4:59:40 AM] Processing Event 33/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Sand Pot Top DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.15",
+      "[4:59:40 AM]   Checking \"Storage: Chinese Solitaire\" (contains: Sand Pot Top DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.15",
+      "[4:59:40 AM] Fresh snapshot has 32 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.15 passed: 82 locations match",
+      "[4:59:40 AM] Processing Event 34/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Cloth Pot Bottom DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.16",
+      "[4:59:40 AM]   Checking \"Storage: Egypt\" (contains: Cloth Pot Bottom DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.16",
+      "[4:59:40 AM] Fresh snapshot has 33 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.16 passed: 82 locations match",
+      "[4:59:40 AM] Processing Event 35/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Crystal Pot Top DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.17",
+      "[4:59:40 AM]   Checking \"Storage: Gallows\" (contains: Crystal Pot Top DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.17",
+      "[4:59:40 AM] Fresh snapshot has 34 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.17 passed: 82 locations match",
+      "[4:59:40 AM] Processing Event 36/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Metal Pot Top DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.18",
+      "[4:59:40 AM]   Checking \"Storage: Lyre\" (contains: Metal Pot Top DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.18",
+      "[4:59:40 AM] Fresh snapshot has 35 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.18 passed: 82 locations match",
+      "[4:59:40 AM] Processing Event 37/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Wood Pot Top DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.19",
+      "[4:59:40 AM]   Checking \"Storage: Skeleton\" (contains: Wood Pot Top DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.19",
+      "[4:59:40 AM] Fresh snapshot has 36 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.19 passed: 82 locations match",
+      "[4:59:40 AM] Processing Event 38/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Wood Pot Bottom DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.20",
+      "[4:59:40 AM]   Checking \"Storage: UFO\" (contains: Wood Pot Bottom DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.20",
+      "[4:59:40 AM] Fresh snapshot has 37 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.20 passed: 82 locations match",
+      "[4:59:40 AM] Processing Event 39/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Viewed Fortune",
+      "[4:59:40 AM] Checking 1 locations from sphere 3.21",
+      "[4:59:40 AM]   Checking \"Viewed Fortune\" (contains: Viewed Fortune)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 3.21",
+      "[4:59:40 AM] Fresh snapshot has 38 checked locations",
+      "[4:59:40 AM] ✓ Sphere 3.21 passed: 84 locations match",
+      "[4:59:40 AM] Processing Event 40/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Set Time",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.1",
+      "[4:59:40 AM]   Checking \"Clock Chains\" (contains: Set Time)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.1",
+      "[4:59:40 AM] Fresh snapshot has 39 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.1 passed: 85 locations match",
+      "[4:59:40 AM] Processing Event 41/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Ash Pot Top",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.2",
+      "[4:59:40 AM]   Checking \"Final Riddle: Planets Aligned\" (contains: Ash Pot Top)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.2",
+      "[4:59:40 AM] Fresh snapshot has 40 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.2 passed: 85 locations match",
+      "[4:59:40 AM] Processing Event 42/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Oil Pot Bottom",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.3",
+      "[4:59:40 AM]   Checking \"Ixupi Captured Sand\" (contains: Oil Pot Bottom)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.3",
+      "[4:59:40 AM] Fresh snapshot has 41 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.3 passed: 85 locations match",
+      "[4:59:40 AM] Processing Event 43/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Aligned Planets",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.4",
+      "[4:59:40 AM]   Checking \"Orrery\" (contains: Aligned Planets)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.4",
+      "[4:59:40 AM] Fresh snapshot has 42 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.4 passed: 87 locations match",
+      "[4:59:40 AM] Processing Event 44/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Cloth Pot Top",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.5",
+      "[4:59:40 AM]   Checking \"Puzzle Hint Found: Basilisk Bone Fragments\" (contains: Cloth Pot Top)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.5",
+      "[4:59:40 AM] Fresh snapshot has 43 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.5 passed: 87 locations match",
+      "[4:59:40 AM] Processing Event 45/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Wax Pot Top",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.6",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Anansi Music Box\" (contains: Wax Pot Top)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.6",
+      "[4:59:40 AM] Fresh snapshot has 44 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.6 passed: 87 locations match",
+      "[4:59:40 AM] Processing Event 46/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Generator Room",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.7",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Atlantis\" (contains: Key for Generator Room)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.7",
+      "[4:59:40 AM] Fresh snapshot has 45 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.7 passed: 87 locations match",
+      "[4:59:40 AM] Processing Event 47/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Water Pot Bottom",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.8",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Bedroom Elevator\" (contains: Water Pot Bottom)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.8",
+      "[4:59:40 AM] Fresh snapshot has 46 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.8 passed: 87 locations match",
+      "[4:59:40 AM] Processing Event 48/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Oil Pot Top",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.9",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Organ\" (contains: Oil Pot Top)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.9",
+      "[4:59:40 AM] Fresh snapshot has 47 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.9 passed: 88 locations match",
+      "[4:59:40 AM] Processing Event 49/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Set Skull Dial: Prehistoric",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.10",
+      "[4:59:40 AM]   Checking \"Set Skull Dial: Prehistoric\" (contains: Set Skull Dial: Prehistoric)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.10",
+      "[4:59:40 AM] Fresh snapshot has 48 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.10 passed: 88 locations match",
+      "[4:59:40 AM] Processing Event 50/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Wax Pot Top DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.11",
+      "[4:59:40 AM]   Checking \"Storage: Eagles Nest\" (contains: Wax Pot Top DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.11",
+      "[4:59:40 AM] Fresh snapshot has 49 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.11 passed: 88 locations match",
+      "[4:59:40 AM] Processing Event 51/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Lightning Pot Top DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.12",
+      "[4:59:40 AM]   Checking \"Storage: Ocean\" (contains: Lightning Pot Top DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.12",
+      "[4:59:40 AM] Fresh snapshot has 50 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.12 passed: 88 locations match",
+      "[4:59:40 AM] Processing Event 52/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Metal Pot Bottom DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 4.13",
+      "[4:59:40 AM]   Checking \"Storage: Workshop Drawers\" (contains: Metal Pot Bottom DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 4.13",
+      "[4:59:40 AM] Fresh snapshot has 51 checked locations",
+      "[4:59:40 AM] ✓ Sphere 4.13 passed: 88 locations match",
+      "[4:59:40 AM] Processing Event 53/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Lightning Pot Top",
+      "[4:59:40 AM] Checking 1 locations from sphere 5.1",
+      "[4:59:40 AM]   Checking \"Ixupi Captured Oil\" (contains: Lightning Pot Top)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 5.1",
+      "[4:59:40 AM] Fresh snapshot has 52 checked locations",
+      "[4:59:40 AM] ✓ Sphere 5.1 passed: 88 locations match",
+      "[4:59:40 AM] Processing Event 54/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Viewed Norse Stone",
+      "[4:59:40 AM] Checking 1 locations from sphere 5.2",
+      "[4:59:40 AM]   Checking \"Norse Stone\" (contains: Viewed Norse Stone)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 5.2",
+      "[4:59:40 AM] Fresh snapshot has 53 checked locations",
+      "[4:59:40 AM] ✓ Sphere 5.2 passed: 90 locations match",
+      "[4:59:40 AM] Processing Event 55/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Water Pot Bottom DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 5.3",
+      "[4:59:40 AM]   Checking \"Storage: Clock Tower\" (contains: Water Pot Bottom DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 5.3",
+      "[4:59:40 AM] Fresh snapshot has 54 checked locations",
+      "[4:59:40 AM] ✓ Sphere 5.3 passed: 90 locations match",
+      "[4:59:40 AM] Processing Event 56/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Viewed Page 17",
+      "[4:59:40 AM] Checking 1 locations from sphere 6.1",
+      "[4:59:40 AM]   Checking \"Beth's Body\" (contains: Viewed Page 17)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 6.1",
+      "[4:59:40 AM] Fresh snapshot has 55 checked locations",
+      "[4:59:40 AM] ✓ Sphere 6.1 passed: 92 locations match",
+      "[4:59:40 AM] Processing Event 57/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Projector Room",
+      "[4:59:40 AM] Checking 1 locations from sphere 6.2",
+      "[4:59:40 AM]   Checking \"Final Riddle: Beth's Body Page 17\" (contains: Key for Projector Room)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 6.2",
+      "[4:59:40 AM] Fresh snapshot has 56 checked locations",
+      "[4:59:40 AM] ✓ Sphere 6.2 passed: 96 locations match",
+      "[4:59:40 AM] Processing Event 58/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Lost Your Head",
+      "[4:59:40 AM] Checking 1 locations from sphere 7.1",
+      "[4:59:40 AM]   Checking \"Guillotine\" (contains: Lost Your Head)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 7.1",
+      "[4:59:40 AM] Fresh snapshot has 57 checked locations",
+      "[4:59:40 AM] ✓ Sphere 7.1 passed: 96 locations match",
+      "[4:59:40 AM] Processing Event 59/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Set Skull Dial: Tar River",
+      "[4:59:40 AM] Checking 1 locations from sphere 7.2",
+      "[4:59:40 AM]   Checking \"Set Skull Dial: Tar River\" (contains: Set Skull Dial: Tar River)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 7.2",
+      "[4:59:40 AM] Fresh snapshot has 58 checked locations",
+      "[4:59:40 AM] ✓ Sphere 7.2 passed: 96 locations match",
+      "[4:59:40 AM] Processing Event 60/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Wax Pot Bottom DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 7.3",
+      "[4:59:40 AM]   Checking \"Storage: Tar River\" (contains: Wax Pot Bottom DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 7.3",
+      "[4:59:40 AM] Fresh snapshot has 59 checked locations",
+      "[4:59:40 AM] ✓ Sphere 7.3 passed: 96 locations match",
+      "[4:59:40 AM] Processing Event 61/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Viewed Theater Movie",
+      "[4:59:40 AM] Checking 1 locations from sphere 7.4",
+      "[4:59:40 AM]   Checking \"Viewed Theater Movie\" (contains: Viewed Theater Movie)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 7.4",
+      "[4:59:40 AM] Fresh snapshot has 60 checked locations",
+      "[4:59:40 AM] ✓ Sphere 7.4 passed: 98 locations match",
+      "[4:59:40 AM] Processing Event 62/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Key for Puzzle Room",
+      "[4:59:40 AM] Checking 1 locations from sphere 8.1",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Maze Door\" (contains: Key for Puzzle Room)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 8.1",
+      "[4:59:40 AM] Fresh snapshot has 61 checked locations",
+      "[4:59:40 AM] ✓ Sphere 8.1 passed: 104 locations match",
+      "[4:59:40 AM] Processing Event 63/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Crystal Pot Top",
+      "[4:59:40 AM] Checking 1 locations from sphere 9.1",
+      "[4:59:40 AM]   Checking \"Puzzle Hint Found: Mastermind Information Plaque\" (contains: Crystal Pot Top)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 9.1",
+      "[4:59:40 AM] Fresh snapshot has 62 checked locations",
+      "[4:59:40 AM] ✓ Sphere 9.1 passed: 104 locations match",
+      "[4:59:40 AM] Processing Event 64/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Wood Pot Top",
+      "[4:59:40 AM] Checking 1 locations from sphere 9.2",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Mastermind\" (contains: Wood Pot Top)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 9.2",
+      "[4:59:40 AM] Fresh snapshot has 63 checked locations",
+      "[4:59:40 AM] ✓ Sphere 9.2 passed: 104 locations match",
+      "[4:59:40 AM] Processing Event 65/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Wax Pot Bottom",
+      "[4:59:40 AM] Checking 1 locations from sphere 9.3",
+      "[4:59:40 AM]   Checking \"Puzzle Solved Skull Dial Door\" (contains: Wax Pot Bottom)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 9.3",
+      "[4:59:40 AM] Fresh snapshot has 64 checked locations",
+      "[4:59:40 AM] ✓ Sphere 9.3 passed: 105 locations match",
+      "[4:59:40 AM] Processing Event 66/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Ash Pot Top DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 9.4",
+      "[4:59:40 AM]   Checking \"Storage: Skull Bridge\" (contains: Ash Pot Top DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 9.4",
+      "[4:59:40 AM] Fresh snapshot has 65 checked locations",
+      "[4:59:40 AM] ✓ Sphere 9.4 passed: 105 locations match",
+      "[4:59:40 AM] Processing Event 67/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Ash Pot Bottom DUPE",
+      "[4:59:40 AM] Checking 1 locations from sphere 9.5",
+      "[4:59:40 AM]   Checking \"Storage: Slide\" (contains: Ash Pot Bottom DUPE)",
+      "[4:59:40 AM] Completed checking 1 locations for sphere 9.5",
+      "[4:59:40 AM] Fresh snapshot has 66 checked locations",
+      "[4:59:40 AM] ✓ Sphere 9.5 passed: 106 locations match",
+      "[4:59:40 AM] Processing Event 68/77: Type 'state_update'",
+      "[4:59:40 AM] 📦 Recently added item: Crystal Pot Bottom",
+      "[4:59:40 AM] Checking 1 locations from sphere 10.1",
+      "[4:59:40 AM]   Checking \"Ixupi Captured Ash\" (contains: Crystal Pot Bottom)",
+      "[4:59:41 AM] Completed checking 1 locations for sphere 10.1",
+      "[4:59:41 AM] Fresh snapshot has 67 checked locations",
+      "[4:59:41 AM] ✓ Sphere 10.1 passed: 107 locations match",
+      "[4:59:41 AM] Processing Event 69/77: Type 'state_update'",
+      "[4:59:41 AM] 📦 Recently added item: Key for Library",
+      "[4:59:41 AM] Checking 1 locations from sphere 10.2",
+      "[4:59:41 AM]   Checking \"Ixupi Captured Wax\" (contains: Key for Library)",
+      "[4:59:41 AM] Completed checking 1 locations for sphere 10.2",
+      "[4:59:41 AM] Fresh snapshot has 68 checked locations",
+      "[4:59:41 AM] ✓ Sphere 10.2 passed: 107 locations match",
+      "[4:59:41 AM] Processing Event 70/77: Type 'state_update'",
+      "[4:59:41 AM] 📦 Recently added item: Wood Pot Bottom",
+      "[4:59:41 AM] Checking 1 locations from sphere 11.1",
+      "[4:59:41 AM]   Checking \"Ixupi Captured Crystal\" (contains: Wood Pot Bottom)",
+      "[4:59:41 AM] Completed checking 1 locations for sphere 11.1",
+      "[4:59:41 AM] Fresh snapshot has 69 checked locations",
+      "[4:59:41 AM] ✓ Sphere 11.1 passed: 108 locations match",
+      "[4:59:41 AM] Processing Event 71/77: Type 'state_update'",
+      "[4:59:41 AM] 📦 Recently added item: Key for Greenhouse",
+      "[4:59:41 AM] Checking 1 locations from sphere 12.1",
+      "[4:59:41 AM]   Checking \"Ixupi Captured Wood\" (contains: Key for Greenhouse)",
+      "[4:59:41 AM] Completed checking 1 locations for sphere 12.1",
+      "[4:59:41 AM] Fresh snapshot has 70 checked locations",
+      "[4:59:41 AM] ✓ Sphere 12.1 passed: 109 locations match",
+      "[4:59:41 AM] Processing Event 72/77: Type 'state_update'",
+      "[4:59:41 AM] 📦 Recently added item: Cloth Pot Top DUPE",
+      "[4:59:41 AM] Checking 1 locations from sphere 13.1",
+      "[4:59:41 AM]   Checking \"Storage: Greenhouse\" (contains: Cloth Pot Top DUPE)",
+      "[4:59:41 AM] Completed checking 1 locations for sphere 13.1",
+      "[4:59:41 AM] Fresh snapshot has 71 checked locations",
+      "[4:59:41 AM] ✓ Sphere 13.1 passed: 111 locations match",
+      "[4:59:41 AM] Processing Event 73/77: Type 'state_update'",
+      "[4:59:41 AM] 📦 Recently added item: Water Pot Top",
+      "[4:59:41 AM] Checking 1 locations from sphere 14.1",
+      "[4:59:41 AM]   Checking \"Ixupi Captured Cloth\" (contains: Water Pot Top)",
+      "[4:59:41 AM] Completed checking 1 locations for sphere 14.1",
+      "[4:59:41 AM] Fresh snapshot has 72 checked locations",
+      "[4:59:41 AM] ✓ Sphere 14.1 passed: 112 locations match",
+      "[4:59:41 AM] Processing Event 74/77: Type 'state_update'",
+      "[4:59:41 AM] 📦 Recently added item: Lightning Pot Bottom DUPE",
+      "[4:59:41 AM] Checking 1 locations from sphere 14.2",
+      "[4:59:41 AM]   Checking \"Storage: Janitor Closet\" (contains: Lightning Pot Bottom DUPE)",
+      "[4:59:41 AM] Completed checking 1 locations for sphere 14.2",
+      "[4:59:41 AM] Fresh snapshot has 73 checked locations",
+      "[4:59:41 AM] ✓ Sphere 14.2 passed: 112 locations match",
+      "[4:59:41 AM] Processing Event 75/77: Type 'state_update'",
+      "[4:59:41 AM] 📦 Recently added item: Metal Pot Top",
+      "[4:59:41 AM] Checking 1 locations from sphere 15.1",
+      "[4:59:41 AM]   Checking \"Ixupi Captured Water\" (contains: Metal Pot Top)",
+      "[4:59:41 AM] Completed checking 1 locations for sphere 15.1",
+      "[4:59:41 AM] Fresh snapshot has 74 checked locations",
+      "[4:59:41 AM] ✓ Sphere 15.1 passed: 113 locations match",
+      "[4:59:41 AM] Processing Event 76/77: Type 'state_update'",
+      "[4:59:41 AM] 📦 Recently added item: Lightning Pot Bottom",
+      "[4:59:41 AM] Checking 1 locations from sphere 16.1",
+      "[4:59:41 AM]   Checking \"Ixupi Captured Metal\" (contains: Lightning Pot Bottom)",
+      "[4:59:41 AM] Completed checking 1 locations for sphere 16.1",
+      "[4:59:41 AM] Fresh snapshot has 75 checked locations",
+      "[4:59:41 AM] ✓ Sphere 16.1 passed: 114 locations match",
+      "[4:59:41 AM] Processing Event 77/77: Type 'state_update'",
+      "[4:59:41 AM] 📦 Recently added item: Mt. Pleasant Tribune: 45 year Old Mystery Solved!",
+      "[4:59:41 AM] Checking 1 locations from sphere 17.1",
+      "[4:59:41 AM]   Checking \"Mystery Solved\" (contains: Mt. Pleasant Tribune: 45 year Old Mystery Solved!)",
+      "[4:59:41 AM] Completed checking 1 locations for sphere 17.1",
+      "[4:59:41 AM] Fresh snapshot has 76 checked locations",
+      "[4:59:41 AM] ✓ Sphere 17.1 passed: 114 locations match",
+      "[4:59:41 AM] Spoiler test completed successfully. All events matched."
+    ],
+    "errorMessages": [],
+    "sphereResults": [
+      {
+        "eventIndex": 0,
+        "sphereIndex": 0,
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 1 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 0,
+          "sphereIndex": 0,
+          "playerId": "1",
+          "newlyAddedItems": null
+        }
+      },
+      {
+        "eventIndex": 1,
+        "sphereIndex": "0.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 2 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 1,
+          "sphereIndex": "0.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Office"
+          ]
+        }
+      },
+      {
+        "eventIndex": 2,
+        "sphereIndex": "0.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 3 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 2,
+          "sphereIndex": "0.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Underground Lake"
+          ]
+        }
+      },
+      {
+        "eventIndex": 3,
+        "sphereIndex": "0.3",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 4 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 3,
+          "sphereIndex": "0.3",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Shaman Room"
+          ]
+        }
+      },
+      {
+        "eventIndex": 4,
+        "sphereIndex": "0.4",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 5 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 4,
+          "sphereIndex": "0.4",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Cloth Pot Bottom"
+          ]
+        }
+      },
+      {
+        "eventIndex": 5,
+        "sphereIndex": "0.5",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 6 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 5,
+          "sphereIndex": "0.5",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Office Elevator"
+          ]
+        }
+      },
+      {
+        "eventIndex": 6,
+        "sphereIndex": "0.6",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 7 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 6,
+          "sphereIndex": "0.6",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Bedroom"
+          ]
+        }
+      },
+      {
+        "eventIndex": 7,
+        "sphereIndex": "1.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 8 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 7,
+          "sphereIndex": "1.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Crawling"
+          ]
+        }
+      },
+      {
+        "eventIndex": 8,
+        "sphereIndex": "1.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 9 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 8,
+          "sphereIndex": "1.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Janitor Closet"
+          ]
+        }
+      },
+      {
+        "eventIndex": 9,
+        "sphereIndex": "1.3",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 10 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 9,
+          "sphereIndex": "1.3",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Crystal Pot Bottom DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 10,
+        "sphereIndex": "1.4",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 11 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 10,
+          "sphereIndex": "1.4",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Water Pot Top DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 11,
+        "sphereIndex": "1.5",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 12 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 11,
+          "sphereIndex": "1.5",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Viewed Egyptian Hieroglyphics Explained"
+          ]
+        }
+      },
+      {
+        "eventIndex": 12,
+        "sphereIndex": "2.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 13 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 12,
+          "sphereIndex": "2.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Ocean Room"
+          ]
+        }
+      },
+      {
+        "eventIndex": 13,
+        "sphereIndex": "2.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 14 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 13,
+          "sphereIndex": "2.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Egypt Room"
+          ]
+        }
+      },
+      {
+        "eventIndex": 14,
+        "sphereIndex": "2.3",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 15 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 14,
+          "sphereIndex": "2.3",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Three Floor Elevator"
+          ]
+        }
+      },
+      {
+        "eventIndex": 15,
+        "sphereIndex": "2.4",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 16 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 15,
+          "sphereIndex": "2.4",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Torture Room"
+          ]
+        }
+      },
+      {
+        "eventIndex": 16,
+        "sphereIndex": "2.5",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 17 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 16,
+          "sphereIndex": "2.5",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Oil Pot Top DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 17,
+        "sphereIndex": "2.6",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 18 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 17,
+          "sphereIndex": "2.6",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Sand Pot Bottom DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 18,
+        "sphereIndex": "3.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 19 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 18,
+          "sphereIndex": "3.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Ash Pot Bottom"
+          ]
+        }
+      },
+      {
+        "eventIndex": 19,
+        "sphereIndex": "3.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 20 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 19,
+          "sphereIndex": "3.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Sand Pot Top"
+          ]
+        }
+      },
+      {
+        "eventIndex": 20,
+        "sphereIndex": "3.3",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 21 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 20,
+          "sphereIndex": "3.3",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Set Song"
+          ]
+        }
+      },
+      {
+        "eventIndex": 21,
+        "sphereIndex": "3.4",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 22 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 21,
+          "sphereIndex": "3.4",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for UFO Room"
+          ]
+        }
+      },
+      {
+        "eventIndex": 22,
+        "sphereIndex": "3.5",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 23 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 22,
+          "sphereIndex": "3.5",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Prehistoric Room"
+          ]
+        }
+      },
+      {
+        "eventIndex": 23,
+        "sphereIndex": "3.6",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 24 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 23,
+          "sphereIndex": "3.6",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Metal Pot Bottom"
+          ]
+        }
+      },
+      {
+        "eventIndex": 24,
+        "sphereIndex": "3.7",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 25 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 24,
+          "sphereIndex": "3.7",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Workshop"
+          ]
+        }
+      },
+      {
+        "eventIndex": 25,
+        "sphereIndex": "3.8",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 26 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 25,
+          "sphereIndex": "3.8",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Bedroom Elevator"
+          ]
+        }
+      },
+      {
+        "eventIndex": 26,
+        "sphereIndex": "3.9",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 27 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 26,
+          "sphereIndex": "3.9",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Sand Pot Bottom"
+          ]
+        }
+      },
+      {
+        "eventIndex": 27,
+        "sphereIndex": "3.10",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 28 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 27,
+          "sphereIndex": "3.10",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Set Skull Dial: Burial"
+          ]
+        }
+      },
+      {
+        "eventIndex": 28,
+        "sphereIndex": "3.11",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 29 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 28,
+          "sphereIndex": "3.11",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Set Skull Dial: Egypt"
+          ]
+        }
+      },
+      {
+        "eventIndex": 29,
+        "sphereIndex": "3.12",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 30 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 29,
+          "sphereIndex": "3.12",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Set Skull Dial: Gods Room"
+          ]
+        }
+      },
+      {
+        "eventIndex": 30,
+        "sphereIndex": "3.13",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 31 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 30,
+          "sphereIndex": "3.13",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Set Skull Dial: Werewolf"
+          ]
+        }
+      },
+      {
+        "eventIndex": 31,
+        "sphereIndex": "3.14",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 32 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 31,
+          "sphereIndex": "3.14",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Oil Pot Bottom DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 32,
+        "sphereIndex": "3.15",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 33 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 32,
+          "sphereIndex": "3.15",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Sand Pot Top DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 33,
+        "sphereIndex": "3.16",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 34 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 33,
+          "sphereIndex": "3.16",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Cloth Pot Bottom DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 34,
+        "sphereIndex": "3.17",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 35 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 34,
+          "sphereIndex": "3.17",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Crystal Pot Top DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 35,
+        "sphereIndex": "3.18",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 36 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 35,
+          "sphereIndex": "3.18",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Metal Pot Top DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 36,
+        "sphereIndex": "3.19",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 37 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 36,
+          "sphereIndex": "3.19",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Wood Pot Top DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 37,
+        "sphereIndex": "3.20",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 38 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 37,
+          "sphereIndex": "3.20",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Wood Pot Bottom DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 38,
+        "sphereIndex": "3.21",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 39 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 38,
+          "sphereIndex": "3.21",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Viewed Fortune"
+          ]
+        }
+      },
+      {
+        "eventIndex": 39,
+        "sphereIndex": "4.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 40 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 39,
+          "sphereIndex": "4.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Set Time"
+          ]
+        }
+      },
+      {
+        "eventIndex": 40,
+        "sphereIndex": "4.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 41 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 40,
+          "sphereIndex": "4.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Ash Pot Top"
+          ]
+        }
+      },
+      {
+        "eventIndex": 41,
+        "sphereIndex": "4.3",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 42 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 41,
+          "sphereIndex": "4.3",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Oil Pot Bottom"
+          ]
+        }
+      },
+      {
+        "eventIndex": 42,
+        "sphereIndex": "4.4",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 43 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 42,
+          "sphereIndex": "4.4",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Aligned Planets"
+          ]
+        }
+      },
+      {
+        "eventIndex": 43,
+        "sphereIndex": "4.5",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 44 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 43,
+          "sphereIndex": "4.5",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Cloth Pot Top"
+          ]
+        }
+      },
+      {
+        "eventIndex": 44,
+        "sphereIndex": "4.6",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 45 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 44,
+          "sphereIndex": "4.6",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Wax Pot Top"
+          ]
+        }
+      },
+      {
+        "eventIndex": 45,
+        "sphereIndex": "4.7",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 46 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 45,
+          "sphereIndex": "4.7",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Generator Room"
+          ]
+        }
+      },
+      {
+        "eventIndex": 46,
+        "sphereIndex": "4.8",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 47 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 46,
+          "sphereIndex": "4.8",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Water Pot Bottom"
+          ]
+        }
+      },
+      {
+        "eventIndex": 47,
+        "sphereIndex": "4.9",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 48 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 47,
+          "sphereIndex": "4.9",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Oil Pot Top"
+          ]
+        }
+      },
+      {
+        "eventIndex": 48,
+        "sphereIndex": "4.10",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 49 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 48,
+          "sphereIndex": "4.10",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Set Skull Dial: Prehistoric"
+          ]
+        }
+      },
+      {
+        "eventIndex": 49,
+        "sphereIndex": "4.11",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 50 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 49,
+          "sphereIndex": "4.11",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Wax Pot Top DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 50,
+        "sphereIndex": "4.12",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 51 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 50,
+          "sphereIndex": "4.12",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Lightning Pot Top DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 51,
+        "sphereIndex": "4.13",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 52 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 51,
+          "sphereIndex": "4.13",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Metal Pot Bottom DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 52,
+        "sphereIndex": "5.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 53 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 52,
+          "sphereIndex": "5.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Lightning Pot Top"
+          ]
+        }
+      },
+      {
+        "eventIndex": 53,
+        "sphereIndex": "5.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 54 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 53,
+          "sphereIndex": "5.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Viewed Norse Stone"
+          ]
+        }
+      },
+      {
+        "eventIndex": 54,
+        "sphereIndex": "5.3",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 55 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 54,
+          "sphereIndex": "5.3",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Water Pot Bottom DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 55,
+        "sphereIndex": "6.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 56 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 55,
+          "sphereIndex": "6.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Viewed Page 17"
+          ]
+        }
+      },
+      {
+        "eventIndex": 56,
+        "sphereIndex": "6.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 57 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 56,
+          "sphereIndex": "6.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Projector Room"
+          ]
+        }
+      },
+      {
+        "eventIndex": 57,
+        "sphereIndex": "7.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 58 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 57,
+          "sphereIndex": "7.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Lost Your Head"
+          ]
+        }
+      },
+      {
+        "eventIndex": 58,
+        "sphereIndex": "7.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 59 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 58,
+          "sphereIndex": "7.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Set Skull Dial: Tar River"
+          ]
+        }
+      },
+      {
+        "eventIndex": 59,
+        "sphereIndex": "7.3",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 60 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 59,
+          "sphereIndex": "7.3",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Wax Pot Bottom DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 60,
+        "sphereIndex": "7.4",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 61 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 60,
+          "sphereIndex": "7.4",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Viewed Theater Movie"
+          ]
+        }
+      },
+      {
+        "eventIndex": 61,
+        "sphereIndex": "8.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 62 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 61,
+          "sphereIndex": "8.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Puzzle Room"
+          ]
+        }
+      },
+      {
+        "eventIndex": 62,
+        "sphereIndex": "9.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 63 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 62,
+          "sphereIndex": "9.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Crystal Pot Top"
+          ]
+        }
+      },
+      {
+        "eventIndex": 63,
+        "sphereIndex": "9.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 64 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 63,
+          "sphereIndex": "9.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Wood Pot Top"
+          ]
+        }
+      },
+      {
+        "eventIndex": 64,
+        "sphereIndex": "9.3",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 65 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 64,
+          "sphereIndex": "9.3",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Wax Pot Bottom"
+          ]
+        }
+      },
+      {
+        "eventIndex": 65,
+        "sphereIndex": "9.4",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 66 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 65,
+          "sphereIndex": "9.4",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Ash Pot Top DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 66,
+        "sphereIndex": "9.5",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 67 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 66,
+          "sphereIndex": "9.5",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Ash Pot Bottom DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 67,
+        "sphereIndex": "10.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 68 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 67,
+          "sphereIndex": "10.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Crystal Pot Bottom"
+          ]
+        }
+      },
+      {
+        "eventIndex": 68,
+        "sphereIndex": "10.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 69 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 68,
+          "sphereIndex": "10.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Library"
+          ]
+        }
+      },
+      {
+        "eventIndex": 69,
+        "sphereIndex": "11.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 70 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 69,
+          "sphereIndex": "11.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Wood Pot Bottom"
+          ]
+        }
+      },
+      {
+        "eventIndex": 70,
+        "sphereIndex": "12.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 71 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 70,
+          "sphereIndex": "12.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Key for Greenhouse"
+          ]
+        }
+      },
+      {
+        "eventIndex": 71,
+        "sphereIndex": "13.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 72 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 71,
+          "sphereIndex": "13.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Cloth Pot Top DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 72,
+        "sphereIndex": "14.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 73 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 72,
+          "sphereIndex": "14.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Water Pot Top"
+          ]
+        }
+      },
+      {
+        "eventIndex": 73,
+        "sphereIndex": "14.2",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 74 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 73,
+          "sphereIndex": "14.2",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Lightning Pot Bottom DUPE"
+          ]
+        }
+      },
+      {
+        "eventIndex": 74,
+        "sphereIndex": "15.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 75 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 74,
+          "sphereIndex": "15.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Metal Pot Top"
+          ]
+        }
+      },
+      {
+        "eventIndex": 75,
+        "sphereIndex": "16.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 76 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 75,
+          "sphereIndex": "16.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Lightning Pot Bottom"
+          ]
+        }
+      },
+      {
+        "eventIndex": 76,
+        "sphereIndex": "17.1",
+        "eventType": "state_update",
+        "passed": true,
+        "message": "Comparison for state_update at step 77 Passed",
+        "details": {
+          "eventType": "state_update",
+          "eventIndex": 76,
+          "sphereIndex": "17.1",
+          "playerId": "1",
+          "newlyAddedItems": [
+            "Mt. Pleasant Tribune: 45 year Old Mystery Solved!"
+          ]
+        }
+      }
+    ],
+    "mismatchDetails": [],
+    "totalEvents": 77,
+    "processedEvents": 77,
+    "testLogPath": "presets/shivers/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl",
+    "playerId": "1",
+    "completedAt": "2025-11-13T04:59:41.162Z"
+  },
+  "sphereResults": [
+    {
+      "eventIndex": 0,
+      "sphereIndex": 0,
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 1 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 0,
+        "sphereIndex": 0,
+        "playerId": "1",
+        "newlyAddedItems": null
+      }
+    },
+    {
+      "eventIndex": 1,
+      "sphereIndex": "0.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 2 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 1,
+        "sphereIndex": "0.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Office"
+        ]
+      }
+    },
+    {
+      "eventIndex": 2,
+      "sphereIndex": "0.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 3 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 2,
+        "sphereIndex": "0.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Underground Lake"
+        ]
+      }
+    },
+    {
+      "eventIndex": 3,
+      "sphereIndex": "0.3",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 4 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 3,
+        "sphereIndex": "0.3",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Shaman Room"
+        ]
+      }
+    },
+    {
+      "eventIndex": 4,
+      "sphereIndex": "0.4",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 5 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 4,
+        "sphereIndex": "0.4",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Cloth Pot Bottom"
+        ]
+      }
+    },
+    {
+      "eventIndex": 5,
+      "sphereIndex": "0.5",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 6 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 5,
+        "sphereIndex": "0.5",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Office Elevator"
+        ]
+      }
+    },
+    {
+      "eventIndex": 6,
+      "sphereIndex": "0.6",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 7 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 6,
+        "sphereIndex": "0.6",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Bedroom"
+        ]
+      }
+    },
+    {
+      "eventIndex": 7,
+      "sphereIndex": "1.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 8 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 7,
+        "sphereIndex": "1.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Crawling"
+        ]
+      }
+    },
+    {
+      "eventIndex": 8,
+      "sphereIndex": "1.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 9 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 8,
+        "sphereIndex": "1.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Janitor Closet"
+        ]
+      }
+    },
+    {
+      "eventIndex": 9,
+      "sphereIndex": "1.3",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 10 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 9,
+        "sphereIndex": "1.3",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Crystal Pot Bottom DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 10,
+      "sphereIndex": "1.4",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 11 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 10,
+        "sphereIndex": "1.4",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Water Pot Top DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 11,
+      "sphereIndex": "1.5",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 12 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 11,
+        "sphereIndex": "1.5",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Viewed Egyptian Hieroglyphics Explained"
+        ]
+      }
+    },
+    {
+      "eventIndex": 12,
+      "sphereIndex": "2.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 13 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 12,
+        "sphereIndex": "2.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Ocean Room"
+        ]
+      }
+    },
+    {
+      "eventIndex": 13,
+      "sphereIndex": "2.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 14 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 13,
+        "sphereIndex": "2.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Egypt Room"
+        ]
+      }
+    },
+    {
+      "eventIndex": 14,
+      "sphereIndex": "2.3",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 15 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 14,
+        "sphereIndex": "2.3",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Three Floor Elevator"
+        ]
+      }
+    },
+    {
+      "eventIndex": 15,
+      "sphereIndex": "2.4",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 16 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 15,
+        "sphereIndex": "2.4",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Torture Room"
+        ]
+      }
+    },
+    {
+      "eventIndex": 16,
+      "sphereIndex": "2.5",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 17 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 16,
+        "sphereIndex": "2.5",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Oil Pot Top DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 17,
+      "sphereIndex": "2.6",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 18 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 17,
+        "sphereIndex": "2.6",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Sand Pot Bottom DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 18,
+      "sphereIndex": "3.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 19 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 18,
+        "sphereIndex": "3.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Ash Pot Bottom"
+        ]
+      }
+    },
+    {
+      "eventIndex": 19,
+      "sphereIndex": "3.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 20 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 19,
+        "sphereIndex": "3.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Sand Pot Top"
+        ]
+      }
+    },
+    {
+      "eventIndex": 20,
+      "sphereIndex": "3.3",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 21 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 20,
+        "sphereIndex": "3.3",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Set Song"
+        ]
+      }
+    },
+    {
+      "eventIndex": 21,
+      "sphereIndex": "3.4",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 22 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 21,
+        "sphereIndex": "3.4",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for UFO Room"
+        ]
+      }
+    },
+    {
+      "eventIndex": 22,
+      "sphereIndex": "3.5",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 23 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 22,
+        "sphereIndex": "3.5",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Prehistoric Room"
+        ]
+      }
+    },
+    {
+      "eventIndex": 23,
+      "sphereIndex": "3.6",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 24 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 23,
+        "sphereIndex": "3.6",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Metal Pot Bottom"
+        ]
+      }
+    },
+    {
+      "eventIndex": 24,
+      "sphereIndex": "3.7",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 25 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 24,
+        "sphereIndex": "3.7",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Workshop"
+        ]
+      }
+    },
+    {
+      "eventIndex": 25,
+      "sphereIndex": "3.8",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 26 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 25,
+        "sphereIndex": "3.8",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Bedroom Elevator"
+        ]
+      }
+    },
+    {
+      "eventIndex": 26,
+      "sphereIndex": "3.9",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 27 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 26,
+        "sphereIndex": "3.9",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Sand Pot Bottom"
+        ]
+      }
+    },
+    {
+      "eventIndex": 27,
+      "sphereIndex": "3.10",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 28 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 27,
+        "sphereIndex": "3.10",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Set Skull Dial: Burial"
+        ]
+      }
+    },
+    {
+      "eventIndex": 28,
+      "sphereIndex": "3.11",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 29 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 28,
+        "sphereIndex": "3.11",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Set Skull Dial: Egypt"
+        ]
+      }
+    },
+    {
+      "eventIndex": 29,
+      "sphereIndex": "3.12",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 30 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 29,
+        "sphereIndex": "3.12",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Set Skull Dial: Gods Room"
+        ]
+      }
+    },
+    {
+      "eventIndex": 30,
+      "sphereIndex": "3.13",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 31 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 30,
+        "sphereIndex": "3.13",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Set Skull Dial: Werewolf"
+        ]
+      }
+    },
+    {
+      "eventIndex": 31,
+      "sphereIndex": "3.14",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 32 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 31,
+        "sphereIndex": "3.14",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Oil Pot Bottom DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 32,
+      "sphereIndex": "3.15",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 33 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 32,
+        "sphereIndex": "3.15",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Sand Pot Top DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 33,
+      "sphereIndex": "3.16",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 34 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 33,
+        "sphereIndex": "3.16",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Cloth Pot Bottom DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 34,
+      "sphereIndex": "3.17",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 35 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 34,
+        "sphereIndex": "3.17",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Crystal Pot Top DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 35,
+      "sphereIndex": "3.18",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 36 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 35,
+        "sphereIndex": "3.18",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Metal Pot Top DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 36,
+      "sphereIndex": "3.19",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 37 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 36,
+        "sphereIndex": "3.19",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Wood Pot Top DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 37,
+      "sphereIndex": "3.20",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 38 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 37,
+        "sphereIndex": "3.20",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Wood Pot Bottom DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 38,
+      "sphereIndex": "3.21",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 39 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 38,
+        "sphereIndex": "3.21",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Viewed Fortune"
+        ]
+      }
+    },
+    {
+      "eventIndex": 39,
+      "sphereIndex": "4.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 40 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 39,
+        "sphereIndex": "4.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Set Time"
+        ]
+      }
+    },
+    {
+      "eventIndex": 40,
+      "sphereIndex": "4.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 41 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 40,
+        "sphereIndex": "4.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Ash Pot Top"
+        ]
+      }
+    },
+    {
+      "eventIndex": 41,
+      "sphereIndex": "4.3",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 42 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 41,
+        "sphereIndex": "4.3",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Oil Pot Bottom"
+        ]
+      }
+    },
+    {
+      "eventIndex": 42,
+      "sphereIndex": "4.4",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 43 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 42,
+        "sphereIndex": "4.4",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Aligned Planets"
+        ]
+      }
+    },
+    {
+      "eventIndex": 43,
+      "sphereIndex": "4.5",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 44 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 43,
+        "sphereIndex": "4.5",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Cloth Pot Top"
+        ]
+      }
+    },
+    {
+      "eventIndex": 44,
+      "sphereIndex": "4.6",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 45 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 44,
+        "sphereIndex": "4.6",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Wax Pot Top"
+        ]
+      }
+    },
+    {
+      "eventIndex": 45,
+      "sphereIndex": "4.7",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 46 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 45,
+        "sphereIndex": "4.7",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Generator Room"
+        ]
+      }
+    },
+    {
+      "eventIndex": 46,
+      "sphereIndex": "4.8",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 47 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 46,
+        "sphereIndex": "4.8",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Water Pot Bottom"
+        ]
+      }
+    },
+    {
+      "eventIndex": 47,
+      "sphereIndex": "4.9",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 48 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 47,
+        "sphereIndex": "4.9",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Oil Pot Top"
+        ]
+      }
+    },
+    {
+      "eventIndex": 48,
+      "sphereIndex": "4.10",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 49 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 48,
+        "sphereIndex": "4.10",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Set Skull Dial: Prehistoric"
+        ]
+      }
+    },
+    {
+      "eventIndex": 49,
+      "sphereIndex": "4.11",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 50 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 49,
+        "sphereIndex": "4.11",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Wax Pot Top DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 50,
+      "sphereIndex": "4.12",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 51 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 50,
+        "sphereIndex": "4.12",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Lightning Pot Top DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 51,
+      "sphereIndex": "4.13",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 52 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 51,
+        "sphereIndex": "4.13",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Metal Pot Bottom DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 52,
+      "sphereIndex": "5.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 53 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 52,
+        "sphereIndex": "5.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Lightning Pot Top"
+        ]
+      }
+    },
+    {
+      "eventIndex": 53,
+      "sphereIndex": "5.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 54 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 53,
+        "sphereIndex": "5.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Viewed Norse Stone"
+        ]
+      }
+    },
+    {
+      "eventIndex": 54,
+      "sphereIndex": "5.3",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 55 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 54,
+        "sphereIndex": "5.3",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Water Pot Bottom DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 55,
+      "sphereIndex": "6.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 56 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 55,
+        "sphereIndex": "6.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Viewed Page 17"
+        ]
+      }
+    },
+    {
+      "eventIndex": 56,
+      "sphereIndex": "6.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 57 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 56,
+        "sphereIndex": "6.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Projector Room"
+        ]
+      }
+    },
+    {
+      "eventIndex": 57,
+      "sphereIndex": "7.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 58 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 57,
+        "sphereIndex": "7.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Lost Your Head"
+        ]
+      }
+    },
+    {
+      "eventIndex": 58,
+      "sphereIndex": "7.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 59 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 58,
+        "sphereIndex": "7.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Set Skull Dial: Tar River"
+        ]
+      }
+    },
+    {
+      "eventIndex": 59,
+      "sphereIndex": "7.3",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 60 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 59,
+        "sphereIndex": "7.3",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Wax Pot Bottom DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 60,
+      "sphereIndex": "7.4",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 61 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 60,
+        "sphereIndex": "7.4",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Viewed Theater Movie"
+        ]
+      }
+    },
+    {
+      "eventIndex": 61,
+      "sphereIndex": "8.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 62 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 61,
+        "sphereIndex": "8.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Puzzle Room"
+        ]
+      }
+    },
+    {
+      "eventIndex": 62,
+      "sphereIndex": "9.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 63 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 62,
+        "sphereIndex": "9.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Crystal Pot Top"
+        ]
+      }
+    },
+    {
+      "eventIndex": 63,
+      "sphereIndex": "9.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 64 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 63,
+        "sphereIndex": "9.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Wood Pot Top"
+        ]
+      }
+    },
+    {
+      "eventIndex": 64,
+      "sphereIndex": "9.3",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 65 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 64,
+        "sphereIndex": "9.3",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Wax Pot Bottom"
+        ]
+      }
+    },
+    {
+      "eventIndex": 65,
+      "sphereIndex": "9.4",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 66 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 65,
+        "sphereIndex": "9.4",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Ash Pot Top DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 66,
+      "sphereIndex": "9.5",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 67 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 66,
+        "sphereIndex": "9.5",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Ash Pot Bottom DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 67,
+      "sphereIndex": "10.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 68 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 67,
+        "sphereIndex": "10.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Crystal Pot Bottom"
+        ]
+      }
+    },
+    {
+      "eventIndex": 68,
+      "sphereIndex": "10.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 69 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 68,
+        "sphereIndex": "10.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Library"
+        ]
+      }
+    },
+    {
+      "eventIndex": 69,
+      "sphereIndex": "11.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 70 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 69,
+        "sphereIndex": "11.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Wood Pot Bottom"
+        ]
+      }
+    },
+    {
+      "eventIndex": 70,
+      "sphereIndex": "12.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 71 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 70,
+        "sphereIndex": "12.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Key for Greenhouse"
+        ]
+      }
+    },
+    {
+      "eventIndex": 71,
+      "sphereIndex": "13.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 72 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 71,
+        "sphereIndex": "13.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Cloth Pot Top DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 72,
+      "sphereIndex": "14.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 73 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 72,
+        "sphereIndex": "14.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Water Pot Top"
+        ]
+      }
+    },
+    {
+      "eventIndex": 73,
+      "sphereIndex": "14.2",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 74 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 73,
+        "sphereIndex": "14.2",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Lightning Pot Bottom DUPE"
+        ]
+      }
+    },
+    {
+      "eventIndex": 74,
+      "sphereIndex": "15.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 75 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 74,
+        "sphereIndex": "15.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Metal Pot Top"
+        ]
+      }
+    },
+    {
+      "eventIndex": 75,
+      "sphereIndex": "16.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 76 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 75,
+        "sphereIndex": "16.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Lightning Pot Bottom"
+        ]
+      }
+    },
+    {
+      "eventIndex": 76,
+      "sphereIndex": "17.1",
+      "eventType": "state_update",
+      "passed": true,
+      "message": "Comparison for state_update at step 77 Passed",
+      "details": {
+        "eventType": "state_update",
+        "eventIndex": 76,
+        "sphereIndex": "17.1",
+        "playerId": "1",
+        "newlyAddedItems": [
+          "Mt. Pleasant Tribune: 45 year Old Mystery Solved!"
+        ]
+      }
+    }
+  ],
+  "mismatchDetails": []
+}
+PW DEBUG: All Playwright assertions passed.
+  ✓  1 tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results (5.1s)
+
+  1 passed (7.5s)

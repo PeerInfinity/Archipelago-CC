@@ -560,12 +560,8 @@
                   },
                   "op": "==",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "IronMaidenBehavior"
-                    },
-                    "attr": "option_start_broken"
+                    "type": "constant",
+                    "value": 1
                   }
                 },
                 {
@@ -1449,12 +1445,8 @@
                   },
                   "op": "==",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "IronMaidenBehavior"
-                    },
-                    "attr": "option_start_broken"
+                    "type": "constant",
+                    "value": 1
                   }
                 },
                 {
@@ -1859,12 +1851,8 @@
                   },
                   "op": "==",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "IronMaidenBehavior"
-                    },
-                    "attr": "option_start_broken"
+                    "type": "constant",
+                    "value": 1
                   }
                 },
                 {
@@ -3565,6 +3553,17 @@
         "event": false,
         "type": null,
         "max_count": 3
+      },
+      "The Count Downed": {
+        "name": "The Count Downed",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
       }
     }
   },

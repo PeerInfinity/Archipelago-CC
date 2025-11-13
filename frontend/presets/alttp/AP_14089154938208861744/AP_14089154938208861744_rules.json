@@ -4062,40 +4062,20 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "small_key_shuffle"
+                        "type": "constant",
+                        "value": 0
                       },
                       "op": "==",
                       "right": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "small_key_shuffle"
-                        },
-                        "attr": "option_universal"
+                        "type": "constant",
+                        "value": 5
                       }
                     },
                     {
                       "type": "compare",
                       "left": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "world"
-                          },
-                          "attr": "options"
-                        },
-                        "attr": "mode"
+                        "type": "constant",
+                        "value": 1
                       },
                       "op": "==",
                       "right": {
@@ -8827,9 +8807,8 @@
                                   "type": "and",
                                   "conditions": [
                                     {
-                                      "type": "helper",
-                                      "name": "can_take_damage",
-                                      "args": []
+                                      "type": "constant",
+                                      "value": true
                                     },
                                     {
                                       "type": "or",
@@ -11455,9 +11434,8 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "can_take_damage",
-                      "args": []
+                      "type": "constant",
+                      "value": true
                     },
                     {
                       "type": "item_check",
@@ -12248,9 +12226,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "helper",
-                          "name": "can_take_damage",
-                          "args": []
+                          "type": "constant",
+                          "value": true
                         },
                         {
                           "type": "helper",

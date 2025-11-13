@@ -1,0 +1,1001 @@
+Found 82 template files (78 testable, 4 filtered by skip list (5 excluded))
+Skipping: Hollow Knight.yaml, Final Fantasy.yaml, Archipelago.yaml, Sudoku.yaml
+Results will be saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+Timestamped backup will be saved to: test-results_2025-11-13_05-00-10.json
+Testing templates from: /home/user/Archipelago-CC/Players/Templates
+Building world mapping...
+World mapping built successfully
+Using seed 1 -> AP_14089154938208861744
+Starting batch processing of 78 templates...
+
+[1/78] Processing A Hat in Time.yaml
+
+=== Testing A Hat in Time.yaml ===
+  [Memory] A Hat in Time.yaml - start: 32.7 MB RSS
+Running Generate.py for A Hat in Time.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/A Hat in Time.yaml --multi 1 --seed 1
+  [Memory] A Hat in Time.yaml - after generation: 32.7 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ahit --seed=1
+  [Memory] A Hat in Time.yaml - after spoiler test: 33.5 MB RSS
+Running test analysis...
+Completed A Hat in Time.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=5.11, Max Spheres=5.11
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[2/78] Processing A Link to the Past.yaml
+
+=== Testing A Link to the Past.yaml ===
+  [Memory] A Link to the Past.yaml - start: 32.8 MB RSS
+Running Generate.py for A Link to the Past.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/A Link to the Past.yaml --multi 1 --seed 1
+  [Memory] A Link to the Past.yaml - after generation: 32.8 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=alttp --seed=1
+  [Memory] A Link to the Past.yaml - after spoiler test: 34.8 MB RSS
+Running test analysis...
+Completed A Link to the Past.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=22.1, Max Spheres=22.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[3/78] Processing A Short Hike.yaml
+
+=== Testing A Short Hike.yaml ===
+  [Memory] A Short Hike.yaml - start: 33.8 MB RSS
+Running Generate.py for A Short Hike.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/A Short Hike.yaml --multi 1 --seed 1
+  [Memory] A Short Hike.yaml - after generation: 33.8 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=shorthike --seed=1
+  [Memory] A Short Hike.yaml - after spoiler test: 33.8 MB RSS
+Running test analysis...
+Completed A Short Hike.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=3.1, Max Spheres=3.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[4/78] Processing Adventure.yaml
+
+=== Testing Adventure.yaml ===
+  [Memory] Adventure.yaml - start: 33.8 MB RSS
+Running Generate.py for Adventure.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Adventure.yaml --multi 1 --seed 1
+  [Memory] Adventure.yaml - after generation: 33.8 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=adventure --seed=1
+  [Memory] Adventure.yaml - after spoiler test: 33.8 MB RSS
+Running test analysis...
+Completed Adventure.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=6.1, Max Spheres=6.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[5/78] Processing Aquaria.yaml
+
+=== Testing Aquaria.yaml ===
+  [Memory] Aquaria.yaml - start: 33.8 MB RSS
+Running Generate.py for Aquaria.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Aquaria.yaml --multi 1 --seed 1
+  [Memory] Aquaria.yaml - after generation: 33.8 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=aquaria --seed=1
+  [Memory] Aquaria.yaml - after spoiler test: 33.8 MB RSS
+Running test analysis...
+Completed Aquaria.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=5.2, Max Spheres=5.2
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[6/78] Processing ArchipIDLE.yaml
+
+=== Testing ArchipIDLE.yaml ===
+  [Memory] ArchipIDLE.yaml - start: 33.8 MB RSS
+Running Generate.py for ArchipIDLE.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/ArchipIDLE.yaml --multi 1 --seed 1
+  [Memory] ArchipIDLE.yaml - after generation: 33.8 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=archipidle --seed=1
+  [Memory] ArchipIDLE.yaml - after spoiler test: 33.8 MB RSS
+Running test analysis...
+Completed ArchipIDLE.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=4.1, Max Spheres=4.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[7/78] Processing Blasphemous.yaml
+
+=== Testing Blasphemous.yaml ===
+  [Memory] Blasphemous.yaml - start: 33.8 MB RSS
+Running Generate.py for Blasphemous.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Blasphemous.yaml --multi 1 --seed 1
+  [Memory] Blasphemous.yaml - after generation: 33.8 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=blasphemous --seed=1
+  [Memory] Blasphemous.yaml - after spoiler test: 36.4 MB RSS
+Running test analysis...
+Completed Blasphemous.yaml: Generation=[PASS], Test=[PASS], Gen Errors=1, Sphere Reached=13.1, Max Spheres=13.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[8/78] Processing Bomb Rush Cyberfunk.yaml
+
+=== Testing Bomb Rush Cyberfunk.yaml ===
+  [Memory] Bomb Rush Cyberfunk.yaml - start: 34.8 MB RSS
+Running Generate.py for Bomb Rush Cyberfunk.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Bomb Rush Cyberfunk.yaml --multi 1 --seed 1
+  [Memory] Bomb Rush Cyberfunk.yaml - after generation: 34.8 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=bomb_rush_cyberfunk --seed=1
+  [Memory] Bomb Rush Cyberfunk.yaml - after spoiler test: 138.0 MB RSS
+Running test analysis...
+Completed Bomb Rush Cyberfunk.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=10.9, Max Spheres=10.9
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[9/78] Processing Bumper Stickers.yaml
+
+=== Testing Bumper Stickers.yaml ===
+  [Memory] Bumper Stickers.yaml - start: 61.0 MB RSS
+Running Generate.py for Bumper Stickers.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Bumper Stickers.yaml --multi 1 --seed 1
+  [Memory] Bumper Stickers.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=bumpstik --seed=1
+  [Memory] Bumper Stickers.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Bumper Stickers.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=8.2, Max Spheres=8.2
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[10/78] Processing Castlevania - Circle of the Moon.yaml
+
+=== Testing Castlevania - Circle of the Moon.yaml ===
+  [Memory] Castlevania - Circle of the Moon.yaml - start: 61.0 MB RSS
+Running Generate.py for Castlevania - Circle of the Moon.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Castlevania - Circle of the Moon.yaml --multi 1 --seed 1
+  [Memory] Castlevania - Circle of the Moon.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=cvcotm --seed=1
+  [Memory] Castlevania - Circle of the Moon.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Castlevania - Circle of the Moon.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=4.4, Max Spheres=4.4
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[11/78] Processing Castlevania 64.yaml
+
+=== Testing Castlevania 64.yaml ===
+  [Memory] Castlevania 64.yaml - start: 61.0 MB RSS
+Running Generate.py for Castlevania 64.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Castlevania 64.yaml --multi 1 --seed 1
+  [Memory] Castlevania 64.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=cv64 --seed=1
+  [Memory] Castlevania 64.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Castlevania 64.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=4.5, Max Spheres=4.5
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[12/78] Processing Celeste 64.yaml
+
+=== Testing Celeste 64.yaml ===
+  [Memory] Celeste 64.yaml - start: 61.0 MB RSS
+Running Generate.py for Celeste 64.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Celeste 64.yaml --multi 1 --seed 1
+  [Memory] Celeste 64.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=celeste64 --seed=1
+  [Memory] Celeste 64.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Celeste 64.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=5.2, Max Spheres=5.2
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[13/78] Processing ChecksFinder.yaml
+
+=== Testing ChecksFinder.yaml ===
+  [Memory] ChecksFinder.yaml - start: 61.0 MB RSS
+Running Generate.py for ChecksFinder.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/ChecksFinder.yaml --multi 1 --seed 1
+  [Memory] ChecksFinder.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=checksfinder --seed=1
+  [Memory] ChecksFinder.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed ChecksFinder.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=4.5, Max Spheres=4.5
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[14/78] Processing ChocolateChipCookies.yaml
+
+=== Testing ChocolateChipCookies.yaml ===
+  [Memory] ChocolateChipCookies.yaml - start: 61.0 MB RSS
+Running Generate.py for ChocolateChipCookies.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/ChocolateChipCookies.yaml --multi 1 --seed 1
+  [Memory] ChocolateChipCookies.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=bakingadventure --seed=1
+  [Memory] ChocolateChipCookies.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed ChocolateChipCookies.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=8.1, Max Spheres=8.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[15/78] Processing Civilization VI.yaml
+
+=== Testing Civilization VI.yaml ===
+  [Memory] Civilization VI.yaml - start: 61.0 MB RSS
+Running Generate.py for Civilization VI.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Civilization VI.yaml --multi 1 --seed 1
+  [Memory] Civilization VI.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=civ_6 --seed=1
+  [Memory] Civilization VI.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Civilization VI.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=8.2, Max Spheres=8.2
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[16/78] Processing DLCQuest.yaml
+
+=== Testing DLCQuest.yaml ===
+  [Memory] DLCQuest.yaml - start: 61.0 MB RSS
+Running Generate.py for DLCQuest.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/DLCQuest.yaml --multi 1 --seed 1
+  [Memory] DLCQuest.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=dlcquest --seed=1
+  [Memory] DLCQuest.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed DLCQuest.yaml: Generation=[PASS], Test=[FAIL], Gen Errors=0, Sphere Reached=0.1, Max Spheres=8.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[17/78] Processing DOOM 1993.yaml
+
+=== Testing DOOM 1993.yaml ===
+  [Memory] DOOM 1993.yaml - start: 61.0 MB RSS
+Running Generate.py for DOOM 1993.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/DOOM 1993.yaml --multi 1 --seed 1
+  [Memory] DOOM 1993.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=doom_1993 --seed=1
+  [Memory] DOOM 1993.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed DOOM 1993.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=18.2, Max Spheres=18.2
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[18/78] Processing DOOM II.yaml
+
+=== Testing DOOM II.yaml ===
+  [Memory] DOOM II.yaml - start: 61.0 MB RSS
+Running Generate.py for DOOM II.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/DOOM II.yaml --multi 1 --seed 1
+  [Memory] DOOM II.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=doom_ii --seed=1
+  [Memory] DOOM II.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed DOOM II.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=21.2, Max Spheres=21.2
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[19/78] Processing Dark Souls III.yaml
+
+=== Testing Dark Souls III.yaml ===
+  [Memory] Dark Souls III.yaml - start: 61.0 MB RSS
+Running Generate.py for Dark Souls III.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Dark Souls III.yaml --multi 1 --seed 1
+  [Memory] Dark Souls III.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=dark_souls_3 --seed=1
+  [Memory] Dark Souls III.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Dark Souls III.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=5.1, Max Spheres=5.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[20/78] Processing Donkey Kong Country 3.yaml
+
+=== Testing Donkey Kong Country 3.yaml ===
+  [Memory] Donkey Kong Country 3.yaml - start: 61.0 MB RSS
+Running Generate.py for Donkey Kong Country 3.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Donkey Kong Country 3.yaml --multi 1 --seed 1
+  [Memory] Donkey Kong Country 3.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=dkc3 --seed=1
+  [Memory] Donkey Kong Country 3.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Donkey Kong Country 3.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=3.1, Max Spheres=3.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[21/78] Processing Factorio.yaml
+
+=== Testing Factorio.yaml ===
+  [Memory] Factorio.yaml - start: 61.0 MB RSS
+Running Generate.py for Factorio.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Factorio.yaml --multi 1 --seed 1
+  [Memory] Factorio.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=factorio --seed=1
+  [Memory] Factorio.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Factorio.yaml: Generation=[PASS], Test=[FAIL], Gen Errors=0, Sphere Reached=0.1, Max Spheres=12.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[22/78] Processing Faxanadu.yaml
+
+=== Testing Faxanadu.yaml ===
+  [Memory] Faxanadu.yaml - start: 61.0 MB RSS
+Running Generate.py for Faxanadu.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Faxanadu.yaml --multi 1 --seed 1
+  [Memory] Faxanadu.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=faxanadu --seed=1
+  [Memory] Faxanadu.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Faxanadu.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=9.1, Max Spheres=9.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[23/78] Processing Final Fantasy Mystic Quest.yaml
+
+=== Testing Final Fantasy Mystic Quest.yaml ===
+  [Memory] Final Fantasy Mystic Quest.yaml - start: 61.0 MB RSS
+Running Generate.py for Final Fantasy Mystic Quest.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Final Fantasy Mystic Quest.yaml --multi 1 --seed 1
+  [Memory] Final Fantasy Mystic Quest.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ffmq --seed=1
+  [Memory] Final Fantasy Mystic Quest.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Final Fantasy Mystic Quest.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=18.2, Max Spheres=18.2
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[24/78] Processing Heretic.yaml
+
+=== Testing Heretic.yaml ===
+  [Memory] Heretic.yaml - start: 61.0 MB RSS
+Running Generate.py for Heretic.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Heretic.yaml --multi 1 --seed 1
+  [Memory] Heretic.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=heretic --seed=1
+  [Memory] Heretic.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Heretic.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=24.1, Max Spheres=24.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[25/78] Processing Hylics 2.yaml
+
+=== Testing Hylics 2.yaml ===
+  [Memory] Hylics 2.yaml - start: 61.0 MB RSS
+Running Generate.py for Hylics 2.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Hylics 2.yaml --multi 1 --seed 1
+  [Memory] Hylics 2.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=hylics2 --seed=1
+  [Memory] Hylics 2.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Hylics 2.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=7.2, Max Spheres=7.2
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[26/78] Processing Inscryption.yaml
+
+=== Testing Inscryption.yaml ===
+  [Memory] Inscryption.yaml - start: 61.0 MB RSS
+Running Generate.py for Inscryption.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Inscryption.yaml --multi 1 --seed 1
+  [Memory] Inscryption.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=inscryption --seed=1
+  [Memory] Inscryption.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Inscryption.yaml: Generation=[PASS], Test=[PASS], Gen Errors=0, Sphere Reached=9.2, Max Spheres=9.2
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[27/78] Processing Jak and Daxter The Precursor Legacy.yaml
+
+=== Testing Jak and Daxter The Precursor Legacy.yaml ===
+  [Memory] Jak and Daxter The Precursor Legacy.yaml - start: 61.0 MB RSS
+Running Generate.py for Jak and Daxter The Precursor Legacy.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Jak and Daxter The Precursor Legacy.yaml --multi 1 --seed 1
+  [Memory] Jak and Daxter The Precursor Legacy.yaml - after generation: 61.0 MB RSS
+Rules file not found: /home/user/Archipelago-CC/frontend/presets/jakanddaxter/AP_14089154938208861744/AP_14089154938208861744_rules.json
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[28/78] Processing Kingdom Hearts 2.yaml
+
+=== Testing Kingdom Hearts 2.yaml ===
+  [Memory] Kingdom Hearts 2.yaml - start: 61.0 MB RSS
+Running Generate.py for Kingdom Hearts 2.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Kingdom Hearts 2.yaml --multi 1 --seed 1
+  [Memory] Kingdom Hearts 2.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=kh2 --seed=1
+  [Memory] Kingdom Hearts 2.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Kingdom Hearts 2.yaml: Generation=[PASS], Test=[FAIL], Gen Errors=0, Sphere Reached=0.3, Max Spheres=15.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[29/78] Processing Kingdom Hearts.yaml
+
+=== Testing Kingdom Hearts.yaml ===
+  [Memory] Kingdom Hearts.yaml - start: 61.0 MB RSS
+Running Generate.py for Kingdom Hearts.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Kingdom Hearts.yaml --multi 1 --seed 1
+  [Memory] Kingdom Hearts.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=kh1 --seed=1
+  [Memory] Kingdom Hearts.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Kingdom Hearts.yaml: Generation=[PASS], Test=[FAIL], Gen Errors=0, Sphere Reached=1.4, Max Spheres=17.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[30/78] Processing Kirby's Dream Land 3.yaml
+
+=== Testing Kirby's Dream Land 3.yaml ===
+  [Memory] Kirby's Dream Land 3.yaml - start: 61.0 MB RSS
+Running Generate.py for Kirby's Dream Land 3.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Kirby's Dream Land 3.yaml --multi 1 --seed 1
+  [Memory] Kirby's Dream Land 3.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=kdl3 --seed=1
+  [Memory] Kirby's Dream Land 3.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Kirby's Dream Land 3.yaml: Generation=[PASS], Test=[FAIL], Gen Errors=0, Sphere Reached=5.34, Max Spheres=11.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[31/78] Processing Landstalker - The Treasures of King Nole.yaml
+
+=== Testing Landstalker - The Treasures of King Nole.yaml ===
+  [Memory] Landstalker - The Treasures of King Nole.yaml - start: 61.0 MB RSS
+Running Generate.py for Landstalker - The Treasures of King Nole.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Landstalker - The Treasures of King Nole.yaml --multi 1 --seed 1
+  [Memory] Landstalker - The Treasures of King Nole.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=landstalker --seed=1
+  [Memory] Landstalker - The Treasures of King Nole.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Landstalker - The Treasures of King Nole.yaml: Generation=[PASS], Test=[FAIL], Gen Errors=49, Sphere Reached=1.2, Max Spheres=10.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[32/78] Processing Lingo.yaml
+
+=== Testing Lingo.yaml ===
+  [Memory] Lingo.yaml - start: 61.0 MB RSS
+Running Generate.py for Lingo.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Lingo.yaml --multi 1 --seed 1
+  [Memory] Lingo.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=lingo --seed=1
+  [Memory] Lingo.yaml - after spoiler test: 61.0 MB RSS
+Running test analysis...
+Completed Lingo.yaml: Generation=[PASS], Test=[FAIL], Gen Errors=0, Sphere Reached=0.0, Max Spheres=5.1
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[33/78] Processing Links Awakening DX.yaml
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 61.0 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 1
+  [Memory] Links Awakening DX.yaml - after generation: 61.0 MB RSS
+Rules file not found: /home/user/Archipelago-CC/frontend/presets/ladx/AP_14089154938208861744/AP_14089154938208861744_rules.json
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Warning: Full spoiler test results not found: /home/user/Archipelago-CC/scripts/output/spoiler-full/test-results.json
+  Warning: Multiplayer test results not found: /home/user/Archipelago-CC/scripts/output/multiplayer/test-results.json
+  Warning: Multiworld test results not found: /home/user/Archipelago-CC/scripts/output/multiworld/test-results.json
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+
+[34/78] Processing Lufia II Ancient Cave.yaml
+
+=== Testing Lufia II Ancient Cave.yaml ===
+  [Memory] Lufia II Ancient Cave.yaml - start: 61.0 MB RSS
+Running Generate.py for Lufia II Ancient Cave.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Lufia II Ancient Cave.yaml --multi 1 --seed 1
+  [Memory] Lufia II Ancient Cave.yaml - after generation: 61.0 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=lufia2ac --seed=1
