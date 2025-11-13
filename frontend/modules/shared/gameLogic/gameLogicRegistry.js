@@ -275,6 +275,7 @@ import * as shapezLogic from './shapez/shapezLogic.js';
 import * as shiversLogic from './shivers/shiversLogic.js';
 import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
+import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -514,6 +515,12 @@ const GAME_REGISTRY = {
     helperFunctions: smz3Logic,
     worldClasses: ['SMZ3World'],
     aliases: ['SMZ3', 'Super Metroid and A Link to the Past Combo Randomizer']
+  },
+  'Subnautica': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: subnauticaLogic.helperFunctions,
+    worldClasses: ['SubnauticaWorld'],
+    aliases: ['Subnautica']
   },
   // Add more games here as they're implemented
   'Generic': {
