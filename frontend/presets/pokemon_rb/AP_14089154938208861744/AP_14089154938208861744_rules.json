@@ -85,12 +85,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           }
         ],
@@ -2324,12 +2319,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -2435,12 +2425,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             },
             "item": {
               "name": "Carbos",
@@ -2467,12 +2452,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -2488,12 +2468,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -2564,12 +2539,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -2676,12 +2646,7 @@
                     },
                     "attr": "can_cut"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 }
               ]
             }
@@ -2736,12 +2701,7 @@
                     },
                     "attr": "can_cut"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "function_call",
@@ -2753,12 +2713,7 @@
                     },
                     "attr": "can_surf"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 }
               ]
             },
@@ -2862,12 +2817,7 @@
                     },
                     "attr": "can_cut"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 }
               ]
             }
@@ -2946,12 +2896,7 @@
                 },
                 "attr": "route"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           }
         ],
@@ -3011,12 +2956,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -3097,12 +3037,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -3159,12 +3094,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -3260,12 +3190,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -3295,12 +3220,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -3316,12 +3236,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -3398,12 +3313,7 @@
                     },
                     "attr": "can_surf"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 }
               ]
             }
@@ -3488,12 +3398,7 @@
                     },
                     "attr": "can_surf"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 }
               ]
             }
@@ -3511,12 +3416,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -3554,12 +3454,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -3634,12 +3529,7 @@
                     },
                     "attr": "can_surf"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "function_call",
@@ -3651,12 +3541,7 @@
                     },
                     "attr": "can_cut"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 }
               ]
             }
@@ -3750,12 +3635,7 @@
                     },
                     "attr": "can_surf"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "function_call",
@@ -3767,12 +3647,7 @@
                     },
                     "attr": "can_cut"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 }
               ]
             }
@@ -3790,12 +3665,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -3836,12 +3706,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -3976,12 +3841,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -5037,12 +4897,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -5083,12 +4938,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -5129,12 +4979,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -5196,12 +5041,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -5857,12 +5697,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             },
             "item": {
               "name": "Static Mew",
@@ -6036,12 +5871,7 @@
                 },
                 "attr": "can_pass_guards"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -6071,12 +5901,7 @@
                 },
                 "attr": "can_pass_guards"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -6106,12 +5931,7 @@
                 },
                 "attr": "can_pass_guards"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -6141,12 +5961,7 @@
                 },
                 "attr": "can_pass_guards"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -6176,12 +5991,7 @@
                 },
                 "attr": "can_pass_guards"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -6211,12 +6021,7 @@
                 },
                 "attr": "can_pass_guards"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -6246,12 +6051,7 @@
                 },
                 "attr": "can_pass_guards"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -6281,12 +6081,7 @@
                 },
                 "attr": "can_pass_guards"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -7988,12 +7783,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8023,12 +7813,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8058,12 +7843,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8093,12 +7873,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8128,12 +7903,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8163,12 +7933,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8490,12 +8255,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8511,12 +8271,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8532,12 +8287,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           }
         ],
@@ -8574,12 +8324,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8595,12 +8340,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8616,12 +8356,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           }
         ],
@@ -8658,12 +8393,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8679,12 +8409,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8700,12 +8425,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           }
         ],
@@ -8742,12 +8462,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8763,12 +8478,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8784,12 +8494,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           }
         ],
@@ -8826,12 +8531,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8847,12 +8547,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -8868,12 +8563,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           }
         ],
@@ -9337,12 +9027,7 @@
                 },
                 "attr": "can_strength"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -9431,12 +9116,7 @@
                 },
                 "attr": "can_strength"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -9482,12 +9162,7 @@
                 },
                 "attr": "can_strength"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -11714,12 +11389,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -11735,12 +11405,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -11756,12 +11421,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           }
         ],
@@ -11779,12 +11439,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             },
             "item": {
               "name": "Item Finder",
@@ -11968,12 +11623,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -12022,12 +11672,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -12076,12 +11721,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -12472,12 +12112,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -12688,12 +12323,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             },
             "item": {
               "name": "Static Mewtwo",
@@ -12720,12 +12350,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -12755,12 +12380,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -12790,12 +12410,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -12825,12 +12440,7 @@
                 },
                 "attr": "rock_tunnel"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -13191,12 +12801,7 @@
                     },
                     "attr": "can_strength"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -13228,12 +12833,7 @@
                     },
                     "attr": "can_strength"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -13348,12 +12948,7 @@
                     },
                     "attr": "can_strength"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -13385,12 +12980,7 @@
                     },
                     "attr": "can_strength"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -13478,12 +13068,7 @@
                     },
                     "attr": "can_surf"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "function_call",
@@ -13495,12 +13080,7 @@
                     },
                     "attr": "can_strength"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -13537,12 +13117,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -13606,12 +13181,7 @@
                     },
                     "attr": "can_surf"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "function_call",
@@ -13623,12 +13193,7 @@
                     },
                     "attr": "can_strength"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -13872,12 +13437,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -14054,12 +13614,7 @@
                     },
                     "attr": "can_strength"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -14934,12 +14489,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -15554,10 +15104,6 @@
               },
               "args": [
                 {
-                  "type": "name",
-                  "name": "world"
-                },
-                {
                   "type": "binary_op",
                   "left": {
                     "type": "attribute",
@@ -15732,10 +15278,6 @@
                 "attr": "oaks_aide"
               },
               "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                },
                 {
                   "type": "binary_op",
                   "left": {
@@ -17313,12 +16855,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -17412,12 +16949,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -17900,12 +17432,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -17946,12 +17473,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -17981,12 +17503,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -18039,12 +17556,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -18060,12 +17572,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -18256,12 +17763,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -18404,12 +17906,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -18583,12 +18080,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -18849,12 +18341,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             },
             "item": {
               "name": "Nugget",
@@ -19182,12 +18669,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -19228,12 +18710,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -19274,12 +18751,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -19320,12 +18792,7 @@
                 },
                 "attr": "can_fly"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -19393,12 +18860,7 @@
                 },
                 "attr": "can_strength"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -19436,12 +18898,7 @@
                 },
                 "attr": "can_strength"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -19525,12 +18982,7 @@
                     },
                     "attr": "can_strength"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -20382,12 +19834,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -20433,12 +19880,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -20476,12 +19918,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -20497,12 +19934,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -20540,12 +19972,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -20575,12 +20002,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -21392,12 +20814,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -21629,12 +21046,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -21661,12 +21073,7 @@
                     },
                     "attr": "can_strength"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "function_call",
@@ -21678,12 +21085,7 @@
                     },
                     "attr": "can_surf"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "not",
@@ -21755,12 +21157,7 @@
                     },
                     "attr": "can_strength"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "function_call",
@@ -21772,12 +21169,7 @@
                     },
                     "attr": "can_surf"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "not",
@@ -21997,12 +21389,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -22018,12 +21405,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -22402,12 +21784,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -22479,12 +21856,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           }
         ],
@@ -22532,12 +21904,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -22553,12 +21920,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           }
         ],
@@ -23387,12 +22749,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -23599,12 +22956,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -23894,12 +23246,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -24004,12 +23351,7 @@
                     },
                     "attr": "can_strength"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "not",
@@ -24236,12 +23578,7 @@
                     },
                     "attr": "can_strength"
                   },
-                  "args": [
-                    {
-                      "type": "name",
-                      "name": "world"
-                    }
-                  ]
+                  "args": []
                 },
                 {
                   "type": "not",
@@ -24321,12 +23658,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -24363,12 +23695,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             },
             "item": {
               "name": "TM14 Blizzard",
@@ -24420,12 +23747,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -24452,12 +23774,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -24979,12 +24296,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -25119,12 +24431,7 @@
                 },
                 "attr": "can_cut"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -27242,10 +26549,6 @@
               },
               "args": [
                 {
-                  "type": "name",
-                  "name": "world"
-                },
-                {
                   "type": "binary_op",
                   "left": {
                     "type": "attribute",
@@ -27581,12 +26884,7 @@
                 },
                 "attr": "can_strength"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -27624,12 +26922,7 @@
                 },
                 "attr": "can_strength"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -27663,12 +26956,7 @@
                 },
                 "attr": "can_strength"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             },
             "item": {
               "name": "Moon Stone",
@@ -27690,12 +26978,7 @@
                 },
                 "attr": "can_strength"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             },
             "item": {
               "name": "HP Up",
@@ -30469,12 +29752,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -30531,12 +29809,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -30585,12 +29858,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -30654,12 +29922,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -30873,12 +30136,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -30894,12 +30152,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -30915,12 +30168,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           },
           {
@@ -30936,12 +30184,7 @@
                 },
                 "attr": "can_surf"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             }
           }
         ],
@@ -31101,12 +30344,7 @@
                 },
                 "attr": "can_strength"
               },
-              "args": [
-                {
-                  "type": "name",
-                  "name": "world"
-                }
-              ]
+              "args": []
             },
             "item": {
               "name": "TM13 Ice Beam",
