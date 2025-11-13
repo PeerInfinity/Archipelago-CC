@@ -248,6 +248,7 @@ import { landstalkerStateModule } from './landstalker/landstalkerLogic.js';
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
 import * as mlssLogic from './mlss/mlssLogic.js';
 import { mlssStateModule } from './mlss/mlssLogic.js';
+import * as marioland2Logic from './marioland2/marioland2Logic.js';
 import * as mmbn3Logic from './mmbn3/mmbn3Logic.js';
 import { mmbn3StateModule } from './mmbn3/mmbn3Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
@@ -428,6 +429,12 @@ const GAME_REGISTRY = {
     helperFunctions: sm64exLogic.helperFunctions,
     worldClasses: ['SM64World'],
     aliases: ['Super Mario 64', 'SM64', 'sm64ex']
+  },
+  'Super Mario Land 2': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: marioland2Logic.helperFunctions,
+    worldClasses: ['MarioLand2World'],
+    aliases: ['Super Mario Land 2', 'SML2', 'marioland2']
   },
   'VVVVVV': {
     logicModule: v6Logic.v6StateModule,

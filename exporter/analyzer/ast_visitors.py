@@ -197,6 +197,50 @@ class ASTVisitorMixin:
                     logging.debug(f"Game handler processed special function {func_name}: {special_result}")
                     return special_result
 
+            # Check if the function name resolves to a callable via function defaults (e.g., loc_rule, coin_rule)
+            if func_name not in self.closure_vars:
+                resolved_func = self.expression_resolver.resolve_variable(func_name)
+                if resolved_func is not None and callable(resolved_func):
+                    logging.debug(f"Identified call to function from lambda default parameter: {func_name} -> {resolved_func}")
+
+                    # Check if game handler wants to preserve this as a helper
+                    should_preserve = False
+                    actual_func_name = None
+                    if self.game_handler and hasattr(self.game_handler, 'should_preserve_as_helper'):
+                        # Get the actual function name from the resolved function
+                        actual_func_name = getattr(resolved_func, '__name__', None)
+                        if actual_func_name and self.game_handler.should_preserve_as_helper(actual_func_name):
+                            logging.debug(f"Game handler requests preserving {actual_func_name} as helper, skipping recursive analysis")
+                            should_preserve = True
+                            # Replace func_name with the actual function name for helper call creation
+                            func_name = actual_func_name
+                            func_info = {'type': 'name', 'name': func_name}
+
+                    # Recursive analysis logic for lambda default parameters (only if not preserving as helper)
+                    if not should_preserve:
+                        try:
+                            # Check if 'state' is passed as an argument using original AST nodes
+                            has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
+                            # Attempt recursion if state arg is present
+                            if has_state_arg:
+                                # Import analyze_rule locally to avoid forward reference issues
+                                from .analysis import analyze_rule
+                                logging.debug(f"Recursively analyzing lambda default function: {func_name} -> {resolved_func}")
+                                # Pass the seen_funcs dictionary (it's mutable state)
+                                recursive_result = analyze_rule(rule_func=resolved_func,
+                                                              closure_vars=self.closure_vars.copy(),
+                                                              seen_funcs=self.seen_funcs,
+                                                              game_handler=self.game_handler,
+                                                              player_context=self.player_context)
+                                if recursive_result.get('type') != 'error':
+                                    logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
+                                    return recursive_result
+                                else:
+                                    logging.debug(f"Recursive analysis for {func_name} returned type 'error'. Falling back to helper node. Error details: {recursive_result.get('error_log')}")
+                        except Exception as e:
+                            logging.error(f"Error during recursive analysis of lambda default {func_name}: {e}")
+                        # If recursion wasn't attempted or failed, fall through to default helper representation
+
             # Check if the function name is in closure vars
             if func_name in self.closure_vars:
                  logging.debug(f"Identified call to known closure variable: {func_name}")
