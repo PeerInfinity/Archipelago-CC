@@ -36,21 +36,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Axe Magic",
-                            "Lantern"
-                          ]
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Axe Magic"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lantern"
                     }
                   ]
                 },
@@ -96,7 +90,7 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Swamp Shrine"
+                        "swamp_shrine"
                       ]
                     }
                   ]
@@ -238,21 +232,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Axe Magic",
-                            "Lantern"
-                          ]
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Axe Magic"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lantern"
                     }
                   ]
                 },
@@ -341,22 +329,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Idol Stone"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Idol Stone"
                 },
                 {
                   "type": "helper",
@@ -478,22 +452,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Idol Stone"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Idol Stone"
                 },
                 {
                   "type": "helper",
@@ -732,7 +692,7 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Swamp Shrine"
+                        "swamp_shrine"
                       ]
                     }
                   ]
@@ -850,22 +810,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Einstein Whistle"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Einstein Whistle"
                 },
                 {
                   "type": "helper",
@@ -874,7 +820,7 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Massan"
+                        "massan"
                       ]
                     }
                   ]
@@ -889,22 +835,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Safety Pass"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Safety Pass"
                 },
                 {
                   "type": "helper",
@@ -1090,7 +1022,7 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Thieves Hideout (after keydoor)"
+                        "thieves_hideout_post_key"
                       ]
                     }
                   ]
@@ -1105,22 +1037,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Sun Stone"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sun Stone"
                 },
                 {
                   "type": "helper",
@@ -1289,22 +1207,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Sun Stone"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sun Stone"
                 },
                 {
                   "type": "helper",
@@ -1369,22 +1273,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Key"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Key"
                 },
                 {
                   "type": "helper",
@@ -1722,22 +1612,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Einstein Whistle"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Einstein Whistle"
                 },
                 {
                   "type": "helper",
@@ -1746,7 +1622,7 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Massan"
+                        "massan"
                       ]
                     }
                   ]
@@ -1796,22 +1672,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Safety Pass"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Safety Pass"
                 },
                 {
                   "type": "helper",
@@ -1849,22 +1711,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Buyer Card"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Buyer Card"
                 },
                 {
                   "type": "helper",
@@ -1886,22 +1734,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Casino Ticket"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Casino Ticket"
                 },
                 {
                   "type": "helper",
@@ -1931,22 +1765,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Key"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Key"
                 },
                 {
                   "type": "helper",
@@ -1990,7 +1810,7 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Ryuma (repaired lighthouse)"
+                        "ryuma_lighthouse_repaired"
                       ]
                     }
                   ]
@@ -2271,22 +2091,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Casino Ticket"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Casino Ticket"
                 },
                 {
                   "type": "helper",
@@ -2485,22 +2291,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Buyer Card"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Buyer Card"
                 },
                 {
                   "type": "helper",
@@ -2601,22 +2393,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Axe Magic"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Axe Magic"
                 },
                 {
                   "type": "helper",
@@ -2638,22 +2416,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Axe Magic"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Axe Magic"
                 },
                 {
                   "type": "helper",
@@ -2675,22 +2439,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Armlet"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Armlet"
                 },
                 {
                   "type": "helper",
@@ -2734,7 +2484,7 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Verla Mines"
+                        "verla_mines"
                       ]
                     }
                   ]
@@ -2812,22 +2562,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Axe Magic"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Axe Magic"
                 },
                 {
                   "type": "helper",
@@ -2870,22 +2606,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Axe Magic"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Axe Magic"
                 },
                 {
                   "type": "helper",
@@ -2993,22 +2715,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Garlic"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Garlic"
                 },
                 {
                   "type": "helper",
@@ -3354,22 +3062,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Einstein Whistle"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Einstein Whistle"
                 },
                 {
                   "type": "helper",
@@ -3391,22 +3085,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "EkeEke"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "EkeEke"
                 },
                 {
                   "type": "helper",
@@ -3428,22 +3108,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Axe Magic"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Axe Magic"
                 },
                 {
                   "type": "helper",
@@ -3584,22 +3250,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "EkeEke"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "EkeEke"
                 },
                 {
                   "type": "helper",
@@ -3672,22 +3324,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Einstein Whistle"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Einstein Whistle"
                 },
                 {
                   "type": "helper",
@@ -3804,7 +3442,7 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Verla Mines"
+                        "verla_mines"
                       ]
                     }
                   ]
@@ -3935,7 +3573,7 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Verla Mines"
+                        "verla_mines"
                       ]
                     }
                   ]
@@ -4035,7 +3673,7 @@
                     {
                       "type": "constant",
                       "value": [
-                        "Verla Mines"
+                        "verla_mines"
                       ]
                     }
                   ]
@@ -4109,22 +3747,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Fireproof"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Fireproof"
                 },
                 {
                   "type": "helper",
@@ -4321,22 +3945,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Fireproof"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Fireproof"
                 },
                 {
                   "type": "helper",
@@ -4961,22 +4571,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Sword of Gaia"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sword of Gaia"
                 },
                 {
                   "type": "helper",
@@ -5103,22 +4699,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Axe Magic"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Axe Magic"
                 },
                 {
                   "type": "helper",
@@ -5514,22 +5096,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Axe Magic"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Axe Magic"
                 },
                 {
                   "type": "helper",
@@ -5559,22 +5127,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Axe Magic"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Axe Magic"
                 },
                 {
                   "type": "helper",
@@ -5596,22 +5150,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Gola's Eye"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Gola's Eye"
                 },
                 {
                   "type": "helper",
@@ -5864,22 +5404,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Gola's Eye"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Gola's Eye"
                 },
                 {
                   "type": "helper",
@@ -5909,24 +5435,27 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Red Jewel",
-                            "Purple Jewel",
-                            "Green Jewel",
-                            "Blue Jewel",
-                            "Yellow Jewel"
-                          ]
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Red Jewel"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Purple Jewel"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Green Jewel"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Blue Jewel"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Yellow Jewel"
                     }
                   ]
                 },
@@ -6142,22 +5671,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Key"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Key"
                 },
                 {
                   "type": "helper",
@@ -6179,22 +5694,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Iron Boots"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Iron Boots"
                 },
                 {
                   "type": "helper",
@@ -6301,22 +5802,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Snow Spikes"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Snow Spikes"
                 },
                 {
                   "type": "helper",
@@ -6338,22 +5825,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Snow Spikes"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Snow Spikes"
                 },
                 {
                   "type": "helper",
@@ -6375,22 +5848,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Axe Magic"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Axe Magic"
                 },
                 {
                   "type": "helper",
@@ -6399,7 +5858,7 @@
                     {
                       "type": "constant",
                       "value": [
-                        "King Nole's Labyrinth (raft entrance)"
+                        "king_nole_labyrinth_raft_entrance"
                       ]
                     }
                   ]
@@ -6659,22 +6118,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Axe Magic"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Axe Magic"
                 },
                 {
                   "type": "helper",
@@ -6754,22 +6199,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Logs"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Logs"
                 },
                 {
                   "type": "helper",
@@ -7004,22 +6435,19 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "helper",
-                      "name": "set",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Gola's Fang",
-                            "Gola's Horn",
-                            "Gola's Nail"
-                          ]
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Gola's Fang"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Gola's Horn"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Gola's Nail"
                     }
                   ]
                 },

@@ -1,0 +1,939 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:06] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: landstalker
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=landstalker&seed=1
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/?mode=test-spoilers&game=landstalker&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/modes.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/presets/landstalker/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/landstalker/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [04:49:08.981] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:08] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/hylics_2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/jak_and_daxter__the_precursor_legacy/jak_and_daxter__the_precursor_legacyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/oot/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.json HTTP/1.1" 200 -
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+BROWSER LOG (log): [YachtDice] yacht_weights data loaded successfully
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [04:49:09.275] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [04:49:09.277] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [04:49:09.294] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [04:49:09.294] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [04:49:09.295] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [04:49:09.295] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/landstalker/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/landstalker/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/landstalker/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [04:49:09.304] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/presets/landstalker/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [13/Nov/2025 04:49:09] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+BROWSER LOG (error): [04:49:11.223] [ERROR] [testSpoilerUI] STATE MISMATCH found for: {"type":"state_update","sphere_number":"2.1","player_id":"1"}
+BROWSER LOG (error): [04:49:11.225] [ERROR] [testSpoilerUI:ComparisonEngine] STATE MISMATCH found for: {"type":"state_update","sphere_number":"2.1","player_id":"1"}
+BROWSER LOG (error): [04:49:11.229] [ERROR] [testSpoilerUI]  > Locations accessible in LOG but NOT in STATE (or checked): Destel Well (0F): 4 crates puzzle room chest, Destel Well (1F): chest in spiky hallway, Destel Well (1F): chest on narrow floating ground, Destel Well (1F): chest on small stairs, Destel Well (2F): chest in falling platforms room, Destel Well (2F): chest in ghosts room, Destel Well (2F): left chest in Pockets room, Destel Well (2F): right chest in Pockets room, Destel Well (3F): chest in first trapped arena, Destel Well (3F): chest in second trapped arena, Destel Well (3F): chest in trapped giants room, Destel Well (4F): bottom chest in room before boss, Destel Well (4F): left chest in room before boss, Destel Well (4F): right chest in room before boss, Destel Well (4F): top chest in room before boss, Destel Well: item on platform revealed after beating Quake, Destel: Inn item, Destel: Shop item #1, Destel: Shop item #2, Destel: Shop item #3, Destel: Shop item #4, Destel: Shop item #5, Destel: chest in inn next to innkeeper, Mercator: Docks shop item #1, Mercator: Docks shop item #2, Mercator: Docks shop item #3, Route after Destel: chest on tiny cliff, Route after Destel: hidden chest in map after seeing Duke raft, Route after Destel: item on ground on the cliff, Route after Destel: visible chest in map after seeing Duke raft, Route from Verla to Destel: Kelketo shop item #1, Route from Verla to Destel: Kelketo shop item #2, Route from Verla to Destel: Kelketo shop item #3, Route from Verla to Destel: Kelketo shop item #4, Route from Verla to Destel: Kelketo shop item #5, Route to Destel: chest in map right after Verla mines exit, Route to Destel: chest in small platform elevator map, Route to Destel: hidden chest in map right before Destel, Route to Lake Shrine: Greedly's shop item #1, Route to Lake Shrine: Greedly's shop item #2, Route to Lake Shrine: Greedly's shop item #3, Route to Lake Shrine: Greedly's shop item #4, Route to Lake Shrine: chest on long cliff in crossroads map, Route to Lake Shrine: left chest in volcano, Route to Lake Shrine: right chest in volcano, Verla Mines: Dex reward chest, Verla Mines: Slasher reward chest, Verla Mines: chest on jar staircase room balcony, Verla Mines: item in the corner of lava filled room, Verla Mines: left chest in 3-chests room near Slasher, Verla Mines: left chest in button room near elevator shaft leading to Marley, Verla Mines: left chest in double chest room near entrance, Verla Mines: middle chest in 3-chests room near Slasher, Verla Mines: right chest in 3-chests room near Slasher, Verla Mines: right chest in button room near elevator shaft leading to Marley, Verla Mines: right chest in double chest room near entrance, Verla Shore: chest behind cabin, Verla Shore: chest on corner cliff after Verla tunnel, Verla Shore: chest on highest cliff after Verla tunnel (accessible through Verla mines), Verla: Shop item #1, Verla: Shop item #2, Verla: Shop item #3, Verla: Shop item #4, event_visited_verla_mines
+BROWSER LOG (error): [04:49:11.229] [ERROR] [testSpoilerUI:ComparisonEngine]  > Locations accessible in LOG but NOT in STATE (or checked): Destel Well (0F): 4 crates puzzle room chest, Destel Well (1F): chest in spiky hallway, Destel Well (1F): chest on narrow floating ground, Destel Well (1F): chest on small stairs, Destel Well (2F): chest in falling platforms room, Destel Well (2F): chest in ghosts room, Destel Well (2F): left chest in Pockets room, Destel Well (2F): right chest in Pockets room, Destel Well (3F): chest in first trapped arena, Destel Well (3F): chest in second trapped arena, Destel Well (3F): chest in trapped giants room, Destel Well (4F): bottom chest in room before boss, Destel Well (4F): left chest in room before boss, Destel Well (4F): right chest in room before boss, Destel Well (4F): top chest in room before boss, Destel Well: item on platform revealed after beating Quake, Destel: Inn item, Destel: Shop item #1, Destel: Shop item #2, Destel: Shop item #3, Destel: Shop item #4, Destel: Shop item #5, Destel: chest in inn next to innkeeper, Mercator: Docks shop item #1, Mercator: Docks shop item #2, Mercator: Docks shop item #3, Route after Destel: chest on tiny cliff, Route after Destel: hidden chest in map after seeing Duke raft, Route after Destel: item on ground on the cliff, Route after Destel: visible chest in map after seeing Duke raft, Route from Verla to Destel: Kelketo shop item #1, Route from Verla to Destel: Kelketo shop item #2, Route from Verla to Destel: Kelketo shop item #3, Route from Verla to Destel: Kelketo shop item #4, Route from Verla to Destel: Kelketo shop item #5, Route to Destel: chest in map right after Verla mines exit, Route to Destel: chest in small platform elevator map, Route to Destel: hidden chest in map right before Destel, Route to Lake Shrine: Greedly's shop item #1, Route to Lake Shrine: Greedly's shop item #2, Route to Lake Shrine: Greedly's shop item #3, Route to Lake Shrine: Greedly's shop item #4, Route to Lake Shrine: chest on long cliff in crossroads map, Route to Lake Shrine: left chest in volcano, Route to Lake Shrine: right chest in volcano, Verla Mines: Dex reward chest, Verla Mines: Slasher reward chest, Verla Mines: chest on jar staircase room balcony, Verla Mines: item in the corner of lava filled room, Verla Mines: left chest in 3-chests room near Slasher, Verla Mines: left chest in button room near elevator shaft leading to Marley, Verla Mines: left chest in double chest room near entrance, Verla Mines: middle chest in 3-chests room near Slasher, Verla Mines: right chest in 3-chests room near Slasher, Verla Mines: right chest in button room near elevator shaft leading to Marley, Verla Mines: right chest in double chest room near entrance, Verla Shore: chest behind cabin, Verla Shore: chest on corner cliff after Verla tunnel, Verla Shore: chest on highest cliff after Verla tunnel (accessible through Verla mines), Verla: Shop item #1, Verla: Shop item #2, Verla: Shop item #3, Verla: Shop item #4, event_visited_verla_mines
+BROWSER LOG (error): [MISMATCH DETAIL] Missing from state (64): [Destel Well (0F): 4 crates puzzle room chest, Destel Well (1F): chest in spiky hallway, Destel Well (1F): chest on narrow floating ground, Destel Well (1F): chest on small stairs, Destel Well (2F): chest in falling platforms room, Destel Well (2F): chest in ghosts room, Destel Well (2F): left chest in Pockets room, Destel Well (2F): right chest in Pockets room, Destel Well (3F): chest in first trapped arena, Destel Well (3F): chest in second trapped arena, Destel Well (3F): chest in trapped giants room, Destel Well (4F): bottom chest in room before boss, Destel Well (4F): left chest in room before boss, Destel Well (4F): right chest in room before boss, Destel Well (4F): top chest in room before boss, Destel Well: item on platform revealed after beating Quake, Destel: Inn item, Destel: Shop item #1, Destel: Shop item #2, Destel: Shop item #3, Destel: Shop item #4, Destel: Shop item #5, Destel: chest in inn next to innkeeper, Mercator: Docks shop item #1, Mercator: Docks shop item #2, Mercator: Docks shop item #3, Route after Destel: chest on tiny cliff, Route after Destel: hidden chest in map after seeing Duke raft, Route after Destel: item on ground on the cliff, Route after Destel: visible chest in map after seeing Duke raft, Route from Verla to Destel: Kelketo shop item #1, Route from Verla to Destel: Kelketo shop item #2, Route from Verla to Destel: Kelketo shop item #3, Route from Verla to Destel: Kelketo shop item #4, Route from Verla to Destel: Kelketo shop item #5, Route to Destel: chest in map right after Verla mines exit, Route to Destel: chest in small platform elevator map, Route to Destel: hidden chest in map right before Destel, Route to Lake Shrine: Greedly's shop item #1, Route to Lake Shrine: Greedly's shop item #2, Route to Lake Shrine: Greedly's shop item #3, Route to Lake Shrine: Greedly's shop item #4, Route to Lake Shrine: chest on long cliff in crossroads map, Route to Lake Shrine: left chest in volcano, Route to Lake Shrine: right chest in volcano, Verla Mines: Dex reward chest, Verla Mines: Slasher reward chest, Verla Mines: chest on jar staircase room balcony, Verla Mines: item in the corner of lava filled room, Verla Mines: left chest in 3-chests room near Slasher, Verla Mines: left chest in button room near elevator shaft leading to Marley, Verla Mines: left chest in double chest room near entrance, Verla Mines: middle chest in 3-chests room near Slasher, Verla Mines: right chest in 3-chests room near Slasher, Verla Mines: right chest in button room near elevator shaft leading to Marley, Verla Mines: right chest in double chest room near entrance, Verla Shore: chest behind cabin, Verla Shore: chest on corner cliff after Verla tunnel, Verla Shore: chest on highest cliff after Verla tunnel (accessible through Verla mines), Verla: Shop item #1, Verla: Shop item #2, Verla: Shop item #3, Verla: Shop item #4, event_visited_verla_mines]
+BROWSER LOG (error): [04:49:11.239] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.246] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.252] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.259] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.266] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.276] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.285] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.295] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.306] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.318] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.331] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.345] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.359] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.376] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.394] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.416] [ERROR] [testSpoilerUI]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:11.438] [ERROR] [testSpoilerUI]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:11.462] [ERROR] [testSpoilerUI]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:11.490] [ERROR] [testSpoilerUI]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:11.524] [ERROR] [testSpoilerUI]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:11.532] [ERROR] [testSpoilerUI]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:11.540] [ERROR] [testSpoilerUI]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:11.555] [ERROR] [testSpoilerUI]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:11.578] [ERROR] [testSpoilerUI]     ISSUE: Region Mercator (docks with repaired lighthouse) is not reachable
+BROWSER LOG (error): [04:49:11.596] [ERROR] [testSpoilerUI]     ISSUE: Region Mercator (docks with repaired lighthouse) is not reachable
+BROWSER LOG (error): [04:49:11.613] [ERROR] [testSpoilerUI]     ISSUE: Region Mercator (docks with repaired lighthouse) is not reachable
+BROWSER LOG (error): [04:49:11.628] [ERROR] [testSpoilerUI]     ISSUE: Region Route after Destel is not reachable
+BROWSER LOG (error): [04:49:11.645] [ERROR] [testSpoilerUI]     ISSUE: Region Route after Destel is not reachable
+BROWSER LOG (error): [04:49:11.663] [ERROR] [testSpoilerUI]     ISSUE: Region Route after Destel is not reachable
+BROWSER LOG (error): [04:49:11.683] [ERROR] [testSpoilerUI]     ISSUE: Region Route after Destel is not reachable
+BROWSER LOG (error): [04:49:11.705] [ERROR] [testSpoilerUI]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:11.727] [ERROR] [testSpoilerUI]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:11.759] [ERROR] [testSpoilerUI]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:11.809] [ERROR] [testSpoilerUI]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:11.860] [ERROR] [testSpoilerUI]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:11.920] [ERROR] [testSpoilerUI]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:11.939] [ERROR] [testSpoilerUI]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:11.950] [ERROR] [testSpoilerUI]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:11.962] [ERROR] [testSpoilerUI]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:11.973] [ERROR] [testSpoilerUI]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:11.985] [ERROR] [testSpoilerUI]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:11.996] [ERROR] [testSpoilerUI]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:12.008] [ERROR] [testSpoilerUI]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:12.021] [ERROR] [testSpoilerUI]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:12.036] [ERROR] [testSpoilerUI]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:12.051] [ERROR] [testSpoilerUI]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.068] [ERROR] [testSpoilerUI]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.085] [ERROR] [testSpoilerUI]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.113] [ERROR] [testSpoilerUI]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.128] [ERROR] [testSpoilerUI]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.144] [ERROR] [testSpoilerUI]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.159] [ERROR] [testSpoilerUI]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.175] [ERROR] [testSpoilerUI]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.191] [ERROR] [testSpoilerUI]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.208] [ERROR] [testSpoilerUI]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.224] [ERROR] [testSpoilerUI]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.241] [ERROR] [testSpoilerUI]     ISSUE: Region Verla shore is not reachable
+BROWSER LOG (error): [04:49:12.258] [ERROR] [testSpoilerUI]     ISSUE: Region Verla shore is not reachable
+BROWSER LOG (error): [04:49:12.282] [ERROR] [testSpoilerUI]     ISSUE: Region Verla shore cliff (accessible from Verla Mines) is not reachable
+BROWSER LOG (error): [04:49:12.314] [ERROR] [testSpoilerUI]     ISSUE: Region Verla is not reachable
+BROWSER LOG (error): [04:49:12.332] [ERROR] [testSpoilerUI]     ISSUE: Region Verla is not reachable
+BROWSER LOG (error): [04:49:12.351] [ERROR] [testSpoilerUI]     ISSUE: Region Verla is not reachable
+BROWSER LOG (error): [04:49:12.372] [ERROR] [testSpoilerUI]     ISSUE: Region Verla is not reachable
+BROWSER LOG (error): [04:49:12.391] [ERROR] [testSpoilerUI]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.395] [ERROR] [testSpoilerUI] REGION MISMATCH found for: {"type":"state_update","sphere_number":"2.1","player_id":"1"}
+BROWSER LOG (error): [04:49:12.396] [ERROR] [testSpoilerUI:ComparisonEngine] REGION MISMATCH found for: {"type":"state_update","sphere_number":"2.1","player_id":"1"}
+BROWSER LOG (error): [04:49:12.399] [ERROR] [testSpoilerUI]  > Regions accessible in LOG but NOT in STATE: Destel, Destel Well, Mercator (docks with repaired lighthouse), Route after Destel, Route between Verla and Destel, Route to Lake Shrine, Verla, Verla Mines, Verla shore, Verla shore cliff (accessible from Verla Mines), Verla shore tree
+BROWSER LOG (error): [04:49:12.399] [ERROR] [testSpoilerUI:ComparisonEngine]  > Regions accessible in LOG but NOT in STATE: Destel, Destel Well, Mercator (docks with repaired lighthouse), Route after Destel, Route between Verla and Destel, Route to Lake Shrine, Verla, Verla Mines, Verla shore, Verla shore cliff (accessible from Verla Mines), Verla shore tree
+BROWSER LOG (error): [REGION MISMATCH DETAIL] Missing from state (11): [Destel, Destel Well, Mercator (docks with repaired lighthouse), Route after Destel, Route between Verla and Destel, Route to Lake Shrine, Verla, Verla Mines, Verla shore, Verla shore cliff (accessible from Verla Mines), Verla shore tree]
+BROWSER LOG (warning): [04:49:12.413] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Destel
+BROWSER LOG (warning): [04:49:12.445] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Destel Well
+BROWSER LOG (warning): [04:49:12.520] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route after Destel
+BROWSER LOG (warning): [04:49:12.542] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route between Verla and Destel
+BROWSER LOG (warning): [04:49:12.570] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Route to Lake Shrine
+BROWSER LOG (warning): [04:49:12.607] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Verla
+BROWSER LOG (warning): [04:49:12.638] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Verla Mines
+BROWSER LOG (warning): [04:49:12.729] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Verla shore cliff (accessible from Verla Mines)
+BROWSER LOG (warning): [04:49:12.751] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Verla shore tree
+BROWSER LOG (error): [04:49:12.769] [ERROR] [testSpoilerUI] Test failed at step 16: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [04:49:12.772] [ERROR] [testSpoilerUI] Mismatch for event 16 (Sphere 2.1): Comparison for state_update at step 16 Failed
+BROWSER LOG (warning): [04:49:12.775] [WARN] [testSpoilerUI] Test run halted due to "Stop on first error" being enabled.
+BROWSER LOG (error): [04:49:12.777] [ERROR] [testSpoilerUI] Spoiler test completed with 1 mismatch(es). See logs above for details.
+BROWSER LOG (error): [04:49:12.796] [ERROR] [TestRunner/test_spoiler_full_run] [spoilers-full-run-1763009349524] Spoiler test failed. Mismatches found in log:
+BROWSER LOG (error): [04:49:12.796] [ERROR] [TestRunner/test_spoiler_full_run]   - Mismatch for event 16 (Sphere 2.1): Comparison for state_update at step 16 Failed
+BROWSER LOG (error): [04:49:12.796] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM] STATE MISMATCH found for: {"type":"state_update","sphere_number":"2.1","player_id":"1"}
+BROWSER LOG (error): [04:49:12.797] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM] > Locations accessible in LOG but NOT in STATE (or checked): Destel Well (0F): 4 crates puzzle room chest, Destel Well (1F): chest in spiky hallway, Destel Well (1F): chest on narrow floating ground, Destel Well (1F): chest on small stairs, Destel Well (2F): chest in falling platforms room, Destel Well (2F): chest in ghosts room, Destel Well (2F): left chest in Pockets room, Destel Well (2F): right chest in Pockets room, Destel Well (3F): chest in first trapped arena, Destel Well (3F): chest in second trapped arena, Destel Well (3F): chest in trapped giants room, Destel Well (4F): bottom chest in room before boss, Destel Well (4F): left chest in room before boss, Destel Well (4F): right chest in room before boss, Destel Well (4F): top chest in room before boss, Destel Well: item on platform revealed after beating Quake, Destel: Inn item, Destel: Shop item #1, Destel: Shop item #2, Destel: Shop item #3, Destel: Shop item #4, Destel: Shop item #5, Destel: chest in inn next to innkeeper, Mercator: Docks shop item #1, Mercator: Docks shop item #2, Mercator: Docks shop item #3, Route after Destel: chest on tiny cliff, Route after Destel: hidden chest in map after seeing Duke raft, Route after Destel: item on ground on the cliff, Route after Destel: visible chest in map after seeing Duke raft, Route from Verla to Destel: Kelketo shop item #1, Route from Verla to Destel: Kelketo shop item #2, Route from Verla to Destel: Kelketo shop item #3, Route from Verla to Destel: Kelketo shop item #4, Route from Verla to Destel: Kelketo shop item #5, Route to Destel: chest in map right after Verla mines exit, Route to Destel: chest in small platform elevator map, Route to Destel: hidden chest in map right before Destel, Route to Lake Shrine: Greedly&#039;s shop item #1, Route to Lake Shrine: Greedly&#039;s shop item #2, Route to Lake Shrine: Greedly&#039;s shop item #3, Route to Lake Shrine: Greedly&#039;s shop item #4, Route to Lake Shrine: chest on long cliff in crossroads map, Route to Lake Shrine: left chest in volcano, Route to Lake Shrine: right chest in volcano, Verla Mines: Dex reward chest, Verla Mines: Slasher reward chest, Verla Mines: chest on jar staircase room balcony, Verla Mines: item in the corner of lava filled room, Verla Mines: left chest in 3-chests room near Slasher, Verla Mines: left chest in button room near elevator shaft leading to Marley, Verla Mines: left chest in double chest room near entrance, Verla Mines: middle chest in 3-chests room near Slasher, Verla Mines: right chest in 3-chests room near Slasher, Verla Mines: right chest in button room near elevator shaft leading to Marley, Verla Mines: right chest in double chest room near entrance, Verla Shore: chest behind cabin, Verla Shore: chest on corner cliff after Verla tunnel, Verla Shore: chest on highest cliff after Verla tunnel (accessible through Verla mines), Verla: Shop item #1, Verla: Shop item #2, Verla: Shop item #3, Verla: Shop item #4, event_visited_verla_mines
+BROWSER LOG (error): [04:49:12.797] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.797] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.797] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.797] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.797] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.797] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.798] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.798] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.798] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.798] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.798] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.798] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.799] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.799] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.799] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.799] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable
+BROWSER LOG (error): [04:49:12.799] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:12.799] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:12.799] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:12.800] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:12.800] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:12.800] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:12.800] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Destel is not reachable
+BROWSER LOG (error): [04:49:12.800] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Mercator (docks with repaired lighthouse) is not reachable
+BROWSER LOG (error): [04:49:12.801] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Mercator (docks with repaired lighthouse) is not reachable
+BROWSER LOG (error): [04:49:12.801] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Mercator (docks with repaired lighthouse) is not reachable
+BROWSER LOG (error): [04:49:12.801] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route after Destel is not reachable
+BROWSER LOG (error): [04:49:12.801] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route after Destel is not reachable
+BROWSER LOG (error): [04:49:12.801] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route after Destel is not reachable
+BROWSER LOG (error): [04:49:12.801] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route after Destel is not reachable
+BROWSER LOG (error): [04:49:12.801] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:12.802] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:12.802] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:12.802] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:12.802] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:12.802] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:12.802] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:12.803] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable
+BROWSER LOG (error): [04:49:12.803] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:12.803] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:12.803] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:12.803] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:11 AM]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:12.803] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:12.803] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:12.803] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Route to Lake Shrine is not reachable
+BROWSER LOG (error): [04:49:12.804] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.804] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.804] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.804] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.804] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.805] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.805] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.805] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.805] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.805] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.805] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.805] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla shore is not reachable
+BROWSER LOG (error): [04:49:12.805] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla shore is not reachable
+BROWSER LOG (error): [04:49:12.805] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla shore cliff (accessible from Verla Mines) is not reachable
+BROWSER LOG (error): [04:49:12.806] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla is not reachable
+BROWSER LOG (error): [04:49:12.806] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla is not reachable
+BROWSER LOG (error): [04:49:12.806] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla is not reachable
+BROWSER LOG (error): [04:49:12.806] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla is not reachable
+BROWSER LOG (error): [04:49:12.806] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable
+BROWSER LOG (error): [04:49:12.806] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM] REGION MISMATCH found for: {"type":"state_update","sphere_number":"2.1","player_id":"1"}
+BROWSER LOG (error): [04:49:12.806] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM] > Regions accessible in LOG but NOT in STATE: Destel, Destel Well, Mercator (docks with repaired lighthouse), Route after Destel, Route between Verla and Destel, Route to Lake Shrine, Verla, Verla Mines, Verla shore, Verla shore cliff (accessible from Verla Mines), Verla shore tree
+BROWSER LOG (error): [04:49:12.806] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM] Test failed at step 16: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [04:49:12.807] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM] Mismatch for event 16 (Sphere 2.1): Comparison for state_update at step 16 Failed
+BROWSER LOG (error): [04:49:12.807] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:12 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Full in-app test results: {
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 0,
+    "failedCount": 1
+  },
+  "testDetails": [
+    {
+      "id": "test_spoiler_full_run",
+      "name": "Test Spoilers Panel - Full Run",
+      "status": "failed",
+      "category": "Test Spoilers Panel",
+      "startTime": "2025-11-13T04:49:09.523Z",
+      "endTime": "2025-11-13T04:49:12.814Z",
+      "durationMs": 3291,
+      "conditions": [
+        {
+          "description": "Test started",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:49:09.524Z"
+        },
+        {
+          "description": "Test Spoilers panel found in DOM",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:49:10.026Z"
+        },
+        {
+          "description": "\"Load Suggested Log\" button found and enabled",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:49:10.277Z"
+        },
+        {
+          "description": "\"Run Full Test\" button appeared",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:49:11.031Z"
+        },
+        {
+          "description": "Full spoiler test completed",
+          "status": "passed",
+          "timestamp": "2025-11-13T04:49:12.794Z"
+        },
+        {
+          "description": "Spoiler test passed all checks",
+          "status": "failed",
+          "timestamp": "2025-11-13T04:49:12.796Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[spoilers-full-run-1763009349524] Starting testSpoilersPanelFullRun...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:09.524Z"
+        },
+        {
+          "message": "Condition: \"Test started\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:09.524Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009349524] Activating testSpoilersPanel panel...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:09.524Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel initialization\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:09.524Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel initialization\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:09.775Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel DOM element\" (timeout: 5000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:09.775Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel DOM element\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:10.026Z"
+        },
+        {
+          "message": "Condition: \"Test Spoilers panel found in DOM\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:10.026Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Load Suggested Log\" button to be available\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:10.026Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Load Suggested Log\" button to be available\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:10.277Z"
+        },
+        {
+          "message": "Condition: \"\"Load Suggested Log\" button found and enabled\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:10.277Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009349524] Clicking \"Load Suggested Log\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:10.277Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Spoiler log loading completion\" (timeout: 15000ms, interval: 500ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:10.280Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Spoiler log loading completion\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:10.780Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Run Full Test\" button to appear\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:10.780Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Run Full Test\" button to appear\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:11.031Z"
+        },
+        {
+          "message": "Condition: \"\"Run Full Test\" button appeared\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:11.031Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009349524] Clicking \"Run Full Test\" button...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:11.031Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test to start processing\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:11.033Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test to start processing\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:11.134Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009349524] Waiting for full spoiler test to complete...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:11.134Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test completion with detailed results\" (timeout: 300000ms, interval: 1000ms)...",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:11.134Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009349524] Polling: buttonReady=true, hasDetailedResults=true, processedEvents=15/53",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:12.794Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009349524] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":53,\"processedEvents\":15,\"errorCount\":1,\"sphereCount\":16,\"testLogPath\":\"presets/landstalker/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:12.794Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test completion with detailed results\".",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:12.794Z"
+        },
+        {
+          "message": "Condition: \"Full spoiler test completed\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:12.794Z"
+        },
+        {
+          "message": "Condition: \"Spoiler test passed all checks\" - FAILED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:12.796Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009349524] Spoiler test failed. Mismatches found in log:",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.796Z"
+        },
+        {
+          "message": "  - Mismatch for event 16 (Sphere 2.1): Comparison for state_update at step 16 Failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.796Z"
+        },
+        {
+          "message": "  - [4:49:11 AM] STATE MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":\"2.1\",\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.796Z"
+        },
+        {
+          "message": "  - [4:49:11 AM] > Locations accessible in LOG but NOT in STATE (or checked): Destel Well (0F): 4 crates puzzle room chest, Destel Well (1F): chest in spiky hallway, Destel Well (1F): chest on narrow floating ground, Destel Well (1F): chest on small stairs, Destel Well (2F): chest in falling platforms room, Destel Well (2F): chest in ghosts room, Destel Well (2F): left chest in Pockets room, Destel Well (2F): right chest in Pockets room, Destel Well (3F): chest in first trapped arena, Destel Well (3F): chest in second trapped arena, Destel Well (3F): chest in trapped giants room, Destel Well (4F): bottom chest in room before boss, Destel Well (4F): left chest in room before boss, Destel Well (4F): right chest in room before boss, Destel Well (4F): top chest in room before boss, Destel Well: item on platform revealed after beating Quake, Destel: Inn item, Destel: Shop item #1, Destel: Shop item #2, Destel: Shop item #3, Destel: Shop item #4, Destel: Shop item #5, Destel: chest in inn next to innkeeper, Mercator: Docks shop item #1, Mercator: Docks shop item #2, Mercator: Docks shop item #3, Route after Destel: chest on tiny cliff, Route after Destel: hidden chest in map after seeing Duke raft, Route after Destel: item on ground on the cliff, Route after Destel: visible chest in map after seeing Duke raft, Route from Verla to Destel: Kelketo shop item #1, Route from Verla to Destel: Kelketo shop item #2, Route from Verla to Destel: Kelketo shop item #3, Route from Verla to Destel: Kelketo shop item #4, Route from Verla to Destel: Kelketo shop item #5, Route to Destel: chest in map right after Verla mines exit, Route to Destel: chest in small platform elevator map, Route to Destel: hidden chest in map right before Destel, Route to Lake Shrine: Greedly&#039;s shop item #1, Route to Lake Shrine: Greedly&#039;s shop item #2, Route to Lake Shrine: Greedly&#039;s shop item #3, Route to Lake Shrine: Greedly&#039;s shop item #4, Route to Lake Shrine: chest on long cliff in crossroads map, Route to Lake Shrine: left chest in volcano, Route to Lake Shrine: right chest in volcano, Verla Mines: Dex reward chest, Verla Mines: Slasher reward chest, Verla Mines: chest on jar staircase room balcony, Verla Mines: item in the corner of lava filled room, Verla Mines: left chest in 3-chests room near Slasher, Verla Mines: left chest in button room near elevator shaft leading to Marley, Verla Mines: left chest in double chest room near entrance, Verla Mines: middle chest in 3-chests room near Slasher, Verla Mines: right chest in 3-chests room near Slasher, Verla Mines: right chest in button room near elevator shaft leading to Marley, Verla Mines: right chest in double chest room near entrance, Verla Shore: chest behind cabin, Verla Shore: chest on corner cliff after Verla tunnel, Verla Shore: chest on highest cliff after Verla tunnel (accessible through Verla mines), Verla: Shop item #1, Verla: Shop item #2, Verla: Shop item #3, Verla: Shop item #4, event_visited_verla_mines",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.796Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.797Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.797Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.797Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.797Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.797Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.797Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.798Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.798Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.798Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.798Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.798Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.798Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.799Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.799Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.799Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel Well is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.799Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.799Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.799Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.799Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.800Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.800Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.800Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.800Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Mercator (docks with repaired lighthouse) is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.800Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Mercator (docks with repaired lighthouse) is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.801Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Mercator (docks with repaired lighthouse) is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.801Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route after Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.801Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route after Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.801Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route after Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.801Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route after Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.801Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.801Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.802Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.802Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.802Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.802Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.802Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.802Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route between Verla and Destel is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.803Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route to Lake Shrine is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.803Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route to Lake Shrine is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.803Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route to Lake Shrine is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.803Z"
+        },
+        {
+          "message": "  - [4:49:11 AM]     ISSUE: Region Route to Lake Shrine is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.803Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Route to Lake Shrine is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.803Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Route to Lake Shrine is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.803Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Route to Lake Shrine is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.803Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.804Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.804Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.804Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.804Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.804Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.805Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.805Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.805Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.805Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.805Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.805Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla shore is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.805Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla shore is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.805Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla shore cliff (accessible from Verla Mines) is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.805Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.806Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.806Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.806Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.806Z"
+        },
+        {
+          "message": "  - [4:49:12 AM]     ISSUE: Region Verla Mines is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.806Z"
+        },
+        {
+          "message": "  - [4:49:12 AM] REGION MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":\"2.1\",\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.806Z"
+        },
+        {
+          "message": "  - [4:49:12 AM] > Regions accessible in LOG but NOT in STATE: Destel, Destel Well, Mercator (docks with repaired lighthouse), Route after Destel, Route between Verla and Destel, Route to Lake Shrine, Verla, Verla Mines, Verla shore, Verla shore cliff (accessible from Verla Mines), Verla shore tree",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.806Z"
+        },
+        {
+          "message": "  - [4:49:12 AM] Test failed at step 16: Comparison failed for event type 'state_update'.",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.806Z"
+        },
+        {
+          "message": "  - [4:49:12 AM] Mismatch for event 16 (Sphere 2.1): Comparison for state_update at step 16 Failed",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.807Z"
+        },
+        {
+          "message": "  - [4:49:12 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.",
+          "type": "error",
+          "timestamp": "2025-11-13T04:49:12.807Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009349524] Spoiler test results stored in window.__spoilerTestResults__",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:12.807Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009349524] Spoiler test results stored in localStorage",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:12.812Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763009349524] testSpoilersPanelFullRun finished. Overall Result: false.",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:12.812Z"
+        },
+        {
+          "message": "Test completion signal: FAILED",
+          "type": "info",
+          "timestamp": "2025-11-13T04:49:12.813Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T04:49:12.813Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T04:49:12.814Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-13T04:49:12.814Z"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2025-11-13T04:49:12.915Z"
+}
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2025-11-13T04-49-13.json
+  ✘  1 tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results (4.8s)
+
+
+  1) tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m0[39m
+    Received: [31m1[39m
+
+      141 |
+      142 |     // The test system should complete successfully regardless of whether tests run
+    > 143 |     expect(results.summary.failedCount).toBe(0);
+          |                                         ^
+      144 |     
+      145 |     // If tests actually ran, they should pass
+      146 |     if (results.summary.totalRun > 0) {
+        at /home/user/Archipelago-CC/tests/e2e/app.spec.js:143:41
+
+    Error Context: test-results/app-Application-End-to-End-a086e-app-tests-and-check-results/error-context.md
+
+  1 failed
+    tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results ─
