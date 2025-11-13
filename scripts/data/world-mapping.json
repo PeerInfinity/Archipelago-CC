@@ -371,10 +371,10 @@
     "world_directory": "ror2"
   },
   "SMZ3": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/smz3.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "smz3"
   },
   "Saving Princess": {
@@ -406,16 +406,16 @@
     "world_directory": "sa2b"
   },
   "Starcraft 2": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/sc2.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "sc2"
   },
   "Stardew Valley": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/stardew_valley.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "stardew_valley"
   },
