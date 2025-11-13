@@ -18,11 +18,38 @@ export function lingo_can_use_entrance(snapshot, staticData, room, door) {
     return true;
   }
 
-  // If door is a RoomAndDoor object (array in JSON: [room, door_name])
-  // we need to check if that door can be opened
-  // For now, return true as a placeholder
-  // TODO: Implement proper door checking logic
-  console.warn(`[lingo_can_use_entrance] Door parameter not null/undefined: ${JSON.stringify(door)}, returning true as placeholder`);
+  // Door is a RoomAndDoor tuple: [room_name, door_name]
+  // door[0] is the room (can be null)
+  // door[1] is the door name
+  if (!Array.isArray(door) || door.length < 2) {
+    console.error(`[lingo_can_use_entrance] Invalid door format: ${JSON.stringify(door)}`);
+    return false;
+  }
+
+  // Determine the effective room: use door[0] if not null, otherwise use room parameter
+  const effectiveRoom = door[0] !== null ? door[0] : room;
+  const doorName = door[1];
+
+  // Build the door item name: "Room - Door"
+  const doorItemName = `${effectiveRoom} - ${doorName}`;
+
+  // Get player ID from snapshot (usually 1 for single-player)
+  const playerId = snapshot?.playerId || '1';
+
+  // Check if this door has an associated item in the game's item list
+  const items = staticData?.items?.[playerId];
+  const doorItemExists = items && (doorItemName in items);
+
+  if (doorItemExists) {
+    // This door requires an item - check if player has it
+    const hasItem = !!(snapshot?.inventory && snapshot.inventory[doorItemName] > 0);
+    return hasItem;
+  }
+
+  // Door doesn't have an associated item, so it must be accessible through
+  // other means (e.g., solving panels, access requirements).
+  // For doors without items, we assume they're always accessible.
+  // TODO: Implement proper access requirements checking for doors without items
   return true;
 }
 
