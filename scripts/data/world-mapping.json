@@ -322,9 +322,9 @@
     "world_directory": "oot"
   },
   "Old School Runescape": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/osrs.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "osrs"
   },

@@ -679,6 +679,12 @@ class ASTVisitorMixin:
                 elif hasattr(value, 'value') and isinstance(value.value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to enum constant value: {value.value}")
                     return {'type': 'constant', 'value': value.value}
+                # Handle Region objects by extracting their .name attribute
+                # We specifically check for 'entrances' attribute which Region objects have
+                # but Location objects don't, to avoid breaking Location.can_reach() patterns
+                elif hasattr(value, 'name') and hasattr(value, 'entrances') and isinstance(value.name, str):
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to Region name: {value.name}")
+                    return {'type': 'constant', 'value': value.name}
                 # Handle NamedTuples (like RoomAndDoor) by converting to list/dict
                 elif hasattr(value, '_fields'):
                     # This is a NamedTuple - convert to a serializable format
@@ -699,6 +705,11 @@ class ASTVisitorMixin:
                     elif hasattr(resolved_value, 'value') and isinstance(resolved_value.value, (int, float, str, bool)):
                         logging.debug(f"visit_Name: Resolved '{name}' from function defaults to enum constant value: {resolved_value.value}")
                         return {'type': 'constant', 'value': resolved_value.value}
+                    # Handle Region objects by extracting their .name attribute
+                    # Check for 'entrances' to distinguish Region from Location objects
+                    elif hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances') and isinstance(resolved_value.name, str):
+                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults to Region name: {resolved_value.name}")
+                        return {'type': 'constant', 'value': resolved_value.name}
                     # Handle NamedTuples from function defaults
                     elif hasattr(resolved_value, '_fields'):
                         serialized = list(resolved_value)
