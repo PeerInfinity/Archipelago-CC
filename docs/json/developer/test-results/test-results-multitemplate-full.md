@@ -4,23 +4,23 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-12 21:07:11
+**Generated:** 2025-11-13 00:52:50
 
 **Source Data Created:** 2025-11-12T05:21:21.688007
 
-**Source Data Last Updated:** 2025-11-12T21:07:11.771182
+**Source Data Last Updated:** 2025-11-13T00:52:50.600054
 
 ## Summary
 
 - **Total Games:** 1
-- **Total Template Configurations:** 174
-- **Passed Configurations:** 115 (66.1%)
-- **Failed Configurations:** 55 (31.6%)
-- **Invalid Configurations:** 4 (2.3%)
+- **Total Template Configurations:** 41
+- **Passed Configurations:** 27 (65.9%)
+- **Failed Configurations:** 12 (29.3%)
+- **Invalid Configurations:** 2 (4.9%)
 
 ## A Link to the Past
 
-**Results:** 115/174 passed (66.1%)  
+**Results:** 27/41 passed (65.9%)  
 **Custom Exporter:** ✅ Yes | **Custom GameLogic:** ✅ Yes
 
 | Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |
@@ -32,173 +32,40 @@
 | allow_collect_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | beemizer | ❌ Generation Failed | 7 | 0 | 0 | N/A |
 | big_key_shuffle_any_world | ✅ Passed | 0 | 38.1 | 38.1 | 100.0% |
-| big_key_shuffle_different_world | ❌ Failed | 0 | 36.11 | 38.1 | 94.8% |
+| big_key_shuffle_different_world | ✅ Passed | 0 | 38.1 | 38.1 | 100.0% |
 | big_key_shuffle_original_dungeon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | big_key_shuffle_own_dungeons | ⚫ Invalid | 3 | 0 | 0 | N/A |
-| big_key_shuffle_own_world | ✅ Passed | 0 | 38.1 | 38.1 | 100.0% |
+| big_key_shuffle_own_world | ❌ Failed | 0 | 36.3 | 38.1 | 95.3% |
 | big_key_shuffle_start_with | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
-| bombless_start_false | ❌ Failed | 0 | 20.9 | 22.1 | 94.6% |
+| bombless_start_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | bombless_start_true | ❌ Failed | 0 | 0 | 31.1 | 0.0% |
 | boss_chaos | ❌ Failed | 0 | 0 | 18.1 | 0.0% |
 | boss_shuffle_basic | ✅ Passed | 0 | 23.1 | 23.1 | 100.0% |
 | boss_shuffle_chaos | ✅ Passed | 0 | 19.3 | 19.3 | 100.0% |
-| boss_shuffle_full | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| boss_shuffle_full | ❌ Failed | 0 | 20.7 | 22.1 | 93.7% |
 | boss_shuffle_none | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| boss_shuffle_singularity | ❌ Failed | 0 | 25.8 | 27.2 | 94.9% |
+| boss_shuffle_singularity | ✅ Passed | 0 | 27.2 | 27.2 | 100.0% |
 | bush_shuffle_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | bush_shuffle_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| compass_shuffle_any_world | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| compass_shuffle_any_world | ❌ Failed | 0 | 19.3 | 22.1 | 87.3% |
 | compass_shuffle_different_world | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | compass_shuffle_original_dungeon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| compass_shuffle_own_dungeons | ❌ Failed | 0 | 16.8 | 18.1 | 92.8% |
-| compass_shuffle_own_world | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| compass_shuffle_start_with | ❌ Failed | 0 | 18.9 | 20.1 | 94.0% |
-| dark_room_logic_lamp | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| dark_room_logic_none | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| dark_room_logic_torches | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| compass_shuffle_own_dungeons | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
+| compass_shuffle_own_world | ❌ Failed | 0 | 18.7 | 22.1 | 84.6% |
+| compass_shuffle_start_with | ✅ Passed | 0 | 20.1 | 20.1 | 100.0% |
+| dark_room_logic_lamp | ❌ Failed | 0 | 19.9 | 22.1 | 90.0% |
+| dark_room_logic_none | ❌ Failed | 0 | 20.7 | 22.1 | 93.7% |
+| dark_room_logic_torches | ❌ Failed | 0 | 20.7 | 22.1 | 93.7% |
 | death_link_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | death_link_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| dungeon_counters_default | ❌ Failed | 0 | 20.6 | 22.1 | 93.2% |
+| dungeon_counters_default | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | dungeon_counters_off | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | dungeon_counters_on | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | dungeon_counters_pickup | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| enemy_damage_chaos | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| enemy_damage_chaos | ❌ Failed | 0 | 20.6 | 22.1 | 93.2% |
 | enemy_damage_default | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| enemy_damage_shuffled | ❌ Failed | 0 | 20.4 | 22.1 | 92.3% |
-| enemy_health_default | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| enemy_health_easy | ❌ Failed | 0 | 20.5 | 22.1 | 92.8% |
-| enemy_health_expert | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| enemy_health_hard | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| enemy_shuffle_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| enemy_shuffle_true | ❌ Failed | 0 | 0 | 24.1 | 0.0% |
-| entrance_shuffle_crossed | ❌ Failed | 0 | 0 | 16.2 | 0.0% |
-| entrance_shuffle_dungeons_crossed | ❌ Failed | 0 | 0 | 27.1 | 0.0% |
-| entrance_shuffle_dungeons_full | ❌ Failed | 0 | 0 | 20.2 | 0.0% |
-| entrance_shuffle_dungeons_simple | ✅ Passed | 0 | 25.3 | 25.3 | 100.0% |
-| entrance_shuffle_full | ❌ Failed | 0 | 0 | 23.7 | 0.0% |
-| entrance_shuffle_insanity | ❌ Failed | 0 | 0 | 18.5 | 0.0% |
-| entrance_shuffle_restricted | ✅ Passed | 0 | 34.3 | 34.3 | 100.0% |
-| entrance_shuffle_simple | ❌ Failed | 0 | 25.9 | 29.3 | 88.4% |
-| entrance_shuffle_vanilla | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| expert_mode | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| fully_randomized | ❌ Failed | 0 | 0 | 14.3 | 0.0% |
-| glitch_boots_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| glitch_boots_true | ❌ Failed | 0 | 19.9 | 22.1 | 90.0% |
-| glitched_logic | ❌ Failed | 0 | 0 | 15.1 | 0.0% |
-| glitches_required_hybrid_major_glitches | ❌ Failed | 0 | 0 | 14.1 | 0.0% |
-| glitches_required_minor_glitches | ❌ Failed | 0 | 0.8 | 22.1 | 3.6% |
-| glitches_required_no_glitches | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| glitches_required_no_logic | ✅ Passed | 0 | 0.268 | 0.268 | 100.0% |
-| glitches_required_overworld_glitches | ❌ Failed | 0 | 0 | 14.1 | 0.0% |
-| goal_bosses | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| goal_crystals | ❌ Failed | 0 | 6.1 | 21.5 | 28.4% |
-| goal_ganon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| goal_ganon_pedestal | ❌ Failed | 0 | 6.1 | 21.5 | 28.4% |
-| goal_ganon_triforce_hunt | ❌ Failed | 0 | 1.14 | 17.3 | 6.6% |
-| goal_local_ganon_triforce_hunt | ❌ Failed | 0 | 1.14 | 17.3 | 6.6% |
-| goal_local_triforce_hunt | ❌ Failed | 0 | 16.2 | 18.1 | 89.5% |
-| goal_pedestal | ✅ Passed | 0 | 26.1 | 26.1 | 100.0% |
-| goal_triforce_hunt | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
-| hard_mode | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| hints_full | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| hints_off | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| hints_on | ❌ Failed | 0 | 19.8 | 22.1 | 89.6% |
-| include_witch_hut_false | ❌ Failed | 0 | 20.7 | 22.1 | 93.7% |
-| include_witch_hut_true | ❌ Failed | 0 | 20.8 | 22.1 | 94.1% |
-| item_functionality_easy | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| item_functionality_expert | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| item_functionality_hard | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| item_functionality_normal | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| item_pool_easy | ❌ Failed | 0 | 18.8 | 20.3 | 92.6% |
-| item_pool_expert | ❌ Failed | 0 | 20.6 | 22.1 | 93.2% |
-| item_pool_hard | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| item_pool_normal | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| key_drop_shuffle_false | ✅ Passed | 0 | 26.1 | 26.1 | 100.0% |
-| key_drop_shuffle_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| key_shuffle_extreme | ✅ Passed | 0 | 21.4 | 21.4 | 100.0% |
-| killable_thieves_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| killable_thieves_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| map_shuffle_any_world | ❌ Failed | 0 | 14.8 | 17.1 | 86.5% |
-| map_shuffle_different_world | ✅ Passed | 0 | 17.1 | 17.1 | 100.0% |
-| map_shuffle_original_dungeon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| map_shuffle_own_dungeons | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
-| map_shuffle_own_world | ✅ Passed | 0 | 17.1 | 17.1 | 100.0% |
-| map_shuffle_start_with | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
-| minimal_access | ⚫ Invalid | 3 | 0 | 0 | N/A |
-| misery_mire_medallion_bombos | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| misery_mire_medallion_ether | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| misery_mire_medallion_quake | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| mode_inverted | ❌ Failed | 0 | 9.1 | 26.1 | 34.9% |
-| mode_open | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| mode_standard | ✅ Passed | 0 | 27.1 | 27.1 | 100.0% |
-| open_inverted | ❌ Failed | 0 | 3.2 | 26.2 | 12.2% |
-| open_pyramid_auto | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| open_pyramid_closed | ❌ Failed | 0 | 20.1 | 22.1 | 91.0% |
-| open_pyramid_goal | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| open_pyramid_open | ❌ Failed | 0 | 6.1 | 22.1 | 27.6% |
-| pot_shuffle_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| pot_shuffle_true | ❌ Failed | 0 | 18.9 | 22.1 | 85.5% |
-| progression_balancing_disabled | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| progression_balancing_extreme | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| progression_balancing_normal | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| progressive_grouped_random | ✅ Passed | 0 | 24.1 | 24.1 | 100.0% |
-| progressive_off | ✅ Passed | 0 | 28.1 | 28.1 | 100.0% |
-| progressive_on | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| randomize_cost_types_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| randomize_cost_types_true | ✅ Passed | 0 | 18.1 | 18.1 | 100.0% |
-| randomize_shop_inventories_default | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| randomize_shop_inventories_randomize_by_shop_type | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| randomize_shop_inventories_randomize_each | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| randomize_shop_prices_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| randomize_shop_prices_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| restrict_dungeon_item_on_boss_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| restrict_dungeon_item_on_boss_true | ❌ Failed | 0 | 28.1 | 30.1 | 93.4% |
-| retro_bow_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| retro_bow_true | ❌ Failed | 0 | 0 | 16.1 | 0.0% |
-| retro_caves_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| retro_caves_true | ✅ Passed | 0 | 28.1 | 28.1 | 100.0% |
-| retro_mode | ❌ Failed | 0 | 0 | 26.2 | 0.0% |
-| scams_all | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| scams_bottle_merchant | ❌ Failed | 0 | 20.5 | 22.1 | 92.8% |
-| scams_king_zora | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| scams_off | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| shop_randomizer | ❌ Generation Failed | 7 | 0 | 0 | N/A |
-| shuffle_capacity_upgrades_off | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| shuffle_capacity_upgrades_on | ❌ Failed | 0 | 0.3 | 20.2 | 1.5% |
-| shuffle_capacity_upgrades_on_combined | ❌ Failed | 0 | 9.13 | 24.1 | 37.9% |
-| shuffle_prizes_bonk | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| shuffle_prizes_both | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| shuffle_prizes_general | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| shuffle_prizes_off | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| shuffle_shop_inventories_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| shuffle_shop_inventories_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| shuffled_everything | ❌ Failed | 0 | 0 | 13.2 | 0.0% |
-| small_key_shuffle_any_world | ✅ Passed | 0 | 19.2 | 19.2 | 100.0% |
-| small_key_shuffle_different_world | ✅ Passed | 0 | 19.2 | 19.2 | 100.0% |
-| small_key_shuffle_original_dungeon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| small_key_shuffle_own_dungeons | ⚫ Invalid | 3 | 0 | 0 | N/A |
-| small_key_shuffle_own_world | ✅ Passed | 0 | 19.2 | 19.2 | 100.0% |
-| small_key_shuffle_start_with | ✅ Passed | 0 | 12.1 | 12.1 | 100.0% |
-| small_key_shuffle_universal | ❌ Failed | 0 | 0 | 10.1 | 0.0% |
-| swordless_challenge | ❌ Failed | 0 | 0 | 20.1 | 0.0% |
-| swordless_false | ❌ Failed | 0 | 19.8 | 22.1 | 89.6% |
-| swordless_true | ❌ Failed | 0 | 0 | 18.1 | 0.0% |
-| tile_shuffle_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| tile_shuffle_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| timer_challenge | ❌ Generation Failed | 7 | 0 | 0 | N/A |
-| timer_display | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| timer_none | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| timer_ohko | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| timer_timed | ✅ Passed | 0 | 34.2 | 34.2 | 100.0% |
-| timer_timed_countdown | ❌ Failed | 0 | 34.2 | 34.2 | 100.0% |
-| timer_timed_ohko | ✅ Passed | 0 | 33.1 | 33.1 | 100.0% |
-| triforce_hunt_easy | ❌ Generation Failed | 7 | 0 | 0 | N/A |
-| triforce_pieces_mode_available | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| triforce_pieces_mode_extra | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| triforce_pieces_mode_percentage | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| turtle_rock_medallion_bombos | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| turtle_rock_medallion_ether | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| turtle_rock_medallion_quake | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| enemy_damage_shuffled | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| enemy_health_default | ❌ Failed | 0 | 20.2 | 22.1 | 91.4% |
 
 ## Notes
 

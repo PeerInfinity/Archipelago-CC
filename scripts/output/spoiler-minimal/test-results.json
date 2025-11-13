@@ -4,7 +4,7 @@
     "batch_processing_time_minutes": 65.4,
     "batch_processing_time_seconds": 3922.8,
     "created": "2025-10-14T13:24:10.253834",
-    "last_updated": "2025-11-12T20:35:04.160469",
+    "last_updated": "2025-11-13T00:28:44.696141",
     "script_version": "1.0.0"
   },
   "results": {
@@ -10580,7 +10580,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.8,
+            "processing_time_seconds": 2.83,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -10595,7 +10595,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.86,
+            "processing_time_seconds": 7.68,
             "return_code": 0,
             "sphere_reached": 24.1,
             "success": true,
@@ -10603,7 +10603,7 @@
             "warning_count": 0
           },
           "template_name": "Heretic.yaml",
-          "timestamp": "2025-11-12T20:33:26.177122",
+          "timestamp": "2025-11-13T00:27:07.728407",
           "world_info": {
             "exporter_path": null,
             "game_logic_path": null,
@@ -10624,7 +10624,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.67,
+            "processing_time_seconds": 2.6,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -10639,7 +10639,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.81,
+            "processing_time_seconds": 6.8,
             "return_code": 0,
             "sphere_reached": 23.1,
             "success": true,
@@ -10647,7 +10647,7 @@
             "warning_count": 0
           },
           "template_name": "Heretic.yaml",
-          "timestamp": "2025-11-12T20:34:54.522483",
+          "timestamp": "2025-11-13T00:28:35.150007",
           "world_info": {
             "exporter_path": null,
             "game_logic_path": null,
@@ -10668,7 +10668,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.83,
+            "processing_time_seconds": 2.8,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -10691,7 +10691,7 @@
             "warning_count": 0
           },
           "template_name": "Heretic.yaml",
-          "timestamp": "2025-11-12T20:33:36.002148",
+          "timestamp": "2025-11-13T00:27:18.410833",
           "world_info": {
             "exporter_path": null,
             "game_logic_path": null,
@@ -10712,7 +10712,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.85,
+            "processing_time_seconds": 2.77,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -10727,7 +10727,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.91,
+            "processing_time_seconds": 6.81,
             "return_code": 0,
             "sphere_reached": 25.1,
             "success": true,
@@ -10735,7 +10735,7 @@
             "warning_count": 0
           },
           "template_name": "Heretic.yaml",
-          "timestamp": "2025-11-12T20:33:45.865003",
+          "timestamp": "2025-11-13T00:27:28.241079",
           "world_info": {
             "exporter_path": null,
             "game_logic_path": null,
@@ -10756,7 +10756,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.78,
+            "processing_time_seconds": 2.6,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -10771,7 +10771,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.86,
+            "processing_time_seconds": 6.77,
             "return_code": 0,
             "sphere_reached": 28.1,
             "success": true,
@@ -10779,7 +10779,7 @@
             "warning_count": 0
           },
           "template_name": "Heretic.yaml",
-          "timestamp": "2025-11-12T20:33:55.787453",
+          "timestamp": "2025-11-13T00:27:37.981121",
           "world_info": {
             "exporter_path": null,
             "game_logic_path": null,
@@ -10800,7 +10800,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.81,
+            "processing_time_seconds": 2.6,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -10815,7 +10815,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.86,
+            "processing_time_seconds": 6.76,
             "return_code": 0,
             "sphere_reached": 29.1,
             "success": true,
@@ -10823,7 +10823,7 @@
             "warning_count": 0
           },
           "template_name": "Heretic.yaml",
-          "timestamp": "2025-11-12T20:34:05.591476",
+          "timestamp": "2025-11-13T00:27:47.514194",
           "world_info": {
             "exporter_path": null,
             "game_logic_path": null,
@@ -10844,7 +10844,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.75,
+            "processing_time_seconds": 2.57,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -10859,7 +10859,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.87,
+            "processing_time_seconds": 6.76,
             "return_code": 0,
             "sphere_reached": 21.5,
             "success": true,
@@ -10867,7 +10867,7 @@
             "warning_count": 0
           },
           "template_name": "Heretic.yaml",
-          "timestamp": "2025-11-12T20:34:15.423490",
+          "timestamp": "2025-11-13T00:27:57.045477",
           "world_info": {
             "exporter_path": null,
             "game_logic_path": null,
@@ -10888,7 +10888,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.88,
+            "processing_time_seconds": 2.61,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -10903,7 +10903,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.88,
+            "processing_time_seconds": 6.76,
             "return_code": 0,
             "sphere_reached": 24.5,
             "success": true,
@@ -10911,7 +10911,7 @@
             "warning_count": 0
           },
           "template_name": "Heretic.yaml",
-          "timestamp": "2025-11-12T20:34:25.216828",
+          "timestamp": "2025-11-13T00:28:06.546106",
           "world_info": {
             "exporter_path": null,
             "game_logic_path": null,
@@ -10932,7 +10932,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.75,
+            "processing_time_seconds": 2.59,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -10947,7 +10947,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.82,
+            "processing_time_seconds": 6.77,
             "return_code": 0,
             "sphere_reached": 23.1,
             "success": true,
@@ -10955,7 +10955,7 @@
             "warning_count": 0
           },
           "template_name": "Heretic.yaml",
-          "timestamp": "2025-11-12T20:34:35.142606",
+          "timestamp": "2025-11-13T00:28:16.076273",
           "world_info": {
             "exporter_path": null,
             "game_logic_path": null,
@@ -10976,7 +10976,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 2.69,
+            "processing_time_seconds": 2.6,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -10991,7 +10991,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 6.79,
+            "processing_time_seconds": 6.78,
             "return_code": 0,
             "sphere_reached": 27.2,
             "success": true,
@@ -10999,7 +10999,7 @@
             "warning_count": 0
           },
           "template_name": "Heretic.yaml",
-          "timestamp": "2025-11-12T20:34:44.883193",
+          "timestamp": "2025-11-13T00:28:25.605309",
           "world_info": {
             "exporter_path": null,
             "game_logic_path": null,
@@ -11021,7 +11021,7 @@
         "failure_rate": 0.0
       },
       "template_name": "Heretic.yaml",
-      "timestamp": "2025-11-12T20:33:26.161773",
+      "timestamp": "2025-11-13T00:27:07.704076",
       "total_seeds_tested": 10
     },
     "Hollow Knight.yaml": {

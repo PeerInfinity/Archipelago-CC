@@ -4,21 +4,21 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-12 22:16:50
+**Generated:** 2025-11-13 00:52:10
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 15 (19.0%)
-- **Failed:** 9 (11.4%)
-- **Skipped (Prerequisites):** 55 (69.6%)
+- **Passed:** 14 (17.7%)
+- **Failed:** 7 (8.9%)
+- **Skipped (Prerequisites):** 58 (73.4%)
 
 ## Test Results
 
 | Game Name | Test Result | Player # | Total Players | Players Passed | Players Failed | Custom Exporter | Custom GameLogic |
 |-----------|-------------|----------|---------------|----------------|----------------|-----------------|------------------|
 | A Hat in Time | ✅ Passed | 1 | 1 | 1 | 0 | ✅ | ✅ |
-| A Link to the Past | ❌ Failed | 2 | 2 | 0 | 1 | ✅ | ✅ |
+| A Link to the Past | ⚫ Skipped | 2 | 2 | 0 | 1 | ✅ | ✅ |
 | A Short Hike | ✅ Passed | 2 | 2 | 1 | 0 | ✅ | ⚫ |
 | Adventure | ✅ Passed | 3 | 3 | 1 | 0 | ✅ | ⚫ |
 | Aquaria | ✅ Passed | 4 | 4 | 1 | 0 | ✅ | ✅ |
@@ -26,17 +26,17 @@
 | Blasphemous | ⚫ Skipped | 6 | 6 | 1 | 0 | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ⚫ Skipped | 7 | 7 | 1 | 0 | ✅ | ⚫ |
 | Bumper Stickers | ✅ Passed | 8 | 8 | 1 | 0 | ✅ | ⚫ |
-| Castlevania - Circle of the Moon | ❌ Failed | 9 | 9 | 0 | 1 | ✅ | ✅ |
-| Castlevania 64 | ✅ Passed | 9 | 9 | 1 | 0 | ✅ | ⚫ |
+| Castlevania - Circle of the Moon | ⚫ Skipped | 9 | 9 | 0 | 1 | ✅ | ✅ |
+| Castlevania 64 | ⚫ Skipped | 9 | 9 | 1 | 0 | ✅ | ⚫ |
 | Celeste 64 | ❌ Failed | 10 | 10 | 0 | 1 | ✅ | ✅ |
 | ChecksFinder | ✅ Passed | 10 | 10 | 1 | 0 | ✅ | ⚫ |
 | ChocolateChipCookies | ✅ Passed | 11 | 11 | 1 | 0 | ✅ | ⚫ |
 | Civilization VI | ❌ Failed | 12 | 12 | 0 | 1 | ✅ | ⚫ |
 | DLCQuest | ⚫ Skipped | 12 | 12 | 0 | 1 | ✅ | ✅ |
-| DOOM 1993 | ✅ Passed | 12 | 12 | 1 | 0 | ✅ | ⚫ |
+| DOOM 1993 | ⚫ Skipped | 12 | 12 | 1 | 0 | ✅ | ⚫ |
 | DOOM II | ❌ Failed | 13 | 13 | 0 | 1 | ✅ | ⚫ |
 | Dark Souls III | ⚫ Skipped | 13 | 13 | 0 | 1 | ✅ | ⚫ |
-| Donkey Kong Country 3 | ⚫ Skipped | 13 | 13 | 0 | 1 | ✅ | ⚫ |
+| Donkey Kong Country 3 | ✅ Passed | 13 | 13 | 1 | 0 | ✅ | ⚫ |
 | Factorio | ⚫ Skipped | 13 | 13 | 0 | 1 | ✅ | ⚫ |
 | Faxanadu | ✅ Passed | 13 | 13 | 1 | 0 | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ⚫ Skipped | 14 | 14 | 0 | 1 | ✅ | ⚫ |

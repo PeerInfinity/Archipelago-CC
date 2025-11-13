@@ -4,11 +4,11 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-12 21:09:35
+**Generated:** 2025-11-13 00:35:20
 
 **Source Data Created:** 2025-10-14T13:23:48.314334
 
-**Source Data Last Updated:** 2025-11-12T21:09:35.611728
+**Source Data Last Updated:** 2025-11-13T00:35:20.212923
 
 ## Summary
 
@@ -43,7 +43,7 @@
 | Factorio | ❌ Failed seed 1 | 0 | 0.1 | 12.1 | 🟠 0.8% | ✅ | ⚫ |
 | Faxanadu | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed seeds 1-10 | 0 | 19.6 | 19.6 | 🟢 Complete | ✅ | ⚫ |
-| Heretic | ❌ Failed seed 1 | 0 | 15.12 | 24.4 | 🟡 62.0% | ⚫ | ⚫ |
+| Heretic | ❌ Failed seed 3 | 0 | 19.12 | 25.5 | 🟡 75.0% | ⚫ | ⚫ |
 | Hollow Knight | ✅ Passed seeds 1-10 | 0 | 70.1 | 70.1 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ✅ | ⚫ |
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 10.2 | 10.2 | 🟢 Complete | ✅ | ✅ |
