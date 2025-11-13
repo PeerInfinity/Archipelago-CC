@@ -391,11 +391,21 @@ export function createInventoryInstance(sm, gameName) {
   const canonicalInventory = {};
 
   if (sm.itemData) {
+    let count = 0;
+    console.log(`[createInventoryInstance] itemData has ${Object.keys(sm.itemData).length} items`);
+    console.log(`[createInventoryInstance] First 10 keys:`, Object.keys(sm.itemData).slice(0, 10));
+
     for (const itemName in sm.itemData) {
       if (Object.hasOwn(sm.itemData, itemName)) {
         canonicalInventory[itemName] = 0;
+        count++;
       }
     }
+
+    console.log(`[createInventoryInstance] Added ${count} items to inventory`);
+    console.log(`[createInventoryInstance] Inventory has ${Object.keys(canonicalInventory).length} items`);
+  } else {
+    console.log(`[createInventoryInstance] itemData is null or undefined`);
   }
 
   return canonicalInventory;

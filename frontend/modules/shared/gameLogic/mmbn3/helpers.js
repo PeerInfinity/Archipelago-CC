@@ -10,7 +10,26 @@
  * @returns {boolean} True if player has the item
  */
 export function has(snapshot, staticData, itemName) {
-    return !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
+    const hasItem = !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
+
+    // Debug logging for "Recov30 *" specifically
+    if (itemName === "Recov30 *") {
+        console.log(`[mmbn3 has()] Checking for "${itemName}"`);
+        console.log(`[mmbn3 has()] Inventory exists: ${!!snapshot?.inventory}`);
+        if (snapshot?.inventory) {
+            const invKeys = Object.keys(snapshot.inventory);
+            console.log(`[mmbn3 has()] Inventory has ${invKeys.length} keys`);
+            console.log(`[mmbn3 has()] First 10 keys:`, invKeys.slice(0, 10));
+            console.log(`[mmbn3 has()] Last 10 keys:`, invKeys.slice(-10));
+            console.log(`[mmbn3 has()] Inventory constructor:`, snapshot.inventory.constructor.name);
+            console.log(`[mmbn3 has()] Checking if "Recov30 *" in inventory:`, itemName in snapshot.inventory);
+            console.log(`[mmbn3 has()] hasOwnProperty check:`, snapshot.inventory.hasOwnProperty(itemName));
+        }
+        console.log(`[mmbn3 has()] Item count: ${snapshot?.inventory?.[itemName]}`);
+        console.log(`[mmbn3 has()] Result: ${hasItem}`);
+    }
+
+    return hasItem;
 }
 
 /**

@@ -96,8 +96,19 @@ export function getSnapshot(sm) {
   // 1. Inventory
   let inventorySnapshot = {};
   if (sm.inventory) {
+    // Debug logging for mmbn3
+    if (sm.rules?.game_name === 'MegaMan Battle Network 3') {
+      console.log(`[getSnapshot] sm.inventory has ${Object.keys(sm.inventory).length} items`);
+      console.log(`[getSnapshot] First 10 items:`, Object.keys(sm.inventory).slice(0, 10));
+    }
+
     // In canonical format, inventory is already a plain object with all items
     inventorySnapshot = { ...sm.inventory };
+
+    if (sm.rules?.game_name === 'MegaMan Battle Network 3') {
+      console.log(`[getSnapshot] inventorySnapshot has ${Object.keys(inventorySnapshot).length} items`);
+      console.log(`[getSnapshot] inventorySnapshot contains "Recov30 *": ${('Recov30 *' in inventorySnapshot)}`);
+    }
   } else {
     log(
       'warn',
@@ -781,6 +792,11 @@ export function applyRuntimeState(sm, payload) {
 
   // 7. Process JSON Export Format (inventory object + checkedLocations array)
   if (payload.inventory && typeof payload.inventory === 'object') {
+    console.log(`[applyRuntimeState] REPLACING INVENTORY!`);
+    console.log(`[applyRuntimeState] BEFORE: sm.inventory has ${Object.keys(sm.inventory || {}).length} items`);
+    console.log(`[applyRuntimeState] payload.inventory has ${Object.keys(payload.inventory).length} items`);
+    console.log(`[applyRuntimeState] payload.inventory keys:`, Object.keys(payload.inventory));
+
     sm._logDebug(
       '[StateManager applyRuntimeState] Processing JSON export format - inventory object'
     );
@@ -810,6 +826,7 @@ export function applyRuntimeState(sm, payload) {
       sm._logDebug(
         `[StateManager applyRuntimeState] Applied ${Object.keys(payload.inventory).length} inventory items from JSON format`
       );
+      console.log(`[applyRuntimeState] AFTER: sm.inventory has ${Object.keys(sm.inventory).length} items with non-zero counts`);
     }
   }
 
@@ -849,6 +866,9 @@ export function applyRuntimeState(sm, payload) {
  * @param {boolean} options.recomputeAndSendUpdate - Whether to recompute and send snapshot (default: true)
  */
 export function clearState(sm, options = { recomputeAndSendUpdate: true }) {
+  console.log(`[clearState] BEFORE: inventory has ${Object.keys(sm.inventory || {}).length} items`);
+  console.log(`[clearState] BEFORE: itemData has ${Object.keys(sm.itemData || {}).length} items`);
+
   // Re-initialize inventory - canonical format: reset all items to 0
   if (sm.inventory) {
     // First, clear all items currently in inventory (including unknown/event items)
@@ -858,13 +878,21 @@ export function clearState(sm, options = { recomputeAndSendUpdate: true }) {
       }
     }
 
+    console.log(`[clearState] AFTER clearing existing items: inventory has ${Object.keys(sm.inventory).length} items`);
+
     // Also ensure all items in itemData are set to 0 (in case they weren't in inventory yet)
     if (sm.itemData) {
+      let addedCount = 0;
       for (const itemName in sm.itemData) {
         if (Object.hasOwn(sm.itemData, itemName)) {
+          if (!(itemName in sm.inventory)) {
+            addedCount++;
+          }
           sm.inventory[itemName] = 0;
         }
       }
+      console.log(`[clearState] Added ${addedCount} new items from itemData`);
+      console.log(`[clearState] AFTER adding from itemData: inventory has ${Object.keys(sm.inventory).length} items`);
     }
 
     // Also ensure virtual progression items are cleared
