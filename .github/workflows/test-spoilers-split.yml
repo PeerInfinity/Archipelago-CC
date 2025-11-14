@@ -163,7 +163,7 @@ jobs:
 
             # Merge main into test-results-update to stay synchronized
             echo "Merging main into test-results-update..."
-            git merge origin/main --no-edit -m "Merge main into test-results-update before updating test results"
+            git merge origin/main --allow-unrelated-histories --no-edit -m "Merge main into test-results-update before updating test results"
           else
             echo "Creating new branch test-results-update from main"
             git checkout -b test-results-update origin/main
