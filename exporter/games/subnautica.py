@@ -74,6 +74,14 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
             'room',  # Used in "Repair Aurora Drive" location
         }
 
+    def should_preserve_as_helper(self, func_name: str) -> bool:
+        """Check if a function should be preserved as a helper call instead of being inlined.
+
+        This prevents the analyzer from recursively analyzing and inlining the function body,
+        which would cause local variables to be incorrectly exported as name references.
+        """
+        return func_name in self.known_helpers
+
     def expand_rule(self, rule):
         """Override to prevent automatic expansion of helpers to capability rules.
 
