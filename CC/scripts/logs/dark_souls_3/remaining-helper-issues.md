@@ -1,41 +1,33 @@
 # Remaining Helper Issues
 
-## Issue 1: _can_get Helper Implementation Incorrect
+## Issue 1: Additional regions not accessible due to _can_get usage
 
 **Error Message:**
 ```
-REGION MISMATCH found for: {"type":"state_update","sphere_number":"0.4","player_id":"1"}
-> Regions accessible in LOG but NOT in STATE: Undead Settlement
+REGION MISMATCH found for: {"type":"state_update","sphere_number":"2.11","player_id":"1"}
+> Regions accessible in LOG but NOT in STATE: Catacombs of Carthus, Irithyll of the Boreal Valley, Smouldering Lake
 ```
 
 **Description:**
-The `_can_get` helper has been added and is now recognized, but it's not working correctly. The current implementation checks if a location is in the `accessibleLocations` array, but this doesn't work for entrance rules because we're evaluating the entrance rule BEFORE the location has been added to accessible locations.
+The `_can_get` helper has been successfully implemented and now works for basic cases. Undead Settlement is now accessible, and the test progresses from Sphere 0.4 to Sphere 2.11. However, there are still three regions that aren't becoming accessible:
+- Catacombs of Carthus
+- Irithyll of the Boreal Valley
+- Smouldering Lake
 
-The entrance to Undead Settlement requires:
-```json
-{
-  "type": "and",
-  "conditions": [
-    { "type": "item_check", "item": "Small Lothric Banner" },
-    { "type": "helper", "name": "_can_get", "args": ["HWL: Soul of Boreal Valley Vordt"] }
-  ]
-}
-```
+These likely use `_can_get` in their entrance rules as well.
 
-The `_can_get` helper needs to check if the location's access rule evaluates to true given the current state, NOT just check if it's already in the accessible locations list.
+**Progress:**
+- ✅ `_can_get` helper is recognized
+- ✅ Undead Settlement is now accessible (test progresses to Sphere 2.11)
+- ✅ Test now passes through 31 steps (previously failed at step 5)
+- ⏳ Need to investigate why these three regions aren't accessible
 
-**Impact:**
-- Region "Undead Settlement" is not reachable
-- Test fails at Sphere 0.4
-- REGION MISMATCH: Regions accessible in LOG but NOT in STATE
-
-**Priority:** Critical
+**Priority:** High
 
 **Status:** In progress
 
-**Potential Solution:**
-The `_can_get` helper should:
-1. Find the location in staticData
-2. Evaluate the location's access_rule using the current snapshot
-3. Return true if the access rule evaluates to true
+**Next Steps:**
+1. Check the entrance rules for these three regions in rules.json
+2. Verify which boss soul locations they depend on
+3. Ensure those locations are being properly evaluated by `_can_get`
 
