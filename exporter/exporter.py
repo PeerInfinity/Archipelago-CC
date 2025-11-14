@@ -127,6 +127,15 @@ def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, An
         if rule.get('if_false') is not None:
             rule['if_false'] = resolve_attribute_nodes_in_rule(rule.get('if_false'), world)
 
+        # Eliminate constant conditionals after resolving attributes
+        test = rule.get('test')
+        if test and test.get('type') == 'constant':
+            test_value = test.get('value')
+            if test_value:  # Truthy - return if_true branch
+                return rule.get('if_true')
+            else:  # Falsy - return if_false branch
+                return rule.get('if_false')
+
     # Process compare rules
     if rule.get('type') == 'compare':
         if rule.get('left'):
@@ -725,7 +734,8 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 closure_vars['world'] = world
 
             # Directly call analyze_rule, which handles recursion internally for combined rules
-            analysis_result = analyze_rule(rule_func=rule_func, closure_vars=closure_vars, game_handler=game_handler, player_context=player)
+            context_info = f"{target_type} '{rule_target_name or 'unknown'}'"
+            analysis_result = analyze_rule(rule_func=rule_func, closure_vars=closure_vars, game_handler=game_handler, player_context=player, context_info=context_info)
             
             if analysis_result and analysis_result.get('type') != 'error':
 

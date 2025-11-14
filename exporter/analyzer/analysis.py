@@ -21,7 +21,8 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                  seen_funcs: Optional[Dict[int, int]] = None,
                  ast_node: Optional[ast.AST] = None,
                  game_handler=None,
-                 player_context: Optional[int] = None) -> Dict[str, Any]:
+                 player_context: Optional[int] = None,
+                 context_info: Optional[str] = None) -> Dict[str, Any]:
     """
     Analyzes a rule function or an AST node representing a rule.
 
@@ -207,10 +208,11 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
             final_result = error_result
         elif analysis_result is None:
             # If no errors but result is still None, it means analysis didn't produce a rule structure
-            logging.warning("Analysis finished without errors but produced no result (None).")
+            context_str = f" for {context_info}" if context_info else ""
+            logging.warning(f"Analysis finished without errors but produced no result (None){context_str}.")
             final_result = {
                 'type': 'error',
-                'message': 'Analysis did not produce a result structure (returned None).',
+                'message': f'Analysis did not produce a result structure (returned None){context_str}.',
                 'subtype': 'no_result',
                 'debug_log': analyzer.debug_log,
                 'error_log': analyzer.error_log

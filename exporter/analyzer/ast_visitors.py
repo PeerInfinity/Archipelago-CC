@@ -36,14 +36,15 @@ class ASTVisitorMixin:
         try:
             logging.debug(f"\n--- Starting Module Analysis ---")
             logging.debug(f"Module body length: {len(node.body)}")
-            
+
             # Detailed module body inspection
             for i, body_node in enumerate(node.body):
                 logging.debug(f"Module body node {i}: {type(body_node).__name__}")
-                
+
             # Visit first node in module body if exists and return its result
             if node.body:
                 return self.visit(node.body[0])
+            logging.warning(f"visit_Module: Empty module body, returning None")
             return None # Return None if no body
         except Exception as e:
             logging.error("Error in visit_Module", e)
@@ -68,10 +69,16 @@ class ASTVisitorMixin:
                 logging.debug("Skipping docstring in function body")
                 body_to_analyze = body_to_analyze[1:]
 
+            # Skip variable assignments (Assign, AnnAssign) and look for control flow or return
+            while body_to_analyze and isinstance(body_to_analyze[0], (ast.Assign, ast.AnnAssign)):
+                logging.debug(f"Skipping variable assignment: {type(body_to_analyze[0]).__name__}")
+                body_to_analyze = body_to_analyze[1:]
+
             # Visit the first meaningful body node if exists and return its result
-            # Assumes the meaningful part is the first statement after docstring (e.g., return)
+            # Looks for control flow (If, Return, etc.) after skipping assignments
             if body_to_analyze:
                 return self.visit(body_to_analyze[0])
+            logging.warning(f"visit_FunctionDef: Empty function body for '{node.name}', returning None")
             return None # Return None if no body
         except Exception as e:
             logging.error(f"Error analyzing function {node.name}: {e}")
@@ -226,9 +233,17 @@ class ASTVisitorMixin:
                                 # Import analyze_rule locally to avoid forward reference issues
                                 from .analysis import analyze_rule
                                 logging.debug(f"Recursively analyzing lambda default function: {func_name} -> {resolved_func}")
+
+                                # Build parameter mapping for function inlining
+                                param_mapping = self._build_parameter_mapping(resolved_func, args_with_nodes)
+
+                                # Merge parameter mapping into closure vars
+                                enhanced_closure_vars = self.closure_vars.copy()
+                                enhanced_closure_vars.update(param_mapping)
+
                                 # Pass the seen_funcs dictionary (it's mutable state)
                                 recursive_result = analyze_rule(rule_func=resolved_func,
-                                                              closure_vars=self.closure_vars.copy(),
+                                                              closure_vars=enhanced_closure_vars,
                                                               seen_funcs=self.seen_funcs,
                                                               game_handler=self.game_handler,
                                                               player_context=self.player_context)
@@ -256,9 +271,17 @@ class ASTVisitorMixin:
                           # Get the actual function from the closure
                           actual_func = self.closure_vars[func_name]
                           logging.debug(f"Recursively analyzing closure function: {func_name} -> {actual_func}")
+
+                          # Build parameter mapping for function inlining
+                          param_mapping = self._build_parameter_mapping(actual_func, args_with_nodes)
+
+                          # Merge parameter mapping into closure vars
+                          enhanced_closure_vars = self.closure_vars.copy()
+                          enhanced_closure_vars.update(param_mapping)
+
                           # Pass the seen_funcs dictionary (it's mutable state)
                           recursive_result = analyze_rule(rule_func=actual_func,
-                                                          closure_vars=self.closure_vars.copy(),
+                                                          closure_vars=enhanced_closure_vars,
                                                           seen_funcs=self.seen_funcs, # Pass the dict
                                                           game_handler=self.game_handler,
                                                           player_context=self.player_context)
@@ -906,31 +929,73 @@ class ASTVisitorMixin:
 
     def visit_Subscript(self, node):
         """
-        Handle subscript expressions like foo[bar]
+        Handle subscript expressions like foo[bar].
+        Attempts to resolve the subscript if both value and index are resolvable.
         """
         logging.debug(f"\nvisit_Subscript called:")
         logging.debug(f"Value: {ast.dump(node.value)}")
         logging.debug(f"Slice: {ast.dump(node.slice)}")
-        
+
         # First visit the value (the object being subscripted)
         value_info = self.visit(node.value) # Get returned result
-        
+
         # Then visit the slice (the index)
         index_info = self.visit(node.slice) # Get returned result
-        
+
         # Check if sub-visits were successful
         if value_info is None or index_info is None:
             logging.error(f"Error visiting value or index in subscript: {ast.dump(node)}")
             return None
-            
-        # Create a subscript node
+
+        # Try to resolve the subscript operation if both parts are resolvable
+        try:
+            # Try to resolve the value (the container)
+            resolved_container = None
+            if value_info.get('type') == 'name':
+                resolved_container = self.expression_resolver.resolve_variable(value_info['name'])
+                if resolved_container is not None:
+                    logging.debug(f"Resolved subscript container '{value_info['name']}' to {type(resolved_container).__name__}")
+            elif value_info.get('type') == 'constant':
+                resolved_container = value_info['value']
+
+            # Try to resolve the index
+            resolved_index = None
+            if index_info.get('type') == 'constant':
+                resolved_index = index_info['value']
+            elif index_info.get('type') == 'name':
+                resolved_index = self.expression_resolver.resolve_variable(index_info['name'])
+                if resolved_index is not None:
+                    logging.debug(f"Resolved subscript index '{index_info['name']}' to {resolved_index}")
+
+            # If both container and index are resolved, perform the subscript operation
+            if resolved_container is not None and resolved_index is not None:
+                try:
+                    # Try to perform the subscript operation
+                    if isinstance(resolved_container, (dict, list, tuple)):
+                        subscript_result = resolved_container[resolved_index]
+                        logging.debug(f"Successfully resolved subscript operation: {type(resolved_container).__name__}[{resolved_index}] = {subscript_result}")
+
+                        # Return as a constant if it's a simple value
+                        if isinstance(subscript_result, (int, float, str, bool, type(None))):
+                            return {'type': 'constant', 'value': subscript_result}
+                        # Handle enum values
+                        elif hasattr(subscript_result, 'value') and isinstance(subscript_result.value, (int, float, str, bool)):
+                            return {'type': 'constant', 'value': subscript_result.value}
+                        else:
+                            logging.debug(f"Subscript result is not a simple value (type: {type(subscript_result).__name__}), cannot convert to constant")
+                except (KeyError, IndexError, TypeError) as e:
+                    logging.debug(f"Could not perform subscript operation: {e}")
+        except Exception as e:
+            logging.debug(f"Error attempting to resolve subscript: {e}")
+
+        # If we couldn't resolve, create an unresolved subscript node
         result = {
             'type': 'subscript',
             'value': value_info,
             'index': index_info
         }
-        
-        logging.debug(f"Subscript result: {result}")
+
+        logging.debug(f"Subscript result (unresolved): {result}")
         return result # Return the result
 
     def visit_BoolOp(self, node):
@@ -1185,7 +1250,7 @@ class ASTVisitorMixin:
         try:
             logging.debug(f"\n--- visit_If ---")
             test_result = self.visit(node.test)
-            
+
             # Assume simple structure where body/orelse contain a single statement (e.g., return)
             # and visit that statement directly.
             body_result = None
@@ -1209,6 +1274,19 @@ class ASTVisitorMixin:
                  # For simplicity, fail if test or body fails.
                  return None
 
+            # Optimize: If test is a constant, statically evaluate the conditional
+            if test_result.get('type') == 'constant':
+                test_value = test_result.get('value')
+                logging.debug(f"visit_If: Test is constant with value: {test_value}")
+                # In Python, truthiness: 0, False, None, "", [], {} are falsy
+                is_truthy = bool(test_value) if test_value is not None else False
+                if is_truthy:
+                    logging.debug("visit_If: Test is truthy, returning if_true branch")
+                    return body_result
+                else:
+                    logging.debug("visit_If: Test is falsy, returning if_false branch")
+                    return orelse_result  # Could be None if no else block
+
             # Use a structure similar to IfExp (ternary) for consistency
             return {
                 'type': 'conditional', # Reusing 'conditional' type
@@ -1231,6 +1309,19 @@ class ASTVisitorMixin:
             if test_result is None or body_result is None or orelse_result is None:
                 logging.error(f"Failed to analyze one or more parts of IfExp: {ast.dump(node)}")
                 return None
+
+            # Optimize: If test is a constant, statically evaluate the conditional
+            if test_result.get('type') == 'constant':
+                test_value = test_result.get('value')
+                logging.debug(f"visit_IfExp: Test is constant with value: {test_value}")
+                # In Python, truthiness: 0, False, None, "", [], {} are falsy
+                is_truthy = bool(test_value) if test_value is not None else False
+                if is_truthy:
+                    logging.debug("visit_IfExp: Test is truthy, returning if_true branch")
+                    return body_result
+                else:
+                    logging.debug("visit_IfExp: Test is falsy, returning if_false branch")
+                    return orelse_result
 
             return {
                 'type': 'conditional',

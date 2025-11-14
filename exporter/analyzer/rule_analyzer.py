@@ -135,3 +135,80 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
             if not (is_state or is_player or is_world):
                 filtered.append(arg_result)
         return filtered
+
+    def _build_parameter_mapping(self, func, args_with_nodes):
+        """
+        Build a mapping of parameter names to argument values for function inlining.
+
+        Args:
+            func: The callable function being analyzed
+            args_with_nodes: List of (arg_node, arg_result) tuples
+
+        Returns:
+            Dictionary mapping parameter names to their resolved values
+        """
+        param_mapping = {}
+
+        try:
+            if not callable(func) or not hasattr(func, '__code__'):
+                logging.debug("_build_parameter_mapping: Function is not callable or has no __code__")
+                return param_mapping
+
+            # Get parameter names from the function
+            param_names = func.__code__.co_varnames[:func.__code__.co_argcount]
+            logging.debug(f"_build_parameter_mapping: Function parameters: {param_names}")
+
+            # Map arguments to parameters (up to the number of provided args)
+            for i, (arg_node, arg_result) in enumerate(args_with_nodes):
+                if i >= len(param_names):
+                    break  # More args than parameters
+
+                param_name = param_names[i]
+
+                # Skip state and player parameters - they shouldn't be inlined
+                # But DO include world so that attribute accesses like world.options.X can be resolved
+                if param_name in ('state', 'player'):
+                    logging.debug(f"_build_parameter_mapping: Skipping special parameter '{param_name}'")
+                    continue
+
+                # Try to resolve the argument to a concrete value
+                resolved_value = None
+
+                # Case 1: Argument is already a constant
+                if arg_result and arg_result.get('type') == 'constant':
+                    resolved_value = arg_result['value']
+                    logging.debug(f"_build_parameter_mapping: Parameter '{param_name}' -> constant {resolved_value}")
+
+                # Case 2: Argument is a name reference - try to resolve it
+                elif arg_result and arg_result.get('type') == 'name':
+                    var_name = arg_result['name']
+                    resolved_value = self.expression_resolver.resolve_variable(var_name)
+                    if resolved_value is not None:
+                        logging.debug(f"_build_parameter_mapping: Parameter '{param_name}' -> resolved '{var_name}' to {type(resolved_value).__name__}")
+                    else:
+                        logging.debug(f"_build_parameter_mapping: Could not resolve '{var_name}' for parameter '{param_name}'")
+
+                # Case 3: Argument is an attribute (like HatType.DWELLER) - try to resolve it
+                elif arg_result and arg_result.get('type') == 'attribute':
+                    resolved_value = self.expression_resolver.resolve_expression(arg_result)
+                    if resolved_value is not None:
+                        logging.debug(f"_build_parameter_mapping: Parameter '{param_name}' -> resolved attribute to {resolved_value}")
+                    else:
+                        logging.debug(f"_build_parameter_mapping: Could not resolve attribute for parameter '{param_name}'")
+
+                # Add to mapping if we successfully resolved the value
+                # For 'world' parameter, always add it even if it's a complex object
+                if resolved_value is not None:
+                    param_mapping[param_name] = resolved_value
+                elif param_name == 'world' and arg_result and arg_result.get('type') == 'name':
+                    # Special case for world - try to get it from closure_vars even if not simple
+                    var_name = arg_result['name']
+                    if var_name in self.closure_vars:
+                        param_mapping[param_name] = self.closure_vars[var_name]
+                        logging.debug(f"_build_parameter_mapping: Added world object from closure_vars for parameter '{param_name}'")
+
+        except Exception as e:
+            logging.error(f"Error building parameter mapping: {e}")
+
+        logging.debug(f"_build_parameter_mapping: Final mapping: {param_mapping}")
+        return param_mapping

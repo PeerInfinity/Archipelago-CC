@@ -499,6 +499,33 @@ class AHitGameExportHandler(BaseGameExportHandler):
         if not rule:
             return rule
 
+        # Note: Constant conditional elimination is now handled in
+        # resolve_attribute_nodes_in_rule in exporter.py after attributes are resolved
+
+        # Eliminate constant conditionals (this may catch some early cases)
+        if rule.get('type') == 'conditional':
+            test = rule.get('test')
+            if test and test.get('type') == 'constant':
+                # Evaluate constant test value
+                test_value = test.get('value')
+                if test_value:  # Truthy
+                    # Return if_true branch (recursively expand it)
+                    if_true = rule.get('if_true')
+                    return self.expand_rule(if_true) if if_true is not None else None
+                else:  # Falsy (0, False, None, etc.)
+                    # Return if_false branch (recursively expand it)
+                    if_false = rule.get('if_false')
+                    return self.expand_rule(if_false) if if_false is not None else None
+            else:
+                # Non-constant conditional - recurse into branches
+                if 'test' in rule:
+                    rule['test'] = self.expand_rule(rule['test'])
+                if 'if_true' in rule:
+                    rule['if_true'] = self.expand_rule(rule['if_true'])
+                if 'if_false' in rule:
+                    rule['if_false'] = self.expand_rule(rule['if_false'])
+                return rule
+
         # Handle helper functions
         if rule.get('type') == 'helper':
             # Filter out 'world' argument - it's automatically provided by executeHelper
@@ -514,5 +541,13 @@ class AHitGameExportHandler(BaseGameExportHandler):
         # Handle logical operators recursively
         if rule['type'] in ['and', 'or']:
             rule['conditions'] = [self.expand_rule(cond) for cond in rule['conditions']]
+            # Filter out None conditions (which came from eliminated conditionals)
+            rule['conditions'] = [c for c in rule['conditions'] if c is not None]
+            # If only one condition remains, return it directly
+            if len(rule['conditions']) == 1:
+                return rule['conditions'][0]
+            # If no conditions remain, return None
+            if len(rule['conditions']) == 0:
+                return None
 
         return rule
