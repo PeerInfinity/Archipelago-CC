@@ -998,7 +998,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
                 result = right.some(item => {
                   if (Array.isArray(item)) {
                     // Deep array comparison
-                    return item.length === left.length && 
+                    return item.length === left.length &&
                            item.every((val, index) => val === left[index]);
                   } else {
                     return item === left;
@@ -1020,6 +1020,43 @@ export const evaluateRule = (rule, context, depth = 0) => {
               );
               result = false; // Define behavior: false if right side isn't iterable
             }
+            break;
+          case 'not in':
+            // Invert the 'in' operator result
+            if (Array.isArray(right)) {
+              if (Array.isArray(left)) {
+                result = !right.some(item => {
+                  if (Array.isArray(item)) {
+                    return item.length === left.length &&
+                           item.every((val, index) => val === left[index]);
+                  } else {
+                    return item === left;
+                  }
+                });
+              } else {
+                result = !right.includes(left);
+              }
+            } else if (typeof right === 'string') {
+              result = !right.includes(left);
+            } else if (right instanceof Set) {
+              result = !right.has(left);
+            } else {
+              log(
+                'warn',
+                '[evaluateRule] "not in" operator used with invalid right side type:',
+                { left, right }
+              );
+              result = true; // If right side isn't iterable, assume not in it
+            }
+            break;
+          case 'is':
+            // Python 'is' operator - checks identity (same object)
+            // In JavaScript, use === for strict equality which is closest
+            result = left === right;
+            break;
+          case 'is not':
+            // Python 'is not' operator - checks non-identity
+            result = left !== right;
             break;
           default:
             log(
