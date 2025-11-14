@@ -1,17 +1,21 @@
 # Remaining General Issues
 
-## Issue 1: Settings not being exported to rules.json
-- **Problem**: Yoshi's Island specific settings (StageLogic, HiddenObjectVisibility, ShuffleMiddleRings, ItemLogic, BowserDoorMode, etc.) are not being exported to rules.json
-- **Current State**: Only `game` and `assume_bidirectional_exits` are in settings
-- **Impact**: Helper functions can't determine game logic difficulty, visibility settings, etc.
-- **Impact Details**:
-  - `cansee_clouds()` needs to know StageLogic (for game_logic difficulty)
-  - `cansee_clouds()` needs HiddenObjectVisibility (for clouds_always_visible)
-  - `cansee_clouds()` and other helpers need ItemLogic (for consumable_logic)
-  - `has_midring()` needs ShuffleMiddleRings
-  - Other helpers need BowserDoorMode and LuigiPiecesRequired
+## Issue 1: Helper function logic mismatch - cansee_clouds returns false in Sphere 0
+- **Problem**: `cansee_clouds()` helper function returns false when Python expects true
+- **Affected Locations**: "Hop! Hop! Donut Lifts: Stars" and "Touch Fuzzy Get Dizzy: Stars"
+- **Current State**:
+  - Settings exported correctly: StageLogic=0, HiddenObjectVisibility=1, ItemLogic=0
+  - JavaScript logic evaluates to false with no items
+  - Python logic (in spheres log) shows these locations accessible in Sphere 0
+- **Analysis**:
+  - StageLogic=0 (strict) → game_logic = "Easy"
+  - HiddenObjectVisibility=1 (coins_only, not clouds_only=2) → clouds_always_visible = false
+  - ItemLogic=0 → consumable_logic = true
+  - With no items: default_vis=false, Secret Lens=false, combat_item=false
+  - Therefore cansee_clouds returns false
 - **Next Steps**:
-  - Check how other games export their settings
-  - Update exporter or create custom exporter method to export Yoshi's Island settings
+  - Verify template default values for hidden_object_visibility
+  - Check if Python logic has a different interpretation
+  - Investigate why Python considers these locations accessible with these settings
 
 
