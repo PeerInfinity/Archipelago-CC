@@ -33,40 +33,32 @@
             "name": "Overworld -> 1-1",
             "connected_region": "1-1",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 1-2",
             "connected_region": "1-2",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 1-3",
             "connected_region": "1-3",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 1-4",
             "connected_region": "1-4",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -74,9 +66,7 @@
             "connected_region": "1-5",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Yellow Ramp"
             }
           },
           {
@@ -84,69 +74,91 @@
             "connected_region": "1-6",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Yellow Ramp"
             }
           },
           {
             "name": "Overworld -> 2-1",
             "connected_region": "2-1",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 2-2",
             "connected_region": "2-2",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Green Ramp"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "5-1 Level Complete"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Purple Ramp"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 2-3",
             "connected_region": "2-3",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Green Ramp"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "5-1 Level Complete"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Purple Ramp"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 2-4",
             "connected_region": "2-4",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 2-5",
             "connected_region": "2-5",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 2-6",
             "connected_region": "2-6",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
@@ -154,9 +166,7 @@
             "connected_region": "3-1",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Blue Ramp"
             }
           },
           {
@@ -164,9 +174,7 @@
             "connected_region": "3-2",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Blue Ramp"
             }
           },
           {
@@ -174,9 +182,7 @@
             "connected_region": "3-3",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Blue Ramp"
             }
           },
           {
@@ -184,9 +190,7 @@
             "connected_region": "3-4",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Blue Ramp"
             }
           },
           {
@@ -194,139 +198,171 @@
             "connected_region": "3-5",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Blue Ramp"
             }
           },
           {
             "name": "Overworld -> 3-6",
             "connected_region": "3-6",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 4-1",
             "connected_region": "4-1",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 4-2",
             "connected_region": "4-2",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 4-3",
             "connected_region": "4-3",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 4-4",
             "connected_region": "4-4",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 4-5",
             "connected_region": "4-5",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 4-6",
             "connected_region": "4-6",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 5-1",
             "connected_region": "5-1",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 5-2",
             "connected_region": "5-2",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Green Ramp"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "5-1 Level Complete"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Purple Ramp"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 5-3",
             "connected_region": "5-3",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Overworld -> 5-4",
             "connected_region": "5-4",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "5-1 Level Complete"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Purple Ramp"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 5-5",
             "connected_region": "5-5",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "5-1 Level Complete"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Purple Ramp"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 5-6",
             "connected_region": "5-6",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "5-1 Level Complete"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Purple Ramp"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
@@ -334,69 +370,163 @@
             "connected_region": "6-1",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Pink Ramp"
             }
           },
           {
             "name": "Overworld -> 6-2",
             "connected_region": "6-2",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "5-1 Level Complete"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Purple Ramp"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-3",
             "connected_region": "6-3",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "5-1 Level Complete"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Purple Ramp"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-4",
             "connected_region": "6-4",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Green Ramp"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "5-1 Level Complete"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Purple Ramp"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-5",
             "connected_region": "6-5",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "5-1 Level Complete"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Purple Ramp"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "6-1 Level Complete"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Ramp"
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> 6-6",
             "connected_region": "6-6",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "5-1 Level Complete"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Purple Ramp"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "6-1 Level Complete"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red Ramp"
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> Kevin-1",
             "connected_region": "Kevin-1",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Dark Green Ramp"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Kevin-1"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Kevin-1"
+                }
+              ]
             }
           },
           {
@@ -404,9 +534,7 @@
             "connected_region": "Kevin-2",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Kevin-2"
             }
           },
           {
@@ -414,9 +542,7 @@
             "connected_region": "Kevin-3",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Kevin-3"
             }
           },
           {
@@ -424,9 +550,7 @@
             "connected_region": "Kevin-4",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Kevin-4"
             }
           },
           {
@@ -434,9 +558,7 @@
             "connected_region": "Kevin-5",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Kevin-5"
             }
           },
           {
@@ -444,29 +566,77 @@
             "connected_region": "Kevin-6",
             "access_rule": {
               "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "item": "Kevin-6"
             }
           },
           {
             "name": "Overworld -> Kevin-7",
             "connected_region": "Kevin-7",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "5-1 Level Complete"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Purple Ramp"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Kevin-7"
+                }
+              ]
             }
           },
           {
             "name": "Overworld -> Kevin-8",
             "connected_region": "Kevin-8",
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Access",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Access"
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "5-1 Level Complete"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Purple Ramp"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "6-1 Level Complete"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Red Ramp"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Kevin-8"
+                }
+              ]
             }
           }
         ],
@@ -489,10 +659,18 @@
             "name": "1-1 Completed",
             "id": 1,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Progressive Dash",
@@ -505,10 +683,18 @@
             "name": "1-1 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "1-1 Level Complete",
@@ -521,10 +707,18 @@
             "name": "1-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -537,10 +731,18 @@
             "name": "1-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -553,10 +755,18 @@
             "name": "1-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -584,10 +794,18 @@
             "name": "1-2 Completed",
             "id": 2,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Coin Purse",
@@ -600,10 +818,18 @@
             "name": "1-2 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "1-2 Level Complete",
@@ -616,10 +842,18 @@
             "name": "1-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -632,10 +866,18 @@
             "name": "1-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -648,10 +890,18 @@
             "name": "1-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -679,10 +929,18 @@
             "name": "1-3 Completed",
             "id": 3,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Larger Tip Jar",
@@ -695,10 +953,18 @@
             "name": "1-3 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "1-3 Level Complete",
@@ -711,10 +977,18 @@
             "name": "1-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -727,10 +1001,18 @@
             "name": "1-3 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -743,10 +1025,18 @@
             "name": "1-3 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -774,10 +1064,18 @@
             "name": "1-4 Completed",
             "id": 4,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-8",
@@ -790,10 +1088,18 @@
             "name": "1-4 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "1-4 Level Complete",
@@ -806,10 +1112,18 @@
             "name": "1-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -822,10 +1136,18 @@
             "name": "1-4 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -838,10 +1160,18 @@
             "name": "1-4 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -869,10 +1199,18 @@
             "name": "1-5 Completed",
             "id": 5,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Progressive Throw/Catch",
@@ -885,10 +1223,18 @@
             "name": "1-5 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "1-5 Level Complete",
@@ -901,10 +1247,18 @@
             "name": "1-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -917,10 +1271,18 @@
             "name": "1-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -933,10 +1295,18 @@
             "name": "1-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -964,10 +1334,18 @@
             "name": "1-6 Completed",
             "id": 6,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Faster Condiment/Drink Switch",
@@ -980,10 +1358,18 @@
             "name": "1-6 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "1-6 Level Complete",
@@ -996,10 +1382,18 @@
             "name": "1-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1012,10 +1406,18 @@
             "name": "1-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1028,10 +1430,18 @@
             "name": "1-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1059,10 +1469,18 @@
             "name": "2-1 Completed",
             "id": 7,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Fire Extinguisher",
@@ -1075,10 +1493,18 @@
             "name": "2-1 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "2-1 Level Complete",
@@ -1091,10 +1517,18 @@
             "name": "2-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1107,10 +1541,18 @@
             "name": "2-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1123,10 +1565,18 @@
             "name": "2-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1154,10 +1604,18 @@
             "name": "2-2 Completed",
             "id": 8,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Emote Wheel",
@@ -1170,10 +1628,18 @@
             "name": "2-2 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "2-2 Level Complete",
@@ -1186,10 +1652,18 @@
             "name": "2-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1202,10 +1676,18 @@
             "name": "2-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1218,10 +1700,18 @@
             "name": "2-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1249,10 +1739,18 @@
             "name": "2-3 Completed",
             "id": 9,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Sharp Knife",
@@ -1265,10 +1763,18 @@
             "name": "2-3 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "2-3 Level Complete",
@@ -1281,10 +1787,18 @@
             "name": "2-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1297,10 +1811,18 @@
             "name": "2-3 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1313,10 +1835,18 @@
             "name": "2-3 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1344,10 +1874,18 @@
             "name": "2-4 Completed",
             "id": 10,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Wok Wheels",
@@ -1360,10 +1898,18 @@
             "name": "2-4 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "2-4 Level Complete",
@@ -1376,10 +1922,18 @@
             "name": "2-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1392,10 +1946,18 @@
             "name": "2-4 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1408,10 +1970,18 @@
             "name": "2-4 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1439,10 +2009,18 @@
             "name": "2-5 Completed",
             "id": 11,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-3",
@@ -1455,10 +2033,18 @@
             "name": "2-5 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "2-5 Level Complete",
@@ -1471,10 +2057,18 @@
             "name": "2-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1487,10 +2081,18 @@
             "name": "2-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1503,10 +2105,18 @@
             "name": "2-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1534,10 +2144,18 @@
             "name": "2-6 Completed",
             "id": 12,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Yellow Ramp",
@@ -1550,10 +2168,18 @@
             "name": "2-6 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "2-6 Level Complete",
@@ -1566,10 +2192,18 @@
             "name": "2-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1582,10 +2216,18 @@
             "name": "2-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1598,10 +2240,18 @@
             "name": "2-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1629,10 +2279,18 @@
             "name": "3-1 Completed",
             "id": 13,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Bonus Star",
@@ -1645,10 +2303,18 @@
             "name": "3-1 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "3-1 Level Complete",
@@ -1661,10 +2327,18 @@
             "name": "3-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1677,10 +2351,18 @@
             "name": "3-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1693,10 +2375,18 @@
             "name": "3-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1724,10 +2414,18 @@
             "name": "3-2 Completed",
             "id": 14,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Progressive Throw/Catch",
@@ -1740,10 +2438,18 @@
             "name": "3-2 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "3-2 Level Complete",
@@ -1756,10 +2462,18 @@
             "name": "3-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1772,10 +2486,18 @@
             "name": "3-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1788,10 +2510,18 @@
             "name": "3-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1819,10 +2549,18 @@
             "name": "3-3 Completed",
             "id": 15,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Dish Scrubber",
@@ -1835,10 +2573,18 @@
             "name": "3-3 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "3-3 Level Complete",
@@ -1851,10 +2597,18 @@
             "name": "3-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1867,10 +2621,18 @@
             "name": "3-3 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1883,10 +2645,18 @@
             "name": "3-3 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1914,10 +2684,18 @@
             "name": "3-4 Completed",
             "id": 16,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Bonus Star",
@@ -1930,10 +2708,18 @@
             "name": "3-4 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "3-4 Level Complete",
@@ -1946,10 +2732,18 @@
             "name": "3-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1962,10 +2756,18 @@
             "name": "3-4 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -1978,10 +2780,18 @@
             "name": "3-4 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2009,10 +2819,18 @@
             "name": "3-5 Completed",
             "id": 17,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-7",
@@ -2025,10 +2843,18 @@
             "name": "3-5 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "3-5 Level Complete",
@@ -2041,10 +2867,18 @@
             "name": "3-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2057,10 +2891,18 @@
             "name": "3-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2073,10 +2915,18 @@
             "name": "3-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2104,10 +2954,18 @@
             "name": "3-6 Completed",
             "id": 18,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-5",
@@ -2120,10 +2978,18 @@
             "name": "3-6 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "3-6 Level Complete",
@@ -2136,10 +3002,18 @@
             "name": "3-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2152,10 +3026,18 @@
             "name": "3-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2168,10 +3050,18 @@
             "name": "3-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2199,10 +3089,18 @@
             "name": "4-1 Completed",
             "id": 19,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Green Ramp",
@@ -2215,10 +3113,18 @@
             "name": "4-1 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "4-1 Level Complete",
@@ -2231,10 +3137,18 @@
             "name": "4-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2247,10 +3161,18 @@
             "name": "4-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2263,10 +3185,18 @@
             "name": "4-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2294,10 +3224,18 @@
             "name": "4-2 Completed",
             "id": 20,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-1",
@@ -2310,10 +3248,18 @@
             "name": "4-2 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "4-2 Level Complete",
@@ -2326,10 +3272,18 @@
             "name": "4-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2342,10 +3296,18 @@
             "name": "4-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2358,10 +3320,18 @@
             "name": "4-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2389,10 +3359,18 @@
             "name": "4-3 Completed",
             "id": 21,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Spare Plate",
@@ -2405,10 +3383,18 @@
             "name": "4-3 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "4-3 Level Complete",
@@ -2421,10 +3407,18 @@
             "name": "4-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2437,10 +3431,18 @@
             "name": "4-3 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2453,10 +3455,18 @@
             "name": "4-3 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2484,10 +3494,18 @@
             "name": "4-4 Completed",
             "id": 22,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Order Lookahead",
@@ -2500,10 +3518,18 @@
             "name": "4-4 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "4-4 Level Complete",
@@ -2516,10 +3542,18 @@
             "name": "4-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2532,10 +3566,18 @@
             "name": "4-4 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2548,10 +3590,18 @@
             "name": "4-4 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2579,10 +3629,18 @@
             "name": "4-5 Completed",
             "id": 23,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Purple Ramp",
@@ -2595,10 +3653,18 @@
             "name": "4-5 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "4-5 Level Complete",
@@ -2611,10 +3677,18 @@
             "name": "4-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2627,10 +3701,18 @@
             "name": "4-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2643,10 +3725,18 @@
             "name": "4-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2674,10 +3764,18 @@
             "name": "4-6 Completed",
             "id": 24,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Faster Respawn Time",
@@ -2690,10 +3788,18 @@
             "name": "4-6 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "4-6 Level Complete",
@@ -2706,10 +3812,18 @@
             "name": "4-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2722,10 +3836,18 @@
             "name": "4-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2738,10 +3860,18 @@
             "name": "4-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2769,10 +3899,18 @@
             "name": "5-1 Completed",
             "id": 25,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Dark Green Ramp",
@@ -2785,10 +3923,18 @@
             "name": "5-1 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "5-1 Level Complete",
@@ -2801,10 +3947,18 @@
             "name": "5-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2817,10 +3971,18 @@
             "name": "5-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2833,10 +3995,18 @@
             "name": "5-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2864,10 +4034,18 @@
             "name": "5-2 Completed",
             "id": 26,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Control Stick Batteries",
@@ -2880,10 +4058,18 @@
             "name": "5-2 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "5-2 Level Complete",
@@ -2896,10 +4082,18 @@
             "name": "5-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2912,10 +4106,18 @@
             "name": "5-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2928,10 +4130,18 @@
             "name": "5-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -2959,10 +4169,18 @@
             "name": "5-3 Completed",
             "id": 27,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Blue Ramp",
@@ -2975,10 +4193,18 @@
             "name": "5-3 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "5-3 Level Complete",
@@ -2991,10 +4217,18 @@
             "name": "5-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3007,10 +4241,18 @@
             "name": "5-3 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3023,10 +4265,18 @@
             "name": "5-3 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3054,10 +4304,18 @@
             "name": "5-4 Completed",
             "id": 28,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Bonus Star",
@@ -3070,10 +4328,18 @@
             "name": "5-4 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "5-4 Level Complete",
@@ -3086,10 +4352,18 @@
             "name": "5-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3102,10 +4376,18 @@
             "name": "5-4 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3118,10 +4400,18 @@
             "name": "5-4 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3149,10 +4439,18 @@
             "name": "5-5 Completed",
             "id": 29,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Red Ramp",
@@ -3165,10 +4463,18 @@
             "name": "5-5 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "5-5 Level Complete",
@@ -3181,10 +4487,18 @@
             "name": "5-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3197,10 +4511,18 @@
             "name": "5-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3213,10 +4535,18 @@
             "name": "5-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3244,10 +4574,18 @@
             "name": "5-6 Completed",
             "id": 30,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Calmer Unbread",
@@ -3260,10 +4598,18 @@
             "name": "5-6 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "5-6 Level Complete",
@@ -3276,10 +4622,18 @@
             "name": "5-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3292,10 +4646,18 @@
             "name": "5-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3308,10 +4670,18 @@
             "name": "5-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3339,10 +4709,18 @@
             "name": "6-1 Completed",
             "id": 31,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-2",
@@ -3355,10 +4733,18 @@
             "name": "6-1 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "6-1 Level Complete",
@@ -3371,10 +4757,18 @@
             "name": "6-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3387,10 +4781,18 @@
             "name": "6-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3403,10 +4805,18 @@
             "name": "6-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3434,10 +4844,18 @@
             "name": "6-2 Completed",
             "id": 32,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Burn Leniency",
@@ -3450,10 +4868,18 @@
             "name": "6-2 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "6-2 Level Complete",
@@ -3466,10 +4892,18 @@
             "name": "6-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3482,10 +4916,18 @@
             "name": "6-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3498,10 +4940,18 @@
             "name": "6-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3529,10 +4979,18 @@
             "name": "6-3 Completed",
             "id": 33,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Order Lookahead",
@@ -3545,10 +5003,18 @@
             "name": "6-3 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "6-3 Level Complete",
@@ -3561,10 +5027,18 @@
             "name": "6-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3592,10 +5066,18 @@
             "name": "6-4 Completed",
             "id": 34,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Guest Patience",
@@ -3608,10 +5090,18 @@
             "name": "6-4 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "6-4 Level Complete",
@@ -3624,10 +5114,18 @@
             "name": "6-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3640,10 +5138,18 @@
             "name": "6-4 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3656,10 +5162,18 @@
             "name": "6-4 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3687,10 +5201,18 @@
             "name": "6-5 Completed",
             "id": 35,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Clean Dishes",
@@ -3703,10 +5225,18 @@
             "name": "6-5 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "6-5 Level Complete",
@@ -3719,10 +5249,18 @@
             "name": "6-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3735,10 +5273,18 @@
             "name": "6-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3751,10 +5297,18 @@
             "name": "6-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3782,10 +5336,18 @@
             "name": "6-6 Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Victory",
@@ -3798,10 +5360,18 @@
             "name": "6-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3814,10 +5384,18 @@
             "name": "6-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3830,10 +5408,18 @@
             "name": "6-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3861,10 +5447,18 @@
             "name": "Kevin-1 Completed",
             "id": 37,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Pink Ramp",
@@ -3877,10 +5471,18 @@
             "name": "Kevin-1 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-1 Level Complete",
@@ -3893,10 +5495,18 @@
             "name": "Kevin-1 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3909,10 +5519,18 @@
             "name": "Kevin-1 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3925,10 +5543,18 @@
             "name": "Kevin-1 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -3956,10 +5582,18 @@
             "name": "Kevin-2 Completed",
             "id": 38,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-6",
@@ -3972,10 +5606,18 @@
             "name": "Kevin-2 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-2 Level Complete",
@@ -3988,10 +5630,18 @@
             "name": "Kevin-2 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4004,10 +5654,18 @@
             "name": "Kevin-2 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4020,10 +5678,18 @@
             "name": "Kevin-2 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4051,10 +5717,18 @@
             "name": "Kevin-3 Completed",
             "id": 39,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Larger Tip Jar",
@@ -4067,10 +5741,18 @@
             "name": "Kevin-3 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-3 Level Complete",
@@ -4083,10 +5765,18 @@
             "name": "Kevin-3 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4099,10 +5789,18 @@
             "name": "Kevin-3 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4115,10 +5813,18 @@
             "name": "Kevin-3 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4146,10 +5852,18 @@
             "name": "Kevin-4 Completed",
             "id": 40,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Bonus Star",
@@ -4162,10 +5876,18 @@
             "name": "Kevin-4 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-4 Level Complete",
@@ -4178,10 +5900,18 @@
             "name": "Kevin-4 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4209,10 +5939,18 @@
             "name": "Kevin-5 Completed",
             "id": 41,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-4",
@@ -4225,10 +5963,18 @@
             "name": "Kevin-5 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-5 Level Complete",
@@ -4241,10 +5987,18 @@
             "name": "Kevin-5 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4257,10 +6011,18 @@
             "name": "Kevin-5 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4273,10 +6035,18 @@
             "name": "Kevin-5 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4304,10 +6074,18 @@
             "name": "Kevin-6 Completed",
             "id": 42,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Bonus Star",
@@ -4320,10 +6098,18 @@
             "name": "Kevin-6 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-6 Level Complete",
@@ -4336,10 +6122,18 @@
             "name": "Kevin-6 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4352,10 +6146,18 @@
             "name": "Kevin-6 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4368,10 +6170,18 @@
             "name": "Kevin-6 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4399,10 +6209,18 @@
             "name": "Kevin-7 Completed",
             "id": 43,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Progressive Dash",
@@ -4415,10 +6233,18 @@
             "name": "Kevin-7 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-7 Level Complete",
@@ -4431,10 +6257,18 @@
             "name": "Kevin-7 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4447,10 +6281,18 @@
             "name": "Kevin-7 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4463,10 +6305,18 @@
             "name": "Kevin-7 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4494,10 +6344,18 @@
             "name": "Kevin-8 Completed",
             "id": 44,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Bonus Star",
@@ -4510,10 +6368,18 @@
             "name": "Kevin-8 Level Completed",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Kevin-8 Level Complete",
@@ -4526,10 +6392,18 @@
             "name": "Kevin-8 (1-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4542,10 +6416,18 @@
             "name": "Kevin-8 (2-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -4558,10 +6440,18 @@
             "name": "Kevin-8 (3-Star)",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Requirements_For_Level_Star",
-              "inferred": true,
-              "description": "Requires having Requirements For Level Star"
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "level"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Star",
@@ -5853,7 +7743,8 @@
   "settings": {
     "1": {
       "game": "Overcooked! 2",
-      "assume_bidirectional_exits": false
+      "assume_bidirectional_exits": false,
+      "ramp_tricks": false
     }
   },
   "game_info": {
