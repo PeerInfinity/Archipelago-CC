@@ -277,6 +277,7 @@ import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
 import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
 import { helperFunctions as smHelperFunctions } from './super_metroid/smLogic.js';
+import * as terrariaLogic from './terraria/terrariaLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -528,6 +529,12 @@ const GAME_REGISTRY = {
     helperFunctions: smHelperFunctions,
     worldClasses: ['SMWorld'],
     aliases: ['Super Metroid', 'SM']
+  },
+  'Terraria': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: terrariaLogic.helperFunctions,
+    worldClasses: ['TerrariaWorld'],
+    aliases: ['Terraria']
   },
   // Add more games here as they're implemented
   'Generic': {
