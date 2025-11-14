@@ -4,23 +4,23 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-13 23:10:38
+**Generated:** 2025-11-14 04:29:39
 
 **Source Data Created:** 2025-11-13T04:22:57.318664
 
-**Source Data Last Updated:** 2025-11-13T21:54:56.181325
+**Source Data Last Updated:** 2025-11-13T05:14:21.928876
 
 ## Summary
 
 - **Total Games:** 1
-- **Total Template Configurations:** 152
-- **Passed Configurations:** 119 (78.3%)
-- **Failed Configurations:** 29 (19.1%)
-- **Invalid Configurations:** 4 (2.6%)
+- **Total Template Configurations:** 174
+- **Passed Configurations:** 138 (79.3%)
+- **Failed Configurations:** 32 (18.4%)
+- **Invalid Configurations:** 4 (2.3%)
 
 ## A Link to the Past
 
-**Results:** 119/152 passed (78.3%)  
+**Results:** 138/174 passed (79.3%)  
 **Custom Exporter:** ✅ Yes | **Custom GameLogic:** ✅ Yes
 
 | Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |
@@ -84,21 +84,21 @@
 | fully_randomized | ❌ Failed | 0 | 0 | 14.1 | 0.0% |
 | glitch_boots_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | glitch_boots_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| glitched_logic | ❌ Failed | 0 | 0.1 | 15.1 | 0.7% |
-| glitches_required_hybrid_major_glitches | ❌ Failed | 0 | 0.1 | 14.1 | 0.7% |
+| glitched_logic | ❌ Failed | 0 | 0 | 15.1 | 0.0% |
+| glitches_required_hybrid_major_glitches | ❌ Failed | 0 | 0 | 14.1 | 0.0% |
 | glitches_required_minor_glitches | ❌ Failed | 0 | 0.3 | 22.1 | 1.4% |
 | glitches_required_no_glitches | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | glitches_required_no_logic | ✅ Passed | 0 | 0.131 | 0.131 | 100.0% |
-| glitches_required_overworld_glitches | ❌ Failed | 0 | 0.1 | 14.1 | 0.7% |
+| glitches_required_overworld_glitches | ❌ Failed | 0 | 0 | 14.1 | 0.0% |
 | goal_bosses | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | goal_crystals | ❌ Failed | 0 | 6.1 | 21.3 | 28.6% |
 | goal_ganon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | goal_ganon_pedestal | ❌ Failed | 0 | 6.1 | 21.3 | 28.6% |
 | goal_ganon_triforce_hunt | ❌ Failed | 0 | 1.9 | 17.1 | 11.1% |
 | goal_local_ganon_triforce_hunt | ❌ Failed | 0 | 1.9 | 17.1 | 11.1% |
-| goal_local_triforce_hunt | ❌ Failed | 0 | 4.1 | 17.1 | 24.0% |
+| goal_local_triforce_hunt | ✅ Passed | 0 | 17.1 | 17.1 | 100.0% |
 | goal_pedestal | ✅ Passed | 0 | 25.3 | 25.3 | 100.0% |
-| goal_triforce_hunt | ❌ Failed | 0 | 4.1 | 17.1 | 24.0% |
+| goal_triforce_hunt | ✅ Passed | 0 | 17.1 | 17.1 | 100.0% |
 | hard_mode | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | hints_full | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | hints_off | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
@@ -177,6 +177,28 @@
 | small_key_shuffle_different_world | ✅ Passed | 0 | 19.2 | 19.2 | 100.0% |
 | small_key_shuffle_original_dungeon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | small_key_shuffle_own_dungeons | ⚫ Invalid | 3 | 0 | 0 | N/A |
+| small_key_shuffle_own_world | ✅ Passed | 0 | 19.2 | 19.2 | 100.0% |
+| small_key_shuffle_start_with | ✅ Passed | 0 | 12.1 | 12.1 | 100.0% |
+| small_key_shuffle_universal | ❌ Failed | 0 | 0 | 10.1 | 0.0% |
+| swordless_challenge | ❌ Failed | 0 | 0 | 20.1 | 0.0% |
+| swordless_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| swordless_true | ❌ Failed | 0 | 0 | 18.1 | 0.0% |
+| tile_shuffle_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| tile_shuffle_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| timer_challenge | ❌ Generation Failed | 7 | 0 | 0 | N/A |
+| timer_display | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| timer_none | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| timer_ohko | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| timer_timed | ✅ Passed | 0 | 34.1 | 34.1 | 100.0% |
+| timer_timed_countdown | ✅ Passed | 0 | 34.1 | 34.1 | 100.0% |
+| timer_timed_ohko | ✅ Passed | 0 | 33.1 | 33.1 | 100.0% |
+| triforce_hunt_easy | ❌ Generation Failed | 7 | 0 | 0 | N/A |
+| triforce_pieces_mode_available | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| triforce_pieces_mode_extra | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| triforce_pieces_mode_percentage | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| turtle_rock_medallion_bombos | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| turtle_rock_medallion_ether | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
+| turtle_rock_medallion_quake | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 
 ## Notes
 
