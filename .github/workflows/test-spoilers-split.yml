@@ -86,7 +86,6 @@ jobs:
             --seed ${{ matrix.seed }} \
             --output-file scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-${{ matrix.seed }}.json \
             --no-backup \
-            --include-list "Adventure.yaml" \
             -p
 
       - name: Upload test results for seed ${{ matrix.seed }}
