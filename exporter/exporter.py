@@ -711,6 +711,22 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
             if hasattr(rule_func, '__globals__'):
                 # Only include specific useful globals, not all of them
                 useful_globals = ['ChapterIndex', 'HatType', 'Difficulty', 'HitType']
+
+                # Also include helper functions that the game handler wants to preserve
+                if game_handler:
+                    # Check if game handler has a HELPER_FUNCTIONS attribute
+                    if hasattr(game_handler, 'HELPER_FUNCTIONS'):
+                        useful_globals.extend(game_handler.HELPER_FUNCTIONS)
+                        logger.debug(f"Added {len(game_handler.HELPER_FUNCTIONS)} helper functions from game handler to useful_globals")
+
+                    # Check for callable globals that the game handler wants to preserve
+                    for var_name, var_value in rule_func.__globals__.items():
+                        if callable(var_value) and hasattr(game_handler, 'should_preserve_as_helper'):
+                            if game_handler.should_preserve_as_helper(var_name):
+                                if var_name not in useful_globals:
+                                    useful_globals.append(var_name)
+                                    logger.debug(f"Added {var_name} to useful_globals (callable and should preserve)")
+
                 for var_name in useful_globals:
                     if var_name in rule_func.__globals__:
                         closure_vars[var_name] = rule_func.__globals__[var_name]

@@ -90,3 +90,26 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
     def should_preserve_as_helper(self, func_name: str) -> bool:
         """Check if a function should be preserved as a helper call."""
         return func_name in self.HELPER_FUNCTIONS
+
+    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Override expand_rule to prevent auto-expansion of our helper functions.
+
+        The generic exporter tries to auto-expand helpers matching patterns like has_*,
+        but we want to preserve our helper functions as-is for the frontend to implement.
+        """
+        if not rule:
+            return rule
+
+        # For our helper functions, preserve them without expansion
+        if rule.get('type') == 'helper':
+            helper_name = rule.get('name', '')
+            if helper_name in self.HELPER_FUNCTIONS:
+                # Recursively expand any arguments, but preserve the helper itself
+                args = rule.get('args', [])
+                if args:
+                    rule['args'] = [self.expand_rule(arg) if isinstance(arg, dict) and 'type' in arg else arg for arg in args]
+                return rule
+
+        # For all other rules, use the parent's expansion logic
+        return super().expand_rule(rule)

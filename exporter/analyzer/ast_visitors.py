@@ -8,6 +8,7 @@ used with the RuleAnalyzer class.
 
 import ast
 import logging
+import sys
 from typing import Any, Dict, Optional, List
 
 from .utils import make_json_serializable, is_simple_value
@@ -314,38 +315,56 @@ class ASTVisitorMixin:
             if func_name in self.closure_vars:
                  logging.debug(f"Identified call to known closure variable: {func_name}")
 
+                 # Check if game handler wants to preserve this as a helper
+                 should_preserve = False
+                 if self.game_handler and hasattr(self.game_handler, 'should_preserve_as_helper'):
+                     # Check with both the func_name and actual function's __name__
+                     if self.game_handler.should_preserve_as_helper(func_name):
+                         logging.debug(f"Game handler requests preserving {func_name} as helper, skipping recursive analysis")
+                         should_preserve = True
+                     else:
+                         actual_func = self.closure_vars[func_name]
+                         if callable(actual_func):
+                             # Also check the actual function's __name__ in case of aliasing
+                             actual_func_name = getattr(actual_func, '__name__', None)
+                             if actual_func_name and self.game_handler.should_preserve_as_helper(actual_func_name):
+                                 logging.debug(f"Game handler requests preserving {actual_func_name} (alias of {func_name}) as helper, skipping recursive analysis")
+                                 should_preserve = True
+
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
-                 try:
-                     # Check if 'state' is passed as an argument using original AST nodes
-                     has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
-                     # Attempt recursion if state arg is present
-                     if has_state_arg:
-                          # Import analyze_rule locally to avoid forward reference issues
-                          from .analysis import analyze_rule
-                          # Get the actual function from the closure
-                          actual_func = self.closure_vars[func_name]
-                          logging.debug(f"Recursively analyzing closure function: {func_name} -> {actual_func}")
+                 # Only recursively analyze if not preserving as helper
+                 if not should_preserve:
+                     try:
+                         # Check if 'state' is passed as an argument using original AST nodes
+                         has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
+                         # Attempt recursion if state arg is present
+                         if has_state_arg:
+                              # Import analyze_rule locally to avoid forward reference issues
+                              from .analysis import analyze_rule
+                              # Get the actual function from the closure
+                              actual_func = self.closure_vars[func_name]
+                              logging.debug(f"Recursively analyzing closure function: {func_name} -> {actual_func}")
 
-                          # Build parameter mapping for function inlining
-                          param_mapping = self._build_parameter_mapping(actual_func, args_with_nodes)
+                              # Build parameter mapping for function inlining
+                              param_mapping = self._build_parameter_mapping(actual_func, args_with_nodes)
 
-                          # Merge parameter mapping into closure vars
-                          enhanced_closure_vars = self.closure_vars.copy()
-                          enhanced_closure_vars.update(param_mapping)
+                              # Merge parameter mapping into closure vars
+                              enhanced_closure_vars = self.closure_vars.copy()
+                              enhanced_closure_vars.update(param_mapping)
 
-                          # Pass the seen_funcs dictionary (it's mutable state)
-                          recursive_result = analyze_rule(rule_func=actual_func,
-                                                          closure_vars=enhanced_closure_vars,
-                                                          seen_funcs=self.seen_funcs, # Pass the dict
-                                                          game_handler=self.game_handler,
-                                                          player_context=self.player_context)
-                          if recursive_result.get('type') != 'error':
-                              logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
-                              return recursive_result # Return the detailed analysis result
-                          else:
-                              logging.debug(f"Recursive analysis for {func_name} returned type 'error'. Falling back to helper node. Error details: {recursive_result.get('error_log')}")
-                 except Exception as e:
-                      logging.error(f"Error during recursive analysis of closure var {func_name}: {e}")
+                              # Pass the seen_funcs dictionary (it's mutable state)
+                              recursive_result = analyze_rule(rule_func=actual_func,
+                                                              closure_vars=enhanced_closure_vars,
+                                                              seen_funcs=self.seen_funcs, # Pass the dict
+                                                              game_handler=self.game_handler,
+                                                              player_context=self.player_context)
+                              if recursive_result.get('type') != 'error':
+                                  logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
+                                  return recursive_result # Return the detailed analysis result
+                              else:
+                                  logging.debug(f"Recursive analysis for {func_name} returned type 'error'. Falling back to helper node. Error details: {recursive_result.get('error_log')}")
+                     except Exception as e:
+                          logging.error(f"Error during recursive analysis of closure var {func_name}: {e}")
                  # --- END Recursive analysis logic ---
                  # If recursion wasn't attempted or failed, fall through to default helper representation
 
