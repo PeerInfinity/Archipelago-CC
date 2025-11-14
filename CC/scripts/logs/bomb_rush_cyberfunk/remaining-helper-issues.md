@@ -2,21 +2,40 @@
 
 ## Issue 1: Helper functions with access_cache parameter not being evaluated
 
-**Locations affected:** Tagged 5 Graffiti Spots, Tagged 10 Graffiti Spots
+**Locations affected:** Tagged 5 Graffiti Spots, Tagged 10 Graffiti Spots, and all other graffiti spot milestone locations
 
-**Symptom:** These locations should be accessible in Sphere 0 according to the spoiler log, but the JavaScript rule engine marks them as inaccessible.
+**Symptom:** These locations should be accessible in Sphere 0 according to the spoiler log, but the JavaScript rule engine marks them as inaccessible with "Access rule evaluation failed" error.
 
-**Root cause:** The access rules call helper functions like `spots_s_glitchless(0, access_cache)` where `access_cache` is passed as a `{type: "name", name: "access_cache"}` node instead of being resolved to an actual value. The JavaScript rule engine doesn't know how to build or resolve this `access_cache` variable.
+**Root cause:** The access rules call helper functions like `spots_s_glitchless(0, access_cache)` where `access_cache` is passed as a `{type: "name", name: "access_cache"}` node instead of being resolved to an actual value.
 
-**Analysis:**
-- The Python code has helper functions like `spots_s_glitchless(state, player, limit, access_cache)` that expect an `access_cache` dictionary parameter
-- There's a `build_access_cache()` function that constructs this dictionary based on current state
-- The exporter is generating rules that reference `access_cache` as a variable name, not as a resolved value
-- The JavaScript helper functions exist and are implemented correctly in `frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js`
-- But the rule engine can't evaluate them because it doesn't know what `access_cache` should be
+**Current status:** Partially fixed (2 of 8 functions updated)
+- Modified `spots_s_glitchless` and `spots_s_glitched` to detect when `access_cache` is a name reference and build it dynamically
+- Still need to update the remaining functions:
+  - `spots_m_glitchless`
+  - `spots_m_glitched`
+  - `spots_l_glitchless`
+  - `spots_l_glitched`
+  - `spots_xl_glitchless`
+  - `spots_xl_glitched`
 
-**Possible solutions:**
-1. Modify the rule engine to recognize `access_cache` as a special parameter and build it on demand
-2. Modify the exporter to expand these helper calls into the full `graffiti_spots()` function call
-3. Create a wrapper helper that builds the access_cache internally
+**Implementation approach:**
+Each spot counting function now checks if `access_cache` is undefined or a name reference, and if so, builds it using:
+```javascript
+if (!accessCache || (typeof accessCache === 'object' && accessCache?.type === 'name')) {
+    const options = getOptionsFromStaticData(staticData);
+    accessCache = build_access_cache(snapshot, staticData, options.movestyle, options.limit, options.glitched);
+}
+```
+
+**Files modified:**
+- `frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js`
+  - Added `getOptionsFromStaticData()` helper (lines 498-514)
+  - Modified `spots_s_glitchless()` to handle access_cache parameter (lines 517-583)
+  - Modified `spots_s_glitched()` to handle access_cache parameter (lines 585-626)
+  - Updated exports to include spot counting functions and `build_access_cache` (lines 1138-1147)
+
+**Next steps:**
+1. Update the remaining 6 spot counting functions with the same pattern
+2. Re-run the spoiler test to verify the fix works
+3. If tests still fail, add debug logging to identify any remaining issues
 
