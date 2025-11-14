@@ -327,6 +327,12 @@ export function createStateSnapshotInterface(
           }
           return undefined;
         default:
+          // Check if this is a game-specific variable (e.g., required_technologies for Factorio)
+          const currentPlayerId = snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1';
+          if (staticData?.game_info?.[currentPlayerId]?.variables && staticData.game_info[currentPlayerId].variables[name]) {
+            return staticData.game_info[currentPlayerId].variables[name];
+          }
+
           // Check if this is a game-specific constant (e.g., OPTIONS for shapez)
           const gameLogic = getGameLogic(gameName);
           if (gameLogic.constants && gameLogic.constants[name]) {
