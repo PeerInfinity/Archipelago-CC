@@ -41,24 +41,33 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_act2_requirements",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Film Roll"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_monocle",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Monocle"
                 }
               ]
             }
@@ -70,14 +79,50 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_act3_requirements",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Film Roll"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Epitaph Piece",
+                      "count": {
+                        "type": "constant",
+                        "value": 9
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Monocle"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_transcendence_requirements",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Quill"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Gems Module"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Inspectometer Battery"
+                    }
+                  ]
                 }
               ]
             }
@@ -402,14 +447,34 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_monocle",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Monocle"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_act2_bridge_requirements",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Camera Replica"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Pile Of Meat"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Epitaph Piece",
+                      "count": {
+                        "type": "constant",
+                        "value": 9
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -448,14 +513,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -584,14 +660,34 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_monocle",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Monocle"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_act2_bridge_requirements",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Camera Replica"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Pile Of Meat"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Epitaph Piece",
+                      "count": {
+                        "type": "constant",
+                        "value": 9
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -609,14 +705,34 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_monocle",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Monocle"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_act2_bridge_requirements",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Camera Replica"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Pile Of Meat"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Epitaph Piece",
+                      "count": {
+                        "type": "constant",
+                        "value": 9
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -634,14 +750,34 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_monocle",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Monocle"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_act2_bridge_requirements",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Camera Replica"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Pile Of Meat"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Epitaph Piece",
+                      "count": {
+                        "type": "constant",
+                        "value": 9
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -659,14 +795,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -684,14 +831,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -709,14 +867,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -855,14 +1024,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -880,14 +1060,34 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_monocle",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Monocle"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_act2_bridge_requirements",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Camera Replica"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Pile Of Meat"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Epitaph Piece",
+                      "count": {
+                        "type": "constant",
+                        "value": 9
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -905,14 +1105,34 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_monocle",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Monocle"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_act2_bridge_requirements",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Camera Replica"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Pile Of Meat"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Epitaph Piece",
+                      "count": {
+                        "type": "constant",
+                        "value": 9
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -930,14 +1150,34 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_monocle",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Monocle"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_act2_bridge_requirements",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Camera Replica"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Pile Of Meat"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Epitaph Piece",
+                      "count": {
+                        "type": "constant",
+                        "value": 9
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -955,14 +1195,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -980,14 +1231,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -1005,14 +1267,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -1030,14 +1303,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -1055,14 +1339,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -1080,14 +1375,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -1105,14 +1411,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -1130,14 +1447,34 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_monocle",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Monocle"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_act2_bridge_requirements",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Camera Replica"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Pile Of Meat"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Epitaph Piece",
+                      "count": {
+                        "type": "constant",
+                        "value": 9
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -1206,14 +1543,34 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_monocle",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Monocle"
                 },
                 {
-                  "type": "helper",
-                  "name": "has_act2_bridge_requirements",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Camera Replica"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Pile Of Meat"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Epitaph Piece",
+                      "count": {
+                        "type": "constant",
+                        "value": 9
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -1259,14 +1616,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_camera_and_meat",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Camera Replica"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pile Of Meat"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_epitaph_pieces",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Epitaph Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 }
               ]
             },
@@ -1440,9 +1808,8 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_inspectometer_battery",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Inspectometer Battery"
                 }
               ]
             },
@@ -1467,9 +1834,8 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_inspectometer_battery",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Inspectometer Battery"
                 }
               ]
             },
@@ -1494,9 +1860,8 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_inspectometer_battery",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Inspectometer Battery"
                 }
               ]
             },
@@ -1521,9 +1886,21 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_transcendence_requirements",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Quill"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Gems Module"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Inspectometer Battery"
+                    }
+                  ]
                 }
               ]
             },
@@ -1548,9 +1925,8 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_inspectometer_battery",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Inspectometer Battery"
                 }
               ]
             },
@@ -1575,9 +1951,8 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_inspectometer_battery",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Inspectometer Battery"
                 }
               ]
             },
@@ -1653,9 +2028,8 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_inspectometer_battery",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Inspectometer Battery"
                 }
               ]
             },
@@ -1684,9 +2058,17 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_gems_and_battery",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Gems Module"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Inspectometer Battery"
+                    }
+                  ]
                 }
               ]
             },
@@ -1715,9 +2097,17 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_gems_and_battery",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Gems Module"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Inspectometer Battery"
+                    }
+                  ]
                 }
               ]
             },
@@ -1746,9 +2136,17 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_gems_and_battery",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Gems Module"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Inspectometer Battery"
+                    }
+                  ]
                 }
               ]
             },
@@ -1777,9 +2175,17 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_gems_and_battery",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Gems Module"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Inspectometer Battery"
+                    }
+                  ]
                 }
               ]
             },
@@ -1808,9 +2214,17 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_gems_and_battery",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Gems Module"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Inspectometer Battery"
+                    }
+                  ]
                 }
               ]
             },
@@ -1863,9 +2277,8 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_inspectometer_battery",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Inspectometer Battery"
                 }
               ]
             },
@@ -1907,9 +2320,8 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_inspectometer_battery",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Inspectometer Battery"
                 }
               ]
             },
@@ -1948,9 +2360,8 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_inspectometer_battery",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Inspectometer Battery"
                 }
               ]
             },
@@ -1975,9 +2386,8 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_inspectometer_battery",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Inspectometer Battery"
                 }
               ]
             },
@@ -2002,9 +2412,8 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_inspectometer_battery",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Inspectometer Battery"
                 }
               ]
             },
@@ -2029,9 +2438,8 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_inspectometer_battery",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Inspectometer Battery"
                 }
               ]
             },
@@ -2056,9 +2464,17 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_gems_and_battery",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Gems Module"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Inspectometer Battery"
+                    }
+                  ]
                 }
               ]
             },
@@ -2114,9 +2530,17 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_gems_and_battery",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Gems Module"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Inspectometer Battery"
+                    }
+                  ]
                 }
               ]
             },
