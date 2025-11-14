@@ -1123,6 +1123,23 @@ export const evaluateRule = (rule, context, depth = 0) => {
         break;
       }
 
+      case 'region_check': {
+        // Check if a region is accessible (can be reached)
+        const regionName = evaluateRule(rule.region, context, depth + 1);
+        if (regionName === undefined) {
+          result = undefined;
+        } else if (typeof context.isRegionAccessible === 'function') {
+          result = context.isRegionAccessible(regionName);
+          if (result === undefined) {
+            log('warn', `[evaluateRule] Region ${regionName} accessibility could not be determined`);
+          }
+        } else {
+          log('warn', '[evaluateRule] context.isRegionAccessible is not a function for region_check.');
+          result = undefined;
+        }
+        break;
+      }
+
       case 'count_check': {
         const itemName = evaluateRule(rule.item, context, depth + 1);
         // Default count to 1 if not specified
@@ -1494,6 +1511,15 @@ export function debugRule(rule, indent = 0) {
       } else {
         log('info', `${prefix}Location (complex):`);
         debugRule(rule.location, indent + 2);
+      }
+      break;
+
+    case 'region_check':
+      if (typeof rule.region === 'string') {
+        log('info', `${prefix}Region: ${rule.region}`);
+      } else {
+        log('info', `${prefix}Region (complex):`);
+        debugRule(rule.region, indent + 2);
       }
       break;
 
