@@ -263,3 +263,6 @@ test3/
 test4/
 frontend/modules/mazeGame-iframe/
 .git.disabled/
+# Temporary test output files
+generate_output*.txt
+spoiler_test*.txt
