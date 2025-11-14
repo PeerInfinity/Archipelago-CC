@@ -20,23 +20,96 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         super().__init__()
         logger.info("SMZ3 exporter initialized")
 
+    def _handle_entrance_rule(self, rule_func, entrance_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Handle SMZ3 entrance rules by extracting the region's CanEnter method.
+
+        SMZ3 entrance rules have signature: lambda state, region=region: region.CanEnter(state.smz3state[player])
+        We extract the region object and analyze its CanEnter method.
+
+        Args:
+            rule_func: The entrance rule function
+            entrance_name: Name of the entrance (e.g., "Menu->Castle Tower")
+
+        Returns:
+            Analyzed rule dict, or None to fall back to standard analysis
+        """
+        logger.info(f"Processing entrance: {entrance_name}")
+
+        # Try to extract the 'region' object from default arguments
+        region_object = None
+        if hasattr(rule_func, '__code__') and hasattr(rule_func, '__defaults__'):
+            arg_names = rule_func.__code__.co_varnames[:rule_func.__code__.co_argcount]
+            defaults = rule_func.__defaults__ or ()
+
+            logger.info(f"Entrance args for {entrance_name}: {arg_names}, defaults: {len(defaults)}")
+
+            # SMZ3 entrance rules have signature: lambda state, region=region: ...
+            if len(arg_names) >= 2 and 'region' in arg_names:
+                region_index = list(arg_names).index('region')
+                defaults_offset = len(arg_names) - len(defaults)
+                if region_index >= defaults_offset:
+                    region_object = defaults[region_index - defaults_offset]
+                    logger.info(f"Found 'region' object from defaults: {type(region_object)}")
+
+        if not region_object:
+            logger.info(f"No 'region' object found in defaults for {entrance_name}")
+            return None
+
+        # Check if this looks like a TotalSMZ3 Region object
+        has_can_enter = hasattr(region_object, 'CanEnter')
+        logger.info(f"region_object attributes - CanEnter: {has_can_enter}, type: {type(region_object)}")
+
+        if not has_can_enter:
+            logger.info(f"Not a TotalSMZ3 Region object for {entrance_name}")
+            return None
+
+        logger.info(f"Found TotalSMZ3 Region object for '{entrance_name}', extracting CanEnter logic")
+
+        # Extract and analyze the CanEnter method
+        try:
+            can_enter_func = region_object.CanEnter
+
+            # Import the analyzer here to avoid circular imports
+            from exporter.analyzer import analyze_rule
+
+            # Analyze the CanEnter function
+            # This function has signature: lambda items: <requirements>
+            # where items is a TotalSMZ3 Progression object
+            analyzed_rule = analyze_rule(can_enter_func)
+
+            if analyzed_rule:
+                logger.info(f"Successfully extracted entrance logic for '{entrance_name}'")
+                return analyzed_rule
+            else:
+                logger.warning(f"Failed to analyze CanEnter for '{entrance_name}', falling back to default")
+                return None
+
+        except Exception as e:
+            logger.error(f"Error analyzing TotalSMZ3 entrance logic for '{entrance_name}': {e}")
+            return None
+
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """
         Override rule analysis for SMZ3-specific patterns.
 
-        This method is called before the standard rule analysis. It detects
-        SMZ3 location access rules that use loc.Available() and extracts the
-        actual item requirements from the TotalSMZ3 Location object.
+        This method is called before the standard rule analysis. It handles:
+        1. Location access rules that use loc.Available()
+        2. Entrance rules that use region.CanEnter()
 
         Returns None to fall back to standard analysis, or a dict with the analyzed rule.
         """
-        # Only handle location access rules (not entrance rules or item rules)
+        # Only handle rules with a target name
         if not rule_target_name:
             return None
 
-        # Skip entrance rules (contain "->") and item rules (contain "Item Rule")
-        if "->" in str(rule_target_name) or "Item Rule" in str(rule_target_name):
+        # Skip item rules
+        if "Item Rule" in str(rule_target_name):
             return None
+
+        # Handle entrance rules (contain "->")
+        if "->" in str(rule_target_name):
+            return self._handle_entrance_rule(rule_func, rule_target_name)
 
         logger.info(f"Processing location: {rule_target_name}")
 

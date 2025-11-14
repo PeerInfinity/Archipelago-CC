@@ -19,360 +19,4271 @@
             "name": "Menu->Castle Tower",
             "connected_region": "Castle Tower",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "smz3_CanKillManyEnemies",
+                  "args": []
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Cape"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "MasterSword"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Eastern Palace",
             "connected_region": "Eastern Palace",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Menu->Desert Palace",
             "connected_region": "Desert Palace",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Book"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Mirror"
+                    },
+                    {
+                      "type": "helper",
+                      "name": "smz3_CanLiftHeavy",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Flute"
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "smz3_CanAccessMiseryMirePortal",
+                      "args": [
+                        {
+                          "type": "attribute",
+                          "object": {
+                            "type": "name",
+                            "name": "self"
+                          },
+                          "attr": "Config"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Mirror"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Tower of Hera",
             "connected_region": "Tower of Hera",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Mirror"
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Hookshot"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Hammer"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "world"
+                    },
+                    "attr": "CanEnter"
+                  },
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Light World Death Mountain West"
+                    },
+                    {
+                      "type": "name",
+                      "name": "items"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Palace of Darkness",
             "connected_region": "Palace of Darkness",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "MoonPearl"
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "world"
+                    },
+                    "attr": "CanEnter"
+                  },
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Dark World North East"
+                    },
+                    {
+                      "type": "name",
+                      "name": "items"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Swamp Palace",
             "connected_region": "Swamp Palace",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "MoonPearl"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Mirror"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Flippers"
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "world"
+                    },
+                    "attr": "CanEnter"
+                  },
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Dark World South"
+                    },
+                    {
+                      "type": "name",
+                      "name": "items"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Skull Woods",
             "connected_region": "Skull Woods",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "MoonPearl"
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "world"
+                    },
+                    "attr": "CanEnter"
+                  },
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Dark World North West"
+                    },
+                    {
+                      "type": "name",
+                      "name": "items"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Thieves' Town",
             "connected_region": "Thieves' Town",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "MoonPearl"
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "world"
+                    },
+                    "attr": "CanEnter"
+                  },
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Dark World North West"
+                    },
+                    {
+                      "type": "name",
+                      "name": "items"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Ice Palace",
             "connected_region": "Ice Palace",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "MoonPearl"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Flippers"
+                },
+                {
+                  "type": "helper",
+                  "name": "smz3_CanLiftHeavy",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "smz3_CanMeltFreezors",
+                  "args": []
+                }
+              ]
             }
           },
           {
             "name": "Menu->Misery Mire",
             "connected_region": "Misery Mire",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "error",
+              "message": "Analysis did not produce a result structure (returned None).",
+              "subtype": "no_result",
+              "debug_log": [],
+              "error_log": []
             }
           },
           {
             "name": "Menu->Turtle Rock",
             "connected_region": "Turtle Rock",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "error",
+              "message": "Analysis did not produce a result structure (returned None).",
+              "subtype": "no_result",
+              "debug_log": [],
+              "error_log": []
             }
           },
           {
             "name": "Menu->Ganon's Tower",
             "connected_region": "Ganon's Tower",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "MoonPearl"
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "world"
+                    },
+                    "attr": "CanEnter"
+                  },
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Dark World Death Mountain East"
+                    },
+                    {
+                      "type": "name",
+                      "name": "items"
+                    }
+                  ]
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "world"
+                    },
+                    "attr": "CanAcquireAtLeast"
+                  },
+                  "args": [
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "self"
+                        },
+                        "attr": "world"
+                      },
+                      "attr": "TowerCrystals"
+                    },
+                    {
+                      "type": "name",
+                      "name": "items"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "RewardType"
+                      },
+                      "attr": "AnyCrystal"
+                    }
+                  ]
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "world"
+                    },
+                    "attr": "CanAcquireAtLeast"
+                  },
+                  "args": [
+                    {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "world"
+                          },
+                          "attr": "TourianBossTokens"
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "world"
+                          },
+                          "attr": "TowerCrystals"
+                        }
+                      },
+                      "op": "/",
+                      "right": {
+                        "type": "constant",
+                        "value": 7
+                      }
+                    },
+                    {
+                      "type": "name",
+                      "name": "items"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "RewardType"
+                      },
+                      "attr": "AnyBossToken"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Light World Death Mountain West",
             "connected_region": "Light World Death Mountain West",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Flute"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "smz3_CanLiftLight",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lamp"
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "smz3_CanAccessDeathMountainPortal",
+                  "args": []
+                }
+              ]
             }
           },
           {
             "name": "Menu->Light World Death Mountain East",
             "connected_region": "Light World Death Mountain East",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "world"
+                    },
+                    "attr": "CanEnter"
+                  },
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Light World Death Mountain West"
+                    },
+                    {
+                      "type": "name",
+                      "name": "items"
+                    }
+                  ]
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Hammer"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Mirror"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Hookshot"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Light World North West",
             "connected_region": "Light World North West",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Menu->Light World North East",
             "connected_region": "Light World North East",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Menu->Light World South",
             "connected_region": "Light World South",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Menu->Hyrule Castle",
             "connected_region": "Hyrule Castle",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Menu->Dark World Death Mountain West",
             "connected_region": "Dark World Death Mountain West",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Menu->Dark World Death Mountain East",
             "connected_region": "Dark World Death Mountain East",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "smz3_CanLiftHeavy",
+                  "args": []
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "world"
+                    },
+                    "attr": "CanEnter"
+                  },
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Light World Death Mountain East"
+                    },
+                    {
+                      "type": "name",
+                      "name": "items"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Dark World North West",
             "connected_region": "Dark World North West",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "MoonPearl"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "function_call",
+                              "function": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "name",
+                                    "name": "self"
+                                  },
+                                  "attr": "world"
+                                },
+                                "attr": "CanAcquire"
+                              },
+                              "args": [
+                                {
+                                  "type": "name",
+                                  "name": "items"
+                                },
+                                {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "name",
+                                    "name": "RewardType"
+                                  },
+                                  "attr": "Agahnim"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "and",
+                              "conditions": [
+                                {
+                                  "type": "helper",
+                                  "name": "smz3_CanAccessDarkWorldPortal",
+                                  "args": [
+                                    {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "name",
+                                        "name": "self"
+                                      },
+                                      "attr": "Config"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Flippers"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Hookshot"
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "Flippers"
+                            },
+                            {
+                              "type": "helper",
+                              "name": "smz3_CanLiftLight",
+                              "args": []
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Hammer"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Hammer"
+                        },
+                        {
+                          "type": "helper",
+                          "name": "smz3_CanLiftLight",
+                          "args": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "smz3_CanLiftHeavy",
+                      "args": []
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Dark World North East",
             "connected_region": "Dark World North East",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "world"
+                    },
+                    "attr": "CanAcquire"
+                  },
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "items"
+                    },
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "RewardType"
+                      },
+                      "attr": "Agahnim"
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "MoonPearl"
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "Hammer"
+                            },
+                            {
+                              "type": "helper",
+                              "name": "smz3_CanLiftLight",
+                              "args": []
+                            }
+                          ]
+                        },
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "helper",
+                              "name": "smz3_CanLiftHeavy",
+                              "args": []
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Flippers"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "helper",
+                              "name": "smz3_CanAccessDarkWorldPortal",
+                              "args": [
+                                {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "name",
+                                    "name": "self"
+                                  },
+                                  "attr": "Config"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Flippers"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Dark World South",
             "connected_region": "Dark World South",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "MoonPearl"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "function_call",
+                              "function": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "name",
+                                    "name": "self"
+                                  },
+                                  "attr": "world"
+                                },
+                                "attr": "CanAcquire"
+                              },
+                              "args": [
+                                {
+                                  "type": "name",
+                                  "name": "items"
+                                },
+                                {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "name",
+                                    "name": "RewardType"
+                                  },
+                                  "attr": "Agahnim"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "and",
+                              "conditions": [
+                                {
+                                  "type": "helper",
+                                  "name": "smz3_CanAccessDarkWorldPortal",
+                                  "args": [
+                                    {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "name",
+                                        "name": "self"
+                                      },
+                                      "attr": "Config"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Flippers"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "Hammer"
+                            },
+                            {
+                              "type": "and",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Hookshot"
+                                },
+                                {
+                                  "type": "or",
+                                  "conditions": [
+                                    {
+                                      "type": "item_check",
+                                      "item": "Flippers"
+                                    },
+                                    {
+                                      "type": "helper",
+                                      "name": "smz3_CanLiftLight",
+                                      "args": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Hammer"
+                        },
+                        {
+                          "type": "helper",
+                          "name": "smz3_CanLiftLight",
+                          "args": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "smz3_CanLiftHeavy",
+                      "args": []
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Dark World Mire",
             "connected_region": "Dark World Mire",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Flute"
+                    },
+                    {
+                      "type": "helper",
+                      "name": "smz3_CanLiftHeavy",
+                      "args": []
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "smz3_CanAccessMiseryMirePortal",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "Config"
+                    }
+                  ]
+                }
+              ]
             }
           },
           {
             "name": "Menu->Crateria West",
             "connected_region": "Crateria West",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "smz3_CanDestroyBombWalls",
+                  "args": []
+                },
+                {
+                  "type": "item_check",
+                  "item": "SpeedBooster"
+                }
+              ]
             }
           },
           {
             "name": "Menu->Crateria Central",
             "connected_region": "Crateria Central",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Menu->Crateria East",
             "connected_region": "Crateria East",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "Logic"
+                },
+                "op": "==",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "SMLogic"
+                  },
+                  "attr": "Normal"
+                }
+              },
+              "if_true": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "Config"
+                          },
+                          "attr": "Keysanity"
+                        },
+                        "if_true": {
+                          "type": "item_check",
+                          "item": "CardCrateriaL2"
+                        },
+                        "if_false": {
+                          "type": "helper",
+                          "name": "smz3_CanUsePowerBombs",
+                          "args": []
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Super"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "Config"
+                          },
+                          "attr": "Keysanity"
+                        },
+                        "if_true": {
+                          "type": "item_check",
+                          "item": "CardCrateriaL2"
+                        },
+                        "if_false": {
+                          "type": "helper",
+                          "name": "smz3_CanUsePowerBombs",
+                          "args": []
+                        }
+                      },
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessNorfairUpperPortal",
+                        "args": []
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Ice"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "HiJump"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "SpaceJump"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessMaridiaPortal",
+                        "args": [
+                          {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "world"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Gravity"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Super"
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "CardMaridiaL2"
+                              },
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanDestroyBombWalls",
+                                "args": []
+                              }
+                            ]
+                          },
+                          {
+                            "type": "function_call",
+                            "function": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "function_call",
+                                "function": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "name",
+                                      "name": "self"
+                                    },
+                                    "attr": "world"
+                                  },
+                                  "attr": "GetLocation"
+                                },
+                                "args": [
+                                  {
+                                    "type": "constant",
+                                    "value": "Space Jump"
+                                  }
+                                ]
+                              },
+                              "attr": "Available"
+                            },
+                            "args": [
+                              {
+                                "type": "name",
+                                "name": "items"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanUsePowerBombs",
+                        "args": []
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Super"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Gravity"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "Config"
+                          },
+                          "attr": "Keysanity"
+                        },
+                        "if_true": {
+                          "type": "item_check",
+                          "item": "CardCrateriaL2"
+                        },
+                        "if_false": {
+                          "type": "helper",
+                          "name": "smz3_CanUsePowerBombs",
+                          "args": []
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Super"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "Config"
+                          },
+                          "attr": "Keysanity"
+                        },
+                        "if_true": {
+                          "type": "item_check",
+                          "item": "CardCrateriaL2"
+                        },
+                        "if_false": {
+                          "type": "helper",
+                          "name": "smz3_CanUsePowerBombs",
+                          "args": []
+                        }
+                      },
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessNorfairUpperPortal",
+                        "args": []
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Ice"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "HiJump"
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanFly",
+                            "args": []
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanSpringBallJump",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessMaridiaPortal",
+                        "args": [
+                          {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "world"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "CardMaridiaL2"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Super"
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "and",
+                                    "conditions": [
+                                      {
+                                        "type": "item_check",
+                                        "item": "HiJump"
+                                      },
+                                      {
+                                        "type": "helper",
+                                        "name": "smz3_CanPassBombPassages",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "and",
+                                    "conditions": [
+                                      {
+                                        "type": "item_check",
+                                        "item": "Gravity"
+                                      },
+                                      {
+                                        "type": "helper",
+                                        "name": "smz3_CanDestroyBombWalls",
+                                        "args": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "Gravity"
+                              },
+                              {
+                                "type": "function_call",
+                                "function": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "function_call",
+                                    "function": {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "attribute",
+                                        "object": {
+                                          "type": "name",
+                                          "name": "self"
+                                        },
+                                        "attr": "world"
+                                      },
+                                      "attr": "GetLocation"
+                                    },
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": "Space Jump"
+                                      }
+                                    ]
+                                  },
+                                  "attr": "Available"
+                                },
+                                "args": [
+                                  {
+                                    "type": "name",
+                                    "name": "items"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanUsePowerBombs",
+                        "args": []
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Super"
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Gravity"
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "HiJump"
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "item_check",
+                                    "item": "Ice"
+                                  },
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_CanSpringBallJump",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Grapple"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "CardMaridiaL1"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
             "name": "Menu->Brinstar Blue",
             "connected_region": "Brinstar Blue",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Menu->Brinstar Green",
             "connected_region": "Brinstar Green",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "smz3_CanDestroyBombWalls",
+                  "args": []
+                },
+                {
+                  "type": "item_check",
+                  "item": "SpeedBooster"
+                }
+              ]
             }
           },
           {
             "name": "Menu->Brinstar Pink",
             "connected_region": "Brinstar Pink",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "Logic"
+                },
+                "op": "==",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "SMLogic"
+                  },
+                  "attr": "Normal"
+                }
+              },
+              "if_true": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanOpenRedDoors",
+                        "args": []
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanDestroyBombWalls",
+                            "args": []
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "SpeedBooster"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "smz3_CanUsePowerBombs",
+                    "args": []
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessNorfairUpperPortal",
+                        "args": []
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Morph"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Wave"
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Ice"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "HiJump"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "SpaceJump"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanOpenRedDoors",
+                        "args": []
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanDestroyBombWalls",
+                            "args": []
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "SpeedBooster"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "smz3_CanUsePowerBombs",
+                    "args": []
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessNorfairUpperPortal",
+                        "args": []
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Morph"
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Missile"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Super"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Wave"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Ice"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "HiJump"
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanSpringBallJump",
+                            "args": []
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanFly",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
             "name": "Menu->Brinstar Red",
             "connected_region": "Brinstar Red",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "Logic"
+                },
+                "op": "==",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "SMLogic"
+                  },
+                  "attr": "Normal"
+                }
+              },
+              "if_true": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanDestroyBombWalls",
+                            "args": []
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "SpeedBooster"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Super"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Morph"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessNorfairUpperPortal",
+                        "args": []
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Ice"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "HiJump"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "SpaceJump"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanDestroyBombWalls",
+                            "args": []
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "SpeedBooster"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Super"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Morph"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessNorfairUpperPortal",
+                        "args": []
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Ice"
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanSpringBallJump",
+                            "args": []
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "HiJump"
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanFly",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
             "name": "Menu->Brinstar Kraid",
             "connected_region": "Brinstar Kraid",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "smz3_CanDestroyBombWalls",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "SpeedBooster"
+                    },
+                    {
+                      "type": "helper",
+                      "name": "smz3_CanAccessNorfairUpperPortal",
+                      "args": []
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Super"
+                },
+                {
+                  "type": "helper",
+                  "name": "smz3_CanPassBombPassages",
+                  "args": []
+                }
+              ]
             }
           },
           {
             "name": "Menu->Wrecked Ship",
             "connected_region": "Wrecked Ship",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "Logic"
+                },
+                "op": "==",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "SMLogic"
+                  },
+                  "attr": "Normal"
+                }
+              },
+              "if_true": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Super"
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "conditional",
+                            "test": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "name",
+                                  "name": "self"
+                                },
+                                "attr": "Config"
+                              },
+                              "attr": "Keysanity"
+                            },
+                            "if_true": {
+                              "type": "item_check",
+                              "item": "CardCrateriaL2"
+                            },
+                            "if_false": {
+                              "type": "helper",
+                              "name": "smz3_CanUsePowerBombs",
+                              "args": []
+                            }
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "SpeedBooster"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Grapple"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "SpaceJump"
+                              },
+                              {
+                                "type": "and",
+                                "conditions": [
+                                  {
+                                    "type": "item_check",
+                                    "item": "Gravity"
+                                  },
+                                  {
+                                    "type": "or",
+                                    "conditions": [
+                                      {
+                                        "type": "helper",
+                                        "name": "smz3_CanIbj",
+                                        "args": []
+                                      },
+                                      {
+                                        "type": "item_check",
+                                        "item": "HiJump"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanUsePowerBombs",
+                            "args": []
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Gravity"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanAccessMaridiaPortal",
+                            "args": [
+                              {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "name",
+                                  "name": "self"
+                                },
+                                "attr": "world"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Gravity"
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "and",
+                                "conditions": [
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_CanDestroyBombWalls",
+                                    "args": []
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "CardMaridiaL2"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "function_call",
+                                "function": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "function_call",
+                                    "function": {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "attribute",
+                                        "object": {
+                                          "type": "name",
+                                          "name": "self"
+                                        },
+                                        "attr": "world"
+                                      },
+                                      "attr": "GetLocation"
+                                    },
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": "Space Jump"
+                                      }
+                                    ]
+                                  },
+                                  "attr": "Available"
+                                },
+                                "args": [
+                                  {
+                                    "type": "name",
+                                    "name": "items"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Super"
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "conditional",
+                        "test": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "Config"
+                          },
+                          "attr": "Keysanity"
+                        },
+                        "if_true": {
+                          "type": "item_check",
+                          "item": "CardCrateriaL2"
+                        },
+                        "if_false": {
+                          "type": "helper",
+                          "name": "smz3_CanUsePowerBombs",
+                          "args": []
+                        }
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanUsePowerBombs",
+                            "args": []
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "Gravity"
+                              },
+                              {
+                                "type": "and",
+                                "conditions": [
+                                  {
+                                    "type": "item_check",
+                                    "item": "HiJump"
+                                  },
+                                  {
+                                    "type": "or",
+                                    "conditions": [
+                                      {
+                                        "type": "item_check",
+                                        "item": "Ice"
+                                      },
+                                      {
+                                        "type": "helper",
+                                        "name": "smz3_CanSpringBallJump",
+                                        "args": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "Grapple"
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "CardMaridiaL1"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanAccessMaridiaPortal",
+                            "args": [
+                              {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "name",
+                                  "name": "self"
+                                },
+                                "attr": "world"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "and",
+                                "conditions": [
+                                  {
+                                    "type": "item_check",
+                                    "item": "HiJump"
+                                  },
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_CanPassBombPassages",
+                                    "args": []
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "CardMaridiaL2"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "and",
+                                "conditions": [
+                                  {
+                                    "type": "item_check",
+                                    "item": "Gravity"
+                                  },
+                                  {
+                                    "type": "or",
+                                    "conditions": [
+                                      {
+                                        "type": "and",
+                                        "conditions": [
+                                          {
+                                            "type": "helper",
+                                            "name": "smz3_CanDestroyBombWalls",
+                                            "args": []
+                                          },
+                                          {
+                                            "type": "item_check",
+                                            "item": "CardMaridiaL2"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "type": "function_call",
+                                        "function": {
+                                          "type": "attribute",
+                                          "object": {
+                                            "type": "function_call",
+                                            "function": {
+                                              "type": "attribute",
+                                              "object": {
+                                                "type": "attribute",
+                                                "object": {
+                                                  "type": "name",
+                                                  "name": "self"
+                                                },
+                                                "attr": "world"
+                                              },
+                                              "attr": "GetLocation"
+                                            },
+                                            "args": [
+                                              {
+                                                "type": "constant",
+                                                "value": "Space Jump"
+                                              }
+                                            ]
+                                          },
+                                          "attr": "Available"
+                                        },
+                                        "args": [
+                                          {
+                                            "type": "name",
+                                            "name": "items"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
             "name": "Menu->Maridia Outer",
             "connected_region": "Maridia Outer",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "Logic"
+                },
+                "op": "==",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "SMLogic"
+                  },
+                  "attr": "Normal"
+                }
+              },
+              "if_true": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Gravity"
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "function_call",
+                            "function": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "name",
+                                  "name": "self"
+                                },
+                                "attr": "world"
+                              },
+                              "attr": "CanEnter"
+                            },
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": "Norfair Upper West"
+                              },
+                              {
+                                "type": "name",
+                                "name": "items"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanUsePowerBombs",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanAccessMaridiaPortal",
+                            "args": [
+                              {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "name",
+                                  "name": "self"
+                                },
+                                "attr": "world"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "CardMaridiaL1"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "CardMaridiaL2"
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanPassBombPassages",
+                                "args": []
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "ScrewAttack"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "function_call",
+                        "function": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "world"
+                          },
+                          "attr": "CanEnter"
+                        },
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Norfair Upper West"
+                          },
+                          {
+                            "type": "name",
+                            "name": "items"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanUsePowerBombs",
+                        "args": []
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Gravity"
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "HiJump"
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_CanSpringBallJump",
+                                    "args": []
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "Ice"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessMaridiaPortal",
+                        "args": [
+                          {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "world"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "CardMaridiaL1"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "CardMaridiaL2"
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanPassBombPassages",
+                            "args": []
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "Gravity"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "ScrewAttack"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "Super"
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "item_check",
+                                    "item": "Gravity"
+                                  },
+                                  {
+                                    "type": "and",
+                                    "conditions": [
+                                      {
+                                        "type": "item_check",
+                                        "item": "HiJump"
+                                      },
+                                      {
+                                        "type": "or",
+                                        "conditions": [
+                                          {
+                                            "type": "helper",
+                                            "name": "smz3_CanSpringBallJump",
+                                            "args": []
+                                          },
+                                          {
+                                            "type": "item_check",
+                                            "item": "Ice"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
             "name": "Menu->Maridia Inner",
             "connected_region": "Maridia Inner",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "Logic"
+                },
+                "op": "==",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "SMLogic"
+                  },
+                  "attr": "Normal"
+                }
+              },
+              "if_true": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Gravity"
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "function_call",
+                            "function": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "name",
+                                  "name": "self"
+                                },
+                                "attr": "world"
+                              },
+                              "attr": "CanEnter"
+                            },
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": "Norfair Upper West"
+                              },
+                              {
+                                "type": "name",
+                                "name": "items"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Super"
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanUsePowerBombs",
+                            "args": []
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanFly",
+                                "args": []
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "SpeedBooster"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Grapple"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessMaridiaPortal",
+                        "args": [
+                          {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "world"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Super"
+                      },
+                      {
+                        "type": "function_call",
+                        "function": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "world"
+                          },
+                          "attr": "CanEnter"
+                        },
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Norfair Upper West"
+                          },
+                          {
+                            "type": "name",
+                            "name": "items"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanUsePowerBombs",
+                        "args": []
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Gravity"
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "HiJump"
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "item_check",
+                                    "item": "Ice"
+                                  },
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_CanSpringBallJump",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Grapple"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "smz3_CanAccessMaridiaPortal",
+                    "args": [
+                      {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "self"
+                        },
+                        "attr": "world"
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
             "name": "Menu->Norfair Upper West",
             "connected_region": "Norfair Upper West",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "smz3_CanDestroyBombWalls",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "SpeedBooster"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Super"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Morph"
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "smz3_CanAccessNorfairUpperPortal",
+                  "args": []
+                }
+              ]
             }
           },
           {
             "name": "Menu->Norfair Upper East",
             "connected_region": "Norfair Upper East",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "Logic"
+                },
+                "op": "==",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "SMLogic"
+                  },
+                  "attr": "Normal"
+                }
+              },
+              "if_true": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanDestroyBombWalls",
+                                "args": []
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "SpeedBooster"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Super"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Morph"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessNorfairUpperPortal",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Varia"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Super"
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanOpenRedDoors",
+                            "args": []
+                          },
+                          {
+                            "type": "conditional",
+                            "test": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "name",
+                                  "name": "self"
+                                },
+                                "attr": "Config"
+                              },
+                              "attr": "Keysanity"
+                            },
+                            "if_true": {
+                              "type": "item_check",
+                              "item": "CardNorfairL2"
+                            },
+                            "if_false": {
+                              "type": "item_check",
+                              "item": "Super"
+                            }
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanFly",
+                                "args": []
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "HiJump"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "SpeedBooster"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "SpeedBooster"
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "CardNorfairL2"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Wave"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanUsePowerBombs",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanDestroyBombWalls",
+                                "args": []
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "SpeedBooster"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Super"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Morph"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessNorfairUpperPortal",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "smz3_CanHellRun",
+                    "args": []
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanOpenRedDoors",
+                            "args": []
+                          },
+                          {
+                            "type": "conditional",
+                            "test": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "name",
+                                  "name": "self"
+                                },
+                                "attr": "Config"
+                              },
+                              "attr": "Keysanity"
+                            },
+                            "if_true": {
+                              "type": "item_check",
+                              "item": "CardNorfairL2"
+                            },
+                            "if_false": {
+                              "type": "item_check",
+                              "item": "Super"
+                            }
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanFly",
+                                "args": []
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "HiJump"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "SpeedBooster"
+                              },
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanSpringBallJump",
+                                "args": []
+                              },
+                              {
+                                "type": "and",
+                                "conditions": [
+                                  {
+                                    "type": "item_check",
+                                    "item": "Varia"
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "Ice"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "SpeedBooster"
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "CardNorfairL2"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Missile"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Super"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Wave"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanUsePowerBombs",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
             "name": "Menu->Norfair Upper Crocomire",
             "connected_region": "Norfair Upper Crocomire",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "Logic"
+                },
+                "op": "==",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "SMLogic"
+                  },
+                  "attr": "Normal"
+                }
+              },
+              "if_true": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_CanDestroyBombWalls",
+                                    "args": []
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "SpeedBooster"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Super"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Morph"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanAccessNorfairUpperPortal",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Varia"
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "conditional",
+                                "test": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "name",
+                                      "name": "self"
+                                    },
+                                    "attr": "Config"
+                                  },
+                                  "attr": "Keysanity"
+                                },
+                                "if_true": {
+                                  "type": "item_check",
+                                  "item": "CardNorfairL1"
+                                },
+                                "if_false": {
+                                  "type": "item_check",
+                                  "item": "Super"
+                                }
+                              },
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanUsePowerBombs",
+                                "args": []
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "SpeedBooster"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "SpeedBooster"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Wave"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanOpenRedDoors",
+                                "args": []
+                              },
+                              {
+                                "type": "conditional",
+                                "test": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "name",
+                                      "name": "self"
+                                    },
+                                    "attr": "Config"
+                                  },
+                                  "attr": "Keysanity"
+                                },
+                                "if_true": {
+                                  "type": "item_check",
+                                  "item": "CardNorfairL2"
+                                },
+                                "if_false": {
+                                  "type": "item_check",
+                                  "item": "Super"
+                                }
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_CanFly",
+                                    "args": []
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "HiJump"
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "SpeedBooster"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_CanPassBombPassages",
+                                    "args": []
+                                  },
+                                  {
+                                    "type": "and",
+                                    "conditions": [
+                                      {
+                                        "type": "item_check",
+                                        "item": "Gravity"
+                                      },
+                                      {
+                                        "type": "item_check",
+                                        "item": "Morph"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Wave"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Varia"
+                      },
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessNorfairLowerPortal",
+                        "args": []
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "ScrewAttack"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "SpaceJump"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Super"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Gravity"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Wave"
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "CardNorfairL2"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Morph"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_CanDestroyBombWalls",
+                                    "args": []
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "SpeedBooster"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Super"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Morph"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanAccessNorfairUpperPortal",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "conditional",
+                                "test": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "name",
+                                      "name": "self"
+                                    },
+                                    "attr": "Config"
+                                  },
+                                  "attr": "Keysanity"
+                                },
+                                "if_true": {
+                                  "type": "item_check",
+                                  "item": "CardNorfairL1"
+                                },
+                                "if_false": {
+                                  "type": "item_check",
+                                  "item": "Super"
+                                }
+                              },
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanUsePowerBombs",
+                                "args": []
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "SpeedBooster"
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_HasEnergyReserves",
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": 3
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "Varia"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "SpeedBooster"
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_HasEnergyReserves",
+                                    "args": [
+                                      {
+                                        "type": "constant",
+                                        "value": 2
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "Varia"
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "item_check",
+                                    "item": "Missile"
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "Super"
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "Wave"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanHellRun",
+                                "args": []
+                              },
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanOpenRedDoors",
+                                "args": []
+                              },
+                              {
+                                "type": "conditional",
+                                "test": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "name",
+                                      "name": "self"
+                                    },
+                                    "attr": "Config"
+                                  },
+                                  "attr": "Keysanity"
+                                },
+                                "if_true": {
+                                  "type": "item_check",
+                                  "item": "CardNorfairL2"
+                                },
+                                "if_false": {
+                                  "type": "item_check",
+                                  "item": "Super"
+                                }
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_CanFly",
+                                    "args": []
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "HiJump"
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "SpeedBooster"
+                                  },
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_CanSpringBallJump",
+                                    "args": []
+                                  },
+                                  {
+                                    "type": "and",
+                                    "conditions": [
+                                      {
+                                        "type": "item_check",
+                                        "item": "Varia"
+                                      },
+                                      {
+                                        "type": "item_check",
+                                        "item": "Ice"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "helper",
+                                    "name": "smz3_CanPassBombPassages",
+                                    "args": []
+                                  },
+                                  {
+                                    "type": "and",
+                                    "conditions": [
+                                      {
+                                        "type": "item_check",
+                                        "item": "Varia"
+                                      },
+                                      {
+                                        "type": "item_check",
+                                        "item": "Morph"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "item_check",
+                                    "item": "Missile"
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "Super"
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "Wave"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Varia"
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanAccessNorfairLowerPortal",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "ScrewAttack"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "SpaceJump"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Super"
+                      },
+                      {
+                        "type": "helper",
+                        "name": "smz3_HasEnergyReserves",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": 2
+                          }
+                        ]
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "CardNorfairL2"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Morph"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
             "name": "Menu->Norfair Lower West",
             "connected_region": "Norfair Lower West",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "Logic"
+                },
+                "op": "==",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "SMLogic"
+                  },
+                  "attr": "Normal"
+                }
+              },
+              "if_true": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Varia"
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "function_call",
+                            "function": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "name",
+                                  "name": "self"
+                                },
+                                "attr": "world"
+                              },
+                              "attr": "CanEnter"
+                            },
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": "Norfair Upper East"
+                              },
+                              {
+                                "type": "name",
+                                "name": "items"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanUsePowerBombs",
+                            "args": []
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "SpaceJump"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Gravity"
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "CardNorfairL2"
+                              },
+                              {
+                                "type": "and",
+                                "conditions": [
+                                  {
+                                    "type": "item_check",
+                                    "item": "SpeedBooster"
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "Wave"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanAccessNorfairLowerPortal",
+                            "args": []
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanDestroyBombWalls",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "function_call",
+                        "function": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "self"
+                            },
+                            "attr": "world"
+                          },
+                          "attr": "CanEnter"
+                        },
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Norfair Upper East"
+                          },
+                          {
+                            "type": "name",
+                            "name": "items"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanUsePowerBombs",
+                        "args": []
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Varia"
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "HiJump"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Gravity"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "CardNorfairL2"
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "SpeedBooster"
+                              },
+                              {
+                                "type": "or",
+                                "conditions": [
+                                  {
+                                    "type": "item_check",
+                                    "item": "Missile"
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "Super"
+                                  },
+                                  {
+                                    "type": "item_check",
+                                    "item": "Wave"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanAccessNorfairLowerPortal",
+                        "args": []
+                      },
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanDestroyBombWalls",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           },
           {
             "name": "Menu->Norfair Lower East",
             "connected_region": "Norfair Lower East",
             "access_rule": {
-              "type": "helper",
-              "name": "smz3_can_enter_region",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "Logic"
+                },
+                "op": "==",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "SMLogic"
+                  },
+                  "attr": "Normal"
+                }
+              },
+              "if_true": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Varia"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "CardLowerNorfairL1"
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "function_call",
+                            "function": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "name",
+                                  "name": "self"
+                                },
+                                "attr": "world"
+                              },
+                              "attr": "CanEnter"
+                            },
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": "Norfair Upper East"
+                              },
+                              {
+                                "type": "name",
+                                "name": "items"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanUsePowerBombs",
+                            "args": []
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "SpaceJump"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Gravity"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanAccessNorfairLowerPortal",
+                            "args": []
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanDestroyBombWalls",
+                            "args": []
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Super"
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanUsePowerBombs",
+                            "args": []
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanFly",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Varia"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "CardLowerNorfairL1"
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "function_call",
+                            "function": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "name",
+                                  "name": "self"
+                                },
+                                "attr": "world"
+                              },
+                              "attr": "CanEnter"
+                            },
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": "Norfair Upper East"
+                              },
+                              {
+                                "type": "name",
+                                "name": "items"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanUsePowerBombs",
+                            "args": []
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "HiJump"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Gravity"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanAccessNorfairLowerPortal",
+                            "args": []
+                          },
+                          {
+                            "type": "helper",
+                            "name": "smz3_CanDestroyBombWalls",
+                            "args": []
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Super"
+                          },
+                          {
+                            "type": "or",
+                            "conditions": [
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanFly",
+                                "args": []
+                              },
+                              {
+                                "type": "helper",
+                                "name": "smz3_CanSpringBallJump",
+                                "args": []
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "SpeedBooster"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanFly",
+                        "args": []
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "HiJump"
+                      },
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanSpringBallJump",
+                        "args": []
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Ice"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Charge"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "smz3_CanPassBombPassages",
+                        "args": []
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "ScrewAttack"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "SpaceJump"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           }
         ],
