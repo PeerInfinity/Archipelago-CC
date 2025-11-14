@@ -97,9 +97,109 @@ def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, An
 
         return attr_node
 
+    # Helper function to resolve subscript nodes
+    def resolve_subscript(subscript_node):
+        if not isinstance(subscript_node, dict) or subscript_node.get('type') != 'subscript':
+            return subscript_node
+
+        value_node = subscript_node.get('value')
+        index_node = subscript_node.get('index')
+
+        if not value_node or not index_node:
+            return subscript_node
+
+        try:
+            # First resolve the value (the object being subscripted)
+            resolved_value = resolve_attribute_nodes_in_rule(value_node, world)
+
+            # Then resolve the index
+            resolved_index = resolve_attribute_nodes_in_rule(index_node, world)
+
+            # If both resolved to constants, perform the subscript operation
+            if (resolved_value.get('type') == 'constant' and
+                resolved_index.get('type') == 'constant'):
+                obj = resolved_value.get('value')
+                idx = resolved_index.get('value')
+
+                if obj is not None and idx is not None:
+                    try:
+                        # Try direct subscript first
+                        result = obj[idx]
+                    except (KeyError, TypeError):
+                        # If that fails and obj is a dict, try to match Enum keys by their .value
+                        if isinstance(obj, dict):
+                            result = None
+                            for key, value in obj.items():
+                                # Check if the key is an Enum and its value matches idx
+                                if hasattr(key, 'value') and key.value == idx:
+                                    result = value
+                                    break
+                            if result is None:
+                                logger.debug(f"Could not find key {idx} in dict with keys: {list(obj.keys())}")
+                                return subscript_node
+                        else:
+                            logger.debug(f"Could not resolve subscript: {idx}")
+                            return subscript_node
+                    except (IndexError, Exception) as e:
+                        logger.debug(f"Could not resolve subscript: {e}")
+                        return subscript_node
+
+                    # Convert result to proper JSON-serializable format
+                    try:
+                        if isinstance(result, dict):
+                            logger.debug(f"Resolved subscript to dict: {result}")
+                            return {'type': 'constant', 'value': dict(result)}
+                        elif isinstance(result, (list, tuple)):
+                            logger.debug(f"Resolved subscript to list: {result}")
+                            return {'type': 'constant', 'value': list(result)}
+                        elif isinstance(result, (str, int, bool, float, type(None))):
+                            logger.debug(f"Resolved subscript to value: {result}")
+                            return {'type': 'constant', 'value': result}
+                        else:
+                            logger.debug(f"Resolved subscript to object: {type(result)}")
+                            return {'type': 'constant', 'value': result}
+                    except Exception as e:
+                        logger.debug(f"Could not convert result to JSON: {e}")
+                        return subscript_node
+        except Exception as e:
+            logger.debug(f"Error resolving subscript: {e}")
+
+        return subscript_node
+
     # If the rule itself is an attribute node, try to resolve it
     if rule.get('type') == 'attribute':
         return resolve_attribute(rule)
+
+    # If the rule itself is a subscript node, try to resolve it
+    if rule.get('type') == 'subscript':
+        resolved = resolve_subscript(rule)
+        # If we resolved to a constant containing a dict/list, this might need
+        # further transformation for state_method calls
+        return resolved
+
+    # Process state_method rules with complex arguments
+    if rule.get('type') == 'state_method':
+        method = rule.get('method')
+        args = rule.get('args', [])
+
+        # Resolve args recursively first
+        if args:
+            resolved_args = [resolve_attribute_nodes_in_rule(arg, world) if isinstance(arg, dict) else arg for arg in args]
+            rule['args'] = resolved_args
+
+            # For has_all_counts and has_all, if the first arg is now a constant (dict/list),
+            # inline it into the rule structure
+            if method == 'has_all_counts' and len(resolved_args) > 0:
+                first_arg = resolved_args[0]
+                if first_arg.get('type') == 'constant' and isinstance(first_arg.get('value'), dict):
+                    # Transform to inline items dict
+                    rule['args'] = [{'type': 'constant', 'value': dict(first_arg['value'])}]
+
+            elif method == 'has_all' and len(resolved_args) > 0:
+                first_arg = resolved_args[0]
+                if first_arg.get('type') == 'constant' and isinstance(first_arg.get('value'), (list, tuple)):
+                    # Transform to inline items list
+                    rule['args'] = [{'type': 'constant', 'value': list(first_arg['value'])}]
 
     # Process item_check rules
     if rule.get('type') == 'item_check':
