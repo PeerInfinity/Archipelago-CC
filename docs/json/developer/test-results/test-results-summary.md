@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-14 04:29:39
+**Generated:** 2025-11-14 05:24:25
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -35,7 +35,7 @@ This summary combines results from four types of tests:
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | ArchipIDLE | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
-| Blasphemous | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Blasphemous | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
@@ -64,7 +64,7 @@ This summary combines results from four types of tests:
 | Lingo | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Links Awakening DX | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| Mario & Luigi Superstar Saga | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Mario & Luigi Superstar Saga | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Mega Man 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | MegaMan Battle Network 3 | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
