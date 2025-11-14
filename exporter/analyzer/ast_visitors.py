@@ -770,6 +770,35 @@ class ASTVisitorMixin:
                 logging.debug(f"Created helper result for logic method: {result}")
                 return result
 
+            # Handle Location object method calls (e.g., loc.can_reach(state))
+            elif obj_name and method_name == 'can_reach':
+                logging.debug(f"Processing potential Location method call: {obj_name}.{method_name}")
+
+                # Try to resolve the object from closure_vars
+                resolved_obj = self.expression_resolver.resolve_variable(obj_name)
+
+                # Check if it's a Location object (has 'name' but not 'entrances')
+                if (resolved_obj is not None and
+                    hasattr(resolved_obj, 'name') and
+                    not hasattr(resolved_obj, 'entrances') and
+                    isinstance(resolved_obj.name, str)):
+
+                    location_name = resolved_obj.name
+                    logging.debug(f"Resolved {obj_name} to Location object with name: {location_name}")
+
+                    # Convert loc.can_reach(state) to state.can_reach(location_name, "Location", player)
+                    # Note: player argument will be provided by the state manager
+                    result = {
+                        'type': 'state_method',
+                        'method': 'can_reach',
+                        'args': [
+                            {'type': 'constant', 'value': location_name},
+                            {'type': 'constant', 'value': 'Location'}
+                        ]
+                    }
+                    logging.debug(f"Converted Location.can_reach to state_method: {result}")
+                    return result
+
         # 3. Fallback for other types of calls (e.g., calling result of another function)
         logging.debug(f"Fallback function call type. func_info = {func_info}")
         filtered_args = self._filter_special_args(args_with_nodes)
@@ -788,15 +817,24 @@ class ASTVisitorMixin:
             logging.debug(f"visit_Attribute: Visiting object {type(node.value).__name__}")
             obj_result = self.visit(node.value) # Get returned result
             # attr_name = node.attr # Moved up
-            
+
             # Specifically log if we are processing self.player
             if isinstance(node.value, ast.Name) and node.value.id == 'self' and attr_name == 'player':
                  logging.debug("visit_Attribute: Detected access to self.player")
 
             if obj_result:
-                 result = {'type': 'attribute', 'object': obj_result, 'attr': attr_name}
-                 logging.debug(f"visit_Attribute: Returning result {result}")
-                 return result # Return the result
+                 # Try to resolve the attribute access to a constant value
+                 attr_structure = {'type': 'attribute', 'object': obj_result, 'attr': attr_name}
+                 resolved_value = self.expression_resolver.resolve_expression(attr_structure)
+
+                 # If resolved to a simple value, return it as a constant
+                 if resolved_value is not None and isinstance(resolved_value, (int, float, str, bool)):
+                     logging.debug(f"visit_Attribute: Resolved {attr_name} to constant value: {resolved_value}")
+                     return {'type': 'constant', 'value': resolved_value}
+
+                 # Otherwise return the attribute access structure
+                 logging.debug(f"visit_Attribute: Returning attribute structure {attr_structure}")
+                 return attr_structure
             else:
                  # Handle case where object visit failed
                  logging.error(f"visit_Attribute: Failed to get result for object in {ast.dump(node)}")
@@ -835,13 +873,12 @@ class ASTVisitorMixin:
                 elif hasattr(value, 'name') and hasattr(value, 'entrances') and isinstance(value.name, str):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to Region name: {value.name}")
                     return {'type': 'constant', 'value': value.name}
-                # Handle NamedTuples (like RoomAndDoor) by converting to list/dict
+                # Handle NamedTuples - keep them as name references so attribute access still works
+                # The attributes will be resolved later in visit_Attribute
                 elif hasattr(value, '_fields'):
-                    # This is a NamedTuple - convert to a serializable format
-                    # Convert to list to preserve order
-                    serialized = list(value)
-                    logging.debug(f"visit_Name: Resolved '{name}' from closure to NamedTuple as list: {serialized}")
-                    return {'type': 'constant', 'value': serialized}
+                    logging.debug(f"visit_Name: Found NamedTuple '{name}' in closure, keeping as name reference for attribute access")
+                    # Don't convert to list here - let attribute access resolve the fields
+                    pass
 
             # Also check function defaults for lambda parameters
             if name not in self.closure_vars:
@@ -860,11 +897,11 @@ class ASTVisitorMixin:
                     elif hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances') and isinstance(resolved_value.name, str):
                         logging.debug(f"visit_Name: Resolved '{name}' from function defaults to Region name: {resolved_value.name}")
                         return {'type': 'constant', 'value': resolved_value.name}
-                    # Handle NamedTuples from function defaults
+                    # Handle NamedTuples from function defaults - keep as name references for attribute access
                     elif hasattr(resolved_value, '_fields'):
-                        serialized = list(resolved_value)
-                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults to NamedTuple as list: {serialized}")
-                        return {'type': 'constant', 'value': serialized}
+                        logging.debug(f"visit_Name: Found NamedTuple '{name}' in function defaults, keeping as name reference for attribute access")
+                        # Don't convert to list here - let attribute access resolve the fields
+                        pass
 
             # Use game handler to replace names if available
             if self.game_handler and hasattr(self.game_handler, 'replace_name'):
