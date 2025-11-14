@@ -76,18 +76,35 @@ class Celeste64GameExportHandler(BaseGameExportHandler):
         """Expand Celeste 64 specific helper functions."""
         if args is None:
             args = []
-        
+
         # Celeste 64 uses location_rule and region_connection_rule as helpers
         # These are handled in the JavaScript frontend, so we don't expand them here
         if helper_name in ['location_rule', 'region_connection_rule', 'goal_rule']:
             return None  # Keep as helper nodes
-        
+
         return None  # Preserve other helper nodes as-is
-    
+
+    def handle_special_function_call(self, func_name: str, processed_args: list) -> dict:
+        """
+        Handle Celeste 64 specific function calls that should be converted to helpers.
+
+        Convert calls to location_rule, region_connection_rule, and goal_rule into
+        helper nodes instead of inlining them.
+        """
+        if func_name in ['location_rule', 'region_connection_rule', 'goal_rule']:
+            # Convert to helper node
+            return {
+                'type': 'helper',
+                'name': func_name,
+                'args': processed_args
+            }
+
+        return None
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand rule functions with Celeste 64-specific analysis."""
         if not rule:
             return rule
-        
+
         # Let the base class handle most of the expansion
         return super().expand_rule(rule)
