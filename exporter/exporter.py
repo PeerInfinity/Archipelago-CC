@@ -994,14 +994,29 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                 # Set context for game handlers that need it (e.g., Bomb Rush Cyberfunk)
                                 if hasattr(game_handler, 'set_context'):
                                     game_handler.set_context(location_name)
-                                # Use normal analysis
-                                access_rule_result = safe_expand_rule(
-                                    game_handler,
-                                    location.access_rule,
-                                    location_name,
-                                    target_type='Location',
-                                    world=world
-                                )
+                                # Check if game handler can extract custom access rule (e.g., Zillion)
+                                if game_handler and hasattr(game_handler, 'get_custom_location_access_rule'):
+                                    custom_rule = game_handler.get_custom_location_access_rule(location, world)
+                                    if custom_rule:
+                                        access_rule_result = game_handler.expand_rule(custom_rule)
+                                    else:
+                                        # Fall back to normal analysis
+                                        access_rule_result = safe_expand_rule(
+                                            game_handler,
+                                            location.access_rule,
+                                            location_name,
+                                            target_type='Location',
+                                            world=world
+                                        )
+                                else:
+                                    # Use normal analysis
+                                    access_rule_result = safe_expand_rule(
+                                        game_handler,
+                                        location.access_rule,
+                                        location_name,
+                                        target_type='Location',
+                                        world=world
+                                    )
                                 
                                 # Post-process the rule if the game handler supports it
                                 if access_rule_result and game_handler and hasattr(game_handler, 'postprocess_rule'):
