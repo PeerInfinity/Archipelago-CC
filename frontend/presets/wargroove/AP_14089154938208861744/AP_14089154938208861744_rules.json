@@ -33,144 +33,40 @@
             "name": "Best Friendssss",
             "connected_region": "Best Friendssss",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "A Knight's Folly",
             "connected_region": "A Knight's Folly",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Denrunaway",
             "connected_region": "Denrunaway",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Wargroove Finale",
             "connected_region": "Wargroove Finale",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": "Humble Beginnings: Victory"
+                },
+                "attr": "access_rule"
+              },
+              "args": []
             }
           }
         ],
@@ -240,108 +136,24 @@
             "name": "Dragon Freeway",
             "connected_region": "Dragon Freeway",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Deep Thicket",
             "connected_region": "Deep Thicket",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Corrupted Inlet",
             "connected_region": "Corrupted Inlet",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -383,108 +195,24 @@
             "name": "Mage Mayhem",
             "connected_region": "Mage Mayhem",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Endless Knight",
             "connected_region": "Endless Knight",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Ambushed in the Middle",
             "connected_region": "Ambushed in the Middle",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -526,108 +254,24 @@
             "name": "The Churning Sea",
             "connected_region": "The Churning Sea",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Frigid Archery",
             "connected_region": "Frigid Archery",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Archery Lessons",
             "connected_region": "Archery Lessons",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -669,36 +313,16 @@
             "name": "Surrounded",
             "connected_region": "Surrounded",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": "Dragon Freeway: Victory"
+                },
+                "attr": "access_rule"
+              },
+              "args": []
             }
           }
         ],
@@ -732,36 +356,16 @@
             "name": "Darkest Knight",
             "connected_region": "Darkest Knight",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": "Deep Thicket: Victory"
+                },
+                "attr": "access_rule"
+              },
+              "args": []
             }
           }
         ],
@@ -815,36 +419,16 @@
             "name": "Robbed",
             "connected_region": "Robbed",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": "Corrupted Inlet: Victory"
+                },
+                "attr": "access_rule"
+              },
+              "args": []
             }
           }
         ],
@@ -903,72 +487,32 @@
             "name": "Open Season",
             "connected_region": "Open Season",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": "Mage Mayhem: Victory"
+                },
+                "attr": "access_rule"
+              },
+              "args": []
             }
           },
           {
             "name": "Foolish Canal: Mage Mayhem Entrance",
             "connected_region": "Foolish Canal",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": "Mage Mayhem: Victory"
+                },
+                "attr": "access_rule"
+              },
+              "args": []
             }
           }
         ],
@@ -1052,72 +596,32 @@
             "name": "Doggo Mountain",
             "connected_region": "Doggo Mountain",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": "Endless Knight: Victory"
+                },
+                "attr": "access_rule"
+              },
+              "args": []
             }
           },
           {
             "name": "Foolish Canal: Endless Knight Entrance",
             "connected_region": "Foolish Canal",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": "Endless Knight: Victory"
+                },
+                "attr": "access_rule"
+              },
+              "args": []
             }
           }
         ],
@@ -1191,34 +695,31 @@
             "name": "Tenri's Fall",
             "connected_region": "Tenri's Fall",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
+              "type": "or",
+              "conditions": [
                 {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Blue"
                     },
-                    "args": []
+                    "attr": "access_rule"
                   },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
+                  "args": []
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Green"
                     },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
+                    "attr": "access_rule"
+                  },
+                  "args": []
                 }
               ]
             }
@@ -1274,36 +775,16 @@
             "name": "Rebel Village",
             "connected_region": "Rebel Village",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": "The Churning Sea: Victory"
+                },
+                "attr": "access_rule"
+              },
+              "args": []
             }
           }
         ],
@@ -1367,36 +848,16 @@
             "name": "A Ballista's Revenge",
             "connected_region": "A Ballista's Revenge",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": "Frigid Archery: Victory"
+                },
+                "attr": "access_rule"
+              },
+              "args": []
             }
           }
         ],
@@ -1465,36 +926,16 @@
             "name": "Master of the Lake",
             "connected_region": "Master of the Lake",
             "access_rule": {
-              "type": "helper",
-              "name": "any",
-              "args": [
-                {
-                  "type": "generator_expression",
-                  "element": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "location"
-                      },
-                      "attr": "access_rule"
-                    },
-                    "args": []
-                  },
-                  "comprehension": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "location"
-                    },
-                    "iterator": {
-                      "type": "name",
-                      "name": "locations"
-                    }
-                  }
-                }
-              ]
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "constant",
+                  "value": "Archery Lessons: Victory"
+                },
+                "attr": "access_rule"
+              },
+              "args": []
             }
           }
         ],

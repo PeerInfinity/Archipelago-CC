@@ -439,6 +439,96 @@ class ASTVisitorMixin:
                 return result
             # *** END ADDED ***
 
+            # *** Special handling for any(GeneratorExp) ***
+            if func_name == 'any' and len(filtered_args) == 1 and filtered_args[0].get('type') == 'generator_expression':
+                logging.debug(f"Detected any(GeneratorExp) pattern.")
+                gen_exp = filtered_args[0] # The result from visit_GeneratorExp
+
+                # Try to resolve the iterator if it's a name reference
+                iterator_info = gen_exp['comprehension']
+                if iterator_info.get('iterator', {}).get('type') == 'name':
+                    iterator_name = iterator_info['iterator']['name']
+                    logging.debug(f"any(GeneratorExp): Attempting to resolve iterator '{iterator_name}'")
+
+                    resolved_value = self.expression_resolver.resolve_variable(iterator_name)
+
+                    # Convert frozensets/sets/tuples to lists for uniform handling
+                    if resolved_value is not None:
+                        if isinstance(resolved_value, (frozenset, set, tuple)):
+                            resolved_value = list(resolved_value)
+                            logging.debug(f"any(GeneratorExp): Converted {type(resolved_value).__name__} to list")
+
+                    if resolved_value is not None and isinstance(resolved_value, list):
+                        logging.debug(f"any(GeneratorExp): Resolved '{iterator_name}' to list with {len(resolved_value)} items")
+
+                        # Check if items are callables (old behavior)
+                        if all(callable(item) for item in resolved_value):
+                            from .analysis import analyze_rule
+                            analyzed_items = []
+                            for item_func in resolved_value:
+                                try:
+                                    item_result = analyze_rule(rule_func=item_func, closure_vars=self.closure_vars.copy(),
+                                                              seen_funcs=self.seen_funcs, game_handler=self.game_handler,
+                                                              player_context=self.player_context)
+                                    if item_result and item_result.get('type') != 'error':
+                                        analyzed_items.append(item_result)
+                                    else:
+                                        logging.debug(f"Could not analyze item in {iterator_name} list, falling back to unresolved")
+                                        analyzed_items = None
+                                        break
+                                except Exception as e:
+                                    logging.debug(f"Error analyzing item in {iterator_name}: {e}")
+                                    analyzed_items = None
+                                    break
+
+                            if analyzed_items:
+                                # Successfully analyzed all items - return an 'or' of all items (different from 'all')
+                                logging.debug(f"any(GeneratorExp): Successfully analyzed {len(analyzed_items)} items, returning 'or' rule")
+                                if len(analyzed_items) == 1:
+                                    return analyzed_items[0]
+                                else:
+                                    return {'type': 'or', 'conditions': analyzed_items}
+
+                        # NEW: Handle simple values (strings, numbers, etc.) - expand the comprehension
+                        else:
+                            logging.debug(f"any(GeneratorExp): Iterator contains non-callable values, expanding comprehension")
+                            target_name = iterator_info.get('target', {}).get('name')
+                            if not target_name:
+                                logging.warning(f"any(GeneratorExp): Could not extract target variable name from comprehension")
+                            else:
+                                element_rule = gen_exp['element']
+                                expanded_conditions = []
+
+                                for value in resolved_value:
+                                    # Substitute the target variable with the current value in the element rule
+                                    substituted_rule = self._substitute_variable_in_rule(element_rule, target_name, value)
+                                    if substituted_rule:
+                                        expanded_conditions.append(substituted_rule)
+                                    else:
+                                        logging.warning(f"any(GeneratorExp): Failed to substitute {target_name}={value} in element rule")
+                                        expanded_conditions = None
+                                        break
+
+                                if expanded_conditions:
+                                    logging.debug(f"any(GeneratorExp): Successfully expanded to {len(expanded_conditions)} conditions")
+                                    if len(expanded_conditions) == 0:
+                                        # Empty iterator - any() of empty is False
+                                        return {'type': 'constant', 'value': False}
+                                    elif len(expanded_conditions) == 1:
+                                        return expanded_conditions[0]
+                                    else:
+                                        return {'type': 'or', 'conditions': expanded_conditions}
+
+                # If we couldn't resolve, represent this as a specific 'any_of' rule type
+                result = {
+                    'type': 'any_of',
+                    'element_rule': gen_exp['element'],
+                    'iterator_info': iterator_info
+                }
+                logging.debug(f"Created 'any_of' result: {result}")
+                return result
+            # *** END any() HANDLING ***
+
             # *** Special handling for zip() function ***
             if func_name == 'zip':
                 logging.debug(f"Detected zip() function call with {len(filtered_args)} args")
