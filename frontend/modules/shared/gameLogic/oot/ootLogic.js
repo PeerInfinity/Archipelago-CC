@@ -90,7 +90,8 @@ function parse_oot_rule(snapshot, staticData, ruleString) {
 function createEvaluationContext(snapshot, staticData) {
   const settings = staticData?.settings?.[1] || {};
 
-  return {
+  // Create context object and store in variable so helper functions can reference it
+  const context = {
     snapshot,
     staticData,
     settings,
@@ -143,33 +144,28 @@ function createEvaluationContext(snapshot, staticData) {
 
     // Explosives helpers
     has_bombchus: () => {
-      const ctx = context;
-      const buyBombchu = ctx.hasItem('Buy_Bombchu_5') || ctx.hasItem('Buy_Bombchu_10') ||
-                         ctx.hasItem('Buy_Bombchu_20') || ctx.hasItem('Bombchu_Drop');
+      const buyBombchu = context.hasItem('Buy_Bombchu_5') || context.hasItem('Buy_Bombchu_10') ||
+                         context.hasItem('Buy_Bombchu_20') || context.hasItem('Bombchu_Drop');
       const bombchusInLogic = settings?.bombchus_in_logic || false;
-      const hasBombBag = ctx.hasItem('Bomb_Bag');
+      const hasBombBag = context.hasItem('Bomb_Bag');
       return buyBombchu && (bombchusInLogic || hasBombBag);
     },
     has_explosives: () => {
-      const ctx = context;
       const bombchusInLogic = settings?.bombchus_in_logic || false;
-      return ctx.hasItem('Bombs') || (bombchusInLogic && ctx.has_bombchus());
+      return context.hasItem('Bombs') || (bombchusInLogic && context.has_bombchus());
     },
     can_blast_or_smash: () => {
-      const ctx = context;
-      return ctx.has_explosives() || (ctx.is_adult() && ctx.hasItem('Megaton_Hammer'));
+      return context.has_explosives() || (context.is_adult() && context.hasItem('Megaton_Hammer'));
     },
 
     // Combat and interaction helpers
     can_break_crate: () => {
-      const ctx = context;
       const canBonk = true; // Simplified - deadly_bonks logic not fully implemented
-      return canBonk || ctx.can_blast_or_smash();
+      return canBonk || context.can_blast_or_smash();
     },
     can_cut_shrubs: () => {
-      const ctx = context;
-      return ctx.is_adult() || ctx.hasItem('Sticks') || ctx.hasItem('Kokiri_Sword') ||
-             ctx.hasItem('Boomerang') || ctx.has_explosives();
+      return context.is_adult() || context.hasItem('Sticks') || context.hasItem('Kokiri_Sword') ||
+             context.hasItem('Boomerang') || context.has_explosives();
     },
     can_dive: () => {
       return context.hasItem('Progressive_Scale');
@@ -182,51 +178,44 @@ function createEvaluationContext(snapshot, staticData) {
 
     // Bean and bug helpers
     can_plant_bean: () => {
-      const ctx = context;
       const plantBeans = settings?.plant_beans || false;
       if (plantBeans) return true;
       // Check if child and has beans
-      if (!ctx.is_child()) return false;
-      return ctx.hasItem('Magic_Bean_Pack') || ctx.hasItem('Buy_Magic_Bean') ||
-             ctx.countItem('Magic_Bean') >= 10;
+      if (!context.is_child()) return false;
+      return context.hasItem('Magic_Bean_Pack') || context.hasItem('Buy_Magic_Bean') ||
+             context.countItem('Magic_Bean') >= 10;
     },
     can_plant_bugs: () => {
-      const ctx = context;
-      return ctx.is_child() && (ctx.hasItem('Bugs') || ctx.hasItem('Buy_Bottle_Bug'));
+      return context.is_child() && (context.hasItem('Bugs') || context.hasItem('Buy_Bottle_Bug'));
     },
 
     // Grotto helpers
     can_open_bomb_grotto: () => {
-      const ctx = context;
       const logicGrottosWithoutAgony = settings?.logic_grottos_without_agony || false;
-      return ctx.can_blast_or_smash() && (ctx.hasItem('Stone_of_Agony') || logicGrottosWithoutAgony);
+      return context.can_blast_or_smash() && (context.hasItem('Stone_of_Agony') || logicGrottosWithoutAgony);
     },
     can_open_storm_grotto: () => {
-      const ctx = context;
       const logicGrottosWithoutAgony = settings?.logic_grottos_without_agony || false;
-      const canPlaySOS = ctx.hasItem('Ocarina') && ctx.hasItem('Song_of_Storms');
-      return canPlaySOS && (ctx.hasItem('Stone_of_Agony') || logicGrottosWithoutAgony);
+      const canPlaySOS = context.hasItem('Ocarina') && context.hasItem('Song_of_Storms');
+      return canPlaySOS && (context.hasItem('Stone_of_Agony') || logicGrottosWithoutAgony);
     },
 
     // Fairy summon helpers
     can_summon_gossip_fairy: () => {
-      const ctx = context;
-      if (!ctx.hasItem('Ocarina')) return false;
-      return ctx.hasItem('Zeldas_Lullaby') || ctx.hasItem('Eponas_Song') ||
-             ctx.hasItem('Song_of_Time') || ctx.hasItem('Suns_Song');
+      if (!context.hasItem('Ocarina')) return false;
+      return context.hasItem('Zeldas_Lullaby') || context.hasItem('Eponas_Song') ||
+             context.hasItem('Song_of_Time') || context.hasItem('Suns_Song');
     },
     can_summon_gossip_fairy_without_suns: () => {
-      const ctx = context;
-      if (!ctx.hasItem('Ocarina')) return false;
-      return ctx.hasItem('Zeldas_Lullaby') || ctx.hasItem('Eponas_Song') ||
-             ctx.hasItem('Song_of_Time');
+      if (!context.hasItem('Ocarina')) return false;
+      return context.hasItem('Zeldas_Lullaby') || context.hasItem('Eponas_Song') ||
+             context.hasItem('Song_of_Time');
     },
 
     // Epona helper
     can_ride_epona: () => {
-      const ctx = context;
-      if (!ctx.is_adult() || !ctx.hasItem('Epona')) return false;
-      const canPlayEponasSong = ctx.hasItem('Ocarina') && ctx.hasItem('Eponas_Song');
+      if (!context.is_adult() || !context.hasItem('Epona')) return false;
+      const canPlayEponasSong = context.hasItem('Ocarina') && context.hasItem('Eponas_Song');
       return canPlayEponasSong; // Simplified - skipping is_glitched and can_hover
     },
 
@@ -274,6 +263,8 @@ function createEvaluationContext(snapshot, staticData) {
     logic_zora_river_lower: () => false,
     logic_link_goron_dins: () => false,
   };
+
+  return context;
 }
 
 /**
