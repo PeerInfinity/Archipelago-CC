@@ -1423,6 +1423,68 @@ export const evaluateRule = (rule, context, depth = 0) => {
         break;
       }
 
+      case 'can_reach_entrance': {
+        // Check if an entrance is reachable
+        // An entrance is reachable if we can reach its source region AND satisfy its access rule
+        const entranceName = rule.entrance;
+        if (!entranceName) {
+          log('warn', '[evaluateRule] can_reach_entrance rule missing entrance name');
+          result = undefined;
+          break;
+        }
+
+        // Find the entrance in the regions data
+        let entrance = null;
+        let sourceRegion = null;
+
+        if (typeof context.getStaticData === 'function') {
+          const staticData = context.getStaticData();
+          const regionsData = staticData?.regions;
+
+          if (regionsData && regionsData instanceof Map) {
+            // staticData.regions is a Map of region name -> region data
+            // Search for the entrance in all regions
+            for (const [regionName, regionData] of regionsData.entries()) {
+              const exits = regionData.exits || [];
+              const foundExit = exits.find(exit => exit.name === entranceName);
+              if (foundExit) {
+                entrance = foundExit;
+                sourceRegion = regionName;
+                break;
+              }
+            }
+          }
+        }
+
+        if (!entrance || !sourceRegion) {
+          log('warn', `[evaluateRule] Entrance "${entranceName}" not found in regions data`);
+          result = undefined;
+          break;
+        }
+
+        // Check if source region is reachable
+        if (typeof context.isRegionReachable !== 'function') {
+          log('warn', '[evaluateRule] context.isRegionReachable is not a function for can_reach_entrance.');
+          result = undefined;
+          break;
+        }
+
+        const sourceReachable = context.isRegionReachable(sourceRegion);
+        if (!sourceReachable) {
+          result = false;
+          break;
+        }
+
+        // Evaluate the entrance's access rule
+        if (entrance.access_rule) {
+          result = evaluateRule(entrance.access_rule, context, depth + 1);
+        } else {
+          // No access rule means the entrance is accessible if the region is reachable
+          result = true;
+        }
+        break;
+      }
+
       default: {
         log('warn', `[evaluateRule] Unknown rule type: ${ruleType}`, { rule });
         result = undefined;
