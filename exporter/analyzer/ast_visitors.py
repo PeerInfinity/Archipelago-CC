@@ -77,7 +77,61 @@ class ASTVisitorMixin:
             # Visit the first meaningful body node if exists and return its result
             # Looks for control flow (If, Return, etc.) after skipping assignments
             if body_to_analyze:
-                return self.visit(body_to_analyze[0])
+                # Special case: If statement without else, and more statements follow
+                if isinstance(body_to_analyze[0], ast.If) and not body_to_analyze[0].orelse and len(body_to_analyze) > 1:
+                    logging.debug(f"visit_FunctionDef: If statement without else, analyzing remaining {len(body_to_analyze) - 1} statements as implicit else")
+                    # Create a synthetic If node with the remaining statements as the else block
+                    if_node = body_to_analyze[0]
+                    remaining_stmts = body_to_analyze[1:]
+
+                    # Analyze the test condition
+                    test_result = self.visit(if_node.test)
+
+                    # Analyze the if body (should be a single statement, typically a return)
+                    body_result = None
+                    if if_node.body:
+                        body_result = self.visit(if_node.body[0])
+
+                    # Analyze remaining statements as the implicit else
+                    # If there's only one remaining statement, visit it directly
+                    # If there are multiple, we need to chain them
+                    if len(remaining_stmts) == 1:
+                        orelse_result = self.visit(remaining_stmts[0])
+                    else:
+                        # Multiple remaining statements - create a synthetic function to analyze them
+                        synthetic_func = ast.FunctionDef(
+                            name='synthetic_else',
+                            args=node.args,
+                            body=remaining_stmts,
+                            decorator_list=[],
+                            returns=None
+                        )
+                        orelse_result = self.visit_FunctionDef(synthetic_func)
+
+                    if test_result is None or body_result is None:
+                        logging.error(f"Failed to analyze If statement in function body")
+                        return None
+
+                    # Optimize: If test is a constant, statically evaluate the conditional
+                    if test_result.get('type') == 'constant':
+                        test_value = test_result.get('value')
+                        logging.debug(f"visit_FunctionDef: Test is constant with value: {test_value}")
+                        is_truthy = bool(test_value) if test_value is not None else False
+                        if is_truthy:
+                            logging.debug("visit_FunctionDef: Test is truthy, returning if_true branch")
+                            return body_result
+                        else:
+                            logging.debug("visit_FunctionDef: Test is falsy, returning if_false branch (implicit)")
+                            return orelse_result
+
+                    return {
+                        'type': 'conditional',
+                        'test': test_result,
+                        'if_true': body_result,
+                        'if_false': orelse_result
+                    }
+                else:
+                    return self.visit(body_to_analyze[0])
             logging.warning(f"visit_FunctionDef: Empty function body for '{node.name}', returning None")
             return None # Return None if no body
         except Exception as e:

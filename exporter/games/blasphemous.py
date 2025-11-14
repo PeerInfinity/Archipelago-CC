@@ -622,11 +622,11 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
             
             # Prayer/relic helpers
             'has_prayer': {
-                'type': 'generic_helper',
+                'type': 'helper',
                 'description': 'Requires having prayer ability'
             },
             'has_relic': {
-                'type': 'generic_helper', 
+                'type': 'helper',
                 'description': 'Requires having relic'
             },
             
