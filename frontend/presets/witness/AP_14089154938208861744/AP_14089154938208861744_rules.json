@@ -328,8 +328,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Town Tower Top"
                   },
                   "attr": "player"
                 }
@@ -339,7 +339,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Town Tower Top"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Town Tower Top"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             },
             "item": {
               "name": "+1 Laser",
@@ -402,8 +428,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Bunker Laser Platform"
                   },
                   "attr": "player"
                 }
@@ -413,7 +439,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Bunker Laser Platform"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Bunker Laser Platform"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             },
             "item": {
               "name": "+1 Laser",
@@ -440,8 +492,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Swamp Laser Area"
                   },
                   "attr": "player"
                 }
@@ -451,7 +503,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Swamp Laser Area"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Swamp Laser Area"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             },
             "item": {
               "name": "+1 Laser",
@@ -478,8 +556,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Treehouse Laser Room"
                   },
                   "attr": "player"
                 }
@@ -489,7 +567,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Treehouse Laser Room"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Treehouse Laser Room"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             },
             "item": {
               "name": "+1 Laser",
@@ -651,8 +755,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Tutorial"
                   },
                   "attr": "player"
                 }
@@ -662,7 +766,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Tutorial"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Tutorial"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             }
           },
           {
@@ -755,8 +885,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Tutorial"
                   },
                   "attr": "player"
                 }
@@ -766,7 +896,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Tutorial"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Tutorial"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             }
           }
         ],
@@ -885,8 +1041,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Orchard"
                   },
                   "attr": "player"
                 }
@@ -896,7 +1052,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Orchard"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Orchard"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             },
             "item": {
               "name": "Sound Dots",
@@ -1560,8 +1742,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Desert Elevator Room"
                   },
                   "attr": "player"
                 }
@@ -1571,7 +1753,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Desert Elevator Room"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Desert Elevator Room"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             },
             "item": {
               "name": "Speed Boost",
@@ -1726,8 +1934,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Desert Outside"
                   },
                   "attr": "player"
                 }
@@ -1737,7 +1945,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Desert Outside"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Desert Outside"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             }
           }
         ],
@@ -2675,8 +2909,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Shadows Ledge"
                   },
                   "attr": "player"
                 }
@@ -2686,7 +2920,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Shadows Ledge"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Shadows Ledge"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             }
           }
         ],
@@ -2709,8 +2969,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Shadows Ledge"
                   },
                   "attr": "player"
                 }
@@ -2720,7 +2980,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Shadows Ledge"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Shadows Ledge"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             },
             "item": {
               "name": "Speed Boost",
@@ -2747,8 +3033,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Shadows Ledge"
                   },
                   "attr": "player"
                 }
@@ -2758,7 +3044,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Shadows Ledge"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Shadows Ledge"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             },
             "item": {
               "name": "Speed Boost",
@@ -2785,8 +3097,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Shadows Ledge"
                   },
                   "attr": "player"
                 }
@@ -2796,7 +3108,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Shadows Ledge"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Shadows Ledge"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             },
             "item": {
               "name": "Speed Boost",
@@ -2945,8 +3283,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Keep 2nd Maze"
                   },
                   "attr": "player"
                 }
@@ -2956,7 +3294,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Keep 2nd Maze"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Keep 2nd Maze"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             }
           },
           {
@@ -2977,8 +3341,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Keep 3rd Maze"
                   },
                   "attr": "player"
                 }
@@ -2988,7 +3352,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Keep 3rd Maze"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Keep 3rd Maze"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             }
           }
         ],
@@ -3080,8 +3470,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Keep 2nd Maze"
                   },
                   "attr": "player"
                 }
@@ -3091,7 +3481,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Keep 2nd Maze"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Keep 2nd Maze"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             }
           },
           {
@@ -3141,8 +3557,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Keep 3rd Maze"
                   },
                   "attr": "player"
                 }
@@ -3152,7 +3568,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Keep 3rd Maze"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Keep 3rd Maze"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             }
           },
           {
@@ -5982,8 +6424,8 @@
                 "index": {
                   "type": "attribute",
                   "object": {
-                    "type": "name",
-                    "name": "self"
+                    "type": "constant",
+                    "value": "Main Island"
                   },
                   "attr": "player"
                 }
@@ -5993,7 +6435,33 @@
                 "method": "update_reachable_regions",
                 "args": []
               },
-              "if_false": null
+              "if_false": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Main Island"
+                },
+                "op": "in",
+                "right": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "reachable_regions"
+                  },
+                  "index": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "constant",
+                      "value": "Main Island"
+                    },
+                    "attr": "player"
+                  }
+                }
+              }
             }
           },
           {
@@ -8114,7 +8582,7 @@
   "start_regions": {
     "1": {
       "default": [
-        "Menu"
+        "Entry"
       ],
       "available": []
     }
@@ -8387,19 +8855,6 @@
         "type": null,
         "max_count": 4
       },
-      "Puzzle Skip": {
-        "name": "Puzzle Skip",
-        "id": 158510,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 21
-      },
       "Speed Boost": {
         "name": "Speed Boost",
         "id": 158500,
@@ -8412,6 +8867,19 @@
         "event": false,
         "type": null,
         "max_count": 168
+      },
+      "Puzzle Skip": {
+        "name": "Puzzle Skip",
+        "id": 158510,
+        "groups": [
+          "Everything"
+        ],
+        "advancement": false,
+        "useful": true,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 21
       },
       "Slowness": {
         "name": "Slowness",
@@ -8997,118 +9465,6 @@
         "type": null,
         "max_count": 1
       },
-      "Windmill Turn Control (Panel)": {
-        "name": "Windmill Turn Control (Panel)",
-        "id": 159182,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Theater Entry (Panel)": {
-        "name": "Theater Entry (Panel)",
-        "id": 159184,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Theater Video Input (Panel)": {
-        "name": "Theater Video Input (Panel)",
-        "id": 159185,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Theater Exit (Panel)": {
-        "name": "Theater Exit (Panel)",
-        "id": 159189,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Treehouse First & Second Doors (Panel)": {
-        "name": "Treehouse First & Second Doors (Panel)",
-        "id": 159200,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Treehouse Third Door (Panel)": {
-        "name": "Treehouse Third Door (Panel)",
-        "id": 159202,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Treehouse Laser House Door Timer (Panel)": {
-        "name": "Treehouse Laser House Door Timer (Panel)",
-        "id": 159205,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Treehouse Drawbridge (Panel)": {
-        "name": "Treehouse Drawbridge (Panel)",
-        "id": 159208,
-        "groups": [
-          "Everything",
-          "Panel Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "Jungle Popup Wall (Panel)": {
         "name": "Jungle Popup Wall (Panel)",
         "id": 159175,
@@ -9151,9 +9507,51 @@
         "type": null,
         "max_count": 1
       },
+      "Windmill Turn Control (Panel)": {
+        "name": "Windmill Turn Control (Panel)",
+        "id": 159182,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
       "Bunker Tinted Glass Door (Panel)": {
         "name": "Bunker Tinted Glass Door (Panel)",
         "id": 159183,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Theater Entry (Panel)": {
+        "name": "Theater Entry (Panel)",
+        "id": 159184,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Theater Video Input (Panel)": {
+        "name": "Theater Video Input (Panel)",
+        "id": 159185,
         "groups": [
           "Everything",
           "Panel Keys"
@@ -9182,6 +9580,20 @@
       "Bunker Drop-Down Door Controls (Panel)": {
         "name": "Bunker Drop-Down Door Controls (Panel)",
         "id": 159188,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Theater Exit (Panel)": {
+        "name": "Theater Exit (Panel)",
+        "id": 159189,
         "groups": [
           "Everything",
           "Panel Keys"
@@ -9280,6 +9692,62 @@
       "Swamp Laser Shortcut (Panel)": {
         "name": "Swamp Laser Shortcut (Panel)",
         "id": 159199,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Treehouse First & Second Doors (Panel)": {
+        "name": "Treehouse First & Second Doors (Panel)",
+        "id": 159200,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Treehouse Third Door (Panel)": {
+        "name": "Treehouse Third Door (Panel)",
+        "id": 159202,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Treehouse Laser House Door Timer (Panel)": {
+        "name": "Treehouse Laser House Door Timer (Panel)",
+        "id": 159205,
+        "groups": [
+          "Everything",
+          "Panel Keys"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Treehouse Drawbridge (Panel)": {
+        "name": "Treehouse Drawbridge (Panel)",
+        "id": 159208,
         "groups": [
           "Everything",
           "Panel Keys"
@@ -9465,6 +9933,160 @@
         "groups": [
           "Doors",
           "Everything"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Symmetry Laser": {
+        "name": "Symmetry Laser",
+        "id": 159500,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Desert Laser": {
+        "name": "Desert Laser",
+        "id": 159501,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Quarry Laser": {
+        "name": "Quarry Laser",
+        "id": 159502,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Shadows Laser": {
+        "name": "Shadows Laser",
+        "id": 159503,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Keep Laser": {
+        "name": "Keep Laser",
+        "id": 159504,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Monastery Laser": {
+        "name": "Monastery Laser",
+        "id": 159505,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Town Laser": {
+        "name": "Town Laser",
+        "id": 159506,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Jungle Laser": {
+        "name": "Jungle Laser",
+        "id": 159507,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Bunker Laser": {
+        "name": "Bunker Laser",
+        "id": 159508,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Swamp Laser": {
+        "name": "Swamp Laser",
+        "id": 159509,
+        "groups": [
+          "Everything",
+          "Lasers"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Treehouse Laser": {
+        "name": "Treehouse Laser",
+        "id": 159510,
+        "groups": [
+          "Everything",
+          "Lasers"
         ],
         "advancement": false,
         "useful": false,
@@ -11691,160 +12313,6 @@
         "groups": [
           "Everything",
           "Obelisk Keys"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Symmetry Laser": {
-        "name": "Symmetry Laser",
-        "id": 159500,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Desert Laser": {
-        "name": "Desert Laser",
-        "id": 159501,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Quarry Laser": {
-        "name": "Quarry Laser",
-        "id": 159502,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Shadows Laser": {
-        "name": "Shadows Laser",
-        "id": 159503,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Keep Laser": {
-        "name": "Keep Laser",
-        "id": 159504,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Monastery Laser": {
-        "name": "Monastery Laser",
-        "id": 159505,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Town Laser": {
-        "name": "Town Laser",
-        "id": 159506,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Jungle Laser": {
-        "name": "Jungle Laser",
-        "id": 159507,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bunker Laser": {
-        "name": "Bunker Laser",
-        "id": 159508,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Swamp Laser": {
-        "name": "Swamp Laser",
-        "id": 159509,
-        "groups": [
-          "Everything",
-          "Lasers"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Treehouse Laser": {
-        "name": "Treehouse Laser",
-        "id": 159510,
-        "groups": [
-          "Everything",
-          "Lasers"
         ],
         "advancement": false,
         "useful": false,
