@@ -10238,8 +10238,18 @@
             "name": "Valor level 2",
             "id": 1245776,
             "access_rule": {
-              "type": "item_check",
-              "item": "ValorForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Valor Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Bond of Flame",
@@ -10252,8 +10262,18 @@
             "name": "Valor level 3",
             "id": 1245777,
             "access_rule": {
-              "type": "item_check",
-              "item": "ValorForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Valor Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Elixir",
@@ -10266,8 +10286,18 @@
             "name": "Valor level 4",
             "id": 1245778,
             "access_rule": {
-              "type": "item_check",
-              "item": "ValorForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Valor Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Precious Mushroom+",
@@ -10280,8 +10310,18 @@
             "name": "Valor level 5",
             "id": 1245779,
             "access_rule": {
-              "type": "item_check",
-              "item": "ValorForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Valor Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Power Boost",
@@ -10294,8 +10334,18 @@
             "name": "Valor level 6",
             "id": 1245780,
             "access_rule": {
-              "type": "item_check",
-              "item": "ValorForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Valor Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 4
+                }
+              ]
             },
             "item": {
               "name": "Lucky Emblem",
@@ -10308,8 +10358,18 @@
             "name": "Valor level 7",
             "id": 1245781,
             "access_rule": {
-              "type": "item_check",
-              "item": "ValorForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Valor Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 5
+                }
+              ]
             },
             "item": {
               "name": "Drive Converter",
@@ -10328,8 +10388,18 @@
             "name": "Wisdom level 2",
             "id": 1245782,
             "access_rule": {
-              "type": "item_check",
-              "item": "WisdomForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Wisdom Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Protect Belt",
@@ -10342,8 +10412,18 @@
             "name": "Wisdom level 3",
             "id": 1245783,
             "access_rule": {
-              "type": "item_check",
-              "item": "WisdomForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Wisdom Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Horizontal Slash",
@@ -10356,8 +10436,18 @@
             "name": "Wisdom level 4",
             "id": 1245784,
             "access_rule": {
-              "type": "item_check",
-              "item": "WisdomForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Wisdom Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Secret Ansem's Report 4",
@@ -10370,8 +10460,18 @@
             "name": "Wisdom level 5",
             "id": 1245785,
             "access_rule": {
-              "type": "item_check",
-              "item": "WisdomForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Wisdom Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Blizzagun Armlet",
@@ -10384,8 +10484,18 @@
             "name": "Wisdom level 6",
             "id": 1245786,
             "access_rule": {
-              "type": "item_check",
-              "item": "WisdomForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Wisdom Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 4
+                }
+              ]
             },
             "item": {
               "name": "Hi-Potion",
@@ -10398,8 +10508,18 @@
             "name": "Wisdom level 7",
             "id": 1245787,
             "access_rule": {
-              "type": "item_check",
-              "item": "WisdomForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Wisdom Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 5
+                }
+              ]
             },
             "item": {
               "name": "Moon Amulet",
@@ -10418,8 +10538,18 @@
             "name": "Limit level 2",
             "id": 1245788,
             "access_rule": {
-              "type": "item_check",
-              "item": "LimitForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Limit Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Magnet Element",
@@ -10432,8 +10562,18 @@
             "name": "Limit level 3",
             "id": 1245789,
             "access_rule": {
-              "type": "item_check",
-              "item": "LimitForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Limit Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Gold Ring",
@@ -10446,8 +10586,18 @@
             "name": "Limit level 4",
             "id": 1245790,
             "access_rule": {
-              "type": "item_check",
-              "item": "LimitForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Limit Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Proof of Peace",
@@ -10460,8 +10610,18 @@
             "name": "Limit level 5",
             "id": 1245791,
             "access_rule": {
-              "type": "item_check",
-              "item": "LimitForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Limit Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Donald Auto Healing",
@@ -10474,8 +10634,18 @@
             "name": "Limit level 6",
             "id": 1245792,
             "access_rule": {
-              "type": "item_check",
-              "item": "LimitForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Limit Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 4
+                }
+              ]
             },
             "item": {
               "name": "Way to the Dawn",
@@ -10488,8 +10658,18 @@
             "name": "Limit level 7",
             "id": 1245793,
             "access_rule": {
-              "type": "item_check",
-              "item": "LimitForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Limit Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 5
+                }
+              ]
             },
             "item": {
               "name": "Proof of Connection",
@@ -10508,8 +10688,18 @@
             "name": "Master level 2",
             "id": 1245794,
             "access_rule": {
-              "type": "item_check",
-              "item": "MasterForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Master Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max MP Up",
@@ -10522,8 +10712,18 @@
             "name": "Master level 3",
             "id": 1245795,
             "access_rule": {
-              "type": "item_check",
-              "item": "MasterForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Master Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Ether",
@@ -10536,8 +10736,18 @@
             "name": "Master level 4",
             "id": 1245796,
             "access_rule": {
-              "type": "item_check",
-              "item": "MasterForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Master Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Hi-Potion",
@@ -10550,8 +10760,18 @@
             "name": "Master level 5",
             "id": 1245797,
             "access_rule": {
-              "type": "item_check",
-              "item": "MasterForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Master Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Max HP Up",
@@ -10564,8 +10784,18 @@
             "name": "Master level 6",
             "id": 1245798,
             "access_rule": {
-              "type": "item_check",
-              "item": "MasterForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Master Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 4
+                }
+              ]
             },
             "item": {
               "name": "Tent",
@@ -10578,8 +10808,18 @@
             "name": "Master level 7",
             "id": 1245799,
             "access_rule": {
-              "type": "item_check",
-              "item": "MasterForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Master Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 5
+                }
+              ]
             },
             "item": {
               "name": "Accessory Slot Up",
@@ -10598,8 +10838,18 @@
             "name": "Final level 2",
             "id": 1245800,
             "access_rule": {
-              "type": "item_check",
-              "item": "FinalForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Final Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Counterguard",
@@ -10612,8 +10862,18 @@
             "name": "Final level 3",
             "id": 1245801,
             "access_rule": {
-              "type": "item_check",
-              "item": "FinalForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Final Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                }
+              ]
             },
             "item": {
               "name": "Goofy Protega",
@@ -10626,8 +10886,18 @@
             "name": "Final level 4",
             "id": 1245802,
             "access_rule": {
-              "type": "item_check",
-              "item": "FinalForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Final Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Secret Ansem's Report 13",
@@ -10640,8 +10910,18 @@
             "name": "Final level 5",
             "id": 1245803,
             "access_rule": {
-              "type": "item_check",
-              "item": "FinalForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Final Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             },
             "item": {
               "name": "Fire Element",
@@ -10654,8 +10934,18 @@
             "name": "Final level 6",
             "id": 1245804,
             "access_rule": {
-              "type": "item_check",
-              "item": "FinalForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Final Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 4
+                }
+              ]
             },
             "item": {
               "name": "Lucky Emblem",
@@ -10668,8 +10958,18 @@
             "name": "Final level 7",
             "id": 1245805,
             "access_rule": {
-              "type": "item_check",
-              "item": "FinalForm"
+              "type": "helper",
+              "name": "form_list_unlock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Final Form"
+                },
+                {
+                  "type": "constant",
+                  "value": 5
+                }
+              ]
             },
             "item": {
               "name": "Hero's Crest",
@@ -17249,7 +17549,11 @@
   "settings": {
     "1": {
       "game": "Kingdom Hearts 2",
-      "assume_bidirectional_exits": false
+      "assume_bidirectional_exits": false,
+      "FightLogic": 1,
+      "AutoFormLogic": 0,
+      "FinalFormLogic": 1,
+      "Promise_Charm": 0
     }
   },
   "game_info": {
