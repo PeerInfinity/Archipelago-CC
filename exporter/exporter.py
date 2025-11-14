@@ -733,6 +733,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
             if world is not None:
                 closure_vars['world'] = world
 
+            # Allow game handler to prepare/modify closure_vars before analysis
+            if hasattr(game_handler, 'prepare_closure_vars'):
+                closure_vars = game_handler.prepare_closure_vars(rule_func, closure_vars)
+
             # Directly call analyze_rule, which handles recursion internally for combined rules
             context_info = f"{target_type} '{rule_target_name or 'unknown'}'"
             analysis_result = analyze_rule(rule_func=rule_func, closure_vars=closure_vars, game_handler=game_handler, player_context=player, context_info=context_info)
