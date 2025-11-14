@@ -10,6 +10,45 @@ class ShapezGameExportHandler(GenericGameExportHandler):
     """Export handler for shapez."""
     GAME_NAME = 'shapez'
 
+    def should_preserve_as_helper(self, func_name: str) -> bool:
+        """
+        Tell the analyzer which functions should be preserved as helper calls
+        instead of being inlined.
+
+        Args:
+            func_name: The name of the function being analyzed
+
+        Returns:
+            True if the function should be preserved as a helper call
+        """
+        # Preserve has_logic_list_building as a helper
+        # This function takes closure variables (buildings list, index) that
+        # can't be properly resolved by the analyzer
+        if func_name == 'has_logic_list_building':
+            return True
+
+        # All other shapez helper functions should also be preserved
+        # This includes: can_cut_half, can_rotate_90, can_stack, can_paint, etc.
+        shapez_helpers = {
+            'can_cut_half',
+            'can_rotate_90',
+            'can_rotate_180',
+            'can_stack',
+            'can_paint',
+            'can_mix_colors',
+            'has_tunnel',
+            'has_balancer',
+            'can_use_quad_painter',
+            'can_make_stitched_shape',
+            'can_build_mam',
+            'can_make_east_windmill',
+            'can_make_half_half_shape',
+            'can_make_half_shape',
+            'has_x_belt_multiplier',
+        }
+
+        return func_name in shapez_helpers
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Override expand_rule to preserve helper functions as-is.
