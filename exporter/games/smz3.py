@@ -185,17 +185,31 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         if not isinstance(rule, dict):
             return rule
 
-        # Handle "items.AttributeName" pattern - convert to item check
-        # This handles the TotalSMZ3 Progression object attributes
+        # Handle attribute access patterns
         if rule.get('type') == 'attribute':
             obj = rule.get('object')
+            attr = rule.get('attr')
+
+            # Handle items.AttributeName - convert to item check
             if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'items':
-                item_name = rule.get('attr')
-                logger.debug(f"Converting items.{item_name} to item_check")
+                logger.debug(f"Converting items.{attr} to item_check")
                 return {
                     'type': 'item_check',
-                    'item': item_name
+                    'item': attr
                 }
+
+            # Handle self.AttributeName - try to resolve to static data or constant
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self':
+                # For now, convert self.Config and similar to a helper call that can access static data
+                # This is a placeholder - ideally we'd resolve these at export time
+                logger.debug(f"Converting self.{attr} to static data reference")
+                return {
+                    'type': 'static_ref',
+                    'ref': attr
+                }
+
+            # Recursively process the object part of attribute access
+            rule['object'] = self.postprocess_rule(obj)
 
         # Handle region.CanEnter() and loc.Available() patterns
         # These appear as: {type: "function_call", function: {type: "attribute", object: {type: "name", name: "region"/"loc"}, attr: "CanEnter"/"Available"}, args: [...]}
@@ -239,21 +253,51 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                     'value': True
                 }
 
-        # Handle method calls on items (e.g., items.CanLiftLight())
-        # These should be converted to helper function calls
+        # Handle function calls
         if rule.get('type') == 'function_call':
             func = rule.get('function')
+            args = rule.get('args', [])
+
+            # Filter out 'items' name arguments (JavaScript helpers get items from snapshot)
+            filtered_args = [arg for arg in args if not (isinstance(arg, dict) and arg.get('type') == 'name' and arg.get('name') == 'items')]
+
             if isinstance(func, dict) and func.get('type') == 'attribute':
                 obj = func.get('object')
+                method_name = func.get('attr')
+
+                # Handle items.MethodName() - convert to helper call
                 if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'items':
-                    method_name = func.get('attr')
-                    # Convert to a helper call with the same arguments
                     logger.debug(f"Converting items.{method_name}() to helper call")
                     return {
                         'type': 'helper',
                         'name': f'smz3_{method_name}',
-                        'args': rule.get('args', [])
+                        'args': [self.postprocess_rule(arg) for arg in filtered_args]
                     }
+
+                # Handle self.world.CanEnter(region_name, items) - convert to region_accessible
+                if (isinstance(obj, dict) and obj.get('type') == 'attribute' and
+                    obj.get('attr') == 'world' and
+                    isinstance(obj.get('object'), dict) and
+                    obj['object'].get('type') == 'name' and
+                    obj['object'].get('name') == 'self' and
+                    method_name == 'CanEnter'):
+
+                    if filtered_args and len(filtered_args) > 0:
+                        region_name_arg = self.postprocess_rule(filtered_args[0])
+                        logger.debug(f"Converting self.world.CanEnter() to region_accessible check")
+                        return {
+                            'type': 'region_accessible',
+                            'region': region_name_arg.get('value') if isinstance(region_name_arg, dict) and region_name_arg.get('type') == 'constant' else region_name_arg
+                        }
+
+            # Update args in the rule if we filtered anything
+            if len(filtered_args) != len(args):
+                rule = rule.copy()
+                rule['args'] = [self.postprocess_rule(arg) for arg in filtered_args]
+                # Recursively process the function
+                if func:
+                    rule['function'] = self.postprocess_rule(func)
+                return rule
 
         # Recursively process nested rules
         if rule.get('type') == 'and' and rule.get('conditions'):
@@ -275,5 +319,11 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 rule['left'] = self.postprocess_rule(rule['left'])
             if rule.get('right'):
                 rule['right'] = self.postprocess_rule(rule['right'])
+        elif rule.get('type') == 'function_call':
+            # Process function and args if not already handled above
+            if rule.get('function'):
+                rule['function'] = self.postprocess_rule(rule['function'])
+            if rule.get('args'):
+                rule['args'] = [self.postprocess_rule(arg) for arg in rule['args']]
 
         return rule

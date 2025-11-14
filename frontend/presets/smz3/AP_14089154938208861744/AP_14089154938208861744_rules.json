@@ -86,12 +86,8 @@
                       "name": "smz3_CanAccessMiseryMirePortal",
                       "args": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "Config"
+                          "type": "static_ref",
+                          "ref": "Config"
                         }
                       ]
                     },
@@ -133,29 +129,8 @@
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Light World Death Mountain West"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Light World Death Mountain West"
                 }
               ]
             }
@@ -171,29 +146,8 @@
                   "item": "MoonPearl"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Dark World North East"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Dark World North East"
                 }
               ]
             }
@@ -217,29 +171,8 @@
                   "item": "Flippers"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Dark World South"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Dark World South"
                 }
               ]
             }
@@ -255,29 +188,8 @@
                   "item": "MoonPearl"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Dark World North West"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Dark World North West"
                 }
               ]
             }
@@ -293,29 +205,8 @@
                   "item": "MoonPearl"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Dark World North West"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Dark World North West"
                 }
               ]
             }
@@ -380,41 +271,16 @@
                   "item": "MoonPearl"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Dark World Death Mountain East"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Dark World Death Mountain East"
                 },
                 {
                   "type": "function_call",
                   "function": {
                     "type": "attribute",
                     "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
+                      "type": "static_ref",
+                      "ref": "world"
                     },
                     "attr": "CanAcquireAtLeast"
                   },
@@ -422,18 +288,10 @@
                     {
                       "type": "attribute",
                       "object": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "world"
+                        "type": "static_ref",
+                        "ref": "world"
                       },
                       "attr": "TowerCrystals"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
                     },
                     {
                       "type": "attribute",
@@ -450,12 +308,8 @@
                   "function": {
                     "type": "attribute",
                     "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
+                      "type": "static_ref",
+                      "ref": "world"
                     },
                     "attr": "CanAcquireAtLeast"
                   },
@@ -495,10 +349,6 @@
                         "type": "constant",
                         "value": 7
                       }
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
                     },
                     {
                       "type": "attribute",
@@ -552,29 +402,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Light World Death Mountain West"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Light World Death Mountain West"
                 },
                 {
                   "type": "or",
@@ -653,29 +482,8 @@
                   "args": []
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Light World Death Mountain East"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Light World Death Mountain East"
                 }
               ]
             }
@@ -704,20 +512,12 @@
                               "function": {
                                 "type": "attribute",
                                 "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "self"
-                                  },
-                                  "attr": "world"
+                                  "type": "static_ref",
+                                  "ref": "world"
                                 },
                                 "attr": "CanAcquire"
                               },
                               "args": [
-                                {
-                                  "type": "name",
-                                  "name": "items"
-                                },
                                 {
                                   "type": "attribute",
                                   "object": {
@@ -736,12 +536,8 @@
                                   "name": "smz3_CanAccessDarkWorldPortal",
                                   "args": [
                                     {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "self"
-                                      },
-                                      "attr": "Config"
+                                      "type": "static_ref",
+                                      "ref": "Config"
                                     }
                                   ]
                                 },
@@ -812,20 +608,12 @@
                   "function": {
                     "type": "attribute",
                     "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
+                      "type": "static_ref",
+                      "ref": "world"
                     },
                     "attr": "CanAcquire"
                   },
                   "args": [
-                    {
-                      "type": "name",
-                      "name": "items"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -882,12 +670,8 @@
                               "name": "smz3_CanAccessDarkWorldPortal",
                               "args": [
                                 {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "self"
-                                  },
-                                  "attr": "Config"
+                                  "type": "static_ref",
+                                  "ref": "Config"
                                 }
                               ]
                             },
@@ -928,20 +712,12 @@
                               "function": {
                                 "type": "attribute",
                                 "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "self"
-                                  },
-                                  "attr": "world"
+                                  "type": "static_ref",
+                                  "ref": "world"
                                 },
                                 "attr": "CanAcquire"
                               },
                               "args": [
-                                {
-                                  "type": "name",
-                                  "name": "items"
-                                },
                                 {
                                   "type": "attribute",
                                   "object": {
@@ -960,12 +736,8 @@
                                   "name": "smz3_CanAccessDarkWorldPortal",
                                   "args": [
                                     {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "self"
-                                      },
-                                      "attr": "Config"
+                                      "type": "static_ref",
+                                      "ref": "Config"
                                     }
                                   ]
                                 },
@@ -1102,12 +874,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -1130,12 +898,8 @@
                         "test": {
                           "type": "attribute",
                           "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "Config"
+                            "type": "static_ref",
+                            "ref": "Config"
                           },
                           "attr": "Keysanity"
                         },
@@ -1163,12 +927,8 @@
                         "test": {
                           "type": "attribute",
                           "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "Config"
+                            "type": "static_ref",
+                            "ref": "Config"
                           },
                           "attr": "Keysanity"
                         },
@@ -1214,12 +974,8 @@
                         "name": "smz3_CanAccessMaridiaPortal",
                         "args": [
                           {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "world"
+                            "type": "static_ref",
+                            "ref": "world"
                           }
                         ]
                       },
@@ -1257,12 +1013,8 @@
                                 "function": {
                                   "type": "attribute",
                                   "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "self"
-                                    },
-                                    "attr": "world"
+                                    "type": "static_ref",
+                                    "ref": "world"
                                   },
                                   "attr": "GetLocation"
                                 },
@@ -1275,12 +1027,7 @@
                               },
                               "attr": "Available"
                             },
-                            "args": [
-                              {
-                                "type": "name",
-                                "name": "items"
-                              }
-                            ]
+                            "args": []
                           }
                         ]
                       }
@@ -1317,12 +1064,8 @@
                         "test": {
                           "type": "attribute",
                           "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "Config"
+                            "type": "static_ref",
+                            "ref": "Config"
                           },
                           "attr": "Keysanity"
                         },
@@ -1350,12 +1093,8 @@
                         "test": {
                           "type": "attribute",
                           "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "Config"
+                            "type": "static_ref",
+                            "ref": "Config"
                           },
                           "attr": "Keysanity"
                         },
@@ -1407,12 +1146,8 @@
                         "name": "smz3_CanAccessMaridiaPortal",
                         "args": [
                           {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "world"
+                            "type": "static_ref",
+                            "ref": "world"
                           }
                         ]
                       },
@@ -1481,12 +1216,8 @@
                                     "function": {
                                       "type": "attribute",
                                       "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "self"
-                                        },
-                                        "attr": "world"
+                                        "type": "static_ref",
+                                        "ref": "world"
                                       },
                                       "attr": "GetLocation"
                                     },
@@ -1499,12 +1230,7 @@
                                   },
                                   "attr": "Available"
                                 },
-                                "args": [
-                                  {
-                                    "type": "name",
-                                    "name": "items"
-                                  }
-                                ]
+                                "args": []
                               }
                             ]
                           }
@@ -1604,12 +1330,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -1788,12 +1510,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -1976,12 +1694,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -2011,12 +1725,8 @@
                             "test": {
                               "type": "attribute",
                               "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "Config"
+                                "type": "static_ref",
+                                "ref": "Config"
                               },
                               "attr": "Keysanity"
                             },
@@ -2094,12 +1804,8 @@
                             "name": "smz3_CanAccessMaridiaPortal",
                             "args": [
                               {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "world"
+                                "type": "static_ref",
+                                "ref": "world"
                               }
                             ]
                           },
@@ -2133,12 +1839,8 @@
                                     "function": {
                                       "type": "attribute",
                                       "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "name",
-                                          "name": "self"
-                                        },
-                                        "attr": "world"
+                                        "type": "static_ref",
+                                        "ref": "world"
                                       },
                                       "attr": "GetLocation"
                                     },
@@ -2151,12 +1853,7 @@
                                   },
                                   "attr": "Available"
                                 },
-                                "args": [
-                                  {
-                                    "type": "name",
-                                    "name": "items"
-                                  }
-                                ]
+                                "args": []
                               }
                             ]
                           }
@@ -2181,12 +1878,8 @@
                         "test": {
                           "type": "attribute",
                           "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "Config"
+                            "type": "static_ref",
+                            "ref": "Config"
                           },
                           "attr": "Keysanity"
                         },
@@ -2258,12 +1951,8 @@
                             "name": "smz3_CanAccessMaridiaPortal",
                             "args": [
                               {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "world"
+                                "type": "static_ref",
+                                "ref": "world"
                               }
                             ]
                           },
@@ -2321,12 +2010,8 @@
                                             "function": {
                                               "type": "attribute",
                                               "object": {
-                                                "type": "attribute",
-                                                "object": {
-                                                  "type": "name",
-                                                  "name": "self"
-                                                },
-                                                "attr": "world"
+                                                "type": "static_ref",
+                                                "ref": "world"
                                               },
                                               "attr": "GetLocation"
                                             },
@@ -2339,12 +2024,7 @@
                                           },
                                           "attr": "Available"
                                         },
-                                        "args": [
-                                          {
-                                            "type": "name",
-                                            "name": "items"
-                                          }
-                                        ]
+                                        "args": []
                                       }
                                     ]
                                   }
@@ -2368,12 +2048,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -2399,29 +2075,8 @@
                         "type": "and",
                         "conditions": [
                           {
-                            "type": "function_call",
-                            "function": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "world"
-                              },
-                              "attr": "CanEnter"
-                            },
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Norfair Upper West"
-                              },
-                              {
-                                "type": "name",
-                                "name": "items"
-                              }
-                            ]
+                            "type": "region_accessible",
+                            "region": "Norfair Upper West"
                           },
                           {
                             "type": "helper",
@@ -2438,12 +2093,8 @@
                             "name": "smz3_CanAccessMaridiaPortal",
                             "args": [
                               {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "world"
+                                "type": "static_ref",
+                                "ref": "world"
                               }
                             ]
                           },
@@ -2482,29 +2133,8 @@
                     "type": "and",
                     "conditions": [
                       {
-                        "type": "function_call",
-                        "function": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "world"
-                          },
-                          "attr": "CanEnter"
-                        },
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Norfair Upper West"
-                          },
-                          {
-                            "type": "name",
-                            "name": "items"
-                          }
-                        ]
+                        "type": "region_accessible",
+                        "region": "Norfair Upper West"
                       },
                       {
                         "type": "helper",
@@ -2553,12 +2183,8 @@
                         "name": "smz3_CanAccessMaridiaPortal",
                         "args": [
                           {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "world"
+                            "type": "static_ref",
+                            "ref": "world"
                           }
                         ]
                       },
@@ -2648,12 +2274,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -2679,29 +2301,8 @@
                         "type": "and",
                         "conditions": [
                           {
-                            "type": "function_call",
-                            "function": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "world"
-                              },
-                              "attr": "CanEnter"
-                            },
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Norfair Upper West"
-                              },
-                              {
-                                "type": "name",
-                                "name": "items"
-                              }
-                            ]
+                            "type": "region_accessible",
+                            "region": "Norfair Upper West"
                           },
                           {
                             "type": "item_check",
@@ -2737,12 +2338,8 @@
                         "name": "smz3_CanAccessMaridiaPortal",
                         "args": [
                           {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "world"
+                            "type": "static_ref",
+                            "ref": "world"
                           }
                         ]
                       }
@@ -2761,29 +2358,8 @@
                         "item": "Super"
                       },
                       {
-                        "type": "function_call",
-                        "function": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "world"
-                          },
-                          "attr": "CanEnter"
-                        },
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Norfair Upper West"
-                          },
-                          {
-                            "type": "name",
-                            "name": "items"
-                          }
-                        ]
+                        "type": "region_accessible",
+                        "region": "Norfair Upper West"
                       },
                       {
                         "type": "helper",
@@ -2833,12 +2409,8 @@
                     "name": "smz3_CanAccessMaridiaPortal",
                     "args": [
                       {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "world"
+                        "type": "static_ref",
+                        "ref": "world"
                       }
                     ]
                   }
@@ -2895,12 +2467,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -2976,12 +2544,8 @@
                             "test": {
                               "type": "attribute",
                               "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "Config"
+                                "type": "static_ref",
+                                "ref": "Config"
                               },
                               "attr": "Keysanity"
                             },
@@ -3106,12 +2670,8 @@
                             "test": {
                               "type": "attribute",
                               "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "Config"
+                                "type": "static_ref",
+                                "ref": "Config"
                               },
                               "attr": "Keysanity"
                             },
@@ -3211,12 +2771,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -3286,12 +2842,8 @@
                                 "test": {
                                   "type": "attribute",
                                   "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "self"
-                                    },
-                                    "attr": "Config"
+                                    "type": "static_ref",
+                                    "ref": "Config"
                                   },
                                   "attr": "Keysanity"
                                 },
@@ -3341,12 +2893,8 @@
                                 "test": {
                                   "type": "attribute",
                                   "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "self"
-                                    },
-                                    "attr": "Config"
+                                    "type": "static_ref",
+                                    "ref": "Config"
                                   },
                                   "attr": "Keysanity"
                                 },
@@ -3513,12 +3061,8 @@
                                 "test": {
                                   "type": "attribute",
                                   "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "self"
-                                    },
-                                    "attr": "Config"
+                                    "type": "static_ref",
+                                    "ref": "Config"
                                   },
                                   "attr": "Keysanity"
                                 },
@@ -3624,12 +3168,8 @@
                                 "test": {
                                   "type": "attribute",
                                   "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "self"
-                                    },
-                                    "attr": "Config"
+                                    "type": "static_ref",
+                                    "ref": "Config"
                                   },
                                   "attr": "Keysanity"
                                 },
@@ -3790,12 +3330,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -3821,29 +3357,8 @@
                         "type": "and",
                         "conditions": [
                           {
-                            "type": "function_call",
-                            "function": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "world"
-                              },
-                              "attr": "CanEnter"
-                            },
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Norfair Upper East"
-                              },
-                              {
-                                "type": "name",
-                                "name": "items"
-                              }
-                            ]
+                            "type": "region_accessible",
+                            "region": "Norfair Upper East"
                           },
                           {
                             "type": "helper",
@@ -3908,29 +3423,8 @@
                     "type": "and",
                     "conditions": [
                       {
-                        "type": "function_call",
-                        "function": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "world"
-                          },
-                          "attr": "CanEnter"
-                        },
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Norfair Upper East"
-                          },
-                          {
-                            "type": "name",
-                            "name": "items"
-                          }
-                        ]
+                        "type": "region_accessible",
+                        "region": "Norfair Upper East"
                       },
                       {
                         "type": "helper",
@@ -4018,12 +3512,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -4053,29 +3543,8 @@
                         "type": "and",
                         "conditions": [
                           {
-                            "type": "function_call",
-                            "function": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "world"
-                              },
-                              "attr": "CanEnter"
-                            },
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Norfair Upper East"
-                              },
-                              {
-                                "type": "name",
-                                "name": "items"
-                              }
-                            ]
+                            "type": "region_accessible",
+                            "region": "Norfair Upper East"
                           },
                           {
                             "type": "helper",
@@ -4143,29 +3612,8 @@
                         "type": "and",
                         "conditions": [
                           {
-                            "type": "function_call",
-                            "function": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "world"
-                              },
-                              "attr": "CanEnter"
-                            },
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Norfair Upper East"
-                              },
-                              {
-                                "type": "name",
-                                "name": "items"
-                              }
-                            ]
+                            "type": "region_accessible",
+                            "region": "Norfair Upper East"
                           },
                           {
                             "type": "helper",
@@ -4566,12 +4014,8 @@
                           "name": "smz3_CanAccessMiseryMirePortal",
                           "args": [
                             {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "self"
-                              },
-                              "attr": "Config"
+                              "type": "static_ref",
+                              "ref": "Config"
                             }
                           ]
                         },
@@ -4806,12 +4250,8 @@
                       "attr": "KeyPD"
                     },
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
+                      "type": "static_ref",
+                      "ref": "world"
                     }
                   ]
                 },
@@ -5074,12 +4514,8 @@
                       "attr": "KeyPD"
                     },
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
+                      "type": "static_ref",
+                      "ref": "world"
                     }
                   ]
                 },
@@ -6087,12 +5523,8 @@
                           "attr": "KeyTT"
                         },
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "world"
+                          "type": "static_ref",
+                          "ref": "world"
                         }
                       ]
                     },
@@ -6658,12 +6090,8 @@
                           "attr": "BigKeyMM"
                         },
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "world"
+                          "type": "static_ref",
+                          "ref": "world"
                         }
                       ]
                     },
@@ -6732,12 +6160,8 @@
                           "attr": "BigKeyMM"
                         },
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "world"
+                          "type": "static_ref",
+                          "ref": "world"
                         }
                       ]
                     },
@@ -6925,12 +6349,8 @@
                           "attr": "BigKeyTR"
                         },
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "world"
+                          "type": "static_ref",
+                          "ref": "world"
                         }
                       ]
                     }
@@ -6968,12 +6388,8 @@
                         "attr": "KeyTR"
                       },
                       {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "world"
+                        "type": "static_ref",
+                        "ref": "world"
                       }
                     ]
                   },
@@ -7692,12 +7108,8 @@
                               "attr": "KeyGT"
                             },
                             {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "self"
-                              },
-                              "attr": "world"
+                              "type": "static_ref",
+                              "ref": "world"
                             }
                           ]
                         }
@@ -8982,29 +8394,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Turtle Rock"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Turtle Rock"
                 }
               ]
             },
@@ -9038,20 +8429,12 @@
               "function": {
                 "type": "attribute",
                 "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "world"
+                  "type": "static_ref",
+                  "ref": "world"
                 },
                 "attr": "CanAcquireAll"
               },
               "args": [
-                {
-                  "type": "name",
-                  "name": "items"
-                },
                 {
                   "type": "attribute",
                   "object": {
@@ -9108,20 +8491,12 @@
                   "function": {
                     "type": "attribute",
                     "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
+                      "type": "static_ref",
+                      "ref": "world"
                     },
                     "attr": "CanAcquire"
                   },
                   "args": [
-                    {
-                      "type": "name",
-                      "name": "items"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -9174,29 +8549,8 @@
                   "item": "MoonPearl"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Dark World North West"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Dark World North West"
                 }
               ]
             },
@@ -9237,29 +8591,8 @@
                           "item": "MoonPearl"
                         },
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "self"
-                              },
-                              "attr": "world"
-                            },
-                            "attr": "CanEnter"
-                          },
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Dark World North West"
-                            },
-                            {
-                              "type": "name",
-                              "name": "items"
-                            }
-                          ]
+                          "type": "region_accessible",
+                          "region": "Dark World North West"
                         }
                       ]
                     }
@@ -9661,20 +8994,12 @@
               "function": {
                 "type": "attribute",
                 "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "world"
+                  "type": "static_ref",
+                  "ref": "world"
                 },
                 "attr": "CanAcquire"
               },
               "args": [
-                {
-                  "type": "name",
-                  "name": "items"
-                },
                 {
                   "type": "attribute",
                   "object": {
@@ -9760,29 +9085,8 @@
                   "item": "Mirror"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Dark World South"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Dark World South"
                 }
               ]
             },
@@ -9895,29 +9199,8 @@
             "name": "Desert Ledge",
             "id": 85508,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "world"
-                },
-                "attr": "CanEnter"
-              },
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Desert Palace"
-                },
-                {
-                  "type": "name",
-                  "name": "items"
-                }
-              ]
+              "type": "region_accessible",
+              "region": "Desert Palace"
             },
             "item": {
               "name": "TwentyRupees",
@@ -9998,29 +9281,8 @@
                   "item": "Mirror"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Dark World South"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Dark World South"
                 }
               ]
             },
@@ -10081,54 +9343,12 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "world"
-                        },
-                        "attr": "CanEnter"
-                      },
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Dark World South"
-                        },
-                        {
-                          "type": "name",
-                          "name": "items"
-                        }
-                      ]
+                      "type": "region_accessible",
+                      "region": "Dark World South"
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "world"
-                        },
-                        "attr": "CanEnter"
-                      },
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Dark World North East"
-                        },
-                        {
-                          "type": "name",
-                          "name": "items"
-                        }
-                      ]
+                      "type": "region_accessible",
+                      "region": "Dark World North East"
                     }
                   ]
                 }
@@ -10439,29 +9659,8 @@
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Light World Death Mountain West"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Light World Death Mountain West"
                 }
               ]
             },
@@ -10815,20 +10014,12 @@
                   "function": {
                     "type": "attribute",
                     "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
+                      "type": "static_ref",
+                      "ref": "world"
                     },
                     "attr": "CanAcquireAll"
                   },
                   "args": [
-                    {
-                      "type": "name",
-                      "name": "items"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -10844,29 +10035,8 @@
                   "item": "MoonPearl"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Dark World South"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Dark World South"
                 },
                 {
                   "type": "or",
@@ -10887,20 +10057,12 @@
                           "function": {
                             "type": "attribute",
                             "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "self"
-                              },
-                              "attr": "world"
+                              "type": "static_ref",
+                              "ref": "world"
                             },
                             "attr": "CanAcquire"
                           },
                           "args": [
-                            {
-                              "type": "name",
-                              "name": "items"
-                            },
                             {
                               "type": "attribute",
                               "object": {
@@ -10935,20 +10097,12 @@
                   "function": {
                     "type": "attribute",
                     "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
+                      "type": "static_ref",
+                      "ref": "world"
                     },
                     "attr": "CanAcquireAll"
                   },
                   "args": [
-                    {
-                      "type": "name",
-                      "name": "items"
-                    },
                     {
                       "type": "attribute",
                       "object": {
@@ -10964,29 +10118,8 @@
                   "item": "MoonPearl"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Dark World South"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Dark World South"
                 },
                 {
                   "type": "or",
@@ -11007,20 +10140,12 @@
                           "function": {
                             "type": "attribute",
                             "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "self"
-                              },
-                              "attr": "world"
+                              "type": "static_ref",
+                              "ref": "world"
                             },
                             "attr": "CanAcquire"
                           },
                           "args": [
-                            {
-                              "type": "name",
-                              "name": "items"
-                            },
                             {
                               "type": "attribute",
                               "object": {
@@ -11237,12 +10362,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -11305,12 +10426,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -11388,12 +10505,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -11599,12 +10712,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -11706,12 +10815,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -11769,29 +10874,8 @@
                         ]
                       },
                       {
-                        "type": "function_call",
-                        "function": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "world"
-                          },
-                          "attr": "CanEnter"
-                        },
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Wrecked Ship"
-                          },
-                          {
-                            "type": "name",
-                            "name": "items"
-                          }
-                        ]
+                        "type": "region_accessible",
+                        "region": "Wrecked Ship"
                       }
                     ]
                   }
@@ -11816,29 +10900,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Wrecked Ship"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Wrecked Ship"
                 },
                 {
                   "type": "item_check",
@@ -11865,29 +10928,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "world"
-                    },
-                    "attr": "CanEnter"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Wrecked Ship"
-                    },
-                    {
-                      "type": "name",
-                      "name": "items"
-                    }
-                  ]
+                  "type": "region_accessible",
+                  "region": "Wrecked Ship"
                 },
                 {
                   "type": "item_check",
@@ -11996,12 +11038,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -12190,12 +11228,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -12260,12 +11294,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -12330,12 +11360,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -12415,12 +11441,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -12547,12 +11569,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -12668,12 +11686,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -12824,12 +11838,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -12927,12 +11937,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -13107,12 +12113,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -13303,12 +12305,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -13453,12 +12451,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -13605,12 +12599,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -13777,12 +12767,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -13924,12 +12910,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -13988,12 +12970,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -14290,12 +13268,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -14439,12 +13413,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -14547,12 +13517,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -14713,12 +13679,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -14784,12 +13746,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -14855,12 +13813,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -14987,12 +13941,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -15035,12 +13985,8 @@
                     "name": "smz3_CanAccessMaridiaPortal",
                     "args": [
                       {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "world"
+                        "type": "static_ref",
+                        "ref": "world"
                       }
                     ]
                   }
@@ -15080,12 +14026,8 @@
                         "name": "smz3_CanAccessMaridiaPortal",
                         "args": [
                           {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "world"
+                            "type": "static_ref",
+                            "ref": "world"
                           }
                         ]
                       }
@@ -15142,12 +14084,8 @@
                       "name": "smz3_CanAccessMaridiaPortal",
                       "args": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "self"
-                          },
-                          "attr": "world"
+                          "type": "static_ref",
+                          "ref": "world"
                         }
                       ]
                     },
@@ -15209,12 +14147,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -15268,29 +14202,8 @@
                         "type": "and",
                         "conditions": [
                           {
-                            "type": "function_call",
-                            "function": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "world"
-                              },
-                              "attr": "CanEnter"
-                            },
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Norfair Upper East"
-                              },
-                              {
-                                "type": "name",
-                                "name": "items"
-                              }
-                            ]
+                            "type": "region_accessible",
+                            "region": "Norfair Upper East"
                           },
                           {
                             "type": "item_check",
@@ -15367,29 +14280,8 @@
                         "type": "and",
                         "conditions": [
                           {
-                            "type": "function_call",
-                            "function": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "name",
-                                  "name": "self"
-                                },
-                                "attr": "world"
-                              },
-                              "attr": "CanEnter"
-                            },
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Norfair Upper East"
-                              },
-                              {
-                                "type": "name",
-                                "name": "items"
-                              }
-                            ]
+                            "type": "region_accessible",
+                            "region": "Norfair Upper East"
                           },
                           {
                             "type": "item_check",
@@ -15421,12 +14313,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -15538,12 +14426,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -15793,12 +14677,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -15897,12 +14777,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -16001,12 +14877,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -16115,12 +14987,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -16211,12 +15079,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -16307,12 +15171,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -16429,12 +15289,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -16615,12 +15471,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -16696,12 +15548,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -16816,12 +15664,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -16921,12 +15765,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -17044,12 +15884,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -17180,12 +16016,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -17295,12 +16127,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -17402,12 +16230,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
@@ -17493,12 +16317,8 @@
               "test": {
                 "type": "compare",
                 "left": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "Logic"
+                  "type": "static_ref",
+                  "ref": "Logic"
                 },
                 "op": "==",
                 "right": {
