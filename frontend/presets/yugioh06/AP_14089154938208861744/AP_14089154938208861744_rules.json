@@ -67,12 +67,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 1
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -93,12 +116,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 0
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -119,12 +165,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 0
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -145,12 +214,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 0
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -171,12 +263,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 1
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -197,12 +312,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 1
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -223,12 +361,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 1
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -249,12 +410,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 1
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -275,12 +459,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 1
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -301,12 +508,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 1
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -327,12 +557,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 2
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -353,12 +606,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 2
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -379,12 +655,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 2
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -405,12 +704,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 2
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -431,12 +753,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 2
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -457,12 +802,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 3
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -483,12 +851,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 3
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -509,12 +900,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 3
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -535,12 +949,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 3
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -561,12 +998,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 3
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -587,12 +1047,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 4
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -613,12 +1096,35 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 4
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 }
@@ -636,15 +1142,42 @@
                   "group": {
                     "type": "constant",
                     "value": "Campaign Boss Beaten"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 3
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 5
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 },
@@ -653,8 +1186,23 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": []
+                      "type": "attribute",
+                      "object": {
+                        "type": "constant",
+                        "value": [
+                          22,
+                          "Stronghold",
+                          [],
+                          5,
+                          3,
+                          6153,
+                          8022,
+                          "deck/LV5_gadget.ydc\u0000\u0000\u0000",
+                          5,
+                          []
+                        ]
+                      },
+                      "attr": "additional_info"
                     }
                   ]
                 }
@@ -672,15 +1220,42 @@
                   "group": {
                     "type": "constant",
                     "value": "Campaign Boss Beaten"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 7
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 6
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 },
@@ -689,8 +1264,23 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": []
+                      "type": "attribute",
+                      "object": {
+                        "type": "constant",
+                        "value": [
+                          23,
+                          "Sacred Phoenix of Nephthys",
+                          [],
+                          5,
+                          4,
+                          6236,
+                          8023,
+                          "deck/LV5_nephthys.ydc\u0000",
+                          6,
+                          []
+                        ]
+                      },
+                      "attr": "additional_info"
                     }
                   ]
                 }
@@ -708,15 +1298,42 @@
                   "group": {
                     "type": "constant",
                     "value": "Campaign Boss Beaten"
+                  },
+                  "count": {
+                    "type": "constant",
+                    "value": 12
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
                     {
                       "type": "constant",
-                      "value": 7
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
+                    {
+                      "type": "name",
+                      "name": "amount"
                     }
                   ]
                 },
@@ -725,8 +1342,25 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": []
+                      "type": "attribute",
+                      "object": {
+                        "type": "constant",
+                        "value": [
+                          24,
+                          "Cyber End Dragon",
+                          [
+                            "Goal"
+                          ],
+                          5,
+                          5,
+                          6397,
+                          8024,
+                          "deck/LV5_cyber.ydc\u0000\u0000\u0000\u0000",
+                          7,
+                          []
+                        ]
+                      },
+                      "attr": "additional_info"
                     }
                   ]
                 }
@@ -852,9 +1486,32 @@
             "name": "Max ATK Bonus",
             "id": 5730008,
             "access_rule": {
-              "type": "helper",
-              "name": "yugioh06_difficulty",
+              "type": "state_method",
+              "method": "has_from_list",
               "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "LEGEND OF B.E.W.D.",
+                    "METAL RAIDERS",
+                    "PHARAOH'S SERVANT",
+                    "PHARAONIC GUARDIAN",
+                    "SPELL RULER",
+                    "LABYRINTH OF NIGHTMARE",
+                    "LEGACY OF DARKNESS",
+                    "MAGICIAN'S FORCE",
+                    "DARK CRISIS",
+                    "INVASION OF CHAOS",
+                    "ANCIENT SANCTUARY",
+                    "SOUL OF THE DUELIST",
+                    "RISE OF DESTINY",
+                    "FLAMING ETERNITY",
+                    "THE LOST MILLENIUM",
+                    "CYBERNETIC REVOLUTION",
+                    "ELEMENTAL ENERGY",
+                    "SHADOW OF INFINITY"
+                  ]
+                },
                 {
                   "type": "constant",
                   "value": 2
@@ -1008,9 +1665,32 @@
             "name": "No Spell Cards Bonus",
             "id": 5730017,
             "access_rule": {
-              "type": "helper",
-              "name": "yugioh06_difficulty",
+              "type": "state_method",
+              "method": "has_from_list",
               "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "LEGEND OF B.E.W.D.",
+                    "METAL RAIDERS",
+                    "PHARAOH'S SERVANT",
+                    "PHARAONIC GUARDIAN",
+                    "SPELL RULER",
+                    "LABYRINTH OF NIGHTMARE",
+                    "LEGACY OF DARKNESS",
+                    "MAGICIAN'S FORCE",
+                    "DARK CRISIS",
+                    "INVASION OF CHAOS",
+                    "ANCIENT SANCTUARY",
+                    "SOUL OF THE DUELIST",
+                    "RISE OF DESTINY",
+                    "FLAMING ETERNITY",
+                    "THE LOST MILLENIUM",
+                    "CYBERNETIC REVOLUTION",
+                    "ELEMENTAL ENERGY",
+                    "SHADOW OF INFINITY"
+                  ]
+                },
                 {
                   "type": "constant",
                   "value": 2
@@ -1028,9 +1708,32 @@
             "name": "No Trap Cards Bonus",
             "id": 5730018,
             "access_rule": {
-              "type": "helper",
-              "name": "yugioh06_difficulty",
+              "type": "state_method",
+              "method": "has_from_list",
               "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "LEGEND OF B.E.W.D.",
+                    "METAL RAIDERS",
+                    "PHARAOH'S SERVANT",
+                    "PHARAONIC GUARDIAN",
+                    "SPELL RULER",
+                    "LABYRINTH OF NIGHTMARE",
+                    "LEGACY OF DARKNESS",
+                    "MAGICIAN'S FORCE",
+                    "DARK CRISIS",
+                    "INVASION OF CHAOS",
+                    "ANCIENT SANCTUARY",
+                    "SOUL OF THE DUELIST",
+                    "RISE OF DESTINY",
+                    "FLAMING ETERNITY",
+                    "THE LOST MILLENIUM",
+                    "CYBERNETIC REVOLUTION",
+                    "ELEMENTAL ENERGY",
+                    "SHADOW OF INFINITY"
+                  ]
+                },
                 {
                   "type": "constant",
                   "value": 2
@@ -1052,6 +1755,10 @@
               "group": {
                 "type": "constant",
                 "value": "Campaign Boss Beaten"
+              },
+              "count": {
+                "type": "constant",
+                "value": 3
               }
             },
             "item": {
@@ -1068,10 +1775,28 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "capability",
-                  "capability": "gain_lp_every_turn",
-                  "inferred": true,
-                  "description": "Requires ability to gain lp every turn"
+                  "type": "compare",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count_from_list_unique",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Solemn Wishes",
+                          "Cure Mermaid",
+                          "Dancing Fairy",
+                          "Princess Pikeru",
+                          "Kiseitai"
+                        ]
+                      }
+                    ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 },
                 {
                   "type": "item_check",
@@ -1103,9 +1828,32 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
                     {
                       "type": "constant",
                       "value": 2
@@ -1141,9 +1889,32 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
                     {
                       "type": "constant",
                       "value": 4
@@ -1180,9 +1951,32 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
                     {
                       "type": "constant",
                       "value": 2
@@ -1219,9 +2013,32 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
                     {
                       "type": "constant",
                       "value": 3
@@ -1329,9 +2146,32 @@
             "name": "Opponent's Turn Finish Bonus",
             "id": 5730027,
             "access_rule": {
-              "type": "helper",
-              "name": "yugioh06_difficulty",
+              "type": "state_method",
+              "method": "has_from_list",
               "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "LEGEND OF B.E.W.D.",
+                    "METAL RAIDERS",
+                    "PHARAOH'S SERVANT",
+                    "PHARAONIC GUARDIAN",
+                    "SPELL RULER",
+                    "LABYRINTH OF NIGHTMARE",
+                    "LEGACY OF DARKNESS",
+                    "MAGICIAN'S FORCE",
+                    "DARK CRISIS",
+                    "INVASION OF CHAOS",
+                    "ANCIENT SANCTUARY",
+                    "SOUL OF THE DUELIST",
+                    "RISE OF DESTINY",
+                    "FLAMING ETERNITY",
+                    "THE LOST MILLENIUM",
+                    "CYBERNETIC REVOLUTION",
+                    "ELEMENTAL ENERGY",
+                    "SHADOW OF INFINITY"
+                  ]
+                },
                 {
                   "type": "constant",
                   "value": 2
@@ -1349,9 +2189,32 @@
             "name": "Exactly 0 LP Bonus",
             "id": 5730028,
             "access_rule": {
-              "type": "helper",
-              "name": "yugioh06_difficulty",
+              "type": "state_method",
+              "method": "has_from_list",
               "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "LEGEND OF B.E.W.D.",
+                    "METAL RAIDERS",
+                    "PHARAOH'S SERVANT",
+                    "PHARAONIC GUARDIAN",
+                    "SPELL RULER",
+                    "LABYRINTH OF NIGHTMARE",
+                    "LEGACY OF DARKNESS",
+                    "MAGICIAN'S FORCE",
+                    "DARK CRISIS",
+                    "INVASION OF CHAOS",
+                    "ANCIENT SANCTUARY",
+                    "SOUL OF THE DUELIST",
+                    "RISE OF DESTINY",
+                    "FLAMING ETERNITY",
+                    "THE LOST MILLENIUM",
+                    "CYBERNETIC REVOLUTION",
+                    "ELEMENTAL ENERGY",
+                    "SHADOW OF INFINITY"
+                  ]
+                },
                 {
                   "type": "constant",
                   "value": 2
@@ -1369,9 +2232,32 @@
             "name": "Reversal Finish Bonus",
             "id": 5730029,
             "access_rule": {
-              "type": "helper",
-              "name": "yugioh06_difficulty",
+              "type": "state_method",
+              "method": "has_from_list",
               "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "LEGEND OF B.E.W.D.",
+                    "METAL RAIDERS",
+                    "PHARAOH'S SERVANT",
+                    "PHARAONIC GUARDIAN",
+                    "SPELL RULER",
+                    "LABYRINTH OF NIGHTMARE",
+                    "LEGACY OF DARKNESS",
+                    "MAGICIAN'S FORCE",
+                    "DARK CRISIS",
+                    "INVASION OF CHAOS",
+                    "ANCIENT SANCTUARY",
+                    "SOUL OF THE DUELIST",
+                    "RISE OF DESTINY",
+                    "FLAMING ETERNITY",
+                    "THE LOST MILLENIUM",
+                    "CYBERNETIC REVOLUTION",
+                    "ELEMENTAL ENERGY",
+                    "SHADOW OF INFINITY"
+                  ]
+                },
                 {
                   "type": "constant",
                   "value": 2
@@ -1399,9 +2285,32 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
                     {
                       "type": "constant",
                       "value": 6
@@ -1547,9 +2456,32 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
                     {
                       "type": "constant",
                       "value": 3
@@ -1604,9 +2536,32 @@
                       ]
                     },
                     {
-                      "type": "helper",
-                      "name": "yugioh06_difficulty",
+                      "type": "state_method",
+                      "method": "has_from_list",
                       "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "LEGEND OF B.E.W.D.",
+                            "METAL RAIDERS",
+                            "PHARAOH'S SERVANT",
+                            "PHARAONIC GUARDIAN",
+                            "SPELL RULER",
+                            "LABYRINTH OF NIGHTMARE",
+                            "LEGACY OF DARKNESS",
+                            "MAGICIAN'S FORCE",
+                            "DARK CRISIS",
+                            "INVASION OF CHAOS",
+                            "ANCIENT SANCTUARY",
+                            "SOUL OF THE DUELIST",
+                            "RISE OF DESTINY",
+                            "FLAMING ETERNITY",
+                            "THE LOST MILLENIUM",
+                            "CYBERNETIC REVOLUTION",
+                            "ELEMENTAL ENERGY",
+                            "SHADOW OF INFINITY"
+                          ]
+                        },
                         {
                           "type": "constant",
                           "value": 8
@@ -1989,9 +2944,32 @@
                       "args": []
                     },
                     {
-                      "type": "helper",
-                      "name": "yugioh06_difficulty",
+                      "type": "state_method",
+                      "method": "has_from_list",
                       "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "LEGEND OF B.E.W.D.",
+                            "METAL RAIDERS",
+                            "PHARAOH'S SERVANT",
+                            "PHARAONIC GUARDIAN",
+                            "SPELL RULER",
+                            "LABYRINTH OF NIGHTMARE",
+                            "LEGACY OF DARKNESS",
+                            "MAGICIAN'S FORCE",
+                            "DARK CRISIS",
+                            "INVASION OF CHAOS",
+                            "ANCIENT SANCTUARY",
+                            "SOUL OF THE DUELIST",
+                            "RISE OF DESTINY",
+                            "FLAMING ETERNITY",
+                            "THE LOST MILLENIUM",
+                            "CYBERNETIC REVOLUTION",
+                            "ELEMENTAL ENERGY",
+                            "SHADOW OF INFINITY"
+                          ]
+                        },
                         {
                           "type": "constant",
                           "value": 2
@@ -2025,9 +3003,32 @@
                       "args": []
                     },
                     {
-                      "type": "helper",
-                      "name": "yugioh06_difficulty",
+                      "type": "state_method",
+                      "method": "has_from_list",
                       "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "LEGEND OF B.E.W.D.",
+                            "METAL RAIDERS",
+                            "PHARAOH'S SERVANT",
+                            "PHARAONIC GUARDIAN",
+                            "SPELL RULER",
+                            "LABYRINTH OF NIGHTMARE",
+                            "LEGACY OF DARKNESS",
+                            "MAGICIAN'S FORCE",
+                            "DARK CRISIS",
+                            "INVASION OF CHAOS",
+                            "ANCIENT SANCTUARY",
+                            "SOUL OF THE DUELIST",
+                            "RISE OF DESTINY",
+                            "FLAMING ETERNITY",
+                            "THE LOST MILLENIUM",
+                            "CYBERNETIC REVOLUTION",
+                            "ELEMENTAL ENERGY",
+                            "SHADOW OF INFINITY"
+                          ]
+                        },
                         {
                           "type": "constant",
                           "value": 4
@@ -2056,14 +3057,116 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "only_dark",
-                      "args": []
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "state_method",
+                          "method": "has_from_list_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Dark Elf",
+                                "Archfiend Soldier",
+                                "Mad Dog of Darkness",
+                                "Vorse Raider",
+                                "Skilled Dark Magician",
+                                "Skull Descovery Knight",
+                                "Mechanicalchaser",
+                                "Dark Blade",
+                                "Gil Garth",
+                                "La Jinn the Mystical Genie of the Lamp",
+                                "Opticlops",
+                                "Zure, Knight of Dark World",
+                                "Brron, Mad King of Dark World",
+                                "D.D. Survivor",
+                                "Exarion Universe",
+                                "Kycoo the Ghost Destroyer",
+                                "Regenerating Mummy"
+                              ]
+                            },
+                            {
+                              "type": "constant",
+                              "value": 2
+                            }
+                          ]
+                        },
+                        {
+                          "type": "state_method",
+                          "method": "has_any",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Beast of Talwar",
+                                "Dark Ruler Ha Des",
+                                "Inferno Hammer",
+                                "Jinzo",
+                                "Ryu Kokki",
+                                "Skull Archfiend of Lightning",
+                                "Summoned Skull",
+                                "The End of Anubis"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "state_method",
+                          "method": "has_from_list_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Legendary Fiend",
+                                "Don Zaloog",
+                                "Newdoria",
+                                "Sangan",
+                                "Spirit Reaper",
+                                "Giant Germ"
+                              ]
+                            },
+                            {
+                              "type": "constant",
+                              "value": 2
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Mystic Tomato"
+                          }
+                        }
+                      ]
                     },
                     {
-                      "type": "helper",
-                      "name": "yugioh06_difficulty",
+                      "type": "state_method",
+                      "method": "has_from_list",
                       "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "LEGEND OF B.E.W.D.",
+                            "METAL RAIDERS",
+                            "PHARAOH'S SERVANT",
+                            "PHARAONIC GUARDIAN",
+                            "SPELL RULER",
+                            "LABYRINTH OF NIGHTMARE",
+                            "LEGACY OF DARKNESS",
+                            "MAGICIAN'S FORCE",
+                            "DARK CRISIS",
+                            "INVASION OF CHAOS",
+                            "ANCIENT SANCTUARY",
+                            "SOUL OF THE DUELIST",
+                            "RISE OF DESTINY",
+                            "FLAMING ETERNITY",
+                            "THE LOST MILLENIUM",
+                            "CYBERNETIC REVOLUTION",
+                            "ELEMENTAL ENERGY",
+                            "SHADOW OF INFINITY"
+                          ]
+                        },
                         {
                           "type": "constant",
                           "value": 2
@@ -2089,9 +3192,32 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
                     {
                       "type": "constant",
                       "value": 5
@@ -2115,9 +3241,32 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
                     {
                       "type": "constant",
                       "value": 5
@@ -2144,14 +3293,97 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "only_water",
-                      "args": []
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "state_method",
+                          "method": "has_from_list_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Gagagigo",
+                                "Familiar-Possessed - Eria",
+                                "7 Colored Fish",
+                                "Sea Serpent Warrior of Darkness",
+                                "Abyss Soldier"
+                              ]
+                            },
+                            {
+                              "type": "constant",
+                              "value": 2
+                            }
+                          ]
+                        },
+                        {
+                          "type": "state_method",
+                          "method": "has_any",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Amphibian Beast",
+                                "Giga Gagagigo",
+                                "Mobius the Frost Monarch",
+                                "Terrorking Salmon"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "state_method",
+                          "method": "has_from_list_unique",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Revival Jam",
+                                "Yomi Ship",
+                                "Treeborn Frog"
+                              ]
+                            },
+                            {
+                              "type": "constant",
+                              "value": 2
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Mother Grizzly"
+                          }
+                        }
+                      ]
                     },
                     {
-                      "type": "helper",
-                      "name": "yugioh06_difficulty",
+                      "type": "state_method",
+                      "method": "has_from_list",
                       "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "LEGEND OF B.E.W.D.",
+                            "METAL RAIDERS",
+                            "PHARAOH'S SERVANT",
+                            "PHARAONIC GUARDIAN",
+                            "SPELL RULER",
+                            "LABYRINTH OF NIGHTMARE",
+                            "LEGACY OF DARKNESS",
+                            "MAGICIAN'S FORCE",
+                            "DARK CRISIS",
+                            "INVASION OF CHAOS",
+                            "ANCIENT SANCTUARY",
+                            "SOUL OF THE DUELIST",
+                            "RISE OF DESTINY",
+                            "FLAMING ETERNITY",
+                            "THE LOST MILLENIUM",
+                            "CYBERNETIC REVOLUTION",
+                            "ELEMENTAL ENERGY",
+                            "SHADOW OF INFINITY"
+                          ]
+                        },
                         {
                           "type": "constant",
                           "value": 2
@@ -2177,9 +3409,32 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
                     {
                       "type": "constant",
                       "value": 4
@@ -2206,14 +3461,55 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "pacman_deck",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_from_list_unique",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Des Lacooda",
+                            "Swarm of Locusts",
+                            "Swarm of Scarabs",
+                            "Wandering Mummy",
+                            "Golem Sentry",
+                            "Great Spirit",
+                            "Royal Keeper",
+                            "Stealth Bird"
+                          ]
+                        },
+                        {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      ]
                     },
                     {
-                      "type": "helper",
-                      "name": "yugioh06_difficulty",
+                      "type": "state_method",
+                      "method": "has_from_list",
                       "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "LEGEND OF B.E.W.D.",
+                            "METAL RAIDERS",
+                            "PHARAOH'S SERVANT",
+                            "PHARAONIC GUARDIAN",
+                            "SPELL RULER",
+                            "LABYRINTH OF NIGHTMARE",
+                            "LEGACY OF DARKNESS",
+                            "MAGICIAN'S FORCE",
+                            "DARK CRISIS",
+                            "INVASION OF CHAOS",
+                            "ANCIENT SANCTUARY",
+                            "SOUL OF THE DUELIST",
+                            "RISE OF DESTINY",
+                            "FLAMING ETERNITY",
+                            "THE LOST MILLENIUM",
+                            "CYBERNETIC REVOLUTION",
+                            "ELEMENTAL ENERGY",
+                            "SHADOW OF INFINITY"
+                          ]
+                        },
                         {
                           "type": "constant",
                           "value": 2
@@ -2254,9 +3550,32 @@
                       "args": []
                     },
                     {
-                      "type": "helper",
-                      "name": "yugioh06_difficulty",
+                      "type": "state_method",
+                      "method": "has_from_list",
                       "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "LEGEND OF B.E.W.D.",
+                            "METAL RAIDERS",
+                            "PHARAOH'S SERVANT",
+                            "PHARAONIC GUARDIAN",
+                            "SPELL RULER",
+                            "LABYRINTH OF NIGHTMARE",
+                            "LEGACY OF DARKNESS",
+                            "MAGICIAN'S FORCE",
+                            "DARK CRISIS",
+                            "INVASION OF CHAOS",
+                            "ANCIENT SANCTUARY",
+                            "SOUL OF THE DUELIST",
+                            "RISE OF DESTINY",
+                            "FLAMING ETERNITY",
+                            "THE LOST MILLENIUM",
+                            "CYBERNETIC REVOLUTION",
+                            "ELEMENTAL ENERGY",
+                            "SHADOW OF INFINITY"
+                          ]
+                        },
                         {
                           "type": "constant",
                           "value": 3
@@ -2282,9 +3601,32 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "yugioh06_difficulty",
+                  "type": "state_method",
+                  "method": "has_from_list",
                   "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "LEGEND OF B.E.W.D.",
+                        "METAL RAIDERS",
+                        "PHARAOH'S SERVANT",
+                        "PHARAONIC GUARDIAN",
+                        "SPELL RULER",
+                        "LABYRINTH OF NIGHTMARE",
+                        "LEGACY OF DARKNESS",
+                        "MAGICIAN'S FORCE",
+                        "DARK CRISIS",
+                        "INVASION OF CHAOS",
+                        "ANCIENT SANCTUARY",
+                        "SOUL OF THE DUELIST",
+                        "RISE OF DESTINY",
+                        "FLAMING ETERNITY",
+                        "THE LOST MILLENIUM",
+                        "CYBERNETIC REVOLUTION",
+                        "ELEMENTAL ENERGY",
+                        "SHADOW OF INFINITY"
+                      ]
+                    },
                     {
                       "type": "constant",
                       "value": 3
@@ -3528,9 +4870,31 @@
             "name": "Has Back-row removal",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "back_row_removal",
-              "args": []
+              "type": "state_method",
+              "method": "has_from_list_unique",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Anteatereatingant",
+                    "B.E.S. Tetran",
+                    "Breaker the Magical Warrior",
+                    "Calamity of the Wicked",
+                    "Chiron the Mage",
+                    "Dust Tornado",
+                    "Heavy Storm",
+                    "Mystical Space Typhoon",
+                    "Mobius the Frost Monarch",
+                    "Raigeki Break",
+                    "Stamping Destruction",
+                    "Swarm of Locusts"
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             },
             "item": {
               "name": "Has Back-row removal",
