@@ -277,6 +277,7 @@ import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
 import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
 import { helperFunctions as smHelperFunctions } from './super_metroid/smLogic.js';
+import * as twwLogic from './tww/twwLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -528,6 +529,12 @@ const GAME_REGISTRY = {
     helperFunctions: smHelperFunctions,
     worldClasses: ['SMWorld'],
     aliases: ['Super Metroid', 'SM']
+  },
+  'The Wind Waker': {
+    logicModule: genericLogic.genericStateModule, // Using generic state module for now
+    helperFunctions: twwLogic.default,
+    worldClasses: ['TWWWorld'],
+    aliases: ['The Wind Waker', 'TWW', 'Wind Waker']
   },
   // Add more games here as they're implemented
   'Generic': {
