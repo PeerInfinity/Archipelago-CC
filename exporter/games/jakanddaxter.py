@@ -283,3 +283,22 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
             rule['if_false'] = self.expand_rule(rule.get('if_false'))
 
         return rule
+
+    def get_region_attributes(self, region):
+        """
+        Extract Jak and Daxter-specific attributes from a region.
+        Adds orb_count which is needed for the can_reach_orbs helper function.
+
+        Args:
+            region: The Archipelago region object
+
+        Returns:
+            dict: Additional attributes to include in region data
+        """
+        attributes = {}
+
+        # Add orb_count if the region has it
+        if hasattr(region, 'orb_count'):
+            attributes['orb_count'] = region.orb_count
+
+        return attributes
