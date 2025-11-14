@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-14 04:29:39
+**Generated:** 2025-11-14 05:14:02
 
 **Source Data Created:** 2025-11-14T04:29:26.555443
 
-**Source Data Last Updated:** 2025-11-14T04:29:26.555451
+**Source Data Last Updated:** 2025-11-14T05:14:01.964180
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 32 (41.0%)
-- **Failed:** 46 (59.0%)
+- **Passed:** 33 (42.3%)
+- **Failed:** 45 (57.7%)
 
 ## Test Results
 
@@ -26,7 +26,7 @@
 | Adventure | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | ArchipIDLE | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Blasphemous | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Blasphemous | ❌ Failed seed 1 | 1 | 5.3 | 13.1 | 🟡 40.5% | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
@@ -45,7 +45,7 @@
 | Final Fantasy Mystic Quest | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Heretic | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Hylics 2 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Inscryption | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | ✅ | ✅ |
 | Jak and Daxter The Precursor Legacy | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Kingdom Hearts | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |

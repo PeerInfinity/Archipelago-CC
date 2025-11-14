@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-14 04:29:39
+**Generated:** 2025-11-14 05:14:02
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,7 +12,7 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 32/78 passed (41.0%)
+- **Minimal Test:** 33/78 passed (42.3%)
 - **Full Test:** 37/78 passed (47.4%)
 - **Multiplayer Test:** 33/78 passed (42.3%)
 - **Multiworld Test:** 0/78 passed (0.0%)
@@ -20,8 +20,8 @@ This summary combines results from four types of tests:
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 0/79 (0.0%)
-- **Templates passing 3 tests:** 28/79 (35.4%)
-- **Templates passing 2 tests:** 6/79 (7.6%)
+- **Templates passing 3 tests:** 29/79 (36.7%)
+- **Templates passing 2 tests:** 5/79 (6.3%)
 - **Templates passing 1 test:** 6/79 (7.6%)
 - **Templates passing 0 tests:** 39/79 (49.4%)
 
@@ -35,7 +35,7 @@ This summary combines results from four types of tests:
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | ArchipIDLE | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
-| Blasphemous | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Blasphemous | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
@@ -54,7 +54,7 @@ This summary combines results from four types of tests:
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
-| Inscryption | ❌ Failed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
+| Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Jak and Daxter The Precursor Legacy | ❌ Failed | ❓ N/A | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
 | Jak and Daxter: The Precursor Legacy | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Kingdom Hearts | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
