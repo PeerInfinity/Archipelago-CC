@@ -2482,11 +2482,14 @@
                   }
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "HWL: Soul of Boreal Valley Vordt"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "HWL: Soul of Boreal Valley Vordt"
+                    }
+                  ]
                 }
               ]
             }
@@ -2495,11 +2498,14 @@
             "name": "Go To Lothric Castle",
             "connected_region": "Lothric Castle",
             "access_rule": {
-              "type": "location_check",
-              "location": {
-                "type": "constant",
-                "value": "HWL: Soul of the Dancer"
-              }
+              "type": "helper",
+              "name": "_can_get",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "HWL: Soul of the Dancer"
+                }
+              ]
             }
           },
           {
@@ -5426,11 +5432,14 @@
             "name": "Go To Cathedral of the Deep",
             "connected_region": "Cathedral of the Deep",
             "access_rule": {
-              "type": "location_check",
-              "location": {
-                "type": "constant",
-                "value": "RS: Soul of a Crystal Sage"
-              }
+              "type": "helper",
+              "name": "_can_get",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "RS: Soul of a Crystal Sage"
+                }
+              ]
             }
           },
           {
@@ -7028,22 +7037,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "location_check",
-                      "location": {
-                        "type": "constant",
-                        "value": "HWL: Red Eye Orb - wall tower, miniboss"
-                      }
+                      "type": "helper",
+                      "name": "_can_get",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "HWL: Red Eye Orb - wall tower, miniboss"
+                        }
+                      ]
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "_can_go_to"
-                      },
+                      "type": "helper",
+                      "name": "_can_go_to",
                       "args": [
                         {
                           "type": "constant",
@@ -7076,18 +7081,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Hidden Blessing - Patches after searching GA"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Hidden Blessing - Patches after searching GA"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Rusted Gold Coin - don't forgive Patches"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Rusted Gold Coin - don't forgive Patches"
+                    }
+                  ]
                 }
               ]
             },
@@ -8197,15 +8208,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
+                  "type": "helper",
+                  "name": "_can_go_to",
                   "args": [
                     {
                       "type": "constant",
@@ -8214,15 +8218,8 @@
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
+                  "type": "helper",
+                  "name": "_can_go_to",
                   "args": [
                     {
                       "type": "constant",
@@ -8246,15 +8243,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
+                  "type": "helper",
+                  "name": "_can_go_to",
                   "args": [
                     {
                       "type": "constant",
@@ -8263,15 +8253,8 @@
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
+                  "type": "helper",
+                  "name": "_can_go_to",
                   "args": [
                     {
                       "type": "constant",
@@ -8295,15 +8278,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
+                  "type": "helper",
+                  "name": "_can_go_to",
                   "args": [
                     {
                       "type": "constant",
@@ -8312,15 +8288,8 @@
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
+                  "type": "helper",
+                  "name": "_can_go_to",
                   "args": [
                     {
                       "type": "constant",
@@ -8344,18 +8313,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Hidden Blessing - Patches after searching GA"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Hidden Blessing - Patches after searching GA"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Rusted Gold Coin - don't forgive Patches"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Rusted Gold Coin - don't forgive Patches"
+                    }
+                  ]
                 }
               ]
             },
@@ -8375,11 +8350,14 @@
             "name": "Go To Catacombs of Carthus",
             "connected_region": "Catacombs of Carthus",
             "access_rule": {
-              "type": "location_check",
-              "location": {
-                "type": "constant",
-                "value": "FK: Soul of the Blood of the Wolf"
-              }
+              "type": "helper",
+              "name": "_can_get",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "FK: Soul of the Blood of the Wolf"
+                }
+              ]
             }
           }
         ],
@@ -9684,15 +9662,8 @@
             "name": "FK: Havel's Helm - upper keep, after killing AP belfry roof NPC",
             "id": 100587,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
+              "type": "helper",
+              "name": "_can_go_to",
               "args": [
                 {
                   "type": "constant",
@@ -9711,15 +9682,8 @@
             "name": "FK: Havel's Armor - upper keep, after killing AP belfry roof NPC",
             "id": 100588,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
+              "type": "helper",
+              "name": "_can_go_to",
               "args": [
                 {
                   "type": "constant",
@@ -9738,15 +9702,8 @@
             "name": "FK: Havel's Gauntlets - upper keep, after killing AP belfry roof NPC",
             "id": 100589,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
+              "type": "helper",
+              "name": "_can_go_to",
               "args": [
                 {
                   "type": "constant",
@@ -9765,15 +9722,8 @@
             "name": "FK: Havel's Leggings - upper keep, after killing AP belfry roof NPC",
             "id": 100590,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
+              "type": "helper",
+              "name": "_can_go_to",
               "args": [
                 {
                   "type": "constant",
@@ -9807,11 +9757,14 @@
                   }
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "CC: Soul of High Lord Wolnir"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "CC: Soul of High Lord Wolnir"
+                    }
+                  ]
                 }
               ]
             }
@@ -11098,11 +11051,14 @@
             "name": "Go To Anor Londo",
             "connected_region": "Anor Londo",
             "access_rule": {
-              "type": "location_check",
-              "location": {
-                "type": "constant",
-                "value": "IBV: Soul of Pontiff Sulyvahn"
-              }
+              "type": "helper",
+              "name": "_can_get",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "IBV: Soul of Pontiff Sulyvahn"
+                }
+              ]
             }
           }
         ],
@@ -11114,11 +11070,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -12050,11 +12009,14 @@
             "name": "IBV: Ring of the Evil Eye - Anri",
             "id": 100752,
             "access_rule": {
-              "type": "location_check",
-              "location": {
-                "type": "constant",
-                "value": "CD: Soul of the Deacons of the Deep"
-              }
+              "type": "helper",
+              "name": "_can_get",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "CD: Soul of the Deacons of the Deep"
+                }
+              ]
             },
             "item": {
               "name": "Dragonslayer Greatarrow x5",
@@ -12070,11 +12032,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -12099,11 +12064,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -12128,11 +12096,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -12157,11 +12128,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -12186,11 +12160,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -12215,11 +12192,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -12244,11 +12224,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -12317,11 +12300,14 @@
                   }
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "CD: Shotel - Patches"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "CD: Shotel - Patches"
+                    }
+                  ]
                 }
               ]
             },
@@ -13544,18 +13530,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "ID: Titanite Slab - Siegward"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "ID: Titanite Slab - Siegward"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "PC: Soul of Yhorm the Giant"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "PC: Soul of Yhorm the Giant"
+                    }
+                  ]
                 }
               ]
             },
@@ -13573,18 +13565,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "ID: Titanite Slab - Siegward"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "ID: Titanite Slab - Siegward"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "PC: Soul of Yhorm the Giant"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "PC: Soul of Yhorm the Giant"
+                    }
+                  ]
                 }
               ]
             },
@@ -13602,18 +13600,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "ID: Titanite Slab - Siegward"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "ID: Titanite Slab - Siegward"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "PC: Soul of Yhorm the Giant"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "PC: Soul of Yhorm the Giant"
+                    }
+                  ]
                 }
               ]
             },
@@ -13665,11 +13669,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -14282,18 +14289,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Mail Breaker - Sirris for killing Creighton"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Soul of Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Soul of Aldrich"
+                    }
+                  ]
                 }
               ]
             },
@@ -14311,18 +14324,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Mail Breaker - Sirris for killing Creighton"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Soul of Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Soul of Aldrich"
+                    }
+                  ]
                 }
               ]
             },
@@ -14340,18 +14359,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Mail Breaker - Sirris for killing Creighton"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Soul of Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Soul of Aldrich"
+                    }
+                  ]
                 }
               ]
             },
@@ -14369,18 +14394,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Mail Breaker - Sirris for killing Creighton"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Soul of Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Soul of Aldrich"
+                    }
+                  ]
                 }
               ]
             },
@@ -14398,18 +14429,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Mail Breaker - Sirris for killing Creighton"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Soul of Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Soul of Aldrich"
+                    }
+                  ]
                 }
               ]
             },
@@ -14427,18 +14464,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Mail Breaker - Sirris for killing Creighton"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Mail Breaker - Sirris for killing Creighton"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Soul of Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Soul of Aldrich"
+                    }
+                  ]
                 }
               ]
             },
@@ -14509,11 +14552,14 @@
             "name": "AL: Chameleon - tomb after marrying Anri",
             "id": 100909,
             "access_rule": {
-              "type": "location_check",
-              "location": {
-                "type": "constant",
-                "value": "CD: Soul of the Deacons of the Deep"
-              }
+              "type": "helper",
+              "name": "_can_get",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "CD: Soul of the Deacons of the Deep"
+                }
+              ]
             },
             "item": {
               "name": "Shriving Stone",
@@ -14529,18 +14575,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "IBV: Ring of the Evil Eye - Anri"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "IBV: Ring of the Evil Eye - Anri"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Soul of Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Soul of Aldrich"
+                    }
+                  ]
                 }
               ]
             },
@@ -14716,18 +14768,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "IBV: Ring of the Evil Eye - Anri"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "IBV: Ring of the Evil Eye - Anri"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Soul of Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Soul of Aldrich"
+                    }
+                  ]
                 }
               ]
             },
@@ -14745,18 +14803,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "IBV: Ring of the Evil Eye - Anri"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "IBV: Ring of the Evil Eye - Anri"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Soul of Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Soul of Aldrich"
+                    }
+                  ]
                 }
               ]
             },
@@ -14774,18 +14838,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "IBV: Ring of the Evil Eye - Anri"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "IBV: Ring of the Evil Eye - Anri"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Soul of Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Soul of Aldrich"
+                    }
+                  ]
                 }
               ]
             },
@@ -14803,18 +14873,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "IBV: Ring of the Evil Eye - Anri"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "IBV: Ring of the Evil Eye - Anri"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Soul of Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Soul of Aldrich"
+                    }
+                  ]
                 }
               ]
             },
@@ -14870,11 +14946,14 @@
                       }
                     },
                     {
-                      "type": "location_check",
-                      "location": {
-                        "type": "constant",
-                        "value": "LC: Soul of Dragonslayer Armour"
-                      }
+                      "type": "helper",
+                      "name": "_can_get",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "LC: Soul of Dragonslayer Armour"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -15791,18 +15870,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Cinders of a Lord - Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Cinders of a Lord - Aldrich"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "PC: Cinders of a Lord - Yhorm the Giant"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "PC: Cinders of a Lord - Yhorm the Giant"
+                    }
+                  ]
                 }
               ]
             },
@@ -15820,18 +15905,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "AL: Cinders of a Lord - Aldrich"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "AL: Cinders of a Lord - Aldrich"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "PC: Cinders of a Lord - Yhorm the Giant"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "PC: Cinders of a Lord - Yhorm the Giant"
+                    }
+                  ]
                 }
               ]
             },
@@ -15863,18 +15954,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "LC: Soul of Dragonslayer Armour"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "LC: Soul of Dragonslayer Armour"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FK: Soul of the Blood of the Wolf"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FK: Soul of the Blood of the Wolf"
+                    }
+                  ]
                 }
               ]
             },
@@ -15892,18 +15989,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "LC: Soul of Dragonslayer Armour"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "LC: Soul of Dragonslayer Armour"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FK: Soul of the Blood of the Wolf"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FK: Soul of the Blood of the Wolf"
+                    }
+                  ]
                 }
               ]
             },
@@ -16035,11 +16138,14 @@
             "name": "Go To Untended Graves",
             "connected_region": "Untended Graves",
             "access_rule": {
-              "type": "location_check",
-              "location": {
-                "type": "constant",
-                "value": "CKG: Soul of Consumed Oceiros"
-              }
+              "type": "helper",
+              "name": "_can_get",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "CKG: Soul of Consumed Oceiros"
+                }
+              ]
             }
           }
         ],
@@ -16356,15 +16462,8 @@
             "name": "CKG: Drakeblood Helm - tomb, after killing AP mausoleum NPC",
             "id": 101028,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
+              "type": "helper",
+              "name": "_can_go_to",
               "args": [
                 {
                   "type": "constant",
@@ -16383,15 +16482,8 @@
             "name": "CKG: Drakeblood Armor - tomb, after killing AP mausoleum NPC",
             "id": 101029,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
+              "type": "helper",
+              "name": "_can_go_to",
               "args": [
                 {
                   "type": "constant",
@@ -16410,15 +16502,8 @@
             "name": "CKG: Drakeblood Gauntlets - tomb, after killing AP mausoleum NPC",
             "id": 101030,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
+              "type": "helper",
+              "name": "_can_go_to",
               "args": [
                 {
                   "type": "constant",
@@ -16437,15 +16522,8 @@
             "name": "CKG: Drakeblood Leggings - tomb, after killing AP mausoleum NPC",
             "id": 101031,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "_can_go_to"
-              },
+              "type": "helper",
+              "name": "_can_go_to",
               "args": [
                 {
                   "type": "constant",
@@ -17537,11 +17615,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -17566,11 +17647,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -17595,11 +17679,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -17624,11 +17711,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -17653,11 +17743,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "US: Soul of the Rotted Greatwood"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "US: Soul of the Rotted Greatwood"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -17682,18 +17775,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "CD: Shotel - Patches"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "CD: Shotel - Patches"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Ember - shop for Greirat's Ashes"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Ember - shop for Greirat's Ashes"
+                    }
+                  ]
                 }
               ]
             },
@@ -17899,11 +17998,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FK: Cinders of a Lord - Abyss Watcher"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FK: Cinders of a Lord - Abyss Watcher"
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -17996,11 +18098,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FK: Cinders of a Lord - Abyss Watcher"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FK: Cinders of a Lord - Abyss Watcher"
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -18051,11 +18156,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FK: Cinders of a Lord - Abyss Watcher"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FK: Cinders of a Lord - Abyss Watcher"
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -18106,11 +18214,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FK: Cinders of a Lord - Abyss Watcher"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FK: Cinders of a Lord - Abyss Watcher"
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -18161,11 +18272,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FK: Cinders of a Lord - Abyss Watcher"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FK: Cinders of a Lord - Abyss Watcher"
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -19034,11 +19148,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -19119,11 +19236,14 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Hawkwood's Shield - gravestone after Hawkwood leaves"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -19328,15 +19448,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
+                  "type": "helper",
+                  "name": "_can_go_to",
                   "args": [
                     {
                       "type": "constant",
@@ -19367,15 +19480,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
+                  "type": "helper",
+                  "name": "_can_go_to",
                   "args": [
                     {
                       "type": "constant",
@@ -19406,15 +19512,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
+                  "type": "helper",
+                  "name": "_can_go_to",
                   "args": [
                     {
                       "type": "constant",
@@ -19423,18 +19522,24 @@
                   ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Divine Blessing - Greirat from US"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Divine Blessing - Greirat from US"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "CD: Shotel - Patches"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "CD: Shotel - Patches"
+                    }
+                  ]
                 }
               ]
             },
@@ -19452,15 +19557,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
+                  "type": "helper",
+                  "name": "_can_go_to",
                   "args": [
                     {
                       "type": "constant",
@@ -19469,18 +19567,24 @@
                   ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Divine Blessing - Greirat from US"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Divine Blessing - Greirat from US"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "CD: Shotel - Patches"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "CD: Shotel - Patches"
+                    }
+                  ]
                 }
               ]
             },
@@ -19498,15 +19602,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
+                  "type": "helper",
+                  "name": "_can_go_to",
                   "args": [
                     {
                       "type": "constant",
@@ -19515,18 +19612,24 @@
                   ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Divine Blessing - Greirat from US"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Divine Blessing - Greirat from US"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "CD: Shotel - Patches"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "CD: Shotel - Patches"
+                    }
+                  ]
                 }
               ]
             },
@@ -19544,15 +19647,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "_can_go_to"
-                  },
+                  "type": "helper",
+                  "name": "_can_go_to",
                   "args": [
                     {
                       "type": "constant",
@@ -19561,18 +19657,24 @@
                   ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "FS: Divine Blessing - Greirat from US"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "FS: Divine Blessing - Greirat from US"
+                    }
+                  ]
                 },
                 {
-                  "type": "location_check",
-                  "location": {
-                    "type": "constant",
-                    "value": "CD: Shotel - Patches"
-                  }
+                  "type": "helper",
+                  "name": "_can_get",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "CD: Shotel - Patches"
+                    }
+                  ]
                 }
               ]
             },
@@ -19593,15 +19695,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "_can_go_to"
-                      },
+                      "type": "helper",
+                      "name": "_can_go_to",
                       "args": [
                         {
                           "type": "constant",
@@ -19610,11 +19705,14 @@
                       ]
                     },
                     {
-                      "type": "location_check",
-                      "location": {
-                        "type": "constant",
-                        "value": "FS: Divine Blessing - Greirat from IBV"
-                      }
+                      "type": "helper",
+                      "name": "_can_get",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "FS: Divine Blessing - Greirat from IBV"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -19622,15 +19720,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "_can_go_to"
-                      },
+                      "type": "helper",
+                      "name": "_can_go_to",
                       "args": [
                         {
                           "type": "constant",
@@ -19639,18 +19730,24 @@
                       ]
                     },
                     {
-                      "type": "location_check",
-                      "location": {
-                        "type": "constant",
-                        "value": "FS: Divine Blessing - Greirat from US"
-                      }
+                      "type": "helper",
+                      "name": "_can_get",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "FS: Divine Blessing - Greirat from US"
+                        }
+                      ]
                     },
                     {
-                      "type": "location_check",
-                      "location": {
-                        "type": "constant",
-                        "value": "CD: Shotel - Patches"
-                      }
+                      "type": "helper",
+                      "name": "_can_get",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "CD: Shotel - Patches"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -36993,6 +37090,50 @@
         "useful": false,
         "trap": false,
         "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "US -> RS": {
+        "name": "US -> RS",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "RS -> FK": {
+        "name": "RS -> FK",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "CD -> PW1": {
+        "name": "CD -> PW1",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "IBV -> ID": {
+        "name": "IBV -> ID",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
         "type": null,
         "max_count": 1
       }
