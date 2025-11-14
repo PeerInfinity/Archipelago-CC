@@ -266,14 +266,25 @@ jobs:
 
           # Check if branch exists remotely
           if git ls-remote --exit-code --heads origin test-results-update; then
-            echo "Branch test-results-update exists, checking it out"
+            echo "Branch test-results-update exists, syncing with main"
             git checkout test-results-update
             git pull origin test-results-update
 
-            # Merge main into test-results-update to stay synchronized
-            echo "Merging main into test-results-update..."
-            # Use -X theirs strategy to auto-accept main's version for conflicts
-            git merge origin/main --allow-unrelated-histories --no-edit -X theirs -m "Merge main into test-results-update before updating test results"
+            # Make test-results-update's content match main exactly while preserving history
+            echo "Syncing test-results-update to match main exactly..."
+
+            # Remove all tracked files
+            git rm -rf .
+
+            # Restore all files from main
+            git checkout origin/main -- .
+
+            # Commit the sync if there are changes
+            if ! git diff --staged --quiet; then
+              git commit -m "Sync test-results-update with main before updating test results"
+            else
+              echo "Already in sync with main"
+            fi
           else
             echo "Creating new branch test-results-update from main"
             git checkout -b test-results-update origin/main
