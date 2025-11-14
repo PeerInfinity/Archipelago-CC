@@ -469,10 +469,10 @@
     "world_directory": "tunic"
   },
   "Terraria": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/terraria.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/terraria/terrariaLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "terraria"
   },
   "The Legend of Zelda": {
