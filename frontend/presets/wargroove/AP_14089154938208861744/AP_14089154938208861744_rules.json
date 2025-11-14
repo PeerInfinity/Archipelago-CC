@@ -57,16 +57,8 @@
             "name": "Wargroove Finale",
             "connected_region": "Wargroove Finale",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": "Humble Beginnings: Victory"
-                },
-                "attr": "access_rule"
-              },
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -313,16 +305,8 @@
             "name": "Surrounded",
             "connected_region": "Surrounded",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": "Dragon Freeway: Victory"
-                },
-                "attr": "access_rule"
-              },
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -356,16 +340,8 @@
             "name": "Darkest Knight",
             "connected_region": "Darkest Knight",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": "Deep Thicket: Victory"
-                },
-                "attr": "access_rule"
-              },
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -419,16 +395,8 @@
             "name": "Robbed",
             "connected_region": "Robbed",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": "Corrupted Inlet: Victory"
-                },
-                "attr": "access_rule"
-              },
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -487,32 +455,16 @@
             "name": "Open Season",
             "connected_region": "Open Season",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": "Mage Mayhem: Victory"
-                },
-                "attr": "access_rule"
-              },
-              "args": []
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Foolish Canal: Mage Mayhem Entrance",
             "connected_region": "Foolish Canal",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": "Mage Mayhem: Victory"
-                },
-                "attr": "access_rule"
-              },
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -596,32 +548,16 @@
             "name": "Doggo Mountain",
             "connected_region": "Doggo Mountain",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": "Endless Knight: Victory"
-                },
-                "attr": "access_rule"
-              },
-              "args": []
+              "type": "constant",
+              "value": true
             }
           },
           {
             "name": "Foolish Canal: Endless Knight Entrance",
             "connected_region": "Foolish Canal",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": "Endless Knight: Victory"
-                },
-                "attr": "access_rule"
-              },
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -695,33 +631,8 @@
             "name": "Tenri's Fall",
             "connected_region": "Tenri's Fall",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Blue"
-                    },
-                    "attr": "access_rule"
-                  },
-                  "args": []
-                },
-                {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Green"
-                    },
-                    "attr": "access_rule"
-                  },
-                  "args": []
-                }
-              ]
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -775,16 +686,8 @@
             "name": "Rebel Village",
             "connected_region": "Rebel Village",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": "The Churning Sea: Victory"
-                },
-                "attr": "access_rule"
-              },
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -848,16 +751,8 @@
             "name": "A Ballista's Revenge",
             "connected_region": "A Ballista's Revenge",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": "Frigid Archery: Victory"
-                },
-                "attr": "access_rule"
-              },
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -926,16 +821,8 @@
             "name": "Master of the Lake",
             "connected_region": "Master of the Lake",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": "Archery Lessons: Victory"
-                },
-                "attr": "access_rule"
-              },
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
