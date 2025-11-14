@@ -328,11 +328,39 @@ export const kh1Logic = {
         const hasHighJump = (snapshot?.inventory?.["High Jump"] || 0);
         const hasGlide = (snapshot?.inventory?.["Progressive Glide"] || 0) > 0;
 
-        return (
+        // Convert to boolean to avoid returning 0 instead of false
+        return !!(
             hasFire ||
             (advanced_logic && hasHighJump >= 2) ||
             (advanced_logic && hasHighJump > 0 && hasGlide)
         );
+    },
+
+    /**
+     * Checks if the player can perform the Dumbo skip
+     * Requires Dumbo summon and at least one Magic item
+     * @param {Object} snapshot - The current game state
+     * @param {Object} staticData - Static game data
+     * @returns {boolean}
+     */
+    can_dumbo_skip(snapshot, staticData) {
+        const hasDumbo = (snapshot?.inventory?.["Dumbo"] || 0) > 0;
+
+        // Check if player has any Magic item
+        // Magic group includes: Progressive Fire, Progressive Blizzard, Progressive Thunder, Progressive Cure, Progressive Gravity, Progressive Stop, Progressive Aero
+        const magicItems = [
+            "Progressive Fire",
+            "Progressive Blizzard",
+            "Progressive Thunder",
+            "Progressive Cure",
+            "Progressive Gravity",
+            "Progressive Stop",
+            "Progressive Aero"
+        ];
+
+        const hasMagic = magicItems.some(item => (snapshot?.inventory?.[item] || 0) > 0);
+
+        return hasDumbo && hasMagic;
     },
 
     /**
@@ -363,6 +391,19 @@ export const kh1Logic = {
         }
 
         return true;
+    },
+
+    /**
+     * Extract puppies_required from location names like "Return X Puppies"
+     * @param {string} locationName - The location name to parse
+     * @returns {number|null} Number of puppies required, or null if not a puppy location
+     */
+    extractPuppiesRequired(locationName) {
+        const match = locationName.match(/Return (\d+) Puppies/);
+        if (match) {
+            return parseInt(match[1], 10);
+        }
+        return null;
     },
 
     /**

@@ -19,6 +19,12 @@ from datetime import datetime
 from typing import Dict, List
 from .seed_utils import get_seed_id as compute_seed_id
 
+try:
+    import psutil
+    PSUTIL_AVAILABLE = True
+except ImportError:
+    PSUTIL_AVAILABLE = False
+
 # Import from the utility modules
 from .test_utils import (
     normalize_game_name,
@@ -32,7 +38,21 @@ from .test_utils import (
 )
 
 
-def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False) -> Dict:
+def log_memory_usage(template_name: str, stage: str):
+    """Log current memory usage if psutil is available."""
+    if not PSUTIL_AVAILABLE:
+        return
+
+    try:
+        process = psutil.Process()
+        mem_info = process.memory_info()
+        mem_mb = mem_info.rss / (1024 * 1024)
+        print(f"  [Memory] {template_name} - {stage}: {mem_mb:.1f} MB RSS")
+    except Exception as e:
+        print(f"  [Memory] Warning: Could not get memory info: {e}")
+
+
+def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False) -> Dict:
     """Test a single template file and return results."""
     template_name = os.path.basename(template_file)
     game_name = normalize_game_name(template_name)
@@ -48,6 +68,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
     world_info = get_world_info(template_file, templates_dir, world_mapping)
 
     print(f"\n=== Testing {template_name} ===")
+    log_memory_usage(template_name, "start")
 
     result = {
         'template_name': template_name,
@@ -122,6 +143,21 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
     # Step 1: Run Generate.py (skip if test_only mode)
     if not test_only:
+        if dry_run:
+            print(f"[DRY RUN] Would run Generate.py for {template_name}...")
+            template_file = template_name if template_name.endswith(('.yaml', '.yml')) else f"{template_name}.yaml"
+            template_path = os.path.join(templates_dir, template_file)
+            generate_cmd = [
+                "python", "Generate.py",
+                "--weights_file_path", template_path,
+                "--multi", "1",
+                "--seed", seed
+            ]
+            print(f"  [DRY RUN] Command: {' '.join(generate_cmd)}")
+            result['generation']['note'] = 'Skipped in dry-run mode'
+            result['dry_run'] = True
+            return result
+
         print(f"Running Generate.py for {template_name}...")
         # Ensure template name has .yaml extension for the file path
         template_file = template_name if template_name.endswith(('.yaml', '.yml')) else f"{template_name}.yaml"
@@ -173,7 +209,10 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
         if gen_return_code != 0:
             print(f"Generation failed with return code {gen_return_code}")
+            log_memory_usage(template_name, "after generation (failed)")
             return result
+
+        log_memory_usage(template_name, "after generation")
     else:
         print(f"Skipping generation for {template_name} (test-only mode)")
         # In test-only mode, don't overwrite error counts - keep the defaults initialized above
@@ -263,6 +302,19 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
         # Parse test results
         test_results_dir = os.path.join(project_root, 'test_results', 'multiplayer')
+        print(f"Looking for test results in: {test_results_dir}")
+
+        # Check if directory exists
+        if not os.path.exists(test_results_dir):
+            print(f"WARNING: Test results directory does not exist: {test_results_dir}")
+        else:
+            # List files in the directory
+            try:
+                files = os.listdir(test_results_dir)
+                print(f"Files in test results directory: {files}")
+            except Exception as e:
+                print(f"ERROR: Could not list test results directory: {e}")
+
         test_results = parse_multiplayer_test_results(test_results_dir)
 
         result['multiplayer_test'].update({
@@ -280,6 +332,16 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
         if include_error_details and test_results.get('error_message'):
             result['multiplayer_test']['first_error_line'] = test_results['error_message']
+
+        # Always log if test failed
+        if not test_results['success']:
+            error_msg = test_results.get('error_message', 'Unknown error')
+            print(f"Multiplayer test failed: {error_msg}")
+            print(f"Test return code: {test_return_code}")
+            if test_error_count > 0:
+                print(f"Errors in output: {test_error_count}")
+                if test_first_error:
+                    print(f"First error: {test_first_error}")
 
     else:
         # Spoiler test
@@ -300,9 +362,10 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         spoiler_env = os.environ.copy()
 
         # Time the spoiler test process
+        # Use 5 minute timeout (300 seconds) - tests should complete in under 1 minute normally
         spoiler_start_time = time.time()
         spoiler_return_code, spoiler_stdout, spoiler_stderr = run_command(
-            spoiler_cmd, cwd=project_root, timeout=900, env=spoiler_env
+            spoiler_cmd, cwd=project_root, timeout=300, env=spoiler_env
         )
         spoiler_end_time = time.time()
         spoiler_processing_time = round(spoiler_end_time - spoiler_start_time, 2)
@@ -310,6 +373,8 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         result['spoiler_test']['return_code'] = spoiler_return_code
         result['spoiler_test']['success'] = spoiler_return_code == 0
         result['spoiler_test']['processing_time_seconds'] = spoiler_processing_time
+
+        log_memory_usage(template_name, "after spoiler test")
 
         # Step 3: Run test analysis
         print("Running test analysis...")
@@ -393,7 +458,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
     return result
 
 
-def test_template_seed_range(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed_list: List[int], export_only: bool = False, test_only: bool = False, stop_on_failure: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False) -> Dict:
+def test_template_seed_range(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed_list: List[int], export_only: bool = False, test_only: bool = False, stop_on_failure: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False) -> Dict:
     """Test a template file with multiple seeds and return aggregated results."""
     template_name = os.path.basename(template_file)
 
@@ -421,6 +486,14 @@ def test_template_seed_range(template_file: str, templates_dir: str, project_roo
 
     consecutive_passes = 0
 
+    # Handle dry-run mode
+    if dry_run:
+        print(f"[DRY RUN] Would test {len(seed_list)} seeds: {seed_list[0]}-{seed_list[-1]}")
+        for i, seed in enumerate(seed_list, 1):
+            print(f"  [DRY RUN] Would test seed {seed} ({i}/{len(seed_list)})")
+        seed_range_result['dry_run'] = True
+        return seed_range_result
+
     for i, seed in enumerate(seed_list, 1):
         print(f"\n--- Seed {seed} ({i}/{len(seed_list)}) ---")
 
@@ -429,7 +502,7 @@ def test_template_seed_range(template_file: str, templates_dir: str, project_roo
             result = test_template_single_seed(
                 template_file, templates_dir, project_root, world_mapping,
                 str(seed), export_only, test_only, multiplayer, single_client, headed,
-                include_error_details
+                include_error_details, dry_run
             )
 
             seed_range_result['individual_results'][str(seed)] = result
@@ -535,13 +608,17 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
                             current_player_count: int, export_only: bool = False,
                             test_only: bool = False, headed: bool = False,
                             keep_templates: bool = False, test_all_players: bool = False,
-                            include_error_details: bool = False) -> Dict:
+                            require_prerequisites: bool = True,
+                            include_error_details: bool = False, max_templates: int = 10,
+                            dry_run: bool = False) -> Dict:
     """
     Test a single template in multiworld mode.
 
-    This checks if the template has passed all prerequisite tests (spoiler minimal,
-    spoiler full, and multiplayer), then copies it to the multiworld directory,
-    runs generation with all accumulated templates, and tests each player.
+    By default (require_prerequisites=True), only tests templates that have passed
+    spoiler minimal, spoiler full, and multiplayer tests. If require_prerequisites
+    is False, tests all templates regardless of other test results.
+    Copies template to the multiworld directory, runs generation with all accumulated
+    templates, and tests each player.
 
     Args:
         template_file: Name of the template file to test
@@ -557,6 +634,10 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         headed: If True, run Playwright tests in headed mode
         keep_templates: If True, don't copy template to multiworld directory (just test existing templates)
         test_all_players: If True, test all players; if False, only test the newly added player
+        require_prerequisites: If True, skip templates that haven't passed other test types (default: True)
+        include_error_details: If True, include first error/warning lines in results
+        max_templates: Maximum number of templates to keep in multiworld directory (default: 10)
+        dry_run: If True, show what would be done without making changes (default: False)
 
     Returns:
         Dictionary with test results
@@ -605,9 +686,9 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     print(f"Checking prerequisites for {template_name}...")
 
     # Load the three test results files
-    spoiler_minimal_file = os.path.join(project_root, 'scripts/output-spoiler-minimal/test-results.json')
-    spoiler_full_file = os.path.join(project_root, 'scripts/output-spoiler-full/test-results.json')
-    multiplayer_file = os.path.join(project_root, 'scripts/output-multiplayer/test-results.json')
+    spoiler_minimal_file = os.path.join(project_root, 'scripts/output/spoiler-minimal/test-results.json')
+    spoiler_full_file = os.path.join(project_root, 'scripts/output/spoiler-full/test-results.json')
+    multiplayer_file = os.path.join(project_root, 'scripts/output/multiplayer/test-results.json')
 
     spoiler_minimal_passed = False
     spoiler_full_passed = False
@@ -687,26 +768,70 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     print(f"  Spoiler Full: {'PASS' if spoiler_full_passed else 'FAIL'}")
     print(f"  Multiplayer: {'PASS' if multiplayer_passed else 'FAIL'}")
 
-    if not result['prerequisite_check']['all_prerequisites_passed']:
+    if require_prerequisites and not result['prerequisite_check']['all_prerequisites_passed']:
         print(f"Skipping {template_name} - not all prerequisites passed")
         result['multiworld_test']['success'] = False
         result['multiworld_test']['skip_reason'] = 'Prerequisites not met'
         return result
+    elif not require_prerequisites:
+        print(f"Proceeding with multiworld test (prerequisite check disabled)")
 
     # Copy template to multiworld directory (unless keep_templates is True)
     if not keep_templates:
-        print(f"Copying {template_name} to multiworld directory...")
-        source_path = os.path.join(templates_dir, template_name)
-        dest_path = os.path.join(multiworld_dir, template_name)
+        # Check if we need to remove old templates to stay under the limit
+        existing_templates = [f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')]
 
-        try:
-            shutil.copy2(source_path, dest_path)
-            print(f"  Copied successfully")
-        except Exception as e:
-            print(f"  Error copying template: {e}")
-            result['multiworld_test']['success'] = False
-            result['multiworld_test']['error'] = f"Failed to copy template: {e}"
+        # If adding this template would exceed the limit, remove the oldest templates
+        if len(existing_templates) >= max_templates:
+            # Get file modification times
+            template_times = []
+            for template in existing_templates:
+                template_path = os.path.join(multiworld_dir, template)
+                mtime = os.path.getmtime(template_path)
+                template_times.append((template, mtime))
+
+            # Sort by modification time (oldest first)
+            template_times.sort(key=lambda x: x[1])
+
+            # Calculate how many we need to remove
+            num_to_remove = len(existing_templates) - max_templates + 1
+
+            # Remove the oldest templates
+            print(f"Multiworld directory has {len(existing_templates)} templates (limit: {max_templates})")
+            if dry_run:
+                print(f"[DRY RUN] Would remove {num_to_remove} oldest template(s) to make room...")
+                for i in range(num_to_remove):
+                    old_template = template_times[i][0]
+                    print(f"  [DRY RUN] Would remove {old_template}")
+            else:
+                print(f"Removing {num_to_remove} oldest template(s) to make room...")
+                for i in range(num_to_remove):
+                    old_template = template_times[i][0]
+                    old_template_path = os.path.join(multiworld_dir, old_template)
+                    try:
+                        os.remove(old_template_path)
+                        print(f"  Removed {old_template}")
+                    except Exception as e:
+                        print(f"  Warning: Could not remove {old_template}: {e}")
+
+        if dry_run:
+            print(f"[DRY RUN] Would copy {template_name} to multiworld directory...")
+            print(f"[DRY RUN] Skipping actual file operations and tests")
+            result['multiworld_test']['dry_run'] = True
             return result
+        else:
+            print(f"Copying {template_name} to multiworld directory...")
+            source_path = os.path.join(templates_dir, template_name)
+            dest_path = os.path.join(multiworld_dir, template_name)
+
+            try:
+                shutil.copy2(source_path, dest_path)
+                print(f"  Copied successfully")
+            except Exception as e:
+                print(f"  Error copying template: {e}")
+                result['multiworld_test']['success'] = False
+                result['multiworld_test']['error'] = f"Failed to copy template: {e}"
+                return result
 
         # Return early if export_only mode
         if export_only:

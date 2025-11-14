@@ -10,22 +10,54 @@ logger = logging.getLogger(__name__)
 class KH1GameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'Kingdom Hearts'
     """KH1-specific expander that handles Kingdom Hearts 1 rules."""
-    
+
     def __init__(self, world=None):
         """Initialize with optional world reference."""
         super().__init__()
         self.world = world
+        self.options_cache = {}
     
+    def preprocess_world_data(self, world, export_data: Dict[str, Any], player: int) -> None:
+        """Populate options cache before region processing."""
+        if hasattr(world, 'options'):
+            self.options_cache = {}
+            options = world.options
+
+            # Extract all KH1-specific options
+            kh1_option_names = [
+                'goal', 'end_of_the_world_unlock', 'final_rest_door',
+                'required_reports_eotw', 'required_reports_door', 'reports_in_pool',
+                'super_bosses', 'atlantica', 'hundred_acre_wood', 'cups',
+                'puppies', 'starting_worlds', 'keyblades_unlock_chests',
+                'interact_in_battle', 'exp_multiplier', 'advanced_logic',
+                'extra_shared_abilities', 'exp_zero_in_pool', 'vanilla_emblem_pieces',
+                'donald_death_link', 'goofy_death_link', 'randomize_keyblade_stats',
+                'bad_starting_weapons', 'keyblade_min_str', 'keyblade_max_str',
+                'keyblade_min_mp', 'keyblade_max_mp', 'level_checks',
+                'force_stats_on_levels', 'strength_increase', 'defense_increase',
+                'hp_increase', 'ap_increase', 'mp_increase',
+                'accessory_slot_increase', 'item_slot_increase'
+            ]
+
+            for option_name in kh1_option_names:
+                if hasattr(options, option_name):
+                    option_obj = getattr(options, option_name)
+                    # Get the value attribute if it exists, otherwise use the object itself
+                    value = getattr(option_obj, 'value', option_obj)
+                    # Cache for options resolution
+                    self.options_cache[option_name] = value
+                    logger.debug(f"Cached KH1 option: {option_name} = {value}")
+
     def expand_helper(self, helper_name: str, args=None):
         """Expand KH1-specific helper functions."""
         # Map of KH1 helper functions to their simplified rules
         helper_map = {
             # Add specific KH1 helpers as we discover them
         }
-        
+
         if helper_name in helper_map:
             return helper_map[helper_name]
-            
+
         # For now, preserve helper nodes as-is until we identify specific helpers
         return None
         
@@ -33,7 +65,10 @@ class KH1GameExportHandler(BaseGameExportHandler):
         """Recursively expand rule functions for KH1."""
         if not rule:
             return rule
-            
+
+        # First, resolve any options references
+        rule = self._resolve_options_in_rule(rule)
+
         # Special handling for function_call with self methods
         if rule.get('type') == 'function_call':
             func = rule.get('function', {})
@@ -51,24 +86,31 @@ class KH1GameExportHandler(BaseGameExportHandler):
                             return self.expand_rule(expanded)  # Recursively expand the result
                         # If not expandable, convert to a helper node with args
                         return {'type': 'helper', 'name': method_name, 'args': args}
-            
+
         # Special handling for __analyzed_func__
         if rule.get('type') == 'state_method' and rule.get('method') == '__analyzed_func__':
             if 'original' in rule:
                 return self._analyze_original_rule(rule['original'])
             return self._infer_rule_type(rule)
-            
+
         # Special handling for helper nodes
         if rule.get('type') == 'helper':
+            # Resolve options in args first
+            if 'args' in rule and rule['args']:
+                rule['args'] = [self._resolve_options_in_rule(arg) for arg in rule['args']]
             expanded = self.expand_helper(rule.get('name'), rule.get('args'))
             if expanded:
                 return self.expand_rule(expanded)  # Recursively expand
             return rule
-            
+
         # Handle and/or conditions recursively
         if rule.get('type') in ['and', 'or']:
             rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
-            
+
+        # Handle not condition
+        if rule.get('type') == 'not':
+            rule['condition'] = self.expand_rule(rule.get('condition'))
+
         return rule
     
     def _analyze_original_rule(self, original_rule):
@@ -219,5 +261,80 @@ class KH1GameExportHandler(BaseGameExportHandler):
                             'type': 'Event',
                             'max_count': 1
                         }
-        
+
         return item_data
+
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Extracts KH1-specific game settings for export."""
+        # Get base settings
+        settings_dict = super().get_settings_data(world, multiworld, player)
+
+        # Add cached KH1 options to settings
+        # (options were already cached in preprocess_world_data)
+        for option_name, value in self.options_cache.items():
+            settings_dict[option_name] = value
+            logger.debug(f"Exported KH1 option: {option_name} = {value}")
+
+        return settings_dict
+
+    def _resolve_options_in_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Recursively resolve options.* attribute references to their constant values.
+
+        This method finds patterns like:
+        {
+          "type": "attribute",
+          "object": {"type": "name", "name": "options"},
+          "attr": "keyblades_unlock_chests"
+        }
+
+        And replaces them with:
+        {
+          "type": "constant",
+          "value": False  # or whatever the actual option value is
+        }
+        """
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        # Check if this is an options attribute access
+        if rule.get('type') == 'attribute':
+            obj = rule.get('object', {})
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'options':
+                attr_name = rule.get('attr')
+                if attr_name and attr_name in self.options_cache:
+                    value = self.options_cache[attr_name]
+                    logger.debug(f"Resolved options.{attr_name} to constant value: {value}")
+                    return {'type': 'constant', 'value': value}
+                else:
+                    logger.warning(f"Could not resolve options.{attr_name} - not in cache")
+
+        # Recursively process nested structures
+        if 'conditions' in rule and isinstance(rule['conditions'], list):
+            rule['conditions'] = [self._resolve_options_in_rule(cond) for cond in rule['conditions']]
+
+        if 'condition' in rule:
+            rule['condition'] = self._resolve_options_in_rule(rule['condition'])
+
+        if 'args' in rule and isinstance(rule['args'], list):
+            rule['args'] = [self._resolve_options_in_rule(arg) for arg in rule['args']]
+
+        if 'test' in rule:
+            rule['test'] = self._resolve_options_in_rule(rule['test'])
+
+        if 'if_true' in rule:
+            rule['if_true'] = self._resolve_options_in_rule(rule['if_true'])
+
+        if 'if_false' in rule:
+            rule['if_false'] = self._resolve_options_in_rule(rule['if_false'])
+
+        if 'left' in rule:
+            rule['left'] = self._resolve_options_in_rule(rule['left'])
+
+        if 'right' in rule:
+            rule['right'] = self._resolve_options_in_rule(rule['right'])
+
+        if 'object' in rule:
+            rule['object'] = self._resolve_options_in_rule(rule['object'])
+
+        return rule

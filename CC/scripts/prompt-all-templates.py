@@ -15,7 +15,7 @@ from pathlib import Path
 # Add parent scripts directory to path to import shared modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'scripts')))
 
-from lib.test_utils import read_host_yaml_config
+from lib.test_utils import read_host_yaml_config, load_template_exclude_list
 from lib.test_results import is_test_passing, load_existing_results
 
 
@@ -168,6 +168,9 @@ def get_prompt_for_game(game_name, seed=1, use_cloud_docs=False):
 
 
 def main():
+    # Load default exclude list
+    default_exclude_list = load_template_exclude_list()
+
     parser = argparse.ArgumentParser(description='Run prompt.py for all failing template tests')
     parser.add_argument('--start-from', help='Template file to start from')
     parser.add_argument('--template-dir', default='Players/Templates',
@@ -183,8 +186,8 @@ def main():
     parser.add_argument('--skip-list',
                        type=str,
                        nargs='*',
-                       default=['Archipelago.yaml', 'Universal Tracker.yaml', 'Final Fantasy.yaml', 'Sudoku.yaml'],
-                       help='List of template files to skip (default: Archipelago.yaml Universal Tracker.yaml Final Fantasy.yaml Sudoku.yaml)')
+                       default=default_exclude_list,
+                       help=f'List of template files to skip (default: {" ".join(default_exclude_list)})')
     parser.add_argument('-s', '--seed', type=int, default=1,
                        help='Seed number to use for generation (default: 1)')
     parser.add_argument('--max-loops', type=int, default=1,
@@ -340,9 +343,11 @@ def main():
         with open(output_file, 'w') as f:
             for i, prompt in enumerate(collected_prompts):
                 f.write(prompt)
-                # Add three newlines between prompts (but not after the last one)
+                # Add 10 empty lines with equals signs in the middle (but not after the last one)
                 if i < len(collected_prompts) - 1:
-                    f.write("\n\n\n")
+                    f.write("\n\n\n\n\n")
+                    f.write("=" * 80)
+                    f.write("\n\n\n\n\n")
 
         print(f"Created {output_file} with {len(collected_prompts)} prompts")
 

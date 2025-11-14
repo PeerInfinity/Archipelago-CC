@@ -12,6 +12,8 @@ on:
         options:
           - minimal-spoiler
           - full-spoiler
+          - minimal-spoiler-retest
+          - full-spoiler-retest
           - multiplayer
           - multiworld
           - multitemplate-minimal
@@ -21,7 +23,7 @@ jobs:
   individual-test:
     name: Individual Test - ${{ github.event.inputs.test_type }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 180
 
     steps:
       - name: Checkout repository
@@ -61,7 +63,7 @@ jobs:
         run: |
           source .venv/bin/activate
           python Launcher.py --update_settings
-          if [[ "${{ github.event.inputs.test_type }}" == "full-spoiler" ]] || [[ "${{ github.event.inputs.test_type }}" == "multitemplate-full" ]]; then
+          if [[ "${{ github.event.inputs.test_type }}" == "full-spoiler" ]] || [[ "${{ github.event.inputs.test_type }}" == "full-spoiler-retest" ]] || [[ "${{ github.event.inputs.test_type }}" == "multitemplate-full" ]]; then
             python scripts/setup/update_host_settings.py full-spoilers
           else
             python scripts/setup/update_host_settings.py minimal-spoilers
@@ -90,6 +92,12 @@ jobs:
             "full-spoiler")
               python scripts/test/test-all-templates.py -p
               ;;
+            "minimal-spoiler-retest")
+              python scripts/test/test-all-templates.py --minimal-spoilers --retest --retest-continue 10 -p
+              ;;
+            "full-spoiler-retest")
+              python scripts/test/test-all-templates.py --full-spoilers --retest --retest-continue 10 -p
+              ;;
             "multiplayer")
               python scripts/test/test-all-templates.py --multiplayer -p
               ;;
@@ -110,7 +118,16 @@ jobs:
         with:
           name: individual-test-${{ github.event.inputs.test_type }}
           path: |
-            scripts/output/
+            scripts/output/${{
+              github.event.inputs.test_type == 'minimal-spoiler' && 'spoiler-minimal/' ||
+              github.event.inputs.test_type == 'minimal-spoiler-retest' && 'spoiler-minimal/' ||
+              github.event.inputs.test_type == 'full-spoiler' && 'spoiler-full/' ||
+              github.event.inputs.test_type == 'full-spoiler-retest' && 'spoiler-full/' ||
+              github.event.inputs.test_type == 'multiplayer' && 'multiplayer/' ||
+              github.event.inputs.test_type == 'multiworld' && 'multiworld/' ||
+              github.event.inputs.test_type == 'multitemplate-minimal' && 'multitemplate-minimal/' ||
+              'multitemplate-full/'
+            }}
             docs/json/developer/test-results/
           retention-days: 7
 
@@ -186,58 +203,58 @@ jobs:
 
       - name: Merge test results into repository
         run: |
-          # Create directories if they don't exist
-          mkdir -p scripts/output/spoiler-minimal
-          mkdir -p scripts/output/spoiler-full
-          mkdir -p scripts/output/multiplayer
-          mkdir -p scripts/output/multiworld
-          mkdir -p scripts/output/multitemplate-minimal
-          mkdir -p scripts/output/multitemplate-full
-          mkdir -p docs/json/developer/test-results
+          # Create temporary directories
+          mkdir -p /tmp/merged-results/scripts/output/spoiler-minimal
+          mkdir -p /tmp/merged-results/scripts/output/spoiler-full
+          mkdir -p /tmp/merged-results/scripts/output/multiplayer
+          mkdir -p /tmp/merged-results/scripts/output/multiworld
+          mkdir -p /tmp/merged-results/scripts/output/multitemplate-minimal
+          mkdir -p /tmp/merged-results/scripts/output/multitemplate-full
+          mkdir -p /tmp/merged-results/docs/json/developer/test-results
 
-          # Copy JSON results based on test type
+          # Copy JSON results to temp based on test type
           case "${{ github.event.inputs.test_type }}" in
-            "minimal-spoiler")
+            "minimal-spoiler"|"minimal-spoiler-retest")
               if [ -f artifacts/scripts/output/spoiler-minimal/test-results.json ]; then
-                cp artifacts/scripts/output/spoiler-minimal/test-results.json scripts/output/spoiler-minimal/test-results.json
+                cp artifacts/scripts/output/spoiler-minimal/test-results.json /tmp/merged-results/scripts/output/spoiler-minimal/test-results.json
               fi
               ;;
-            "full-spoiler")
+            "full-spoiler"|"full-spoiler-retest")
               if [ -f artifacts/scripts/output/spoiler-full/test-results.json ]; then
-                cp artifacts/scripts/output/spoiler-full/test-results.json scripts/output/spoiler-full/test-results.json
+                cp artifacts/scripts/output/spoiler-full/test-results.json /tmp/merged-results/scripts/output/spoiler-full/test-results.json
               fi
               ;;
             "multiplayer")
               if [ -f artifacts/scripts/output/multiplayer/test-results.json ]; then
-                cp artifacts/scripts/output/multiplayer/test-results.json scripts/output/multiplayer/test-results.json
+                cp artifacts/scripts/output/multiplayer/test-results.json /tmp/merged-results/scripts/output/multiplayer/test-results.json
               fi
               ;;
             "multiworld")
               if [ -f artifacts/scripts/output/multiworld/test-results.json ]; then
-                cp artifacts/scripts/output/multiworld/test-results.json scripts/output/multiworld/test-results.json
+                cp artifacts/scripts/output/multiworld/test-results.json /tmp/merged-results/scripts/output/multiworld/test-results.json
               fi
               ;;
             "multitemplate-minimal")
               if [ -f artifacts/scripts/output/multitemplate-minimal/test-results.json ]; then
-                cp artifacts/scripts/output/multitemplate-minimal/test-results.json scripts/output/multitemplate-minimal/test-results.json
+                cp artifacts/scripts/output/multitemplate-minimal/test-results.json /tmp/merged-results/scripts/output/multitemplate-minimal/test-results.json
               fi
               ;;
             "multitemplate-full")
               if [ -f artifacts/scripts/output/multitemplate-full/test-results.json ]; then
-                cp artifacts/scripts/output/multitemplate-full/test-results.json scripts/output/multitemplate-full/test-results.json
+                cp artifacts/scripts/output/multitemplate-full/test-results.json /tmp/merged-results/scripts/output/multitemplate-full/test-results.json
               fi
               ;;
           esac
 
-          # Copy markdown documentation files
-          find artifacts -path "*/docs/json/developer/test-results/*.md" -exec cp {} docs/json/developer/test-results/ \;
+          # Copy markdown documentation files to temp
+          find artifacts -path "*/docs/json/developer/test-results/*.md" -exec cp {} /tmp/merged-results/docs/json/developer/test-results/ \;
 
           # List what was copied
-          echo "=== Copied JSON Results ==="
-          ls -lh scripts/output/*/test-results.json || echo "No JSON files found"
+          echo "=== Copied JSON Results to temp ==="
+          ls -lh /tmp/merged-results/scripts/output/*/test-results.json || echo "No JSON files found"
 
-          echo "=== Copied Markdown Files ==="
-          ls -lh docs/json/developer/test-results/*.md || echo "No markdown files found"
+          echo "=== Copied Markdown Files to temp ==="
+          ls -lh /tmp/merged-results/docs/json/developer/test-results/*.md || echo "No markdown files found"
 
       - name: Create or switch to test-results-update branch
         run: |
@@ -252,10 +269,27 @@ jobs:
             echo "Branch test-results-update exists, checking it out"
             git checkout test-results-update
             git pull origin test-results-update
+
+            # Merge main into test-results-update to stay synchronized
+            echo "Merging main into test-results-update..."
+            # Use -X theirs strategy to auto-accept main's version for conflicts
+            git merge origin/main --allow-unrelated-histories --no-edit -X theirs -m "Merge main into test-results-update before updating test results"
           else
-            echo "Creating new branch test-results-update"
-            git checkout -b test-results-update
+            echo "Creating new branch test-results-update from main"
+            git checkout -b test-results-update origin/main
           fi
+
+          # Now copy the merged results from temp location
+          echo "Copying merged results to repository..."
+          mkdir -p scripts/output
+          mkdir -p docs/json/developer/test-results
+
+          cp -r /tmp/merged-results/scripts/output/* scripts/output/ 2>/dev/null || true
+          cp /tmp/merged-results/docs/json/developer/test-results/*.md docs/json/developer/test-results/ 2>/dev/null || true
+
+          echo "=== Files in repository after copy ==="
+          ls -lh scripts/output/*/test-results.json || echo "No JSON files"
+          ls -lh docs/json/developer/test-results/*.md || echo "No MD files"
 
       - name: Commit and push results
         run: |
@@ -263,12 +297,13 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           # Add the specific files we want to commit
-          git add scripts/output/spoiler-minimal/test-results.json || true
-          git add scripts/output/spoiler-full/test-results.json || true
-          git add scripts/output/multiplayer/test-results.json || true
-          git add scripts/output/multiworld/test-results.json || true
-          git add scripts/output/multitemplate-minimal/test-results.json || true
-          git add scripts/output/multitemplate-full/test-results.json || true
+          # Use -f because scripts/output is in .gitignore (even though specific files are excepted)
+          git add -f scripts/output/spoiler-minimal/test-results.json || true
+          git add -f scripts/output/spoiler-full/test-results.json || true
+          git add -f scripts/output/multiplayer/test-results.json || true
+          git add -f scripts/output/multiworld/test-results.json || true
+          git add -f scripts/output/multitemplate-minimal/test-results.json || true
+          git add -f scripts/output/multitemplate-full/test-results.json || true
           git add docs/json/developer/test-results/*.md || true
 
           # Check if there are changes to commit

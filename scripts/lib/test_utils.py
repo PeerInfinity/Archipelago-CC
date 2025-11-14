@@ -35,26 +35,74 @@ def read_host_yaml_config(project_root: str) -> Dict:
         return {}
 
 
+def load_template_exclude_list(project_root: str = None, include_reasons: bool = False):
+    """
+    Load the default template exclude list from scripts/data/template-exclude-list.json.
+
+    Args:
+        project_root: Optional project root path. If not provided, will be inferred.
+        include_reasons: If True, returns list of dicts with 'name' and 'reason' keys.
+                        If False, returns list of template filenames only.
+
+    Returns:
+        List[str] if include_reasons=False: List of template filenames to exclude
+        List[Dict] if include_reasons=True: List of dicts with 'name' and 'reason' keys
+        Returns default list if file not found or malformed.
+    """
+    if project_root is None:
+        # Infer project root from this file's location (scripts/lib/test_utils.py)
+        project_root = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+
+    exclude_list_file = os.path.join(project_root, 'scripts', 'data', 'template-exclude-list.json')
+
+    # Default fallback list (old format)
+    default_exclude_list = ['Archipelago.yaml', 'Universal Tracker.yaml', 'Final Fantasy.yaml', 'Sudoku.yaml']
+
+    try:
+        with open(exclude_list_file, 'r') as f:
+            data = json.load(f)
+            exclude_list = data.get('exclude_list', default_exclude_list)
+
+            # Check if the list contains dictionaries (new format) or strings (old format)
+            if exclude_list and isinstance(exclude_list[0], dict):
+                # New format: list of objects with 'name' and 'reason'
+                if include_reasons:
+                    return exclude_list
+                else:
+                    return [item['name'] for item in exclude_list]
+            else:
+                # Old format: list of strings
+                if include_reasons:
+                    # Convert to new format with empty reasons
+                    return [{'name': name, 'reason': ''} for name in exclude_list]
+                else:
+                    return exclude_list
+    except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
+        # If file doesn't exist or is malformed, return default list
+        if include_reasons:
+            return [{'name': name, 'reason': ''} for name in default_exclude_list]
+        else:
+            return default_exclude_list
+
+
 def build_and_load_world_mapping(project_root: str) -> Dict[str, Dict]:
     """Build world mapping and load it."""
     mapping_file = os.path.join(project_root, 'scripts', 'data', 'world-mapping.json')
     build_script = os.path.join(project_root, 'scripts', 'build', 'build-world-mapping.py')
 
     # Always build the mapping to ensure it's current
-    try:
-        print("Building world mapping...")
-        result = subprocess.run([sys.executable, build_script],
-                              cwd=project_root,
-                              capture_output=True,
-                              text=True)
-        if result.returncode != 0:
-            print(f"Warning: Failed to build world mapping: {result.stderr}")
-            return {}
-        else:
-            print("World mapping built successfully")
-    except Exception as e:
-        print(f"Warning: Failed to build world mapping: {e}")
+    print("Building world mapping...")
+    return_code, stdout, stderr = run_command(
+        [sys.executable, build_script],
+        cwd=project_root,
+        timeout=120  # 2 minute timeout for building world mapping
+    )
+
+    if return_code != 0:
+        print(f"Warning: Failed to build world mapping: {stderr}")
         return {}
+    else:
+        print("World mapping built successfully")
 
     # Load the mapping
     try:
@@ -296,20 +344,67 @@ def run_command(cmd: List[str], cwd: str = None, timeout: int = 300, env: Dict =
     """
     Run a command and return (return_code, stdout, stderr).
     Closes stdin to prevent the subprocess from waiting for user input.
+    Uses process groups to ensure all child processes are terminated on timeout.
     """
+    import signal
+    import os as os_module
+
     try:
-        result = subprocess.run(
-            cmd,
-            cwd=cwd,
-            env=env,
-            stdin=subprocess.DEVNULL,
-            capture_output=True,
-            text=True,
-            timeout=timeout
-        )
-        return result.returncode, result.stdout, result.stderr
-    except subprocess.TimeoutExpired:
-        return -1, "", "Command timed out"
+        # On Unix systems, use process groups to ensure we can kill the entire process tree
+        if os_module.name != 'nt':  # Unix/Linux/Mac
+            process = subprocess.Popen(
+                cmd,
+                cwd=cwd,
+                env=env,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                preexec_fn=os_module.setpgrp  # Create new process group
+            )
+        else:  # Windows
+            process = subprocess.Popen(
+                cmd,
+                cwd=cwd,
+                env=env,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP
+            )
+
+        try:
+            stdout, stderr = process.communicate(timeout=timeout)
+            return process.returncode, stdout, stderr
+        except subprocess.TimeoutExpired:
+            # Kill the entire process group on timeout
+            if os_module.name != 'nt':  # Unix/Linux/Mac
+                try:
+                    os_module.killpg(os_module.getpgid(process.pid), signal.SIGTERM)
+                    # Give it 5 seconds to terminate gracefully
+                    try:
+                        process.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        # Force kill if still running
+                        os_module.killpg(os_module.getpgid(process.pid), signal.SIGKILL)
+                except ProcessLookupError:
+                    pass  # Process already terminated
+            else:  # Windows
+                process.terminate()
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+
+            # Try to get any output that was generated before timeout
+            try:
+                stdout, stderr = process.communicate(timeout=1)
+            except:
+                stdout, stderr = "", ""
+
+            return -1, stdout, f"Command timed out after {timeout} seconds\n{stderr}"
+
     except Exception as e:
         return -1, "", str(e)
 

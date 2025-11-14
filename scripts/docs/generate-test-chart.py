@@ -8,9 +8,15 @@ Can generate individual charts for each test type and a combined summary chart.
 import argparse
 import json
 import os
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Tuple, Optional
+
+# Add parent scripts directory to path to import from lib
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from lib.test_utils import load_template_exclude_list
 
 
 def load_test_results(results_file: str) -> Dict[str, Any]:
@@ -597,7 +603,7 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
     return md_content
 
 
-def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None) -> str:
+def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, excluded_games=None) -> str:
     """Generate a combined summary chart with all test results."""
     md_content = "# Archipelago Template Test Results Summary\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
@@ -750,6 +756,27 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld
                 mtfull_link = f"[{passed}/{total} passed](./test-results-multitemplate-full.md#{game.lower().replace(' ', '-')})"
 
             md_content += f"| {game} | {mtmin_link} | {mtfull_link} |\n"
+
+    # Add Excluded Games section
+    if excluded_games:
+        md_content += "\n## Excluded Games\n\n"
+        md_content += "The following games are excluded from automated testing:\n\n"
+
+        # Check if excluded_games contains dicts (with reasons) or strings (without)
+        if excluded_games and isinstance(excluded_games[0], dict):
+            # New format with reasons
+            md_content += "| Game | Reason |\n"
+            md_content += "|------|--------|\n"
+            for item in excluded_games:
+                game_name = item['name'].replace('.yaml', '')
+                reason = item.get('reason', 'Not specified')
+                md_content += f"| {game_name} | {reason} |\n"
+        else:
+            # Old format (list of strings)
+            for game in excluded_games:
+                game_name = game.replace('.yaml', '')
+                md_content += f"- {game_name}\n"
+        md_content += "\n"
 
     return md_content
 
@@ -942,8 +969,10 @@ def main():
     # Generate summary chart
     if minimal_data or full_data or mp_data or mw_data or mtmin_data or mtfull_data:
         print(f"Generating summary chart...")
+        # Load the exclude list with reasons
+        excluded_games = load_template_exclude_list(project_root, include_reasons=True)
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data)
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, excluded_games)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
         print(f"✓ Summary chart saved to: {summary_output}")

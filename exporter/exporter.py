@@ -26,8 +26,8 @@ def clear_rule_cache():
 
 def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, Any]:
     """
-    Recursively resolve attribute nodes in a rule structure to their actual string values.
-    This is needed for item_check rules and helper arguments that reference ItemName.* attributes.
+    Recursively resolve attribute nodes in a rule structure to their actual values.
+    This is needed for item_check rules, helper arguments, and world option references.
 
     Args:
         rule: The rule dictionary to process
@@ -39,19 +39,26 @@ def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, An
     if not rule or not isinstance(rule, dict):
         return rule
 
-    # Helper function to resolve a single attribute node
+    # Helper function to resolve a single attribute node (including nested chains)
     def resolve_attribute(attr_node):
         if not isinstance(attr_node, dict) or attr_node.get('type') != 'attribute':
             return attr_node
 
-        obj_name = attr_node.get('object', {}).get('name')
+        # Recursively resolve the object part first (handles nested attributes)
+        obj_node = attr_node.get('object')
         attr_name = attr_node.get('attr')
 
-        if obj_name and attr_name:
-            try:
-                # Try to get the module/class from the world or its module
-                obj = None
-                if hasattr(world, obj_name):
+        if not attr_name:
+            return attr_node
+
+        try:
+            # If the object is a name (e.g., 'world'), resolve it first
+            if isinstance(obj_node, dict) and obj_node.get('type') == 'name':
+                obj_name = obj_node.get('name')
+                if obj_name == 'world':
+                    # Start with world object
+                    obj = world
+                elif hasattr(world, obj_name):
                     obj = getattr(world, obj_name)
                 elif hasattr(world, '__class__') and hasattr(world.__class__, '__module__'):
                     # Import the world's module and look for the object there
@@ -59,28 +66,52 @@ def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, An
                     world_module = sys.modules.get(world.__class__.__module__)
                     if world_module and hasattr(world_module, obj_name):
                         obj = getattr(world_module, obj_name)
+                    else:
+                        return attr_node
+                else:
+                    return attr_node
+            # If the object is itself an attribute (e.g., world.options), resolve it recursively
+            elif isinstance(obj_node, dict) and obj_node.get('type') == 'attribute':
+                resolved_obj_node = resolve_attribute(obj_node)
+                # If we successfully resolved to a constant, use that value as the object
+                if resolved_obj_node.get('type') == 'constant':
+                    obj = resolved_obj_node.get('value')
+                else:
+                    return attr_node
+            else:
+                return attr_node
 
-                if obj:
-                    # Get the attribute value (e.g., MasterForm -> "Master Form")
-                    resolved_value = getattr(obj, attr_name)
-                    if isinstance(resolved_value, str):
-                        logger.debug(f"Resolved attribute {obj_name}.{attr_name} to '{resolved_value}'")
-                        return {'type': 'constant', 'value': resolved_value}
-            except (AttributeError, KeyError) as e:
-                logger.debug(f"Could not resolve attribute {obj_name}.{attr_name}: {e}")
+            # Now get the attribute from the resolved object
+            if obj is not None:
+                resolved_value = getattr(obj, attr_name)
+                # Resolve any basic types (str, int, bool, float)
+                if isinstance(resolved_value, (str, int, bool, float, type(None))):
+                    logger.debug(f"Resolved attribute chain to value: {resolved_value}")
+                    return {'type': 'constant', 'value': resolved_value}
+                # If it's another object (like world.options), keep it as a value for further resolution
+                else:
+                    logger.debug(f"Resolved attribute {attr_name} to object: {type(resolved_value)}")
+                    return {'type': 'constant', 'value': resolved_value}
+        except (AttributeError, KeyError, TypeError) as e:
+            logger.debug(f"Could not resolve attribute {attr_name}: {e}")
 
         return attr_node
+
+    # If the rule itself is an attribute node, try to resolve it
+    if rule.get('type') == 'attribute':
+        return resolve_attribute(rule)
 
     # Process item_check rules
     if rule.get('type') == 'item_check':
         item = rule.get('item')
-        rule['item'] = resolve_attribute(item)
+        if isinstance(item, dict):
+            rule['item'] = resolve_attribute_nodes_in_rule(item, world)
 
     # Process helper rules and their arguments
     if rule.get('type') == 'helper':
         args = rule.get('args', [])
         if args:
-            rule['args'] = [resolve_attribute(arg) if isinstance(arg, dict) else arg for arg in args]
+            rule['args'] = [resolve_attribute_nodes_in_rule(arg, world) if isinstance(arg, dict) else arg for arg in args]
 
     # Recursively process nested rules
     if rule.get('type') in ['and', 'or']:
@@ -91,8 +122,33 @@ def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, An
 
     if rule.get('type') == 'conditional':
         rule['test'] = resolve_attribute_nodes_in_rule(rule.get('test'), world)
-        rule['if_true'] = resolve_attribute_nodes_in_rule(rule.get('if_true'), world)
-        rule['if_false'] = resolve_attribute_nodes_in_rule(rule.get('if_false'), world)
+        if rule.get('if_true') is not None:
+            rule['if_true'] = resolve_attribute_nodes_in_rule(rule.get('if_true'), world)
+        if rule.get('if_false') is not None:
+            rule['if_false'] = resolve_attribute_nodes_in_rule(rule.get('if_false'), world)
+
+        # Eliminate constant conditionals after resolving attributes
+        test = rule.get('test')
+        if test and test.get('type') == 'constant':
+            test_value = test.get('value')
+            if test_value:  # Truthy - return if_true branch
+                return rule.get('if_true')
+            else:  # Falsy - return if_false branch
+                return rule.get('if_false')
+
+    # Process compare rules
+    if rule.get('type') == 'compare':
+        if rule.get('left'):
+            rule['left'] = resolve_attribute_nodes_in_rule(rule['left'], world)
+        if rule.get('right'):
+            rule['right'] = resolve_attribute_nodes_in_rule(rule['right'], world)
+
+    # Process binary_op rules
+    if rule.get('type') == 'binary_op':
+        if rule.get('left'):
+            rule['left'] = resolve_attribute_nodes_in_rule(rule['left'], world)
+        if rule.get('right'):
+            rule['right'] = resolve_attribute_nodes_in_rule(rule['right'], world)
 
     return rule
 
@@ -134,39 +190,122 @@ def get_world_directory_name(game_name: str) -> str:
                 import re
                 pattern = r'game:\s*ClassVar\[str\]\s*=\s*"([^"]*)"'
                 match = re.search(pattern, content)
-                
+
                 if match:
                     found_game_name = match.group(1)
                     if found_game_name == game_name:
                         return world_dir_name
-                
+
                 # Fallback pattern for single quotes
                 pattern = r'game:\s*ClassVar\[str\]\s*=\s*\'([^\']*)\''
                 match = re.search(pattern, content)
-                
+
                 if match:
                     found_game_name = match.group(1)
                     if found_game_name == game_name:
                         return world_dir_name
-                
+
+                # Pattern for type-annotated declarations: game: str = "Game Name"
+                # This matches ClassVar[str], str, or any other type annotation
+                pattern = r'game:\s*[A-Za-z_]\w*(?:\[[^\]]*\])?\s*=\s*"([^"]*)"'
+                match = re.search(pattern, content)
+
+                if match:
+                    found_game_name = match.group(1)
+                    if found_game_name == game_name:
+                        return world_dir_name
+
+                # Fallback pattern for single quotes with type annotations
+                pattern = r'game:\s*[A-Za-z_]\w*(?:\[[^\]]*\])?\s*=\s*\'([^\']*)\''
+                match = re.search(pattern, content)
+
+                if match:
+                    found_game_name = match.group(1)
+                    if found_game_name == game_name:
+                        return world_dir_name
+
                 # Fallback: look for simpler pattern: game = "Game Name"
                 pattern = r'game\s*=\s*"([^"]*)"'
                 match = re.search(pattern, content)
-                
+
                 if match:
                     found_game_name = match.group(1)
                     if found_game_name == game_name:
                         return world_dir_name
-                
+
                 # Fallback pattern for single quotes
                 pattern = r'game\s*=\s*\'([^\']*)\''
                 match = re.search(pattern, content)
-                
+
                 if match:
                     found_game_name = match.group(1)
                     if found_game_name == game_name:
                         return world_dir_name
-                        
+
+                # NEW: Handle case where game = CONSTANT_NAME (e.g., game = LINKS_AWAKENING)
+                # First, look for game = <identifier> (not a string)
+                pattern = r'game\s*=\s*([A-Z_][A-Z0-9_]*)\s*(?:#|$)'
+                match = re.search(pattern, content, re.MULTILINE)
+
+                if match:
+                    constant_name = match.group(1)
+
+                    # Try to find the constant definition in the same file
+                    const_pattern = rf'{constant_name}\s*=\s*"([^"]*)"'
+                    const_match = re.search(const_pattern, content)
+
+                    if const_match:
+                        found_game_name = const_match.group(1)
+                        if found_game_name == game_name:
+                            return world_dir_name
+
+                    # Try to find the constant in imported modules within the same world directory
+                    # Look for: from .ModuleName import CONSTANT_NAME, from .ModuleName import *, or from . import ModuleName
+                    # Pattern 1: Specific import - from .ModuleName import CONSTANT_NAME
+                    import_pattern = rf'from\s+\.(\w+)\s+import.*\b{constant_name}\b'
+                    import_match = re.search(import_pattern, content)
+
+                    if import_match:
+                        module_name = import_match.group(1)
+                        module_file = os.path.join(world_path, f'{module_name}.py')
+
+                        if os.path.exists(module_file):
+                            try:
+                                with open(module_file, 'r', encoding='utf-8') as mf:
+                                    module_content = mf.read()
+                                    const_pattern = rf'{constant_name}\s*=\s*"([^"]*)"'
+                                    const_match = re.search(const_pattern, module_content)
+
+                                    if const_match:
+                                        found_game_name = const_match.group(1)
+                                        if found_game_name == game_name:
+                                            return world_dir_name
+                            except (IOError, UnicodeDecodeError):
+                                pass
+
+                    # Pattern 2: Wildcard import - from .ModuleName import *
+                    # Find all wildcard imports and check each module
+                    wildcard_pattern = r'from\s+\.(\w+)\s+import\s+\*'
+                    wildcard_matches = re.finditer(wildcard_pattern, content)
+
+                    for wc_match in wildcard_matches:
+                        module_name = wc_match.group(1)
+                        module_file = os.path.join(world_path, f'{module_name}.py')
+
+                        if os.path.exists(module_file):
+                            try:
+                                with open(module_file, 'r', encoding='utf-8') as mf:
+                                    module_content = mf.read()
+                                    const_pattern = rf'{constant_name}\s*=\s*"([^"]*)"'
+                                    const_match = re.search(const_pattern, module_content)
+
+                                    if const_match:
+                                        found_game_name = const_match.group(1)
+                                        if found_game_name == game_name:
+                                            return world_dir_name
+                            except (IOError, UnicodeDecodeError):
+                                pass
+
             except (IOError, UnicodeDecodeError):
                 continue
         
@@ -595,7 +734,8 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 closure_vars['world'] = world
 
             # Directly call analyze_rule, which handles recursion internally for combined rules
-            analysis_result = analyze_rule(rule_func=rule_func, closure_vars=closure_vars, game_handler=game_handler, player_context=player)
+            context_info = f"{target_type} '{rule_target_name or 'unknown'}'"
+            analysis_result = analyze_rule(rule_func=rule_func, closure_vars=closure_vars, game_handler=game_handler, player_context=player, context_info=context_info)
             
             if analysis_result and analysis_result.get('type') != 'error':
 

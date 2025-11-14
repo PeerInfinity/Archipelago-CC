@@ -18,6 +18,23 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
         from worlds.jakanddaxter.items import item_table
         self.item_id_to_name = dict(item_table)
 
+    def recalculate_collection_state_if_needed(self, current_collection_state, player_id, world):
+        """
+        Recalculate "Reachable Orbs" based on accessible orb regions if needed.
+
+        This is called during sphere logging to ensure the Reachable Orbs progressive
+        item is up-to-date before state is logged.
+
+        Args:
+            current_collection_state: The CollectionState to update
+            player_id: The player ID
+            world: The JakAndDaxterWorld instance
+        """
+        # Check if "Reachable Orbs Fresh" is False, indicating recalculation is needed
+        if not current_collection_state.prog_items[player_id].get("Reachable Orbs Fresh", False):
+            from worlds.jakanddaxter.rules import recalculate_reachable_orbs
+            recalculate_reachable_orbs(current_collection_state, player_id, world)
+
     def _unwrap_constant(self, value: Any) -> Any:
         """Unwrap constant wrappers to get the actual value."""
         if isinstance(value, dict) and value.get('type') == 'constant':

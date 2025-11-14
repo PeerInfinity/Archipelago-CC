@@ -54,6 +54,17 @@ def log_sphere_details(file_handler, multiworld: "MultiWorld", sphere_index: Uni
         is_fractional = _is_fractional_sphere(sphere_index)
         is_sphere_zero = str(sphere_index) == "0" or str(sphere_index) == "0.0"
 
+        # Trigger game-specific state recalculations before logging
+        # This ensures progressive items that depend on region accessibility are up-to-date
+        from exporter.games import get_game_export_handler
+        for player_id in multiworld.player_ids:
+            world = multiworld.worlds[player_id]
+            game_name = world.game
+            game_handler = get_game_export_handler(game_name, world)
+            game_handler.recalculate_collection_state_if_needed(
+                current_collection_state, player_id, world
+            )
+
         # Collect current state data for all players
         current_state_data = {}
         player_specific_data = {}

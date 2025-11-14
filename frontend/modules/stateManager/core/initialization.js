@@ -182,6 +182,28 @@ function loadPlayerData(sm, jsonData, selectedPlayerId) {
   sm.progressionMapping = jsonData.progression_mapping?.[selectedPlayerId] || {};
   sm.gameInfo = jsonData.game_info || {};
 
+  // Initialize prog_items for games that use accumulated/progressive items
+  // Structure: prog_items[playerId][itemName] = accumulated_count
+  if (!sm.prog_items) {
+    sm.prog_items = {};
+  }
+  if (!sm.prog_items[selectedPlayerId]) {
+    sm.prog_items[selectedPlayerId] = {};
+  }
+
+  // Initialize accumulators from game_info metadata (generic for all games)
+  const gameInfo = jsonData.game_info?.[selectedPlayerId];
+  if (gameInfo?.prog_items_init) {
+    for (const [accumulatorName, initialValue] of Object.entries(gameInfo.prog_items_init)) {
+      if (!(accumulatorName in sm.prog_items[selectedPlayerId])) {
+        sm.prog_items[selectedPlayerId][accumulatorName] = initialValue;
+      }
+    }
+    sm._logDebug(`[Initialization] Initialized ${Object.keys(gameInfo.prog_items_init).length} prog_items accumulators from game_info`);
+  }
+
+  sm._logDebug('[Initialization] Initialized prog_items structure');
+
   // Load locations
   loadLocations(sm, selectedPlayerId);
 

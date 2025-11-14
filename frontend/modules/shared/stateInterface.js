@@ -327,16 +327,24 @@ export function createStateSnapshotInterface(
           }
           return undefined;
         default:
-          // Game-specific location variable extraction
+          // Check if this is a game-specific constant (e.g., OPTIONS for shapez)
+          const gameLogic = getGameLogic(gameName);
+          if (gameLogic.constants && gameLogic.constants[name]) {
+            return gameLogic.constants[name];
+          }
+
+          // Game-specific location variable extraction hook
           // For variables not found in context, try to extract from location name
           if (contextVariables && contextVariables.location) {
             const locationName = contextVariables.location.name || '';
+            const selectedHelpers = getHelperFunctions(gameName);
 
-            // Kingdom Hearts: Extract puppies_required from "Return X Puppies" locations
-            if (name === 'puppies_required' && gameName === 'Kingdom Hearts') {
-              const match = locationName.match(/Return (\d+) Puppies/);
-              if (match) {
-                return parseInt(match[1], 10);
+            // Check if the game has a custom extractor for this variable
+            const extractorName = `extract${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+            if (selectedHelpers && typeof selectedHelpers[extractorName] === 'function') {
+              const extractedValue = selectedHelpers[extractorName](locationName);
+              if (extractedValue !== null && extractedValue !== undefined) {
+                return extractedValue;
               }
             }
           }
@@ -644,6 +652,72 @@ export function createStateSnapshotInterface(
           itemsFound += (finalSnapshotInterface.countItem(itemName) || 0);
         }
         return itemsFound >= count;
+      }
+
+      // Handle has_group_unique - counts unique items from a group (ignores duplicates)
+      if (methodName === 'has_group_unique' && args.length >= 2) {
+        const groupName = args[0];
+        const requiredCount = args[1];
+        if (typeof groupName !== 'string') return false;
+        if (typeof requiredCount !== 'number' || requiredCount < 0) return false;
+
+        const playerSlot = snapshot?.player?.slot || '1';
+        const playerItemGroups = staticData?.item_groups?.[playerSlot] || staticData?.item_groups;
+
+        let uniqueItemsFound = 0;
+
+        if (Array.isArray(playerItemGroups)) {
+          // ALTTP-style with group names as array
+          const playerItemsData = staticData.itemsByPlayer && staticData.itemsByPlayer[playerSlot];
+          if (playerItemsData) {
+            for (const itemName in playerItemsData) {
+              if (playerItemsData[itemName]?.groups?.includes(groupName)) {
+                const itemCount = snapshot.inventory[itemName] || 0;
+                if (itemCount > 0) {
+                  uniqueItemsFound++;
+                  if (uniqueItemsFound >= requiredCount) {
+                    return true;
+                  }
+                }
+              }
+            }
+          }
+        } else if (
+          typeof playerItemGroups === 'object' &&
+          playerItemGroups[groupName] &&
+          Array.isArray(playerItemGroups[groupName])
+        ) {
+          // Item_groups is an object { groupName: [itemNames...] }
+          for (const itemInGroup of playerItemGroups[groupName]) {
+            const itemCount = snapshot.inventory[itemInGroup] || 0;
+            if (itemCount > 0) {
+              uniqueItemsFound++;
+              if (uniqueItemsFound >= requiredCount) {
+                return true;
+              }
+            }
+          }
+        } else if (staticData?.groups) {
+          // Fallback to old groups structure if available
+          const playerGroups = staticData.groups[playerSlot] || staticData.groups;
+          if (
+            typeof playerGroups === 'object' &&
+            playerGroups[groupName] &&
+            Array.isArray(playerGroups[groupName])
+          ) {
+            for (const itemInGroup of playerGroups[groupName]) {
+              const itemCount = snapshot.inventory[itemInGroup] || 0;
+              if (itemCount > 0) {
+                uniqueItemsFound++;
+                if (uniqueItemsFound >= requiredCount) {
+                  return true;
+                }
+              }
+            }
+          }
+        }
+
+        return uniqueItemsFound >= requiredCount;
       }
 
       // Use game-specific agnostic helpers for all helper methods

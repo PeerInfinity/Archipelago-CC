@@ -3,6 +3,28 @@
  */
 
 /**
+ * Check if the player has an item
+ * @param {Object} snapshot - Game state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {string} itemName - Name of the item to check
+ * @returns {boolean} True if player has the item
+ */
+export function has(snapshot, staticData, itemName) {
+    return !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
+}
+
+/**
+ * Count how many of an item the player has
+ * @param {Object} snapshot - Game state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {string} itemName - Name of the item to count
+ * @returns {number} Count of the item
+ */
+export function count(snapshot, staticData, itemName) {
+    return snapshot?.inventory?.[itemName] || 0;
+}
+
+/**
  * Calculate an exploration score based on which regions are accessible
  * This is used to gate certain locations (like Numberman Codes) based on game progression
  *
@@ -57,5 +79,7 @@ export function explore_score(snapshot, staticData) {
 }
 
 export default {
+    has,
+    count,
     explore_score
 };

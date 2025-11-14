@@ -62,8 +62,12 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'can_reach_region',
             'can_take_damage',
             # This function doesn't appear in the final export, but we get warning messages if we remove it from this list
-            'orig_rule', 
+            'orig_rule',
         }
+
+    def should_preserve_as_helper(self, func_name: str) -> bool:
+        """Check if a function should be preserved as a helper call."""
+        return func_name in self.known_helpers
 
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Override to validate helper names instead of expanding them."""

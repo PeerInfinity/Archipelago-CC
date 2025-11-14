@@ -36,14 +36,15 @@ class ASTVisitorMixin:
         try:
             logging.debug(f"\n--- Starting Module Analysis ---")
             logging.debug(f"Module body length: {len(node.body)}")
-            
+
             # Detailed module body inspection
             for i, body_node in enumerate(node.body):
                 logging.debug(f"Module body node {i}: {type(body_node).__name__}")
-                
+
             # Visit first node in module body if exists and return its result
             if node.body:
                 return self.visit(node.body[0])
+            logging.warning(f"visit_Module: Empty module body, returning None")
             return None # Return None if no body
         except Exception as e:
             logging.error("Error in visit_Module", e)
@@ -68,10 +69,70 @@ class ASTVisitorMixin:
                 logging.debug("Skipping docstring in function body")
                 body_to_analyze = body_to_analyze[1:]
 
+            # Skip variable assignments (Assign, AnnAssign) and look for control flow or return
+            while body_to_analyze and isinstance(body_to_analyze[0], (ast.Assign, ast.AnnAssign)):
+                logging.debug(f"Skipping variable assignment: {type(body_to_analyze[0]).__name__}")
+                body_to_analyze = body_to_analyze[1:]
+
             # Visit the first meaningful body node if exists and return its result
-            # Assumes the meaningful part is the first statement after docstring (e.g., return)
+            # Looks for control flow (If, Return, etc.) after skipping assignments
             if body_to_analyze:
-                return self.visit(body_to_analyze[0])
+                # Special case: If statement without else, and more statements follow
+                if isinstance(body_to_analyze[0], ast.If) and not body_to_analyze[0].orelse and len(body_to_analyze) > 1:
+                    logging.debug(f"visit_FunctionDef: If statement without else, analyzing remaining {len(body_to_analyze) - 1} statements as implicit else")
+                    # Create a synthetic If node with the remaining statements as the else block
+                    if_node = body_to_analyze[0]
+                    remaining_stmts = body_to_analyze[1:]
+
+                    # Analyze the test condition
+                    test_result = self.visit(if_node.test)
+
+                    # Analyze the if body (should be a single statement, typically a return)
+                    body_result = None
+                    if if_node.body:
+                        body_result = self.visit(if_node.body[0])
+
+                    # Analyze remaining statements as the implicit else
+                    # If there's only one remaining statement, visit it directly
+                    # If there are multiple, we need to chain them
+                    if len(remaining_stmts) == 1:
+                        orelse_result = self.visit(remaining_stmts[0])
+                    else:
+                        # Multiple remaining statements - create a synthetic function to analyze them
+                        synthetic_func = ast.FunctionDef(
+                            name='synthetic_else',
+                            args=node.args,
+                            body=remaining_stmts,
+                            decorator_list=[],
+                            returns=None
+                        )
+                        orelse_result = self.visit_FunctionDef(synthetic_func)
+
+                    if test_result is None or body_result is None:
+                        logging.error(f"Failed to analyze If statement in function body")
+                        return None
+
+                    # Optimize: If test is a constant, statically evaluate the conditional
+                    if test_result.get('type') == 'constant':
+                        test_value = test_result.get('value')
+                        logging.debug(f"visit_FunctionDef: Test is constant with value: {test_value}")
+                        is_truthy = bool(test_value) if test_value is not None else False
+                        if is_truthy:
+                            logging.debug("visit_FunctionDef: Test is truthy, returning if_true branch")
+                            return body_result
+                        else:
+                            logging.debug("visit_FunctionDef: Test is falsy, returning if_false branch (implicit)")
+                            return orelse_result
+
+                    return {
+                        'type': 'conditional',
+                        'test': test_result,
+                        'if_true': body_result,
+                        'if_false': orelse_result
+                    }
+                else:
+                    return self.visit(body_to_analyze[0])
+            logging.warning(f"visit_FunctionDef: Empty function body for '{node.name}', returning None")
             return None # Return None if no body
         except Exception as e:
             logging.error(f"Error analyzing function {node.name}: {e}")
@@ -197,6 +258,58 @@ class ASTVisitorMixin:
                     logging.debug(f"Game handler processed special function {func_name}: {special_result}")
                     return special_result
 
+            # Check if the function name resolves to a callable via function defaults (e.g., loc_rule, coin_rule)
+            if func_name not in self.closure_vars:
+                resolved_func = self.expression_resolver.resolve_variable(func_name)
+                if resolved_func is not None and callable(resolved_func):
+                    logging.debug(f"Identified call to function from lambda default parameter: {func_name} -> {resolved_func}")
+
+                    # Check if game handler wants to preserve this as a helper
+                    should_preserve = False
+                    actual_func_name = None
+                    if self.game_handler and hasattr(self.game_handler, 'should_preserve_as_helper'):
+                        # Get the actual function name from the resolved function
+                        actual_func_name = getattr(resolved_func, '__name__', None)
+                        if actual_func_name and self.game_handler.should_preserve_as_helper(actual_func_name):
+                            logging.debug(f"Game handler requests preserving {actual_func_name} as helper, skipping recursive analysis")
+                            should_preserve = True
+                            # Replace func_name with the actual function name for helper call creation
+                            func_name = actual_func_name
+                            func_info = {'type': 'name', 'name': func_name}
+
+                    # Recursive analysis logic for lambda default parameters (only if not preserving as helper)
+                    if not should_preserve:
+                        try:
+                            # Check if 'state' is passed as an argument using original AST nodes
+                            has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
+                            # Attempt recursion if state arg is present
+                            if has_state_arg:
+                                # Import analyze_rule locally to avoid forward reference issues
+                                from .analysis import analyze_rule
+                                logging.debug(f"Recursively analyzing lambda default function: {func_name} -> {resolved_func}")
+
+                                # Build parameter mapping for function inlining
+                                param_mapping = self._build_parameter_mapping(resolved_func, args_with_nodes)
+
+                                # Merge parameter mapping into closure vars
+                                enhanced_closure_vars = self.closure_vars.copy()
+                                enhanced_closure_vars.update(param_mapping)
+
+                                # Pass the seen_funcs dictionary (it's mutable state)
+                                recursive_result = analyze_rule(rule_func=resolved_func,
+                                                              closure_vars=enhanced_closure_vars,
+                                                              seen_funcs=self.seen_funcs,
+                                                              game_handler=self.game_handler,
+                                                              player_context=self.player_context)
+                                if recursive_result.get('type') != 'error':
+                                    logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
+                                    return recursive_result
+                                else:
+                                    logging.debug(f"Recursive analysis for {func_name} returned type 'error'. Falling back to helper node. Error details: {recursive_result.get('error_log')}")
+                        except Exception as e:
+                            logging.error(f"Error during recursive analysis of lambda default {func_name}: {e}")
+                        # If recursion wasn't attempted or failed, fall through to default helper representation
+
             # Check if the function name is in closure vars
             if func_name in self.closure_vars:
                  logging.debug(f"Identified call to known closure variable: {func_name}")
@@ -212,9 +325,17 @@ class ASTVisitorMixin:
                           # Get the actual function from the closure
                           actual_func = self.closure_vars[func_name]
                           logging.debug(f"Recursively analyzing closure function: {func_name} -> {actual_func}")
+
+                          # Build parameter mapping for function inlining
+                          param_mapping = self._build_parameter_mapping(actual_func, args_with_nodes)
+
+                          # Merge parameter mapping into closure vars
+                          enhanced_closure_vars = self.closure_vars.copy()
+                          enhanced_closure_vars.update(param_mapping)
+
                           # Pass the seen_funcs dictionary (it's mutable state)
                           recursive_result = analyze_rule(rule_func=actual_func,
-                                                          closure_vars=self.closure_vars.copy(),
+                                                          closure_vars=enhanced_closure_vars,
                                                           seen_funcs=self.seen_funcs, # Pass the dict
                                                           game_handler=self.game_handler,
                                                           player_context=self.player_context)
@@ -240,9 +361,17 @@ class ASTVisitorMixin:
                     logging.debug(f"all(GeneratorExp): Attempting to resolve iterator '{iterator_name}'")
 
                     resolved_value = self.expression_resolver.resolve_variable(iterator_name)
+
+                    # Convert frozensets/sets/tuples to lists for uniform handling
+                    if resolved_value is not None:
+                        if isinstance(resolved_value, (frozenset, set, tuple)):
+                            resolved_value = list(resolved_value)
+                            logging.debug(f"all(GeneratorExp): Converted {type(resolved_value).__name__} to list")
+
                     if resolved_value is not None and isinstance(resolved_value, list):
                         logging.debug(f"all(GeneratorExp): Resolved '{iterator_name}' to list with {len(resolved_value)} items")
-                        # Try to analyze each item in the list if they're callables
+
+                        # Check if items are callables (old behavior)
                         if all(callable(item) for item in resolved_value):
                             from .analysis import analyze_rule
                             analyzed_items = []
@@ -269,6 +398,36 @@ class ASTVisitorMixin:
                                     return analyzed_items[0]
                                 else:
                                     return {'type': 'and', 'conditions': analyzed_items}
+
+                        # NEW: Handle simple values (strings, numbers, etc.) - expand the comprehension
+                        else:
+                            logging.debug(f"all(GeneratorExp): Iterator contains non-callable values, expanding comprehension")
+                            target_name = iterator_info.get('target', {}).get('name')
+                            if not target_name:
+                                logging.warning(f"all(GeneratorExp): Could not extract target variable name from comprehension")
+                            else:
+                                element_rule = gen_exp['element']
+                                expanded_conditions = []
+
+                                for value in resolved_value:
+                                    # Substitute the target variable with the current value in the element rule
+                                    substituted_rule = self._substitute_variable_in_rule(element_rule, target_name, value)
+                                    if substituted_rule:
+                                        expanded_conditions.append(substituted_rule)
+                                    else:
+                                        logging.warning(f"all(GeneratorExp): Failed to substitute {target_name}={value} in element rule")
+                                        expanded_conditions = None
+                                        break
+
+                                if expanded_conditions:
+                                    logging.debug(f"all(GeneratorExp): Successfully expanded to {len(expanded_conditions)} conditions")
+                                    if len(expanded_conditions) == 0:
+                                        # Empty iterator - all() of empty is True
+                                        return {'type': 'constant', 'value': True}
+                                    elif len(expanded_conditions) == 1:
+                                        return expanded_conditions[0]
+                                    else:
+                                        return {'type': 'and', 'conditions': expanded_conditions}
 
                 # Represent this as a specific 'all_of' rule type
                 result = {
@@ -306,10 +465,10 @@ class ASTVisitorMixin:
             }
             logging.debug(f"Created helper result: {result}")
             return result # Return helper result
-        
+
         # 2. State method call (e.g., state.has)
-        elif func_info and func_info.get('type') == 'attribute':
-            if func_info['object'].get('type') == 'name' and func_info['object'].get('name') == 'state':
+        elif (func_info and func_info.get('type') == 'attribute' and
+              func_info['object'].get('type') == 'name' and func_info['object'].get('name') == 'state'):
                 method = func_info['attr']
                 logging.debug(f"Processing state method: {method}")
 
@@ -519,10 +678,13 @@ class ASTVisitorMixin:
                 logging.debug(f"State method result: {result}")
                 return result # Return state method result
 
-        # 2.5. Self method call (e.g., self.has_boss_strength)
+        # 2.5. Attribute-based method calls (self.method, logic.method)
         elif func_info and func_info.get('type') == 'attribute':
-            if func_info['object'].get('type') == 'name' and func_info['object'].get('name') == 'self':
-                method_name = func_info['attr']
+            obj_name = func_info['object'].get('name') if func_info['object'].get('type') == 'name' else None
+            method_name = func_info['attr']
+
+            # Handle self.method calls (e.g., self.has_boss_strength)
+            if obj_name == 'self':
                 logging.debug(f"Processing self method call: {method_name}")
 
                 # Filter out state/player arguments
@@ -536,6 +698,76 @@ class ASTVisitorMixin:
                     'args': filtered_args
                 }
                 logging.debug(f"Created helper result for self method: {result}")
+                return result
+
+            # Handle logic.method calls (e.g., logic.oaks_aide, logic.can_surf)
+            elif obj_name == 'logic':
+                logging.debug(f"Processing logic method call: {method_name}")
+
+                # Filter out state/world/player arguments
+                filtered_args = self._filter_special_args(args_with_nodes)
+
+                # Resolve variable references in arguments (e.g., world.options.value expressions)
+                resolved_args = []
+                for arg in filtered_args:
+                    if arg and arg.get('type') == 'binary_op':
+                        # Try to resolve binary operations like world.options.oaks_aide_rt_11.value + 5
+                        resolved_value = self.expression_resolver.resolve_expression(arg)
+                        if resolved_value is not None and is_simple_value(resolved_value):
+                            # Ensure the resolved value is JSON-serializable
+                            resolved_value = make_json_serializable(resolved_value)
+                            logging.debug(f"Resolved logic method binary_op to {resolved_value}")
+                            resolved_args.append({'type': 'constant', 'value': resolved_value})
+                        else:
+                            # Keep unresolved expression as-is
+                            resolved_args.append(arg)
+                    elif arg and arg.get('type') == 'attribute':
+                        # Try to resolve attribute expressions like world.options.some_option.value
+                        resolved_value = self.expression_resolver.resolve_expression(arg)
+                        if resolved_value is not None and is_simple_value(resolved_value):
+                            # Handle enum values - extract the numeric value
+                            if hasattr(resolved_value, 'value'):
+                                final_value = resolved_value.value
+                            else:
+                                final_value = resolved_value
+                            # Ensure the final value is JSON-serializable
+                            final_value = make_json_serializable(final_value)
+                            logging.debug(f"Resolved logic method argument attribute to {final_value}")
+                            resolved_args.append({'type': 'constant', 'value': final_value})
+                        else:
+                            # Keep unresolved or complex objects as attribute references
+                            resolved_args.append(arg)
+                    elif arg and arg.get('type') == 'name':
+                        # Try to resolve the variable (but skip 'world' which should already be filtered)
+                        if arg['name'] == 'world':
+                            logging.debug(f"Skipping resolution of 'world' argument in logic call")
+                            continue
+                        resolved_value = self.expression_resolver.resolve_variable(arg['name'])
+                        if resolved_value is not None and is_simple_value(resolved_value):
+                            # Handle enum values - extract the numeric value
+                            if hasattr(resolved_value, 'value'):
+                                final_value = resolved_value.value
+                            else:
+                                final_value = resolved_value
+                            # Ensure the final value is JSON-serializable
+                            final_value = make_json_serializable(final_value)
+                            logging.debug(f"Resolved logic method argument variable '{arg['name']}' to {final_value}")
+                            resolved_args.append({'type': 'constant', 'value': final_value})
+                        else:
+                            # Keep unresolved or complex objects as name references
+                            resolved_args.append(arg)
+                    else:
+                        resolved_args.append(arg)
+
+                filtered_args = resolved_args
+
+                # Create helper result
+                result = {
+                    'type': 'helper',
+                    'name': method_name,
+                    'args': filtered_args
+                }
+                logging.debug(f"Created helper result for logic method: {result}")
                 return result
 
         # 3. Fallback for other types of calls (e.g., calling result of another function)
@@ -597,6 +829,12 @@ class ASTVisitorMixin:
                 elif hasattr(value, 'value') and isinstance(value.value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to enum constant value: {value.value}")
                     return {'type': 'constant', 'value': value.value}
+                # Handle Region objects by extracting their .name attribute
+                # We specifically check for 'entrances' attribute which Region objects have
+                # but Location objects don't, to avoid breaking Location.can_reach() patterns
+                elif hasattr(value, 'name') and hasattr(value, 'entrances') and isinstance(value.name, str):
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to Region name: {value.name}")
+                    return {'type': 'constant', 'value': value.name}
                 # Handle NamedTuples (like RoomAndDoor) by converting to list/dict
                 elif hasattr(value, '_fields'):
                     # This is a NamedTuple - convert to a serializable format
@@ -617,6 +855,11 @@ class ASTVisitorMixin:
                     elif hasattr(resolved_value, 'value') and isinstance(resolved_value.value, (int, float, str, bool)):
                         logging.debug(f"visit_Name: Resolved '{name}' from function defaults to enum constant value: {resolved_value.value}")
                         return {'type': 'constant', 'value': resolved_value.value}
+                    # Handle Region objects by extracting their .name attribute
+                    # Check for 'entrances' to distinguish Region from Location objects
+                    elif hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances') and isinstance(resolved_value.name, str):
+                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults to Region name: {resolved_value.name}")
+                        return {'type': 'constant', 'value': resolved_value.name}
                     # Handle NamedTuples from function defaults
                     elif hasattr(resolved_value, '_fields'):
                         serialized = list(resolved_value)
@@ -740,31 +983,73 @@ class ASTVisitorMixin:
 
     def visit_Subscript(self, node):
         """
-        Handle subscript expressions like foo[bar]
+        Handle subscript expressions like foo[bar].
+        Attempts to resolve the subscript if both value and index are resolvable.
         """
         logging.debug(f"\nvisit_Subscript called:")
         logging.debug(f"Value: {ast.dump(node.value)}")
         logging.debug(f"Slice: {ast.dump(node.slice)}")
-        
+
         # First visit the value (the object being subscripted)
         value_info = self.visit(node.value) # Get returned result
-        
+
         # Then visit the slice (the index)
         index_info = self.visit(node.slice) # Get returned result
-        
+
         # Check if sub-visits were successful
         if value_info is None or index_info is None:
             logging.error(f"Error visiting value or index in subscript: {ast.dump(node)}")
             return None
-            
-        # Create a subscript node
+
+        # Try to resolve the subscript operation if both parts are resolvable
+        try:
+            # Try to resolve the value (the container)
+            resolved_container = None
+            if value_info.get('type') == 'name':
+                resolved_container = self.expression_resolver.resolve_variable(value_info['name'])
+                if resolved_container is not None:
+                    logging.debug(f"Resolved subscript container '{value_info['name']}' to {type(resolved_container).__name__}")
+            elif value_info.get('type') == 'constant':
+                resolved_container = value_info['value']
+
+            # Try to resolve the index
+            resolved_index = None
+            if index_info.get('type') == 'constant':
+                resolved_index = index_info['value']
+            elif index_info.get('type') == 'name':
+                resolved_index = self.expression_resolver.resolve_variable(index_info['name'])
+                if resolved_index is not None:
+                    logging.debug(f"Resolved subscript index '{index_info['name']}' to {resolved_index}")
+
+            # If both container and index are resolved, perform the subscript operation
+            if resolved_container is not None and resolved_index is not None:
+                try:
+                    # Try to perform the subscript operation
+                    if isinstance(resolved_container, (dict, list, tuple)):
+                        subscript_result = resolved_container[resolved_index]
+                        logging.debug(f"Successfully resolved subscript operation: {type(resolved_container).__name__}[{resolved_index}] = {subscript_result}")
+
+                        # Return as a constant if it's a simple value
+                        if isinstance(subscript_result, (int, float, str, bool, type(None))):
+                            return {'type': 'constant', 'value': subscript_result}
+                        # Handle enum values
+                        elif hasattr(subscript_result, 'value') and isinstance(subscript_result.value, (int, float, str, bool)):
+                            return {'type': 'constant', 'value': subscript_result.value}
+                        else:
+                            logging.debug(f"Subscript result is not a simple value (type: {type(subscript_result).__name__}), cannot convert to constant")
+                except (KeyError, IndexError, TypeError) as e:
+                    logging.debug(f"Could not perform subscript operation: {e}")
+        except Exception as e:
+            logging.debug(f"Error attempting to resolve subscript: {e}")
+
+        # If we couldn't resolve, create an unresolved subscript node
         result = {
             'type': 'subscript',
             'value': value_info,
             'index': index_info
         }
-        
-        logging.debug(f"Subscript result: {result}")
+
+        logging.debug(f"Subscript result (unresolved): {result}")
         return result # Return the result
 
     def visit_BoolOp(self, node):
@@ -806,15 +1091,36 @@ class ASTVisitorMixin:
         try:
             op_name = type(node.op).__name__.lower()
             logging.debug(f"\n--- visit_UnaryOp: op={op_name} ---")
-            
+
             operand_result = self.visit(node.operand)
             if operand_result is None:
                 logging.error(f"Failed to analyze operand for UnaryOp: {ast.dump(node.operand)}")
                 return None
 
+            # Try to resolve the operand if it's an attribute expression
+            if operand_result.get('type') == 'attribute':
+                resolved_value = self.expression_resolver.resolve_expression(operand_result)
+                if resolved_value is not None and is_simple_value(resolved_value):
+                    # Handle enum values - extract the numeric/boolean value
+                    if hasattr(resolved_value, 'value'):
+                        final_value = resolved_value.value
+                    else:
+                        final_value = resolved_value
+                    # Ensure the final value is JSON-serializable
+                    final_value = make_json_serializable(final_value)
+                    logging.debug(f"Resolved UnaryOp operand attribute to constant: {final_value}")
+                    operand_result = {'type': 'constant', 'value': final_value}
+
             # Handle specific unary operators
             if isinstance(node.op, ast.Not):
-                return {'type': 'not', 'condition': operand_result}
+                # If operand is a constant, evaluate the not operation now
+                if operand_result.get('type') == 'constant':
+                    constant_value = operand_result['value']
+                    result_value = not constant_value
+                    logging.debug(f"Evaluated not {constant_value} = {result_value}")
+                    return {'type': 'constant', 'value': result_value}
+                else:
+                    return {'type': 'not', 'condition': operand_result}
             # Add other unary ops (e.g., UAdd, USub) if needed for rules
             else:
                 logging.error(f"Unhandled unary operator: {op_name}")
@@ -998,7 +1304,7 @@ class ASTVisitorMixin:
         try:
             logging.debug(f"\n--- visit_If ---")
             test_result = self.visit(node.test)
-            
+
             # Assume simple structure where body/orelse contain a single statement (e.g., return)
             # and visit that statement directly.
             body_result = None
@@ -1022,6 +1328,19 @@ class ASTVisitorMixin:
                  # For simplicity, fail if test or body fails.
                  return None
 
+            # Optimize: If test is a constant, statically evaluate the conditional
+            if test_result.get('type') == 'constant':
+                test_value = test_result.get('value')
+                logging.debug(f"visit_If: Test is constant with value: {test_value}")
+                # In Python, truthiness: 0, False, None, "", [], {} are falsy
+                is_truthy = bool(test_value) if test_value is not None else False
+                if is_truthy:
+                    logging.debug("visit_If: Test is truthy, returning if_true branch")
+                    return body_result
+                else:
+                    logging.debug("visit_If: Test is falsy, returning if_false branch")
+                    return orelse_result  # Could be None if no else block
+
             # Use a structure similar to IfExp (ternary) for consistency
             return {
                 'type': 'conditional', # Reusing 'conditional' type
@@ -1044,6 +1363,19 @@ class ASTVisitorMixin:
             if test_result is None or body_result is None or orelse_result is None:
                 logging.error(f"Failed to analyze one or more parts of IfExp: {ast.dump(node)}")
                 return None
+
+            # Optimize: If test is a constant, statically evaluate the conditional
+            if test_result.get('type') == 'constant':
+                test_value = test_result.get('value')
+                logging.debug(f"visit_IfExp: Test is constant with value: {test_value}")
+                # In Python, truthiness: 0, False, None, "", [], {} are falsy
+                is_truthy = bool(test_value) if test_value is not None else False
+                if is_truthy:
+                    logging.debug("visit_IfExp: Test is truthy, returning if_true branch")
+                    return body_result
+                else:
+                    logging.debug("visit_IfExp: Test is falsy, returning if_false branch")
+                    return orelse_result
 
             return {
                 'type': 'conditional',
@@ -1092,4 +1424,79 @@ class ASTVisitorMixin:
         except Exception as e:
             logging.error("Error in visit_BinOp", e)
             return None
+
+    def _substitute_variable_in_rule(self, rule: Dict[str, Any], var_name: str, value: Any) -> Optional[Dict[str, Any]]:
+        """
+        Recursively substitute a variable name with a concrete value in a rule structure.
+
+        This is used to expand comprehensions where we have a target variable (e.g., 'ingredient')
+        that needs to be replaced with concrete values from an iterator.
+
+        Args:
+            rule: The rule structure to substitute in
+            var_name: The variable name to replace
+            value: The value to substitute
+
+        Returns:
+            A new rule structure with the variable substituted, or None if substitution fails
+        """
+        import copy
+
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        # Deep copy to avoid modifying the original
+        result = copy.deepcopy(rule)
+
+        def substitute_recursive(node):
+            """Recursively walk and substitute in the rule structure."""
+            if not isinstance(node, dict):
+                return node
+
+            node_type = node.get('type')
+
+            # Handle 'name' type - this is where we substitute
+            if node_type == 'name' and node.get('name') == var_name:
+                # Replace the name reference with a constant value
+                return {'type': 'constant', 'value': value}
+
+            # Handle f_string that might reference the variable
+            if node_type == 'f_string':
+                # Need to process the parts
+                if 'parts' in node:
+                    new_parts = []
+                    for part in node['parts']:
+                        if isinstance(part, dict):
+                            if part.get('type') == 'formatted_value':
+                                # Check if the formatted value references our variable
+                                val = part.get('value', {})
+                                if val.get('type') == 'name' and val.get('name') == var_name:
+                                    # Replace the formatted value with a constant
+                                    new_parts.append({'type': 'constant', 'value': str(value)})
+                                else:
+                                    # Recursively substitute in the formatted value
+                                    new_parts.append({**part, 'value': substitute_recursive(val)})
+                            else:
+                                new_parts.append(substitute_recursive(part))
+                        else:
+                            new_parts.append(part)
+
+                    # Reconstruct the f_string
+                    # If all parts are now constants, we can simplify to a single constant
+                    if all(p.get('type') == 'constant' for p in new_parts):
+                        combined_value = ''.join(str(p['value']) for p in new_parts)
+                        return {'type': 'constant', 'value': combined_value}
+                    else:
+                        return {**node, 'parts': new_parts}
+
+            # Recursively process nested structures
+            for key, val in node.items():
+                if isinstance(val, dict):
+                    node[key] = substitute_recursive(val)
+                elif isinstance(val, list):
+                    node[key] = [substitute_recursive(item) if isinstance(item, dict) else item for item in val]
+
+            return node
+
+        return substitute_recursive(result)
 
