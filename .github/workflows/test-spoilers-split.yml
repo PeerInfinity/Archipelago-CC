@@ -86,6 +86,7 @@ jobs:
             --seed ${{ matrix.seed }} \
             --output-file scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-${{ matrix.seed }}.json \
             --no-backup \
+            --include-list "Adventure.yaml" \
             -p
 
       - name: Upload test results for seed ${{ matrix.seed }}
@@ -193,7 +194,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           # Add the specific files we want to commit
-          git add scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+          # Use -f because scripts/output is in .gitignore (even though specific files are excepted)
+          git add -f scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
           # Check if there are changes to commit

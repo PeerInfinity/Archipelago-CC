@@ -297,12 +297,13 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           # Add the specific files we want to commit
-          git add scripts/output/spoiler-minimal/test-results.json || true
-          git add scripts/output/spoiler-full/test-results.json || true
-          git add scripts/output/multiplayer/test-results.json || true
-          git add scripts/output/multiworld/test-results.json || true
-          git add scripts/output/multitemplate-minimal/test-results.json || true
-          git add scripts/output/multitemplate-full/test-results.json || true
+          # Use -f because scripts/output is in .gitignore (even though specific files are excepted)
+          git add -f scripts/output/spoiler-minimal/test-results.json || true
+          git add -f scripts/output/spoiler-full/test-results.json || true
+          git add -f scripts/output/multiplayer/test-results.json || true
+          git add -f scripts/output/multiworld/test-results.json || true
+          git add -f scripts/output/multitemplate-minimal/test-results.json || true
+          git add -f scripts/output/multitemplate-full/test-results.json || true
           git add docs/json/developer/test-results/*.md || true
 
           # Check if there are changes to commit
