@@ -505,15 +505,76 @@ export const helperFunctions = {
     const gapCloser = ['Slide Dash', 'Flash Step'];
     const defensiveTool = ['Reflect Element', 'Guard'];
 
+    if (fightLogic === 0) { // easy: all 3 categories
+      let categoriesAvailable = 0;
+      if (formList.some(form => snapshot?.inventory?.[form] > 0)) categoriesAvailable++;
+      if (gapCloser.some(item => snapshot?.inventory?.[item] > 0)) categoriesAvailable++;
+      if (defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0)) categoriesAvailable++;
+      return categoriesAvailable >= 3;
+    } else if (fightLogic === 1) { // normal: drive form AND defensive tool (no gap closer)
+      let categoriesAvailable = 0;
+      if (formList.some(form => snapshot?.inventory?.[form] > 0)) categoriesAvailable++;
+      if (defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0)) categoriesAvailable++;
+      return categoriesAvailable >= 2;
+    } else { // hard: defensive tool only
+      return defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0);
+    }
+  },
+
+  /**
+   * Check if Fire Lord fight is accessible.
+   * Based on worlds/kh2/Rules.py:743-750
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Fire Lord fight
+   */
+  get_fire_lord_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
+    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+
     let categoriesAvailable = 0;
     if (formList.some(form => snapshot?.inventory?.[form] > 0)) categoriesAvailable++;
-    if (gapCloser.some(item => snapshot?.inventory?.[item] > 0)) categoriesAvailable++;
     if (defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0)) categoriesAvailable++;
+    if (blackMagic.some(magic => snapshot?.inventory?.[magic] > 0)) categoriesAvailable++;
+    if (partyLimit.some(limit => snapshot?.inventory?.[limit] > 0)) categoriesAvailable++;
 
-    if (fightLogic === 0) return categoriesAvailable >= 3; // easy
-    if (fightLogic === 1) return categoriesAvailable >= 2; // normal: drive form + defensive tool
-    // hard: defensive tool only
-    return defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0);
+    if (fightLogic === 0) return categoriesAvailable >= 4; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 3; // normal
+    return categoriesAvailable >= 2; // hard
+  },
+
+  /**
+   * Check if Blizzard Lord fight is accessible.
+   * Based on worlds/kh2/Rules.py:753-760
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Blizzard Lord fight
+   */
+  get_blizzard_lord_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
+    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+
+    let categoriesAvailable = 0;
+    if (formList.some(form => snapshot?.inventory?.[form] > 0)) categoriesAvailable++;
+    if (defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0)) categoriesAvailable++;
+    if (blackMagic.some(magic => snapshot?.inventory?.[magic] > 0)) categoriesAvailable++;
+    if (partyLimit.some(limit => snapshot?.inventory?.[limit] > 0)) categoriesAvailable++;
+
+    if (fightLogic === 0) return categoriesAvailable >= 4; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 3; // normal
+    return categoriesAvailable >= 2; // hard
   },
 
   /**
