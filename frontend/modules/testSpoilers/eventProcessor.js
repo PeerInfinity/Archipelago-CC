@@ -212,7 +212,141 @@ export class EventProcessor {
             }
           }
 
-          // Check locations from current sphere one-by-one, allowing natural item acquisition
+          // CRITICAL FIX: Get snapshot BEFORE checking locations for comparison
+          // This ensures we compare what's accessible at the START of the sphere,
+          // not after collecting items from the sphere
+          await stateManager.pingWorker(
+            `spoiler_sphere_${context.sphere_number}_pre_check`,
+            60000
+          );
+          const preCheckSnapshot = await stateManager.getFullSnapshot();
+          if (!preCheckSnapshot) {
+            this.logCallback(
+              'error',
+              'Failed to retrieve pre-check snapshot from StateManager.'
+            );
+            allChecksPassed = false;
+            break;
+          }
+          if (this.verboseMode) {
+            this.logCallback(
+              'debug',
+              'Retrieved pre-check snapshot for comparison.',
+              preCheckSnapshot
+            );
+          }
+
+          // DEBUG: Log prog_items state
+          this.logCallback(
+            'info',
+            `DEBUG: Pre-check snapshot prog_items: ${JSON.stringify(preCheckSnapshot.prog_items || {})}`
+          );
+          this.logCallback(
+            'info',
+            `DEBUG: Pre-check snapshot inventory: ${JSON.stringify(preCheckSnapshot.inventory || {})}`
+          );
+
+          // Compare accessible locations BEFORE checking any locations
+          // This matches the sphere log semantics: "new_accessible_locations" means
+          // locations that are accessible at the START of this sphere
+          const locationComparisonResult = await this.comparisonEngine.compareAccessibleLocations(
+            accessible_from_log,
+            preCheckSnapshot,
+            this.playerId,
+            context
+          );
+
+          // If there was a location mismatch, trigger analysis and store details
+          if (!locationComparisonResult) {
+            const mismatchDetails = this.comparisonEngine.getMismatchDetails();
+            if (mismatchDetails && mismatchDetails.type === 'locations') {
+              // Store serializable mismatch details
+              this.currentEventMismatchDetails.push({
+                type: mismatchDetails.type,
+                context: mismatchDetails.context,
+                missingFromState: mismatchDetails.missingFromState,
+                extraInState: mismatchDetails.extraInState,
+                logAccessibleCount: mismatchDetails.logAccessibleCount,
+                stateAccessibleCount: mismatchDetails.stateAccessibleCount,
+                inventoryUsed: mismatchDetails.inventoryUsed
+              });
+
+              // Analyze missing locations
+              if (mismatchDetails.missingFromState && mismatchDetails.missingFromState.length > 0) {
+                this.analysisReporter.analyzeFailingLocations(
+                  mismatchDetails.missingFromState,
+                  mismatchDetails.staticData,
+                  mismatchDetails.currentWorkerSnapshot,
+                  mismatchDetails.snapshotInterface,
+                  'MISSING_FROM_STATE',
+                  this.playerId
+                );
+              }
+              // Analyze extra locations
+              if (mismatchDetails.extraInState && mismatchDetails.extraInState.length > 0) {
+                this.analysisReporter.analyzeFailingLocations(
+                  mismatchDetails.extraInState,
+                  mismatchDetails.staticData,
+                  mismatchDetails.currentWorkerSnapshot,
+                  mismatchDetails.snapshotInterface,
+                  'EXTRA_IN_STATE',
+                  this.playerId
+                );
+              }
+            }
+          }
+
+          // Compare accessible regions BEFORE checking any locations
+          const regionComparisonResult = await this.comparisonEngine.compareAccessibleRegions(
+            accessible_regions_from_log,
+            preCheckSnapshot,
+            this.playerId,
+            context
+          );
+
+          // If there was a region mismatch, trigger analysis and store details
+          if (!regionComparisonResult) {
+            const mismatchDetails = this.comparisonEngine.getMismatchDetails();
+            if (mismatchDetails && mismatchDetails.type === 'regions') {
+              // Store serializable mismatch details
+              this.currentEventMismatchDetails.push({
+                type: mismatchDetails.type,
+                context: mismatchDetails.context,
+                missingFromState: mismatchDetails.missingFromState,
+                extraInState: mismatchDetails.extraInState,
+                logAccessibleCount: mismatchDetails.logAccessibleCount,
+                stateAccessibleCount: mismatchDetails.stateAccessibleCount,
+                inventoryUsed: mismatchDetails.inventoryUsed
+              });
+
+              // Analyze missing regions
+              if (mismatchDetails.missingFromState && mismatchDetails.missingFromState.length > 0) {
+                this.analysisReporter.analyzeFailingRegions(
+                  mismatchDetails.missingFromState,
+                  mismatchDetails.staticData,
+                  mismatchDetails.currentWorkerSnapshot,
+                  this.playerId,
+                  'MISSING_FROM_STATE'
+                );
+              }
+              // Analyze extra regions
+              if (mismatchDetails.extraInState && mismatchDetails.extraInState.length > 0) {
+                this.analysisReporter.analyzeFailingRegions(
+                  mismatchDetails.extraInState,
+                  mismatchDetails.staticData,
+                  mismatchDetails.currentWorkerSnapshot,
+                  this.playerId,
+                  'EXTRA_IN_STATE'
+                );
+              }
+            }
+          }
+
+          // Store the comparison results
+          comparisonResult = locationComparisonResult && regionComparisonResult;
+          allChecksPassed = allChecksPassed && comparisonResult;
+
+          // Now check locations from current sphere one-by-one, allowing natural item acquisition
           // NOTE: We now use addItems=true (default) to let checkLocation naturally add items.
           // Progressive items are automatically resolved by the has() function in game logic.
 
@@ -282,137 +416,8 @@ export class EventProcessor {
           //   2. Enhance sphere log format to include both resolved and unresolved items
           //   3. Use progression_mapping to convert StateManager inventory to resolved form
 
-          // Ping worker to ensure all commands are processed and state is stable.
-          await stateManager.pingWorker(
-            `spoiler_sphere_${context.sphere_number}_locations_checked`,
-            60000  // Increased timeout to 60 seconds to handle complex rule evaluation
-          );
-          if (this.verboseMode) {
-            this.logCallback(
-              'debug',
-              'Ping successful. StateManager ready for comparison.'
-            );
-          }
-
-          // Get the fresh snapshot from the worker.
-          const freshSnapshot = await stateManager.getFullSnapshot();
-          if (!freshSnapshot) {
-            this.logCallback(
-              'error',
-              'Failed to retrieve a fresh snapshot from StateManager after checking locations.'
-            );
-            allChecksPassed = false;
-            break;
-          }
-          this.logCallback(
-            'info',
-            `Fresh snapshot has ${freshSnapshot.checkedLocations?.length || 0} checked locations`
-          );
-          if (this.verboseMode) {
-            this.logCallback(
-              'debug',
-              'Retrieved fresh snapshot from StateManager.',
-              freshSnapshot
-            );
-          }
-
-          // Compare using the fresh snapshot.
-          const locationComparisonResult = await this.comparisonEngine.compareAccessibleLocations(
-            accessible_from_log, // This is an array of location names
-            freshSnapshot, // The authoritative snapshot from the worker
-            this.playerId, // Pass player ID for context in comparison
-            context // Original context for logging
-          );
-
-          // If there was a location mismatch, trigger analysis and store details
-          if (!locationComparisonResult) {
-            const mismatchDetails = this.comparisonEngine.getMismatchDetails();
-            if (mismatchDetails && mismatchDetails.type === 'locations') {
-              // Store serializable mismatch details
-              this.currentEventMismatchDetails.push({
-                type: mismatchDetails.type,
-                context: mismatchDetails.context,
-                missingFromState: mismatchDetails.missingFromState,
-                extraInState: mismatchDetails.extraInState,
-                logAccessibleCount: mismatchDetails.logAccessibleCount,
-                stateAccessibleCount: mismatchDetails.stateAccessibleCount,
-                inventoryUsed: mismatchDetails.inventoryUsed
-              });
-
-              // Analyze missing locations
-              if (mismatchDetails.missingFromState && mismatchDetails.missingFromState.length > 0) {
-                this.analysisReporter.analyzeFailingLocations(
-                  mismatchDetails.missingFromState,
-                  mismatchDetails.staticData,
-                  mismatchDetails.currentWorkerSnapshot,
-                  mismatchDetails.snapshotInterface,
-                  'MISSING_FROM_STATE',
-                  this.playerId
-                );
-              }
-              // Analyze extra locations
-              if (mismatchDetails.extraInState && mismatchDetails.extraInState.length > 0) {
-                this.analysisReporter.analyzeFailingLocations(
-                  mismatchDetails.extraInState,
-                  mismatchDetails.staticData,
-                  mismatchDetails.currentWorkerSnapshot,
-                  mismatchDetails.snapshotInterface,
-                  'EXTRA_IN_STATE',
-                  this.playerId
-                );
-              }
-            }
-          }
-
-          // Compare accessible regions using the fresh snapshot.
-          const regionComparisonResult = await this.comparisonEngine.compareAccessibleRegions(
-            accessible_regions_from_log, // This is an array of region names
-            freshSnapshot, // The authoritative snapshot from the worker
-            this.playerId, // Pass player ID for context in comparison
-            context // Original context for logging
-          );
-
-          // If there was a region mismatch, trigger analysis and store details
-          if (!regionComparisonResult) {
-            const mismatchDetails = this.comparisonEngine.getMismatchDetails();
-            if (mismatchDetails && mismatchDetails.type === 'regions') {
-              // Store serializable mismatch details
-              this.currentEventMismatchDetails.push({
-                type: mismatchDetails.type,
-                context: mismatchDetails.context,
-                missingFromState: mismatchDetails.missingFromState,
-                extraInState: mismatchDetails.extraInState,
-                logAccessibleCount: mismatchDetails.logAccessibleCount,
-                stateAccessibleCount: mismatchDetails.stateAccessibleCount,
-                inventoryUsed: mismatchDetails.inventoryUsed
-              });
-
-              // Analyze missing regions
-              if (mismatchDetails.missingFromState && mismatchDetails.missingFromState.length > 0) {
-                this.analysisReporter.analyzeFailingRegions(
-                  mismatchDetails.missingFromState,
-                  mismatchDetails.staticData,
-                  mismatchDetails.currentWorkerSnapshot,
-                  this.playerId,
-                  'MISSING_FROM_STATE'
-                );
-              }
-              // Analyze extra regions
-              if (mismatchDetails.extraInState && mismatchDetails.extraInState.length > 0) {
-                this.analysisReporter.analyzeFailingRegions(
-                  mismatchDetails.extraInState,
-                  mismatchDetails.staticData,
-                  mismatchDetails.currentWorkerSnapshot,
-                  this.playerId,
-                  'EXTRA_IN_STATE'
-                );
-              }
-            }
-          }
-
-          // Both location and region comparisons must pass
-          comparisonResult = locationComparisonResult && regionComparisonResult;
-          allChecksPassed = comparisonResult;
+          // Comparison already done before checking locations (see above)
+          // No need to compare again after checking - that was the bug!
         } catch (err) {
           this.logCallback(
             'error',
