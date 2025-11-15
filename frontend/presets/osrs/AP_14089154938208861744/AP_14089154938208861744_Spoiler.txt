@@ -300,10 +300,9 @@ Kill a Hill Giant
    =>   Hill Giant
 Kill a Zombie
         Menu -> Start->Lumbridge
-   =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->West Varrock
-   =>   West Varrock -> West Varrock->Wilderness
-   =>   Wilderness -> Wilderness->Zombie
+   =>   Lumbridge -> Lumbridge->Lumbridge Farms West
+   =>   Lumbridge Farms West -> Lumbridge Farms West->Draynor Village
+   =>   Draynor Village -> Draynor Village->Zombie
    =>   Zombie
 Mine Silver
         Menu -> Start->Lumbridge
@@ -367,14 +366,12 @@ Points: Misthalin Mystery
    =>   Lumbridge Swamp
 Points: Pirate's Treasure
         Menu -> Start->Lumbridge
-   =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Al Kharid
+   =>   Lumbridge -> Lumbridge->Al Kharid
    =>   Al Kharid -> Al Kharid->Port Sarim
    =>   Port Sarim
 Points: Prince Ali Rescue
         Menu -> Start->Lumbridge
-   =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Al Kharid
+   =>   Lumbridge -> Lumbridge->Al Kharid
    =>   Al Kharid
 Points: Romeo & Juliet
         Menu -> Start->Lumbridge
@@ -395,8 +392,7 @@ Points: Shield of Arrav
    =>   Central Varrock
 Points: The Corsair Curse
         Menu -> Start->Lumbridge
-   =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Al Kharid
+   =>   Lumbridge -> Lumbridge->Al Kharid
    =>   Al Kharid -> Al Kharid->Port Sarim
    =>   Port Sarim -> Port Sarim->Falador Farms
    =>   Falador Farms -> Falador Farms->Rimmington
@@ -404,10 +400,11 @@ Points: The Corsair Curse
 Points: The Knight's Sword
         Menu -> Start->Lumbridge
    =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Al Kharid
-   =>   Al Kharid -> Al Kharid->Port Sarim
-   =>   Port Sarim -> Port Sarim->Falador Farms
-   =>   Falador Farms -> Falador Farms->Falador
+   =>   South of Varrock -> South of Varrock->West Varrock
+   =>   West Varrock -> West Varrock->Wilderness
+   =>   Wilderness -> Wilderness->Goblin Village
+   =>   Goblin Village -> Goblin Village->Dwarven Mountain Pass
+   =>   Dwarven Mountain Pass -> Dwarven Mountain Pass->Falador
    =>   Falador
 Points: The Restless Ghost
         Menu -> Start->Lumbridge
@@ -419,8 +416,7 @@ Points: Vampyre Slayer
    =>   Draynor Village
 Points: Witch's Potion
         Menu -> Start->Lumbridge
-   =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Al Kharid
+   =>   Lumbridge -> Lumbridge->Al Kharid
    =>   Al Kharid -> Al Kharid->Port Sarim
    =>   Port Sarim -> Port Sarim->Falador Farms
    =>   Falador Farms -> Falador Farms->Rimmington
@@ -457,8 +453,7 @@ Quest: Doric's Quest
    =>   Dwarven Mountain Pass
 Quest: Dragon Slayer
         Menu -> Start->Lumbridge
-   =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Al Kharid
+   =>   Lumbridge -> Lumbridge->Al Kharid
    =>   Al Kharid -> Al Kharid->Port Sarim
    =>   Port Sarim -> Port Sarim->Crandor
    =>   Crandor
@@ -474,14 +469,12 @@ Quest: Misthalin Mystery
    =>   Lumbridge Swamp
 Quest: Pirate's Treasure
         Menu -> Start->Lumbridge
-   =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Al Kharid
+   =>   Lumbridge -> Lumbridge->Al Kharid
    =>   Al Kharid -> Al Kharid->Port Sarim
    =>   Port Sarim
 Quest: Prince Ali Rescue
         Menu -> Start->Lumbridge
-   =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Al Kharid
+   =>   Lumbridge -> Lumbridge->Al Kharid
    =>   Al Kharid
 Quest: Romeo & Juliet
         Menu -> Start->Lumbridge
@@ -502,8 +495,7 @@ Quest: Shield of Arrav
    =>   Central Varrock
 Quest: The Corsair Curse
         Menu -> Start->Lumbridge
-   =>   Lumbridge -> Lumbridge->South of Varrock
-   =>   South of Varrock -> South of Varrock->Al Kharid
+   =>   Lumbridge -> Lumbridge->Al Kharid
    =>   Al Kharid -> Al Kharid->Port Sarim
    =>   Port Sarim -> Port Sarim->Falador Farms
    =>   Falador Farms -> Falador Farms->Rimmington

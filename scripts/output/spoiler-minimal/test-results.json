@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-15T03:44:47.986699",
-    "last_updated": "2025-11-15T03:44:47.986704",
+    "last_updated": "2025-11-15T04:36:24.594084",
     "script_version": "1.0.0"
   },
   "results": {
@@ -302,54 +302,111 @@
       }
     },
     "Blasphemous.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
+      "consecutive_passes_before_failure": 1,
+      "first_failure_reason": "Test failed at sphere 0",
+      "first_failure_seed": 2,
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "blasphemous",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.43,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 3166001,
+            "size_mb": 3.02
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 11.49,
+            "return_code": 0,
+            "sphere_reached": 5.1,
+            "success": true,
+            "total_spheres": 5.1,
+            "warning_count": 0
+          },
+          "template_name": "Blasphemous.yaml",
+          "timestamp": "2025-11-15T04:36:00.033118",
+          "world_info": {
+            "exporter_path": "exporter/games/blasphemous.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
+            "game_name_from_yaml": "Blasphemous",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "blasphemous",
+            "world_directory": "blasphemous"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": false,
+            "warning_count": 0
+          },
+          "game_name": "blasphemous",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.2,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": null,
+            "size_bytes": 0,
+            "size_mb": 0.0
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 1,
+            "pass_fail": "unknown",
+            "processing_time_seconds": 0,
+            "return_code": null,
+            "sphere_reached": 0,
+            "success": false,
+            "total_spheres": 0,
+            "warning_count": 0
+          },
+          "template_name": "Blasphemous.yaml",
+          "timestamp": "2025-11-15T04:36:18.393949",
+          "world_info": {
+            "exporter_path": "exporter/games/blasphemous.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
+            "game_name_from_yaml": "Blasphemous",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "blasphemous",
+            "world_directory": "blasphemous"
+          }
+        }
       },
-      "consecutive_passes_before_failure": 0,
-      "first_failure_seed": 1,
-      "game_name": "blasphemous",
-      "generation": {
-        "error_count": 1,
-        "error_type": null,
-        "processing_time_seconds": 39.06,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "rules_file": {
-        "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 3349263,
-        "size_mb": 3.19
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 10,
-      "seeds_passed": 0,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 44.09,
-        "return_code": 1,
-        "sphere_reached": 3.2,
-        "success": false,
-        "total_spheres": 13.1,
-        "warning_count": 0
+      "seeds_failed": 1,
+      "seeds_passed": 1,
+      "stop_on_failure": true,
+      "summary": {
+        "all_passed": false,
+        "any_failed": true,
+        "failure_rate": 0.5
       },
       "template_name": "Blasphemous.yaml",
-      "timestamp": "2025-11-15T03:23:10.523914",
-      "world_info": {
-        "exporter_path": "exporter/games/blasphemous.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
-        "game_name_from_yaml": "Blasphemous",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "blasphemous",
-        "world_directory": "blasphemous"
-      }
+      "timestamp": "2025-11-15T04:35:59.991164",
+      "total_seeds_tested": 2
     },
     "Bomb Rush Cyberfunk.yaml": {
       "analysis": {
