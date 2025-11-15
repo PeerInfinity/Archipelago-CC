@@ -356,7 +356,23 @@ export default {
     protoss_competent_comp,
     protoss_hybrid_counter,
 
-    zerg_common_unit: () => false,
+    zerg_common_unit: (snapshot, staticData) => {
+        const advancedTactics = isAdvancedTactics(staticData);
+
+        // Basic zerg units (standard logic)
+        const basicUnits = ['Zergling', 'Swarm Queen', 'Roach', 'Hydralisk'];
+
+        if (has_any(snapshot, basicUnits)) {
+            return true;
+        }
+
+        // Advanced tactics also includes Infestor and Aberration
+        if (advancedTactics) {
+            return has_any(snapshot, ['Infestor', 'Aberration']);
+        }
+
+        return false;
+    },
     zerg_basic_anti_air: () => false,
     zerg_competent_anti_air: () => false,
     zerg_competent_comp: () => false,
