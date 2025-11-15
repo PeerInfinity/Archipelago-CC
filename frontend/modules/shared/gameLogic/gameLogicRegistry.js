@@ -286,6 +286,7 @@ import * as terrariaLogic from './terraria/terrariaLogic.js';
 import * as timespinnerLogic from './timespinner/timespinnerLogic.js';
 import * as twwLogic from './tww/twwLogic.js';
 import { helperFunctions as yoshisislandHelperFunctions } from './yoshisisland/yoshisislandLogic.js';
+import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -579,6 +580,12 @@ const GAME_REGISTRY = {
     helperFunctions: yoshisislandHelperFunctions,
     worldClasses: ['YoshisIslandWorld'],
     aliases: ["Yoshi's Island"]
+  },
+  'Yu-Gi-Oh! 2006': {
+    logicModule: genericLogic.genericStateModule, // Using generic state module
+    helperFunctions: yugioh06Logic.helperFunctions,
+    worldClasses: ['Yugioh06World'],
+    aliases: ['Yu-Gi-Oh! 2006', 'yugioh06']
   },
   // Add more games here as they're implemented
   'Generic': {
