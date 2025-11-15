@@ -151,7 +151,8 @@ class KH2GameExportHandler(BaseGameExportHandler):
             'FightLogic',
             'AutoFormLogic',
             'FinalFormLogic',
-            'Promise_Charm'
+            'Promise_Charm',
+            'CorSkipToggle'
         ]
 
         for setting_name in kh2_settings:

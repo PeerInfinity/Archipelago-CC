@@ -338,3 +338,118 @@ class KH1GameExportHandler(BaseGameExportHandler):
             rule['object'] = self._resolve_options_in_rule(rule['object'])
 
         return rule
+
+    def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Post-process the exported data to fix KH1-specific issues.
+
+        This handles cases where the analyzer couldn't fully resolve rules,
+        particularly for has_all_counts which appears with empty args due to
+        variable resolution issues in has_all_magic_lvx.
+        """
+        # Fix has_all_counts state_method calls with empty args
+        # These come from has_all_magic_lvx(state, player, level) which calls
+        # state.has_all_counts({...}, player) with a dict that references 'level'
+        # The analyzer can't resolve 'level' so it outputs empty args
+
+        if 'regions' in data:
+            for player_id, player_regions in data['regions'].items():
+                for region_name, region in player_regions.items():
+                    for location in region.get('locations', []):
+                        location_name = location.get('name', '')
+                        access_rule = location.get('access_rule')
+
+                        if access_rule and isinstance(access_rule, dict):
+                            # Fix the access rule
+                            location['access_rule'] = self._fix_has_all_counts_rule(access_rule, location_name)
+
+        return data
+
+    def _fix_has_all_counts_rule(self, rule: Dict[str, Any], location_name: str) -> Dict[str, Any]:
+        """
+        Recursively fix has_all_counts state_method calls in rules.
+
+        When we find a state_method with has_all_counts and empty args,
+        we convert it to a helper call to has_all_magic_lvx with the
+        appropriate level extracted from the location name.
+        """
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        # First, recursively process nested structures to fix all has_all_counts
+        if 'conditions' in rule and isinstance(rule['conditions'], list):
+            rule['conditions'] = [self._fix_has_all_counts_rule(cond, location_name) for cond in rule['conditions']]
+
+        if 'condition' in rule:
+            rule['condition'] = self._fix_has_all_counts_rule(rule['condition'], location_name)
+
+        if 'test' in rule:
+            rule['test'] = self._fix_has_all_counts_rule(rule['test'], location_name)
+
+        if 'if_true' in rule:
+            rule['if_true'] = self._fix_has_all_counts_rule(rule['if_true'], location_name)
+
+        if 'if_false' in rule:
+            rule['if_false'] = self._fix_has_all_counts_rule(rule['if_false'], location_name)
+
+        if 'left' in rule:
+            rule['left'] = self._fix_has_all_counts_rule(rule['left'], location_name)
+
+        if 'right' in rule:
+            rule['right'] = self._fix_has_all_counts_rule(rule['right'], location_name)
+
+        # Now check for patterns AFTER nested fixes
+
+        # Check if this is a has_all_counts state_method with empty or missing args
+        if (rule.get('type') == 'state_method' and
+            rule.get('method') == 'has_all_counts' and
+            not rule.get('args')):
+
+            # Extract level from location name
+            # Level 3 locations
+            if 'LV3 Magic' in location_name or 'All LV3 Magic' in location_name:
+                level = 3
+            # Level 2 locations - specific Neverland locations and superboss-related checks
+            elif ('Clock Tower' in location_name or
+                  'Phantom' in location_name or
+                  ('Final Rest' in location_name and 'superboss' in location_name.lower())):
+                level = 2
+            # Level 2 magic explicitly
+            elif 'LV2 Magic' in location_name or 'All LV2 Magic' in location_name:
+                level = 2
+            # Default to level 1 for all other cases
+            # This includes "Obtained All Arts Items" and similar locations
+            else:
+                level = 1
+
+            logger.info(f"Fixing has_all_counts rule for {location_name} -> has_all_magic_lvx({level})")
+            return {
+                'type': 'helper',
+                'name': 'has_all_magic_lvx',
+                'args': [{'type': 'constant', 'value': level}]
+            }
+
+        # Check for has_defensive_tools pattern:
+        # An 'and' condition containing has_all_magic_lvx and has_any_count
+        # This occurs when has_defensive_tools is inlined
+        if rule.get('type') == 'and' and 'conditions' in rule:
+            conditions = rule['conditions']
+            has_magic_lvx = any(
+                isinstance(c, dict) and c.get('type') == 'helper' and c.get('name') == 'has_all_magic_lvx'
+                for c in conditions
+            )
+            has_any_count = any(
+                isinstance(c, dict) and c.get('type') == 'state_method' and c.get('method') == 'has_any_count'
+                for c in conditions
+            )
+
+            if has_magic_lvx and has_any_count:
+                # This is the has_defensive_tools pattern - replace the entire 'and' with a helper call
+                logger.info(f"Detected has_defensive_tools pattern in {location_name}, converting to helper call")
+                return {
+                    'type': 'helper',
+                    'name': 'has_defensive_tools',
+                    'args': []
+                }
+
+        return rule

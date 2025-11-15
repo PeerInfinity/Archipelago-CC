@@ -146,10 +146,17 @@ export const kh1Logic = {
      * @returns {boolean}
      */
     has_defensive_tools(snapshot, staticData) {
+        // Must have all of: Progressive Cure 2+, Leaf Bracer 1+, Dodge Roll 1+
         const hasCure2 = (snapshot?.inventory?.["Progressive Cure"] || 0) >= 2;
-        const hasLeafBracer = (snapshot?.inventory?.["Leaf Bracer"] || 0) > 0;
-        const hasSecondChance = (snapshot?.inventory?.["Second Chance"] || 0) > 0;
-        return hasCure2 && (hasLeafBracer || hasSecondChance);
+        const hasLeafBracer = (snapshot?.inventory?.["Leaf Bracer"] || 0) >= 1;
+        const hasDodgeRoll = (snapshot?.inventory?.["Dodge Roll"] || 0) >= 1;
+
+        // Must have at least one of: Second Chance 1+, MP Rage 1+, Progressive Aero 2+
+        const hasSecondChance = (snapshot?.inventory?.["Second Chance"] || 0) >= 1;
+        const hasMPRage = (snapshot?.inventory?.["MP Rage"] || 0) >= 1;
+        const hasAero2 = (snapshot?.inventory?.["Progressive Aero"] || 0) >= 2;
+
+        return hasCure2 && hasLeafBracer && hasDodgeRoll && (hasSecondChance || hasMPRage || hasAero2);
     },
 
     /**

@@ -501,7 +501,20 @@ export function isLocationAccessible(sm, location) {
   if (!reachableRegions.has(location.region)) {
     return false;
   }
-  if (!location.access_rule) return true;
+  if (!location.access_rule) {
+    // Event locations with no access rule are only accessible if you don't already have the event item
+    // This matches Python's behavior where event items can only be collected once
+    if (location.item && location.item.event && location.item.name) {
+      // Check if we already have this event item
+      const itemCount = sm.inventory && sm.inventory[location.item.name];
+      if (itemCount && itemCount > 0) {
+        // Already have this event, location is not accessible (can't collect again)
+        return false;
+      }
+    }
+    // No access rule means accessible (for non-event locations or events we don't have yet)
+    return true;
+  }
 
   // Use the *injected* evaluateRule engine
   try {

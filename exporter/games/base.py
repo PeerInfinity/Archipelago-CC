@@ -55,14 +55,59 @@ class BaseGameExportHandler:
         """
         return None
     
+    def should_preserve_as_helper(self, func_name: str) -> bool:
+        """
+        Check if a function should be preserved as a helper call during rule analysis.
+
+        This prevents the analyzer from recursively analyzing closure variables that
+        should remain as helper functions in the exported rules.
+
+        Args:
+            func_name: The name of the function being analyzed
+
+        Returns:
+            True if the function should be preserved as a helper, False otherwise
+        """
+        # Default implementation: don't preserve any functions as helpers
+        # Games can override this to preserve specific helpers
+        return False
+
+    def should_process_multistatement_if_bodies(self) -> bool:
+        """
+        Check if the analyzer should process if-statements with multiple statements in the body.
+
+        By default, the analyzer only handles simple if-statements with a single statement
+        in the body. Some games (like Mario Land 2) have complex if-statements with multiple
+        statements that need to be combined into compound conditions.
+
+        Returns:
+            True if multi-statement if-bodies should be processed, False otherwise
+        """
+        # Default implementation: don't process multi-statement if-bodies
+        return False
+
+    def should_recursively_analyze_closures(self) -> bool:
+        """
+        Check if the analyzer should recursively analyze closure variable function calls.
+
+        By default, closure variables are converted to helper calls without recursive analysis.
+        Some games (like Mario Land 2) need closure variables to be recursively analyzed and
+        inlined to properly export complex rule logic.
+
+        Returns:
+            True if closure variables should be recursively analyzed, False otherwise
+        """
+        # Default implementation: don't recursively analyze closures
+        return False
+
     def get_effective_item_type(self, item_name: str, original_type: str) -> str:
         """
         Get the effective type for an item, considering game-specific event item rules.
-        
+
         Args:
             item_name: The name of the item
             original_type: The original type from the item object
-            
+
         Returns:
             The effective type that should be used for export
         """

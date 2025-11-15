@@ -280,11 +280,8 @@ function loadLocations(sm, selectedPlayerId) {
         sm.originalLocationOrder.push(descriptiveName);
 
         // Track event locations
-        if (
-          locationDataItem.id === 0 ||
-          locationDataItem.id === null ||
-          locationDataItem.id === undefined
-        ) {
+        // Event locations are those with event=true in their item
+        if (locationDataItem.item && locationDataItem.item.event === true) {
           sm.eventLocations.set(descriptiveName, locationObject);
         }
 

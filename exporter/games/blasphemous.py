@@ -91,10 +91,47 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
             func_name = rule_func.__name__
             if func_name in boss_mapping:
                 boss_name = boss_mapping[func_name]
-                # Let the normal analysis happen, but we'll fix it in postprocess
-                # Store the boss name in a way we can retrieve it later
-                # For now, just let it proceed and we'll handle in postprocess
-                pass
+                # For boss methods, manually construct the rule with the boss name
+                # Most boss methods follow the pattern:
+                # has_boss_strength(state, "boss_name") AND can_reach_region(...)
+                #
+                # Inspect the function to extract any region requirements
+                import inspect
+                source = inspect.getsource(rule_func)
+
+                # Extract region names from can_reach_region calls
+                import re
+                region_matches = re.findall(r'can_reach_region\(["\']([^"\']+)["\']', source)
+
+                # Build the rule conditions
+                conditions = [
+                    {
+                        'type': 'helper',
+                        'name': 'has_boss_strength',
+                        'args': [{'type': 'constant', 'value': boss_name}]
+                    }
+                ]
+
+                # Add region requirements
+                for region in region_matches:
+                    conditions.append({
+                        'type': 'state_method',
+                        'method': 'can_reach_region',
+                        'args': [{'type': 'constant', 'value': region}]
+                    })
+
+                # Add wall_climb requirement if found in source
+                if 'wall_climb' in source:
+                    conditions.append({
+                        'type': 'helper',
+                        'name': 'wallClimb'
+                    })
+
+                # Return AND of all conditions
+                if len(conditions) == 1:
+                    return conditions[0]
+                else:
+                    return {'type': 'and', 'conditions': conditions}
 
         # First try to extract from closure variables if this is a lambda with clauses
         closure_result = self._try_extract_from_closure(rule_func)

@@ -155,13 +155,34 @@ export function getSnapshot(sm) {
   // Increment snapshot counter
   sm.snapshotCount++;
 
-  // 6. Assemble Snapshot
+  // 6. Get game-specific state if the module provides getStateForSnapshot
+  let gameSpecificState = {};
+  if (sm.logicModule && typeof sm.logicModule.getStateForSnapshot === 'function') {
+    try {
+      gameSpecificState = sm.logicModule.getStateForSnapshot(sm.gameStateModule || {});
+    } catch (error) {
+      log('warn', '[StateManager getSnapshot] Error calling getStateForSnapshot:', error);
+      // Fallback to default game state extraction
+      gameSpecificState = {
+        flags: sm.gameStateModule?.flags || [],
+        events: sm.gameStateModule?.events || [],
+      };
+    }
+  } else {
+    // Fallback for games without getStateForSnapshot
+    gameSpecificState = {
+      flags: sm.gameStateModule?.flags || [],
+      events: sm.gameStateModule?.events || [],
+    };
+  }
+
+  // 7. Assemble Snapshot
   // REFACTOR: Duplication removed - using single source of truth for all fields
   const snapshot = {
     snapshotCount: sm.snapshotCount,
     inventory: inventorySnapshot,
-    // All games now use gameStateModule flags
-    flags: sm.gameStateModule?.flags || [],
+    // Merge game-specific state (flags, events, and any other game-specific fields like age)
+    ...gameSpecificState,
     checkedLocations: Array.from(sm.checkedLocations || []),
     // REFACTOR: Separated region and location reachability to prevent name conflicts
     regionReachability: regionReachability,
@@ -177,7 +198,6 @@ export function getSnapshot(sm) {
     difficultyRequirements: sm.gameStateModule?.difficultyRequirements,
     shops: sm.gameStateModule?.shops,
     gameMode: sm.gameStateModule?.gameMode || sm.mode,
-    events: sm.gameStateModule?.events || [],
     // REFACTOR: Add missing properties for canonical state
     debugMode: sm.debugMode || false,
     autoCollectEventsEnabled: sm.autoCollectEventsEnabled !== false, // Default true

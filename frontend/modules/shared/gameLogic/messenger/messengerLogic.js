@@ -27,6 +27,41 @@ export const messengerStateModule = {
   },
 
   /**
+   * Process Time Shard items to add their value to the Shards counter.
+   * In Python: when collecting "Time Shard (100)", it adds 100 to a "Shards" virtual item.
+   *
+   * @param {Object} inventory - The inventory object to modify
+   * @param {string} itemName - Name of the item being added
+   * @param {number} delta - Number of items being added (usually 1)
+   * @returns {Object|null} - Object with additional inventory changes, or null
+   */
+  processItem(inventory, itemName, delta) {
+    // Check if this is a Time Shard item
+    if (itemName.includes('Time Shard')) {
+      // Extract the shard value from the item name
+      // Item names are like "Time Shard (100)", "Time Shard (50)", etc.
+      const match = itemName.match(/Time Shard \((\d+)\)/);
+      if (match) {
+        const shardValue = parseInt(match[1], 10);
+        const shardsDelta = shardValue * delta;
+
+        // Add the shard value to the virtual "Shards" counter
+        return {
+          'Shards': shardsDelta
+        };
+      }
+      // Handle plain "Time Shard" items (value of 1 each)
+      else if (itemName === 'Time Shard') {
+        return {
+          'Shards': delta
+        };
+      }
+    }
+
+    return null; // No additional changes
+  },
+
+  /**
    * Returns the Messenger state properties for a snapshot.
    */
   getStateForSnapshot(gameState) {

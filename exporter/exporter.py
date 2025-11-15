@@ -1342,6 +1342,26 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                     # ... then update max_count to match the pool count.
                     item_data['max_count'] = pool_count
 
+    # 5. Add groups from item_name_groups to ALL items (including events)
+    # This ensures event items and other items not in item_id_to_name get their groups
+    item_name_groups = getattr(world, 'item_name_groups', {})
+    if item_name_groups:
+        for group_name, group_items in item_name_groups.items():
+            for item_name in group_items:
+                if item_name in items_data:
+                    # Ensure groups key exists
+                    if 'groups' not in items_data[item_name] or not isinstance(items_data[item_name]['groups'], list):
+                        items_data[item_name]['groups'] = []
+
+                    # Add group if not already present
+                    if group_name not in items_data[item_name]['groups']:
+                        items_data[item_name]['groups'].append(group_name)
+
+        # Sort groups for consistency
+        for item_data in items_data.values():
+            if 'groups' in item_data and isinstance(item_data['groups'], list):
+                item_data['groups'].sort()
+
     return items_data
 
 def process_item_groups(multiworld, player: int) -> List[str]:

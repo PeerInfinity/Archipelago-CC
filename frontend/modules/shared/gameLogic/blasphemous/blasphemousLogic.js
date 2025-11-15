@@ -270,8 +270,12 @@ export const helperFunctions = {
       // Called with just (snapshot, staticData) - no boss name
       // Use staticData from second argument
       actualStaticData = worldOrBossName;
+    } else if (arguments.length === 3) {
+      // Called with (snapshot, bossName, staticData) - new calling convention
+      bossName = worldOrBossName;
+      actualStaticData = bossNameOrStaticData;
     } else {
-      // Called with (snapshot, worldOrBossName, bossName, staticData)
+      // Called with (snapshot, worldOrBossName, bossName, staticData) - old calling convention
       bossName = bossNameOrStaticData;
       actualStaticData = staticData;
     }

@@ -91,6 +91,24 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
         """Check if a function should be preserved as a helper call."""
         return func_name in self.HELPER_FUNCTIONS
 
+    def should_process_multistatement_if_bodies(self) -> bool:
+        """
+        Enable processing of if-statements with multiple statements in the body.
+
+        Mario Land 2 has complex rule functions with multiple if-statements that
+        need to be combined into compound conditions for proper export.
+        """
+        return True
+
+    def should_recursively_analyze_closures(self) -> bool:
+        """
+        Enable recursive analysis of closure variable function calls.
+
+        Mario Land 2 needs closure variables to be recursively analyzed and inlined
+        to properly export the complex rule logic used in this game.
+        """
+        return True
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Override expand_rule to prevent auto-expansion of our helper functions.

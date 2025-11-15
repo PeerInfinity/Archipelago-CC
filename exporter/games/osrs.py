@@ -26,7 +26,7 @@ class OSRSGameExportHandler(GenericGameExportHandler):
         Recursively expand and resolve OSRS-specific rule patterns.
 
         Handles:
-        1. Converting self.quest_points() method calls to helper functions
+        1. Converting self.quest_points() and world.quest_points() method calls to helper functions
         2. Other OSRS-specific expansions as needed
         """
         if not rule:
@@ -34,19 +34,20 @@ class OSRSGameExportHandler(GenericGameExportHandler):
 
         rule_type = rule.get('type')
 
-        # Handle function calls (e.g., self.quest_points())
+        # Handle function calls (e.g., self.quest_points() or world.quest_points())
         if rule_type == 'function_call':
             function = rule.get('function', {})
 
-            # Check if this is a method call on self (self.quest_points)
+            # Check if this is a method call (e.g., self.quest_points or world.quest_points)
             if function.get('type') == 'attribute':
                 obj = function.get('object', {})
                 method_name = function.get('attr')
 
-                if obj.get('type') == 'name' and obj.get('name') == 'self':
+                # Check if object is 'self' or 'world' (both refer to the OSRS World instance)
+                if obj.get('type') == 'name' and obj.get('name') in ['self', 'world']:
                     if method_name == 'quest_points':
                         # Convert to a helper function call
-                        logger.debug("Converting self.quest_points() to helper function")
+                        logger.debug(f"Converting {obj.get('name')}.quest_points() to helper function")
                         return {
                             'type': 'helper',
                             'name': 'quest_points',

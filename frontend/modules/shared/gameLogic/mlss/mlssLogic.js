@@ -70,7 +70,7 @@ export function count(snapshot, staticData, itemName) {
  */
 export function can_reach(snapshot, staticData, regionName) {
   if (!snapshot.regionReachability) return false;
-  return snapshot.regionReachability[regionName] === true;
+  return snapshot.regionReachability[regionName] === 'reachable';
 }
 
 // StateLogic helper functions from worlds/mlss/StateLogic.py

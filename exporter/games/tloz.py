@@ -14,6 +14,12 @@ class TLoZGameExportHandler(GenericGameExportHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._boss_locations = {}  # Cache for boss location access rules
+        self._current_location_name = None  # Track current location being processed
+
+    def set_context(self, location_name: str):
+        """Set the current location context for rule expansion."""
+        self._current_location_name = location_name
+        logger.debug(f"Set context to location: {location_name}")
 
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Expand rules with special handling for f_string rules and can_reach patterns."""
@@ -29,17 +35,29 @@ class TLoZGameExportHandler(GenericGameExportHandler):
             logger.warning(f"Unable to resolve f_string rule: {rule}")
             return rule
 
-        # Handle can_reach state methods with unresolved variables
+        # Handle can_reach state methods for Boss Status locations
         # This pattern appears in Boss Status locations: state.can_reach(b, "Location", player)
         # where b is a lambda default parameter pointing to a boss location
         if rule.get('type') == 'state_method' and rule.get('method') == 'can_reach':
             args = rule.get('args', [])
             if len(args) >= 2 and args[1].get('type') == 'constant' and args[1].get('value') == 'Location':
-                # This is a can_reach for a location
-                # Since the Boss Status locations already have the same access requirements
-                # as the Boss locations (weapons group check), we can simplify this to True
-                logger.debug(f"Simplifying can_reach(Location) to True for TLOZ")
-                return {'type': 'constant', 'value': True}
+                # This is a can_reach for a location (specifically boss locations)
+                # The first arg is often an unresolved variable 'b' that refers to the boss location
+                # For "Level X Boss Status" locations, the boss is "Level X Boss"
+                if args[0].get('type') == 'name' and self._current_location_name:
+                    if ' Boss Status' in self._current_location_name:
+                        # Resolve the boss location name by removing " Status"
+                        boss_location_name = self._current_location_name.replace(' Status', '')
+                        logger.debug(f"Resolving can_reach variable for {self._current_location_name} -> {boss_location_name}")
+                        # Replace the 'name' type with a constant containing the boss location name
+                        args[0] = {
+                            'type': 'constant',
+                            'value': boss_location_name
+                        }
+                        rule['args'] = args
+                        logger.debug(f"Resolved can_reach to check location: {boss_location_name}")
+                else:
+                    logger.debug(f"Preserving can_reach(Location) check with args: {args}")
 
         # Recursively process nested rules
         if rule.get('type') in ['and', 'or']:
