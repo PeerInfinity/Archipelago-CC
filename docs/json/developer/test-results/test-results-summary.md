@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-15 03:45:00
+**Generated:** 2025-11-15 19:39:52
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,7 +12,7 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 43/78 passed (55.1%)
+- **Minimal Test:** 48/78 passed (61.5%)
 - **Full Test:** 29/78 passed (37.2%)
 - **Multiplayer Test:** 33/78 passed (42.3%)
 - **Multiworld Test:** 0/78 passed (0.0%)
@@ -20,10 +20,10 @@ This summary combines results from four types of tests:
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 0/79 (0.0%)
-- **Templates passing 3 tests:** 24/79 (30.4%)
+- **Templates passing 3 tests:** 25/79 (31.6%)
 - **Templates passing 2 tests:** 11/79 (13.9%)
-- **Templates passing 1 test:** 11/79 (13.9%)
-- **Templates passing 0 tests:** 33/79 (41.8%)
+- **Templates passing 1 test:** 13/79 (16.5%)
+- **Templates passing 0 tests:** 30/79 (38.0%)
 
 ## Test Results
 
@@ -47,7 +47,7 @@ This summary combines results from four types of tests:
 | DLCQuest | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | DOOM 1993 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | DOOM II | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
-| Dark Souls III | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
+| Dark Souls III | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Factorio | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Faxanadu | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
@@ -57,19 +57,19 @@ This summary combines results from four types of tests:
 | Inscryption | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Jak and Daxter The Precursor Legacy | ❌ Failed | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
 | Jak and Daxter: The Precursor Legacy | ❓ N/A | ❓ N/A | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| Kingdom Hearts | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Kingdom Hearts | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Kingdom Hearts 2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Kirby's Dream Land 3 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Lingo | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| Links Awakening DX | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Links Awakening DX | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| Mario & Luigi Superstar Saga | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Mario & Luigi Superstar Saga | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Mega Man 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | MegaMan Battle Network 3 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Meritous | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
-| Metamath | ❌ Failed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
+| Metamath | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Muse Dash | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Noita | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Ocarina of Time | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
