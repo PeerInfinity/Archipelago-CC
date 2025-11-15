@@ -32,13 +32,6 @@ export function paint_percent_available(snapshot, staticData) {
     // Get inventory from snapshot
     const inventory = snapshot?.inventory || {};
 
-    // Debug: Log inventory for first few calls
-    const shouldDebug = typeof console !== 'undefined';
-    if (shouldDebug && !inventory.__paintDebugLogged) {
-        console.log('[Paint DEBUG] First call inventory:', JSON.stringify(inventory).substring(0, 200));
-        inventory.__paintDebugLogged = true;
-    }
-
     // Check if we have the Pick Color item
     const hasPickColor = (inventory["Pick Color"] || 0) > 0;
 
@@ -81,19 +74,6 @@ export function paint_percent_available(snapshot, staticData) {
 
     // Final calculation
     const paintPercent = (perPixelScore * totalPixels * logicPercent) / maxPixels;
-
-    // Debug logging (remove after testing)
-    if (typeof console !== 'undefined' && Math.random() < 0.01) { // Log 1% of the time to avoid spam
-        console.log('[Paint] paint_percent_available:', {
-            r, g, b,
-            w, h,
-            hasPickColor,
-            perPixelScore: perPixelScore.toFixed(4),
-            currentWidth, currentHeight,
-            canvasSizeIncrement, logicPercent,
-            paintPercent: paintPercent.toFixed(2)
-        });
-    }
 
     return paintPercent;
 }
