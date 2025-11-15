@@ -313,6 +313,19 @@ export function _addItemToInventory(sm, itemName, count = 1) {
         // Accumulate
         sm.prog_items[playerId][target] += totalValue;
 
+        // DEBUG for DLCQuest coins
+        if (target === ' coins' && sm.settings?.game === 'DLCQuest') {
+          const fullStack = new Error().stack.split('\n');
+          console.log('[DEBUG-COINS] Adding coins:', {
+            itemName,
+            totalValue,
+            newTotal: sm.prog_items[playerId][target],
+            caller: fullStack[2],
+            grandparent: fullStack[3],
+            greatGrandparent: fullStack[4]
+          });
+        }
+
         sm._logDebug(
           `[InventoryManager] Accumulated ${totalValue} into prog_items["${playerId}"]["${target}"] (now ${sm.prog_items[playerId][target]})`
         );
