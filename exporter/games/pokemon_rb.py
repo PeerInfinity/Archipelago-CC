@@ -109,7 +109,17 @@ class PokemonRBGameExportHandler(BaseGameExportHandler):
 
         # Add local_poke_data (Pokemon TM/HM learn data)
         if hasattr(world, 'local_poke_data'):
-            game_info['local_poke_data'] = world.local_poke_data
+            # Convert bytearrays to lists for JSON serialization
+            local_poke_data = {}
+            for pokemon_name, pokemon_data in world.local_poke_data.items():
+                pokemon_dict = {}
+                for key, value in pokemon_data.items():
+                    if isinstance(value, bytearray):
+                        pokemon_dict[key] = list(value)
+                    else:
+                        pokemon_dict[key] = value
+                local_poke_data[pokemon_name] = pokemon_dict
+            game_info['local_poke_data'] = local_poke_data
         else:
             game_info['local_poke_data'] = {}
 
@@ -279,4 +289,14 @@ class PokemonRBGameExportHandler(BaseGameExportHandler):
         if hasattr(world, 'local_poke_data'):
             if 'local_poke_data' not in export_data:
                 export_data['local_poke_data'] = {}
-            export_data['local_poke_data'][player] = world.local_poke_data
+            # Convert bytearrays to lists for JSON serialization
+            local_poke_data = {}
+            for pokemon_name, pokemon_data in world.local_poke_data.items():
+                pokemon_dict = {}
+                for key, value in pokemon_data.items():
+                    if isinstance(value, bytearray):
+                        pokemon_dict[key] = list(value)
+                    else:
+                        pokemon_dict[key] = value
+                local_poke_data[pokemon_name] = pokemon_dict
+            export_data['local_poke_data'][player] = local_poke_data
