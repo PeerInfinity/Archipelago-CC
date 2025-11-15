@@ -50,7 +50,7 @@ The GenericGameExportHandler was auto-expanding Yoshi's Island helper functions 
 The generic exporter's `_is_common_helper_pattern` method matches helpers starting with "has_", "can_", etc., and automatically expands them to item checks or other inferred rules. This is incorrect for Yoshi's Island, which has custom helper implementations.
 
 **Solution implemented:**
-Override `_is_common_helper_pattern` in YoshisIslandGameExportHandler to exclude Yoshi's Island-specific helpers from auto-expansion. Added a YOSHI_HELPERS set containing all custom helper names that should be preserved as helper calls.
+Override `_is_common_helper_pattern` in YoshisIslandGameExportHandler to exclude Yoshi's Island-specific helpers from auto-expansion. Added a YOSHI_HELPERS set containing all custom helper names that should be preserved as helper calls. Also added pattern matching to exclude level-specific helpers (pattern: `_[0-9]{2}[A-Z][a-z]+`) such as `_14Clear`, `_17Game`, etc.
 
 **File modified:** `exporter/games/yoshisisland.py`
 

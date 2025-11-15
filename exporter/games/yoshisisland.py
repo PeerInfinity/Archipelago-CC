@@ -40,6 +40,12 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
         if helper_name in self.YOSHI_HELPERS:
             return False
 
+        # Don't auto-expand level-specific helpers (pattern: _[0-9][0-9][A-Za-z]+)
+        # Examples: _14Clear, _17Game, _27Game, _47Game, etc.
+        import re
+        if re.match(r'^_\d{2}[A-Z][a-z]+$', helper_name):
+            return False
+
         # Fall back to parent implementation for other patterns
         return super()._is_common_helper_pattern(helper_name)
 
