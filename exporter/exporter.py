@@ -796,10 +796,15 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
             if cache_key in _rule_analysis_cache:
                 return _rule_analysis_cache[cache_key]
 
-            # Check if game handler has an override for rule analysis (e.g., Blasphemous)
+            # Check if game handler has an override for rule analysis (e.g., Blasphemous, Terraria)
             if game_handler and hasattr(game_handler, 'override_rule_analysis'):
                 override_result = game_handler.override_rule_analysis(rule_func, rule_target_name)
                 if override_result:
+                    # Check for Terraria's sentinel value for "always accessible"
+                    if isinstance(override_result, dict) and override_result.get('__terraria_handled__'):
+                        actual_result = override_result.get('__value__')
+                        _rule_analysis_cache[cache_key] = actual_result
+                        return actual_result
                     # Cache the override result before returning
                     _rule_analysis_cache[cache_key] = override_result
                     return override_result
