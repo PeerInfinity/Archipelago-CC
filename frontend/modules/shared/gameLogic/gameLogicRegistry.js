@@ -287,6 +287,7 @@ import * as timespinnerLogic from './timespinner/timespinnerLogic.js';
 import * as twwLogic from './tww/twwLogic.js';
 import { helperFunctions as yoshisislandHelperFunctions } from './yoshisisland/yoshisislandLogic.js';
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
+import { helperFunctions as osrsHelperFunctions } from './osrs/osrsLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -465,6 +466,12 @@ const GAME_REGISTRY = {
     helperFunctions: ootLogic.helperFunctions,
     worldClasses: ['OOTWorld'],
     aliases: ['Ocarina of Time', 'OOT', 'Zelda: Ocarina of Time']
+  },
+  'Old School Runescape': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: osrsHelperFunctions,
+    worldClasses: ['OSRSWorld'],
+    aliases: ['Old School Runescape', 'OSRS', 'osrs']
   },
   'Paint': {
     logicModule: genericLogic.genericStateModule,
