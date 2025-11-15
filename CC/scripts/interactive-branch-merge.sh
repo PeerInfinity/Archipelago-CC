@@ -262,9 +262,9 @@ perform_merge_only() {
                 git clean -fd docs/json/developer/test-results/ 2>/dev/null || true
             fi
 
-            # Remove text files in project root directory
+            # Remove text and log files in project root directory
             shopt -s nullglob
-            for txtfile in *.txt; do
+            for txtfile in *.txt *.log; do
                 # First, check if file has merge conflicts and resolve by removing
                 if git diff --name-only --diff-filter=U | grep -q "^${txtfile}$"; then
                     rm -f "$txtfile"
@@ -450,9 +450,9 @@ fetch_and_merge() {
                 git clean -fd docs/json/developer/test-results/ 2>/dev/null || true
             fi
 
-            # Remove text files in project root directory
+            # Remove text and log files in project root directory
             shopt -s nullglob
-            for txtfile in *.txt; do
+            for txtfile in *.txt *.log; do
                 # First, check if file has merge conflicts and resolve by removing
                 if git diff --name-only --diff-filter=U | grep -q "^${txtfile}$"; then
                     rm -f "$txtfile"
