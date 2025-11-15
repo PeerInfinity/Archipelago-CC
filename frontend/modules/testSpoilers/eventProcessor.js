@@ -151,6 +151,7 @@ export class EventProcessor {
     switch (eventType) {
       case 'state_update': {
         // Get sphere data from sphereState (which handles both verbose and incremental formats)
+        this.logCallback('info', `[DEBUG] Getting sphere data for index ${this.currentLogIndex}`);
         const sphereData = this._getSphereDataFromSphereState(this.currentLogIndex);
 
         if (!sphereData) {
@@ -161,6 +162,7 @@ export class EventProcessor {
           allChecksPassed = false;
           break;
         }
+        this.logCallback('info', `[DEBUG] Got sphereData: locations=${sphereData.locations?.length || 0}`);
 
         // Use accumulated data from sphereState
         const inventory_from_log = sphereData.inventoryDetails?.base_items || {};
@@ -225,6 +227,8 @@ export class EventProcessor {
           } else {
             // Single-player processing: check locations normally
             const locationsToCheck = sphereData.locations || [];
+            // DEBUG: Log sphere data to understand what we're getting
+            this.logCallback('info', `[DEBUG] sphereData for sphere ${context.sphere_number}: locations=${JSON.stringify(locationsToCheck)}, accessibleLocations=${sphereData.accessibleLocations?.length || 0}, inventoryItems=${JSON.stringify(Object.keys(sphereData.inventoryDetails?.base_items || {}))}`);
             if (locationsToCheck.length > 0) {
               this.logCallback('info', `Checking ${locationsToCheck.length} locations from sphere ${context.sphere_number}`);
 
