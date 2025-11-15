@@ -998,7 +998,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
                 result = right.some(item => {
                   if (Array.isArray(item)) {
                     // Deep array comparison
-                    return item.length === left.length && 
+                    return item.length === left.length &&
                            item.every((val, index) => val === left[index]);
                   } else {
                     return item === left;
@@ -1012,6 +1012,9 @@ export const evaluateRule = (rule, context, depth = 0) => {
             } else if (right instanceof Set) {
               // Handle Set
               result = right.has(left);
+            } else if (typeof right === 'object' && right !== null) {
+              // Handle object (dictionary) membership check
+              result = left in right;
             } else {
               log(
                 'warn',
@@ -1019,6 +1022,40 @@ export const evaluateRule = (rule, context, depth = 0) => {
                 { left, right }
               );
               result = false; // Define behavior: false if right side isn't iterable
+            }
+            break;
+          case 'not in':
+            // Same logic as 'in' but negated
+            if (Array.isArray(right)) {
+              // Handle array comparison with deep equality for nested arrays
+              if (Array.isArray(left)) {
+                result = !right.some(item => {
+                  if (Array.isArray(item)) {
+                    // Deep array comparison
+                    return item.length === left.length &&
+                           item.every((val, index) => val === left[index]);
+                  } else {
+                    return item === left;
+                  }
+                });
+              } else {
+                result = !right.includes(left);
+              }
+            } else if (typeof right === 'string') {
+              result = !right.includes(left);
+            } else if (right instanceof Set) {
+              // Handle Set
+              result = !right.has(left);
+            } else if (typeof right === 'object' && right !== null) {
+              // Handle object (dictionary) membership check
+              result = !(left in right);
+            } else {
+              log(
+                'warn',
+                '[evaluateRule] "not in" operator used with invalid right side type:',
+                { left, right }
+              );
+              result = true; // Define behavior: true if right side isn't iterable (consistent with 'not in' semantics)
             }
             break;
           default:

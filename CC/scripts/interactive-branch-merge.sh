@@ -250,6 +250,18 @@ perform_merge_only() {
                 git clean -fd scripts/output/ 2>/dev/null || true
             fi
 
+            # Unstage and discard changes in docs/json/developer/test-results/
+            if [ -d "docs/json/developer/test-results" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^docs/json/developer/test-results/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
+                git reset -- docs/json/developer/test-results/ 2>/dev/null || true
+                git checkout -- docs/json/developer/test-results/ 2>/dev/null || true
+                git clean -fd docs/json/developer/test-results/ 2>/dev/null || true
+            fi
+
             # Remove new text files in project root directory
             for txtfile in *.txt; do
                 if [ -f "$txtfile" ] && git ls-files --error-unmatch "$txtfile" >/dev/null 2>&1; then
@@ -418,6 +430,18 @@ fetch_and_merge() {
                 git reset -- scripts/output/ 2>/dev/null || true
                 git checkout -- scripts/output/ 2>/dev/null || true
                 git clean -fd scripts/output/ 2>/dev/null || true
+            fi
+
+            # Unstage and discard changes in docs/json/developer/test-results/
+            if [ -d "docs/json/developer/test-results" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^docs/json/developer/test-results/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
+                git reset -- docs/json/developer/test-results/ 2>/dev/null || true
+                git checkout -- docs/json/developer/test-results/ 2>/dev/null || true
+                git clean -fd docs/json/developer/test-results/ 2>/dev/null || true
             fi
 
             # Remove new text files in project root directory
