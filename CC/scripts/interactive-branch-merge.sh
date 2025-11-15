@@ -263,16 +263,16 @@ perform_merge_only() {
             fi
 
             # Remove new text files in project root directory
+            shopt -s nullglob
             for txtfile in *.txt; do
-                if [ -f "$txtfile" ] && git ls-files --error-unmatch "$txtfile" >/dev/null 2>&1; then
-                    # File is tracked by git, skip
-                    :
-                elif [ -f "$txtfile" ]; then
+                # Check if file is NOT tracked by git (if git ls-files returns empty, it's untracked)
+                if [ -z "$(git ls-files "$txtfile")" ]; then
                     # File exists and is not tracked by git, remove it
                     rm -f "$txtfile"
                     echo "  Removed untracked: $txtfile"
                 fi
             done
+            shopt -u nullglob
 
             echo -e "${GREEN}Temporary files cleaned.${NC}"
         else
@@ -445,16 +445,16 @@ fetch_and_merge() {
             fi
 
             # Remove new text files in project root directory
+            shopt -s nullglob
             for txtfile in *.txt; do
-                if [ -f "$txtfile" ] && git ls-files --error-unmatch "$txtfile" >/dev/null 2>&1; then
-                    # File is tracked by git, skip
-                    :
-                elif [ -f "$txtfile" ]; then
+                # Check if file is NOT tracked by git (if git ls-files returns empty, it's untracked)
+                if [ -z "$(git ls-files "$txtfile")" ]; then
                     # File exists and is not tracked by git, remove it
                     rm -f "$txtfile"
                     echo "  Removed untracked: $txtfile"
                 fi
             done
+            shopt -u nullglob
 
             echo -e "${GREEN}Temporary files cleaned.${NC}"
         else
