@@ -314,38 +314,51 @@ class ASTVisitorMixin:
             if func_name in self.closure_vars:
                  logging.debug(f"Identified call to known closure variable: {func_name}")
 
+                 # Check if game handler wants to preserve this as a helper
+                 should_preserve = False
+                 actual_func = self.closure_vars[func_name]
+                 if callable(actual_func):
+                     actual_func_name = getattr(actual_func, '__name__', None)
+                     if self.game_handler and hasattr(self.game_handler, 'should_preserve_as_helper') and actual_func_name:
+                         if self.game_handler.should_preserve_as_helper(actual_func_name):
+                             logging.debug(f"Game handler requests preserving {actual_func_name} as helper, skipping recursive analysis")
+                             should_preserve = True
+                             # Update func_name to use the actual function name for helper call creation
+                             func_name = actual_func_name
+                             func_info = {'type': 'name', 'name': func_name}
+
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
-                 try:
-                     # Check if 'state' is passed as an argument using original AST nodes
-                     has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
-                     # Attempt recursion if state arg is present
-                     if has_state_arg:
-                          # Import analyze_rule locally to avoid forward reference issues
-                          from .analysis import analyze_rule
-                          # Get the actual function from the closure
-                          actual_func = self.closure_vars[func_name]
-                          logging.debug(f"Recursively analyzing closure function: {func_name} -> {actual_func}")
+                 if not should_preserve:
+                     try:
+                         # Check if 'state' is passed as an argument using original AST nodes
+                         has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
+                         # Attempt recursion if state arg is present
+                         if has_state_arg:
+                              # Import analyze_rule locally to avoid forward reference issues
+                              from .analysis import analyze_rule
+                              # Get the actual function from the closure
+                              logging.debug(f"Recursively analyzing closure function: {func_name} -> {actual_func}")
 
-                          # Build parameter mapping for function inlining
-                          param_mapping = self._build_parameter_mapping(actual_func, args_with_nodes)
+                              # Build parameter mapping for function inlining
+                              param_mapping = self._build_parameter_mapping(actual_func, args_with_nodes)
 
-                          # Merge parameter mapping into closure vars
-                          enhanced_closure_vars = self.closure_vars.copy()
-                          enhanced_closure_vars.update(param_mapping)
+                              # Merge parameter mapping into closure vars
+                              enhanced_closure_vars = self.closure_vars.copy()
+                              enhanced_closure_vars.update(param_mapping)
 
-                          # Pass the seen_funcs dictionary (it's mutable state)
-                          recursive_result = analyze_rule(rule_func=actual_func,
-                                                          closure_vars=enhanced_closure_vars,
-                                                          seen_funcs=self.seen_funcs, # Pass the dict
-                                                          game_handler=self.game_handler,
-                                                          player_context=self.player_context)
-                          if recursive_result.get('type') != 'error':
-                              logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
-                              return recursive_result # Return the detailed analysis result
-                          else:
-                              logging.debug(f"Recursive analysis for {func_name} returned type 'error'. Falling back to helper node. Error details: {recursive_result.get('error_log')}")
-                 except Exception as e:
-                      logging.error(f"Error during recursive analysis of closure var {func_name}: {e}")
+                              # Pass the seen_funcs dictionary (it's mutable state)
+                              recursive_result = analyze_rule(rule_func=actual_func,
+                                                              closure_vars=enhanced_closure_vars,
+                                                              seen_funcs=self.seen_funcs, # Pass the dict
+                                                              game_handler=self.game_handler,
+                                                              player_context=self.player_context)
+                              if recursive_result.get('type') != 'error':
+                                  logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
+                                  return recursive_result # Return the detailed analysis result
+                              else:
+                                  logging.debug(f"Recursive analysis for {func_name} returned type 'error'. Falling back to helper node. Error details: {recursive_result.get('error_log')}")
+                     except Exception as e:
+                          logging.error(f"Error during recursive analysis of closure var {func_name}: {e}")
                  # --- END Recursive analysis logic ---
                  # If recursion wasn't attempted or failed, fall through to default helper representation
 
@@ -1487,11 +1500,65 @@ class ASTVisitorMixin:
             logging.debug(f"\n--- visit_If ---")
             test_result = self.visit(node.test)
 
-            # Assume simple structure where body/orelse contain a single statement (e.g., return)
-            # and visit that statement directly.
+            # Handle body - process all statements if there are multiple
             body_result = None
             if node.body:
-                 body_result = self.visit(node.body[0]) # Visit the first statement in the 'if' block
+                if len(node.body) == 1:
+                    # Single statement - process directly
+                    body_result = self.visit(node.body[0])
+                else:
+                    # Multiple statements - process all and combine
+                    logging.debug(f"visit_If: Found {len(node.body)} statements in if body, processing all...")
+                    body_statements = []
+                    for stmt in node.body:
+                        stmt_result = self.visit(stmt)
+                        if stmt_result is not None:
+                            body_statements.append(stmt_result)
+                        else:
+                            logging.warning(f"visit_If: Failed to analyze statement in body: {ast.dump(stmt)}")
+
+                    # Combine multiple statements
+                    if len(body_statements) == 0:
+                        logging.error("visit_If: All statements in body failed to analyze")
+                        return None
+                    elif len(body_statements) == 1:
+                        body_result = body_statements[0]
+                    else:
+                        # Multiple successful statements
+                        # Check if they are all conditionals with the same if_true value (common pattern)
+                        all_conditionals_with_same_true = all(
+                            stmt.get('type') == 'conditional' and
+                            stmt.get('if_true') is not None and
+                            stmt.get('if_true').get('type') == 'constant' and
+                            stmt.get('if_true').get('value') == body_statements[0].get('if_true', {}).get('value')
+                            for stmt in body_statements
+                        )
+
+                        if all_conditionals_with_same_true:
+                            # Pattern: multiple "if X: return True" statements
+                            # Combine their tests with OR logic
+                            logging.debug("visit_If: Combining multiple conditionals with OR logic")
+                            or_conditions = [stmt['test'] for stmt in body_statements]
+                            body_result = {
+                                'type': 'conditional',
+                                'test': {'type': 'or', 'conditions': or_conditions},
+                                'if_true': body_statements[0]['if_true'],
+                                'if_false': body_statements[0].get('if_false')
+                            }
+                        else:
+                            # General case: chain them sequentially
+                            # Last statement determines the result if all previous ones are false
+                            logging.debug("visit_If: Chaining multiple statements sequentially")
+                            body_result = body_statements[-1]
+                            for i in range(len(body_statements) - 2, -1, -1):
+                                stmt = body_statements[i]
+                                if stmt.get('type') == 'conditional':
+                                    # Chain: if this condition, do this, else continue to next
+                                    stmt['if_false'] = body_result
+                                    body_result = stmt
+                                else:
+                                    # Non-conditional statement - just keep the last result
+                                    pass
             else:
                  logging.warning("visit_If: 'if' block is empty.")
 

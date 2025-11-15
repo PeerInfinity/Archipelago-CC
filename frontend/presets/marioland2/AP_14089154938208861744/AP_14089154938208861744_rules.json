@@ -139,8 +139,16 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": 6
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "options"
+                  },
+                  "attr": "required_golden_coins"
                 }
               ]
             }
@@ -209,10 +217,14 @@
             "name": "Tree Zone 1 -> Tree Zone 2",
             "connected_region": "Tree Zone 2",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Tree Zone Progression"
+                }
+              ]
             }
           }
         ],
@@ -254,10 +266,18 @@
             "name": "Tree Zone 2 -> Tree Zone 3",
             "connected_region": "Tree Zone 3",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Tree Zone Progression"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             }
           },
           {
@@ -278,7 +298,7 @@
             "id": 6,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_2_normal_exit",
               "args": []
             },
             "item": {
@@ -293,7 +313,7 @@
             "id": 7,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_2_secret_exit",
               "args": []
             },
             "item": {
@@ -308,7 +328,7 @@
             "id": 8,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_2_midway_bell",
               "args": []
             },
             "item": {
@@ -338,7 +358,7 @@
             "id": 9,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_3_normal_exit",
               "args": []
             },
             "item": {
@@ -357,10 +377,18 @@
             "name": "Tree Zone 4 -> Tree Zone 5",
             "connected_region": "Tree Zone 5",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Tree Zone Progression"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             }
           }
         ],
@@ -370,7 +398,7 @@
             "id": 10,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_4_normal_exit",
               "args": []
             },
             "item": {
@@ -385,7 +413,7 @@
             "id": 11,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_4_midway_bell",
               "args": []
             },
             "item": {
@@ -406,7 +434,7 @@
             "id": 12,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "tree_zone_5_boss",
               "args": []
             },
             "item": {
@@ -460,9 +488,47 @@
             "name": "Hippo Zone - Normal or Secret Exit",
             "id": 15,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Hippo Bubble",
+                        "Water Physics"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Carrot"
+                      }
+                    },
+                    {
+                      "type": "not",
+                      "condition": {
+                        "type": "helper",
+                        "name": "is_auto_scroll",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Hippo Zone"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -491,10 +557,14 @@
             "name": "Space Zone 1 -> Space Zone 2",
             "connected_region": "Space Zone 2",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Space Zone Progression"
+                }
+              ]
             }
           }
         ],
@@ -504,7 +574,7 @@
             "id": 16,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "space_zone_1_normal_exit",
               "args": []
             },
             "item": {
@@ -519,7 +589,7 @@
             "id": 17,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "space_zone_1_secret_exit",
               "args": []
             },
             "item": {
@@ -573,9 +643,31 @@
             "name": "Space Zone 2 - Boss",
             "id": 20,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "conditional",
+              "test": {
+                "type": "helper",
+                "name": "has_pipe_right",
+                "args": []
+              },
+              "if_true": {
+                "type": "conditional",
+                "test": {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Space Physics"
+                  }
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": true
+                },
+                "if_false": null
+              },
+              "if_false": {
+                "type": "constant",
+                "value": false
+              }
             },
             "item": {
               "name": "Space Coin",
@@ -589,7 +681,7 @@
             "id": 21,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "space_zone_2_midway_bell",
               "args": []
             },
             "item": {
@@ -608,10 +700,14 @@
             "name": "Macro Zone 1 -> Macro Zone 2",
             "connected_region": "Macro Zone 2",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Macro Zone Progression"
+                }
+              ]
             }
           },
           {
@@ -632,7 +728,7 @@
             "id": 22,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "macro_zone_1_normal_exit",
               "args": []
             },
             "item": {
@@ -647,7 +743,7 @@
             "id": 23,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "macro_zone_1_secret_exit",
               "args": []
             },
             "item": {
@@ -662,7 +758,7 @@
             "id": 24,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "macro_zone_1_midway_bell",
               "args": []
             },
             "item": {
@@ -681,10 +777,18 @@
             "name": "Macro Zone 2 -> Macro Zone 3",
             "connected_region": "Macro Zone 3",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Macro Zone Progression"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             }
           }
         ],
@@ -694,7 +798,7 @@
             "id": 25,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "macro_zone_2_normal_exit",
               "args": []
             },
             "item": {
@@ -709,7 +813,7 @@
             "id": 26,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "macro_zone_2_midway_bell",
               "args": []
             },
             "item": {
@@ -728,10 +832,18 @@
             "name": "Macro Zone 3 -> Macro Zone 4",
             "connected_region": "Macro Zone 4",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Macro Zone Progression"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             }
           }
         ],
@@ -740,9 +852,31 @@
             "name": "Macro Zone 3 - Normal Exit",
             "id": 27,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "has_pipe_down",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_pipe_up",
+                      "args": []
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Macro Zone 3 Midway Bell"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -755,9 +889,31 @@
             "name": "Macro Zone 3 - Midway Bell",
             "id": 28,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "has_pipe_down",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_pipe_up",
+                      "args": []
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Macro Zone 3 Midway Bell"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -789,7 +945,7 @@
             "id": 29,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "has_pipe_right",
               "args": []
             },
             "item": {
@@ -854,10 +1010,14 @@
             "name": "Pumpkin Zone 1 -> Pumpkin Zone 2",
             "connected_region": "Pumpkin Zone 2",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Pumpkin Zone Progression"
+                }
+              ]
             }
           }
         ],
@@ -867,7 +1027,7 @@
             "id": 32,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "pumpkin_zone_1_normal_exit",
               "args": []
             },
             "item": {
@@ -882,7 +1042,7 @@
             "id": 33,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "pumpkin_zone_1_midway_bell",
               "args": []
             },
             "item": {
@@ -901,10 +1061,18 @@
             "name": "Pumpkin Zone 2 -> Pumpkin Zone 3",
             "connected_region": "Pumpkin Zone 3",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Pumpkin Zone Progression"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             }
           },
           {
@@ -925,7 +1093,7 @@
             "id": 34,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "pumpkin_zone_2_normal_exit",
               "args": []
             },
             "item": {
@@ -940,7 +1108,7 @@
             "id": 35,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "pumpkin_zone_2_secret_exit",
               "args": []
             },
             "item": {
@@ -973,10 +1141,18 @@
             "name": "Pumpkin Zone 3 -> Pumpkin Zone 4",
             "connected_region": "Pumpkin Zone 4",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Pumpkin Zone Progression"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             }
           },
           {
@@ -1011,7 +1187,7 @@
             "id": 38,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "pumpkin_zone_3_secret_exit",
               "args": []
             },
             "item": {
@@ -1046,7 +1222,7 @@
             "id": 40,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "pumpkin_zone_4_boss",
               "args": []
             },
             "item": {
@@ -1119,10 +1295,14 @@
             "name": "Mario Zone 1 -> Mario Zone 2",
             "connected_region": "Mario Zone 2",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Mario Zone Progression"
+                }
+              ]
             }
           }
         ],
@@ -1132,7 +1312,7 @@
             "id": 44,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "mario_zone_1_normal_exit",
               "args": []
             },
             "item": {
@@ -1147,7 +1327,7 @@
             "id": 45,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "mario_zone_1_midway_bell",
               "args": []
             },
             "item": {
@@ -1166,10 +1346,18 @@
             "name": "Mario Zone 2 -> Mario Zone 3",
             "connected_region": "Mario Zone 3",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Mario Zone Progression"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             }
           }
         ],
@@ -1211,10 +1399,18 @@
             "name": "Mario Zone 3 -> Mario Zone 4",
             "connected_region": "Mario Zone 4",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Mario Zone Progression"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                }
+              ]
             }
           }
         ],
@@ -1258,7 +1454,7 @@
             "id": 50,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "mario_zone_4_boss",
               "args": []
             },
             "item": {
@@ -1291,10 +1487,14 @@
             "name": "Turtle Zone 1 -> Turtle Zone 2",
             "connected_region": "Turtle Zone 2",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Turtle Zone Progression"
+                }
+              ]
             }
           }
         ],
@@ -1304,7 +1504,7 @@
             "id": 52,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "turtle_zone_1_normal_exit",
               "args": []
             },
             "item": {
@@ -1337,10 +1537,18 @@
             "name": "Turtle Zone 2 -> Turtle Zone 3",
             "connected_region": "Turtle Zone 3",
             "access_rule": {
-              "type": "item_check",
-              "item": "Level_Progression",
-              "inferred": true,
-              "description": "Requires having Level Progression"
+              "type": "helper",
+              "name": "has_level_progression",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Turtle Zone Progression"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
             }
           },
           {
@@ -1361,7 +1569,7 @@
             "id": 54,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "turtle_zone_2_normal_exit",
               "args": []
             },
             "item": {
@@ -1375,9 +1583,34 @@
             "name": "Turtle Zone 2 - Secret Exit",
             "id": 55,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "has_pipe_up",
+                  "args": []
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Water Physics"
+                  }
+                },
+                {
+                  "type": "not",
+                  "condition": {
+                    "type": "helper",
+                    "name": "is_auto_scroll",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Turtle Zone 2"
+                      }
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Hippo Bubble",
@@ -1391,7 +1624,7 @@
             "id": 56,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "turtle_zone_2_midway_bell",
               "args": []
             },
             "item": {
@@ -1412,7 +1645,7 @@
             "id": 57,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "has_pipe_right",
               "args": []
             },
             "item": {
@@ -1447,7 +1680,7 @@
             "id": 59,
             "access_rule": {
               "type": "helper",
-              "name": "loc_rule",
+              "name": "turtle_zone_secret_course_normal_exit",
               "args": []
             },
             "item": {
@@ -1467,9 +1700,31 @@
             "name": "Mario's Castle - Wario",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "loc_rule",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "has_pipe_right",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_pipe_left",
+                      "args": []
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Mario's Castle Midway Bell"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Wario Defeated",
