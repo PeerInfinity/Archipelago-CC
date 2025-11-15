@@ -63,6 +63,9 @@ function countProgress(snapshot, staticData, progressId, visitedRules = new Set(
         const providesThisProgress = rule.provides.some(p => p.progress_id === progressId);
         if (!providesThisProgress) continue;
 
+        // Skip if we're already evaluating this rule (prevents circular dependencies)
+        if (visitedRules.has(i)) continue;
+
         // Check if all requirements are met
         let requirementsMet = true;
         for (const req of rule.requires) {
