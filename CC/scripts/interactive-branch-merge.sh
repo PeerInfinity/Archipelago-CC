@@ -216,6 +216,11 @@ perform_merge_only() {
 
             # Unstage and discard changes in CC/scripts/logs/
             if [ -d "CC/scripts/logs" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^CC/scripts/logs/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
                 git reset -- CC/scripts/logs/ 2>/dev/null || true
                 git checkout -- CC/scripts/logs/ 2>/dev/null || true
                 git clean -fd CC/scripts/logs/ 2>/dev/null || true
@@ -223,6 +228,11 @@ perform_merge_only() {
 
             # Unstage and discard changes in frontend/presets/
             if [ -d "frontend/presets" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^frontend/presets/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
                 git reset -- frontend/presets/ 2>/dev/null || true
                 git checkout -- frontend/presets/ 2>/dev/null || true
                 git clean -fd frontend/presets/ 2>/dev/null || true
@@ -230,6 +240,11 @@ perform_merge_only() {
 
             # Unstage and discard changes in scripts/output/
             if [ -d "scripts/output" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^scripts/output/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
                 git reset -- scripts/output/ 2>/dev/null || true
                 git checkout -- scripts/output/ 2>/dev/null || true
                 git clean -fd scripts/output/ 2>/dev/null || true
@@ -371,6 +386,11 @@ fetch_and_merge() {
 
             # Unstage and discard changes in CC/scripts/logs/
             if [ -d "CC/scripts/logs" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^CC/scripts/logs/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
                 git reset -- CC/scripts/logs/ 2>/dev/null || true
                 git checkout -- CC/scripts/logs/ 2>/dev/null || true
                 git clean -fd CC/scripts/logs/ 2>/dev/null || true
@@ -378,6 +398,11 @@ fetch_and_merge() {
 
             # Unstage and discard changes in frontend/presets/
             if [ -d "frontend/presets" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^frontend/presets/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
                 git reset -- frontend/presets/ 2>/dev/null || true
                 git checkout -- frontend/presets/ 2>/dev/null || true
                 git clean -fd frontend/presets/ 2>/dev/null || true
@@ -385,6 +410,11 @@ fetch_and_merge() {
 
             # Unstage and discard changes in scripts/output/
             if [ -d "scripts/output" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^scripts/output/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
                 git reset -- scripts/output/ 2>/dev/null || true
                 git checkout -- scripts/output/ 2>/dev/null || true
                 git clean -fd scripts/output/ 2>/dev/null || true
