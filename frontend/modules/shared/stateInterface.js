@@ -470,6 +470,10 @@ export function createStateSnapshotInterface(
       });
       return evaluateRule(locData.access_rule, locationContext);
     },
+    // Alias for isRegionReachable to match naming convention used in region_check rules
+    isRegionAccessible: function (regionName) {
+      return this.isRegionReachable(regionName);
+    },
     getPlayerSlot: () => snapshot?.player?.slot,
     getGameMode: () => snapshot?.gameMode,
     getDifficultyRequirements: () => snapshot?.difficultyRequirements,
