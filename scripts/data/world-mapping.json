@@ -476,9 +476,9 @@
     "world_directory": "terraria"
   },
   "The Legend of Zelda": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/tloz.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "tloz"
   },
@@ -546,23 +546,23 @@
     "world_directory": "yachtdice"
   },
   "Yoshi's Island": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/yoshisisland.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/yoshisisland/yoshisislandLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "yoshisisland"
   },
   "Yu-Gi-Oh! 2006": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/yugioh06.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "yugioh06"
   },
   "Zillion": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/zillion.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "zillion"
   },
