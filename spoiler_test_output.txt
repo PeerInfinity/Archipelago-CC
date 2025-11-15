@@ -1,0 +1,1758 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:26] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: oot
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=oot&seed=1
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/?mode=test-spoilers&game=oot&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/modes.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/presets/oot/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/oot/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [04:23:48.992] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:48] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/hylics_2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/jak_and_daxter__the_precursor_legacy/jak_and_daxter__the_precursor_legacyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/messenger/messengerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/oot/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/raft/raftLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/cv64/cv64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/dark_souls_3/darkSouls3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/paint/paintLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/soe/soeLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/shapez/shapezLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/shivers/shiversLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/smz3/smz3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/sc2/sc2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/super_metroid/smLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/stardew_valley/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/terraria/terrariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/yoshisisland/yoshisislandLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/tww/twwLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/jak_and_daxter__the_precursor_legacy/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/marioland2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/cv64/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/overcooked2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/shapez/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/paint/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/shivers/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/sc2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/subnautica/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/terraria/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [04:23:49.500] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [04:23:49.502] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [04:23:49.688] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [04:23:49.688] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [04:23:49.689] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [04:23:49.689] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/oot/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/oot/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/oot/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [04:23:49.710] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:49] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/presets/oot/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [15/Nov/2025 04:23:50] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+BROWSER LOG (warning): [OOT] Unknown rule pattern: can_finish_GerudoFortress
+BROWSER LOG (warning): [OOT] Unknown helper: logic_gerudo_kitchen
+BROWSER LOG (warning): [OOT] Unknown helper: has_fire_source
+BROWSER LOG (warning): [OOT] Unknown helper: can_child_attack
+BROWSER LOG (warning): [OOT] Unknown helper: has_fire_source
+BROWSER LOG (warning): [OOT] Unknown helper: logic_child_dampe_race_poh
+BROWSER LOG (warning): [OOT] Unknown helper: logic_dmt_bombable
+BROWSER LOG (warning): [OOT] Unknown helper: logic_goron_city_leftmost
+BROWSER LOG (warning): [OOT] Unknown helper: logic_zora_river_upper
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_upper_beehive_child
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_upper_beehive_child
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_upper_beehive_child
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_upper_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_upper_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_upper_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: has_fire_source
+BROWSER LOG (warning): [OOT] Unknown helper: has_fire_source
+BROWSER LOG (warning): [OOT] Unknown helper: has_fire_source
+BROWSER LOG (warning): [OOT] Unknown helper: has_fire_source
+BROWSER LOG (warning): [OOT] Unknown helper: has_fire_source
+BROWSER LOG (warning): [OOT] Unknown helper: has_fire_source
+BROWSER LOG (warning): [OOT] Unknown helper: has_fire_source
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_upper_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_upper_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_lower_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_upper_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_upper_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_upper_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_break_upper_beehive
+BROWSER LOG (warning): [OOT] Unknown helper: king_dodongo_shortcuts
+BROWSER LOG (warning): [OOT] Unknown helper: king_dodongo_shortcuts
+BROWSER LOG (warning): [OOT] Unknown helper: can_child_attack
+BROWSER LOG (warning): [OOT] Unknown helper: can_child_attack
+BROWSER LOG (warning): [OOT] Unknown helper: can_child_attack
+BROWSER LOG (warning): [OOT] Unknown helper: can_use_projectile
+BROWSER LOG (warning): [OOT] Unknown helper: logic_deku_basement_gs
+BROWSER LOG (warning): [OOT] Unknown rule pattern: here(has_fire_source_with_torch or can_use(Bow))
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: logic_dc_scarecrow_gs
+BROWSER LOG (warning): [OOT] Unknown helper: logic_dc_scrub_room
+BROWSER LOG (warning): [OOT] Unknown helper: logic_dc_scrub_room
+BROWSER LOG (warning): [OOT] Unknown helper: logic_jabu_alcove_jump_dive
+BROWSER LOG (warning): [OOT] Unknown helper: logic_forest_first_gs
+BROWSER LOG (warning): [OOT] Unknown rule pattern: at('Forest Temple Outside Upper Ledge', can_use(Hookshot) or can_use(Boomerang))
+BROWSER LOG (warning): [OOT] Unknown helper: logic_forest_outdoor_east_gs
+BROWSER LOG (warning): [OOT] Unknown rule pattern: at('Forest Temple Falling Room', can_use(Bow) or can_use(Dins_Fire) or has_explosives)
+BROWSER LOG (warning): [OOT] Unknown helper: logic_fewer_tunic_requirements
+BROWSER LOG (warning): [OOT] Unknown helper: logic_fire_scarecrow
+BROWSER LOG (warning): [OOT] Unknown helper: logic_fire_scarecrow
+BROWSER LOG (warning): [OOT] Unknown helper: logic_fire_scarecrow
+BROWSER LOG (warning): [OOT] Unknown helper: logic_ice_block_gs
+BROWSER LOG (warning): [OOT] Unknown helper: has_fire_source_with_torch
+BROWSER LOG (warning): [OOT] Unknown helper: logic_water_central_gs_fw
+BROWSER LOG (warning): [OOT] Unknown helper: logic_water_central_gs_irons
+BROWSER LOG (warning): [OOT] Unknown helper: logic_water_central_gs_fw
+BROWSER LOG (warning): [OOT] Unknown helper: logic_water_falling_platform_gs_hookshot
+BROWSER LOG (warning): [OOT] Unknown helper: logic_water_falling_platform_gs_boomerang
+BROWSER LOG (warning): [OOT] Unknown helper: logic_water_river_gs
+BROWSER LOG (warning): [OOT] Unknown helper: logic_shadow_umbrella
+BROWSER LOG (warning): [OOT] Unknown helper: logic_shadow_umbrella
+BROWSER LOG (warning): [OOT] Unknown helper: logic_shadow_umbrella
+BROWSER LOG (warning): [OOT] Unknown helper: logic_shadow_umbrella
+BROWSER LOG (warning): [OOT] Unknown helper: logic_shadow_umbrella_gs
+BROWSER LOG (warning): [OOT] Unknown function: has_projectile
+BROWSER LOG (warning): [OOT] Unknown function: has_projectile
+BROWSER LOG (warning): [OOT] Unknown function: has_projectile
+BROWSER LOG (warning): [OOT] Unknown helper: can_take_damage
+BROWSER LOG (warning): [OOT] Unknown helper: logic_spirit_map_chest
+BROWSER LOG (warning): [OOT] Unknown helper: logic_spirit_sun_chest
+BROWSER LOG (warning): [OOT] Unknown helper: spirit_temple_shortcuts
+BROWSER LOG (warning): [OOT] Unknown helper: spirit_temple_shortcuts
+BROWSER LOG (warning): [OOT] Unknown helper: spirit_temple_shortcuts
+BROWSER LOG (warning): [OOT] Unknown helper: spirit_temple_shortcuts
+BROWSER LOG (warning): [OOT] Unknown helper: logic_spirit_lobby_gs
+BROWSER LOG (warning): [OOT] Unknown helper: logic_lens_spirit
+BROWSER LOG (warning): [OOT] Unknown helper: logic_lens_spirit
+BROWSER LOG (warning): [OOT] Unknown helper: logic_lens_castle
+BROWSER LOG (warning): [OOT] Unknown helper: logic_lens_castle
+BROWSER LOG (warning): [OOT] Unknown helper: logic_lens_castle
+BROWSER LOG (warning): [OOT] Unknown helper: logic_lens_castle
+BROWSER LOG (warning): [OOT] Unknown helper: logic_lens_castle
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (warning): [OOT] Unknown helper: can_stun_deku
+BROWSER LOG (error): [04:23:52.059] [ERROR] [testSpoilerUI] STATE MISMATCH found for: {"type":"state_update","sphere_number":0,"player_id":"1"}
+BROWSER LOG (error): [04:23:52.059] [ERROR] [testSpoilerUI:ComparisonEngine] STATE MISMATCH found for: {"type":"state_update","sphere_number":0,"player_id":"1"}
+BROWSER LOG (error): [04:23:52.065] [ERROR] [testSpoilerUI]  > Locations accessible in LOG but NOT in STATE (or checked): Deku Tree Compass Chest, Deku Tree Compass Room Side Chest, Deku Tree Lower Lobby Recovery Heart, Deku Tree Map Chest, GV Crate Freestanding PoH, GV Crate Near Cow, GV Freestanding PoH Crate, GV Waterfall Freestanding PoH, Graveyard Dampe Gravedigging Tour, Graveyard Shield Grave Chest, Graveyard Subrule 1, HC Malon Egg, HF Open Grotto Chest, KF Behind Midos Blue Rupee, KF Boulder Maze Blue Rupee 1, KF Boulder Maze Blue Rupee 2, KF End of Bridge Blue Rupee, KF Grass Near Midos Green Rupee 1, KF Grass Near Midos Green Rupee 2, KF Grass Near Ramp Green Rupee 1, KF Grass Near Ramp Green Rupee 2, KF House of Twins Pot 1, KF House of Twins Pot 2, KF Know it All House Pot 1, KF Know it All House Pot 2, KF Kokiri Sword Chest, KF Links House Pot, KF Midos Bottom Left Chest, KF Midos Bottom Right Chest, KF Midos Top Left Chest, KF Midos Top Right Chest, KF Sarias House Recovery Heart 1, KF Sarias House Recovery Heart 2, KF Sarias House Recovery Heart 3, KF Sarias House Recovery Heart 4, KF Shop Blue Rupee, KF Shop Item 1, KF Shop Item 2, KF Shop Item 3, KF Shop Item 4, KF Shop Item 5, KF Shop Item 6, KF Shop Item 7, KF Shop Item 8, KF Top of Sarias Recovery Heart 1, KF Top of Sarias Recovery Heart 2, KF Top of Sarias Recovery Heart 3, Kak Anju as Child, Kak GS House Under Construction, Kak GS Near Gate Guard, Kak GS Skulltula House, Kak GS Tree, Kak Impas House Freestanding PoH, Kak Near Guards House Pot 1, Kak Near Guards House Pot 2, Kak Near Guards House Pot 3, Kak Near Impas House Pot 1, Kak Near Impas House Pot 2, Kak Near Impas House Pot 3, Kak Near Odd Medicine Building Pot 1, Kak Near Odd Medicine Building Pot 2, Kak Near Potion Shop Pot 1, Kak Near Potion Shop Pot 2, Kak Near Potion Shop Pot 3, Kak Open Grotto Chest, Kakariko Village Gate Open from Kakariko Village, Kakariko Village Subrule 1, LH Child Fishing, LH Underwater Near Shore Green Rupee, LLR Child Crate, LLR Freestanding PoH, LLR Front Pot 1, LLR Front Pot 2, LLR Front Pot 3, LLR Front Pot 4, LLR GS Rain Shed, LLR GS Tree, LLR Rain Shed Pot 1, LLR Rain Shed Pot 2, LLR Rain Shed Pot 3, LLR Talons House Pot 1, LLR Talons House Pot 2, LLR Talons House Pot 3, LW Gift from Saria, Market Bazaar Item 1, Market Bazaar Item 2, Market Bazaar Item 3, Market Bazaar Item 4, Market Bazaar Item 5, Market Bazaar Item 7, Market Bazaar Item 8, Market Dog Lady House Crate, Market GS Guard House, Market Guard House Child Crate, Market Guard House Child Pot 1, Market Guard House Child Pot 10, Market Guard House Child Pot 11, Market Guard House Child Pot 12, Market Guard House Child Pot 13, Market Guard House Child Pot 14, Market Guard House Child Pot 15, Market Guard House Child Pot 16, Market Guard House Child Pot 17, Market Guard House Child Pot 18, Market Guard House Child Pot 19, Market Guard House Child Pot 2, Market Guard House Child Pot 20, Market Guard House Child Pot 21, Market Guard House Child Pot 22, Market Guard House Child Pot 23, Market Guard House Child Pot 24, Market Guard House Child Pot 25, Market Guard House Child Pot 26, Market Guard House Child Pot 27, Market Guard House Child Pot 28, Market Guard House Child Pot 29, Market Guard House Child Pot 3, Market Guard House Child Pot 30, Market Guard House Child Pot 31, Market Guard House Child Pot 32, Market Guard House Child Pot 33, Market Guard House Child Pot 34, Market Guard House Child Pot 35, Market Guard House Child Pot 36, Market Guard House Child Pot 37, Market Guard House Child Pot 38, Market Guard House Child Pot 39, Market Guard House Child Pot 4, Market Guard House Child Pot 40, Market Guard House Child Pot 41, Market Guard House Child Pot 42, Market Guard House Child Pot 43, Market Guard House Child Pot 44, Market Guard House Child Pot 5, Market Guard House Child Pot 6, Market Guard House Child Pot 7, Market Guard House Child Pot 8, Market Guard House Child Pot 9, Market Lost Dog, Market Man in Green House Pot 1, Market Man in Green House Pot 2, Market Man in Green House Pot 3, Market Night Green Rupee Crate 1, Market Night Green Rupee Crate 2, Market Night Green Rupee Crate 3, Market Night Red Rupee Crate, Market Potion Shop Item 3, Market Potion Shop Item 5, Market Shooting Gallery Reward, Master Sword Pedestal
+BROWSER LOG (error): [04:23:52.067] [ERROR] [testSpoilerUI:ComparisonEngine]  > Locations accessible in LOG but NOT in STATE (or checked): Deku Tree Compass Chest, Deku Tree Compass Room Side Chest, Deku Tree Lower Lobby Recovery Heart, Deku Tree Map Chest, GV Crate Freestanding PoH, GV Crate Near Cow, GV Freestanding PoH Crate, GV Waterfall Freestanding PoH, Graveyard Dampe Gravedigging Tour, Graveyard Shield Grave Chest, Graveyard Subrule 1, HC Malon Egg, HF Open Grotto Chest, KF Behind Midos Blue Rupee, KF Boulder Maze Blue Rupee 1, KF Boulder Maze Blue Rupee 2, KF End of Bridge Blue Rupee, KF Grass Near Midos Green Rupee 1, KF Grass Near Midos Green Rupee 2, KF Grass Near Ramp Green Rupee 1, KF Grass Near Ramp Green Rupee 2, KF House of Twins Pot 1, KF House of Twins Pot 2, KF Know it All House Pot 1, KF Know it All House Pot 2, KF Kokiri Sword Chest, KF Links House Pot, KF Midos Bottom Left Chest, KF Midos Bottom Right Chest, KF Midos Top Left Chest, KF Midos Top Right Chest, KF Sarias House Recovery Heart 1, KF Sarias House Recovery Heart 2, KF Sarias House Recovery Heart 3, KF Sarias House Recovery Heart 4, KF Shop Blue Rupee, KF Shop Item 1, KF Shop Item 2, KF Shop Item 3, KF Shop Item 4, KF Shop Item 5, KF Shop Item 6, KF Shop Item 7, KF Shop Item 8, KF Top of Sarias Recovery Heart 1, KF Top of Sarias Recovery Heart 2, KF Top of Sarias Recovery Heart 3, Kak Anju as Child, Kak GS House Under Construction, Kak GS Near Gate Guard, Kak GS Skulltula House, Kak GS Tree, Kak Impas House Freestanding PoH, Kak Near Guards House Pot 1, Kak Near Guards House Pot 2, Kak Near Guards House Pot 3, Kak Near Impas House Pot 1, Kak Near Impas House Pot 2, Kak Near Impas House Pot 3, Kak Near Odd Medicine Building Pot 1, Kak Near Odd Medicine Building Pot 2, Kak Near Potion Shop Pot 1, Kak Near Potion Shop Pot 2, Kak Near Potion Shop Pot 3, Kak Open Grotto Chest, Kakariko Village Gate Open from Kakariko Village, Kakariko Village Subrule 1, LH Child Fishing, LH Underwater Near Shore Green Rupee, LLR Child Crate, LLR Freestanding PoH, LLR Front Pot 1, LLR Front Pot 2, LLR Front Pot 3, LLR Front Pot 4, LLR GS Rain Shed, LLR GS Tree, LLR Rain Shed Pot 1, LLR Rain Shed Pot 2, LLR Rain Shed Pot 3, LLR Talons House Pot 1, LLR Talons House Pot 2, LLR Talons House Pot 3, LW Gift from Saria, Market Bazaar Item 1, Market Bazaar Item 2, Market Bazaar Item 3, Market Bazaar Item 4, Market Bazaar Item 5, Market Bazaar Item 7, Market Bazaar Item 8, Market Dog Lady House Crate, Market GS Guard House, Market Guard House Child Crate, Market Guard House Child Pot 1, Market Guard House Child Pot 10, Market Guard House Child Pot 11, Market Guard House Child Pot 12, Market Guard House Child Pot 13, Market Guard House Child Pot 14, Market Guard House Child Pot 15, Market Guard House Child Pot 16, Market Guard House Child Pot 17, Market Guard House Child Pot 18, Market Guard House Child Pot 19, Market Guard House Child Pot 2, Market Guard House Child Pot 20, Market Guard House Child Pot 21, Market Guard House Child Pot 22, Market Guard House Child Pot 23, Market Guard House Child Pot 24, Market Guard House Child Pot 25, Market Guard House Child Pot 26, Market Guard House Child Pot 27, Market Guard House Child Pot 28, Market Guard House Child Pot 29, Market Guard House Child Pot 3, Market Guard House Child Pot 30, Market Guard House Child Pot 31, Market Guard House Child Pot 32, Market Guard House Child Pot 33, Market Guard House Child Pot 34, Market Guard House Child Pot 35, Market Guard House Child Pot 36, Market Guard House Child Pot 37, Market Guard House Child Pot 38, Market Guard House Child Pot 39, Market Guard House Child Pot 4, Market Guard House Child Pot 40, Market Guard House Child Pot 41, Market Guard House Child Pot 42, Market Guard House Child Pot 43, Market Guard House Child Pot 44, Market Guard House Child Pot 5, Market Guard House Child Pot 6, Market Guard House Child Pot 7, Market Guard House Child Pot 8, Market Guard House Child Pot 9, Market Lost Dog, Market Man in Green House Pot 1, Market Man in Green House Pot 2, Market Man in Green House Pot 3, Market Night Green Rupee Crate 1, Market Night Green Rupee Crate 2, Market Night Green Rupee Crate 3, Market Night Red Rupee Crate, Market Potion Shop Item 3, Market Potion Shop Item 5, Market Shooting Gallery Reward, Master Sword Pedestal
+BROWSER LOG (error): [MISMATCH DETAIL] Missing from state (150): [Deku Tree Compass Chest, Deku Tree Compass Room Side Chest, Deku Tree Lower Lobby Recovery Heart, Deku Tree Map Chest, GV Crate Freestanding PoH, GV Crate Near Cow, GV Freestanding PoH Crate, GV Waterfall Freestanding PoH, Graveyard Dampe Gravedigging Tour, Graveyard Shield Grave Chest, Graveyard Subrule 1, HC Malon Egg, HF Open Grotto Chest, KF Behind Midos Blue Rupee, KF Boulder Maze Blue Rupee 1, KF Boulder Maze Blue Rupee 2, KF End of Bridge Blue Rupee, KF Grass Near Midos Green Rupee 1, KF Grass Near Midos Green Rupee 2, KF Grass Near Ramp Green Rupee 1, KF Grass Near Ramp Green Rupee 2, KF House of Twins Pot 1, KF House of Twins Pot 2, KF Know it All House Pot 1, KF Know it All House Pot 2, KF Kokiri Sword Chest, KF Links House Pot, KF Midos Bottom Left Chest, KF Midos Bottom Right Chest, KF Midos Top Left Chest, KF Midos Top Right Chest, KF Sarias House Recovery Heart 1, KF Sarias House Recovery Heart 2, KF Sarias House Recovery Heart 3, KF Sarias House Recovery Heart 4, KF Shop Blue Rupee, KF Shop Item 1, KF Shop Item 2, KF Shop Item 3, KF Shop Item 4, KF Shop Item 5, KF Shop Item 6, KF Shop Item 7, KF Shop Item 8, KF Top of Sarias Recovery Heart 1, KF Top of Sarias Recovery Heart 2, KF Top of Sarias Recovery Heart 3, Kak Anju as Child, Kak GS House Under Construction, Kak GS Near Gate Guard, Kak GS Skulltula House, Kak GS Tree, Kak Impas House Freestanding PoH, Kak Near Guards House Pot 1, Kak Near Guards House Pot 2, Kak Near Guards House Pot 3, Kak Near Impas House Pot 1, Kak Near Impas House Pot 2, Kak Near Impas House Pot 3, Kak Near Odd Medicine Building Pot 1, Kak Near Odd Medicine Building Pot 2, Kak Near Potion Shop Pot 1, Kak Near Potion Shop Pot 2, Kak Near Potion Shop Pot 3, Kak Open Grotto Chest, Kakariko Village Gate Open from Kakariko Village, Kakariko Village Subrule 1, LH Child Fishing, LH Underwater Near Shore Green Rupee, LLR Child Crate, LLR Freestanding PoH, LLR Front Pot 1, LLR Front Pot 2, LLR Front Pot 3, LLR Front Pot 4, LLR GS Rain Shed, LLR GS Tree, LLR Rain Shed Pot 1, LLR Rain Shed Pot 2, LLR Rain Shed Pot 3, LLR Talons House Pot 1, LLR Talons House Pot 2, LLR Talons House Pot 3, LW Gift from Saria, Market Bazaar Item 1, Market Bazaar Item 2, Market Bazaar Item 3, Market Bazaar Item 4, Market Bazaar Item 5, Market Bazaar Item 7, Market Bazaar Item 8, Market Dog Lady House Crate, Market GS Guard House, Market Guard House Child Crate, Market Guard House Child Pot 1, Market Guard House Child Pot 10, Market Guard House Child Pot 11, Market Guard House Child Pot 12, Market Guard House Child Pot 13, Market Guard House Child Pot 14]
+BROWSER LOG (error): [04:23:52.076] [ERROR] [testSpoilerUI]     ISSUE: Region Deku Tree Lobby is not reachable
+BROWSER LOG (error): [04:23:52.080] [ERROR] [testSpoilerUI]     ISSUE: Region Deku Tree Lobby is not reachable
+BROWSER LOG (error): [04:23:52.082] [ERROR] [testSpoilerUI]     ISSUE: Region Deku Tree Lobby is not reachable
+BROWSER LOG (error): [04:23:52.086] [ERROR] [testSpoilerUI]     ISSUE: Region Deku Tree Lobby is not reachable
+BROWSER LOG (error): [04:23:52.090] [ERROR] [testSpoilerUI]     ISSUE: Region GV Crate Ledge is not reachable
+BROWSER LOG (error): [04:23:52.094] [ERROR] [testSpoilerUI]     ISSUE: Region GV Upper Stream is not reachable
+BROWSER LOG (error): [04:23:52.098] [ERROR] [testSpoilerUI]     ISSUE: Region GV Crate Ledge is not reachable
+BROWSER LOG (error): [04:23:52.103] [ERROR] [testSpoilerUI]     ISSUE: Region GV Upper Stream is not reachable
+BROWSER LOG (error): [04:23:52.109] [ERROR] [testSpoilerUI]     ISSUE: Region Graveyard is not reachable
+BROWSER LOG (error): [04:23:52.116] [ERROR] [testSpoilerUI]     ISSUE: Region Graveyard Shield Grave is not reachable
+BROWSER LOG (error): [04:23:52.122] [ERROR] [testSpoilerUI]     ISSUE: Region Graveyard is not reachable
+BROWSER LOG (error): [04:23:52.129] [ERROR] [testSpoilerUI]     ISSUE: Region Hyrule Castle Grounds is not reachable
+BROWSER LOG (error): [04:23:52.138] [ERROR] [testSpoilerUI]     ISSUE: Region HF Open Grotto is not reachable
+BROWSER LOG (error): [04:23:52.147] [ERROR] [testSpoilerUI]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:23:52.156] [ERROR] [testSpoilerUI]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:23:52.167] [ERROR] [testSpoilerUI]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:23:52.179] [ERROR] [testSpoilerUI]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:23:52.191] [ERROR] [testSpoilerUI]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:23:52.206] [ERROR] [testSpoilerUI]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:23:52.219] [ERROR] [testSpoilerUI]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:23:52.232] [ERROR] [testSpoilerUI]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:23:52.241] [ERROR] [testSpoilerUI]     ISSUE: Region KF House of Twins is not reachable
+BROWSER LOG (error): [04:23:52.252] [ERROR] [testSpoilerUI]     ISSUE: Region KF House of Twins is not reachable
+BROWSER LOG (error): [04:23:52.265] [ERROR] [testSpoilerUI]     ISSUE: Region KF Know It All House is not reachable
+BROWSER LOG (error): [04:23:52.277] [ERROR] [testSpoilerUI]     ISSUE: Region KF Know It All House is not reachable
+BROWSER LOG (error): [04:23:52.291] [ERROR] [testSpoilerUI]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:23:52.306] [ERROR] [testSpoilerUI]     ISSUE: Region KF Links House is not reachable
+BROWSER LOG (error): [04:23:52.322] [ERROR] [testSpoilerUI]     ISSUE: Region KF Midos House is not reachable
+BROWSER LOG (error): [04:23:52.340] [ERROR] [testSpoilerUI]     ISSUE: Region KF Midos House is not reachable
+BROWSER LOG (error): [04:23:52.359] [ERROR] [testSpoilerUI]     ISSUE: Region KF Midos House is not reachable
+BROWSER LOG (error): [04:23:52.379] [ERROR] [testSpoilerUI]     ISSUE: Region KF Midos House is not reachable
+BROWSER LOG (error): [04:23:52.404] [ERROR] [testSpoilerUI]     ISSUE: Region KF Sarias House is not reachable
+BROWSER LOG (error): [04:23:52.428] [ERROR] [testSpoilerUI]     ISSUE: Region KF Sarias House is not reachable
+BROWSER LOG (error): [04:23:52.454] [ERROR] [testSpoilerUI]     ISSUE: Region KF Sarias House is not reachable
+BROWSER LOG (error): [04:23:52.482] [ERROR] [testSpoilerUI]     ISSUE: Region KF Sarias House is not reachable
+BROWSER LOG (error): [04:23:52.514] [ERROR] [testSpoilerUI]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:23:52.542] [ERROR] [testSpoilerUI]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:23:52.552] [ERROR] [testSpoilerUI]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:23:52.565] [ERROR] [testSpoilerUI]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:23:52.578] [ERROR] [testSpoilerUI]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:23:52.591] [ERROR] [testSpoilerUI]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:23:52.605] [ERROR] [testSpoilerUI]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:23:52.619] [ERROR] [testSpoilerUI]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:23:52.633] [ERROR] [testSpoilerUI]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:23:52.650] [ERROR] [testSpoilerUI]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:23:52.665] [ERROR] [testSpoilerUI]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:23:52.681] [ERROR] [testSpoilerUI]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:23:52.696] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:52.713] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:52.728] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:52.744] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:52.760] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:52.778] [ERROR] [testSpoilerUI]     ISSUE: Region Kak Impas House Back is not reachable
+BROWSER LOG (error): [04:23:52.801] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:52.824] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:52.850] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:52.879] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:52.915] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:52.931] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:52.945] [ERROR] [testSpoilerUI]     ISSUE: Region Kak Backyard is not reachable
+BROWSER LOG (error): [04:23:52.959] [ERROR] [testSpoilerUI]     ISSUE: Region Kak Backyard is not reachable
+BROWSER LOG (error): [04:23:52.975] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:52.991] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:53.008] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:53.025] [ERROR] [testSpoilerUI]     ISSUE: Region Kak Open Grotto is not reachable
+BROWSER LOG (error): [04:23:53.043] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:53.059] [ERROR] [testSpoilerUI]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:23:53.079] [ERROR] [testSpoilerUI]     ISSUE: Region LH Fishing Hole is not reachable
+BROWSER LOG (error): [04:23:53.098] [ERROR] [testSpoilerUI]     ISSUE: Region Lake Hylia is not reachable
+BROWSER LOG (error): [04:23:53.119] [ERROR] [testSpoilerUI]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:23:53.138] [ERROR] [testSpoilerUI]     ISSUE: Region LLR Tower is not reachable
+BROWSER LOG (error): [04:23:53.158] [ERROR] [testSpoilerUI]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:23:53.178] [ERROR] [testSpoilerUI]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:23:53.202] [ERROR] [testSpoilerUI]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:23:53.238] [ERROR] [testSpoilerUI]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:23:53.262] [ERROR] [testSpoilerUI]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:23:53.284] [ERROR] [testSpoilerUI]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:23:53.306] [ERROR] [testSpoilerUI]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:23:53.329] [ERROR] [testSpoilerUI]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:23:53.351] [ERROR] [testSpoilerUI]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:23:53.376] [ERROR] [testSpoilerUI]     ISSUE: Region LLR Talons House is not reachable
+BROWSER LOG (error): [04:23:53.402] [ERROR] [testSpoilerUI]     ISSUE: Region LLR Talons House is not reachable
+BROWSER LOG (error): [04:23:53.427] [ERROR] [testSpoilerUI]     ISSUE: Region LLR Talons House is not reachable
+BROWSER LOG (error): [04:23:53.457] [ERROR] [testSpoilerUI]     ISSUE: Region LW Bridge From Forest is not reachable
+BROWSER LOG (error): [04:23:53.489] [ERROR] [testSpoilerUI]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:23:53.520] [ERROR] [testSpoilerUI]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:23:53.551] [ERROR] [testSpoilerUI]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:23:53.582] [ERROR] [testSpoilerUI]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:23:53.619] [ERROR] [testSpoilerUI]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:23:53.642] [ERROR] [testSpoilerUI]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:23:53.668] [ERROR] [testSpoilerUI]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:23:53.692] [ERROR] [testSpoilerUI]     ISSUE: Region Market Dog Lady House is not reachable
+BROWSER LOG (error): [04:23:53.716] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:53.742] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:53.768] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:53.799] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:53.829] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:53.865] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:53.896] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:53.923] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:53.950] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:53.977] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.004] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.033] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.062] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.092] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.130] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.160] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.192] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.227] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.257] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.288] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.320] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.354] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.388] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.427] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.457] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.489] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.521] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.555] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.590] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.624] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.660] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.713] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.745] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.781] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.816] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.855] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.894] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.933] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:54.970] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:55.018] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:55.054] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:55.090] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:55.130] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:55.168] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:55.207] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:55.247] [ERROR] [testSpoilerUI]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:23:55.290] [ERROR] [testSpoilerUI]     ISSUE: Region Market Dog Lady House is not reachable
+BROWSER LOG (error): [04:23:55.334] [ERROR] [testSpoilerUI]     ISSUE: Region Market Man in Green House is not reachable
+BROWSER LOG (error): [04:23:55.374] [ERROR] [testSpoilerUI]     ISSUE: Region Market Man in Green House is not reachable
+BROWSER LOG (error): [04:23:55.412] [ERROR] [testSpoilerUI]     ISSUE: Region Market Man in Green House is not reachable
+BROWSER LOG (error): [04:23:55.455] [ERROR] [testSpoilerUI]     ISSUE: Region Market is not reachable
+BROWSER LOG (error): [04:23:55.496] [ERROR] [testSpoilerUI]     ISSUE: Region Market is not reachable
+BROWSER LOG (error): [04:23:55.540] [ERROR] [testSpoilerUI]     ISSUE: Region Market is not reachable
+BROWSER LOG (error): [04:23:55.584] [ERROR] [testSpoilerUI]     ISSUE: Region Market is not reachable
+BROWSER LOG (error): [04:23:55.635] [ERROR] [testSpoilerUI]     ISSUE: Region Market Potion Shop is not reachable
+BROWSER LOG (error): [04:23:55.674] [ERROR] [testSpoilerUI]     ISSUE: Region Market Potion Shop is not reachable
+BROWSER LOG (error): [04:23:55.713] [ERROR] [testSpoilerUI]     ISSUE: Region Market Shooting Gallery is not reachable
+BROWSER LOG (error): [04:23:55.755] [ERROR] [testSpoilerUI]     ISSUE: Region Beyond Door of Time is not reachable
+BROWSER LOG (error): [04:23:55.763] [ERROR] [testSpoilerUI] REGION MISMATCH found for: {"type":"state_update","sphere_number":0,"player_id":"1"}
+BROWSER LOG (error): [04:23:55.764] [ERROR] [testSpoilerUI:ComparisonEngine] REGION MISMATCH found for: {"type":"state_update","sphere_number":0,"player_id":"1"}
+BROWSER LOG (error): [04:23:55.769] [ERROR] [testSpoilerUI]  > Regions accessible in LOG but NOT in STATE: Beyond Door of Time, Castle Grounds, Child Spawn, Deku Theater, Deku Tree Lobby, GC Woods Warp, GV Crate Ledge, GV Grotto Ledge, GV Lower Stream, GV Upper Stream, Gerudo Valley, Graveyard, Graveyard Dampes House, Graveyard Heart Piece Grave, Graveyard Shield Grave, HF Open Grotto, Hyrule Castle Grounds, Hyrule Field, KF House of Twins, KF Know It All House, KF Kokiri Shop, KF Links House, KF Midos House, KF Outside Deku Tree, KF Sarias House, Kak Backyard, Kak Carpenter Boss House, Kak House of Skulltula, Kak Impas House, Kak Impas House Back, Kak Impas House Near Cow, Kak Impas Ledge, Kak Open Grotto, Kak Potion Shop Front, Kak Windmill, Kakariko Village, Kokiri Forest, LH Fishing Hole, LH Fishing Island, LH Grotto, LH Lab, LH Owl Flight, LLR Grotto, LLR Stables, LLR Talons House, LLR Tower, LW Beyond Mido, LW Bridge, LW Bridge From Forest, LW Forest Exit, Lake Hylia, Lon Lon Ranch, Lost Woods, Market, Market Back Alley, Market Bazaar, Market Bombchu Bowling, Market Bombchu Shop, Market Dog Lady House, Market Entrance, Market Guard House, Market Man in Green House, Market Mask Shop, Market Potion Shop, Market Shooting Gallery, Market Treasure Chest Game, Root Exits, SFM Entryway, Temple of Time, ToT Entrance, ZR Front
+BROWSER LOG (error): [04:23:55.769] [ERROR] [testSpoilerUI:ComparisonEngine]  > Regions accessible in LOG but NOT in STATE: Beyond Door of Time, Castle Grounds, Child Spawn, Deku Theater, Deku Tree Lobby, GC Woods Warp, GV Crate Ledge, GV Grotto Ledge, GV Lower Stream, GV Upper Stream, Gerudo Valley, Graveyard, Graveyard Dampes House, Graveyard Heart Piece Grave, Graveyard Shield Grave, HF Open Grotto, Hyrule Castle Grounds, Hyrule Field, KF House of Twins, KF Know It All House, KF Kokiri Shop, KF Links House, KF Midos House, KF Outside Deku Tree, KF Sarias House, Kak Backyard, Kak Carpenter Boss House, Kak House of Skulltula, Kak Impas House, Kak Impas House Back, Kak Impas House Near Cow, Kak Impas Ledge, Kak Open Grotto, Kak Potion Shop Front, Kak Windmill, Kakariko Village, Kokiri Forest, LH Fishing Hole, LH Fishing Island, LH Grotto, LH Lab, LH Owl Flight, LLR Grotto, LLR Stables, LLR Talons House, LLR Tower, LW Beyond Mido, LW Bridge, LW Bridge From Forest, LW Forest Exit, Lake Hylia, Lon Lon Ranch, Lost Woods, Market, Market Back Alley, Market Bazaar, Market Bombchu Bowling, Market Bombchu Shop, Market Dog Lady House, Market Entrance, Market Guard House, Market Man in Green House, Market Mask Shop, Market Potion Shop, Market Shooting Gallery, Market Treasure Chest Game, Root Exits, SFM Entryway, Temple of Time, ToT Entrance, ZR Front
+BROWSER LOG (error): [REGION MISMATCH DETAIL] Missing from state (71): [Beyond Door of Time, Castle Grounds, Child Spawn, Deku Theater, Deku Tree Lobby, GC Woods Warp, GV Crate Ledge, GV Grotto Ledge, GV Lower Stream, GV Upper Stream, Gerudo Valley, Graveyard, Graveyard Dampes House, Graveyard Heart Piece Grave, Graveyard Shield Grave, HF Open Grotto, Hyrule Castle Grounds, Hyrule Field, KF House of Twins, KF Know It All House, KF Kokiri Shop, KF Links House, KF Midos House, KF Outside Deku Tree, KF Sarias House, Kak Backyard, Kak Carpenter Boss House, Kak House of Skulltula, Kak Impas House, Kak Impas House Back, Kak Impas House Near Cow, Kak Impas Ledge, Kak Open Grotto, Kak Potion Shop Front, Kak Windmill, Kakariko Village, Kokiri Forest, LH Fishing Hole, LH Fishing Island, LH Grotto, LH Lab, LH Owl Flight, LLR Grotto, LLR Stables, LLR Talons House, LLR Tower, LW Beyond Mido, LW Bridge, LW Bridge From Forest, LW Forest Exit, Lake Hylia, Lon Lon Ranch, Lost Woods, Market, Market Back Alley, Market Bazaar, Market Bombchu Bowling, Market Bombchu Shop, Market Dog Lady House, Market Entrance, Market Guard House, Market Man in Green House, Market Mask Shop, Market Potion Shop, Market Shooting Gallery, Market Treasure Chest Game, Root Exits, SFM Entryway, Temple of Time, ToT Entrance, ZR Front]
+BROWSER LOG (warning): [04:23:55.797] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Beyond Door of Time
+BROWSER LOG (warning): [04:23:55.838] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Castle Grounds
+BROWSER LOG (warning): [04:23:55.939] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Child Spawn
+BROWSER LOG (warning): [04:23:55.978] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Deku Theater
+BROWSER LOG (warning): [04:23:56.017] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Deku Tree Lobby
+BROWSER LOG (warning): [04:23:56.057] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to GC Woods Warp
+BROWSER LOG (warning): [04:23:56.107] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to GV Crate Ledge
+BROWSER LOG (warning): [04:23:56.179] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to GV Grotto Ledge
+BROWSER LOG (warning): [04:23:56.248] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to GV Lower Stream
+BROWSER LOG (warning): [04:23:56.312] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to GV Upper Stream
+BROWSER LOG (warning): [04:23:56.364] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Gerudo Valley
+BROWSER LOG (warning): [04:23:56.415] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Graveyard
+BROWSER LOG (warning): [04:23:56.538] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Graveyard Dampes House
+BROWSER LOG (warning): [04:23:56.585] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Graveyard Heart Piece Grave
+BROWSER LOG (warning): [04:23:56.625] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Graveyard Shield Grave
+BROWSER LOG (warning): [04:23:56.668] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to HF Open Grotto
+BROWSER LOG (warning): [04:23:56.713] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Hyrule Castle Grounds
+BROWSER LOG (warning): [04:23:56.775] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Hyrule Field
+BROWSER LOG (warning): [04:23:57.002] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to KF House of Twins
+BROWSER LOG (warning): [04:23:57.050] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to KF Know It All House
+BROWSER LOG (warning): [04:23:57.098] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to KF Kokiri Shop
+BROWSER LOG (warning): [04:23:57.144] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to KF Links House
+BROWSER LOG (warning): [04:23:57.214] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to KF Midos House
+BROWSER LOG (warning): [04:23:57.260] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to KF Outside Deku Tree
+BROWSER LOG (warning): [04:23:57.324] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to KF Sarias House
+BROWSER LOG (warning): [04:23:57.370] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Kak Backyard
+BROWSER LOG (warning): [04:23:57.466] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Kak Carpenter Boss House
+BROWSER LOG (warning): [04:23:57.525] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Kak House of Skulltula
+BROWSER LOG (warning): [04:23:57.573] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Kak Impas House
+BROWSER LOG (warning): [04:23:57.623] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Kak Impas House Back
+BROWSER LOG (warning): [04:23:57.674] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Kak Impas House Near Cow
+BROWSER LOG (warning): [04:23:57.735] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Kak Impas Ledge
+BROWSER LOG (warning): [04:23:57.825] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Kak Open Grotto
+BROWSER LOG (warning): [04:23:57.877] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Kak Potion Shop Front
+BROWSER LOG (warning): [04:23:57.939] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Kak Windmill
+BROWSER LOG (warning): [04:23:58.008] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Kakariko Village
+BROWSER LOG (warning): [04:23:58.277] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Kokiri Forest
+BROWSER LOG (warning): [04:23:58.454] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LH Fishing Hole
+BROWSER LOG (warning): [04:23:58.526] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LH Fishing Island
+BROWSER LOG (warning): [04:23:58.596] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LH Grotto
+BROWSER LOG (warning): [04:23:58.651] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LH Lab
+BROWSER LOG (warning): [04:23:58.709] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LH Owl Flight
+BROWSER LOG (warning): [04:23:58.766] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LLR Grotto
+BROWSER LOG (warning): [04:23:58.824] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LLR Stables
+BROWSER LOG (warning): [04:23:58.897] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LLR Talons House
+BROWSER LOG (warning): [04:23:58.959] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LLR Tower
+BROWSER LOG (warning): [04:23:59.016] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LW Beyond Mido
+BROWSER LOG (warning): [04:23:59.115] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LW Bridge
+BROWSER LOG (warning): [04:23:59.201] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LW Bridge From Forest
+BROWSER LOG (warning): [04:23:59.261] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to LW Forest Exit
+BROWSER LOG (warning): [04:23:59.343] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Lake Hylia
+BROWSER LOG (warning): [04:23:59.499] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Lon Lon Ranch
+BROWSER LOG (warning): [04:23:59.619] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Lost Woods
+BROWSER LOG (warning): [04:23:59.789] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market
+BROWSER LOG (warning): [04:23:59.999] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market Back Alley
+BROWSER LOG (warning): [04:24:00.120] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market Bazaar
+BROWSER LOG (warning): [04:24:00.182] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market Bombchu Bowling
+BROWSER LOG (warning): [04:24:00.242] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market Bombchu Shop
+BROWSER LOG (warning): [04:24:00.304] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market Dog Lady House
+BROWSER LOG (warning): [04:24:00.364] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market Entrance
+BROWSER LOG (warning): [04:24:00.477] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market Guard House
+BROWSER LOG (warning): [04:24:00.543] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market Man in Green House
+BROWSER LOG (warning): [04:24:00.607] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market Mask Shop
+BROWSER LOG (warning): [04:24:00.671] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market Potion Shop
+BROWSER LOG (warning): [04:24:00.734] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market Shooting Gallery
+BROWSER LOG (warning): [04:24:00.798] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Market Treasure Chest Game
+BROWSER LOG (warning): [04:24:00.967] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to SFM Entryway
+BROWSER LOG (warning): [04:24:01.067] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Temple of Time
+BROWSER LOG (warning): [04:24:01.181] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to ToT Entrance
+BROWSER LOG (warning): [04:24:01.282] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to ZR Front
+BROWSER LOG (error): [04:24:01.344] [ERROR] [testSpoilerUI] Test failed at step 1: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [04:24:01.350] [ERROR] [testSpoilerUI] Mismatch for event 1 (Sphere 0): Comparison for state_update at step 1 Failed
+BROWSER LOG (warning): [04:24:01.355] [WARN] [testSpoilerUI] Test run halted due to "Stop on first error" being enabled.
+BROWSER LOG (error): [04:24:01.360] [ERROR] [testSpoilerUI] Spoiler test completed with 1 mismatch(es). See logs above for details.
+BROWSER LOG (error): [04:24:01.411] [ERROR] [TestRunner/test_spoiler_full_run] [spoilers-full-run-1763180630394] Spoiler test failed. Mismatches found in log:
+BROWSER LOG (error): [04:24:01.411] [ERROR] [TestRunner/test_spoiler_full_run]   - Mismatch for event 1 (Sphere 0): Comparison for state_update at step 1 Failed
+BROWSER LOG (error): [04:24:01.411] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM] STATE MISMATCH found for: {"type":"state_update","sphere_number":0,"player_id":"1"}
+BROWSER LOG (error): [04:24:01.411] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM] > Locations accessible in LOG but NOT in STATE (or checked): Deku Tree Compass Chest, Deku Tree Compass Room Side Chest, Deku Tree Lower Lobby Recovery Heart, Deku Tree Map Chest, GV Crate Freestanding PoH, GV Crate Near Cow, GV Freestanding PoH Crate, GV Waterfall Freestanding PoH, Graveyard Dampe Gravedigging Tour, Graveyard Shield Grave Chest, Graveyard Subrule 1, HC Malon Egg, HF Open Grotto Chest, KF Behind Midos Blue Rupee, KF Boulder Maze Blue Rupee 1, KF Boulder Maze Blue Rupee 2, KF End of Bridge Blue Rupee, KF Grass Near Midos Green Rupee 1, KF Grass Near Midos Green Rupee 2, KF Grass Near Ramp Green Rupee 1, KF Grass Near Ramp Green Rupee 2, KF House of Twins Pot 1, KF House of Twins Pot 2, KF Know it All House Pot 1, KF Know it All House Pot 2, KF Kokiri Sword Chest, KF Links House Pot, KF Midos Bottom Left Chest, KF Midos Bottom Right Chest, KF Midos Top Left Chest, KF Midos Top Right Chest, KF Sarias House Recovery Heart 1, KF Sarias House Recovery Heart 2, KF Sarias House Recovery Heart 3, KF Sarias House Recovery Heart 4, KF Shop Blue Rupee, KF Shop Item 1, KF Shop Item 2, KF Shop Item 3, KF Shop Item 4, KF Shop Item 5, KF Shop Item 6, KF Shop Item 7, KF Shop Item 8, KF Top of Sarias Recovery Heart 1, KF Top of Sarias Recovery Heart 2, KF Top of Sarias Recovery Heart 3, Kak Anju as Child, Kak GS House Under Construction, Kak GS Near Gate Guard, Kak GS Skulltula House, Kak GS Tree, Kak Impas House Freestanding PoH, Kak Near Guards House Pot 1, Kak Near Guards House Pot 2, Kak Near Guards House Pot 3, Kak Near Impas House Pot 1, Kak Near Impas House Pot 2, Kak Near Impas House Pot 3, Kak Near Odd Medicine Building Pot 1, Kak Near Odd Medicine Building Pot 2, Kak Near Potion Shop Pot 1, Kak Near Potion Shop Pot 2, Kak Near Potion Shop Pot 3, Kak Open Grotto Chest, Kakariko Village Gate Open from Kakariko Village, Kakariko Village Subrule 1, LH Child Fishing, LH Underwater Near Shore Green Rupee, LLR Child Crate, LLR Freestanding PoH, LLR Front Pot 1, LLR Front Pot 2, LLR Front Pot 3, LLR Front Pot 4, LLR GS Rain Shed, LLR GS Tree, LLR Rain Shed Pot 1, LLR Rain Shed Pot 2, LLR Rain Shed Pot 3, LLR Talons House Pot 1, LLR Talons House Pot 2, LLR Talons House Pot 3, LW Gift from Saria, Market Bazaar Item 1, Market Bazaar Item 2, Market Bazaar Item 3, Market Bazaar Item 4, Market Bazaar Item 5, Market Bazaar Item 7, Market Bazaar Item 8, Market Dog Lady House Crate, Market GS Guard House, Market Guard House Child Crate, Market Guard House Child Pot 1, Market Guard House Child Pot 10, Market Guard House Child Pot 11, Market Guard House Child Pot 12, Market Guard House Child Pot 13, Market Guard House Child Pot 14, Market Guard House Child Pot 15, Market Guard House Child Pot 16, Market Guard House Child Pot 17, Market Guard House Child Pot 18, Market Guard House Child Pot 19, Market Guard House Child Pot 2, Market Guard House Child Pot 20, Market Guard House Child Pot 21, Market Guard House Child Pot 22, Market Guard House Child Pot 23, Market Guard House Child Pot 24, Market Guard House Child Pot 25, Market Guard House Child Pot 26, Market Guard House Child Pot 27, Market Guard House Child Pot 28, Market Guard House Child Pot 29, Market Guard House Child Pot 3, Market Guard House Child Pot 30, Market Guard House Child Pot 31, Market Guard House Child Pot 32, Market Guard House Child Pot 33, Market Guard House Child Pot 34, Market Guard House Child Pot 35, Market Guard House Child Pot 36, Market Guard House Child Pot 37, Market Guard House Child Pot 38, Market Guard House Child Pot 39, Market Guard House Child Pot 4, Market Guard House Child Pot 40, Market Guard House Child Pot 41, Market Guard House Child Pot 42, Market Guard House Child Pot 43, Market Guard House Child Pot 44, Market Guard House Child Pot 5, Market Guard House Child Pot 6, Market Guard House Child Pot 7, Market Guard House Child Pot 8, Market Guard House Child Pot 9, Market Lost Dog, Market Man in Green House Pot 1, Market Man in Green House Pot 2, Market Man in Green House Pot 3, Market Night Green Rupee Crate 1, Market Night Green Rupee Crate 2, Market Night Green Rupee Crate 3, Market Night Red Rupee Crate, Market Potion Shop Item 3, Market Potion Shop Item 5, Market Shooting Gallery Reward, Master Sword Pedestal
+BROWSER LOG (error): [04:24:01.412] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Deku Tree Lobby is not reachable
+BROWSER LOG (error): [04:24:01.412] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Deku Tree Lobby is not reachable
+BROWSER LOG (error): [04:24:01.412] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Deku Tree Lobby is not reachable
+BROWSER LOG (error): [04:24:01.413] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Deku Tree Lobby is not reachable
+BROWSER LOG (error): [04:24:01.413] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region GV Crate Ledge is not reachable
+BROWSER LOG (error): [04:24:01.413] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region GV Upper Stream is not reachable
+BROWSER LOG (error): [04:24:01.413] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region GV Crate Ledge is not reachable
+BROWSER LOG (error): [04:24:01.413] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region GV Upper Stream is not reachable
+BROWSER LOG (error): [04:24:01.413] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Graveyard is not reachable
+BROWSER LOG (error): [04:24:01.413] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Graveyard Shield Grave is not reachable
+BROWSER LOG (error): [04:24:01.414] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Graveyard is not reachable
+BROWSER LOG (error): [04:24:01.414] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Hyrule Castle Grounds is not reachable
+BROWSER LOG (error): [04:24:01.414] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region HF Open Grotto is not reachable
+BROWSER LOG (error): [04:24:01.415] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:24:01.415] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:24:01.415] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:24:01.415] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:24:01.415] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:24:01.415] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:24:01.415] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:24:01.415] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:24:01.416] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF House of Twins is not reachable
+BROWSER LOG (error): [04:24:01.416] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF House of Twins is not reachable
+BROWSER LOG (error): [04:24:01.416] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Know It All House is not reachable
+BROWSER LOG (error): [04:24:01.416] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Know It All House is not reachable
+BROWSER LOG (error): [04:24:01.416] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:24:01.416] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Links House is not reachable
+BROWSER LOG (error): [04:24:01.416] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Midos House is not reachable
+BROWSER LOG (error): [04:24:01.416] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Midos House is not reachable
+BROWSER LOG (error): [04:24:01.416] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Midos House is not reachable
+BROWSER LOG (error): [04:24:01.417] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Midos House is not reachable
+BROWSER LOG (error): [04:24:01.417] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Sarias House is not reachable
+BROWSER LOG (error): [04:24:01.417] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Sarias House is not reachable
+BROWSER LOG (error): [04:24:01.417] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Sarias House is not reachable
+BROWSER LOG (error): [04:24:01.417] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Sarias House is not reachable
+BROWSER LOG (error): [04:24:01.417] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:24:01.418] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:24:01.418] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:24:01.418] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:24:01.418] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:24:01.418] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:24:01.418] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:24:01.418] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:24:01.418] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable
+BROWSER LOG (error): [04:24:01.418] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:24:01.418] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:24:01.419] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable
+BROWSER LOG (error): [04:24:01.419] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.419] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.419] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.419] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.419] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.419] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kak Impas House Back is not reachable
+BROWSER LOG (error): [04:24:01.420] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.420] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.420] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.420] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.420] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.421] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.421] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kak Backyard is not reachable
+BROWSER LOG (error): [04:24:01.421] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kak Backyard is not reachable
+BROWSER LOG (error): [04:24:01.421] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.421] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.421] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.421] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Kak Open Grotto is not reachable
+BROWSER LOG (error): [04:24:01.422] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.422] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Kakariko Village is not reachable
+BROWSER LOG (error): [04:24:01.422] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region LH Fishing Hole is not reachable
+BROWSER LOG (error): [04:24:01.422] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Lake Hylia is not reachable
+BROWSER LOG (error): [04:24:01.422] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:24:01.422] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region LLR Tower is not reachable
+BROWSER LOG (error): [04:24:01.423] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:24:01.423] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:24:01.423] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:24:01.423] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:24:01.423] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:24:01.423] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:24:01.424] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:24:01.424] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:24:01.424] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable
+BROWSER LOG (error): [04:24:01.424] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region LLR Talons House is not reachable
+BROWSER LOG (error): [04:24:01.425] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region LLR Talons House is not reachable
+BROWSER LOG (error): [04:24:01.425] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region LLR Talons House is not reachable
+BROWSER LOG (error): [04:24:01.425] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region LW Bridge From Forest is not reachable
+BROWSER LOG (error): [04:24:01.425] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:24:01.425] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:24:01.425] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:24:01.425] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:24:01.426] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:24:01.426] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:24:01.426] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable
+BROWSER LOG (error): [04:24:01.426] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Dog Lady House is not reachable
+BROWSER LOG (error): [04:24:01.426] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.426] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.426] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.427] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.427] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.427] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.427] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.427] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.427] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.428] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.428] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.428] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.428] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.428] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.428] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.428] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.428] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.428] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.428] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.429] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.429] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.429] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.429] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.429] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.429] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.429] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.429] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.429] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.429] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.429] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.430] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.430] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.430] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.430] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.430] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.430] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.430] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.430] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.430] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.430] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.430] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.430] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.431] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.431] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.431] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.431] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable
+BROWSER LOG (error): [04:24:01.431] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Dog Lady House is not reachable
+BROWSER LOG (error): [04:24:01.432] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Man in Green House is not reachable
+BROWSER LOG (error): [04:24:01.432] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Man in Green House is not reachable
+BROWSER LOG (error): [04:24:01.432] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Man in Green House is not reachable
+BROWSER LOG (error): [04:24:01.432] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market is not reachable
+BROWSER LOG (error): [04:24:01.432] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market is not reachable
+BROWSER LOG (error): [04:24:01.432] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market is not reachable
+BROWSER LOG (error): [04:24:01.432] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market is not reachable
+BROWSER LOG (error): [04:24:01.433] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Potion Shop is not reachable
+BROWSER LOG (error): [04:24:01.433] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Potion Shop is not reachable
+BROWSER LOG (error): [04:24:01.433] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Market Shooting Gallery is not reachable
+BROWSER LOG (error): [04:24:01.433] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM]     ISSUE: Region Beyond Door of Time is not reachable
+BROWSER LOG (error): [04:24:01.433] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM] REGION MISMATCH found for: {"type":"state_update","sphere_number":0,"player_id":"1"}
+BROWSER LOG (error): [04:24:01.433] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:23:55 AM] > Regions accessible in LOG but NOT in STATE: Beyond Door of Time, Castle Grounds, Child Spawn, Deku Theater, Deku Tree Lobby, GC Woods Warp, GV Crate Ledge, GV Grotto Ledge, GV Lower Stream, GV Upper Stream, Gerudo Valley, Graveyard, Graveyard Dampes House, Graveyard Heart Piece Grave, Graveyard Shield Grave, HF Open Grotto, Hyrule Castle Grounds, Hyrule Field, KF House of Twins, KF Know It All House, KF Kokiri Shop, KF Links House, KF Midos House, KF Outside Deku Tree, KF Sarias House, Kak Backyard, Kak Carpenter Boss House, Kak House of Skulltula, Kak Impas House, Kak Impas House Back, Kak Impas House Near Cow, Kak Impas Ledge, Kak Open Grotto, Kak Potion Shop Front, Kak Windmill, Kakariko Village, Kokiri Forest, LH Fishing Hole, LH Fishing Island, LH Grotto, LH Lab, LH Owl Flight, LLR Grotto, LLR Stables, LLR Talons House, LLR Tower, LW Beyond Mido, LW Bridge, LW Bridge From Forest, LW Forest Exit, Lake Hylia, Lon Lon Ranch, Lost Woods, Market, Market Back Alley, Market Bazaar, Market Bombchu Bowling, Market Bombchu Shop, Market Dog Lady House, Market Entrance, Market Guard House, Market Man in Green House, Market Mask Shop, Market Potion Shop, Market Shooting Gallery, Market Treasure Chest Game, Root Exits, SFM Entryway, Temple of Time, ToT Entrance, ZR Front
+BROWSER LOG (error): [04:24:01.433] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:24:01 AM] Test failed at step 1: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [04:24:01.433] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:24:01 AM] Mismatch for event 1 (Sphere 0): Comparison for state_update at step 1 Failed
+BROWSER LOG (error): [04:24:01.434] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:24:01 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Full in-app test results: {
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 0,
+    "failedCount": 1
+  },
+  "testDetails": [
+    {
+      "id": "test_spoiler_full_run",
+      "name": "Test Spoilers Panel - Full Run",
+      "status": "failed",
+      "category": "Test Spoilers Panel",
+      "startTime": "2025-11-15T04:23:50.393Z",
+      "endTime": "2025-11-15T04:24:01.453Z",
+      "durationMs": 11060,
+      "conditions": [
+        {
+          "description": "Test started",
+          "status": "passed",
+          "timestamp": "2025-11-15T04:23:50.394Z"
+        },
+        {
+          "description": "Test Spoilers panel found in DOM",
+          "status": "passed",
+          "timestamp": "2025-11-15T04:23:50.904Z"
+        },
+        {
+          "description": "\"Load Suggested Log\" button found and enabled",
+          "status": "passed",
+          "timestamp": "2025-11-15T04:23:51.155Z"
+        },
+        {
+          "description": "\"Run Full Test\" button appeared",
+          "status": "passed",
+          "timestamp": "2025-11-15T04:23:51.909Z"
+        },
+        {
+          "description": "Full spoiler test completed",
+          "status": "passed",
+          "timestamp": "2025-11-15T04:24:01.407Z"
+        },
+        {
+          "description": "Spoiler test passed all checks",
+          "status": "failed",
+          "timestamp": "2025-11-15T04:24:01.410Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[spoilers-full-run-1763180630394] Starting testSpoilersPanelFullRun...",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:50.394Z"
+        },
+        {
+          "message": "Condition: \"Test started\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:50.394Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763180630394] Activating testSpoilersPanel panel...",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:50.394Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel initialization\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:50.401Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel initialization\".",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:50.652Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel DOM element\" (timeout: 5000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:50.653Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel DOM element\".",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:50.904Z"
+        },
+        {
+          "message": "Condition: \"Test Spoilers panel found in DOM\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:50.904Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Load Suggested Log\" button to be available\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:50.904Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Load Suggested Log\" button to be available\".",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:51.155Z"
+        },
+        {
+          "message": "Condition: \"\"Load Suggested Log\" button found and enabled\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:51.155Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763180630394] Clicking \"Load Suggested Log\" button...",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:51.155Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Spoiler log loading completion\" (timeout: 15000ms, interval: 500ms)...",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:51.158Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Spoiler log loading completion\".",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:51.658Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Run Full Test\" button to appear\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:51.658Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Run Full Test\" button to appear\".",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:51.909Z"
+        },
+        {
+          "message": "Condition: \"\"Run Full Test\" button appeared\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:51.909Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763180630394] Clicking \"Run Full Test\" button...",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:51.909Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test to start processing\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:51.911Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test to start processing\".",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:52.011Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763180630394] Waiting for full spoiler test to complete...",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:52.011Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test completion with detailed results\" (timeout: 300000ms, interval: 1000ms)...",
+          "type": "info",
+          "timestamp": "2025-11-15T04:23:52.012Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763180630394] Polling: buttonReady=true, hasDetailedResults=true, processedEvents=0/465",
+          "type": "info",
+          "timestamp": "2025-11-15T04:24:01.407Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763180630394] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":465,\"processedEvents\":0,\"errorCount\":1,\"sphereCount\":1,\"testLogPath\":\"presets/oot/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+          "type": "info",
+          "timestamp": "2025-11-15T04:24:01.407Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test completion with detailed results\".",
+          "type": "info",
+          "timestamp": "2025-11-15T04:24:01.407Z"
+        },
+        {
+          "message": "Condition: \"Full spoiler test completed\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-15T04:24:01.407Z"
+        },
+        {
+          "message": "Condition: \"Spoiler test passed all checks\" - FAILED",
+          "type": "info",
+          "timestamp": "2025-11-15T04:24:01.410Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763180630394] Spoiler test failed. Mismatches found in log:",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.411Z"
+        },
+        {
+          "message": "  - Mismatch for event 1 (Sphere 0): Comparison for state_update at step 1 Failed",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.411Z"
+        },
+        {
+          "message": "  - [4:23:52 AM] STATE MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":0,\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.411Z"
+        },
+        {
+          "message": "  - [4:23:52 AM] > Locations accessible in LOG but NOT in STATE (or checked): Deku Tree Compass Chest, Deku Tree Compass Room Side Chest, Deku Tree Lower Lobby Recovery Heart, Deku Tree Map Chest, GV Crate Freestanding PoH, GV Crate Near Cow, GV Freestanding PoH Crate, GV Waterfall Freestanding PoH, Graveyard Dampe Gravedigging Tour, Graveyard Shield Grave Chest, Graveyard Subrule 1, HC Malon Egg, HF Open Grotto Chest, KF Behind Midos Blue Rupee, KF Boulder Maze Blue Rupee 1, KF Boulder Maze Blue Rupee 2, KF End of Bridge Blue Rupee, KF Grass Near Midos Green Rupee 1, KF Grass Near Midos Green Rupee 2, KF Grass Near Ramp Green Rupee 1, KF Grass Near Ramp Green Rupee 2, KF House of Twins Pot 1, KF House of Twins Pot 2, KF Know it All House Pot 1, KF Know it All House Pot 2, KF Kokiri Sword Chest, KF Links House Pot, KF Midos Bottom Left Chest, KF Midos Bottom Right Chest, KF Midos Top Left Chest, KF Midos Top Right Chest, KF Sarias House Recovery Heart 1, KF Sarias House Recovery Heart 2, KF Sarias House Recovery Heart 3, KF Sarias House Recovery Heart 4, KF Shop Blue Rupee, KF Shop Item 1, KF Shop Item 2, KF Shop Item 3, KF Shop Item 4, KF Shop Item 5, KF Shop Item 6, KF Shop Item 7, KF Shop Item 8, KF Top of Sarias Recovery Heart 1, KF Top of Sarias Recovery Heart 2, KF Top of Sarias Recovery Heart 3, Kak Anju as Child, Kak GS House Under Construction, Kak GS Near Gate Guard, Kak GS Skulltula House, Kak GS Tree, Kak Impas House Freestanding PoH, Kak Near Guards House Pot 1, Kak Near Guards House Pot 2, Kak Near Guards House Pot 3, Kak Near Impas House Pot 1, Kak Near Impas House Pot 2, Kak Near Impas House Pot 3, Kak Near Odd Medicine Building Pot 1, Kak Near Odd Medicine Building Pot 2, Kak Near Potion Shop Pot 1, Kak Near Potion Shop Pot 2, Kak Near Potion Shop Pot 3, Kak Open Grotto Chest, Kakariko Village Gate Open from Kakariko Village, Kakariko Village Subrule 1, LH Child Fishing, LH Underwater Near Shore Green Rupee, LLR Child Crate, LLR Freestanding PoH, LLR Front Pot 1, LLR Front Pot 2, LLR Front Pot 3, LLR Front Pot 4, LLR GS Rain Shed, LLR GS Tree, LLR Rain Shed Pot 1, LLR Rain Shed Pot 2, LLR Rain Shed Pot 3, LLR Talons House Pot 1, LLR Talons House Pot 2, LLR Talons House Pot 3, LW Gift from Saria, Market Bazaar Item 1, Market Bazaar Item 2, Market Bazaar Item 3, Market Bazaar Item 4, Market Bazaar Item 5, Market Bazaar Item 7, Market Bazaar Item 8, Market Dog Lady House Crate, Market GS Guard House, Market Guard House Child Crate, Market Guard House Child Pot 1, Market Guard House Child Pot 10, Market Guard House Child Pot 11, Market Guard House Child Pot 12, Market Guard House Child Pot 13, Market Guard House Child Pot 14, Market Guard House Child Pot 15, Market Guard House Child Pot 16, Market Guard House Child Pot 17, Market Guard House Child Pot 18, Market Guard House Child Pot 19, Market Guard House Child Pot 2, Market Guard House Child Pot 20, Market Guard House Child Pot 21, Market Guard House Child Pot 22, Market Guard House Child Pot 23, Market Guard House Child Pot 24, Market Guard House Child Pot 25, Market Guard House Child Pot 26, Market Guard House Child Pot 27, Market Guard House Child Pot 28, Market Guard House Child Pot 29, Market Guard House Child Pot 3, Market Guard House Child Pot 30, Market Guard House Child Pot 31, Market Guard House Child Pot 32, Market Guard House Child Pot 33, Market Guard House Child Pot 34, Market Guard House Child Pot 35, Market Guard House Child Pot 36, Market Guard House Child Pot 37, Market Guard House Child Pot 38, Market Guard House Child Pot 39, Market Guard House Child Pot 4, Market Guard House Child Pot 40, Market Guard House Child Pot 41, Market Guard House Child Pot 42, Market Guard House Child Pot 43, Market Guard House Child Pot 44, Market Guard House Child Pot 5, Market Guard House Child Pot 6, Market Guard House Child Pot 7, Market Guard House Child Pot 8, Market Guard House Child Pot 9, Market Lost Dog, Market Man in Green House Pot 1, Market Man in Green House Pot 2, Market Man in Green House Pot 3, Market Night Green Rupee Crate 1, Market Night Green Rupee Crate 2, Market Night Green Rupee Crate 3, Market Night Red Rupee Crate, Market Potion Shop Item 3, Market Potion Shop Item 5, Market Shooting Gallery Reward, Master Sword Pedestal",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.411Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Deku Tree Lobby is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.412Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Deku Tree Lobby is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.412Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Deku Tree Lobby is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.412Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Deku Tree Lobby is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.413Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region GV Crate Ledge is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.413Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region GV Upper Stream is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.413Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region GV Crate Ledge is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.413Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region GV Upper Stream is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.413Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Graveyard is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.413Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Graveyard Shield Grave is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.413Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Graveyard is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.414Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Hyrule Castle Grounds is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.414Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region HF Open Grotto is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.414Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.415Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.415Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.415Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.415Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.415Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.415Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.415Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.415Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF House of Twins is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.416Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF House of Twins is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.416Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Know It All House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.416Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Know It All House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.416Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.416Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Links House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.416Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Midos House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.416Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Midos House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.416Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Midos House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.416Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Midos House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.417Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Sarias House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.417Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Sarias House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.417Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Sarias House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.417Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Sarias House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.417Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.417Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.418Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.418Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.418Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.418Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.418Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.418Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.418Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region KF Kokiri Shop is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.418Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.418Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.418Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kokiri Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.419Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.419Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.419Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.419Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.419Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.419Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kak Impas House Back is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.419Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.420Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.420Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.420Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.420Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.420Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.421Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kak Backyard is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.421Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kak Backyard is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.421Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.421Z"
+        },
+        {
+          "message": "  - [4:23:52 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.421Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.421Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Kak Open Grotto is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.421Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.422Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Kakariko Village is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.422Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region LH Fishing Hole is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.422Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Lake Hylia is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.422Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.422Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region LLR Tower is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.422Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.423Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.423Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.423Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.423Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.423Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.423Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.424Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.424Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Lon Lon Ranch is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.424Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region LLR Talons House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.424Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region LLR Talons House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.424Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region LLR Talons House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.425Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region LW Bridge From Forest is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.425Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.425Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.425Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.425Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.425Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.426Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.426Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Bazaar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.426Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Dog Lady House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.426Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.426Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.426Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.426Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.427Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.427Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.427Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.427Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.427Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.427Z"
+        },
+        {
+          "message": "  - [4:23:53 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.428Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.428Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.428Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.428Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.428Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.428Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.428Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.428Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.428Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.428Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.429Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.429Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.429Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.429Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.429Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.429Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.429Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.429Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.429Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.429Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.429Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.429Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.430Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.430Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.430Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.430Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.430Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.430Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.430Z"
+        },
+        {
+          "message": "  - [4:23:54 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.430Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.430Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.430Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.430Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.431Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.431Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.431Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Guard House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.431Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Dog Lady House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.431Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Man in Green House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.432Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Man in Green House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.432Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Man in Green House is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.432Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.432Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.432Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.432Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.432Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Potion Shop is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.433Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Potion Shop is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.433Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Market Shooting Gallery is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.433Z"
+        },
+        {
+          "message": "  - [4:23:55 AM]     ISSUE: Region Beyond Door of Time is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.433Z"
+        },
+        {
+          "message": "  - [4:23:55 AM] REGION MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":0,\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.433Z"
+        },
+        {
+          "message": "  - [4:23:55 AM] > Regions accessible in LOG but NOT in STATE: Beyond Door of Time, Castle Grounds, Child Spawn, Deku Theater, Deku Tree Lobby, GC Woods Warp, GV Crate Ledge, GV Grotto Ledge, GV Lower Stream, GV Upper Stream, Gerudo Valley, Graveyard, Graveyard Dampes House, Graveyard Heart Piece Grave, Graveyard Shield Grave, HF Open Grotto, Hyrule Castle Grounds, Hyrule Field, KF House of Twins, KF Know It All House, KF Kokiri Shop, KF Links House, KF Midos House, KF Outside Deku Tree, KF Sarias House, Kak Backyard, Kak Carpenter Boss House, Kak House of Skulltula, Kak Impas House, Kak Impas House Back, Kak Impas House Near Cow, Kak Impas Ledge, Kak Open Grotto, Kak Potion Shop Front, Kak Windmill, Kakariko Village, Kokiri Forest, LH Fishing Hole, LH Fishing Island, LH Grotto, LH Lab, LH Owl Flight, LLR Grotto, LLR Stables, LLR Talons House, LLR Tower, LW Beyond Mido, LW Bridge, LW Bridge From Forest, LW Forest Exit, Lake Hylia, Lon Lon Ranch, Lost Woods, Market, Market Back Alley, Market Bazaar, Market Bombchu Bowling, Market Bombchu Shop, Market Dog Lady House, Market Entrance, Market Guard House, Market Man in Green House, Market Mask Shop, Market Potion Shop, Market Shooting Gallery, Market Treasure Chest Game, Root Exits, SFM Entryway, Temple of Time, ToT Entrance, ZR Front",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.433Z"
+        },
+        {
+          "message": "  - [4:24:01 AM] Test failed at step 1: Comparison failed for event type 'state_update'.",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.433Z"
+        },
+        {
+          "message": "  - [4:24:01 AM] Mismatch for event 1 (Sphere 0): Comparison for state_update at step 1 Failed",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.433Z"
+        },
+        {
+          "message": "  - [4:24:01 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.",
+          "type": "error",
+          "timestamp": "2025-11-15T04:24:01.434Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763180630394] Spoiler test results stored in window.__spoilerTestResults__",
+          "type": "info",
+          "timestamp": "2025-11-15T04:24:01.434Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763180630394] Spoiler test results stored in localStorage",
+          "type": "info",
+          "timestamp": "2025-11-15T04:24:01.452Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763180630394] testSpoilersPanelFullRun finished. Overall Result: false.",
+          "type": "info",
+          "timestamp": "2025-11-15T04:24:01.452Z"
+        },
+        {
+          "message": "Test completion signal: FAILED",
+          "type": "info",
+          "timestamp": "2025-11-15T04:24:01.452Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-15T04:24:01.453Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-15T04:24:01.453Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-15T04:24:01.453Z"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2025-11-15T04:24:01.554Z"
+}
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2025-11-15T04-24-01.json
+  ✘  1 tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results (17.2s)
+
+
+  1) tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m0[39m
+    Received: [31m1[39m
+
+      141 |
+      142 |     // The test system should complete successfully regardless of whether tests run
+    > 143 |     expect(results.summary.failedCount).toBe(0);
+          |                                         ^
+      144 |     
+      145 |     // If tests actually ran, they should pass
+      146 |     if (results.summary.totalRun > 0) {
+        at /home/user/Archipelago-CC/tests/e2e/app.spec.js:143:41
+
+    Error Context: test-results/app-Application-End-to-End-a086e-app-tests-and-check-results/error-context.md
+
+  1 failed
+    tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results ─
