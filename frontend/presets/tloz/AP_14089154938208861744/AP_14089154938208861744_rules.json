@@ -110,25 +110,7 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Boss "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Defeated"
-                      }
-                    ],
-                    "all_simple": true,
+                    "type": "constant",
                     "value": "Boss 1 Defeated"
                   }
                 },
@@ -749,25 +731,7 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Boss "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "constant",
-                          "value": 2
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Defeated"
-                      }
-                    ],
-                    "all_simple": true,
+                    "type": "constant",
                     "value": "Boss 2 Defeated"
                   }
                 },
@@ -2260,25 +2224,7 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Boss "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "constant",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Defeated"
-                      }
-                    ],
-                    "all_simple": true,
+                    "type": "constant",
                     "value": "Boss 3 Defeated"
                   }
                 },
@@ -4269,25 +4215,7 @@
                     {
                       "type": "item_check",
                       "item": {
-                        "type": "f_string",
-                        "parts": [
-                          {
-                            "type": "constant",
-                            "value": "Boss "
-                          },
-                          {
-                            "type": "formatted_value",
-                            "value": {
-                              "type": "constant",
-                              "value": 4
-                            }
-                          },
-                          {
-                            "type": "constant",
-                            "value": " Defeated"
-                          }
-                        ],
-                        "all_simple": true,
+                        "type": "constant",
                         "value": "Boss 4 Defeated"
                       }
                     },
@@ -6010,25 +5938,7 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Boss "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "constant",
-                          "value": 5
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Defeated"
-                      }
-                    ],
-                    "all_simple": true,
+                    "type": "constant",
                     "value": "Boss 5 Defeated"
                   }
                 },
@@ -8733,25 +8643,7 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Boss "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "constant",
-                          "value": 6
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Defeated"
-                      }
-                    ],
-                    "all_simple": true,
+                    "type": "constant",
                     "value": "Boss 6 Defeated"
                   }
                 },
@@ -10976,25 +10868,7 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Boss "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "constant",
-                          "value": 7
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Defeated"
-                      }
-                    ],
-                    "all_simple": true,
+                    "type": "constant",
                     "value": "Boss 7 Defeated"
                   }
                 },
@@ -14787,25 +14661,7 @@
                 {
                   "type": "item_check",
                   "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Boss "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "constant",
-                          "value": 8
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Defeated"
-                      }
-                    ],
-                    "all_simple": true,
+                    "type": "constant",
                     "value": "Boss 8 Defeated"
                   }
                 },
