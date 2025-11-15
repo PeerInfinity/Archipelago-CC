@@ -770,6 +770,61 @@ class ASTVisitorMixin:
                 logging.debug(f"Created helper result for logic method: {result}")
                 return result
 
+            # Handle module-based helper calls (e.g., StateLogic.canDig, Rules.method)
+            # These are calls to functions from imported modules that should be treated as helpers
+            else:
+                # Check if this is a module name that contains helper functions
+                # Common patterns: StateLogic, Rules, Logic (capitalized module names)
+                if obj_name and (obj_name.endswith('Logic') or obj_name == 'Rules'):
+                    logging.debug(f"Processing module-based helper call: {obj_name}.{method_name}")
+
+                    # Filter out state/world/player arguments
+                    filtered_args = self._filter_special_args(args_with_nodes)
+
+                    # Resolve variable references in arguments
+                    resolved_args = []
+                    for arg in filtered_args:
+                        if arg and arg.get('type') == 'name':
+                            if arg['name'] == 'world':
+                                logging.debug(f"Skipping resolution of 'world' argument in module call")
+                                continue
+                            resolved_value = self.expression_resolver.resolve_variable(arg['name'])
+                            if resolved_value is not None and is_simple_value(resolved_value):
+                                if hasattr(resolved_value, 'value'):
+                                    final_value = resolved_value.value
+                                else:
+                                    final_value = resolved_value
+                                final_value = make_json_serializable(final_value)
+                                logging.debug(f"Resolved module helper argument variable '{arg['name']}' to {final_value}")
+                                resolved_args.append({'type': 'constant', 'value': final_value})
+                            else:
+                                resolved_args.append(arg)
+                        elif arg and arg.get('type') == 'attribute':
+                            resolved_value = self.expression_resolver.resolve_expression(arg)
+                            if resolved_value is not None and is_simple_value(resolved_value):
+                                if hasattr(resolved_value, 'value'):
+                                    final_value = resolved_value.value
+                                else:
+                                    final_value = resolved_value
+                                final_value = make_json_serializable(final_value)
+                                logging.debug(f"Resolved module helper argument attribute to {final_value}")
+                                resolved_args.append({'type': 'constant', 'value': final_value})
+                            else:
+                                resolved_args.append(arg)
+                        else:
+                            resolved_args.append(arg)
+
+                    filtered_args = resolved_args
+
+                    # Create helper result
+                    result = {
+                        'type': 'helper',
+                        'name': method_name,
+                        'args': filtered_args
+                    }
+                    logging.debug(f"Created helper result for module method: {result}")
+                    return result
+
         # 3. Fallback for other types of calls (e.g., calling result of another function)
         logging.debug(f"Fallback function call type. func_info = {func_info}")
         filtered_args = self._filter_special_args(args_with_nodes)
