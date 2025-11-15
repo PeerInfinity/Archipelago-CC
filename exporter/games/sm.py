@@ -21,7 +21,8 @@ class SMGameExportHandler(GenericGameExportHandler):
 
     def __init__(self, world=None):
         print(f"[SM] SMGameExportHandler initialized for {self.GAME_NAME}")
-        super().__init__(world)
+        super().__init__()  # Base class doesn't take arguments
+        self.world = world
 
     def _check_smbool_true_pattern(self, rule: Dict[str, Any]) -> bool:
         """Check if a rule represents SMBool(True) construction."""

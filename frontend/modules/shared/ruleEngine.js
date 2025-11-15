@@ -1417,7 +1417,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
           result = undefined;
           break;
         }
-        
+
         // Extract iterator information
         let iterable;
         if (rule.iterator_info && rule.iterator_info.iterator) {
@@ -1431,13 +1431,13 @@ export const evaluateRule = (rule, context, depth = 0) => {
           result = undefined;
           break;
         }
-        
+
         if (!Array.isArray(iterable)) {
           log('warn', '[evaluateRule] all_of iterator is not an array', { rule, iterable });
           result = false;
           break;
         }
-        
+
         result = true;
         for (const item of iterable) {
           // For now, evaluate the element_rule directly
@@ -1451,6 +1451,62 @@ export const evaluateRule = (rule, context, depth = 0) => {
             result = undefined;
             break;
           }
+        }
+        break;
+      }
+
+      case 'any_of': {
+        // any_of evaluates an element_rule against items from an iterator
+        // Returns true if ANY item satisfies the element_rule (OR logic)
+        if (!rule.element_rule) {
+          log('warn', '[evaluateRule] any_of rule missing element_rule', { rule });
+          result = undefined;
+          break;
+        }
+
+        // Extract iterator information
+        let iterable;
+        if (rule.iterator_info && rule.iterator_info.iterator) {
+          // Get the iterator from the iterator_info
+          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1);
+        } else if (rule.iterable) {
+          // Fallback for direct iterable field
+          iterable = evaluateRule(rule.iterable, context, depth + 1);
+        } else {
+          log('warn', '[evaluateRule] any_of rule missing iterator information', { rule });
+          result = undefined;
+          break;
+        }
+
+        if (!Array.isArray(iterable)) {
+          log('warn', '[evaluateRule] any_of iterator is not an array', { rule, iterable });
+          result = false;
+          break;
+        }
+
+        // If the iterable is empty, any_of should return false
+        if (iterable.length === 0) {
+          result = false;
+          break;
+        }
+
+        result = false;
+        let hasUndefined = false;
+        for (const item of iterable) {
+          // For now, evaluate the element_rule directly
+          // TODO: In a full implementation, we'd need to bind the iterator variable
+          const itemResult = evaluateRule(rule.element_rule, context, depth + 1);
+          if (itemResult === true) {
+            result = true;
+            break;
+          }
+          if (itemResult === undefined) {
+            hasUndefined = true;
+          }
+        }
+        // If no item returned true but some returned undefined, result is undefined
+        if (result === false && hasUndefined) {
+          result = undefined;
         }
         break;
       }
