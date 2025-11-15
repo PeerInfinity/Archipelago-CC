@@ -10,7 +10,8 @@ logger = logging.getLogger(__name__)
 
 class LingoGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Lingo'
-    """Export handler for Lingo that handles AccessRequirements string sorting and door variable resolution."""
+    """Export handler for Lingo that handles AccessRequirements string sorting, door variable resolution,
+    and exporting door-related data structures for rule evaluation."""
 
     def expand_rule(self, analyzed_rule: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -140,3 +141,64 @@ class LingoGameExportHandler(GenericGameExportHandler):
                 logger.debug(f"Added AccessRequirements to location {location_name}: {attributes['access']}")
 
         return attributes
+
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """
+        Export Lingo-specific settings needed for rule evaluation.
+
+        This exports data structures that the rule engine needs to evaluate
+        entrance access rules that contain unresolved variable references.
+        """
+        # Get base settings from parent class
+        settings = super().get_settings_data(world, multiworld, player)
+
+        if hasattr(world, 'player_logic'):
+            # Export item_by_door: which doors require which items
+            if hasattr(world.player_logic, 'item_by_door'):
+                settings['item_by_door'] = {}
+                for room, doors in world.player_logic.item_by_door.items():
+                    settings['item_by_door'][room] = dict(doors)
+                logger.debug(f"Exported item_by_door with {len(settings['item_by_door'])} rooms")
+
+            # Export door_reqs: AccessRequirements for doors without items
+            if hasattr(world.player_logic, 'door_reqs'):
+                settings['door_reqs'] = {}
+                for room, doors in world.player_logic.door_reqs.items():
+                    settings['door_reqs'][room] = {}
+                    for door_name, access_req in doors.items():
+                        settings['door_reqs'][room][door_name] = {
+                            'rooms': sorted(list(access_req.rooms)) if hasattr(access_req, 'rooms') else [],
+                            'doors': [{'room': d.room, 'door': d.door} for d in sorted(access_req.doors, key=lambda d: (d.room or '', d.door))] if hasattr(access_req, 'doors') else [],
+                            'colors': sorted(list(access_req.colors)) if hasattr(access_req, 'colors') else [],
+                            'items': sorted(list(access_req.items)) if hasattr(access_req, 'items') else [],
+                            'progression': dict(access_req.progression) if hasattr(access_req, 'progression') else {},
+                            'the_master': access_req.the_master if hasattr(access_req, 'the_master') else False,
+                            'postgame': access_req.postgame if hasattr(access_req, 'postgame') else False
+                        }
+                logger.debug(f"Exported door_reqs with {len(settings['door_reqs'])} rooms")
+
+        # Export PROGRESSIVE_ITEMS constant
+        try:
+            from worlds.lingo.static_logic import PROGRESSIVE_ITEMS
+            settings['PROGRESSIVE_ITEMS'] = list(PROGRESSIVE_ITEMS)
+            logger.debug(f"Exported PROGRESSIVE_ITEMS: {settings['PROGRESSIVE_ITEMS']}")
+        except ImportError:
+            logger.warning("Could not import PROGRESSIVE_ITEMS from worlds.lingo.static_logic")
+
+        # Export PROGRESSIVE_DOORS_BY_ROOM constant
+        try:
+            from worlds.lingo.static_logic import PROGRESSIVE_DOORS_BY_ROOM
+            settings['PROGRESSIVE_DOORS_BY_ROOM'] = {}
+            for room, doors in PROGRESSIVE_DOORS_BY_ROOM.items():
+                settings['PROGRESSIVE_DOORS_BY_ROOM'][room] = {}
+                for door_name, progression_info in doors.items():
+                    # progression_info is a ProgressiveDoorInfo namedtuple
+                    settings['PROGRESSIVE_DOORS_BY_ROOM'][room][door_name] = {
+                        'item_name': progression_info.item_name if hasattr(progression_info, 'item_name') else None,
+                        'index': progression_info.index if hasattr(progression_info, 'index') else 1
+                    }
+            logger.debug(f"Exported PROGRESSIVE_DOORS_BY_ROOM with {len(settings['PROGRESSIVE_DOORS_BY_ROOM'])} rooms")
+        except ImportError:
+            logger.warning("Could not import PROGRESSIVE_DOORS_BY_ROOM from worlds.lingo.static_logic")
+
+        return settings
