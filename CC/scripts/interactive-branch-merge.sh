@@ -262,14 +262,20 @@ perform_merge_only() {
                 git clean -fd docs/json/developer/test-results/ 2>/dev/null || true
             fi
 
-            # Remove new text files in project root directory
+            # Remove text files in project root directory
             shopt -s nullglob
             for txtfile in *.txt; do
-                # Check if file is NOT tracked by git (if git ls-files returns empty, it's untracked)
-                if [ -z "$(git ls-files "$txtfile")" ]; then
-                    # File exists and is not tracked by git, remove it
+                # First, check if file has merge conflicts and resolve by removing
+                if git diff --name-only --diff-filter=U | grep -q "^${txtfile}$"; then
                     rm -f "$txtfile"
-                    echo "  Removed untracked: $txtfile"
+                    git add "$txtfile" 2>/dev/null || true
+                    echo "  Removed conflicted: $txtfile"
+                # Check if file is NOT tracked in the repository (using ls-tree on HEAD)
+                elif [ -z "$(git ls-tree HEAD "$txtfile" 2>/dev/null)" ]; then
+                    # File is not in the repository, safe to remove
+                    git reset -- "$txtfile" 2>/dev/null || true
+                    rm -f "$txtfile"
+                    echo "  Removed: $txtfile"
                 fi
             done
             shopt -u nullglob
@@ -444,14 +450,20 @@ fetch_and_merge() {
                 git clean -fd docs/json/developer/test-results/ 2>/dev/null || true
             fi
 
-            # Remove new text files in project root directory
+            # Remove text files in project root directory
             shopt -s nullglob
             for txtfile in *.txt; do
-                # Check if file is NOT tracked by git (if git ls-files returns empty, it's untracked)
-                if [ -z "$(git ls-files "$txtfile")" ]; then
-                    # File exists and is not tracked by git, remove it
+                # First, check if file has merge conflicts and resolve by removing
+                if git diff --name-only --diff-filter=U | grep -q "^${txtfile}$"; then
                     rm -f "$txtfile"
-                    echo "  Removed untracked: $txtfile"
+                    git add "$txtfile" 2>/dev/null || true
+                    echo "  Removed conflicted: $txtfile"
+                # Check if file is NOT tracked in the repository (using ls-tree on HEAD)
+                elif [ -z "$(git ls-tree HEAD "$txtfile" 2>/dev/null)" ]; then
+                    # File is not in the repository, safe to remove
+                    git reset -- "$txtfile" 2>/dev/null || true
+                    rm -f "$txtfile"
+                    echo "  Removed: $txtfile"
                 fi
             done
             shopt -u nullglob
