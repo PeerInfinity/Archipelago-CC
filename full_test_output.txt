@@ -1,0 +1,108 @@
+[WARNING] HTTP development server not running!
+
+The spoiler tests require a local development server.
+Starting server automatically: python -m http.server 8000
+
+Waiting for server to start... Server started successfully!
+Server running at: http://localhost:8000/frontend/
+Server PID: 22187
+
+Retest mode: Found 32 templates to test
+  - Blasphemous.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Bomb Rush Cyberfunk.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - DLCQuest.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Dark Souls III.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Factorio.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Jak and Daxter The Precursor Legacy.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Kingdom Hearts 2.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Kingdom Hearts.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Kirby's Dream Land 3.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Lingo.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Links Awakening DX.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Mario & Luigi Superstar Saga.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Metamath.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Ocarina of Time.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Old School Runescape.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Overcooked! 2.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Pokemon Red and Blue.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - SMZ3.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Secret of Evermore.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Starcraft 2.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Stardew Valley.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Super Mario Land 2.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Super Metroid.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - The Legend of Zelda.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - The Messenger.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - The Wind Waker.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - The Witness.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Timespinner.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Wargroove.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Yoshi's Island.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Yu-Gi-Oh! 2006.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Zillion.yaml: will test seed 1 (and continue to seed 10 if it passes)
+Found 82 template files (32 testable, 50 filtered by retest mode (32 templates))
+Skipping: 50 files (too many to list)
+Backup of existing results saved to: test-results_backup_2025-11-15_04-37-37.json
+Results will be saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+Timestamped backup will be saved to: test-results_2025-11-15_04-37-37.json
+Testing templates from: /home/user/Archipelago-CC/Players/Templates
+Building world mapping...
+World mapping built successfully
+Using seed 1 -> AP_14089154938208861744
+Starting batch processing of 32 templates...
+
+[1/32] Processing Blasphemous.yaml
+Testing seeds 1-10 (failing seed + continue)
+
+=== Testing Blasphemous.yaml with 10 seeds ===
+
+--- Seed 1 (1/10) ---
+
+=== Testing Blasphemous.yaml ===
+  [Memory] Blasphemous.yaml - start: 33.6 MB RSS
+Running Generate.py for Blasphemous.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Blasphemous.yaml --multi 1 --seed 1
+  [Memory] Blasphemous.yaml - after generation: 33.6 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=blasphemous --seed=1
+  [Memory] Blasphemous.yaml - after spoiler test: 33.6 MB RSS
+Running test analysis...
+Completed Blasphemous.yaml: Generation=[PASS], Test=[FAIL], Gen Errors=1, Sphere Reached=3.2, Max Spheres=13.1
+❌ Seed 1 FAILED
+Stopping at first failure (seed 1)
+
+=== Seed Range Summary for Blasphemous.yaml ===
+Seeds tested: 1
+Passed: 0
+Failed: 1
+First failure at seed: 1
+Consecutive passes before failure: 0
+Failure reason: Test failed at sphere 3.2
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Processing full spoiler test results...
+  ✓ Full spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-full.md
+  Processing multiplayer test results...
+  ✓ Multiplayer chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiplayer.md
+  Processing multiworld test results...
+  ✓ Multiworld chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiworld.md
+  Processing multitemplate minimal test results...
+  ✓ Multitemplate minimal chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-minimal.md
+  Processing multitemplate full test results...
+  ✓ Multitemplate full chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-full.md
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+❌ Blasphemous.yaml still failing. Stopping retest.
+
+Retest stopped at first still-failing test: Blasphemous.yaml
+Timestamped results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results_2025-11-15_04-37-37.json
