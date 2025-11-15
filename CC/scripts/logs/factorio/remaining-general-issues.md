@@ -2,7 +2,7 @@
 
 This file tracks general issues (not exporter or helper related) for Factorio.
 
-## Issue 1: Event Items Not Being Added to Inventory
+## Issue 1: Event Items Not Being Added to Inventory [ACTIVE INVESTIGATION]
 
 **Severity:** Critical
 **Category:** State Management
@@ -56,6 +56,20 @@ The issue appears to be in the test flow:
 
 1. ✅ Verified item addition logic works correctly
 2. ✅ Verified event processor checks locations from sphere_locations
-3. ⏳ Add detailed logging to trace the exact execution flow
-4. ⏳ Verify the location is actually being checked (not skipped due to accessibility check)
-5. ⏳ Check if there's a race condition between checking and snapshot
+3. ✅ Fixed missing region field in exporter (locations now have region: "Nauvis")
+4. ⏳ Debug why loop at eventProcessor.js:228-272 isn't running
+5. ⏳ Verify sphereData.locations is properly populated for Sphere 0.1
+6. ⏳ Add console logging to trace exact values
+
+### Recent Progress
+
+Fixed the missing `region` field in the exporter. After regenerating rules.json, all locations now have `region: "Nauvis"` and `parent_region_name: "Nauvis"` set correctly.
+
+However, the test still fails at the same point. The sphere log clearly shows `sphere_locations: ['Automate automation-science-pack']` at index 1 (Event 2, Sphere 0.1), but the test jumps straight to STATE MISMATCH without any "Checking locations" messages in the logs.
+
+This suggests either:
+1. `sphereData.locations` is empty/undefined despite being in the source data
+2. The loop condition `if (locationsToCheck.length > 0)` is failing
+3. The sphereState module isn't correctly parsing the incremental format
+
+Need to add logging to see what's actually in `sphereData.locations`.

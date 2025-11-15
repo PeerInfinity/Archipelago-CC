@@ -31,7 +31,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-349",
@@ -43,14 +45,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -64,7 +66,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -74,7 +76,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-798",
@@ -91,7 +95,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-126",
@@ -99,20 +105,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated logistic-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -126,6 +118,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated logistic-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -134,7 +140,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-328",
@@ -151,7 +159,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-431",
@@ -163,14 +173,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 }
               ]
@@ -180,7 +190,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-926",
@@ -192,14 +204,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 }
               ]
@@ -209,7 +221,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-757",
@@ -226,7 +240,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-413",
@@ -238,14 +254,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 }
               ]
@@ -255,7 +271,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-529",
@@ -267,14 +285,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -288,7 +306,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -298,7 +316,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-416",
@@ -310,14 +330,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -327,7 +347,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-304",
@@ -339,14 +361,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -360,7 +382,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -370,7 +392,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-024",
@@ -382,14 +406,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -403,7 +427,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -413,7 +437,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-946",
@@ -421,13 +447,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -446,6 +465,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated production-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated military-science-pack"
                   }
                 },
@@ -453,7 +479,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -463,7 +489,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-169",
@@ -475,14 +503,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -496,7 +524,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -506,7 +534,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-954",
@@ -518,14 +548,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 }
               ]
@@ -535,7 +565,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-041",
@@ -547,6 +579,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -556,13 +595,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -571,7 +603,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-822",
@@ -583,14 +617,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 }
               ]
@@ -600,7 +634,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-179",
@@ -612,14 +648,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -629,7 +665,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-097",
@@ -646,7 +684,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-634",
@@ -658,14 +698,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -675,7 +715,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-974",
@@ -687,6 +729,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -696,13 +745,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -711,7 +753,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-688",
@@ -723,14 +767,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -740,7 +784,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-499",
@@ -752,14 +798,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 }
               ]
@@ -769,7 +815,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-738",
@@ -781,7 +829,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
@@ -795,7 +843,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -805,7 +853,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-141",
@@ -822,7 +872,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-683",
@@ -834,14 +886,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -851,7 +903,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-650",
@@ -863,14 +917,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -880,7 +934,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-459",
@@ -897,7 +953,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-055",
@@ -914,7 +972,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-117",
@@ -931,7 +991,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-269",
@@ -943,14 +1005,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -960,7 +1022,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-220",
@@ -972,7 +1036,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated chemical-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
@@ -986,14 +1057,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1003,7 +1067,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-338",
@@ -1015,7 +1081,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated chemical-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
@@ -1029,14 +1102,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1046,7 +1112,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-022",
@@ -1058,14 +1126,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -1079,7 +1147,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1089,7 +1157,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-413",
@@ -1101,14 +1171,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1118,7 +1188,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-502",
@@ -1135,7 +1207,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-722",
@@ -1147,14 +1221,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1164,7 +1238,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-806",
@@ -1176,14 +1252,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1193,7 +1269,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-524",
@@ -1210,7 +1288,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-769",
@@ -1227,7 +1307,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-011",
@@ -1239,7 +1321,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated chemical-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
@@ -1253,14 +1342,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1270,7 +1352,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-013",
@@ -1282,14 +1366,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -1303,7 +1387,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1313,7 +1397,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-849",
@@ -1325,14 +1411,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -1346,7 +1432,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1356,7 +1442,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-600",
@@ -1368,7 +1456,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
@@ -1382,7 +1470,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1392,7 +1480,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-374",
@@ -1404,7 +1494,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
@@ -1418,7 +1508,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1428,7 +1518,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-002",
@@ -1436,20 +1528,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated utility-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -1463,6 +1541,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated utility-science-pack"
+                  }
                 }
               ]
             },
@@ -1471,7 +1563,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-654",
@@ -1488,7 +1582,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-274",
@@ -1500,14 +1596,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -1521,7 +1617,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1531,7 +1627,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-272",
@@ -1543,14 +1641,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1560,7 +1658,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-129",
@@ -1577,7 +1677,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-072",
@@ -1589,14 +1691,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1606,7 +1708,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-898",
@@ -1618,14 +1722,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1635,7 +1739,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-696",
@@ -1647,14 +1753,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -1668,7 +1774,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1678,7 +1784,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-633",
@@ -1695,7 +1803,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-972",
@@ -1707,14 +1817,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -1728,7 +1838,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1738,7 +1848,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-076",
@@ -1755,7 +1867,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-719",
@@ -1763,6 +1877,13 @@
             "access_rule": {
               "type": "and",
               "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
                 {
                   "type": "item_check",
                   "item": {
@@ -1776,13 +1897,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -1791,7 +1905,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-880",
@@ -1808,7 +1924,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-703",
@@ -1837,7 +1955,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-211",
@@ -1854,7 +1974,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-676",
@@ -1862,6 +1984,13 @@
             "access_rule": {
               "type": "and",
               "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated chemical-science-pack"
+                  }
+                },
                 {
                   "type": "item_check",
                   "item": {
@@ -1875,13 +2004,6 @@
                     "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated chemical-science-pack"
-                  }
                 }
               ]
             },
@@ -1890,7 +2012,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-735",
@@ -1898,6 +2022,20 @@
             "access_rule": {
               "type": "and",
               "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated chemical-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated production-science-pack"
+                  }
+                },
                 {
                   "type": "item_check",
                   "item": {
@@ -1911,20 +2049,6 @@
                     "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated chemical-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated production-science-pack"
-                  }
                 }
               ]
             },
@@ -1933,7 +2057,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-270",
@@ -1945,14 +2071,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -1962,7 +2088,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-755",
@@ -1970,13 +2098,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -1990,6 +2111,13 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -1998,7 +2126,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-754",
@@ -2015,7 +2145,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-861",
@@ -2027,14 +2159,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -2044,7 +2176,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-077",
@@ -2056,7 +2190,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated utility-science-pack"
+                    "value": "Automated chemical-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
@@ -2070,14 +2211,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated utility-science-pack"
                   }
                 }
               ]
@@ -2087,7 +2221,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-469",
@@ -2099,14 +2235,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -2116,7 +2252,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-464",
@@ -2128,13 +2266,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated chemical-science-pack"
                   }
                 },
@@ -2144,6 +2275,13 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -2152,7 +2290,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-954",
@@ -2164,6 +2304,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -2173,13 +2320,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -2188,7 +2328,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-886",
@@ -2200,6 +2342,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -2209,13 +2358,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -2224,7 +2366,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-999",
@@ -2236,9 +2380,40 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated chemical-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated military-science-pack"
                   }
                 },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated logistic-science-pack"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "solar-energy",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
+          },
+          {
+            "name": "AP-5-609",
+            "id": 135676,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
                 {
                   "type": "item_check",
                   "item": {
@@ -2251,42 +2426,6 @@
                   "item": {
                     "type": "constant",
                     "value": "Automated chemical-science-pack"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "solar-energy",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "AP-5-609",
-            "id": 135676,
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated logistic-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -2300,7 +2439,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -2310,7 +2456,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-201",
@@ -2318,13 +2466,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -2343,13 +2484,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated chemical-science-pack"
                   }
                 },
@@ -2359,6 +2493,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -2367,7 +2515,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-316",
@@ -2379,13 +2529,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated chemical-science-pack"
                   }
                 },
@@ -2395,6 +2538,13 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated logistic-science-pack"
+                  }
                 }
               ]
             },
@@ -2403,7 +2553,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-829",
@@ -2415,14 +2567,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 }
               ]
@@ -2432,7 +2584,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-702",
@@ -2440,6 +2594,13 @@
             "access_rule": {
               "type": "and",
               "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
                 {
                   "type": "item_check",
                   "item": {
@@ -2453,13 +2614,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -2468,7 +2622,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-983",
@@ -2485,7 +2641,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-953",
@@ -2497,14 +2655,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -2514,7 +2672,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-996",
@@ -2531,7 +2691,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-080",
@@ -2548,7 +2710,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-901",
@@ -2560,14 +2724,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -2577,7 +2741,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-844",
@@ -2589,13 +2755,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -2603,7 +2762,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
@@ -2617,7 +2776,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -2627,7 +2793,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-734",
@@ -2639,13 +2807,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -2653,7 +2814,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
@@ -2667,7 +2828,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -2677,7 +2845,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-475",
@@ -2694,7 +2864,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-193",
@@ -2702,13 +2874,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -2727,13 +2892,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated chemical-science-pack"
                   }
                 },
@@ -2743,6 +2901,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -2751,7 +2923,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-126",
@@ -2768,7 +2942,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-406",
@@ -2780,7 +2956,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
@@ -2794,7 +2970,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -2804,7 +2980,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-954",
@@ -2821,7 +2999,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-148",
@@ -2833,7 +3013,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated utility-science-pack"
+                    "value": "Automated chemical-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
@@ -2847,14 +3034,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated utility-science-pack"
                   }
                 }
               ]
@@ -2864,7 +3044,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-827",
@@ -2876,14 +3058,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 }
               ]
@@ -2893,7 +3075,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-409",
@@ -2905,14 +3089,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 }
               ]
@@ -2922,7 +3106,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-240",
@@ -2934,6 +3120,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -2943,13 +3136,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -2958,7 +3144,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-025",
@@ -2970,6 +3158,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -2979,13 +3174,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -2994,7 +3182,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-133",
@@ -3006,13 +3196,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -3020,7 +3203,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
@@ -3034,7 +3217,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3044,7 +3234,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-507",
@@ -3061,7 +3253,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-585",
@@ -3073,14 +3267,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3090,7 +3284,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-350",
@@ -3102,14 +3298,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -3123,7 +3319,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3133,7 +3329,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-466",
@@ -3145,6 +3343,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -3154,13 +3359,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -3169,7 +3367,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-401",
@@ -3181,14 +3381,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 }
               ]
@@ -3198,7 +3398,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-951",
@@ -3215,7 +3417,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-210",
@@ -3223,6 +3427,13 @@
             "access_rule": {
               "type": "and",
               "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
                 {
                   "type": "item_check",
                   "item": {
@@ -3236,13 +3447,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -3251,7 +3455,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-079",
@@ -3268,7 +3474,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-603",
@@ -3280,7 +3488,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
@@ -3294,7 +3502,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3304,7 +3512,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-618",
@@ -3330,13 +3540,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated chemical-science-pack"
                   }
                 },
@@ -3346,6 +3549,13 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
                 }
               ]
             },
@@ -3354,7 +3564,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-496",
@@ -3366,9 +3578,40 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated utility-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated production-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated utility-science-pack"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "progressive-research-speed",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
+          },
+          {
+            "name": "AP-5-180",
+            "id": 135247,
+            "access_rule": {
+              "type": "and",
+              "conditions": [
                 {
                   "type": "item_check",
                   "item": {
@@ -3381,28 +3624,6 @@
                   "item": {
                     "type": "constant",
                     "value": "Automated production-science-pack"
-                  }
-                }
-              ]
-            },
-            "item": {
-              "name": "progressive-research-speed",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "AP-5-180",
-            "id": 135247,
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
                   }
                 },
                 {
@@ -3416,14 +3637,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3433,7 +3647,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-711",
@@ -3450,7 +3666,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-801",
@@ -3462,14 +3680,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3479,7 +3697,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-693",
@@ -3491,14 +3711,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -3512,7 +3732,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3522,7 +3742,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-934",
@@ -3530,20 +3752,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated logistic-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -3557,6 +3765,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated logistic-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -3565,7 +3787,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-644",
@@ -3582,7 +3806,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-261",
@@ -3594,14 +3820,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -3615,7 +3841,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3625,7 +3851,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-784",
@@ -3637,14 +3865,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3654,7 +3882,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-269",
@@ -3666,13 +3896,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated utility-science-pack"
                   }
                 },
@@ -3687,6 +3910,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated chemical-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated military-science-pack"
                   }
                 },
@@ -3694,7 +3924,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3704,7 +3934,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-746",
@@ -3716,7 +3948,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated utility-science-pack"
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
@@ -3730,7 +3962,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated utility-science-pack"
                   }
                 }
               ]
@@ -3740,7 +3972,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-514",
@@ -3752,14 +3986,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3769,7 +4003,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-554",
@@ -3781,14 +4017,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 }
               ]
@@ -3798,7 +4034,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-889",
@@ -3810,14 +4048,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3827,7 +4065,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-092",
@@ -3835,13 +4075,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -3869,6 +4102,13 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -3877,7 +4117,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-473",
@@ -3889,14 +4131,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3906,7 +4148,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-336",
@@ -3918,14 +4162,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -3939,7 +4183,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -3949,7 +4193,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-195",
@@ -3966,7 +4212,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-126",
@@ -3974,6 +4222,13 @@
             "access_rule": {
               "type": "and",
               "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated chemical-science-pack"
+                  }
+                },
                 {
                   "type": "item_check",
                   "item": {
@@ -3987,13 +4242,6 @@
                     "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated chemical-science-pack"
-                  }
                 }
               ]
             },
@@ -4002,7 +4250,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-034",
@@ -4010,20 +4260,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -4037,6 +4273,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -4045,7 +4295,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-494",
@@ -4062,7 +4314,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-117",
@@ -4098,7 +4352,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-577",
@@ -4110,21 +4366,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated utility-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -4140,6 +4382,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -4148,7 +4404,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-472",
@@ -4160,13 +4418,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -4174,7 +4425,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
@@ -4188,7 +4439,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -4198,7 +4456,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-652",
@@ -4215,7 +4475,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-063",
@@ -4227,6 +4489,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -4236,13 +4505,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -4251,7 +4513,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-737",
@@ -4263,21 +4527,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated utility-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -4293,6 +4543,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -4301,7 +4565,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-881",
@@ -4313,14 +4579,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 }
               ]
@@ -4330,7 +4596,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-276",
@@ -4342,14 +4610,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -4363,7 +4631,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -4373,7 +4641,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-561",
@@ -4385,14 +4655,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 }
               ]
@@ -4402,7 +4672,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-576",
@@ -4414,6 +4686,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated chemical-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated military-science-pack"
                   }
                 },
@@ -4430,13 +4709,6 @@
                     "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated chemical-science-pack"
-                  }
                 }
               ]
             },
@@ -4445,7 +4717,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-678",
@@ -4457,14 +4731,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 }
               ]
@@ -4474,7 +4748,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-371",
@@ -4482,13 +4758,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -4501,13 +4770,6 @@
                   "item": {
                     "type": "constant",
                     "value": "Automated logistic-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -4523,6 +4785,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -4531,7 +4807,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-823",
@@ -4543,14 +4821,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -4560,7 +4838,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-733",
@@ -4572,6 +4852,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -4581,13 +4868,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -4596,7 +4876,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-318",
@@ -4608,6 +4890,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -4617,13 +4906,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -4632,7 +4914,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-079",
@@ -4644,6 +4928,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -4653,13 +4944,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -4668,7 +4952,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-537",
@@ -4680,6 +4966,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -4689,13 +4982,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -4704,7 +4990,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-674",
@@ -4716,6 +5004,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -4725,13 +5020,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -4740,7 +5028,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-330",
@@ -4757,7 +5047,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-599",
@@ -4769,13 +5061,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated chemical-science-pack"
                   }
                 },
@@ -4785,6 +5070,13 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -4793,7 +5085,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-406",
@@ -4805,14 +5099,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated utility-science-pack"
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
@@ -4826,7 +5113,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated utility-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -4836,7 +5130,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-298",
@@ -4848,14 +5144,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 }
               ]
@@ -4865,7 +5161,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-527",
@@ -4877,7 +5175,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
@@ -4891,7 +5189,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -4901,7 +5199,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-800",
@@ -4913,14 +5213,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -4934,7 +5234,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -4944,7 +5244,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-927",
@@ -4956,14 +5258,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -4977,7 +5279,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -4987,7 +5289,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-158",
@@ -5004,7 +5308,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-321",
@@ -5012,13 +5318,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -5037,13 +5336,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated chemical-science-pack"
                   }
                 },
@@ -5053,6 +5345,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -5061,7 +5367,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-356",
@@ -5073,7 +5381,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated chemical-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
@@ -5087,14 +5402,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -5104,7 +5412,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-934",
@@ -5121,7 +5431,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-4-649",
@@ -5133,14 +5445,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -5154,7 +5466,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -5164,7 +5476,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-108",
@@ -5181,7 +5495,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-953",
@@ -5193,14 +5509,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated production-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated military-science-pack"
                   }
                 },
                 {
@@ -5214,7 +5530,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated production-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -5224,7 +5540,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-255",
@@ -5236,14 +5554,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -5253,7 +5571,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-106",
@@ -5265,6 +5585,13 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -5274,13 +5601,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -5289,7 +5609,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-794",
@@ -5301,14 +5623,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -5318,7 +5640,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-070",
@@ -5326,13 +5650,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -5351,13 +5668,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated chemical-science-pack"
                   }
                 },
@@ -5367,6 +5677,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -5375,7 +5699,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-998",
@@ -5387,20 +5713,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated logistic-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated chemical-science-pack"
                   }
                 },
@@ -5410,6 +5722,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated logistic-science-pack"
+                  }
                 }
               ]
             },
@@ -5418,7 +5744,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-5-075",
@@ -5430,13 +5758,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
                 },
@@ -5444,7 +5765,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
+                    "value": "Automated chemical-science-pack"
                   }
                 },
                 {
@@ -5458,7 +5779,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated chemical-science-pack"
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -5468,7 +5796,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-031",
@@ -5485,7 +5815,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-043",
@@ -5493,6 +5825,13 @@
             "access_rule": {
               "type": "and",
               "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
                 {
                   "type": "item_check",
                   "item": {
@@ -5506,13 +5845,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -5521,7 +5853,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-653",
@@ -5538,7 +5872,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-997",
@@ -5555,7 +5891,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-096",
@@ -5563,6 +5901,13 @@
             "access_rule": {
               "type": "and",
               "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated production-science-pack"
+                  }
+                },
                 {
                   "type": "item_check",
                   "item": {
@@ -5576,13 +5921,6 @@
                     "type": "constant",
                     "value": "Automated logistic-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated production-science-pack"
-                  }
                 }
               ]
             },
@@ -5591,7 +5929,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-194",
@@ -5608,7 +5948,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-491",
@@ -5625,7 +5967,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-3-794",
@@ -5633,6 +5977,13 @@
             "access_rule": {
               "type": "and",
               "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
                 {
                   "type": "item_check",
                   "item": {
@@ -5646,13 +5997,6 @@
                     "type": "constant",
                     "value": "Automated automation-science-pack"
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
                 }
               ]
             },
@@ -5661,7 +6005,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-684",
@@ -5687,13 +6033,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated chemical-science-pack"
                   }
                 },
@@ -5703,6 +6042,13 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
                 }
               ]
             },
@@ -5711,7 +6057,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-338",
@@ -5728,7 +6076,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-6-685",
@@ -5736,13 +6086,6 @@
             "access_rule": {
               "type": "and",
               "conditions": [
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "Automated automation-science-pack"
-                  }
-                },
                 {
                   "type": "item_check",
                   "item": {
@@ -5761,13 +6104,6 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated military-science-pack"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
                     "value": "Automated chemical-science-pack"
                   }
                 },
@@ -5777,6 +6113,20 @@
                     "type": "constant",
                     "value": "Automated production-science-pack"
                   }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated military-science-pack"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Automated automation-science-pack"
+                  }
                 }
               ]
             },
@@ -5785,7 +6135,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-763",
@@ -5797,14 +6149,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated automation-science-pack"
+                    "value": "Automated logistic-science-pack"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Automated logistic-science-pack"
+                    "value": "Automated automation-science-pack"
                   }
                 }
               ]
@@ -5814,7 +6166,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-1-499",
@@ -5831,7 +6185,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "AP-2-569",
@@ -5848,7 +6204,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "Rocket Launch",
@@ -5860,14 +6218,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "advanced-material-processing-2"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "advanced-oil-processing"
+                    "value": "night-vision-equipment"
                   }
                 },
                 {
@@ -5888,28 +6239,14 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "advanced-circuit"
+                    "value": "advanced-oil-processing"
                   }
                 },
                 {
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "flamethrower"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "oil-processing"
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "constant",
-                    "value": "plastics"
+                    "value": "advanced-material-processing-2"
                   }
                 },
                 {
@@ -5923,7 +6260,28 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "night-vision-equipment"
+                    "value": "plastics"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "advanced-circuit"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "oil-processing"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "flamethrower"
                   }
                 }
               ]
@@ -5933,7 +6291,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "Automate automation-science-pack",
@@ -5975,7 +6335,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "Automate chemical-science-pack",
@@ -6017,7 +6379,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "Automate logistic-science-pack",
@@ -6059,7 +6423,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "Automate military-science-pack",
@@ -6101,7 +6467,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "Automate production-science-pack",
@@ -6143,7 +6511,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           },
           {
             "name": "Automate utility-science-pack",
@@ -6185,7 +6555,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "region": "Nauvis",
+            "parent_region_name": "Nauvis"
           }
         ]
       }
