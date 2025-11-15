@@ -1046,14 +1046,16 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                 # Process exits
                 if hasattr(region, 'exits'):
+                    # Set region context before processing exits (for handlers that need source region)
+                    region_name = getattr(region, 'name', 'Unknown')
+                    if hasattr(game_handler, 'set_context'):
+                        game_handler.set_context(region_name)
+
                     for exit in region.exits:
                         try:
                             expanded_rule = None
                             exit_name = getattr(exit, 'name', None)
                             if hasattr(exit, 'access_rule') and exit.access_rule:
-                                # Set context for game handlers that need it (e.g., metamath)
-                                if hasattr(game_handler, 'set_context'):
-                                    game_handler.set_context(exit_name)
                                 # Try special handling first for complex exit rules
                                 if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
                                     special_rule = game_handler.handle_complex_exit_rule(exit_name, exit.access_rule)
