@@ -470,6 +470,10 @@ export function createStateSnapshotInterface(
       });
       return evaluateRule(locData.access_rule, locationContext);
     },
+    // Alias for isRegionReachable to match naming convention used in region_check rules
+    isRegionAccessible: function (regionName) {
+      return this.isRegionReachable(regionName);
+    },
     getPlayerSlot: () => snapshot?.player?.slot,
     getGameMode: () => snapshot?.gameMode,
     getDifficultyRequirements: () => snapshot?.difficultyRequirements,
@@ -579,7 +583,8 @@ export function createStateSnapshotInterface(
       const selectedHelpers = getHelperFunctions(gameName);
 
       if (selectedHelpers && selectedHelpers[helperName]) {
-        return selectedHelpers[helperName](snapshot, staticData, ...args);
+        // Pass finalSnapshotInterface as 'snapshot' so helpers can access evaluateRule
+        return selectedHelpers[helperName](finalSnapshotInterface, staticData, ...args);
       }
       return undefined; // Helper not found - all games should use agnostic helpers
     },
