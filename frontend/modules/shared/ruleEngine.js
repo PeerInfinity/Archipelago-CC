@@ -448,8 +448,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
         let hasUndefined = false;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
-          // Treat falsy values (false, 0, "", null) as false, but not undefined
-          if (conditionResult === false || (conditionResult !== undefined && !conditionResult)) {
+          // Check for falsiness (but not undefined, which is handled separately)
+          if (!conditionResult && conditionResult !== undefined) {
             result = false;
             hasUndefined = false; // Definitively false
             break;
@@ -470,8 +470,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
         let hasUndefined = false;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
-          // Treat truthy values (true, non-zero numbers, non-empty strings) as true, but not undefined
-          if (conditionResult === true || (conditionResult !== undefined && !!conditionResult)) {
+          // Check for truthiness (but not undefined, which is handled separately)
+          if (conditionResult && conditionResult !== undefined) {
             result = true;
             hasUndefined = false; // Definitively true
             break;
