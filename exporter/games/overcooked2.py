@@ -90,6 +90,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
 
         code = rule_func.__code__
 
+
         # Extract closure variables
         closure_vars = {}
         if hasattr(rule_func, '__closure__') and rule_func.__closure__:
@@ -100,6 +101,18 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                         closure_vars[var_names[i]] = cell.cell_contents
                     except ValueError:
                         pass
+
+        # Extract default arguments (for lambdas with default params like level_name=...)
+        if hasattr(rule_func, '__defaults__') and rule_func.__defaults__:
+            # Get argument names (excluding 'state' which is the first positional arg)
+            arg_names = code.co_varnames[1:code.co_argcount]  # Skip 'state'
+            defaults = rule_func.__defaults__
+            # Match defaults to their argument names (defaults are right-aligned)
+            start_index = len(arg_names) - len(defaults)
+            for i, default_value in enumerate(defaults):
+                arg_name = arg_names[start_index + i]
+                closure_vars[arg_name] = default_value
+
 
         # Handle entrance rules (has_requirements_for_level_access)
         if 'has_requirements_for_level_access' in code.co_names:
@@ -112,8 +125,9 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                 required_stars = closure_vars.get('required_star_count', 0)
                 allow_tricks = closure_vars.get('allow_ramp_tricks', self.ramp_tricks_enabled)
 
-                # Create a helper rule that we'll expand later
-                return {
+                # Create a helper rule and EXPAND IT IMMEDIATELY
+                # (because override results bypass the normal expansion flow)
+                helper_rule = {
                     'type': 'helper',
                     'name': 'has_requirements_for_level_access',
                     'args': [
@@ -123,6 +137,8 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                         {'type': 'constant', 'value': allow_tricks}
                     ]
                 }
+                # Expand the helper immediately
+                return self._expand_level_access_rule(helper_rule)
 
         # Handle location rules (has_requirements_for_level_star)
         if 'has_requirements_for_level_star' in code.co_names:
@@ -156,7 +172,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         """Expand Overcooked! 2 helper functions."""
         # For now, preserve helpers as-is - they'll be implemented in frontend
         if helper_name in ['has_requirements_for_level_star', 'has_requirements_for_level_access',
-                          'meets_requirements']:
+                          'meets_requirements', 'has_enough_stars']:
             return None  # Keep as helper
 
         return super().expand_helper(helper_name)
@@ -277,11 +293,22 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         if rule_type == 'helper':
             helper_name = rule.get('name', '')
 
-            # Handle has_requirements_for_level_access
+            # Keep certain helpers as-is (don't let generic exporter convert them to items)
+            if helper_name in ['has_enough_stars', 'has_requirements_for_level_star',
+                              'has_requirements_for_level_access', 'meets_requirements']:
+                # Don't call super().expand_rule() - this would convert has_* to items
+                # Just recursively process the args if any
+                if 'args' in rule:
+                    rule = dict(rule)  # Make a copy
+                    rule['args'] = [self.expand_rule(arg) if isinstance(arg, dict) else arg
+                                   for arg in rule.get('args', [])]
+                return rule
+
+            # Handle has_requirements_for_level_access (shouldn't reach here due to override)
             if helper_name == 'has_requirements_for_level_access':
                 return self._expand_level_access_rule(rule)
 
-            # Handle has_requirements_for_level_star
+            # Handle has_requirements_for_level_star (shouldn't reach here due to override)
             if helper_name == 'has_requirements_for_level_star':
                 return self._expand_level_star_rule(rule)
 
