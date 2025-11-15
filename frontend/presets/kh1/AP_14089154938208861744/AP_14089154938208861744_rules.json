@@ -118,12 +118,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -417,12 +413,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -485,12 +477,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -504,9 +492,21 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_summons",
-                  "args": []
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Bambi",
+                        "Dumbo",
+                        "Genie",
+                        "Mushu",
+                        "Simba",
+                        "Tinker Bell"
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "helper",
@@ -558,12 +558,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -626,12 +622,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -694,12 +686,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -762,12 +750,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -830,12 +814,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -898,12 +878,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -966,12 +942,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -1189,12 +1161,37 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_emblems",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Emblem Piece (Chest)",
+                            "Emblem Piece (Flame)",
+                            "Emblem Piece (Fountain)",
+                            "Emblem Piece (Statue)",
+                            "Hollow Bastion"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 5
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     }
                   ]
                 },
@@ -1259,9 +1256,22 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_all_arts",
-                  "args": []
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Aero Arts",
+                        "Blizzard Arts",
+                        "Cure Arts",
+                        "Fire Arts",
+                        "Gravity Arts",
+                        "Stop Arts",
+                        "Thunder Arts"
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "helper",
@@ -1552,12 +1562,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "or",
@@ -1607,12 +1613,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -1668,12 +1670,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -1758,8 +1756,8 @@
                     {
                       "type": "binary_op",
                       "left": {
-                        "type": "name",
-                        "name": "puppies_required"
+                        "type": "constant",
+                        "value": 10
                       },
                       "op": "/",
                       "right": {
@@ -1830,8 +1828,8 @@
                     {
                       "type": "binary_op",
                       "left": {
-                        "type": "name",
-                        "name": "puppies_required"
+                        "type": "constant",
+                        "value": 20
                       },
                       "op": "/",
                       "right": {
@@ -1902,8 +1900,8 @@
                     {
                       "type": "binary_op",
                       "left": {
-                        "type": "name",
-                        "name": "puppies_required"
+                        "type": "constant",
+                        "value": 30
                       },
                       "op": "/",
                       "right": {
@@ -1974,8 +1972,8 @@
                     {
                       "type": "binary_op",
                       "left": {
-                        "type": "name",
-                        "name": "puppies_required"
+                        "type": "constant",
+                        "value": 40
                       },
                       "op": "/",
                       "right": {
@@ -2046,8 +2044,8 @@
                     {
                       "type": "binary_op",
                       "left": {
-                        "type": "name",
-                        "name": "puppies_required"
+                        "type": "constant",
+                        "value": 50
                       },
                       "op": "/",
                       "right": {
@@ -2118,8 +2116,8 @@
                     {
                       "type": "binary_op",
                       "left": {
-                        "type": "name",
-                        "name": "puppies_required"
+                        "type": "constant",
+                        "value": 50
                       },
                       "op": "/",
                       "right": {
@@ -2190,8 +2188,8 @@
                     {
                       "type": "binary_op",
                       "left": {
-                        "type": "name",
-                        "name": "puppies_required"
+                        "type": "constant",
+                        "value": 60
                       },
                       "op": "/",
                       "right": {
@@ -2262,8 +2260,8 @@
                     {
                       "type": "binary_op",
                       "left": {
-                        "type": "name",
-                        "name": "puppies_required"
+                        "type": "constant",
+                        "value": 70
                       },
                       "op": "/",
                       "right": {
@@ -2334,8 +2332,8 @@
                     {
                       "type": "binary_op",
                       "left": {
-                        "type": "name",
-                        "name": "puppies_required"
+                        "type": "constant",
+                        "value": 80
                       },
                       "op": "/",
                       "right": {
@@ -2406,8 +2404,8 @@
                     {
                       "type": "binary_op",
                       "left": {
-                        "type": "name",
-                        "name": "puppies_required"
+                        "type": "constant",
+                        "value": 90
                       },
                       "op": "/",
                       "right": {
@@ -2478,8 +2476,8 @@
                     {
                       "type": "binary_op",
                       "left": {
-                        "type": "name",
-                        "name": "puppies_required"
+                        "type": "constant",
+                        "value": 99
                       },
                       "op": "/",
                       "right": {
@@ -2550,8 +2548,8 @@
                     {
                       "type": "binary_op",
                       "left": {
-                        "type": "name",
-                        "name": "puppies_required"
+                        "type": "constant",
+                        "value": 99
                       },
                       "op": "/",
                       "right": {
@@ -3043,12 +3041,8 @@
                   ]
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -3076,12 +3070,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "or",
@@ -3094,9 +3084,23 @@
                           }
                         },
                         {
-                          "type": "helper",
-                          "name": "can_dumbo_skip",
-                          "args": []
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Dumbo"
+                              }
+                            },
+                            {
+                              "type": "group_check",
+                              "group": {
+                                "type": "constant",
+                                "value": "Magic"
+                              }
+                            }
+                          ]
                         }
                       ]
                     },
@@ -3418,12 +3422,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "state_method",
@@ -3489,12 +3489,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "state_method",
@@ -3560,12 +3556,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "state_method",
@@ -3609,12 +3601,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -4153,12 +4141,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -4375,12 +4359,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -4612,12 +4592,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -4729,12 +4705,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -4749,17 +4721,27 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
-                      "type": "helper",
-                      "name": "can_dumbo_skip",
-                      "args": []
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Dumbo"
+                          }
+                        },
+                        {
+                          "type": "group_check",
+                          "group": {
+                            "type": "constant",
+                            "value": "Magic"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
@@ -4852,12 +4834,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -4901,12 +4879,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -5121,17 +5095,27 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
-                      "type": "helper",
-                      "name": "can_dumbo_skip",
-                      "args": []
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Dumbo"
+                          }
+                        },
+                        {
+                          "type": "group_check",
+                          "group": {
+                            "type": "constant",
+                            "value": "Magic"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -5184,12 +5168,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "or",
@@ -5202,9 +5182,23 @@
                               }
                             },
                             {
-                              "type": "helper",
-                              "name": "can_dumbo_skip",
-                              "args": []
+                              "type": "and",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": {
+                                    "type": "constant",
+                                    "value": "Dumbo"
+                                  }
+                                },
+                                {
+                                  "type": "group_check",
+                                  "group": {
+                                    "type": "constant",
+                                    "value": "Magic"
+                                  }
+                                }
+                              ]
                             }
                           ]
                         }
@@ -5227,12 +5221,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -5266,12 +5256,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -5487,12 +5473,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -5517,12 +5499,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -5547,12 +5525,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -5645,12 +5619,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -5684,12 +5654,8 @@
                   }
                 },
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "options"
-                  },
-                  "attr": "advanced_logic"
+                  "type": "constant",
+                  "value": 0
                 }
               ]
             },
@@ -5723,12 +5689,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -5796,12 +5758,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -6027,12 +5985,8 @@
                       }
                     },
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 }
@@ -6075,12 +6029,8 @@
                       }
                     },
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 }
@@ -6136,12 +6086,57 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_oogie_manor",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Progressive Fire"
+                      }
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          },
+                          "count": {
+                            "type": "constant",
+                            "value": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Progressive Glide"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -6174,12 +6169,57 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_oogie_manor",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Progressive Fire"
+                      }
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          },
+                          "count": {
+                            "type": "constant",
+                            "value": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Progressive Glide"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -6212,12 +6252,57 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_oogie_manor",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Progressive Fire"
+                      }
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          },
+                          "count": {
+                            "type": "constant",
+                            "value": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Progressive Glide"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -6250,12 +6335,57 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_oogie_manor",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Progressive Fire"
+                      }
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          },
+                          "count": {
+                            "type": "constant",
+                            "value": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Progressive Glide"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -6312,12 +6442,57 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_oogie_manor",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Progressive Fire"
+                      }
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          },
+                          "count": {
+                            "type": "constant",
+                            "value": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Progressive Glide"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -6350,12 +6525,57 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_oogie_manor",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Progressive Fire"
+                      }
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          },
+                          "count": {
+                            "type": "constant",
+                            "value": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Progressive Glide"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -6399,17 +6619,27 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
-                      "type": "helper",
-                      "name": "can_dumbo_skip",
-                      "args": []
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Dumbo"
+                          }
+                        },
+                        {
+                          "type": "group_check",
+                          "group": {
+                            "type": "constant",
+                            "value": "Magic"
+                          }
+                        }
+                      ]
                     }
                   ]
                 },
@@ -6417,12 +6647,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -6462,12 +6688,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -6494,12 +6716,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -6552,12 +6770,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -6584,12 +6798,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -6754,12 +6964,57 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_oogie_manor",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Progressive Fire"
+                      }
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          },
+                          "count": {
+                            "type": "constant",
+                            "value": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Progressive Glide"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -6815,12 +7070,57 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_oogie_manor",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Progressive Fire"
+                      }
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          },
+                          "count": {
+                            "type": "constant",
+                            "value": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Progressive Glide"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -6853,12 +7153,57 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_oogie_manor",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Progressive Fire"
+                      }
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          },
+                          "count": {
+                            "type": "constant",
+                            "value": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Progressive Glide"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -6891,12 +7236,57 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_oogie_manor",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Progressive Fire"
+                      }
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          },
+                          "count": {
+                            "type": "constant",
+                            "value": 2
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": 0
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "High Jump"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Progressive Glide"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -7362,12 +7752,37 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_emblems",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Emblem Piece (Chest)",
+                            "Emblem Piece (Flame)",
+                            "Emblem Piece (Fountain)",
+                            "Emblem Piece (Statue)",
+                            "Hollow Bastion"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 5
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     }
                   ]
                 },
@@ -7386,17 +7801,27 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
-                      "type": "helper",
-                      "name": "can_dumbo_skip",
-                      "args": []
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Dumbo"
+                          }
+                        },
+                        {
+                          "type": "group_check",
+                          "group": {
+                            "type": "constant",
+                            "value": "Magic"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -7426,12 +7851,37 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_emblems",
-                      "args": [
+                      "type": "and",
+                      "conditions": [
                         {
-                          "type": "constant",
-                          "value": 0
+                          "type": "state_method",
+                          "method": "has_all",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Emblem Piece (Chest)",
+                                "Emblem Piece (Flame)",
+                                "Emblem Piece (Fountain)",
+                                "Emblem Piece (Statue)",
+                                "Hollow Bastion"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_x_worlds",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 5
+                            },
+                            {
+                              "type": "constant",
+                              "value": 0
+                            }
+                          ]
                         }
                       ]
                     },
@@ -7439,12 +7889,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
                           "type": "item_check",
@@ -7470,17 +7916,27 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "options"
-                          },
-                          "attr": "advanced_logic"
+                          "type": "constant",
+                          "value": 0
                         },
                         {
-                          "type": "helper",
-                          "name": "can_dumbo_skip",
-                          "args": []
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Dumbo"
+                              }
+                            },
+                            {
+                              "type": "group_check",
+                              "group": {
+                                "type": "constant",
+                                "value": "Magic"
+                              }
+                            }
+                          ]
                         },
                         {
                           "type": "item_check",
@@ -7509,12 +7965,37 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_emblems",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Emblem Piece (Chest)",
+                            "Emblem Piece (Flame)",
+                            "Emblem Piece (Fountain)",
+                            "Emblem Piece (Statue)",
+                            "Hollow Bastion"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 5
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     }
                   ]
                 },
@@ -7533,17 +8014,27 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
-                      "type": "helper",
-                      "name": "can_dumbo_skip",
-                      "args": []
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Dumbo"
+                          }
+                        },
+                        {
+                          "type": "group_check",
+                          "group": {
+                            "type": "constant",
+                            "value": "Magic"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -7560,12 +8051,37 @@
             "name": "Hollow Bastion Defeat Behemoth Omega Arts Event",
             "id": 2656105,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -7580,12 +8096,37 @@
             "name": "Hollow Bastion Defeat Dragon Maleficent Fireglow Event",
             "id": 2656103,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -7600,12 +8141,37 @@
             "name": "Hollow Bastion Defeat Maleficent Ansem's Report 5",
             "id": 2657014,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -7620,12 +8186,37 @@
             "name": "Hollow Bastion Defeat Maleficent Donald Cheer Event",
             "id": 2656102,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -7654,12 +8245,37 @@
             "name": "Hollow Bastion Defeat Riku II Ragnarok Event",
             "id": 2656104,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -7723,12 +8339,37 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_emblems",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Emblem Piece (Chest)",
+                            "Emblem Piece (Flame)",
+                            "Emblem Piece (Fountain)",
+                            "Emblem Piece (Statue)",
+                            "Hollow Bastion"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 5
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     }
                   ]
                 }
@@ -7769,12 +8410,37 @@
                       }
                     },
                     {
-                      "type": "helper",
-                      "name": "has_emblems",
-                      "args": [
+                      "type": "and",
+                      "conditions": [
                         {
-                          "type": "constant",
-                          "value": 0
+                          "type": "state_method",
+                          "method": "has_all",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Emblem Piece (Chest)",
+                                "Emblem Piece (Flame)",
+                                "Emblem Piece (Fountain)",
+                                "Emblem Piece (Statue)",
+                                "Hollow Bastion"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_x_worlds",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 5
+                            },
+                            {
+                              "type": "constant",
+                              "value": 0
+                            }
+                          ]
                         }
                       ]
                     }
@@ -7812,12 +8478,8 @@
                       }
                     },
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     }
                   ]
                 }
@@ -7855,12 +8517,37 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_emblems",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Emblem Piece (Chest)",
+                            "Emblem Piece (Flame)",
+                            "Emblem Piece (Fountain)",
+                            "Emblem Piece (Statue)",
+                            "Hollow Bastion"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 5
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     }
                   ]
                 }
@@ -7901,12 +8588,37 @@
                       }
                     },
                     {
-                      "type": "helper",
-                      "name": "has_emblems",
-                      "args": [
+                      "type": "and",
+                      "conditions": [
                         {
-                          "type": "constant",
-                          "value": 0
+                          "type": "state_method",
+                          "method": "has_all",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Emblem Piece (Chest)",
+                                "Emblem Piece (Flame)",
+                                "Emblem Piece (Fountain)",
+                                "Emblem Piece (Statue)",
+                                "Hollow Bastion"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_x_worlds",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 5
+                            },
+                            {
+                              "type": "constant",
+                              "value": 0
+                            }
+                          ]
                         }
                       ]
                     }
@@ -7945,25 +8657,60 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
-                      "type": "helper",
-                      "name": "can_dumbo_skip",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "has_emblems",
-                      "args": [
+                      "type": "and",
+                      "conditions": [
                         {
-                          "type": "constant",
-                          "value": 0
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Dumbo"
+                          }
+                        },
+                        {
+                          "type": "group_check",
+                          "group": {
+                            "type": "constant",
+                            "value": "Magic"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "state_method",
+                          "method": "has_all",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Emblem Piece (Chest)",
+                                "Emblem Piece (Flame)",
+                                "Emblem Piece (Fountain)",
+                                "Emblem Piece (Statue)",
+                                "Hollow Bastion"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_x_worlds",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 5
+                            },
+                            {
+                              "type": "constant",
+                              "value": 0
+                            }
+                          ]
                         }
                       ]
                     }
@@ -7982,12 +8729,37 @@
             "name": "Hollow Bastion Grand Hall Left of Gate Chest",
             "id": 2654492,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8002,12 +8774,37 @@
             "name": "Hollow Bastion Grand Hall Oblivion Chest",
             "id": 2654491,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8022,12 +8819,37 @@
             "name": "Hollow Bastion Grand Hall Steps Right Side Chest",
             "id": 2654454,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8042,12 +8864,37 @@
             "name": "Hollow Bastion Great Crest After Battle Platform Chest",
             "id": 2654172,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8062,12 +8909,37 @@
             "name": "Hollow Bastion Great Crest Lower Chest",
             "id": 2654171,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8092,12 +8964,37 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_emblems",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Emblem Piece (Chest)",
+                            "Emblem Piece (Flame)",
+                            "Emblem Piece (Fountain)",
+                            "Emblem Piece (Statue)",
+                            "Hollow Bastion"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 5
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     }
                   ]
                 }
@@ -8124,12 +9021,37 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_emblems",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Emblem Piece (Chest)",
+                            "Emblem Piece (Flame)",
+                            "Emblem Piece (Fountain)",
+                            "Emblem Piece (Statue)",
+                            "Hollow Bastion"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 5
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     }
                   ]
                 }
@@ -8146,12 +9068,37 @@
             "name": "Hollow Bastion High Tower Above Sliding Blocks Chest",
             "id": 2654211,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8208,12 +9155,37 @@
             "name": "Hollow Bastion Library Speak to Aerith Cure",
             "id": 2656523,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8228,12 +9200,37 @@
             "name": "Hollow Bastion Library Speak to Belle Divine Rose",
             "id": 2656522,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8286,12 +9283,37 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_emblems",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Emblem Piece (Chest)",
+                            "Emblem Piece (Flame)",
+                            "Emblem Piece (Fountain)",
+                            "Emblem Piece (Statue)",
+                            "Hollow Bastion"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 5
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     }
                   ]
                 }
@@ -8318,12 +9340,37 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_emblems",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Emblem Piece (Chest)",
+                            "Emblem Piece (Flame)",
+                            "Emblem Piece (Fountain)",
+                            "Emblem Piece (Statue)",
+                            "Hollow Bastion"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 5
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     }
                   ]
                 }
@@ -8377,12 +9424,37 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_emblems",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Emblem Piece (Chest)",
+                            "Emblem Piece (Flame)",
+                            "Emblem Piece (Fountain)",
+                            "Emblem Piece (Statue)",
+                            "Hollow Bastion"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 5
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     }
                   ]
                 },
@@ -8504,12 +9576,37 @@
                       }
                     },
                     {
-                      "type": "helper",
-                      "name": "has_emblems",
-                      "args": [
+                      "type": "and",
+                      "conditions": [
                         {
-                          "type": "constant",
-                          "value": 0
+                          "type": "state_method",
+                          "method": "has_all",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Emblem Piece (Chest)",
+                                "Emblem Piece (Flame)",
+                                "Emblem Piece (Fountain)",
+                                "Emblem Piece (Statue)",
+                                "Hollow Bastion"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_x_worlds",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 5
+                            },
+                            {
+                              "type": "constant",
+                              "value": 0
+                            }
+                          ]
                         }
                       ]
                     }
@@ -8519,12 +9616,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -8562,12 +9655,37 @@
             "name": "Hollow Bastion Rising Falls Under Water 2nd Chest",
             "id": 2654092,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8613,12 +9731,37 @@
             "name": "Hollow Bastion Speak to Princesses Fire Event",
             "id": 2656106,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8633,12 +9776,37 @@
             "name": "Hollow Bastion Speak with Aerith Ansem's Report 10",
             "id": 2657027,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8653,12 +9821,37 @@
             "name": "Hollow Bastion Speak with Aerith Ansem's Report 2",
             "id": 2657017,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8673,12 +9866,37 @@
             "name": "Hollow Bastion Speak with Aerith Ansem's Report 4",
             "id": 2657015,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -8693,12 +9911,37 @@
             "name": "Hollow Bastion Speak with Aerith Ansem's Report 6",
             "id": 2657013,
             "access_rule": {
-              "type": "helper",
-              "name": "has_emblems",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Emblem Piece (Chest)",
+                        "Emblem Piece (Flame)",
+                        "Emblem Piece (Fountain)",
+                        "Emblem Piece (Statue)",
+                        "Hollow Bastion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             },
@@ -9023,12 +10266,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
                       "type": "item_check",
@@ -9110,17 +10349,27 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "options"
-                      },
-                      "attr": "advanced_logic"
+                      "type": "constant",
+                      "value": 0
                     },
                     {
-                      "type": "helper",
-                      "name": "can_dumbo_skip",
-                      "args": []
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Dumbo"
+                          }
+                        },
+                        {
+                          "type": "group_check",
+                          "group": {
+                            "type": "constant",
+                            "value": "Magic"
+                          }
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
@@ -9242,26 +10491,309 @@
             "name": "Final Ansem",
             "id": 2659999,
             "access_rule": {
-              "type": "helper",
-              "name": "has_final_rest_door",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
                   "type": "constant",
                   "value": "reports"
                 },
-                {
+                "op": "==",
+                "right": {
                   "type": "constant",
-                  "value": 4
-                },
-                {
-                  "type": "constant",
-                  "value": 0
-                },
-                {
-                  "type": "constant",
-                  "value": 1
+                  "value": "reports"
                 }
-              ]
+              },
+              "if_true": {
+                "type": "state_method",
+                "method": "has_group_unique",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Reports"
+                  },
+                  {
+                    "type": "constant",
+                    "value": 4
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "constant",
+                    "value": "reports"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "puppies"
+                  }
+                },
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "individual"
+                    }
+                  },
+                  "if_true": {
+                    "type": "state_method",
+                    "method": "has_from_list_unique",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": [
+                          "Puppy 01",
+                          "Puppy 02",
+                          "Puppy 03",
+                          "Puppy 04",
+                          "Puppy 05",
+                          "Puppy 06",
+                          "Puppy 07",
+                          "Puppy 08",
+                          "Puppy 09",
+                          "Puppy 10",
+                          "Puppy 11",
+                          "Puppy 12",
+                          "Puppy 13",
+                          "Puppy 14",
+                          "Puppy 15",
+                          "Puppy 16",
+                          "Puppy 17",
+                          "Puppy 18",
+                          "Puppy 19",
+                          "Puppy 20",
+                          "Puppy 21",
+                          "Puppy 22",
+                          "Puppy 23",
+                          "Puppy 24",
+                          "Puppy 25",
+                          "Puppy 26",
+                          "Puppy 27",
+                          "Puppy 28",
+                          "Puppy 29",
+                          "Puppy 30",
+                          "Puppy 31",
+                          "Puppy 32",
+                          "Puppy 33",
+                          "Puppy 34",
+                          "Puppy 35",
+                          "Puppy 36",
+                          "Puppy 37",
+                          "Puppy 38",
+                          "Puppy 39",
+                          "Puppy 40",
+                          "Puppy 41",
+                          "Puppy 42",
+                          "Puppy 43",
+                          "Puppy 44",
+                          "Puppy 45",
+                          "Puppy 46",
+                          "Puppy 47",
+                          "Puppy 48",
+                          "Puppy 49",
+                          "Puppy 50",
+                          "Puppy 51",
+                          "Puppy 52",
+                          "Puppy 53",
+                          "Puppy 54",
+                          "Puppy 55",
+                          "Puppy 56",
+                          "Puppy 57",
+                          "Puppy 58",
+                          "Puppy 59",
+                          "Puppy 60",
+                          "Puppy 61",
+                          "Puppy 62",
+                          "Puppy 63",
+                          "Puppy 64",
+                          "Puppy 65",
+                          "Puppy 66",
+                          "Puppy 67",
+                          "Puppy 68",
+                          "Puppy 69",
+                          "Puppy 70",
+                          "Puppy 71",
+                          "Puppy 72",
+                          "Puppy 73",
+                          "Puppy 74",
+                          "Puppy 75",
+                          "Puppy 76",
+                          "Puppy 77",
+                          "Puppy 78",
+                          "Puppy 79",
+                          "Puppy 80",
+                          "Puppy 81",
+                          "Puppy 82",
+                          "Puppy 83",
+                          "Puppy 84",
+                          "Puppy 85",
+                          "Puppy 86",
+                          "Puppy 87",
+                          "Puppy 88",
+                          "Puppy 89",
+                          "Puppy 90",
+                          "Puppy 91",
+                          "Puppy 92",
+                          "Puppy 93",
+                          "Puppy 94",
+                          "Puppy 95",
+                          "Puppy 96",
+                          "Puppy 97",
+                          "Puppy 98",
+                          "Puppy 99"
+                        ]
+                      },
+                      {
+                        "type": "constant",
+                        "value": 99
+                      }
+                    ]
+                  },
+                  "if_false": null
+                },
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "constant",
+                      "value": "reports"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "postcards"
+                    }
+                  },
+                  "if_true": {
+                    "type": "item_check",
+                    "item": {
+                      "type": "constant",
+                      "value": "Postcard"
+                    },
+                    "count": {
+                      "type": "constant",
+                      "value": 10
+                    }
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "constant",
+                        "value": "reports"
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "superbosses"
+                      }
+                    },
+                    "if_true": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "state_method",
+                          "method": "has_all",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Agrabah",
+                                "Entry Pass",
+                                "Green Trinity",
+                                "Hercules Cup",
+                                "Hollow Bastion",
+                                "Neverland",
+                                "Olympus Coliseum",
+                                "Pegasus Cup",
+                                "Phil Cup"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "state_method",
+                              "method": "has_all",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": [
+                                    "Emblem Piece (Chest)",
+                                    "Emblem Piece (Flame)",
+                                    "Emblem Piece (Fountain)",
+                                    "Emblem Piece (Statue)",
+                                    "Hollow Bastion"
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "helper",
+                              "name": "has_x_worlds",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": 5
+                                },
+                                {
+                                  "type": "constant",
+                                  "value": 0
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_all_magic_lvx",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_defensive_tools",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "has_x_worlds",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 7
+                            },
+                            {
+                              "type": "constant",
+                              "value": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "if_false": null
+                  }
+                }
+              }
             },
             "item": {
               "name": "Victory",
@@ -14558,9 +16090,13 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_reports",
+                      "type": "state_method",
+                      "method": "has_group_unique",
                       "args": [
+                        {
+                          "type": "constant",
+                          "value": "Reports"
+                        },
                         {
                           "type": "constant",
                           "value": 4
@@ -19941,7 +21477,43 @@
   "settings": {
     "1": {
       "game": "Kingdom Hearts",
-      "assume_bidirectional_exits": false
+      "assume_bidirectional_exits": false,
+      "goal": 3,
+      "end_of_the_world_unlock": 1,
+      "final_rest_door": 0,
+      "required_reports_eotw": 4,
+      "required_reports_door": 4,
+      "reports_in_pool": 4,
+      "super_bosses": 0,
+      "atlantica": 0,
+      "hundred_acre_wood": 0,
+      "cups": 0,
+      "puppies": 1,
+      "starting_worlds": 0,
+      "keyblades_unlock_chests": 0,
+      "interact_in_battle": 0,
+      "exp_multiplier": 16,
+      "advanced_logic": 0,
+      "extra_shared_abilities": 0,
+      "exp_zero_in_pool": 0,
+      "vanilla_emblem_pieces": 1,
+      "donald_death_link": 0,
+      "goofy_death_link": 0,
+      "randomize_keyblade_stats": 1,
+      "bad_starting_weapons": 0,
+      "keyblade_min_str": 3,
+      "keyblade_max_str": 14,
+      "keyblade_min_mp": -2,
+      "keyblade_max_mp": 3,
+      "level_checks": 100,
+      "force_stats_on_levels": 1,
+      "strength_increase": 24,
+      "defense_increase": 24,
+      "hp_increase": 23,
+      "ap_increase": 18,
+      "mp_increase": 7,
+      "accessory_slot_increase": 1,
+      "item_slot_increase": 3
     }
   },
   "game_info": {
