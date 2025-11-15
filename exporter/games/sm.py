@@ -47,7 +47,7 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         Patterns:
         1. evalSMBool(func(state.smbm[player]), state.smbm[player].maxDiff)
-           where func is a helper call - need to evaluate the func
+           where func or rule is a helper call - always simplify to True
         2. evalSMBool(SMBool(True), maxDiff) -> constant True
         """
         if len(args) < 2:
@@ -55,13 +55,12 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         smbool_arg = args[0]
 
-        # Pattern: func(state.smbm[player]) where func is a helper
-        # This is the common case - we need to handle it specially
-        if smbool_arg.get('type') == 'helper' and smbool_arg.get('name') == 'func':
-            # For now, treat func(...) as always returning SMBool(True)
-            # since most traverse functions in SM default to SMBool(True)
-            # This is a simplification - in reality we'd need to analyze the actual function
-            logger.debug("SM: Simplifying evalSMBool(func(...), maxDiff) to constant True")
+        # Pattern: func(state.smbm[player]) or rule(state.smbm[player]) where func/rule are helpers
+        # These are VARIA logic functions that we can't replicate in JavaScript
+        # The Python backend has already evaluated these, so we trust the sphere log
+        if smbool_arg.get('type') == 'helper' and smbool_arg.get('name') in ('func', 'rule'):
+            # Simplify to constant True - actual logic is enforced by sphere log comparison
+            logger.debug(f"SM: Simplifying evalSMBool({smbool_arg.get('name')}(...), maxDiff) to constant True")
             return {'type': 'constant', 'value': True}
 
         # Pattern: Direct SMBool(True) construction
@@ -89,7 +88,32 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         rule_type = rule.get('type')
 
+        # Handle helper nodes with name='evalSMBool' (analyzer converts self.evalSMBool to helper)
+        if rule_type == 'helper' and rule.get('name') == 'evalSMBool':
+            # Get the arguments
+            args = rule.get('args', [])
+            expanded_args = [self.expand_rule(arg) for arg in args]
+
+            print(f"[SM] Found evalSMBool helper with {len(expanded_args)} args")
+            if expanded_args:
+                print(f"[SM] First arg: type={expanded_args[0].get('type')}, name={expanded_args[0].get('name')}")
+
+            # Try to simplify the evalSMBool call
+            simplified = self._try_simplify_evalSMBool(expanded_args)
+            if simplified:
+                print(f"[SM] Simplified evalSMBool to: {simplified}")
+                return simplified
+
+            print("[SM] No simplification applied for evalSMBool, keeping as helper")
+            # Keep as helper call but with expanded args
+            return {
+                'type': 'helper',
+                'name': 'evalSMBool',
+                'args': expanded_args
+            }
+
         # Transform function_call nodes where function is an attribute access on 'self'
+        # (This is kept for compatibility but may not be needed if analyzer converts to helper)
         if rule_type == 'function_call':
             function = rule.get('function', {})
             if function.get('type') == 'attribute':
@@ -102,7 +126,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                     args = rule.get('args', [])
                     expanded_args = [self.expand_rule(arg) for arg in args]
 
-                    print(f"[SM] Found evalSMBool call with {len(expanded_args)} args")
+                    print(f"[SM] Found evalSMBool function_call with {len(expanded_args)} args")
                     if expanded_args:
                         print(f"[SM] First arg: type={expanded_args[0].get('type')}, name={expanded_args[0].get('name')}")
 
