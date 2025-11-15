@@ -177,31 +177,62 @@ class SoEGameExportHandler(BaseGameExportHandler):
         """
         Convert a self.logic.has(...) call to a helper call.
 
-        Expected input: {
-            'type': 'function_call',
-            'function': {'type': 'attribute', 'object': {...'self'...}, 'attr': 'has'},
-            'args': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'pyevermizer'}, 'attr': 'P_XXX'}]
-        }
+        Expected input patterns:
+        1. With constant progress ID (already resolved):
+           {
+               'type': 'function_call',
+               'function': {
+                   'type': 'attribute',
+                   'object': {'type': 'attribute', 'object': {'type': 'name', 'name': 'self'}, 'attr': 'logic'},
+                   'attr': 'has'
+               },
+               'args': [{'type': 'constant', 'value': 11}]  # progress_id
+           }
+
+        2. With pyevermizer.P_XXX reference (not yet resolved):
+           {
+               'type': 'function_call',
+               'function': {'type': 'attribute', 'object': {...'self.logic'...}, 'attr': 'has'},
+               'args': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'pyevermizer'}, 'attr': 'P_XXX'}]
+           }
         """
         if not isinstance(rule, dict) or rule.get('type') != 'function_call':
             return None
 
         # Check if it's a call to self.logic.has
         func = rule.get('function', {})
-        if func.get('type') == 'attribute' and func.get('attr') == 'has':
-            # Get the progress constant from the args
-            args = rule.get('args', [])
-            if len(args) >= 1:
-                arg = args[0]
-                # Check if it's pyevermizer.P_XXX
-                if arg.get('type') == 'attribute' and arg.get('object', {}).get('name') == 'pyevermizer':
-                    progress_name = arg.get('attr', '')
-                    # Look up the progress ID
+        if not (func.get('type') == 'attribute' and func.get('attr') == 'has'):
+            return None
+
+        # Verify it's self.logic.has (not just any .has method)
+        func_obj = func.get('object', {})
+        if func_obj.get('type') == 'attribute' and func_obj.get('attr') == 'logic':
+            logic_obj = func_obj.get('object', {})
+            if logic_obj.get('type') == 'name' and logic_obj.get('name') == 'self':
+                # This is self.logic.has - now extract the progress ID
+                args = rule.get('args', [])
+                if len(args) >= 1:
                     progress_id = None
-                    for pid, name in self.progress_id_to_name.items():
-                        if name == progress_name:
-                            progress_id = pid
-                            break
+                    progress_name = None
+                    count = 1  # default count
+
+                    # Case 1: First arg is a constant (already resolved progress ID)
+                    if args[0].get('type') == 'constant':
+                        progress_id = args[0].get('value')
+                        progress_name = self.progress_id_to_name.get(progress_id, f"P_{progress_id}")
+
+                    # Case 2: First arg is pyevermizer.P_XXX
+                    elif args[0].get('type') == 'attribute' and args[0].get('object', {}).get('name') == 'pyevermizer':
+                        progress_name = args[0].get('attr', '')
+                        # Look up the progress ID
+                        for pid, name in self.progress_id_to_name.items():
+                            if name == progress_name:
+                                progress_id = pid
+                                break
+
+                    # Extract count if provided (second argument)
+                    if len(args) >= 2 and args[1].get('type') == 'constant':
+                        count = args[1].get('value', 1)
 
                     if progress_id is not None:
                         # Convert to a helper call
@@ -210,9 +241,9 @@ class SoEGameExportHandler(BaseGameExportHandler):
                             'name': 'has',
                             'args': [
                                 {'type': 'constant', 'value': progress_id},
-                                {'type': 'constant', 'value': 1}
+                                {'type': 'constant', 'value': count}
                             ],
-                            'comment': f"Requires 1x {progress_name}"
+                            'comment': f"Requires {count}x {progress_name}"
                         }
 
         return None
@@ -253,7 +284,7 @@ class SoEGameExportHandler(BaseGameExportHandler):
 
         # If the rule has unresolved names, return None to signal it should be replaced
         if self._rule_has_unresolved_names(rule):
-            print(f"[SOE] postprocess_rule: Discarding malformed rule with unresolved names")
+            logger.debug("Discarding malformed rule with unresolved names")
             return None
 
         return rule
@@ -264,33 +295,32 @@ class SoEGameExportHandler(BaseGameExportHandler):
         """
         try:
             location_name = getattr(location, 'name', None)
-            print(f"[SOE] get_location_attributes called for location {location_name}")
             attrs = {}
 
             # Try to get evermizer requirements from the raw location data
             # Note: If the location has a Python rule, it will be processed by postprocess_rule first.
             # If postprocess_rule returns None, the main exporter will call this method to get a replacement.
             in_map = location_name in self.location_id_to_raw if location_name else False
-            print(f"[SOE] Location: {location_name}, in map: {in_map}")
             if location_name and in_map:
                 evermizer_loc = self.location_id_to_raw[location_name]
-                print(f"[SOE] Found evermizer loc, requires: {evermizer_loc.requires}")
                 if evermizer_loc.requires:
                     # Convert pyevermizer requirements to rule format
                     rule = self.transform_pyevermizer_requirements(evermizer_loc.requires)
                     if rule:
                         attrs['access_rule'] = rule
-                        print(f"[SOE] Added helper rule to {location_name}")
+                        logger.debug(f"Added helper rule to {location_name}")
                 else:
                     # Explicitly set to True for locations with no requirements
                     attrs['access_rule'] = {'type': 'constant', 'value': True}
-                    print(f"[SOE] Added constant True rule to {location_name}")
+                    logger.debug(f"Added constant True rule to {location_name}")
             else:
-                print(f"[SOE] Location {location_name} not in mapping")
+                # Location not in evermizer mapping (e.g., event locations)
+                # The rule should have been provided by postprocess_rule
+                logger.debug(f"Location {location_name} not in evermizer mapping")
 
             return attrs
         except Exception as e:
-            print(f"[SOE] ERROR in get_location_attributes: {e}")
+            logger.error(f"ERROR in get_location_attributes for {location_name}: {e}")
             import traceback
             traceback.print_exc()
             return {}
