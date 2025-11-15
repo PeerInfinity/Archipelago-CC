@@ -48,17 +48,42 @@ After fix, all spheres pass. Test completes successfully with "Overall Result: t
 
 ---
 
+---
+
+## Issue 3: Missing BOWWOW Item Mapping
+
+**Status**: FIXED
+**Sphere**: 5.7 (seed 7)
+**Fixed in**: exporter/games/ladx.py:233
+
+### Description
+The exporter was missing a mapping for `BOWWOW` -> `"BowWow"`, causing access issues to Bottle Grotto dungeon in some seeds.
+
+### Solution
+Added mapping to `item_name_mapping` dict:
+```python
+'BOWWOW': 'BowWow',
+```
+
+### Verification
+Seeds 1-6 passed before fix (didn't require BowWow early).
+Seed 7 failed at Sphere 5.7 before fix.
+After fix, all seeds 7-10 pass.
+
+---
+
 ## Summary
 
-**Total Issues Fixed**: 2
+**Total Issues Fixed**: 3
 - GOLD_LEAF mapping
 - INSTRUMENT1-8 mappings
+- BOWWOW mapping
 
-**Test Results**: ✅ PASSING
-- All spheres: PASS
-- Total events: 164
-- Mismatches: 0
+**Test Results**: ✅ PASSING (Seeds 1-10)
+- Seed 1: PASS (164 events)
+- Seeds 2-6: PASS
+- Seeds 7-10: PASS (after BOWWOW fix)
 
-The LADX exporter is now fully functional for seed 1 with default settings.
+The LADX exporter is now fully functional for seeds 1-10 with default settings.
 
 ---

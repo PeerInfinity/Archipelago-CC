@@ -3943,6 +3943,159 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      },
+      "AP_01043188731678011336": {
+        "seed": 2,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Links Awakening DX"
+          }
+        ],
+        "files": [
+          "AP_01043188731678011336.archipelago",
+          "AP_01043188731678011336_P1_Player1.apladx",
+          "AP_01043188731678011336_Spoiler.txt",
+          "AP_01043188731678011336_rules.json",
+          "AP_01043188731678011336_spheres_log.jsonl"
+        ]
+      },
+      "AP_84719271504320872445": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Links Awakening DX"
+          }
+        ],
+        "files": [
+          "AP_84719271504320872445.archipelago",
+          "AP_84719271504320872445_P1_Player1.apladx",
+          "AP_84719271504320872445_Spoiler.txt",
+          "AP_84719271504320872445_rules.json",
+          "AP_84719271504320872445_spheres_log.jsonl"
+        ]
+      },
+      "AP_05594871498841892311": {
+        "seed": 4,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Links Awakening DX"
+          }
+        ],
+        "files": [
+          "AP_05594871498841892311.archipelago",
+          "AP_05594871498841892311_P1_Player1.apladx",
+          "AP_05594871498841892311_Spoiler.txt",
+          "AP_05594871498841892311_rules.json",
+          "AP_05594871498841892311_spheres_log.jsonl"
+        ]
+      },
+      "AP_96945849220684217413": {
+        "seed": 5,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Links Awakening DX"
+          }
+        ],
+        "files": [
+          "AP_96945849220684217413.archipelago",
+          "AP_96945849220684217413_P1_Player1.apladx",
+          "AP_96945849220684217413_Spoiler.txt",
+          "AP_96945849220684217413_rules.json",
+          "AP_96945849220684217413_spheres_log.jsonl"
+        ]
+      },
+      "AP_00679259829289197625": {
+        "seed": 6,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Links Awakening DX"
+          }
+        ],
+        "files": [
+          "AP_00679259829289197625.archipelago",
+          "AP_00679259829289197625_P1_Player1.apladx",
+          "AP_00679259829289197625_Spoiler.txt",
+          "AP_00679259829289197625_rules.json",
+          "AP_00679259829289197625_spheres_log.jsonl"
+        ]
+      },
+      "AP_35931773795037525048": {
+        "seed": 7,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Links Awakening DX"
+          }
+        ],
+        "files": [
+          "AP_35931773795037525048.archipelago",
+          "AP_35931773795037525048_P1_Player1.apladx",
+          "AP_35931773795037525048_Spoiler.txt",
+          "AP_35931773795037525048_rules.json",
+          "AP_35931773795037525048_spheres_log.jsonl"
+        ]
+      },
+      "AP_20777137877808592492": {
+        "seed": 8,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Links Awakening DX"
+          }
+        ],
+        "files": [
+          "AP_20777137877808592492.archipelago",
+          "AP_20777137877808592492_P1_Player1.apladx",
+          "AP_20777137877808592492_Spoiler.txt",
+          "AP_20777137877808592492_rules.json",
+          "AP_20777137877808592492_spheres_log.jsonl"
+        ]
+      },
+      "AP_48205312626925217390": {
+        "seed": 9,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Links Awakening DX"
+          }
+        ],
+        "files": [
+          "AP_48205312626925217390.archipelago",
+          "AP_48205312626925217390_P1_Player1.apladx",
+          "AP_48205312626925217390_Spoiler.txt",
+          "AP_48205312626925217390_rules.json",
+          "AP_48205312626925217390_spheres_log.jsonl"
+        ]
+      },
+      "AP_55941320597534372051": {
+        "seed": 10,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Links Awakening DX"
+          }
+        ],
+        "files": [
+          "AP_55941320597534372051.archipelago",
+          "AP_55941320597534372051_P1_Player1.apladx",
+          "AP_55941320597534372051_Spoiler.txt",
+          "AP_55941320597534372051_rules.json",
+          "AP_55941320597534372051_spheres_log.jsonl"
+        ]
       }
     }
   }
