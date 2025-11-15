@@ -283,6 +283,7 @@ import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
 import { helperFunctions as smHelperFunctions } from './super_metroid/smLogic.js';
 import * as stardewValleyHelpers from './stardew_valley/helpers.js';
 import * as terrariaLogic from './terraria/terrariaLogic.js';
+import * as timespinnerLogic from './timespinner/timespinnerLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -558,6 +559,12 @@ const GAME_REGISTRY = {
     helperFunctions: terrariaLogic.helperFunctions,
     worldClasses: ['TerrariaWorld'],
     aliases: ['Terraria']
+  },
+  'Timespinner': {
+    logicModule: timespinnerLogic.timespinnerStateModule,
+    helperFunctions: timespinnerLogic.helperFunctions,
+    worldClasses: ['TimespinnerWorld'],
+    aliases: ['Timespinner']
   },
   // Add more games here as they're implemented
   'Generic': {
