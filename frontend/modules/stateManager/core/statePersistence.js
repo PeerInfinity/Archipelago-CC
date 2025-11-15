@@ -157,6 +157,17 @@ export function getSnapshot(sm) {
 
   // 6. Assemble Snapshot
   // REFACTOR: Duplication removed - using single source of truth for all fields
+
+  // Get game-specific state properties if getStateForSnapshot is available
+  let gameSpecificState = {};
+  if (sm.logicModule && typeof sm.logicModule.getStateForSnapshot === 'function') {
+    try {
+      gameSpecificState = sm.logicModule.getStateForSnapshot(sm.gameStateModule) || {};
+    } catch (error) {
+      log('warn', '[StateManager getSnapshot] Error calling getStateForSnapshot:', error);
+    }
+  }
+
   const snapshot = {
     snapshotCount: sm.snapshotCount,
     inventory: inventorySnapshot,
@@ -185,6 +196,8 @@ export function getSnapshot(sm) {
     startRegions: sm.startRegions || ['Menu'],
     // Progressive items tracking (used by games like DLCQuest for coin accumulation)
     prog_items: sm.prog_items || {},
+    // Game-specific state properties (e.g., Timespinner's pyramid_keys_unlock)
+    ...gameSpecificState,
 
     // Note: We don't include progressionMapping, itemData, groupData, etc. here
     // because they are static data already available in staticDataCache

@@ -55,6 +55,29 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
             return 'logic'
         return name
 
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export Timespinner-specific settings including precalculated weights."""
+        # Get base settings
+        settings_dict = super().get_settings_data(world, multiworld, player)
+
+        # Export option flags needed by helper functions
+        if hasattr(world, 'options'):
+            options = world.options
+            settings_dict['specific_keycards'] = getattr(options.specific_keycards, 'value', False)
+            settings_dict['eye_spy'] = getattr(options.eye_spy, 'value', False)
+            settings_dict['unchained_keys'] = getattr(options.unchained_keys, 'value', False)
+            settings_dict['prism_break'] = getattr(options.prism_break, 'value', False)
+
+        # Export precalculated weights (warp gate unlocks)
+        if hasattr(world, 'precalculated_weights'):
+            weights = world.precalculated_weights
+            settings_dict['pyramid_keys_unlock'] = getattr(weights, 'pyramid_keys_unlock', None)
+            settings_dict['present_keys_unlock'] = getattr(weights, 'present_key_unlock', None)
+            settings_dict['past_keys_unlock'] = getattr(weights, 'past_key_unlock', None)
+            settings_dict['time_keys_unlock'] = getattr(weights, 'time_key_unlock', None)
+
+        return settings_dict
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Validate and expand Timespinner-specific rules."""
         if not rule:
