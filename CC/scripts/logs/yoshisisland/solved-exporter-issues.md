@@ -37,3 +37,20 @@ The transformation is done recursively across all location and exit rules in the
 
 **File modified:** `exporter/games/yoshisisland.py`
 
+## Issue 2: Helper functions incorrectly auto-expanded to item checks
+
+**Status:** SOLVED
+**Affected helpers:**
+- has_midring, reconstitute_luigi, bandit_bonus, item_bonus, combat_item, melon_item, default_vis, cansee_clouds, bowserdoor_1-4
+
+**Description:**
+The GenericGameExportHandler was auto-expanding Yoshi's Island helper functions based on naming patterns. For example, `has_midring` was being converted to an item check for "Midring" item instead of being preserved as a helper function call.
+
+**Root cause:**
+The generic exporter's `_is_common_helper_pattern` method matches helpers starting with "has_", "can_", etc., and automatically expands them to item checks or other inferred rules. This is incorrect for Yoshi's Island, which has custom helper implementations.
+
+**Solution implemented:**
+Override `_is_common_helper_pattern` in YoshisIslandGameExportHandler to exclude Yoshi's Island-specific helpers from auto-expansion. Added a YOSHI_HELPERS set containing all custom helper names that should be preserved as helper calls.
+
+**File modified:** `exporter/games/yoshisisland.py`
+

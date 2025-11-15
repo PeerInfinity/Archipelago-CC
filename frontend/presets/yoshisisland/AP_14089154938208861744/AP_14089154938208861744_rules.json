@@ -691,10 +691,9 @@
                   }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 }
               ]
             },
@@ -889,10 +888,9 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Midring",
-                      "inferred": true,
-                      "description": "Requires having Midring"
+                      "type": "helper",
+                      "name": "has_midring",
+                      "args": []
                     },
                     {
                       "type": "item_check",
@@ -989,10 +987,9 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "helper",
@@ -1083,10 +1080,9 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Midring",
-                          "inferred": true,
-                          "description": "Requires having Midring"
+                          "type": "helper",
+                          "name": "has_midring",
+                          "args": []
                         },
                         {
                           "type": "item_check",
@@ -1101,10 +1097,9 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Midring",
-                          "inferred": true,
-                          "description": "Requires having Midring"
+                          "type": "helper",
+                          "name": "has_midring",
+                          "args": []
                         },
                         {
                           "type": "item_check",
@@ -1208,10 +1203,9 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "and",
@@ -1332,10 +1326,9 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "or",
@@ -1474,10 +1467,9 @@
                   }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 }
               ]
             },
@@ -1573,10 +1565,9 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Midring",
-                      "inferred": true,
-                      "description": "Requires having Midring"
+                      "type": "helper",
+                      "name": "has_midring",
+                      "args": []
                     },
                     {
                       "type": "item_check",
@@ -1804,10 +1795,9 @@
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 }
               ]
             },
@@ -1992,10 +1982,9 @@
                   }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 }
               ]
             },
@@ -2148,10 +2137,9 @@
                   }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 }
               ]
             },
@@ -2315,10 +2303,9 @@
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -2414,10 +2401,9 @@
             "name": "Welcome To Monkey World!: Stars",
             "id": 3166307,
             "access_rule": {
-              "type": "item_check",
-              "item": "Midring",
-              "inferred": true,
-              "description": "Requires having Midring"
+              "type": "helper",
+              "name": "has_midring",
+              "args": []
             },
             "item": {
               "name": "Anytime Egg",
@@ -2499,10 +2485,9 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -2602,10 +2587,9 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "state_method",
@@ -2732,10 +2716,9 @@
             "name": "Prince Froggy's Fort: Stars",
             "id": 3166319,
             "access_rule": {
-              "type": "item_check",
-              "item": "Midring",
-              "inferred": true,
-              "description": "Requires having Midring"
+              "type": "helper",
+              "name": "has_midring",
+              "args": []
             },
             "item": {
               "name": "Winged Cloud Maker",
@@ -2840,10 +2823,9 @@
                       "type": "or",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Midring",
-                          "inferred": true,
-                          "description": "Requires having Midring"
+                          "type": "helper",
+                          "name": "has_midring",
+                          "args": []
                         },
                         {
                           "type": "item_check",
@@ -2865,10 +2847,9 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Midring",
-                      "inferred": true,
-                      "description": "Requires having Midring"
+                      "type": "helper",
+                      "name": "has_midring",
+                      "args": []
                     },
                     {
                       "type": "item_check",
@@ -2983,10 +2964,9 @@
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 }
               ]
             },
@@ -3194,10 +3174,9 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -3298,10 +3277,9 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "and",
@@ -3502,10 +3480,9 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Midring",
-                      "inferred": true,
-                      "description": "Requires having Midring"
+                      "type": "helper",
+                      "name": "has_midring",
+                      "args": []
                     },
                     {
                       "type": "item_check",
@@ -3685,10 +3662,9 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Midring",
-                      "inferred": true,
-                      "description": "Requires having Midring"
+                      "type": "helper",
+                      "name": "has_midring",
+                      "args": []
                     },
                     {
                       "type": "item_check",
@@ -3948,10 +3924,9 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Midring",
-                      "inferred": true,
-                      "description": "Requires having Midring"
+                      "type": "helper",
+                      "name": "has_midring",
+                      "args": []
                     },
                     {
                       "type": "and",
@@ -4075,10 +4050,9 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Midring",
-                      "inferred": true,
-                      "description": "Requires having Midring"
+                      "type": "helper",
+                      "name": "has_midring",
+                      "args": []
                     },
                     {
                       "type": "item_check",
@@ -4208,10 +4182,9 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "state_method",
@@ -4332,10 +4305,9 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Midring",
-                          "inferred": true,
-                          "description": "Requires having Midring"
+                          "type": "helper",
+                          "name": "has_midring",
+                          "args": []
                         },
                         {
                           "type": "item_check",
@@ -4419,10 +4391,9 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -4564,10 +4535,9 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Midring",
-                      "inferred": true,
-                      "description": "Requires having Midring"
+                      "type": "helper",
+                      "name": "has_midring",
+                      "args": []
                     },
                     {
                       "type": "or",
@@ -4715,10 +4685,9 @@
                       ]
                     },
                     {
-                      "type": "item_check",
-                      "item": "Midring",
-                      "inferred": true,
-                      "description": "Requires having Midring"
+                      "type": "helper",
+                      "name": "has_midring",
+                      "args": []
                     }
                   ]
                 },
@@ -4847,10 +4816,9 @@
             "name": "Goonie Rides!: Stars",
             "id": 3166387,
             "access_rule": {
-              "type": "item_check",
-              "item": "Midring",
-              "inferred": true,
-              "description": "Requires having Midring"
+              "type": "helper",
+              "name": "has_midring",
+              "args": []
             },
             "item": {
               "name": "+20 Stars",
@@ -4923,10 +4891,9 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -5030,10 +4997,9 @@
             "name": "Shifting Platforms Ahead: Stars",
             "id": 3166395,
             "access_rule": {
-              "type": "item_check",
-              "item": "Midring",
-              "inferred": true,
-              "description": "Requires having Midring"
+              "type": "helper",
+              "name": "has_midring",
+              "args": []
             },
             "item": {
               "name": "Pocket Melon",
@@ -5125,10 +5091,9 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "item_check",
@@ -5248,10 +5213,9 @@
                   }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 }
               ]
             },
@@ -5337,10 +5301,9 @@
                   "args": []
                 },
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 }
               ]
             },
@@ -5555,10 +5518,9 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 },
                 {
                   "type": "state_method",
@@ -5747,10 +5709,9 @@
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Midring",
-                  "inferred": true,
-                  "description": "Requires having Midring"
+                  "type": "helper",
+                  "name": "has_midring",
+                  "args": []
                 }
               ]
             },
@@ -5853,10 +5814,9 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Midring",
-                      "inferred": true,
-                      "description": "Requires having Midring"
+                      "type": "helper",
+                      "name": "has_midring",
+                      "args": []
                     },
                     {
                       "type": "state_method",
@@ -5966,10 +5926,9 @@
             "name": "KEEP MOVING!!!!: Stars",
             "id": 3166427,
             "access_rule": {
-              "type": "item_check",
-              "item": "Midring",
-              "inferred": true,
-              "description": "Requires having Midring"
+              "type": "helper",
+              "name": "has_midring",
+              "args": []
             },
             "item": {
               "name": "Anywhere Pow",

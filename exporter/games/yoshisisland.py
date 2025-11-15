@@ -14,6 +14,35 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
     """
     GAME_NAME = "Yoshi's Island"
 
+    # Define Yoshi's Island-specific helpers that should NOT be auto-expanded
+    YOSHI_HELPERS = {
+        'has_midring',
+        'reconstitute_luigi',
+        'bandit_bonus',
+        'item_bonus',
+        'combat_item',
+        'melon_item',
+        'default_vis',
+        'cansee_clouds',
+        'bowserdoor_1',
+        'bowserdoor_2',
+        'bowserdoor_3',
+        'bowserdoor_4',
+    }
+
+    def _is_common_helper_pattern(self, helper_name):
+        """
+        Override to prevent auto-expansion of Yoshi's Island-specific helpers.
+        These helpers have custom implementations in JavaScript and should not be
+        automatically converted to item checks or other inferred rules.
+        """
+        # Don't auto-expand Yoshi's Island helpers
+        if helper_name in self.YOSHI_HELPERS:
+            return False
+
+        # Fall back to parent implementation for other patterns
+        return super()._is_common_helper_pattern(helper_name)
+
     def _transform_logic_attribute_access(self, rule: Any) -> Any:
         """
         Recursively transform logic.method attribute access patterns to helper calls.
