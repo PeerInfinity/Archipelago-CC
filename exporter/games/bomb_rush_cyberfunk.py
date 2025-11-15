@@ -10,13 +10,13 @@ logger = logging.getLogger(__name__)
 class BombRushCyberfunkGameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'Bomb Rush Cyberfunk'
     """Bomb Rush Cyberfunk expander that handles game-specific rules."""
-    
+
     def __init__(self, world=None):
         """Initialize with world instance to access options."""
         super().__init__()
         self.world = world
         self.current_location_name = None  # Track current location being processed
-        
+
         # Extract option values if world is available
         self.options = {}
         if world:
@@ -34,6 +34,79 @@ class BombRushCyberfunkGameExportHandler(BaseGameExportHandler):
                     'limit': False,
                     'glitched': False,
                 }
+
+    def should_preserve_as_helper(self, func_name: str) -> bool:
+        """Check if a function should be preserved as a helper call instead of being inlined.
+
+        Args:
+            func_name: The name of the function being analyzed
+
+        Returns:
+            True if the function should be kept as a helper call, False if it should be inlined
+        """
+        # Preserve graffiti_spots and related spot counting functions as helpers
+        # These functions build an access cache internally and have complex logic
+        # that shouldn't be inlined
+        #
+        # Also preserve region access functions that have complex conditional logic
+        # to avoid analysis issues
+        preserve_list = [
+            'graffiti_spots',
+            'spots_s_glitchless',
+            'spots_s_glitched',
+            'spots_m_glitchless',
+            'spots_m_glitched',
+            'spots_l_glitchless',
+            'spots_l_glitched',
+            'spots_xl_glitchless',
+            'spots_xl_glitched',
+            'build_access_cache',
+            # Region entrance and sub-region access functions
+            'versum_hill_entrance',
+            'versum_hill_ch1_roadblock',
+            'versum_hill_oldhead',
+            'versum_hill_all_challenges',
+            'versum_hill_basketball_court',
+            'millennium_square_entrance',
+            'brink_terminal_entrance',
+            'brink_terminal_plaza',
+            'brink_terminal_tower',
+            'brink_terminal_oldhead_underground',
+            'brink_terminal_oldhead_dock',
+            'millennium_mall_entrance',
+            'millennium_mall_theater',
+            'millennium_mall_oldhead_ceiling',
+            'millennium_mall_oldhead_race',
+            'pyramid_island_entrance',
+            'pyramid_island_gate',
+            'pyramid_island_oldhead',
+            'pyramid_island_top',
+            'pyramid_island_upper_half',
+            'mataan_entrance',
+            'mataan_smoke_wall',
+            'mataan_oldhead',
+            # Region access/challenge functions
+            'versum_hill_rietveld',
+            'versum_hill_crew_battle',
+            'versum_hill_rave',
+            'brink_terminal_crew_battle',
+            'brink_terminal_mesh',
+            'millennium_mall_switch',
+            'millennium_mall_big',
+            'millennium_mall_crew_battle',
+            'pyramid_island_all_challenges',
+            'pyramid_island_crew_battle',
+            'pyramid_island_race',
+            'mataan_challenge1',
+            'mataan_deep_city',
+            'mataan_challenge2',
+            'mataan_all_challenges',
+            'mataan_smoke_wall2',
+            'mataan_deepest',
+            'mataan_crew_battle',
+            'mataan_faux'
+        ]
+        return func_name in preserve_list
     
     def set_context(self, location_name: str = None):
         """Set context for rule expansion."""
