@@ -1,0 +1,109 @@
+Archipelago (0.6.4) logging initialized on Linux-4.4.0-x86_64-with-glibc2.39 process 23913 running Python 3.11.14
+Weights: /home/user/Archipelago-CC/Players/Templates/Blasphemous.yaml >> Default Blasphemous Template
+Generating for 1 player, 14089154938208861744 Seed 1 with plando: connections, texts, bosses
+[SM MODULE] Loading Super Metroid exporter handler
+Archipelago Version 0.6.4  -  Seed: 1
+
+Found 82 World Types:
+ Adventure                               : Items:   15 | Locations:    24
+ A Hat in Time                           : Items:   58 | Locations:   455
+ A Link to the Past                      : Items:  146 | Locations:   286
+ Aquaria                                 : Items:  134 | Locations:   218
+ ChocolateChipCookies                    : Items:   15 | Locations:    15
+ Blasphemous                             : Items:  204 | Locations:   306
+ Bomb Rush Cyberfunk                     : Items:  165 | Locations:   247
+ Bumper Stickers                         : Items:   12 | Locations:   100
+ Celeste 64                              : Items:   24 | Locations:    56
+ ChecksFinder                            : Items:    3 | Locations:    25
+ Civilization VI                         : Items:  167 | Locations:   278
+ WebDevJourney                           : Items:   51 | Locations:    61
+ Castlevania 64                          : Items:   36 | Locations:   352
+ Castlevania - Circle of the Moon        : Items:   31 | Locations:   125
+ Dark Souls III                          : Items: 1204 | Locations:  1506
+ Donkey Kong Country 3                   : Items:    8 | Locations:   230
+ DLCQuest                                : Items:   51 | Locations: 18913
+ DOOM 1993                               : Items:  195 | Locations:   474
+ DOOM II                                 : Items:  178 | Locations:   479
+ Factorio                                : Items:  233 | Locations:  6993
+ Faxanadu                                : Items:   30 | Locations:   110
+ Final Fantasy                           : Items:  194 | Locations:   255
+ Final Fantasy Mystic Quest              : Items:   67 | Locations:   266
+ Heretic                                 : Items:  269 | Locations:  1014
+ Hollow Knight                           : Items:  249 | Locations:   740
+ Hylics 2                                : Items:   70 | Locations:   166
+ Inscryption                             : Items:   42 | Locations:   100
+ Jak and Daxter: The Precursor Legacy    : Items:   75 | Locations:  4239
+ Kirby's Dream Land 3                    : Items:   24 | Locations:   876
+ Kingdom Hearts                          : Items:  361 | Locations:   520
+ Kingdom Hearts 2                        : Items:  293 | Locations:   724
+ Links Awakening DX                      : Items:  118 | Locations:   255
+ Landstalker - The Treasures of King Nole: Items:   62 | Locations:   292
+ Lingo                                   : Items:  276 | Locations:   872
+ Lufia II Ancient Cave                   : Items:  415 | Locations:   123
+ Super Mario Land 2                      : Items: 2727 | Locations:  2659
+ MathProof2p2e4                          : Items:   10 | Locations:    10
+ Meritous                                : Items:   23 | Locations:   104
+ The Messenger                           : Items:   64 | Locations:   136
+ Metamath                                : Items:  108 | Locations:   100
+ Mario & Luigi Superstar Saga            : Items:  146 | Locations:   600
+ Mega Man 2                              : Items:   23 | Locations:    71
+ MegaMan Battle Network 3                : Items:  224 | Locations:   263
+ Muse Dash                               : Items:  672 | Locations:  1314
+ Noita                                   : Items:   32 | Locations:   672
+ Ocarina of Time                         : Items:  143 | Locations:  1623
+ Old School Runescape                    : Items:   86 | Locations:   169
+ Overcooked! 2                           : Items:   45 | Locations:    43
+ Paint                                   : Items:   27 | Locations:   380
+ Pokemon Emerald                         : Items:  291 | Locations:  1338
+ Pokemon Red and Blue                    : Items:  207 | Locations:   709
+ Raft                                    : Items:  325 | Locations:   154
+ Risk of Rain 2                          : Items:   51 | Locations:   954
+ Sonic Adventure 2 Battle                : Items:  182 | Locations:  2555
+ Saving Princess                         : Items:   20 | Locations:    36
+ Starcraft 2                             : Items:  595 | Locations:   663
+ shapez                                  : Items:   67 | Locations:  3543
+ Shivers                                 : Items:   76 | Locations:   117
+ A Short Hike                            : Items:   37 | Locations:   131
+ Super Metroid                           : Items:   24 | Locations:   101
+ Super Mario 64                          : Items:   29 | Locations:   164
+ Super Mario World                       : Items:   29 | Locations:   765
+ SMZ3                                    : Items:  151 | Locations:   316
+ Secret of Evermore                      : Items:  165 | Locations:   913
+ Stardew Valley                          : Items:  964 | Locations:  3291
+ Subnautica                              : Items:  104 | Locations:   181
+ Terraria                                : Items:  188 | Locations:   159
+ Timespinner                             : Items:  198 | Locations:   215
+ The Legend of Zelda                     : Items:   33 | Locations:   155
+ TUNIC                                   : Items:  157 | Locations:  6835
+ The Wind Waker                          : Items:  152 | Locations:   313
+ Undertale                               : Items:   85 | Locations:   122
+ VVVVVV                                  : Items:   20 | Locations:    20
+ Wargroove                               : Items:   31 | Locations:    38
+ The Witness                             : Items:  267 | Locations:  1004
+ Yacht Dice                              : Items:   47 | Locations:  1000
+ Yoshi's Island                          : Items:   69 | Locations:   235
+ Yu-Gi-Oh! 2006                          : Items:  172 | Locations:   165
+ Zillion                                 : Items:   12 | Locations:  1555
+
+Creating MultiWorld.
+Creating Items.
+Calculating Access Rules.
+Running Item Plando.
+Running Pre Main Fill.
+Filling the multiworld with 285 items.
+Progression balancing skipped.
+Beginning output...
+Generating output files (2/2).
+Calculating playthrough.
+Attempting to open spoiler log file for sphere data at: /tmp/tmpxlxbm1qo/AP_14089154938208861744_spheres_log.jsonl
+Spoiler sphere log will be written to: /tmp/tmpxlxbm1qo/AP_14089154938208861744_spheres_log.jsonl
+Closed spoiler log file: /tmp/tmpxlxbm1qo/AP_14089154938208861744_spheres_log.jsonl
+Error getting game-specific item data for Blasphemous: 'list' object has no attribute 'items'
+Successfully wrote rules to /tmp/tmpxlxbm1qo/AP_14089154938208861744_rules.json
+Detected single game world (Blasphemous), using 'blasphemous' preset folder.
+Preset content mismatch found in AP_14089154938208861744_rules.json. Update needed.
+Updating preset directory: /home/user/Archipelago-CC/exporter/../frontend/presets/blasphemous/AP_14089154938208861744
+Copied 4 files to preset directory /home/user/Archipelago-CC/exporter/../frontend/presets/blasphemous/AP_14089154938208861744
+Updated preset_files.json with 4 files for blasphemous/AP_14089154938208861744
+Creating final archive at /home/user/Archipelago-CC/output/AP_14089154938208861744.zip
+Done. Enjoy. Total Time: 32.03814995300013
