@@ -235,6 +235,18 @@ perform_merge_only() {
                 git clean -fd scripts/output/ 2>/dev/null || true
             fi
 
+            # Remove new text files in project root directory
+            for txtfile in *.txt; do
+                if [ -f "$txtfile" ] && git ls-files --error-unmatch "$txtfile" >/dev/null 2>&1; then
+                    # File is tracked by git, skip
+                    :
+                elif [ -f "$txtfile" ]; then
+                    # File exists and is not tracked by git, remove it
+                    rm -f "$txtfile"
+                    echo "  Removed untracked: $txtfile"
+                fi
+            done
+
             echo -e "${GREEN}Temporary files cleaned.${NC}"
         else
             echo -e "${BLUE}Skipped cleaning temporary files.${NC}"
@@ -377,6 +389,18 @@ fetch_and_merge() {
                 git checkout -- scripts/output/ 2>/dev/null || true
                 git clean -fd scripts/output/ 2>/dev/null || true
             fi
+
+            # Remove new text files in project root directory
+            for txtfile in *.txt; do
+                if [ -f "$txtfile" ] && git ls-files --error-unmatch "$txtfile" >/dev/null 2>&1; then
+                    # File is tracked by git, skip
+                    :
+                elif [ -f "$txtfile" ]; then
+                    # File exists and is not tracked by git, remove it
+                    rm -f "$txtfile"
+                    echo "  Removed untracked: $txtfile"
+                fi
+            done
 
             echo -e "${GREEN}Temporary files cleaned.${NC}"
         else
