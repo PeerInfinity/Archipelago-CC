@@ -53,17 +53,19 @@ function getItemCount(snapshot, itemName) {
 /**
  * Check if player can lift light objects (requires Power Glove).
  * Python: def CanLiftLight(self): return self.Glove
+ * Note: Uses ProgressiveGlove >= 1
  */
 export function smz3_CanLiftLight(snapshot, staticData) {
-  return hasItem(snapshot, 'Power Glove');
+  return hasItem(snapshot, 'ProgressiveGlove');
 }
 
 /**
  * Check if player can lift heavy objects (requires Titans Mitts).
  * Python: def CanLiftHeavy(self): return self.Mitt
+ * Note: Uses ProgressiveGlove >= 2
  */
 export function smz3_CanLiftHeavy(snapshot, staticData) {
-  return hasItem(snapshot, 'Titans Mitt');
+  return getItemCount(snapshot, 'ProgressiveGlove') >= 2;
 }
 
 /**
@@ -71,7 +73,7 @@ export function smz3_CanLiftHeavy(snapshot, staticData) {
  * Python: def CanLightTorches(self): return self.Firerod or self.Lamp
  */
 export function smz3_CanLightTorches(snapshot, staticData) {
-  return hasItem(snapshot, 'Fire Rod') || hasItem(snapshot, 'Lamp');
+  return hasItem(snapshot, 'Firerod') || hasItem(snapshot, 'Lamp');
 }
 
 /**
@@ -79,8 +81,8 @@ export function smz3_CanLightTorches(snapshot, staticData) {
  * Python: def CanMeltFreezors(self): return self.Firerod or self.Bombos and self.Sword
  */
 export function smz3_CanMeltFreezors(snapshot, staticData) {
-  return hasItem(snapshot, 'Fire Rod') ||
-         (hasItem(snapshot, 'Bombos') && hasItem(snapshot, 'Fighter Sword'));
+  return hasItem(snapshot, 'Firerod') ||
+         (hasItem(snapshot, 'Bombos') && hasItem(snapshot, 'ProgressiveSword'));
 }
 
 /**
@@ -92,7 +94,7 @@ export function smz3_CanMeltFreezors(snapshot, staticData) {
  * @param {number} bars - Number of bars required (default 2)
  */
 export function smz3_CanExtendMagic(snapshot, staticData, bars = 2) {
-  const halfMagicMultiplier = hasItem(snapshot, 'Half Magic') ? 2 : 1;
+  const halfMagicMultiplier = hasItem(snapshot, 'HalfMagic') ? 2 : 1;
   const bottleMultiplier = hasItem(snapshot, 'Bottle') ? 2 : 1;
   return halfMagicMultiplier * bottleMultiplier >= bars;
 }
@@ -104,15 +106,12 @@ export function smz3_CanExtendMagic(snapshot, staticData, bars = 2) {
  *            self.Somaria or self.Byrna and self.CanExtendMagic()
  */
 export function smz3_CanKillManyEnemies(snapshot, staticData) {
-  return hasItem(snapshot, 'Fighter Sword') ||
-         hasItem(snapshot, 'Master Sword') ||
-         hasItem(snapshot, 'Tempered Sword') ||
-         hasItem(snapshot, 'Golden Sword') ||
+  return hasItem(snapshot, 'ProgressiveSword') ||
          hasItem(snapshot, 'Hammer') ||
          hasItem(snapshot, 'Bow') ||
-         hasItem(snapshot, 'Fire Rod') ||
-         hasItem(snapshot, 'Cane of Somaria') ||
-         (hasItem(snapshot, 'Cane of Byrna') && smz3_CanExtendMagic(snapshot, staticData, 2));
+         hasItem(snapshot, 'Firerod') ||
+         hasItem(snapshot, 'Somaria') ||
+         (hasItem(snapshot, 'Byrna') && smz3_CanExtendMagic(snapshot, staticData, 2));
 }
 
 // ====================
@@ -124,7 +123,7 @@ export function smz3_CanKillManyEnemies(snapshot, staticData) {
  * Python: def CanIbj(self): return self.Morph and self.Bombs
  */
 export function smz3_CanIbj(snapshot, staticData) {
-  return hasItem(snapshot, 'Morph Ball') && hasItem(snapshot, 'Bomb');
+  return hasItem(snapshot, 'Morph') && hasItem(snapshot, 'Bombs');
 }
 
 /**
@@ -132,7 +131,7 @@ export function smz3_CanIbj(snapshot, staticData) {
  * Python: def CanFly(self): return self.SpaceJump or self.CanIbj()
  */
 export function smz3_CanFly(snapshot, staticData) {
-  return hasItem(snapshot, 'Space Jump') || smz3_CanIbj(snapshot, staticData);
+  return hasItem(snapshot, 'SpaceJump') || smz3_CanIbj(snapshot, staticData);
 }
 
 /**
@@ -140,7 +139,7 @@ export function smz3_CanFly(snapshot, staticData) {
  * Python: def CanUsePowerBombs(self): return self.Morph and self.PowerBomb
  */
 export function smz3_CanUsePowerBombs(snapshot, staticData) {
-  return hasItem(snapshot, 'Morph Ball') && hasItem(snapshot, 'Power Bomb');
+  return hasItem(snapshot, 'Morph') && hasItem(snapshot, 'PowerBomb');
 }
 
 /**
@@ -148,8 +147,8 @@ export function smz3_CanUsePowerBombs(snapshot, staticData) {
  * Python: def CanPassBombPassages(self): return self.Morph and (self.Bombs or self.PowerBomb)
  */
 export function smz3_CanPassBombPassages(snapshot, staticData) {
-  return hasItem(snapshot, 'Morph Ball') &&
-         (hasItem(snapshot, 'Bomb') || hasItem(snapshot, 'Power Bomb'));
+  return hasItem(snapshot, 'Morph') &&
+         (hasItem(snapshot, 'Bombs') || hasItem(snapshot, 'PowerBomb'));
 }
 
 /**
@@ -157,7 +156,7 @@ export function smz3_CanPassBombPassages(snapshot, staticData) {
  * Python: def CanDestroyBombWalls(self): return self.CanPassBombPassages() or self.ScrewAttack
  */
 export function smz3_CanDestroyBombWalls(snapshot, staticData) {
-  return smz3_CanPassBombPassages(snapshot, staticData) || hasItem(snapshot, 'Screw Attack');
+  return smz3_CanPassBombPassages(snapshot, staticData) || hasItem(snapshot, 'ScrewAttack');
 }
 
 /**
@@ -165,7 +164,7 @@ export function smz3_CanDestroyBombWalls(snapshot, staticData) {
  * Python: def CanSpringBallJump(self): return self.Morph and self.SpringBall
  */
 export function smz3_CanSpringBallJump(snapshot, staticData) {
-  return hasItem(snapshot, 'Morph Ball') && hasItem(snapshot, 'Spring Ball');
+  return hasItem(snapshot, 'Morph') && hasItem(snapshot, 'SpringBall');
 }
 
 /**
@@ -173,7 +172,7 @@ export function smz3_CanSpringBallJump(snapshot, staticData) {
  * Python: def CanHellRun(self): return self.Varia or self.HasEnergyReserves(5)
  */
 export function smz3_CanHellRun(snapshot, staticData) {
-  return hasItem(snapshot, 'Varia Suit') || smz3_HasEnergyReserves(snapshot, staticData, 5);
+  return hasItem(snapshot, 'Varia') || smz3_HasEnergyReserves(snapshot, staticData, 5);
 }
 
 /**
@@ -185,8 +184,8 @@ export function smz3_CanHellRun(snapshot, staticData) {
  * @param {number} amount - Required number of tanks
  */
 export function smz3_HasEnergyReserves(snapshot, staticData, amount) {
-  const eTanks = getItemCount(snapshot, 'Energy Tank');
-  const reserveTanks = getItemCount(snapshot, 'Reserve Tank');
+  const eTanks = getItemCount(snapshot, 'ETank');
+  const reserveTanks = getItemCount(snapshot, 'ReserveTank');
   return (eTanks + reserveTanks) >= amount;
 }
 
@@ -195,7 +194,7 @@ export function smz3_HasEnergyReserves(snapshot, staticData, amount) {
  * Python: def CanOpenRedDoors(self): return self.Missile or self.Super
  */
 export function smz3_CanOpenRedDoors(snapshot, staticData) {
-  return hasItem(snapshot, 'Missile') || hasItem(snapshot, 'Super Missile');
+  return hasItem(snapshot, 'Missile') || hasItem(snapshot, 'Super');
 }
 
 // ====================
@@ -208,9 +207,9 @@ export function smz3_CanOpenRedDoors(snapshot, staticData) {
  *     return (self.CanDestroyBombWalls() or self.SpeedBooster) and self.Super and self.Morph
  */
 export function smz3_CanAccessDeathMountainPortal(snapshot, staticData) {
-  return (smz3_CanDestroyBombWalls(snapshot, staticData) || hasItem(snapshot, 'Speed Booster')) &&
-         hasItem(snapshot, 'Super Missile') &&
-         hasItem(snapshot, 'Morph Ball');
+  return (smz3_CanDestroyBombWalls(snapshot, staticData) || hasItem(snapshot, 'SpeedBooster')) &&
+         hasItem(snapshot, 'Super') &&
+         hasItem(snapshot, 'Morph');
 }
 
 /**
@@ -228,12 +227,12 @@ export function smz3_CanAccessDeathMountainPortal(snapshot, staticData) {
  */
 export function smz3_CanAccessDarkWorldPortal(snapshot, staticData) {
   // Simplified implementation (Normal logic)
-  return hasItem(snapshot, 'Maridia L1 Key Card') &&
-         hasItem(snapshot, 'Maridia L2 Key Card') &&
+  return hasItem(snapshot, 'CardMaridiaL1') &&
+         hasItem(snapshot, 'CardMaridiaL2') &&
          smz3_CanUsePowerBombs(snapshot, staticData) &&
-         hasItem(snapshot, 'Super Missile') &&
-         hasItem(snapshot, 'Gravity Suit') &&
-         hasItem(snapshot, 'Speed Booster');
+         hasItem(snapshot, 'Super') &&
+         hasItem(snapshot, 'Gravity') &&
+         hasItem(snapshot, 'SpeedBooster');
 }
 
 /**
@@ -250,12 +249,12 @@ export function smz3_CanAccessDarkWorldPortal(snapshot, staticData) {
  */
 export function smz3_CanAccessMiseryMirePortal(snapshot, staticData) {
   // Simplified implementation (Normal logic)
-  return (hasItem(snapshot, 'Norfair L2 Key Card') ||
-          (hasItem(snapshot, 'Speed Booster') && hasItem(snapshot, 'Wave Beam'))) &&
-         hasItem(snapshot, 'Varia Suit') &&
-         hasItem(snapshot, 'Super Missile') &&
-         hasItem(snapshot, 'Gravity Suit') &&
-         hasItem(snapshot, 'Space Jump') &&
+  return (hasItem(snapshot, 'CardNorfairL2') ||
+          (hasItem(snapshot, 'SpeedBooster') && hasItem(snapshot, 'Wave'))) &&
+         hasItem(snapshot, 'Varia') &&
+         hasItem(snapshot, 'Super') &&
+         hasItem(snapshot, 'Gravity') &&
+         hasItem(snapshot, 'SpaceJump') &&
          smz3_CanUsePowerBombs(snapshot, staticData);
 }
 
@@ -295,10 +294,10 @@ export function smz3_CanAccessNorfairLowerPortal(snapshot, staticData) {
  */
 export function smz3_CanAccessMaridiaPortal(snapshot, staticData) {
   // Simplified implementation (Normal logic, without Agahnim event check for now)
-  return hasItem(snapshot, 'Moon Pearl') &&
+  return hasItem(snapshot, 'MoonPearl') &&
          hasItem(snapshot, 'Flippers') &&
-         hasItem(snapshot, 'Gravity Suit') &&
-         hasItem(snapshot, 'Morph Ball') &&
+         hasItem(snapshot, 'Gravity') &&
+         hasItem(snapshot, 'Morph') &&
          (hasItem(snapshot, 'Hammer') && smz3_CanLiftLight(snapshot, staticData) ||
           smz3_CanLiftHeavy(snapshot, staticData));
 }
