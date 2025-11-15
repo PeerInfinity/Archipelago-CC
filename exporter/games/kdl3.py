@@ -23,6 +23,19 @@ class KDL3GameExportHandler(BaseGameExportHandler):
             logger.warning(f"Could not load location_name module: {e}")
             self.level_names_inverse = {}
 
+    def get_settings_data(self, world, multiworld, player):
+        """Override to add KDL3-specific settings like copy_abilities."""
+        settings = super().get_settings_data(world, multiworld, player)
+
+        # Export copy_abilities dictionary if it exists on the world
+        if hasattr(world, 'copy_abilities'):
+            settings['copy_abilities'] = world.copy_abilities
+            logger.debug(f"Exported copy_abilities: {len(world.copy_abilities)} entries")
+        else:
+            logger.warning("World does not have copy_abilities attribute")
+
+        return settings
+
     def expand_helper(self, helper_name: str):
         """Return None to preserve helper nodes as-is."""
         return None
