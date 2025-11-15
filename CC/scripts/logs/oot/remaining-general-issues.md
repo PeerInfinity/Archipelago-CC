@@ -2,41 +2,43 @@
 
 ## Status
 Last updated: 2025-11-15
-Test Status: FAILING at Sphere 0 - No regions accessible
+Test Status: FAILING at Sphere 0 - Subrule locations incorrectly accessible
 
 ## Critical Issues
 
-### 1. Age Not Initialized from Settings (BLOCKING ALL TESTS)
+### 1. Subrule Event Locations Incorrectly Accessible (BLOCKING SPHERE 0)
 
-**Priority**: CRITICAL - Must fix first
-**Location**: frontend/modules/shared/gameLogic/oot/ootLogic.js
+**Priority**: CRITICAL - Must fix next
+**Location**: Unknown - needs investigation
 
 **Problem**:
-The age is not being properly set when the game state loads. The test fails at Sphere 0 because the rule "is_starting_age or Time_Travel" evaluates to false, preventing access from Root -> Root Exits.
+24 "Subrule" event locations are being marked as accessible in STATE when they should not be accessible in LOG at Sphere 0.
 
 **Evidence**:
-- Sphere 0 should make 74 regions accessible
-- In STATE, 0 regions are accessible (only Menu is reachable)
-- The exit from Root -> Root Exits requires: `is_starting_age or Time_Travel`
-- `is_starting_age` checks if `snapshot.age === settings.starting_age`
-- Settings correctly shows `starting_age: "child"`
-- But `snapshot.age` is not being set to "child"
+```
+Locations accessible in STATE (and unchecked) but NOT in LOG:
+- Kokiri Forest Subrule 1
+- Lost Woods Subrule 1, Lost Woods Subrule 2
+- LW Beyond Mido Subrule 1
+- Hyrule Field Subrule 1, Hyrule Field Subrule 2
+- Lake Hylia Subrule 1
+- Market Bazaar Item 6
+- Market Potion Shop Item 1, 2, 4, 6, 7, 8
+- Market Bombchu Shop Item 1-8
+- Graveyard Subrule 2
+- Deku Tree Lobby Subrule 1
+```
 
-**Root Cause**:
-The `ootStateModule.loadSettings()` function sets `age: startingAge`, but this may not be called during initialization, or the returned state may not be properly merged into the game state.
+**Investigation Needed**:
+1. What are "Subrule" locations in OOT? (They appear to be event locations)
+2. Why are they being marked as accessible when they shouldn't be?
+3. Do they have access rules that are being incorrectly evaluated?
+4. Or are they being automatically added to accessible locations?
 
-**Expected Behavior**:
-When the game initializes, the player's age should be set to the value of `settings.starting_age` (which is "child" by default).
-
-**Fix Needed**:
-Investigate how `loadSettings()` is called in the state initialization flow. Ensure that:
-1. `loadSettings()` is actually called during initialization
-2. The returned state object is properly merged into the game state
-3. `snapshot.age` is set to the correct starting age value
-4. The age is included in state snapshots so helpers can access it
-
-**Test to Verify Fix**:
-After fixing, the spoiler test should progress past Sphere 0 and start accessing regions.
+**Next Steps**:
+1. Examine one of these locations in the rules.json to understand its structure
+2. Check if it has an access_rule that's being evaluated incorrectly
+3. Determine if this is a helper function issue or a rule evaluation issue
 
 ## Medium Priority Issues
 
@@ -85,4 +87,4 @@ All logic trick helpers currently return false. This is safe and correct for the
 
 ## Notes
 
-The #1 critical issue (age initialization) must be fixed before any other work can proceed, as it prevents all regions from being accessible in Sphere 0.
+The age initialization issue has been fixed! Now working on the Subrule location issue.
