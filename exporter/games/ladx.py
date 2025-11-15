@@ -233,6 +233,39 @@ class LADXGameExportHandler(GenericGameExportHandler):
             'ROOSTER': 'Rooster',
             'FLIPPERS': 'Flippers',
             'RUPEES': 'RUPEES',  # Special case for currency
+            # Small Keys - LADXR uses KEY1-KEY9 internally
+            'KEY1': 'Small Key (Tail Cave)',
+            'KEY2': 'Small Key (Bottle Grotto)',
+            'KEY3': 'Small Key (Key Cavern)',
+            'KEY4': 'Small Key (Angler\'s Tunnel)',
+            'KEY5': 'Small Key (Catfish\'s Maw)',
+            'KEY6': 'Small Key (Face Shrine)',
+            'KEY7': 'Small Key (Eagle\'s Tower)',
+            'KEY8': 'Small Key (Turtle Rock)',
+            'KEY9': 'Small Key (Color Dungeon)',
+            # Nightmare Keys - LADXR uses NIGHTMARE_KEY1-9 internally
+            'NIGHTMARE_KEY1': 'Nightmare Key (Tail Cave)',
+            'NIGHTMARE_KEY2': 'Nightmare Key (Bottle Grotto)',
+            'NIGHTMARE_KEY3': 'Nightmare Key (Key Cavern)',
+            'NIGHTMARE_KEY4': 'Nightmare Key (Angler\'s Tunnel)',
+            'NIGHTMARE_KEY5': 'Nightmare Key (Catfish\'s Maw)',
+            'NIGHTMARE_KEY6': 'Nightmare Key (Face Shrine)',
+            'NIGHTMARE_KEY7': 'Nightmare Key (Eagle\'s Tower)',
+            'NIGHTMARE_KEY8': 'Nightmare Key (Turtle Rock)',
+            'NIGHTMARE_KEY9': 'Nightmare Key (Color Dungeon)',
+            # Other special keys
+            'BIRD_KEY': 'Bird Key',
+            'ANGLER_KEY': 'Angler Key',
+            # Ocarina Songs
+            'SONG1': 'Ballad of the Wind Fish',
+            'SONG2': 'Manbo\'s Mambo',
+            'SONG3': 'Frog\'s Song of Soul',
+            # Collectibles
+            'SEASHELL': 'Seashell',
+            # Trading Quest Items
+            'TRADING_ITEM_FISHING_HOOK': 'Fishing Hook',
+            'TRADING_ITEM_NECKLACE': 'Necklace',
+            'TRADING_ITEM_SCALE': 'Scale',
             # Add more mappings as needed
         }
         return item_name_mapping.get(item_str, item_str)
@@ -298,6 +331,15 @@ class LADXGameExportHandler(GenericGameExportHandler):
             return rule
 
         rule_type = rule.get('type')
+
+        # Map LADXR item names to Archipelago names in item_check rules
+        if rule_type == 'item_check' and 'item' in rule:
+            item_name = rule['item']
+            if isinstance(item_name, str):
+                mapped_name = self._map_ladxr_item_name(item_name)
+                if mapped_name != item_name:
+                    logger.debug(f"Mapped item name: {item_name} -> {mapped_name}")
+                    rule['item'] = mapped_name
 
         # Process nested conditions
         if rule_type in ['and', 'or'] and 'conditions' in rule:
