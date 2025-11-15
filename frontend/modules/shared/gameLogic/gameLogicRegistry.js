@@ -500,6 +500,7 @@ const GAME_REGISTRY = {
   'Super Mario Land 2': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: marioland2Logic.helperFunctions,
+    stateMethods: marioland2Logic.stateMethods,
     worldClasses: ['MarioLand2World'],
     aliases: ['Super Mario Land 2', 'SML2', 'marioland2']
   },
@@ -655,6 +656,7 @@ export function getGameLogic(gameName) {
     return {
       logicModule: GAME_REGISTRY['Generic'].logicModule,
       helperFunctions: GAME_REGISTRY['Generic'].helperFunctions,
+      stateMethods: GAME_REGISTRY['Generic'].stateMethods,
       stateModule: GAME_REGISTRY['Generic'].logicModule,
       constants: GAME_REGISTRY['Generic'].constants
     };
@@ -663,6 +665,7 @@ export function getGameLogic(gameName) {
   return {
     logicModule: config.logicModule,
     helperFunctions: config.helperFunctions,
+    stateMethods: config.stateMethods,
     stateModule: config.logicModule, // Expose stateModule for hooks
     constants: config.constants
   };

@@ -148,7 +148,14 @@ export function executeStateMethod(manager, method, ...args) {
       return manager.can_reach(targetName, targetType, player);
     }
 
-    // 3. Look in modern helperFunctions system
+    // 3. Check for game-specific state methods (e.g., has_from_list_unique for Mario Land 2)
+    if (manager.stateMethods && typeof manager.stateMethods[method] === 'function') {
+      const snapshot = manager.getSnapshot();
+      const staticData = manager.getStaticGameData();
+      return manager.stateMethods[method](snapshot, staticData, ...args);
+    }
+
+    // 4. Look in modern helperFunctions system
     if (manager.helperFunctions) {
       // Try exact method name first
       if (typeof manager.helperFunctions[method] === 'function') {

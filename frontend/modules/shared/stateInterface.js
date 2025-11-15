@@ -205,9 +205,23 @@ function getHelperFunctions(gameName) {
   if (!gameName) {
     return genericLogic; // Default to generic
   }
-  
+
   const gameLogic = getGameLogic(gameName);
   return gameLogic.helperFunctions || genericLogic;
+}
+
+/**
+ * Get state methods for a game
+ * @param {string} gameName - The name of the game
+ * @returns {Object} Object containing game-specific state methods, or empty object if none
+ */
+function getStateMethods(gameName) {
+  if (!gameName) {
+    return {}; // No state methods for generic
+  }
+
+  const gameLogic = getGameLogic(gameName);
+  return gameLogic.stateMethods || {};
 }
 
 /**
@@ -746,6 +760,13 @@ export function createStateSnapshotInterface(
         }
 
         return uniqueItemsFound >= requiredCount;
+      }
+
+      // Check for game-specific state methods first
+      const selectedStateMethods = getStateMethods(gameName);
+
+      if (selectedStateMethods && selectedStateMethods[methodName]) {
+        return selectedStateMethods[methodName](snapshot, staticData, ...args);
       }
 
       // Use game-specific agnostic helpers for all helper methods

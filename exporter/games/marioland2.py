@@ -111,13 +111,60 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
 
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Override expand_rule to prevent auto-expansion of our helper functions.
+        Override expand_rule to prevent auto-expansion of our helper functions
+        and to resolve self.options.* references to constant values.
 
         The generic exporter tries to auto-expand helpers matching patterns like has_*,
         but we want to preserve our helper functions as-is for the frontend to implement.
         """
         if not rule:
             return rule
+
+        # Debug: log all attribute rules to see what we're getting
+        if rule.get('type') == 'attribute':
+            logger.debug(f"[marioland2] expand_rule called with attribute: attr={rule.get('attr')}, object={rule.get('object')}")
+
+        # Resolve self.options.required_golden_coins to a constant value
+        # Check if this is the nested attribute access pattern
+        is_required_coins = (
+            rule.get('type') == 'attribute' and
+            rule.get('attr') == 'required_golden_coins' and
+            rule.get('object', {}).get('type') == 'attribute' and
+            rule.get('object', {}).get('attr') == 'options' and
+            rule.get('object', {}).get('object', {}).get('type') == 'name' and
+            rule.get('object', {}).get('object', {}).get('name') == 'self'
+        )
+
+        if is_required_coins:
+            # Debug: log that we found the pattern
+            logger.info("[marioland2] Found self.options.required_golden_coins pattern, resolving to constant")
+
+            # Get the value from the world's options if available
+            # Note: We need to get the world instance to access its options
+            # For now, try to get it from _world if it was set earlier
+            if hasattr(self, '_world'):
+                world = self._world
+            else:
+                # Try to get it from get_all_worlds()
+                worlds = self.get_all_worlds()
+                world = worlds[0] if worlds else None
+
+            if world and hasattr(world, 'options') and hasattr(world.options, 'required_golden_coins'):
+                value = world.options.required_golden_coins.value
+                logger.info(f"[marioland2] Resolved to value: {value}")
+                return {'type': 'constant', 'value': value}
+            else:
+                # Fallback to default value (6 is the default for this option)
+                logger.warning("[marioland2] Could not resolve self.options.required_golden_coins, using default value 6")
+                return {'type': 'constant', 'value': 6}
+
+        # For state_method rules, recursively expand args to catch nested attribute access
+        if rule.get('type') == 'state_method':
+            args = rule.get('args', [])
+            if args:
+                rule['args'] = [self.expand_rule(arg) if isinstance(arg, dict) and 'type' in arg else arg for arg in args]
+            # Continue with parent processing
+            return super().expand_rule(rule)
 
         # For our helper functions, preserve them without expansion
         if rule.get('type') == 'helper':
@@ -131,3 +178,20 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
 
         # For all other rules, use the parent's expansion logic
         return super().expand_rule(rule)
+
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Extract Super Mario Land 2 settings including player options."""
+        # Store world reference for use in expand_rule
+        self._world = world
+
+        # Get base settings from parent
+        settings_dict = super().get_settings_data(world, multiworld, player)
+
+        # Add Mario Land 2 specific options that are referenced in rules
+        if hasattr(world, 'options'):
+            # Export required_golden_coins as it's used in access rules
+            required_coins = getattr(world.options, 'required_golden_coins', None)
+            if required_coins is not None:
+                settings_dict['required_golden_coins'] = getattr(required_coins, 'value', required_coins)
+
+        return settings_dict

@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-15 23:10:54
+**Generated:** 2025-11-15 19:39:52
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,7 +12,7 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 45/73 passed (61.6%)
+- **Minimal Test:** 48/78 passed (61.5%)
 - **Full Test:** 29/78 passed (37.2%)
 - **Multiplayer Test:** 33/78 passed (42.3%)
 - **Multiworld Test:** 0/78 passed (0.0%)
@@ -20,10 +20,10 @@ This summary combines results from four types of tests:
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 0/79 (0.0%)
-- **Templates passing 3 tests:** 24/79 (30.4%)
-- **Templates passing 2 tests:** 12/79 (15.2%)
-- **Templates passing 1 test:** 11/79 (13.9%)
-- **Templates passing 0 tests:** 32/79 (40.5%)
+- **Templates passing 3 tests:** 25/79 (31.6%)
+- **Templates passing 2 tests:** 11/79 (13.9%)
+- **Templates passing 1 test:** 13/79 (16.5%)
+- **Templates passing 0 tests:** 30/79 (38.0%)
 
 ## Test Results
 
@@ -100,14 +100,14 @@ This summary combines results from four types of tests:
 | The Witness | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Timespinner | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Undertale | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| VVVVVV | ❌ Failed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
-| Wargroove | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
+| VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
+| Wargroove | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | WebDevJourney | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
-| Yacht Dice | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| Yoshi's Island | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| Yu-Gi-Oh! 2006 | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| Zillion | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| shapez | ❓ N/A | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Yacht Dice | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Yoshi's Island | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Yu-Gi-Oh! 2006 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Zillion | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| shapez | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 
 ## Multi-Template Test Results
 

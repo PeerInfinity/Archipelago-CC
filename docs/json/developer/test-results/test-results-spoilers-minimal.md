@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-15 23:10:54
+**Generated:** 2025-11-15 19:39:52
 
-**Source Data Created:** 2025-11-15T23:10:41.066325
+**Source Data Created:** 2025-11-15T19:39:38.559543
 
-**Source Data Last Updated:** 2025-11-15T23:10:41.066335
+**Source Data Last Updated:** 2025-11-15T19:39:38.559548
 
 ## Summary
 
-- **Total Games:** 73
-- **Passed:** 45 (61.6%)
-- **Failed:** 28 (38.4%)
+- **Total Games:** 78
+- **Passed:** 48 (61.5%)
+- **Failed:** 30 (38.5%)
 
 ## Test Results
 
@@ -27,7 +27,7 @@
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | ArchipIDLE | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Blasphemous | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
-| Bomb Rush Cyberfunk | ❌ Failed seed 6 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Bomb Rush Cyberfunk | ❌ Failed seed 9 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Castlevania 64 | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
@@ -49,7 +49,7 @@
 | Jak and Daxter The Precursor Legacy | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Kingdom Hearts | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
-| Kirby's Dream Land 3 | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Kirby's Dream Land 3 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Lingo | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Links Awakening DX | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
@@ -82,17 +82,22 @@
 | Super Mario Land 2 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Super Mario World | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Super Metroid | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
-| TUNIC | ✅ Passed seeds 1-7 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Terraria | ✅ Passed seeds 1-7 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| The Legend of Zelda | ❌ Failed seed 3 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| TUNIC | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
+| Terraria | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
+| The Legend of Zelda | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | The Messenger | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | The Wind Waker | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | The Witness | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Timespinner | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
-| Undertale | ✅ Passed seeds 1-3 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| VVVVVV | ❌ Failed | 4 | 2.4 | 2.4 | 🟡 100.0% | ✅ | ✅ |
-| Wargroove | ❌ Failed | 0 | 0.1 | 9.1 | 🟠 1.1% | ✅ | ⚫ |
-| WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ⚫ | ⚫ |
+| Undertale | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
+| VVVVVV | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
+| Wargroove | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| WebDevJourney | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
+| Yacht Dice | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
+| Yoshi's Island | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Yu-Gi-Oh! 2006 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Zillion | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| shapez | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 
 ## Notes
 
