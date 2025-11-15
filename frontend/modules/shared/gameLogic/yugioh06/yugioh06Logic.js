@@ -87,6 +87,31 @@ export function has_from_list(snapshot, staticData, itemList, amount) {
 }
 
 /**
+ * Check if player has at least 'count' UNIQUE items from a list (ignores duplicates)
+ * Equivalent to Python's state.has_from_list_unique(list, player, count)
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {Array<string>} itemList - List of item names to check
+ * @param {number} amount - Minimum number of unique items required
+ * @returns {boolean} True if player has at least 'amount' unique items from the list
+ */
+export function has_from_list_unique(snapshot, staticData, itemList, amount) {
+  let foundCount = 0;
+
+  for (const itemName of itemList) {
+    // Check if the player has at least one of this item (count > 0)
+    if (count(snapshot, staticData, itemName) > 0) {
+      foundCount++;
+      if (foundCount >= amount) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+/**
  * Check difficulty requirement based on core booster packs owned
  * Equivalent to Python's yugioh06_difficulty(state, player, amount)
  * @param {Object} snapshot - Canonical state snapshot
@@ -104,6 +129,7 @@ export const helperFunctions = {
   has,
   count,
   has_from_list,
+  has_from_list_unique,
 
   // Yu-Gi-Oh! 2006 specific helpers
   yugioh06_difficulty,

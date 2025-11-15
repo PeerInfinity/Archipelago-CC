@@ -660,6 +660,23 @@ export function createStateSnapshotInterface(
         return itemsFound >= count;
       }
 
+      // Handle has_from_list_unique - counts unique items from a list (ignores duplicates)
+      if (methodName === 'has_from_list_unique' && args.length >= 2) {
+        const items = args[0];
+        const count = args[1];
+        if (!Array.isArray(items)) return false;
+        if (typeof count !== 'number' || count < 0) return false;
+
+        // Count unique items from the list (items with count > 0)
+        let uniqueItemsFound = 0;
+        for (const itemName of items) {
+          if ((finalSnapshotInterface.countItem(itemName) || 0) > 0) {
+            uniqueItemsFound++;
+          }
+        }
+        return uniqueItemsFound >= count;
+      }
+
       // Handle has_group_unique - counts unique items from a group (ignores duplicates)
       if (methodName === 'has_group_unique' && args.length >= 2) {
         const groupName = args[0];
