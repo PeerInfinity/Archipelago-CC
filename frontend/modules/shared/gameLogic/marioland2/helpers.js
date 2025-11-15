@@ -291,12 +291,19 @@ export function mario_zone_4_boss(snapshot, staticData) {
  * Turtle Zone helper functions
  */
 export function turtle_zone_2_normal_exit(snapshot, staticData) {
-    return has_pipe_up(snapshot, staticData) && turtle_zone_2_midway_bell(snapshot, staticData);
+    return (
+        has_pipe_up(snapshot, staticData) &&
+        has_pipe_down(snapshot, staticData) &&
+        has_pipe_right(snapshot, staticData) &&
+        has_pipe_left(snapshot, staticData) &&
+        has(snapshot, "Water Physics") &&
+        !is_auto_scroll(snapshot, staticData, "Turtle Zone 2")
+    );
 }
 
 export function turtle_zone_2_midway_bell(snapshot, staticData) {
     return (
-        (has_pipe_down(snapshot, staticData) && !is_auto_scroll(snapshot, staticData, "Turtle Zone 2")) ||
+        (has(snapshot, "Water Physics") && !is_auto_scroll(snapshot, staticData, "Turtle Zone 2")) ||
         has(snapshot, "Turtle Zone 2 Midway Bell")
     );
 }
@@ -344,12 +351,17 @@ export function macro_zone_1_secret_exit(snapshot, staticData) {
 }
 
 export function macro_zone_2_normal_exit(snapshot, staticData) {
-    return has_pipe_down(snapshot, staticData) && macro_zone_2_midway_bell(snapshot, staticData);
+    return (
+        (has_pipe_down(snapshot, staticData) || has(snapshot, "Macro Zone 2 Midway Bell")) &&
+        has(snapshot, "Water Physics") &&
+        has_pipe_up(snapshot, staticData) &&
+        !is_auto_scroll(snapshot, staticData, "Macro Zone 2")
+    );
 }
 
 export function macro_zone_2_midway_bell(snapshot, staticData) {
     return (
-        (has_pipe_down(snapshot, staticData) && has_pipe_right(snapshot, staticData)) ||
+        (has_pipe_down(snapshot, staticData) && has(snapshot, "Water Physics")) ||
         has(snapshot, "Macro Zone 2 Midway Bell")
     );
 }

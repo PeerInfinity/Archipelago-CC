@@ -102,6 +102,25 @@ export const helperFunctions = {
 };
 
 /**
+ * State methods for Super Mario Land 2.
+ * These handle special state checks like counting unique items from a list.
+ */
+export const stateMethods = {
+    has_from_list_unique(snapshot, staticData, items, count) {
+        let found = 0;
+        for (const itemName of items) {
+            if (snapshot?.inventory?.[itemName] > 0) {
+                found++;
+                if (found >= count) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+
+/**
  * Initialize Super Mario Land 2 game logic.
  *
  * @param {Object} context - The game logic context
@@ -109,12 +128,14 @@ export const helperFunctions = {
  */
 export function initializeGameLogic(context) {
     return {
-        helpers: helperFunctions
+        helpers: helperFunctions,
+        stateMethods: stateMethods
     };
 }
 
 // Export for game logic registry
 export default {
     initializeGameLogic,
-    helperFunctions
+    helperFunctions,
+    stateMethods
 };
