@@ -614,9 +614,23 @@
             "name": "Grass Land 2 - Muchimuchi",
             "id": 7799041,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_chuchu",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "ChuChu"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "ChuChu Spawn"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "1-Up",
@@ -1281,9 +1295,23 @@
             "name": "Grass Land 4 - Chao & Goku",
             "id": 7799043,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_stone",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Stone"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Stone Ability"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Invincible Candy",
@@ -1687,9 +1715,23 @@
             "name": "Grass Land 5 - Mine",
             "id": 7799044,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_kine",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Kine"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Kine Spawn"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Heart Star",
@@ -2245,72 +2287,12 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Grass Land - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 }
               ]
             },
@@ -2357,72 +2339,12 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Grass Land - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 }
               ]
             },
@@ -2727,14 +2649,42 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_pitch",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Pitch"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Pitch Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_clean",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Clean"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Clean Ability"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -2895,14 +2845,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -3171,14 +3149,42 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_parasol",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Parasol"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Parasol Ability"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -3342,14 +3348,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -3651,14 +3685,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -3764,9 +3826,23 @@
             "name": "Ripple Field 4 - Toad & Little Toad",
             "id": 7799049,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_needle",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Needle"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Needle Ability"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Heart Star",
@@ -3928,14 +4004,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -3953,14 +4057,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -4337,14 +4469,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -4362,14 +4522,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -4425,14 +4613,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -4450,14 +4666,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -4757,24 +5001,80 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_pitch",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Pitch"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Pitch Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_burning",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Burning"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Burning Ability"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_stone",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Stone"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Stone Ability"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -4830,9 +5130,23 @@
             "name": "Ripple Field 5 - Complete",
             "id": 7798794,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_kine",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Kine"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Kine Spawn"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Slowness",
@@ -5391,72 +5705,12 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Ripple Field - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 }
               ]
             },
@@ -5503,72 +5757,12 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Ripple Field - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 }
               ]
             },
@@ -6615,9 +6809,23 @@
             "name": "Sand Canyon 2 - Auntie",
             "id": 7799053,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_clean",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Clean"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Clean Ability"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Gooey Bag",
@@ -7344,14 +7552,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -7369,14 +7605,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -7394,14 +7658,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -7419,14 +7711,42 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_kine",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Kine Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -8071,14 +8391,42 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_cutter",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Cutter"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Cutter Ability"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -8099,9 +8447,23 @@
             "name": "Sand Canyon 5 - Complete",
             "id": 7798800,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_cutter",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Cutter"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Cutter Ability"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Eject Ability",
@@ -10385,88 +10747,58 @@
             "name": "Sand Canyon 6 - Professor Hector & R.O.B",
             "id": 7799057,
             "access_rule": {
-              "type": "helper",
-              "name": "can_assemble_rob",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": {
-                    "Waddle Dee": "No Ability",
-                    "Bronto Burt": "No Ability",
-                    "Rocky": "Stone Ability",
-                    "Bobo": "Burning Ability",
-                    "Chilly": "Ice Ability",
-                    "Poppy Bros Jr.": "No Ability",
-                    "Sparky": "Spark Ability",
-                    "Polof": "No Ability",
-                    "Broom Hatter": "Clean Ability",
-                    "Cappy": "No Ability",
-                    "Bouncy": "No Ability",
-                    "Nruff": "No Ability",
-                    "Glunk": "No Ability",
-                    "Togezo": "Needle Ability",
-                    "Kabu": "No Ability",
-                    "Mony": "No Ability",
-                    "Blipper": "No Ability",
-                    "Squishy": "No Ability",
-                    "Gabon": "No Ability",
-                    "Oro": "No Ability",
-                    "Galbo": "Burning Ability",
-                    "Sir Kibble": "Cutter Ability",
-                    "Nidoo": "No Ability",
-                    "Kany": "No Ability",
-                    "Sasuke": "Parasol Ability",
-                    "Yaban": "No Ability",
-                    "Boten": "Needle Ability",
-                    "Coconut": "No Ability",
-                    "Doka": "No Ability",
-                    "Icicle": "No Ability",
-                    "Pteran": "No Ability",
-                    "Loud": "No Ability",
-                    "Como": "No Ability",
-                    "Klinko": "Parasol Ability",
-                    "Babut": "No Ability",
-                    "Wappa": "Ice Ability",
-                    "Mariel": "No Ability",
-                    "Tick": "Needle Ability",
-                    "Apolo": "No Ability",
-                    "Popon Ball": "No Ability",
-                    "KeKe": "Clean Ability",
-                    "Magoo": "Burning Ability",
-                    "Raft Waddle Dee": "No Ability",
-                    "Madoo": "No Ability",
-                    "Corori": "No Ability",
-                    "Kapar": "Cutter Ability",
-                    "Batamon": "No Ability",
-                    "Peran": "No Ability",
-                    "Bobin": "Spark Ability",
-                    "Mopoo": "No Ability",
-                    "Gansan": "Stone Ability",
-                    "Bukiset (Burning)": "Burning Ability",
-                    "Bukiset (Stone)": "Stone Ability",
-                    "Bukiset (Ice)": "Ice Ability",
-                    "Bukiset (Needle)": "Needle Ability",
-                    "Bukiset (Clean)": "Clean Ability",
-                    "Bukiset (Parasol)": "Parasol Ability",
-                    "Bukiset (Spark)": "Spark Ability",
-                    "Bukiset (Cutter)": "Cutter Ability",
-                    "Waddle Dee Drawing": "No Ability",
-                    "Bronto Burt Drawing": "No Ability",
-                    "Bouncy Drawing": "No Ability",
-                    "Kabu (Dekabu)": "No Ability",
-                    "Wapod": "No Ability",
-                    "Propeller": "No Ability",
-                    "Dogon": "No Ability",
-                    "Joe": "No Ability",
-                    "Captain Stitch": "Needle Ability",
-                    "Yuki": "Ice Ability",
-                    "Blocky": "Stone Ability",
-                    "Jumper Shoot": "Parasol Ability",
-                    "Boboo": "Burning Ability",
-                    "Haboki": "Clean Ability"
-                  }
+              "type": "conditional",
+              "test": {
+                "type": "not",
+                "condition": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Coo"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Coo Spawn"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Kine"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Kine Spawn"
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
-              ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": false
+              },
+              "if_false": null
             },
             "item": {
               "name": "Nago",
@@ -10533,72 +10865,12 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sand Canyon - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 }
               ]
             },
@@ -10645,72 +10917,12 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sand Canyon - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 }
               ]
             },
@@ -11267,14 +11479,42 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_coo",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Coo"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Coo Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_clean",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Clean"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Clean Ability"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -11763,9 +12003,23 @@
             "name": "Cloudy Park 2 - Piyo & Keko",
             "id": 7799059,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_needle",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Needle"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Needle Ability"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Burning",
@@ -12648,9 +12902,23 @@
             "name": "Cloudy Park 4 - Mikarin & Kagami Mocchi",
             "id": 7799061,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_coo",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Coo"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Coo Spawn"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Heart Star",
@@ -13046,9 +13314,23 @@
             "name": "Cloudy Park 5 - Pick",
             "id": 7799062,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_rick",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Rick"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Rick Spawn"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Heart Star",
@@ -13799,72 +14081,12 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Cloudy Park - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 }
               ]
             },
@@ -13911,72 +14133,12 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Cloudy Park - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 }
               ]
             },
@@ -14362,9 +14524,23 @@
             "name": "Iceberg 1 - Kogoesou",
             "id": 7799064,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_burning",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Burning"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Burning Ability"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "1-Up",
@@ -14849,9 +15025,23 @@
             "name": "Iceberg 2 - Samus",
             "id": 7799065,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_ice",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Ice"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Ice Ability"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "1-Up",
@@ -15938,14 +16128,42 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_coo",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Coo"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Coo Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_burning",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Burning"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Burning Ability"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -15963,19 +16181,61 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_coo",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Coo"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Coo Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_burning",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Burning"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Burning Ability"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -16216,19 +16476,61 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_coo",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Coo"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Coo Spawn"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_burning",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Burning"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Burning Ability"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_chuchu",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "ChuChu Spawn"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -16249,9 +16551,23 @@
             "name": "Iceberg 4 - Complete",
             "id": 7798811,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_burning",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Burning"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Burning Ability"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Heart Star",
@@ -17590,9 +17906,23 @@
             "name": "Iceberg 5 - Shiro",
             "id": 7799068,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_nago",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Nago"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Nago Spawn"
+                  }
+                }
+              ]
             },
             "item": {
               "name": "1-Up",
@@ -18518,72 +18848,12 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 5
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Iceberg - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 }
               ]
             },
@@ -18630,72 +18900,12 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 5
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Iceberg - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 }
               ]
             },
@@ -19493,6 +19703,347 @@
         "event": false,
         "type": null,
         "max_count": 6
+      },
+      "No Ability": {
+        "name": "No Ability",
+        "id": null,
+        "groups": [],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 190
+      },
+      "Cutter Ability": {
+        "name": "Cutter Ability",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 22
+      },
+      "Spark Ability": {
+        "name": "Spark Ability",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 22
+      },
+      "Parasol Ability": {
+        "name": "Parasol Ability",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 21
+      },
+      "Nago Spawn": {
+        "name": "Nago Spawn",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 16
+      },
+      "Rick Spawn": {
+        "name": "Rick Spawn",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 20
+      },
+      "Stone Ability": {
+        "name": "Stone Ability",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 19
+      },
+      "Clean Ability": {
+        "name": "Clean Ability",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 23
+      },
+      "Burning Ability": {
+        "name": "Burning Ability",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 26
+      },
+      "ChuChu Spawn": {
+        "name": "ChuChu Spawn",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 17
+      },
+      "Pitch Spawn": {
+        "name": "Pitch Spawn",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 15
+      },
+      "Needle Ability": {
+        "name": "Needle Ability",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 22
+      },
+      "Kine Spawn": {
+        "name": "Kine Spawn",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 13
+      },
+      "Coo Spawn": {
+        "name": "Coo Spawn",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 17
+      },
+      "Level 1 Boss Defeated": {
+        "name": "Level 1 Boss Defeated",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Level 1 Boss Purified": {
+        "name": "Level 1 Boss Purified",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Level 2 Boss Defeated": {
+        "name": "Level 2 Boss Defeated",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Level 2 Boss Purified": {
+        "name": "Level 2 Boss Purified",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Ice Ability": {
+        "name": "Ice Ability",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 18
+      },
+      "Level 3 Boss Defeated": {
+        "name": "Level 3 Boss Defeated",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Level 3 Boss Purified": {
+        "name": "Level 3 Boss Purified",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Level 4 Boss Defeated": {
+        "name": "Level 4 Boss Defeated",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Level 4 Boss Purified": {
+        "name": "Level 4 Boss Purified",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Level 5 Boss Defeated": {
+        "name": "Level 5 Boss Defeated",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Level 5 Boss Purified": {
+        "name": "Level 5 Boss Purified",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
+      },
+      "Grass Land - Stage Completion": {
+        "name": "Grass Land - Stage Completion",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 6
+      },
+      "Ripple Field - Stage Completion": {
+        "name": "Ripple Field - Stage Completion",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 6
+      },
+      "Sand Canyon - Stage Completion": {
+        "name": "Sand Canyon - Stage Completion",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 6
+      },
+      "Cloudy Park - Stage Completion": {
+        "name": "Cloudy Park - Stage Completion",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 6
+      },
+      "Iceberg - Stage Completion": {
+        "name": "Iceberg - Stage Completion",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 6
+      },
+      "Love-Love Rod": {
+        "name": "Love-Love Rod",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
       }
     }
   },
