@@ -285,6 +285,7 @@ import * as stardewValleyHelpers from './stardew_valley/helpers.js';
 import * as terrariaLogic from './terraria/terrariaLogic.js';
 import * as timespinnerLogic from './timespinner/timespinnerLogic.js';
 import * as twwLogic from './tww/twwLogic.js';
+import { helperFunctions as yoshisislandHelperFunctions } from './yoshisisland/yoshisislandLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -572,6 +573,12 @@ const GAME_REGISTRY = {
     helperFunctions: twwLogic.default,
     worldClasses: ['TWWWorld'],
     aliases: ['The Wind Waker', 'TWW', 'Wind Waker']
+  },
+  "Yoshi's Island": {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: yoshisislandHelperFunctions,
+    worldClasses: ['YoshisIslandWorld'],
+    aliases: ["Yoshi's Island"]
   },
   // Add more games here as they're implemented
   'Generic': {
