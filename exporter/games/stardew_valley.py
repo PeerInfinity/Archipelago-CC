@@ -116,15 +116,27 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
 
             # Handle Reach rule (region/location accessibility)
             elif rule_type == 'Reach':
-                # Reach rules check if a region is accessible
-                # The frontend handles region reachability automatically
-                # So we can just return a constant true since the region check
-                # is already handled by the region graph
+                # Reach rules check if a region or location is accessible
+                # Export as region_check or location_check based on resolution_hint
                 logger.debug(f"Reach rule for: {rule_obj.spot} (resolution: {rule_obj.resolution_hint})")
-                return {
-                    'type': 'constant',
-                    'value': True
-                }
+
+                if rule_obj.resolution_hint == 'Region':
+                    return {
+                        'type': 'region_check',
+                        'region': rule_obj.spot
+                    }
+                elif rule_obj.resolution_hint == 'Location':
+                    return {
+                        'type': 'location_check',
+                        'location': rule_obj.spot
+                    }
+                else:
+                    # Fallback for unknown resolution hints
+                    logger.warning(f"Unknown resolution hint '{rule_obj.resolution_hint}' for Reach rule, spot: {rule_obj.spot}")
+                    return {
+                        'type': 'region_check',
+                        'region': rule_obj.spot
+                    }
 
             # Handle TotalReceived rule (count across multiple items)
             elif rule_type == 'TotalReceived':

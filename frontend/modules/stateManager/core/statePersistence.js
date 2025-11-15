@@ -328,6 +328,7 @@ export function _createSelfSnapshotInterface(sm) {
       sm.settings ? sm.settings[settingName] : undefined,
     getAllSettings: () => sm.settings,
     isRegionReachable: (regionName) => sm.isRegionReachable(regionName),
+    isRegionAccessible: (regionName) => sm.isRegionReachable(regionName), // Alias for isRegionReachable
     isLocationChecked: (locName) => sm.isLocationChecked(locName),
     isLocationAccessible: (locationOrName) => {
       // Check if a location is accessible (reachable and rules pass)

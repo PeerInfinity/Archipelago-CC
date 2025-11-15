@@ -281,6 +281,7 @@ import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
 import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
 import { helperFunctions as smHelperFunctions } from './super_metroid/smLogic.js';
+import * as stardewValleyHelpers from './stardew_valley/helpers.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -513,6 +514,12 @@ const GAME_REGISTRY = {
     helperFunctions: soeLogic.helperFunctions,
     worldClasses: ['SoEWorld'],
     aliases: ['Secret of Evermore', 'SOE', 'soe']
+  },
+  'Stardew Valley': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: stardewValleyHelpers,
+    worldClasses: ['StardewValleyWorld'],
+    aliases: ['Stardew Valley', 'SDV', 'stardew_valley']
   },
   'shapez': {
     logicModule: genericLogic.genericStateModule,
