@@ -477,16 +477,20 @@ ANGLER_KEYHOLE
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None)
 Access Tunnel Bombable Heart Piece (Tal Tal Mountains)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -500,8 +504,10 @@ Access Tunnel Interior (Tal Tal Mountains)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> Access Tunnel Interior (Tal Tal Mountains)
@@ -554,8 +560,10 @@ Beamos Blocked Chest (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -577,8 +585,10 @@ Beamos Ledge Chest (Eagle's Tower)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -612,8 +622,10 @@ Bird Key Cave (Tal Tal Mountains)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -626,8 +638,10 @@ Blob Chest (Angler's Tunnel)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None) -> Unset Room (None) -> No Name 15
    =>   No Name 15 -> No Name 15 -> D4 Room
@@ -670,7 +684,9 @@ Boo Buddies Room Chest (Bottle Grotto)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> D2 Room
    =>   D2 Room -> D2 Room -> D2 Room 2
    =>   D2 Room 2 -> D2 Room 2 -> First Switch Locked Chest (Bottle Grotto)
@@ -697,8 +713,10 @@ Bridge Rock (Tal Tal Mountains)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -726,7 +744,9 @@ Button Spawn Chest (Bottle Grotto)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> D2 Room
    =>   D2 Room -> D2 Room -> D2 Room 2
    =>   D2 Room 2 -> D2 Room 2 -> First Switch Locked Chest (Bottle Grotto)
@@ -777,7 +797,9 @@ Conch Horn (Bottle Grotto)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> D2 Room
    =>   D2 Room -> D2 Room -> D2 Room 2
    =>   D2 Room 2 -> D2 Room 2 -> First Switch Locked Chest (Bottle Grotto)
@@ -794,8 +816,10 @@ Conveyor Beamos Chest (Eagle's Tower)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -822,11 +846,7 @@ Coral Triangle (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -841,8 +861,10 @@ Damp Cave Heart Piece (Tal Tal Heights)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None) -> Unset Room (None) -> No Name 31
    =>   No Name 31 -> No Name 31 -> Damp Cave Heart Piece (Tal Tal Heights)
@@ -863,8 +885,10 @@ Dodongo Chest (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -921,7 +945,9 @@ Enemy Order Room Chest (Bottle Grotto)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> D2 Room
    =>   D2 Room -> D2 Room -> D2 Room 2
    =>   D2 Room 2 -> D2 Room 2 -> First Switch Locked Chest (Bottle Grotto)
@@ -935,7 +961,9 @@ Entrance Chest (Bottle Grotto)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> D2 Room
    =>   D2 Room -> D2 Room -> Entrance Chest (Bottle Grotto)
    =>   Entrance Chest (Bottle Grotto)
@@ -952,11 +980,7 @@ Entrance Hookshottable Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> Entrance Hookshottable Chest (Catfish's Maw)
@@ -965,8 +989,10 @@ Entrance Key (Eagle's Tower)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -988,11 +1014,7 @@ Facade Heart Container (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1007,7 +1029,9 @@ First Switch Locked Chest (Bottle Grotto)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> D2 Room
    =>   D2 Room -> D2 Room -> D2 Room 2
    =>   D2 Room 2 -> D2 Room 2 -> First Switch Locked Chest (Bottle Grotto)
@@ -1016,11 +1040,7 @@ Fisher (Martha's Bay)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> Fisher (Martha's Bay)
    =>   Fisher (Martha's Bay)
 Fishing Game Heart Piece (Mabe Village)
@@ -1032,8 +1052,10 @@ Flipper Locked Before Boots Pit Chest (Angler's Tunnel)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None) -> Unset Room (None) -> No Name 15
    =>   No Name 15 -> No Name 15 -> D4 Room
@@ -1046,8 +1068,10 @@ Flippers Chest (Angler's Tunnel)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None) -> Unset Room (None) -> No Name 15
    =>   No Name 15 -> No Name 15 -> D4 Room
@@ -1062,11 +1086,7 @@ Flying Bomb Chest South (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -1076,8 +1096,10 @@ Four Ropes Pot Chest (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1099,11 +1121,7 @@ Four Wizzrobe Ledge Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1133,7 +1151,9 @@ Genie Heart Container (Bottle Grotto)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> D2 Room
    =>   D2 Room -> D2 Room -> D2 Room 2
    =>   D2 Room 2 -> D2 Room 2 -> First Switch Locked Chest (Bottle Grotto)
@@ -1150,10 +1170,7 @@ Ghost Grave Dig (Koholint Prairie)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 60
-   =>   No Name 60 -> No Name 60 -> No Name 61
-   =>   No Name 61 -> No Name 61 -> No Name 62
+   =>   Forest -> Forest -> No Name 62
    =>   No Name 62 -> No Name 62 -> Ghost Grave Dig (Koholint Prairie)
    =>   Ghost Grave Dig (Koholint Prairie)
 Ghost House Barrel (Martha's Bay)
@@ -1169,8 +1186,10 @@ Gibdos on Cracked Floor Key (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1221,8 +1240,10 @@ Hinox Key (Eagle's Tower)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1265,11 +1286,7 @@ L2 Bracelet Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1291,8 +1308,10 @@ Lava Ledge Chest (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1316,8 +1335,10 @@ Left Vire Key (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1339,8 +1360,10 @@ Left of Hinox Zamboni Chest (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1360,17 +1383,20 @@ Left of Hinox Zamboni Chest (Turtle Rock)
 Lone Bush (Martha's Bay)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 67
-   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   Mabe Village -> Mabe Village -> Sword Beach
+   =>   Sword Beach -> Sword Beach -> Sword Beach to Ghost House
+   =>   Sword Beach to Ghost House -> Sword Beach to Ghost House -> Outside Ghost House
+   =>   Outside Ghost House -> Outside Ghost House -> No Name 2
    =>   No Name 2 -> No Name 2 -> Lone Bush (Martha's Bay)
    =>   Lone Bush (Martha's Bay)
 Lower Bomb Locked Watery Chest (Angler's Tunnel)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None) -> Unset Room (None) -> No Name 15
    =>   No Name 15 -> No Name 15 -> D4 Room
@@ -1388,9 +1414,10 @@ MEDICINE2
 Mad Batter (Martha's Bay)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 67
-   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   Mabe Village -> Mabe Village -> Sword Beach
+   =>   Sword Beach -> Sword Beach -> Sword Beach to Ghost House
+   =>   Sword Beach to Ghost House -> Sword Beach to Ghost House -> Outside Ghost House
+   =>   Outside Ghost House -> Outside Ghost House -> No Name 2
    =>   No Name 2 -> No Name 2 -> No Name 78
    =>   No Name 78 -> No Name 78 -> No Name 79
    =>   No Name 79 -> No Name 79 -> No Name 80
@@ -1408,8 +1435,10 @@ Mad Batter (Tal Tal Mountains)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1426,8 +1455,10 @@ Magic Rod Chest (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1455,7 +1486,9 @@ Mask-Mimic Chest (Bottle Grotto)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> D2 Room
    =>   D2 Room -> D2 Room -> D2 Room 2
    =>   D2 Room 2 -> D2 Room 2 -> Mask-Mimic Chest (Bottle Grotto)
@@ -1464,7 +1497,9 @@ Mask-Mimic Key (Bottle Grotto)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> D2 Room
    =>   D2 Room -> D2 Room -> D2 Room 2
    =>   D2 Room 2 -> D2 Room 2 -> First Switch Locked Chest (Bottle Grotto)
@@ -1474,11 +1509,7 @@ Master Stalfos Item (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -1491,11 +1522,7 @@ Mermaid (Martha's Bay)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> Mermaid (Martha's Bay)
    =>   Mermaid (Martha's Bay)
 Mermaid Statue (Martha's Bay)
@@ -1517,11 +1544,7 @@ Mini-Moldorm, Spark Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1533,8 +1556,10 @@ Mirror Shield Chest (Eagle's Tower)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1575,7 +1600,9 @@ MrWrite (Goponga Swamp)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> Outside Write's House
    =>   Outside Write's House -> Outside Write's House -> Write's House
    =>   Write's House -> Write's House -> MrWrite (Goponga Swamp)
@@ -1599,8 +1626,10 @@ Nightmare Key Ledge Chest (Angler's Tunnel)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None) -> Unset Room (None) -> No Name 15
    =>   No Name 15 -> No Name 15 -> D4 Room
@@ -1616,8 +1645,10 @@ Nightmare Key/Big Zamboni Chest (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1640,11 +1671,7 @@ Nightmare Key/Torch Cross Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -1666,8 +1693,10 @@ Organ of Evening Calm (Eagle's Tower)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1713,8 +1742,10 @@ Outside Heart Piece (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1737,8 +1768,10 @@ Outside Mad Batter (Tal Tal Mountains)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1753,8 +1786,10 @@ Papahl (Tal Tal Heights)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1773,8 +1808,10 @@ Paphl Cave (Tal Tal Mountains)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1799,8 +1836,10 @@ Pit Key (Angler's Tunnel)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None) -> Unset Room (None) -> No Name 15
    =>   No Name 15 -> No Name 15 -> D4 Room
@@ -1815,11 +1854,7 @@ Pot Locked Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1850,11 +1885,7 @@ Raft Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1868,8 +1899,10 @@ Right Lava Chest (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -1973,8 +2006,10 @@ Spark Chest (Angler's Tunnel)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None) -> Unset Room (None) -> No Name 15
    =>   No Name 15 -> No Name 15 -> D4 Room
@@ -1994,11 +2029,7 @@ Spark, Two Iron Mask Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> Spark, Two Iron Mask Chest (Catfish's Maw)
@@ -2007,11 +2038,7 @@ Stairs Across Statues Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2023,8 +2050,10 @@ Surf Harp (Angler's Tunnel)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None) -> Unset Room (None) -> No Name 15
    =>   No Name 15 -> No Name 15 -> D4 Room
@@ -2040,18 +2069,16 @@ Swampy Chest (Goponga Swamp)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> Swamp Chest
    =>   Swamp Chest
 Swort Stalfos, Star, Bridge Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -2063,7 +2090,9 @@ Tail Key Chest (Mysterious Woods)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> Tail Key Chest (Mysterious Woods)
    =>   Tail Key Chest (Mysterious Woods)
 Tarin's Gift (Mabe Village)
@@ -2085,11 +2114,7 @@ Three Stalfos Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -2101,11 +2126,7 @@ Three Wizzrobe, Switch Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2135,8 +2156,10 @@ Three of a Kind, Pit Chest (Eagle's Tower)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -2160,8 +2183,10 @@ Thunder Drum (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -2195,11 +2220,7 @@ Top Right Horse Heads Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2257,8 +2278,10 @@ Two Spiked Beetle, Zol Chest (Angler's Tunnel)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None) -> Unset Room (None) -> No Name 15
    =>   No Name 15 -> No Name 15 -> D4 Room
@@ -2268,7 +2291,9 @@ Two Stalfos Key (Bottle Grotto)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> D2 Room
    =>   D2 Room -> D2 Room -> D2 Room 2
    =>   D2 Room 2 -> D2 Room 2 -> Two Stalfos Key (Bottle Grotto)
@@ -2293,8 +2318,10 @@ Two Torches Room Chest (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -2316,11 +2343,7 @@ Two Wizzrobe Key (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2361,8 +2384,10 @@ Upper Bomb Locked Watery Chest (Angler's Tunnel)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None) -> Unset Room (None) -> No Name 15
    =>   No Name 15 -> No Name 15 -> D4 Room
@@ -2390,8 +2415,10 @@ Vacuum Mouth Chest (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -2413,8 +2440,10 @@ Watery Statue Chest (Angler's Tunnel)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Unset Room (None)
    =>   Unset Room (None) -> Unset Room (None) -> No Name 15
    =>   No Name 15 -> No Name 15 -> D4 Room
@@ -2439,8 +2468,10 @@ West of Boss Door Ledge Chest (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34
@@ -2469,11 +2500,7 @@ Wind Marimba (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 26
-   =>   No Name 26 -> No Name 26 -> No Name 25
-   =>   No Name 25 -> No Name 25 -> No Name 21
-   =>   No Name 21 -> No Name 21 -> No Name 20
-   =>   No Name 20 -> No Name 20 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -2487,8 +2514,10 @@ Windfish
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> Nightmare
    =>   Nightmare -> Nightmare -> Windfish
    =>   Windfish
@@ -2503,7 +2532,9 @@ Write Cave East (Goponga Swamp)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Swamp
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
    =>   Swamp -> Swamp -> Outside Write's House
    =>   Outside Write's House -> Outside Write's House -> Write's Cave
    =>   Write's Cave -> Write's Cave -> Write Cave East (Goponga Swamp)
@@ -2518,8 +2549,10 @@ Zamboni, Two Zol Key (Turtle Rock)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
+   =>   Forest -> Forest -> Forest Cave
+   =>   Forest Cave -> Forest Cave -> Toadstool (Mysterious Woods)
+   =>   Toadstool (Mysterious Woods) -> Toadstool (Mysterious Woods) -> Swamp
+   =>   Swamp -> Swamp -> No Name 5
    =>   No Name 5 -> No Name 5 -> No Name 32
    =>   No Name 32 -> No Name 32 -> No Name 33
    =>   No Name 33 -> No Name 33 -> No Name 34

@@ -2188,7 +2188,7 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "BOWWOW"
+                  "item": "BowWow"
                 },
                 {
                   "type": "item_check",
@@ -2271,7 +2271,7 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "BOWWOW"
+                  "item": "BowWow"
                 },
                 {
                   "type": "item_check",
@@ -2444,7 +2444,7 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "BOWWOW"
+                  "item": "BowWow"
                 },
                 {
                   "type": "item_check",
@@ -2773,7 +2773,7 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "BOWWOW"
+                  "item": "BowWow"
                 },
                 {
                   "type": "item_check",

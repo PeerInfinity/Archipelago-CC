@@ -813,7 +813,9 @@ Coral Triangle (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -943,7 +945,9 @@ Entrance Hookshottable Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> Entrance Hookshottable Chest (Catfish's Maw)
@@ -993,7 +997,9 @@ Fisher (Martha's Bay)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> Fisher (Martha's Bay)
    =>   Fisher (Martha's Bay)
 Fishing Game Heart Piece (Mabe Village)
@@ -1035,7 +1041,9 @@ Flying Bomb Chest East (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -1070,7 +1078,9 @@ Four Wizzrobe Ledge Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1258,7 +1268,9 @@ In the Moat Heart Piece (Kanalet Castle)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> In the Moat Heart Piece (Kanalet Castle)
    =>   In the Moat Heart Piece (Kanalet Castle)
 Island Bush of Destiny (Martha's Bay)
@@ -1304,7 +1316,9 @@ L2 Bracelet Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1462,7 +1476,9 @@ Mermaid (Martha's Bay)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> Mermaid (Martha's Bay)
    =>   Mermaid (Martha's Bay)
 Mermaid Statue (Martha's Bay)
@@ -1573,7 +1589,9 @@ Nightmare Key/Torch Cross Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -1732,7 +1750,9 @@ Pot Locked Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1786,7 +1806,9 @@ Raft Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1897,7 +1919,9 @@ Spark, Two Iron Mask Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> Spark, Two Iron Mask Chest (Catfish's Maw)
@@ -1906,7 +1930,9 @@ Stairs Across Statues Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1967,7 +1993,9 @@ Switch, Star Above Statues Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1995,7 +2023,9 @@ Swort Stalfos, Star, Bridge Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -2066,7 +2096,9 @@ Tile Room Key (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2080,7 +2112,9 @@ Top Left Horse Heads Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2093,7 +2127,9 @@ Top Right Horse Heads Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2288,7 +2324,9 @@ Water Tektite Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2345,7 +2383,9 @@ Wind Marimba (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> No Name 4
-   =>   No Name 4 -> No Name 4 -> No Name 3
+   =>   No Name 4 -> No Name 4 -> No Name 67
+   =>   No Name 67 -> No Name 67 -> No Name 2
+   =>   No Name 2 -> No Name 2 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2

@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-15T03:44:47.986699",
-    "last_updated": "2025-11-15T04:37:08.799944",
+    "last_updated": "2025-11-15T04:53:43.657522",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1600,7 +1600,7 @@
       }
     },
     "Links Awakening DX.yaml": {
-      "consecutive_passes_before_failure": 10,
+      "consecutive_passes_before_failure": 50,
       "first_failure_reason": null,
       "first_failure_seed": null,
       "individual_results": {
@@ -1612,9 +1612,9 @@
           },
           "game_name": "links_awakening_dx",
           "generation": {
-            "error_count": 295,
+            "error_count": 282,
             "error_type": null,
-            "processing_time_seconds": 7.3,
+            "processing_time_seconds": 7.44,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -1629,7 +1629,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 10.94,
+            "processing_time_seconds": 10.71,
             "return_code": 0,
             "sphere_reached": 15.1,
             "success": true,
@@ -1637,7 +1637,7 @@
             "warning_count": 0
           },
           "template_name": "Links Awakening DX.yaml",
-          "timestamp": "2025-11-15T04:32:12.868853",
+          "timestamp": "2025-11-15T04:38:15.529812",
           "world_info": {
             "exporter_path": "exporter/games/ladx.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
@@ -1656,9 +1656,9 @@
           },
           "game_name": "links_awakening_dx",
           "generation": {
-            "error_count": 283,
+            "error_count": 295,
             "error_type": null,
-            "processing_time_seconds": 7.31,
+            "processing_time_seconds": 7.34,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -1673,7 +1673,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 10.71,
+            "processing_time_seconds": 10.74,
             "return_code": 0,
             "sphere_reached": 15.1,
             "success": true,
@@ -1681,7 +1681,403 @@
             "warning_count": 0
           },
           "template_name": "Links Awakening DX.yaml",
-          "timestamp": "2025-11-15T04:36:50.172333",
+          "timestamp": "2025-11-15T04:41:03.095239",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "11": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 292,
+            "error_type": null,
+            "processing_time_seconds": 7.2,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_89757102641179993453/AP_89757102641179993453_rules.json",
+            "size_bytes": 662299,
+            "size_mb": 0.63
+          },
+          "seed": "11",
+          "seed_id": "AP_89757102641179993453",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.69,
+            "return_code": 0,
+            "sphere_reached": 16.1,
+            "success": true,
+            "total_spheres": 16.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:41:21.652303",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "12": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 301,
+            "error_type": null,
+            "processing_time_seconds": 7.05,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_97195801408842856158/AP_97195801408842856158_rules.json",
+            "size_bytes": 662313,
+            "size_mb": 0.63
+          },
+          "seed": "12",
+          "seed_id": "AP_97195801408842856158",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.44,
+            "return_code": 0,
+            "sphere_reached": 17.2,
+            "success": true,
+            "total_spheres": 17.2,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:41:40.005638",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "13": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 304,
+            "error_type": null,
+            "processing_time_seconds": 7.36,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_97597253031866294651/AP_97597253031866294651_rules.json",
+            "size_bytes": 662323,
+            "size_mb": 0.63
+          },
+          "seed": "13",
+          "seed_id": "AP_97597253031866294651",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.65,
+            "return_code": 0,
+            "sphere_reached": 16.1,
+            "success": true,
+            "total_spheres": 16.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:41:57.962960",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "14": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 328,
+            "error_type": null,
+            "processing_time_seconds": 7.48,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_85815028503973011889/AP_85815028503973011889_rules.json",
+            "size_bytes": 662336,
+            "size_mb": 0.63
+          },
+          "seed": "14",
+          "seed_id": "AP_85815028503973011889",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.66,
+            "return_code": 0,
+            "sphere_reached": 16.1,
+            "success": true,
+            "total_spheres": 16.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:42:16.471888",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "15": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 288,
+            "error_type": null,
+            "processing_time_seconds": 7.24,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_03855006904931195900/AP_03855006904931195900_rules.json",
+            "size_bytes": 662314,
+            "size_mb": 0.63
+          },
+          "seed": "15",
+          "seed_id": "AP_03855006904931195900",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.73,
+            "return_code": 0,
+            "sphere_reached": 17.1,
+            "success": true,
+            "total_spheres": 17.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:42:35.099462",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "16": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 298,
+            "error_type": null,
+            "processing_time_seconds": 7.2,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_63995860912159113643/AP_63995860912159113643_rules.json",
+            "size_bytes": 662309,
+            "size_mb": 0.63
+          },
+          "seed": "16",
+          "seed_id": "AP_63995860912159113643",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.66,
+            "return_code": 0,
+            "sphere_reached": 18.1,
+            "success": true,
+            "total_spheres": 18.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:42:53.548829",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "17": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 278,
+            "error_type": null,
+            "processing_time_seconds": 7.34,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_54611489483343604102/AP_54611489483343604102_rules.json",
+            "size_bytes": 662349,
+            "size_mb": 0.63
+          },
+          "seed": "17",
+          "seed_id": "AP_54611489483343604102",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.73,
+            "return_code": 0,
+            "sphere_reached": 25.1,
+            "success": true,
+            "total_spheres": 25.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:43:11.911524",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "18": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 289,
+            "error_type": null,
+            "processing_time_seconds": 7.23,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_94499266122763165639/AP_94499266122763165639_rules.json",
+            "size_bytes": 662338,
+            "size_mb": 0.63
+          },
+          "seed": "18",
+          "seed_id": "AP_94499266122763165639",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.5,
+            "return_code": 0,
+            "sphere_reached": 18.2,
+            "success": true,
+            "total_spheres": 18.2,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:43:30.464802",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "19": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 281,
+            "error_type": null,
+            "processing_time_seconds": 7.37,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_09600906052635305867/AP_09600906052635305867_rules.json",
+            "size_bytes": 662343,
+            "size_mb": 0.63
+          },
+          "seed": "19",
+          "seed_id": "AP_09600906052635305867",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.62,
+            "return_code": 0,
+            "sphere_reached": 18.1,
+            "success": true,
+            "total_spheres": 18.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:43:48.687126",
           "world_info": {
             "exporter_path": "exporter/games/ladx.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
@@ -1700,9 +2096,9 @@
           },
           "game_name": "links_awakening_dx",
           "generation": {
-            "error_count": 292,
+            "error_count": 288,
             "error_type": null,
-            "processing_time_seconds": 7.39,
+            "processing_time_seconds": 7.18,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -1717,7 +2113,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 11.07,
+            "processing_time_seconds": 10.55,
             "return_code": 0,
             "sphere_reached": 17.1,
             "success": true,
@@ -1725,7 +2121,447 @@
             "warning_count": 0
           },
           "template_name": "Links Awakening DX.yaml",
-          "timestamp": "2025-11-15T04:32:31.590456",
+          "timestamp": "2025-11-15T04:38:34.165578",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "20": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 300,
+            "error_type": null,
+            "processing_time_seconds": 7.12,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_39682733307390651924/AP_39682733307390651924_rules.json",
+            "size_bytes": 662323,
+            "size_mb": 0.63
+          },
+          "seed": "20",
+          "seed_id": "AP_39682733307390651924",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.82,
+            "return_code": 0,
+            "sphere_reached": 18.1,
+            "success": true,
+            "total_spheres": 18.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:44:07.172134",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "21": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 294,
+            "error_type": null,
+            "processing_time_seconds": 7.34,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_99944342256591970567/AP_99944342256591970567_rules.json",
+            "size_bytes": 662311,
+            "size_mb": 0.63
+          },
+          "seed": "21",
+          "seed_id": "AP_99944342256591970567",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.85,
+            "return_code": 0,
+            "sphere_reached": 16.1,
+            "success": true,
+            "total_spheres": 16.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:44:25.594031",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "22": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 288,
+            "error_type": null,
+            "processing_time_seconds": 7.16,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_35184644806190904767/AP_35184644806190904767_rules.json",
+            "size_bytes": 662323,
+            "size_mb": 0.63
+          },
+          "seed": "22",
+          "seed_id": "AP_35184644806190904767",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.85,
+            "return_code": 0,
+            "sphere_reached": 19.1,
+            "success": true,
+            "total_spheres": 19.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:44:44.279372",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "23": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 292,
+            "error_type": null,
+            "processing_time_seconds": 7.7,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_74101984014322865112/AP_74101984014322865112_rules.json",
+            "size_bytes": 662347,
+            "size_mb": 0.63
+          },
+          "seed": "23",
+          "seed_id": "AP_74101984014322865112",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.91,
+            "return_code": 0,
+            "sphere_reached": 15.1,
+            "success": true,
+            "total_spheres": 15.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:45:02.808808",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "24": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 289,
+            "error_type": null,
+            "processing_time_seconds": 7.1,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_21814969940699053273/AP_21814969940699053273_rules.json",
+            "size_bytes": 662310,
+            "size_mb": 0.63
+          },
+          "seed": "24",
+          "seed_id": "AP_21814969940699053273",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.67,
+            "return_code": 0,
+            "sphere_reached": 17.1,
+            "success": true,
+            "total_spheres": 17.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:45:21.896711",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "25": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 308,
+            "error_type": null,
+            "processing_time_seconds": 7.26,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_15558846181041901063/AP_15558846181041901063_rules.json",
+            "size_bytes": 662329,
+            "size_mb": 0.63
+          },
+          "seed": "25",
+          "seed_id": "AP_15558846181041901063",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.73,
+            "return_code": 0,
+            "sphere_reached": 18.1,
+            "success": true,
+            "total_spheres": 18.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:45:40.144751",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "26": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 290,
+            "error_type": null,
+            "processing_time_seconds": 7.29,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_35173002093838367478/AP_35173002093838367478_rules.json",
+            "size_bytes": 662348,
+            "size_mb": 0.63
+          },
+          "seed": "26",
+          "seed_id": "AP_35173002093838367478",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.88,
+            "return_code": 0,
+            "sphere_reached": 17.1,
+            "success": true,
+            "total_spheres": 17.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:45:58.615857",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "27": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 299,
+            "error_type": null,
+            "processing_time_seconds": 7.29,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_54547889238144698858/AP_54547889238144698858_rules.json",
+            "size_bytes": 662311,
+            "size_mb": 0.63
+          },
+          "seed": "27",
+          "seed_id": "AP_54547889238144698858",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.71,
+            "return_code": 0,
+            "sphere_reached": 16.1,
+            "success": true,
+            "total_spheres": 16.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:46:17.269592",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "28": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 283,
+            "error_type": null,
+            "processing_time_seconds": 7.3,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_32140757851607581388/AP_32140757851607581388_rules.json",
+            "size_bytes": 662311,
+            "size_mb": 0.63
+          },
+          "seed": "28",
+          "seed_id": "AP_32140757851607581388",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.71,
+            "return_code": 0,
+            "sphere_reached": 20.1,
+            "success": true,
+            "total_spheres": 20.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:46:35.784287",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "29": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 297,
+            "error_type": null,
+            "processing_time_seconds": 7.05,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_38297580643225274305/AP_38297580643225274305_rules.json",
+            "size_bytes": 662317,
+            "size_mb": 0.63
+          },
+          "seed": "29",
+          "seed_id": "AP_38297580643225274305",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.72,
+            "return_code": 0,
+            "sphere_reached": 16.1,
+            "success": true,
+            "total_spheres": 16.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:46:54.289153",
           "world_info": {
             "exporter_path": "exporter/games/ladx.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
@@ -1744,9 +2580,9 @@
           },
           "game_name": "links_awakening_dx",
           "generation": {
-            "error_count": 282,
+            "error_count": 303,
             "error_type": null,
-            "processing_time_seconds": 7.23,
+            "processing_time_seconds": 7.34,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -1761,7 +2597,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 10.66,
+            "processing_time_seconds": 10.71,
             "return_code": 0,
             "sphere_reached": 15.1,
             "success": true,
@@ -1769,7 +2605,447 @@
             "warning_count": 0
           },
           "template_name": "Links Awakening DX.yaml",
-          "timestamp": "2025-11-15T04:32:50.529338",
+          "timestamp": "2025-11-15T04:38:52.381279",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "30": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 283,
+            "error_type": null,
+            "processing_time_seconds": 6.8,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_51799879832263802842/AP_51799879832263802842_rules.json",
+            "size_bytes": 662335,
+            "size_mb": 0.63
+          },
+          "seed": "30",
+          "seed_id": "AP_51799879832263802842",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.58,
+            "return_code": 0,
+            "sphere_reached": 18.2,
+            "success": true,
+            "total_spheres": 18.2,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:47:12.535795",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "31": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 292,
+            "error_type": null,
+            "processing_time_seconds": 7.0,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_08662188719499160259/AP_08662188719499160259_rules.json",
+            "size_bytes": 662347,
+            "size_mb": 0.63
+          },
+          "seed": "31",
+          "seed_id": "AP_08662188719499160259",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.6,
+            "return_code": 0,
+            "sphere_reached": 23.1,
+            "success": true,
+            "total_spheres": 23.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:47:30.399858",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "32": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 293,
+            "error_type": null,
+            "processing_time_seconds": 7.66,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_35537607521190668771/AP_35537607521190668771_rules.json",
+            "size_bytes": 662326,
+            "size_mb": 0.63
+          },
+          "seed": "32",
+          "seed_id": "AP_35537607521190668771",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.77,
+            "return_code": 0,
+            "sphere_reached": 20.1,
+            "success": true,
+            "total_spheres": 20.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:47:48.492443",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "33": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 293,
+            "error_type": null,
+            "processing_time_seconds": 7.53,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_95319007568278391608/AP_95319007568278391608_rules.json",
+            "size_bytes": 662320,
+            "size_mb": 0.63
+          },
+          "seed": "33",
+          "seed_id": "AP_95319007568278391608",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.9,
+            "return_code": 0,
+            "sphere_reached": 17.1,
+            "success": true,
+            "total_spheres": 17.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:48:07.417234",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "34": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 298,
+            "error_type": null,
+            "processing_time_seconds": 7.27,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_80373793998305251124/AP_80373793998305251124_rules.json",
+            "size_bytes": 662321,
+            "size_mb": 0.63
+          },
+          "seed": "34",
+          "seed_id": "AP_80373793998305251124",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.77,
+            "return_code": 0,
+            "sphere_reached": 20.1,
+            "success": true,
+            "total_spheres": 20.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:48:26.342892",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "35": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 302,
+            "error_type": null,
+            "processing_time_seconds": 7.29,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_50678864083171197547/AP_50678864083171197547_rules.json",
+            "size_bytes": 662308,
+            "size_mb": 0.63
+          },
+          "seed": "35",
+          "seed_id": "AP_50678864083171197547",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.59,
+            "return_code": 0,
+            "sphere_reached": 16.3,
+            "success": true,
+            "total_spheres": 16.3,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:48:44.869376",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "36": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 281,
+            "error_type": null,
+            "processing_time_seconds": 7.51,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_16142130104969173985/AP_16142130104969173985_rules.json",
+            "size_bytes": 662353,
+            "size_mb": 0.63
+          },
+          "seed": "36",
+          "seed_id": "AP_16142130104969173985",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.88,
+            "return_code": 0,
+            "sphere_reached": 17.2,
+            "success": true,
+            "total_spheres": 17.2,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:49:03.240771",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "37": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 282,
+            "error_type": null,
+            "processing_time_seconds": 7.42,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_11211133176964962779/AP_11211133176964962779_rules.json",
+            "size_bytes": 662295,
+            "size_mb": 0.63
+          },
+          "seed": "37",
+          "seed_id": "AP_11211133176964962779",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.83,
+            "return_code": 0,
+            "sphere_reached": 16.1,
+            "success": true,
+            "total_spheres": 16.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:49:22.139238",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "38": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 299,
+            "error_type": null,
+            "processing_time_seconds": 7.1,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_63108654277841947722/AP_63108654277841947722_rules.json",
+            "size_bytes": 662316,
+            "size_mb": 0.63
+          },
+          "seed": "38",
+          "seed_id": "AP_63108654277841947722",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.81,
+            "return_code": 0,
+            "sphere_reached": 15.1,
+            "success": true,
+            "total_spheres": 15.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:49:40.876632",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "39": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 281,
+            "error_type": null,
+            "processing_time_seconds": 7.53,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_60130183190245068718/AP_60130183190245068718_rules.json",
+            "size_bytes": 662357,
+            "size_mb": 0.63
+          },
+          "seed": "39",
+          "seed_id": "AP_60130183190245068718",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 11.05,
+            "return_code": 0,
+            "sphere_reached": 17.1,
+            "success": true,
+            "total_spheres": 17.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:49:59.273496",
           "world_info": {
             "exporter_path": "exporter/games/ladx.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
@@ -1790,7 +3066,7 @@
           "generation": {
             "error_count": 289,
             "error_type": null,
-            "processing_time_seconds": 7.42,
+            "processing_time_seconds": 7.24,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -1805,7 +3081,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 11.02,
+            "processing_time_seconds": 10.6,
             "return_code": 0,
             "sphere_reached": 18.1,
             "success": true,
@@ -1813,7 +3089,447 @@
             "warning_count": 0
           },
           "template_name": "Links Awakening DX.yaml",
-          "timestamp": "2025-11-15T04:33:08.890287",
+          "timestamp": "2025-11-15T04:39:10.895775",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "40": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 265,
+            "error_type": null,
+            "processing_time_seconds": 7.29,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_19034207958950154781/AP_19034207958950154781_rules.json",
+            "size_bytes": 662349,
+            "size_mb": 0.63
+          },
+          "seed": "40",
+          "seed_id": "AP_19034207958950154781",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 11.12,
+            "return_code": 0,
+            "sphere_reached": 22.3,
+            "success": true,
+            "total_spheres": 22.3,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:50:18.369742",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "41": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 294,
+            "error_type": null,
+            "processing_time_seconds": 7.79,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_24575209652760515169/AP_24575209652760515169_rules.json",
+            "size_bytes": 662329,
+            "size_mb": 0.63
+          },
+          "seed": "41",
+          "seed_id": "AP_24575209652760515169",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.76,
+            "return_code": 0,
+            "sphere_reached": 17.1,
+            "success": true,
+            "total_spheres": 17.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:50:37.272069",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "42": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 306,
+            "error_type": null,
+            "processing_time_seconds": 7.22,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_02053695854357871005/AP_02053695854357871005_rules.json",
+            "size_bytes": 662295,
+            "size_mb": 0.63
+          },
+          "seed": "42",
+          "seed_id": "AP_02053695854357871005",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.92,
+            "return_code": 0,
+            "sphere_reached": 17.2,
+            "success": true,
+            "total_spheres": 17.2,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:50:56.337810",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "43": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 296,
+            "error_type": null,
+            "processing_time_seconds": 7.43,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_97511042024992573589/AP_97511042024992573589_rules.json",
+            "size_bytes": 662309,
+            "size_mb": 0.63
+          },
+          "seed": "43",
+          "seed_id": "AP_97511042024992573589",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.48,
+            "return_code": 0,
+            "sphere_reached": 20.1,
+            "success": true,
+            "total_spheres": 20.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:51:15.010394",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "44": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 304,
+            "error_type": null,
+            "processing_time_seconds": 7.33,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_83379661168092499624/AP_83379661168092499624_rules.json",
+            "size_bytes": 662338,
+            "size_mb": 0.63
+          },
+          "seed": "44",
+          "seed_id": "AP_83379661168092499624",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.7,
+            "return_code": 0,
+            "sphere_reached": 17.1,
+            "success": true,
+            "total_spheres": 17.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:51:33.433565",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "45": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 294,
+            "error_type": null,
+            "processing_time_seconds": 7.15,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_63045274676531667076/AP_63045274676531667076_rules.json",
+            "size_bytes": 662320,
+            "size_mb": 0.63
+          },
+          "seed": "45",
+          "seed_id": "AP_63045274676531667076",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.71,
+            "return_code": 0,
+            "sphere_reached": 16.2,
+            "success": true,
+            "total_spheres": 16.2,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:51:51.952606",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "46": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 322,
+            "error_type": null,
+            "processing_time_seconds": 7.92,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_56749254662246730086/AP_56749254662246730086_rules.json",
+            "size_bytes": 662345,
+            "size_mb": 0.63
+          },
+          "seed": "46",
+          "seed_id": "AP_56749254662246730086",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.71,
+            "return_code": 0,
+            "sphere_reached": 16.1,
+            "success": true,
+            "total_spheres": 16.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:52:10.322322",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "47": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 283,
+            "error_type": null,
+            "processing_time_seconds": 7.31,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_56493618142060386465/AP_56493618142060386465_rules.json",
+            "size_bytes": 662305,
+            "size_mb": 0.63
+          },
+          "seed": "47",
+          "seed_id": "AP_56493618142060386465",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.81,
+            "return_code": 0,
+            "sphere_reached": 17.1,
+            "success": true,
+            "total_spheres": 17.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:52:29.437641",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "48": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 299,
+            "error_type": null,
+            "processing_time_seconds": 7.65,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_24265836188415562305/AP_24265836188415562305_rules.json",
+            "size_bytes": 662313,
+            "size_mb": 0.63
+          },
+          "seed": "48",
+          "seed_id": "AP_24265836188415562305",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.91,
+            "return_code": 0,
+            "sphere_reached": 15.1,
+            "success": true,
+            "total_spheres": 15.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:52:48.057081",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "49": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 308,
+            "error_type": null,
+            "processing_time_seconds": 7.14,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_61691997546595962621/AP_61691997546595962621_rules.json",
+            "size_bytes": 662309,
+            "size_mb": 0.63
+          },
+          "seed": "49",
+          "seed_id": "AP_61691997546595962621",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.71,
+            "return_code": 0,
+            "sphere_reached": 25.1,
+            "success": true,
+            "total_spheres": 25.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:53:07.104453",
           "world_info": {
             "exporter_path": "exporter/games/ladx.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
@@ -1832,9 +3548,9 @@
           },
           "game_name": "links_awakening_dx",
           "generation": {
-            "error_count": 286,
+            "error_count": 298,
             "error_type": null,
-            "processing_time_seconds": 6.94,
+            "processing_time_seconds": 7.58,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -1849,7 +3565,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 10.73,
+            "processing_time_seconds": 10.89,
             "return_code": 0,
             "sphere_reached": 16.1,
             "success": true,
@@ -1857,7 +3573,51 @@
             "warning_count": 0
           },
           "template_name": "Links Awakening DX.yaml",
-          "timestamp": "2025-11-15T04:33:27.843588",
+          "timestamp": "2025-11-15T04:39:29.221111",
+          "world_info": {
+            "exporter_path": "exporter/games/ladx.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+            "game_name_from_yaml": "Links Awakening DX",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "links_awakening_dx",
+            "world_directory": "ladx"
+          }
+        },
+        "50": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "links_awakening_dx",
+          "generation": {
+            "error_count": 292,
+            "error_type": null,
+            "processing_time_seconds": 6.72,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/ladx/AP_52678281861948935777/AP_52678281861948935777_rules.json",
+            "size_bytes": 662345,
+            "size_mb": 0.63
+          },
+          "seed": "50",
+          "seed_id": "AP_52678281861948935777",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.84,
+            "return_code": 0,
+            "sphere_reached": 15.1,
+            "success": true,
+            "total_spheres": 15.1,
+            "warning_count": 0
+          },
+          "template_name": "Links Awakening DX.yaml",
+          "timestamp": "2025-11-15T04:53:25.441170",
           "world_info": {
             "exporter_path": "exporter/games/ladx.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
@@ -1876,9 +3636,9 @@
           },
           "game_name": "links_awakening_dx",
           "generation": {
-            "error_count": 298,
+            "error_count": 291,
             "error_type": null,
-            "processing_time_seconds": 7.04,
+            "processing_time_seconds": 7.52,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -1893,7 +3653,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 10.77,
+            "processing_time_seconds": 11.04,
             "return_code": 0,
             "sphere_reached": 19.1,
             "success": true,
@@ -1901,7 +3661,7 @@
             "warning_count": 0
           },
           "template_name": "Links Awakening DX.yaml",
-          "timestamp": "2025-11-15T04:33:45.981128",
+          "timestamp": "2025-11-15T04:39:48.203974",
           "world_info": {
             "exporter_path": "exporter/games/ladx.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
@@ -1920,9 +3680,9 @@
           },
           "game_name": "links_awakening_dx",
           "generation": {
-            "error_count": 281,
+            "error_count": 306,
             "error_type": null,
-            "processing_time_seconds": 7.27,
+            "processing_time_seconds": 7.37,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -1937,7 +3697,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 10.66,
+            "processing_time_seconds": 10.6,
             "return_code": 0,
             "sphere_reached": 19.2,
             "success": true,
@@ -1945,7 +3705,7 @@
             "warning_count": 0
           },
           "template_name": "Links Awakening DX.yaml",
-          "timestamp": "2025-11-15T04:35:55.001876",
+          "timestamp": "2025-11-15T04:40:07.273221",
           "world_info": {
             "exporter_path": "exporter/games/ladx.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
@@ -1964,9 +3724,9 @@
           },
           "game_name": "links_awakening_dx",
           "generation": {
-            "error_count": 287,
+            "error_count": 298,
             "error_type": null,
-            "processing_time_seconds": 7.07,
+            "processing_time_seconds": 7.36,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -1981,7 +3741,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 10.71,
+            "processing_time_seconds": 10.74,
             "return_code": 0,
             "sphere_reached": 15.1,
             "success": true,
@@ -1989,7 +3749,7 @@
             "warning_count": 0
           },
           "template_name": "Links Awakening DX.yaml",
-          "timestamp": "2025-11-15T04:36:13.425944",
+          "timestamp": "2025-11-15T04:40:25.734224",
           "world_info": {
             "exporter_path": "exporter/games/ladx.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
@@ -2008,9 +3768,9 @@
           },
           "game_name": "links_awakening_dx",
           "generation": {
-            "error_count": 312,
+            "error_count": 299,
             "error_type": null,
-            "processing_time_seconds": 7.34,
+            "processing_time_seconds": 7.52,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -2025,7 +3785,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 10.67,
+            "processing_time_seconds": 10.78,
             "return_code": 0,
             "sphere_reached": 16.2,
             "success": true,
@@ -2033,7 +3793,7 @@
             "warning_count": 0
           },
           "template_name": "Links Awakening DX.yaml",
-          "timestamp": "2025-11-15T04:36:31.691509",
+          "timestamp": "2025-11-15T04:40:44.311676",
           "world_info": {
             "exporter_path": "exporter/games/ladx.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
@@ -2045,9 +3805,9 @@
           }
         }
       },
-      "seed_range": "1-10",
+      "seed_range": "1-50",
       "seeds_failed": 0,
-      "seeds_passed": 10,
+      "seeds_passed": 50,
       "stop_on_failure": true,
       "summary": {
         "all_passed": true,
@@ -2055,8 +3815,8 @@
         "failure_rate": 0.0
       },
       "template_name": "Links Awakening DX.yaml",
-      "timestamp": "2025-11-15T04:35:54.925681",
-      "total_seeds_tested": 10
+      "timestamp": "2025-11-15T04:38:15.443488",
+      "total_seeds_tested": 50
     },
     "Lufia II Ancient Cave.yaml": {
       "analysis": {

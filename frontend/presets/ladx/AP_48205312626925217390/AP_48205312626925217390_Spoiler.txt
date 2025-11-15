@@ -705,11 +705,8 @@ Conch Horn (Bottle Grotto)
 Coral Triangle (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -854,11 +851,8 @@ Entrance Chest (Color Dungeon)
 Entrance Hookshottable Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> Entrance Hookshottable Chest (Catfish's Maw)
@@ -929,11 +923,8 @@ First Switch Locked Chest (Bottle Grotto)
 Fisher (Martha's Bay)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> Fisher (Martha's Bay)
    =>   Fisher (Martha's Bay)
 Fishing Game Heart Piece (Mabe Village)
@@ -974,11 +965,8 @@ Flipper Locked Before Boots Pit Chest (Angler's Tunnel)
 Flying Bomb Chest South (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -987,11 +975,8 @@ Flying Bomb Chest South (Catfish's Maw)
 Flying Heart, Statue Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1025,11 +1010,8 @@ Four Ropes Pot Chest (Turtle Rock)
 Four Wizzrobe Ledge Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1188,11 +1170,8 @@ Hot Head Heart Container (Turtle Rock)
 In the Moat Heart Piece (Kanalet Castle)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> In the Moat Heart Piece (Kanalet Castle)
    =>   In the Moat Heart Piece (Kanalet Castle)
 Island Bush of Destiny (Martha's Bay)
@@ -1212,11 +1191,8 @@ Kiki (Ukuku Prairie)
 L2 Bracelet Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1393,11 +1369,8 @@ Mask-Mimic Key (Bottle Grotto)
 Master Stalfos Item (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -1409,11 +1382,8 @@ Master Stalfos Item (Catfish's Maw)
 Mermaid (Martha's Bay)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> Mermaid (Martha's Bay)
    =>   Mermaid (Martha's Bay)
 Mermaid Statue (Martha's Bay)
@@ -1426,11 +1396,8 @@ Mermaid Statue (Martha's Bay)
 Mini-Moldorm, Spark Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1558,11 +1525,8 @@ Nightmare Key/After Grim Creeper Chest (Eagle's Tower)
 Nightmare Key/Torch Cross Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -1701,11 +1665,8 @@ RAFT
 Raft Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1879,11 +1840,8 @@ Switch Wrapped Chest (Eagle's Tower)
 Switch, Star Above Statues Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -1899,11 +1857,8 @@ Sword on the Beach (Toronbo Shores)
 Swort Stalfos, Star, Bridge Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -1938,11 +1893,8 @@ Three Bombite Key (Key Cavern)
 Three Iron Mask Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -1951,11 +1903,8 @@ Three Iron Mask Chest (Catfish's Maw)
 Three Stalfos Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -1966,11 +1915,8 @@ Three Stalfos Chest (Catfish's Maw)
 Three Wizzrobe, Switch Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2040,11 +1986,8 @@ Thunder Drum (Turtle Rock)
 Tile Room Key (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2064,11 +2007,8 @@ Toadstool (Mysterious Woods)
 Top Left Horse Heads Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2080,11 +2020,8 @@ Top Left Horse Heads Chest (Face Shrine)
 Top Right Horse Heads Chest (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2158,11 +2095,8 @@ Two Stalfos Key (Bottle Grotto)
 Two Stalfos, Star Pit Chest (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2
@@ -2212,11 +2146,8 @@ Two Torches Room Chest (Turtle Rock)
 Two Wizzrobe Key (Face Shrine)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 74
    =>   No Name 74 -> No Name 74 -> No Name 75
    =>   No Name 75 -> No Name 75 -> No Name 76
@@ -2362,11 +2293,8 @@ West of Ghost House Chest (Toronbo Shores)
 Wind Marimba (Catfish's Maw)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
-   =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> Graveyard
-   =>   Graveyard -> Graveyard -> No Name 5
-   =>   No Name 5 -> No Name 5 -> Unset Room (None)
-   =>   Unset Room (None) -> Unset Room (None) -> No Name 3
+   =>   Mabe Village -> Mabe Village -> No Name 4
+   =>   No Name 4 -> No Name 4 -> No Name 3
    =>   No Name 3 -> No Name 3 -> No Name 73
    =>   No Name 73 -> No Name 73 -> D5 Room
    =>   D5 Room -> D5 Room -> D5 Room 2

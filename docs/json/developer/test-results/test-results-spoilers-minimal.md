@@ -4,11 +4,11 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-15 04:37:08
+**Generated:** 2025-11-15 04:53:43
 
 **Source Data Created:** 2025-11-15T03:44:47.986699
 
-**Source Data Last Updated:** 2025-11-15T04:37:08.575702
+**Source Data Last Updated:** 2025-11-15T04:53:43.419832
 
 ## Summary
 
@@ -52,7 +52,7 @@
 | Kirby's Dream Land 3 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Lingo | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
-| Links Awakening DX | ✅ Passed seeds 1-10 | 295 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
+| Links Awakening DX | ✅ Passed seeds 1-50 | 282 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | MathProof2p2e4 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |

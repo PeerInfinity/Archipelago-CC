@@ -1,0 +1,764 @@
+Found 82 template files (1 testable, 81 filtered by include list (1 requested))
+Not included: 81 files (too many to list)
+Backup of existing results saved to: test-results_backup_2025-11-15_04-38-15.json
+Results will be saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+Timestamped backup will be saved to: test-results_2025-11-15_04-38-15.json
+Testing templates from: /home/user/Archipelago-CC/Players/Templates
+Building world mapping...
+World mapping built successfully
+Testing seed range: 1-50 (50 seeds)
+Will stop at first failure (default behavior)
+Starting batch processing of 1 templates...
+
+[1/1] Processing Links Awakening DX.yaml
+
+=== Testing Links Awakening DX.yaml with 50 seeds ===
+
+--- Seed 1 (1/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 31.7 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 1
+  [Memory] Links Awakening DX.yaml - after generation: 31.7 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=1
+  [Memory] Links Awakening DX.yaml - after spoiler test: 33.1 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=282, Sphere Reached=15.1, Max Spheres=15.1
+✅ Seed 1 PASSED
+
+--- Seed 2 (2/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 31.9 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 2
+  [Memory] Links Awakening DX.yaml - after generation: 31.9 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=2
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.4 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=288, Sphere Reached=17.1, Max Spheres=17.1
+✅ Seed 2 PASSED
+
+--- Seed 3 (3/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 33.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 3
+  [Memory] Links Awakening DX.yaml - after generation: 33.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=3
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.4 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=303, Sphere Reached=15.1, Max Spheres=15.1
+✅ Seed 3 PASSED
+
+--- Seed 4 (4/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 33.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 4
+  [Memory] Links Awakening DX.yaml - after generation: 33.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=4
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.4 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=289, Sphere Reached=18.1, Max Spheres=18.1
+✅ Seed 4 PASSED
+
+--- Seed 5 (5/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.1 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 5
+  [Memory] Links Awakening DX.yaml - after generation: 32.1 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=5
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=298, Sphere Reached=16.1, Max Spheres=16.1
+✅ Seed 5 PASSED
+
+--- Seed 6 (6/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 33.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 6
+  [Memory] Links Awakening DX.yaml - after generation: 33.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=6
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.4 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=291, Sphere Reached=19.1, Max Spheres=19.1
+✅ Seed 6 PASSED
+
+--- Seed 7 (7/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.1 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 7
+  [Memory] Links Awakening DX.yaml - after generation: 32.1 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=7
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.4 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=306, Sphere Reached=19.2, Max Spheres=19.2
+✅ Seed 7 PASSED
+
+--- Seed 8 (8/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.1 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 8
+  [Memory] Links Awakening DX.yaml - after generation: 32.1 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=8
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=298, Sphere Reached=15.1, Max Spheres=15.1
+✅ Seed 8 PASSED
+
+--- Seed 9 (9/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.1 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 9
+  [Memory] Links Awakening DX.yaml - after generation: 32.1 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=9
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=299, Sphere Reached=16.2, Max Spheres=16.2
+✅ Seed 9 PASSED
+
+--- Seed 10 (10/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 10
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=10
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=295, Sphere Reached=15.1, Max Spheres=15.1
+✅ Seed 10 PASSED
+
+--- Seed 11 (11/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 11
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=11
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=292, Sphere Reached=16.1, Max Spheres=16.1
+✅ Seed 11 PASSED
+
+--- Seed 12 (12/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 12
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=12
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=301, Sphere Reached=17.2, Max Spheres=17.2
+✅ Seed 12 PASSED
+
+--- Seed 13 (13/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 13
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=13
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=304, Sphere Reached=16.1, Max Spheres=16.1
+✅ Seed 13 PASSED
+
+--- Seed 14 (14/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 14
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=14
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=328, Sphere Reached=16.1, Max Spheres=16.1
+✅ Seed 14 PASSED
+
+--- Seed 15 (15/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 15
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=15
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=288, Sphere Reached=17.1, Max Spheres=17.1
+✅ Seed 15 PASSED
+
+--- Seed 16 (16/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 16
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=16
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.6 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=298, Sphere Reached=18.1, Max Spheres=18.1
+✅ Seed 16 PASSED
+
+--- Seed 17 (17/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 17
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=17
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=278, Sphere Reached=25.1, Max Spheres=25.1
+✅ Seed 17 PASSED
+
+--- Seed 18 (18/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 18
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=18
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=289, Sphere Reached=18.2, Max Spheres=18.2
+✅ Seed 18 PASSED
+
+--- Seed 19 (19/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 19
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=19
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=281, Sphere Reached=18.1, Max Spheres=18.1
+✅ Seed 19 PASSED
+
+--- Seed 20 (20/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 20
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=20
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.6 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=300, Sphere Reached=18.1, Max Spheres=18.1
+✅ Seed 20 PASSED
+
+--- Seed 21 (21/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 21
+  [Memory] Links Awakening DX.yaml - after generation: 32.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=21
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.6 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=294, Sphere Reached=16.1, Max Spheres=16.1
+✅ Seed 21 PASSED
+
+--- Seed 22 (22/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 22
+  [Memory] Links Awakening DX.yaml - after generation: 32.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=22
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.5 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=288, Sphere Reached=19.1, Max Spheres=19.1
+✅ Seed 22 PASSED
+
+--- Seed 23 (23/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 23
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=23
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.6 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=292, Sphere Reached=15.1, Max Spheres=15.1
+✅ Seed 23 PASSED
+
+--- Seed 24 (24/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.2 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 24
+  [Memory] Links Awakening DX.yaml - after generation: 32.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=24
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.6 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=289, Sphere Reached=17.1, Max Spheres=17.1
+✅ Seed 24 PASSED
+
+--- Seed 25 (25/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 25
+  [Memory] Links Awakening DX.yaml - after generation: 32.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=25
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.6 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=308, Sphere Reached=18.1, Max Spheres=18.1
+✅ Seed 25 PASSED
+
+--- Seed 26 (26/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 26
+  [Memory] Links Awakening DX.yaml - after generation: 32.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=26
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.6 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=290, Sphere Reached=17.1, Max Spheres=17.1
+✅ Seed 26 PASSED
+
+--- Seed 27 (27/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 27
+  [Memory] Links Awakening DX.yaml - after generation: 32.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=27
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.7 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=299, Sphere Reached=16.1, Max Spheres=16.1
+✅ Seed 27 PASSED
+
+--- Seed 28 (28/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 28
+  [Memory] Links Awakening DX.yaml - after generation: 32.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=28
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.7 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=283, Sphere Reached=20.1, Max Spheres=20.1
+✅ Seed 28 PASSED
+
+--- Seed 29 (29/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 29
+  [Memory] Links Awakening DX.yaml - after generation: 32.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=29
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.6 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=297, Sphere Reached=16.1, Max Spheres=16.1
+✅ Seed 29 PASSED
+
+--- Seed 30 (30/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 30
+  [Memory] Links Awakening DX.yaml - after generation: 32.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=30
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.6 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=283, Sphere Reached=18.2, Max Spheres=18.2
+✅ Seed 30 PASSED
+
+--- Seed 31 (31/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 31
+  [Memory] Links Awakening DX.yaml - after generation: 32.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=31
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.6 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=292, Sphere Reached=23.1, Max Spheres=23.1
+✅ Seed 31 PASSED
+
+--- Seed 32 (32/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 32
+  [Memory] Links Awakening DX.yaml - after generation: 32.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=32
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.6 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=293, Sphere Reached=20.1, Max Spheres=20.1
+✅ Seed 32 PASSED
+
+--- Seed 33 (33/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 33
+  [Memory] Links Awakening DX.yaml - after generation: 32.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=33
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.6 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=293, Sphere Reached=17.1, Max Spheres=17.1
+✅ Seed 33 PASSED
+
+--- Seed 34 (34/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.3 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 34
+  [Memory] Links Awakening DX.yaml - after generation: 32.3 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=34
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.7 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=298, Sphere Reached=20.1, Max Spheres=20.1
+✅ Seed 34 PASSED
+
+--- Seed 35 (35/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 35
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=35
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.7 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=302, Sphere Reached=16.3, Max Spheres=16.3
+✅ Seed 35 PASSED
+
+--- Seed 36 (36/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 36
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=36
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.7 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=281, Sphere Reached=17.2, Max Spheres=17.2
+✅ Seed 36 PASSED
+
+--- Seed 37 (37/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 37
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=37
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.7 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=282, Sphere Reached=16.1, Max Spheres=16.1
+✅ Seed 37 PASSED
+
+--- Seed 38 (38/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 33.5 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 38
+  [Memory] Links Awakening DX.yaml - after generation: 33.5 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=38
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.8 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=299, Sphere Reached=15.1, Max Spheres=15.1
+✅ Seed 38 PASSED
+
+--- Seed 39 (39/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 39
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=39
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.7 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=281, Sphere Reached=17.1, Max Spheres=17.1
+✅ Seed 39 PASSED
+
+--- Seed 40 (40/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 40
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=40
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.7 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=265, Sphere Reached=22.3, Max Spheres=22.3
+✅ Seed 40 PASSED
+
+--- Seed 41 (41/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 41
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=41
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.7 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=294, Sphere Reached=17.1, Max Spheres=17.1
+✅ Seed 41 PASSED
+
+--- Seed 42 (42/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 42
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=42
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.8 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=306, Sphere Reached=17.2, Max Spheres=17.2
+✅ Seed 42 PASSED
+
+--- Seed 43 (43/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 43
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=43
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.8 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=296, Sphere Reached=20.1, Max Spheres=20.1
+✅ Seed 43 PASSED
+
+--- Seed 44 (44/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 44
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=44
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.8 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=304, Sphere Reached=17.1, Max Spheres=17.1
+✅ Seed 44 PASSED
+
+--- Seed 45 (45/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 45
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=45
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.7 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=294, Sphere Reached=16.2, Max Spheres=16.2
+✅ Seed 45 PASSED
+
+--- Seed 46 (46/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 46
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=46
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.8 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=322, Sphere Reached=16.1, Max Spheres=16.1
+✅ Seed 46 PASSED
+
+--- Seed 47 (47/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.5 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 47
+  [Memory] Links Awakening DX.yaml - after generation: 32.5 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=47
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.7 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=283, Sphere Reached=17.1, Max Spheres=17.1
+✅ Seed 47 PASSED
+
+--- Seed 48 (48/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 48
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=48
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.7 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=299, Sphere Reached=15.1, Max Spheres=15.1
+✅ Seed 48 PASSED
+
+--- Seed 49 (49/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 49
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=49
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.8 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=308, Sphere Reached=25.1, Max Spheres=25.1
+✅ Seed 49 PASSED
+
+--- Seed 50 (50/50) ---
+
+=== Testing Links Awakening DX.yaml ===
+  [Memory] Links Awakening DX.yaml - start: 32.4 MB RSS
+Running Generate.py for Links Awakening DX.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Links Awakening DX.yaml --multi 1 --seed 50
+  [Memory] Links Awakening DX.yaml - after generation: 32.4 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=ladx --seed=50
+  [Memory] Links Awakening DX.yaml - after spoiler test: 34.8 MB RSS
+Running test analysis...
+Completed Links Awakening DX.yaml: Generation=[PASS], Test=[PASS], Gen Errors=292, Sphere Reached=15.1, Max Spheres=15.1
+✅ Seed 50 PASSED
+
+=== Seed Range Summary for Links Awakening DX.yaml ===
+Seeds tested: 50
+Passed: 50
+Failed: 0
+🎉 All 50 seeds passed!
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Processing full spoiler test results...
+  ✓ Full spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-full.md
+  Processing multiplayer test results...
+  ✓ Multiplayer chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiplayer.md
+  Processing multiworld test results...
+  ✓ Multiworld chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiworld.md
+  Processing multitemplate minimal test results...
+  ✓ Multitemplate minimal chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-minimal.md
+  Processing multitemplate full test results...
+  ✓ Multitemplate full chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-full.md
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+Timestamped results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results_2025-11-15_04-38-15.json
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Testing Complete ===
+Processed 1 templates
+Total batch processing time: 928.2 seconds (15.5 minutes)
+Average time per template: 928.2 seconds
+Timestamped results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results_2025-11-15_04-38-15.json
+Merged results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Final Summary ===
+Seed Range Testing Results (50 seeds per template):
+  ✅ Links Awakening DX.yaml: All 50 seeds passed
+
+Overall Seed Range Summary:
+  Templates with all seeds passing: 1
+  Templates with some failures: 0
+  Average consecutive passes before failure: 50.0
