@@ -316,6 +316,248 @@ export function protoss_stalker_upgrade(snapshot, staticData) {
         && has_any(snapshot, ['Stalker', 'Instigator', 'Slayer']);
 }
 
+// Zerg helpers
+
+/**
+ * Zerg competent anti-air
+ */
+export function zerg_competent_anti_air(snapshot, staticData) {
+    const advancedTactics = isAdvancedTactics(staticData);
+
+    return has_any(snapshot, ['Hydralisk', 'Mutalisk', 'Corruptor', 'Brood Queen'])
+        || has_all(snapshot, ['Swarm Host', 'Pressurized Glands (Swarm Host)'])
+        || has_all(snapshot, ['Scourge', 'Resource Efficiency (Scourge)'])
+        || (advancedTactics && has(snapshot, 'Infestor'));
+}
+
+/**
+ * Zerg basic anti-air
+ */
+export function zerg_basic_anti_air(snapshot, staticData) {
+    const advancedTactics = isAdvancedTactics(staticData);
+    const kerriganUnitAvailable = staticData?.settings?.kerrigan_unit_available || false;
+
+    // Check if zerg_competent_anti_air is satisfied
+    if (zerg_competent_anti_air(snapshot, staticData)) {
+        return true;
+    }
+
+    // Check if Kerrigan is available as a unit
+    if (kerriganUnitAvailable) {
+        return true;
+    }
+
+    // Check for basic anti-air units
+    if (has_any(snapshot, ['Swarm Queen', 'Scourge'])) {
+        return true;
+    }
+
+    // Advanced tactics allows Spore Crawler
+    if (advancedTactics && has(snapshot, 'Spore Crawler')) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Morph Brood Lord
+ */
+export function morph_brood_lord(snapshot, staticData) {
+    return has_any(snapshot, ['Mutalisk', 'Corruptor'])
+        && has(snapshot, 'Brood Lord Aspect (Mutalisk/Corruptor)');
+}
+
+/**
+ * Morph Viper
+ */
+export function morph_viper(snapshot, staticData) {
+    return has_any(snapshot, ['Mutalisk', 'Corruptor'])
+        && has(snapshot, 'Viper Aspect (Mutalisk/Corruptor)');
+}
+
+/**
+ * Morph Impaler or Lurker
+ */
+export function morph_impaler_or_lurker(snapshot, staticData) {
+    return has(snapshot, 'Hydralisk')
+        && has_any(snapshot, ['Impaler Aspect (Hydralisk)', 'Lurker Aspect (Hydralisk)']);
+}
+
+/**
+ * Zerg competent composition
+ */
+export function zerg_competent_comp(snapshot, staticData) {
+    const advanced = isAdvancedTactics(staticData);
+
+    const coreUnit = has_any(snapshot, ['Roach', 'Aberration', 'Zergling']);
+    const supportUnit = has_any(snapshot, ['Swarm Queen', 'Hydralisk'])
+        || morph_brood_lord(snapshot, staticData)
+        || (advanced && (has_any(snapshot, ['Infestor', 'Defiler']) || morph_viper(snapshot, staticData)));
+
+    if (coreUnit && supportUnit) {
+        return true;
+    }
+
+    const vespeneUnit = has_any(snapshot, ['Ultralisk', 'Aberration'])
+        || (advanced && morph_viper(snapshot, staticData));
+    return vespeneUnit && has_any(snapshot, ['Zergling', 'Swarm Queen']);
+}
+
+/**
+ * Spread creep
+ */
+export function spread_creep(snapshot, staticData) {
+    return isAdvancedTactics(staticData) || has(snapshot, 'Swarm Queen');
+}
+
+/**
+ * Two Kerrigan actives - check if player has at least 2 tiers of active abilities
+ */
+export function two_kerrigan_actives(snapshot, staticData) {
+    // kerrigan_actives is a list of sets, one for each progression tier
+    // The tier numbers in item names don't match array indices
+    const kerriganActivesTiers = [
+        ['Kinetic Blast (Kerrigan Tier 1)', 'Leaping Strike (Kerrigan Tier 1)'],
+        ['Crushing Grip (Kerrigan Tier 2)', 'Psionic Shift (Kerrigan Tier 2)'],
+        [],  // Tier 2 has no actives
+        ['Wild Mutation (Kerrigan Tier 4)', 'Spawn Banelings (Kerrigan Tier 1)', 'Mend (Kerrigan Tier 4)'],
+        [],  // Tier 4 has no actives
+        [],  // Tier 5 has no actives
+        ['Apocalypse (Kerrigan Tier 7)', 'Spawn Leviathan (Kerrigan Tier 7)', 'Drop-Pods (Kerrigan Tier 7)']
+    ];
+
+    let count = 0;
+    for (const tier of kerriganActivesTiers) {
+        if (tier.length > 0 && has_any(snapshot, tier)) {
+            count++;
+        }
+    }
+
+    return count >= 2;
+}
+
+/**
+ * Basic Kerrigan - check if player has basic Kerrigan setup
+ */
+export function basic_kerrigan(snapshot, staticData) {
+    const advancedTactics = isAdvancedTactics(staticData);
+
+    // List of active abilities that can defeat enemies directly
+    const directCombatAbilities = [
+        'Kinetic Blast (Kerrigan Tier 1)',
+        'Leaping Strike (Kerrigan Tier 1)',
+        'Crushing Grip (Kerrigan Tier 2)',
+        'Psionic Shift (Kerrigan Tier 2)',
+        'Spawn Banelings (Kerrigan Tier 1)'
+    ];
+
+    // On standard tactics (not advanced), require at least one direct combat ability
+    if (!advancedTactics && !has_any(snapshot, directCombatAbilities)) {
+        return false;
+    }
+
+    // All non-ultimate Kerrigan abilities
+    const kerriganAbilities = [
+        'Kinetic Blast (Kerrigan Tier 1)',
+        'Leaping Strike (Kerrigan Tier 1)',
+        'Heroic Fortitude (Kerrigan Tier 1)',
+        'Chain Reaction (Kerrigan Tier 2)',
+        'Crushing Grip (Kerrigan Tier 2)',
+        'Psionic Shift (Kerrigan Tier 2)',
+        'Spawn Banelings (Kerrigan Tier 1)',
+        'Infest Broodlings (Kerrigan Tier 6)',
+        'Fury (Kerrigan Tier 6)'
+    ];
+
+    // Count how many non-ultimate abilities the player has
+    let count = 0;
+    for (const ability of kerriganAbilities) {
+        if (has(snapshot, ability)) {
+            count++;
+            if (count >= 2) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Kerrigan levels - check if player has enough Kerrigan levels
+ */
+export function kerrigan_levels(snapshot, staticData, target) {
+    const settings = staticData?.settings || {};
+    const storyLevelsGranted = settings.story_levels_granted || false;
+    const kerriganUnitAvailable = settings.kerrigan_unit_available || false;
+
+    // If story levels are granted or Kerrigan is not available as a unit, levels are granted
+    if (storyLevelsGranted || !kerriganUnitAvailable) {
+        return true;
+    }
+
+    // For item placement (not pool filtering), calculate actual levels
+    // Check if we're in item placement mode
+    const isItemPlacement = snapshot?.inventory && Object.keys(snapshot.inventory).length > 0;
+
+    const levelsPerMissionCompleted = settings.kerrigan_levels_per_mission_completed || 0;
+    const levelsPerMissionCap = settings.kerrigan_levels_per_mission_completed_cap || 0;
+
+    if (levelsPerMissionCompleted > 0 && levelsPerMissionCap > 0 && !isItemPlacement) {
+        // Pool filtering - assume missions will be completed
+        return true;
+    }
+
+    // Calculate levels from missions beaten
+    let levels = 0;
+
+    // Count Beat missions (missions in the Missions group)
+    const inventory = snapshot?.inventory || {};
+    let missionCount = 0;
+    for (const [itemName, itemCount] of Object.entries(inventory)) {
+        if (itemName.startsWith('Beat ')) {
+            missionCount += itemCount;
+        }
+    }
+
+    levels = levelsPerMissionCompleted * missionCount;
+    if (levelsPerMissionCap !== -1) {
+        levels = Math.min(levels, levelsPerMissionCap);
+    }
+
+    // Add levels from Kerrigan level items
+    const kerriganLevelItems = {
+        'Kerrigan Level 1': 1,
+        'Kerrigan Level 2': 2,
+        'Kerrigan Level 3': 3,
+        'Kerrigan Level 4': 4,
+        'Kerrigan Level 5': 5,
+        'Kerrigan Level 6': 6,
+        'Kerrigan Level 7': 7,
+        'Kerrigan Level 8': 8,
+        'Kerrigan Level 9': 9,
+        'Kerrigan Level 10': 10,
+        'Kerrigan Level 11': 11,
+        'Kerrigan Level 12': 12,
+        'Kerrigan Level 13': 13,
+        'Kerrigan Level 14': 14
+    };
+
+    for (const [itemName, levelAmount] of Object.entries(kerriganLevelItems)) {
+        const itemCount = count(snapshot, itemName);
+        levels += itemCount * levelAmount;
+    }
+
+    // Apply total level cap
+    const totalLevelCap = settings.kerrigan_total_level_cap || -1;
+    if (totalLevelCap !== -1) {
+        levels = Math.min(levels, totalLevelCap);
+    }
+
+    return levels >= target;
+}
+
 // Export all helpers
 export default {
     terran_common_unit,
@@ -330,7 +572,95 @@ export default {
 
     // Add stubs for all other helpers that may be needed
     // These will return false for now and can be implemented as needed
-    terran_defense_rating: () => 0,
+    terran_defense_rating: (snapshot, staticData, zergEnemy, airEnemy = true) => {
+        // Base defense ratings for units
+        const defenseRatings = {
+            'Siege Tank': 5,
+            'Planetary Fortress': 3,
+            'Perdition Turret': 2,
+            'Vulture': 1,
+            'Banshee': 1,
+            'Battlecruiser': 1,
+            'Liberator': 4,
+            'Widow Mine': 1
+        };
+
+        // Zerg-specific defense ratings
+        const zergDefenseRatings = {
+            'Perdition Turret': 2,
+            'Liberator': -2,  // Liberator is worse against zerg
+            'Hive Mind Emulator': 3,
+            'Psi Disrupter': 3
+        };
+
+        // Air-specific defense ratings
+        const airDefenseRatings = {
+            'Missile Turret': 2
+        };
+
+        let defenseScore = 0;
+
+        // Sum base defense ratings
+        for (const [item, rating] of Object.entries(defenseRatings)) {
+            if (has(snapshot, item)) {
+                defenseScore += rating;
+            }
+        }
+
+        // Manned Bunker
+        if (has_any(snapshot, ['Marine', 'Marauder']) && has(snapshot, 'Bunker')) {
+            defenseScore += 3;
+        } else if (zergEnemy && has(snapshot, 'Firebat') && has(snapshot, 'Bunker')) {
+            defenseScore += 2;
+        }
+
+        // Siege Tank upgrades
+        if (has_all(snapshot, ['Siege Tank', 'Maelstrom Rounds (Siege Tank)'])) {
+            defenseScore += 2;
+        }
+        if (has_all(snapshot, ['Siege Tank', 'Graduating Range (Siege Tank)'])) {
+            defenseScore += 1;
+        }
+
+        // Widow Mine upgrade
+        if (has_all(snapshot, ['Widow Mine', 'Concealment (Widow Mine)'])) {
+            defenseScore += 1;
+        }
+
+        // Viking with splash
+        if (has_all(snapshot, ['Viking', 'Shredder Rounds (Viking)'])) {
+            defenseScore += 2;
+        }
+
+        // Enemy-specific ratings
+        if (zergEnemy) {
+            for (const [item, rating] of Object.entries(zergDefenseRatings)) {
+                if (has(snapshot, item)) {
+                    defenseScore += rating;
+                }
+            }
+        }
+
+        if (airEnemy) {
+            for (const [item, rating] of Object.entries(airDefenseRatings)) {
+                if (has(snapshot, item)) {
+                    defenseScore += rating;
+                }
+            }
+        }
+
+        // Valkyries shred mass Mutas
+        if (airEnemy && zergEnemy && has(snapshot, 'Valkyrie')) {
+            defenseScore += 2;
+        }
+
+        // Advanced Tactics bumps defense rating down by 2
+        if (isAdvancedTactics(staticData)) {
+            defenseScore += 2;
+        }
+
+        return defenseScore;
+    },
     terran_mobile_detector: () => false,
     terran_beats_protoss_deathball: () => false,
     terran_base_trasher: () => false,
@@ -373,20 +703,20 @@ export default {
 
         return false;
     },
-    zerg_basic_anti_air: () => false,
-    zerg_competent_anti_air: () => false,
-    zerg_competent_comp: () => false,
+    zerg_competent_anti_air,
+    zerg_basic_anti_air,
+    zerg_competent_comp,
     zerg_competent_defense: () => false,
     zerg_pass_vents: () => false,
 
-    spread_creep: () => false,
-    morph_brood_lord: () => false,
-    morph_impaler_or_lurker: () => false,
-    morph_viper: () => false,
+    spread_creep,
+    morph_brood_lord,
+    morph_impaler_or_lurker,
+    morph_viper,
 
-    basic_kerrigan: () => false,
-    kerrigan_levels: () => 0,
-    two_kerrigan_actives: () => false,
+    basic_kerrigan,
+    kerrigan_levels,
+    two_kerrigan_actives,
 
     marine_medic_upgrade: () => false,
     can_nuke: () => false,
@@ -445,7 +775,14 @@ export default {
         );
     },
     dark_skies_requirement: () => false,
-    last_stand_requirement: () => false,
+    last_stand_requirement: (snapshot, staticData) => {
+        const advancedTactics = isAdvancedTactics(staticData);
+
+        return protoss_common_unit(snapshot, staticData)
+            && protoss_competent_anti_air(snapshot, staticData)
+            && protoss_static_defense(snapshot, staticData)
+            && (advancedTactics || protoss_basic_splash(snapshot, staticData));
+    },
     end_game_requirement: () => false,
     enemy_shadow_first_stage: () => false,
     enemy_shadow_second_stage: () => false,
@@ -458,7 +795,17 @@ export default {
     steps_of_the_rite_requirement: () => false,
     templars_return_requirement: () => false,
     templars_charge_requirement: () => false,
-    the_infinite_cycle_requirement: () => false,
+    the_infinite_cycle_requirement: (snapshot, staticData) => {
+        const settings = staticData?.settings || {};
+        const storyTechGranted = settings.story_tech_granted || false;
+        const kerriganUnitAvailable = settings.kerrigan_unit_available || false;
+
+        return storyTechGranted
+            || !kerriganUnitAvailable
+            || (two_kerrigan_actives(snapshot, staticData)
+                && basic_kerrigan(snapshot, staticData)
+                && kerrigan_levels(snapshot, staticData, 70));
+    },
     harbinger_of_oblivion_requirement: () => false,
     supreme_requirement: () => false,
     the_host_requirement: () => false,
