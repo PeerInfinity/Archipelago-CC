@@ -1153,9 +1153,7 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                 'id': location_name_to_id.get(location_name, None),  # Add location ID from mapping
                                 'access_rule': access_rule_result,
                                 'item_rule': item_rule_result,
-                                'item': None,
-                                'region': region.name,  # Add region reference for reachability checking
-                                'parent_region_name': region.name  # Alternative field name for compatibility
+                                'item': None
                             }
 
                             # Add game-specific location attributes from the handler
