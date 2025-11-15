@@ -356,7 +356,16 @@ class ASTVisitorMixin:
 
                 # Try to resolve the iterator if it's a name reference
                 iterator_info = gen_exp['comprehension']
-                if iterator_info.get('iterator', {}).get('type') == 'name':
+
+                # Check if the iterator has already been resolved to an 'and' or 'or' rule
+                # This happens when visit_Subscript has already analyzed a list of callables
+                iterator_type = iterator_info.get('iterator', {}).get('type')
+                if iterator_type in ('and', 'or'):
+                    logging.debug(f"all(GeneratorExp): Iterator already resolved to '{iterator_type}' rule, returning it directly")
+                    # The iterator has already been fully analyzed, just return it
+                    return iterator_info['iterator']
+
+                if iterator_type == 'name':
                     iterator_name = iterator_info['iterator']['name']
                     logging.debug(f"all(GeneratorExp): Attempting to resolve iterator '{iterator_name}'")
 
@@ -446,7 +455,22 @@ class ASTVisitorMixin:
 
                 # Try to resolve the iterator if it's a name reference
                 iterator_info = gen_exp['comprehension']
-                if iterator_info.get('iterator', {}).get('type') == 'name':
+
+                # Check if the iterator has already been resolved to an 'and' or 'or' rule
+                # This happens when visit_Subscript has already analyzed a list of callables
+                iterator_type = iterator_info.get('iterator', {}).get('type')
+                if iterator_type in ('and', 'or'):
+                    logging.debug(f"any(GeneratorExp): Iterator already resolved to '{iterator_type}' rule, returning it directly (converting 'and' to 'or' if needed)")
+                    # The iterator has already been fully analyzed
+                    # For any(), we need an 'or' of all conditions
+                    iterator_rule = iterator_info['iterator']
+                    if iterator_rule.get('type') == 'and':
+                        # Convert 'and' to 'or' for any()
+                        return {'type': 'or', 'conditions': iterator_rule.get('conditions', [])}
+                    else:
+                        return iterator_rule
+
+                if iterator_type == 'name':
                     iterator_name = iterator_info['iterator']['name']
                     logging.debug(f"any(GeneratorExp): Attempting to resolve iterator '{iterator_name}'")
 
@@ -1217,6 +1241,67 @@ class ASTVisitorMixin:
                         # Handle enum values
                         elif hasattr(subscript_result, 'value') and isinstance(subscript_result.value, (int, float, str, bool)):
                             return {'type': 'constant', 'value': subscript_result.value}
+                        # Handle callable results (functions from closure)
+                        elif callable(subscript_result):
+                            logging.debug(f"Subscript result is callable (type: {type(subscript_result).__name__}), analyzing it as a rule function")
+                            # Import analyze_rule to avoid circular dependency
+                            from .analysis import analyze_rule
+                            # Analyze the function to get its rule structure
+                            analyzed_result = analyze_rule(
+                                rule_func=subscript_result,
+                                closure_vars=self.closure_vars,
+                                seen_funcs=self.seen_funcs,
+                                game_handler=self.game_handler,
+                                player_context=self.player_context
+                            )
+                            if analyzed_result and analyzed_result.get('type') != 'error':
+                                logging.debug(f"Successfully analyzed callable subscript result: {analyzed_result.get('type')}")
+                                return analyzed_result
+                            else:
+                                logging.warning(f"Failed to analyze callable subscript result or got error: {analyzed_result}")
+                        # Handle lists (which may contain callables or other values)
+                        elif isinstance(subscript_result, (list, tuple)):
+                            logging.debug(f"Subscript result is a list/tuple with {len(subscript_result)} items, checking if items are analyzable")
+                            # Check if all items are callables
+                            if all(callable(item) for item in subscript_result):
+                                logging.debug(f"All items in subscript result list are callable, analyzing them")
+                                # Import analyze_rule to avoid circular dependency
+                                from .analysis import analyze_rule
+                                analyzed_items = []
+                                for idx, item_func in enumerate(subscript_result):
+                                    try:
+                                        item_result = analyze_rule(
+                                            rule_func=item_func,
+                                            closure_vars=self.closure_vars.copy(),
+                                            seen_funcs=self.seen_funcs,
+                                            game_handler=self.game_handler,
+                                            player_context=self.player_context
+                                        )
+                                        if item_result and item_result.get('type') != 'error':
+                                            analyzed_items.append(item_result)
+                                        else:
+                                            logging.debug(f"Could not analyze item {idx} in subscript list result, falling back to unresolved")
+                                            analyzed_items = None
+                                            break
+                                    except Exception as e:
+                                        logging.debug(f"Error analyzing item {idx} in subscript list result: {e}")
+                                        analyzed_items = None
+                                        break
+
+                                if analyzed_items:
+                                    # Successfully analyzed all items - return an 'and' of all items
+                                    logging.debug(f"Successfully analyzed {len(analyzed_items)} callable items from subscript list, returning 'and' rule")
+                                    if len(analyzed_items) == 0:
+                                        # Empty list - all() of empty is True
+                                        return {'type': 'constant', 'value': True}
+                                    elif len(analyzed_items) == 1:
+                                        return analyzed_items[0]
+                                    else:
+                                        return {'type': 'and', 'conditions': analyzed_items}
+                            else:
+                                # List contains non-callables, keep it as a constant
+                                logging.debug(f"Subscript result list contains non-callable items, returning as constant")
+                                return {'type': 'constant', 'value': subscript_result}
                         else:
                             logging.debug(f"Subscript result is not a simple value (type: {type(subscript_result).__name__}), cannot convert to constant")
                 except (KeyError, IndexError, TypeError) as e:
