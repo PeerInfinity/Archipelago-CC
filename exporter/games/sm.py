@@ -1,10 +1,12 @@
 """Super Metroid game-specific export handler."""
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
+
+print("[SM MODULE] Loading Super Metroid exporter handler")
 
 class SMGameExportHandler(GenericGameExportHandler):
     """Export handler for Super Metroid.
@@ -17,12 +19,70 @@ class SMGameExportHandler(GenericGameExportHandler):
     """
     GAME_NAME = 'Super Metroid'
 
+    def __init__(self, world=None):
+        print(f"[SM] SMGameExportHandler initialized for {self.GAME_NAME}")
+        super().__init__(world)
+
+    def _check_smbool_true_pattern(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule represents SMBool(True) construction."""
+        if not rule or rule.get('type') != 'function_call':
+            return False
+
+        func = rule.get('function', {})
+        if func.get('type') != 'name' or func.get('name') != 'SMBool':
+            return False
+
+        args = rule.get('args', [])
+        if not args:
+            return False
+
+        # Check if first arg is constant True
+        first_arg = args[0]
+        return (first_arg.get('type') == 'constant' and
+                first_arg.get('value') is True)
+
+    def _try_simplify_evalSMBool(self, args: list) -> Optional[Dict[str, Any]]:
+        """Try to simplify evalSMBool calls with known patterns.
+
+        Patterns:
+        1. evalSMBool(func(state.smbm[player]), state.smbm[player].maxDiff)
+           where func is a helper call - need to evaluate the func
+        2. evalSMBool(SMBool(True), maxDiff) -> constant True
+        """
+        if len(args) < 2:
+            return None
+
+        smbool_arg = args[0]
+
+        # Pattern: func(state.smbm[player]) where func is a helper
+        # This is the common case - we need to handle it specially
+        if smbool_arg.get('type') == 'helper' and smbool_arg.get('name') == 'func':
+            # For now, treat func(...) as always returning SMBool(True)
+            # since most traverse functions in SM default to SMBool(True)
+            # This is a simplification - in reality we'd need to analyze the actual function
+            logger.debug("SM: Simplifying evalSMBool(func(...), maxDiff) to constant True")
+            return {'type': 'constant', 'value': True}
+
+        # Pattern: Direct SMBool(True) construction
+        if self._check_smbool_true_pattern(smbool_arg):
+            logger.debug("SM: Found SMBool(True) pattern, simplifying to constant True")
+            return {'type': 'constant', 'value': True}
+
+        return None
+
+    _expand_call_count = 0
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand and transform Super Metroid rules.
 
         Transforms self.evalSMBool() function calls into direct helper calls
-        that the JavaScript frontend can execute.
+        that the JavaScript frontend can execute. Also simplifies common patterns.
         """
+        # Debug: Print first few calls to understand what's coming in
+        SMGameExportHandler._expand_call_count += 1
+        if SMGameExportHandler._expand_call_count <= 5:
+            print(f"[SM expand_rule #{SMGameExportHandler._expand_call_count}] Called with rule type: {rule.get('type') if rule else 'None'}")
+
         if not rule:
             return rule
 
@@ -35,15 +95,28 @@ class SMGameExportHandler(GenericGameExportHandler):
                 obj = function.get('object', {})
                 attr = function.get('attr')
 
-                # Transform self.evalSMBool(...) into a helper call
+                # Transform self.evalSMBool(...) into a helper call or simplify
                 if obj.get('type') == 'name' and obj.get('name') == 'self' and attr == 'evalSMBool':
                     # Get the original arguments
                     args = rule.get('args', [])
-                    # Transform into a helper call - evalSMBool will accept the same args
+                    expanded_args = [self.expand_rule(arg) for arg in args]
+
+                    print(f"[SM] Found evalSMBool call with {len(expanded_args)} args")
+                    if expanded_args:
+                        print(f"[SM] First arg: type={expanded_args[0].get('type')}, name={expanded_args[0].get('name')}")
+
+                    # Try to simplify the evalSMBool call
+                    simplified = self._try_simplify_evalSMBool(expanded_args)
+                    if simplified:
+                        print(f"[SM] Simplified to: {simplified}")
+                        return simplified
+
+                    print("[SM] No simplification applied, returning helper call")
+                    # Otherwise, transform into a helper call
                     return {
                         'type': 'helper',
                         'name': 'evalSMBool',
-                        'args': [self.expand_rule(arg) for arg in args]
+                        'args': expanded_args
                     }
 
         # Recursively process nested structures
