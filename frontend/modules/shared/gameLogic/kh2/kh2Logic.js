@@ -166,6 +166,48 @@ export const helperFunctions = {
   },
 
   /**
+   * Check if Land of Dragons is unlocked.
+   * Based on worlds/kh2/Rules.py:37-38
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @param {number} amount - Required count of Sword of the Ancestor
+   * @returns {boolean} True if player has the required amount of Sword of the Ancestor
+   */
+  lod_unlocked(snapshot, staticData, amount) {
+    const count = snapshot?.inventory?.["Sword of the Ancestor"] || 0;
+    return count >= amount;
+  },
+
+  /**
+   * Check if Olympus Coliseum is unlocked.
+   * Based on worlds/kh2/Rules.py:40-41
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @param {number} amount - Required count of Battlefields of War
+   * @returns {boolean} True if player has the required amount of Battlefields of War
+   */
+  oc_unlocked(snapshot, staticData, amount) {
+    const count = snapshot?.inventory?.["Battlefields of War"] || 0;
+    return count >= amount;
+  },
+
+  /**
+   * Check if The World That Never Was is unlocked.
+   * Based on worlds/kh2/Rules.py:43-44
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @param {number} amount - Required count of Way to the Dawn
+   * @returns {boolean} True if player has the required amount of Way to the Dawn
+   */
+  twtnw_unlocked(snapshot, staticData, amount) {
+    const count = snapshot?.inventory?.["Way to the Dawn"] || 0;
+    return count >= amount;
+  },
+
+  /**
    * Check if level locking is unlocked.
    * Based on worlds/kh2/Rules.py:85-88
    *
@@ -396,20 +438,143 @@ export const helperFunctions = {
    * Check if Prison Keeper fight is accessible.
    * Based on worlds/kh2/Rules.py:849-858
    *
-   * This is a simplified implementation that returns true (easy mode).
-   * The full implementation would check fight_logic setting and require:
-   * - easy: defensive tool + drive form + party limit (3 categories)
-   * - normal: 2 of the above categories
-   * - hard: 1 of the above categories
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Prison Keeper fight
+   */
+  get_prison_keeper_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+
+    let categoriesAvailable = 0;
+    if (defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0)) categoriesAvailable++;
+    if (formList.some(form => snapshot?.inventory?.[form] > 0)) categoriesAvailable++;
+    if (partyLimit.some(limit => snapshot?.inventory?.[limit] > 0)) categoriesAvailable++;
+
+    if (fightLogic === 0) return categoriesAvailable >= 3; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 2; // normal
+    return categoriesAvailable >= 1; // hard
+  },
+
+  /**
+   * Check if Shan Yu fight is accessible.
+   * Based on worlds/kh2/Rules.py:726-735
    *
    * @param {Object} snapshot - Game state snapshot
    * @param {Object} staticData - Static game data (contains settings)
-   * @returns {boolean} True for simplified implementation
+   * @returns {boolean} True if player can access Shan Yu fight
    */
-  get_prison_keeper_rules(snapshot, staticData) {
-    // TODO: Implement proper fight logic when fight_logic setting is available
-    // For now, return true (easy mode / no requirements)
-    return true;
+  get_shan_yu_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+
+    let categoriesAvailable = 0;
+    if (gapCloser.some(item => snapshot?.inventory?.[item] > 0)) categoriesAvailable++;
+    if (defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0)) categoriesAvailable++;
+    if (formList.some(form => snapshot?.inventory?.[form] > 0)) categoriesAvailable++;
+
+    if (fightLogic === 0) return categoriesAvailable >= 3; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 2; // normal
+    // hard: defensive tool or drive form
+    const hasDefensiveTool = defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0);
+    const hasForm = formList.some(form => snapshot?.inventory?.[form] > 0);
+    return hasDefensiveTool || hasForm;
+  },
+
+  /**
+   * Check if Dark Thorn fight is accessible.
+   * Based on worlds/kh2/Rules.py:784-793
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Dark Thorn fight
+   */
+  get_dark_thorn_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+
+    if (fightLogic === 0) { // easy: all 3 categories
+      let categoriesAvailable = 0;
+      if (formList.some(form => snapshot?.inventory?.[form] > 0)) categoriesAvailable++;
+      if (gapCloser.some(item => snapshot?.inventory?.[item] > 0)) categoriesAvailable++;
+      if (defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0)) categoriesAvailable++;
+      return categoriesAvailable >= 3;
+    } else if (fightLogic === 1) { // normal: drive form AND defensive tool (no gap closer)
+      let categoriesAvailable = 0;
+      if (formList.some(form => snapshot?.inventory?.[form] > 0)) categoriesAvailable++;
+      if (defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0)) categoriesAvailable++;
+      return categoriesAvailable >= 2;
+    } else { // hard: defensive tool only
+      return defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0);
+    }
+  },
+
+  /**
+   * Check if Fire Lord fight is accessible.
+   * Based on worlds/kh2/Rules.py:743-750
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Fire Lord fight
+   */
+  get_fire_lord_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
+    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+
+    let categoriesAvailable = 0;
+    if (formList.some(form => snapshot?.inventory?.[form] > 0)) categoriesAvailable++;
+    if (defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0)) categoriesAvailable++;
+    if (blackMagic.some(magic => snapshot?.inventory?.[magic] > 0)) categoriesAvailable++;
+    if (partyLimit.some(limit => snapshot?.inventory?.[limit] > 0)) categoriesAvailable++;
+
+    if (fightLogic === 0) return categoriesAvailable >= 4; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 3; // normal
+    return categoriesAvailable >= 2; // hard
+  },
+
+  /**
+   * Check if Blizzard Lord fight is accessible.
+   * Based on worlds/kh2/Rules.py:753-760
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Blizzard Lord fight
+   */
+  get_blizzard_lord_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
+    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+
+    let categoriesAvailable = 0;
+    if (formList.some(form => snapshot?.inventory?.[form] > 0)) categoriesAvailable++;
+    if (defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0)) categoriesAvailable++;
+    if (blackMagic.some(magic => snapshot?.inventory?.[magic] > 0)) categoriesAvailable++;
+    if (partyLimit.some(limit => snapshot?.inventory?.[limit] > 0)) categoriesAvailable++;
+
+    if (fightLogic === 0) return categoriesAvailable >= 4; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 3; // normal
+    return categoriesAvailable >= 2; // hard
   },
 
   /**
@@ -438,19 +603,52 @@ export const helperFunctions = {
    * Check if Thresholder fight is accessible.
    * Based on worlds/kh2/Rules.py:767-776
    *
-   * This is a simplified implementation that returns true (easy mode).
-   * The full implementation would check fight_logic setting and require:
-   * - easy: drive form + black magic + defensive tool (3 categories)
-   * - normal: 2 of the above categories
-   * - hard: defensive tool or drive form (1 category)
+   * Requires different item combinations based on fight_logic setting:
+   * - easy (0): drive form + black magic + defensive tool (3 categories)
+   * - normal (1): 2 of the above 3 categories
+   * - hard (2): defensive tool or drive form (1 category)
    *
    * @param {Object} snapshot - Game state snapshot
    * @param {Object} staticData - Static game data (contains settings)
-   * @returns {boolean} True for simplified implementation
+   * @returns {boolean} True if player can access Thresholder fight
    */
   get_thresholder_rules(snapshot, staticData) {
-    // TODO: Implement proper fight logic when fight_logic setting is available
-    // For now, return true (easy mode / no requirements)
-    return true;
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    // Define item categories (from worlds/kh2/Logic.py)
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+
+    // Count how many categories the player has access to
+    let categoriesAvailable = 0;
+
+    // Check if player has any form
+    if (formList.some(form => snapshot?.inventory?.[form] > 0)) {
+      categoriesAvailable++;
+    }
+
+    // Check if player has any black magic
+    if (blackMagic.some(magic => snapshot?.inventory?.[magic] > 0)) {
+      categoriesAvailable++;
+    }
+
+    // Check if player has any defensive tool
+    if (defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0)) {
+      categoriesAvailable++;
+    }
+
+    // Apply fight logic based on setting
+    if (fightLogic === 0) { // easy
+      return categoriesAvailable >= 3;
+    } else if (fightLogic === 1) { // normal (default)
+      return categoriesAvailable >= 2;
+    } else { // hard (2)
+      // For hard mode, need defensive tool OR drive form (not black magic alone)
+      const hasForm = formList.some(form => snapshot?.inventory?.[form] > 0);
+      const hasDefensiveTool = defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0);
+      return hasForm || hasDefensiveTool;
+    }
   }
 };

@@ -141,6 +141,30 @@ class KH2GameExportHandler(BaseGameExportHandler):
             'details': 'This rule requires KH2-specific logic'
         }
     
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export KH2-specific settings for frontend logic."""
+        # Get base settings from parent class
+        settings_dict = super().get_settings_data(world, multiworld, player)
+
+        # Add KH2-specific settings that affect logic
+        kh2_settings = [
+            'FightLogic',
+            'AutoFormLogic',
+            'FinalFormLogic',
+            'Promise_Charm'
+        ]
+
+        for setting_name in kh2_settings:
+            if hasattr(world, 'options') and hasattr(world.options, setting_name):
+                option = getattr(world.options, setting_name)
+                # Get the value (could be an integer option or boolean)
+                if hasattr(option, 'value'):
+                    settings_dict[setting_name] = option.value
+                else:
+                    settings_dict[setting_name] = option
+
+        return settings_dict
+
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """Return KH2-specific item data with classification flags."""
         from BaseClasses import ItemClassification
