@@ -15,6 +15,7 @@ const AUTO_FORM_MAP = {
 const DRIVE_FORMS = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
 
 // List of visit locking items (2VisitLocking from worlds/kh2/Items.py:569-584)
+// Note: Ice Cream appears twice in the Python list, so we include it twice here
 const VISIT_LOCKING_ITEMS = [
   'Disney Castle Key',
   'Battlefields of War',
@@ -28,6 +29,7 @@ const VISIT_LOCKING_ITEMS = [
   'Ice Cream',
   'Way to the Dawn',
   'Identity Disk',
+  'Ice Cream',  // Appears twice in Python list (Items.py:579 and 582)
   "Namine Sketches"
 ];
 
@@ -650,5 +652,325 @@ export const helperFunctions = {
       const hasDefensiveTool = defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0);
       return hasForm || hasDefensiveTool;
     }
+  },
+
+  /**
+   * Check if Demyx fight is accessible.
+   * Based on worlds/kh2/Rules.py:887-896
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Demyx fight
+   */
+  get_demyx_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+
+    // Count categories using kh2_list_any_sum
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [defensiveTool, formList, partyLimit],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 3; // easy
+    if (fightLogic === 1) {
+      // normal: defensive tool + drive form (2 categories)
+      const hasDefensive = defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0);
+      const hasForm = formList.some(form => snapshot?.inventory?.[form] > 0);
+      return hasDefensive && hasForm;
+    }
+    // hard: defensive tool only
+    return defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0);
+  },
+
+  /**
+   * Check if Cavern of Remembrance first fight movement requirements are met.
+   * Based on worlds/kh2/Rules.py:931-940
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player meets movement requirements
+   */
+  get_cor_first_fight_movement_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    if (fightLogic === 0) { // easy: quick run 3 or wisdom 5
+      return (snapshot?.inventory?.['Quick Run'] >= 3) ||
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Wisdom Form', 3, true);
+    } else if (fightLogic === 1) { // normal: (quick run 2 and aerial dodge 1) or wisdom 5
+      return helperFunctions.kh2_dict_count({'Quick Run': 2, 'Aerial Dodge': 1}, snapshot) ||
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Wisdom Form', 3, true);
+    } else { // hard: (quick run 1, aerial dodge 1) or (wisdom form and aerial dodge 1)
+      return helperFunctions.kh2_has_all(['Aerial Dodge', 'Quick Run'], snapshot) ||
+        helperFunctions.kh2_has_all(['Aerial Dodge', 'Wisdom Form'], snapshot);
+    }
+  },
+
+  /**
+   * Check if Cavern of Remembrance first fight requirements are met.
+   * Based on worlds/kh2/Rules.py:942-951
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access first fight
+   */
+  get_cor_first_fight_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const notHardCorToolsDict = {
+      'Reflect Element': 3,
+      'Stitch': 1,
+      'Chicken Little': 1,
+      'Magnet Element': 2,
+      'Explosion': 1,
+      'Finishing Leap': 1,
+      'Thunder Element': 2
+    };
+
+    const toolCount = helperFunctions.kh2_dict_one_count(notHardCorToolsDict, snapshot);
+
+    if (fightLogic === 0) { // easy: 5 tools or 4 tools + final form 1
+      return toolCount >= 5 ||
+        (toolCount >= 4 && helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 1, true));
+    } else if (fightLogic === 1) { // normal: 3 tools or 2 tools + final form 1
+      return toolCount >= 3 ||
+        (toolCount >= 2 && helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 1, true));
+    } else { // hard: reflect + (stitch or chicken little) + final form
+      return (snapshot?.inventory?.['Reflect Element'] > 0) &&
+        helperFunctions.kh2_has_any(['Stitch', 'Chicken Little'], snapshot) &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 1, true);
+    }
+  },
+
+  /**
+   * Check if Cavern of Remembrance skip requirements are met.
+   * Based on worlds/kh2/Rules.py:953-977
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can skip the first fight
+   */
+  get_cor_skip_first_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+
+    // Check if CoR skip is enabled
+    if (!settings.CorSkipToggle) {
+      return false;
+    }
+
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+    const magic = ['Fire Element', 'Blizzard Element', 'Thunder Element', 'Reflect Element', 'Cure Element', 'Magnet Element'];
+
+    // Void cross rules
+    let voidCrossPass = false;
+    if (fightLogic === 0) { // easy: aerial dodge 3, master form, fire
+      voidCrossPass = (snapshot?.inventory?.['Aerial Dodge'] >= 3) &&
+        helperFunctions.kh2_has_all(['Master Form', 'Fire Element'], snapshot);
+    } else if (fightLogic === 1) { // normal: aerial dodge 2, master form, fire
+      voidCrossPass = (snapshot?.inventory?.['Aerial Dodge'] >= 2) &&
+        helperFunctions.kh2_has_all(['Master Form', 'Fire Element'], snapshot);
+    } else { // hard: multiple options
+      voidCrossPass = helperFunctions.kh2_dict_count({'Quick Run': 3, 'Aerial Dodge': 1}, snapshot) ||
+        (helperFunctions.kh2_dict_count({'Quick Run': 2, 'Aerial Dodge': 2}, snapshot) &&
+          helperFunctions.kh2_has_any(magic, snapshot)) ||
+        ((snapshot?.inventory?.['Final Form'] > 0) &&
+          (helperFunctions.kh2_has_any(magic, snapshot) || (snapshot?.inventory?.['Combo Master'] > 0))) ||
+        ((snapshot?.inventory?.['Master Form'] > 0) &&
+          helperFunctions.kh2_has_any(['Reflect Element', 'Fire Element', 'Combo Master'], snapshot));
+    }
+
+    // Wall rise rules
+    let wallRisePass = true;
+    if (fightLogic === 2) { // hard only
+      wallRisePass = (snapshot?.inventory?.['Aerial Dodge'] > 0) &&
+        (helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 1, true) ||
+          (snapshot?.inventory?.['Glide'] >= 2));
+    }
+
+    return voidCrossPass && wallRisePass;
+  },
+
+  /**
+   * Check if Cavern of Remembrance second fight movement requirements are met.
+   * Based on worlds/kh2/Rules.py:979-991
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player meets movement requirements
+   */
+  get_cor_second_fight_movement_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+    const magic = ['Fire Element', 'Blizzard Element', 'Thunder Element', 'Reflect Element', 'Cure Element', 'Magnet Element'];
+
+    if (fightLogic === 0) { // easy: quick run 2, aerial dodge 3 or master form 5
+      return helperFunctions.kh2_dict_count({'Quick Run': 2, 'Aerial Dodge': 3}, snapshot) ||
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Master Form', 3, true);
+    } else if (fightLogic === 1) { // normal: quick run 2, aerial dodge 2 or master 5
+      return helperFunctions.kh2_dict_count({'Quick Run': 2, 'Aerial Dodge': 2}, snapshot) ||
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Master Form', 3, true);
+    } else { // hard: multiple options
+      return (helperFunctions.kh2_has_all(['Glide', 'Aerial Dodge'], snapshot) &&
+        helperFunctions.kh2_has_any(magic, snapshot)) ||
+        ((snapshot?.inventory?.['Master Form'] > 0) && helperFunctions.kh2_has_any(magic, snapshot)) ||
+        ((snapshot?.inventory?.['Glide'] > 0) && (snapshot?.inventory?.['Aerial Dodge'] >= 2));
+    }
+  },
+
+  /**
+   * Check if Cerberus fight is accessible.
+   * Based on worlds/kh2/Rules.py:672-680
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Cerberus fight
+   */
+  get_cerberus_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
+
+    if (fightLogic === 0 || fightLogic === 1) { // easy or normal: defensive tool + black magic
+      return helperFunctions.kh2_list_any_sum([defensiveTool, blackMagic], snapshot) >= 2;
+    }
+    // hard: defensive tool only
+    return helperFunctions.kh2_has_any(defensiveTool, snapshot);
+  },
+
+  /**
+   * Check if Olympus Pete fight is accessible.
+   * Based on worlds/kh2/Rules.py:723-732
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Olympus Pete fight
+   */
+  get_olympus_pete_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [gapCloser, defensiveTool, formList],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 3; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 2; // normal
+    return categoriesAvailable >= 1; // hard
+  },
+
+  /**
+   * Check if Hydra fight is accessible.
+   * Based on worlds/kh2/Rules.py:734-743
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Hydra fight
+   */
+  get_hydra_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [blackMagic, defensiveTool, formList],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 3; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 2; // normal
+    return categoriesAvailable >= 1; // hard
+  },
+
+  /**
+   * Utility: Check if player has any item from a list of item lists.
+   * Based on worlds/kh2/Rules.py:101-108
+   *
+   * @param {Array<Array<string>>} listOfItemLists - Array of item name arrays
+   * @param {Object} snapshot - Game state snapshot
+   * @returns {number} Count of lists where player has at least one item
+   */
+  kh2_list_any_sum(listOfItemLists, snapshot) {
+    let count = 0;
+    for (const itemList of listOfItemLists) {
+      if (itemList.some(item => snapshot?.inventory?.[item] > 0)) {
+        count++;
+      }
+    }
+    return count;
+  },
+
+  /**
+   * Utility: Check if player has all required item counts from a dictionary.
+   * Based on worlds/kh2/Rules.py:110-117
+   *
+   * @param {Object} itemNameToCount - Dictionary mapping item names to required counts
+   * @param {Object} snapshot - Game state snapshot
+   * @returns {boolean} True if player has all required counts
+   */
+  kh2_dict_count(itemNameToCount, snapshot) {
+    for (const [itemName, requiredCount] of Object.entries(itemNameToCount)) {
+      if ((snapshot?.inventory?.[itemName] || 0) < requiredCount) {
+        return false;
+      }
+    }
+    return true;
+  },
+
+  /**
+   * Utility: Count how many items in dictionary meet their required count.
+   * Based on worlds/kh2/Rules.py:119-126
+   *
+   * @param {Object} itemNameToCount - Dictionary mapping item names to required counts
+   * @param {Object} snapshot - Game state snapshot
+   * @returns {number} Count of items that meet their required count
+   */
+  kh2_dict_one_count(itemNameToCount, snapshot) {
+    let count = 0;
+    for (const [itemName, requiredCount] of Object.entries(itemNameToCount)) {
+      if ((snapshot?.inventory?.[itemName] || 0) >= requiredCount) {
+        count++;
+      }
+    }
+    return count;
+  },
+
+  /**
+   * Utility: Check if player has all items from a list.
+   * Based on worlds/kh2/Rules.py:151-153
+   *
+   * @param {Array<string>} items - Array of item names
+   * @param {Object} snapshot - Game state snapshot
+   * @returns {boolean} True if player has at least one of all items
+   */
+  kh2_has_all(items, snapshot) {
+    return items.every(item => snapshot?.inventory?.[item] > 0);
+  },
+
+  /**
+   * Utility: Check if player has any item from a list.
+   * Based on worlds/kh2/Rules.py:155-156
+   *
+   * @param {Array<string>} items - Array of item names
+   * @param {Object} snapshot - Game state snapshot
+   * @returns {boolean} True if player has at least one item
+   */
+  kh2_has_any(items, snapshot) {
+    return items.some(item => snapshot?.inventory?.[item] > 0);
   }
 };
