@@ -100,12 +100,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Symmetry Island Upper"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -116,8 +112,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Symmetry Island Upper"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -131,12 +127,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Symmetry Island Upper"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -180,12 +172,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Desert Outside"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -196,8 +184,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Desert Outside"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -211,12 +199,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Desert Outside"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -234,12 +218,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Desert Elevator Room"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -250,8 +230,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Desert Elevator Room"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -265,12 +245,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Desert Elevator Room"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -303,12 +279,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Quarry Boathouse Upper Back"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -319,8 +291,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Quarry Boathouse Upper Back"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -334,12 +306,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Quarry Boathouse Upper Back"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -357,12 +325,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Quarry Stoneworks Upper Floor"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -373,8 +337,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Quarry Stoneworks Upper Floor"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -388,12 +352,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Quarry Stoneworks Upper Floor"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -411,12 +371,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Outside Quarry"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -427,8 +383,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Outside Quarry"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -442,12 +398,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Outside Quarry"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -496,12 +448,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Shadows Ledge"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -512,8 +460,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Shadows Ledge"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -527,12 +475,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Shadows Ledge"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -550,12 +494,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Shadows"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -566,8 +506,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Shadows"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -581,12 +521,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Shadows"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -604,12 +540,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Shadows Laser Room"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -620,8 +552,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Shadows Laser Room"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -635,12 +567,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Shadows Laser Room"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -676,11 +604,11 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Keep 2nd Maze>",
+                        "<bound method Region.can_reach of Keep 3rd Maze>",
+                        "<bound method Region.can_reach of Keep 4th Maze>",
                         "<bound method Region.can_reach of Keep>",
                         "<bound method Region.can_reach of Keep Tower>",
-                        "<bound method Region.can_reach of Keep 4th Maze>",
-                        "<bound method Region.can_reach of Keep 3rd Maze>"
+                        "<bound method Region.can_reach of Keep 2nd Maze>"
                       ]
                     }
                   }
@@ -701,12 +629,12 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
+                        "<bound method Region.can_reach of Keep Tower>",
+                        "<bound method Region.can_reach of Keep 2nd Pressure Plate>",
+                        "<bound method Region.can_reach of Keep 4th Pressure Plate>",
                         "<bound method Region.can_reach of Keep>",
                         "<bound method Region.can_reach of Keep 3rd Pressure Plate>",
-                        "<bound method Region.can_reach of Keep Tower>",
-                        "<bound method Region.can_reach of Keep 4th Pressure Plate>",
-                        "<bound method Region.can_reach of Keep 2nd Pressure Plate>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea18d0cc680>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea8d7718900>"
                       ]
                     }
                   }
@@ -739,12 +667,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Outside Monastery"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -755,8 +679,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Outside Monastery"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -770,12 +694,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Outside Monastery"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -793,12 +713,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Inside Monastery"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -809,8 +725,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Inside Monastery"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -824,12 +740,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Inside Monastery"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -870,12 +782,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Town Tower Top"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -886,8 +794,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Town Tower Top"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -901,12 +809,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Town Tower Top"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -937,12 +841,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Jungle"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -953,8 +853,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Jungle"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -968,12 +868,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Jungle"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -1014,12 +910,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Bunker Laser Platform"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -1030,8 +922,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Bunker Laser Platform"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -1045,12 +937,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Bunker Laser Platform"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -1078,12 +966,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Swamp Laser Area"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -1094,8 +978,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Swamp Laser Area"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -1109,12 +993,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Swamp Laser Area"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -1142,12 +1022,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Treehouse Laser Room"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -1158,8 +1034,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Treehouse Laser Room"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -1173,12 +1049,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Treehouse Laser Room"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -1341,12 +1213,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Tutorial"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -1357,8 +1225,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Tutorial"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -1372,12 +1240,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Tutorial"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -1471,12 +1335,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Tutorial"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -1487,8 +1347,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Tutorial"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -1502,12 +1362,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Tutorial"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -1627,12 +1483,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Orchard"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -1643,8 +1495,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Orchard"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -1658,12 +1510,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Orchard"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -2006,12 +1854,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Inside Glass Factory"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -2022,8 +1866,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Inside Glass Factory"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -2037,12 +1881,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Inside Glass Factory"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -2084,12 +1924,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Inside Glass Factory"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -2100,8 +1936,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Inside Glass Factory"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -2115,12 +1951,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Inside Glass Factory"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -2420,12 +2252,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Desert Elevator Room"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -2436,8 +2264,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Desert Elevator Room"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -2451,12 +2279,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Desert Elevator Room"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -2612,12 +2436,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Desert Outside"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -2628,8 +2448,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Desert Outside"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -2643,12 +2463,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Desert Outside"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -2781,12 +2597,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Quarry Boathouse Upper Back"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -2797,8 +2609,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Quarry Boathouse Upper Back"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -2812,12 +2624,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Quarry Boathouse Upper Back"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -2835,12 +2643,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Quarry Stoneworks Upper Floor"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -2851,8 +2655,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Quarry Stoneworks Upper Floor"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -2866,12 +2670,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Quarry Stoneworks Upper Floor"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -2928,8 +2728,8 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Quarry>",
-                        "<bound method Region.can_reach of Main Island>"
+                        "<bound method Region.can_reach of Quarry Stoneworks Upper Floor>",
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea8d7a631a0>"
                       ]
                     }
                   }
@@ -2950,8 +2750,8 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Quarry Stoneworks Upper Floor>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea18cf2af20>"
+                        "<bound method Region.can_reach of Main Island>",
+                        "<bound method Region.can_reach of Quarry>"
                       ]
                     }
                   }
@@ -2978,12 +2778,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Quarry Stoneworks Upper Floor"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -2994,8 +2790,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Quarry Stoneworks Upper Floor"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -3009,12 +2805,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Quarry Stoneworks Upper Floor"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -3271,12 +3063,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Quarry Stoneworks Middle Floor"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -3287,8 +3075,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Quarry Stoneworks Middle Floor"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -3302,12 +3090,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Quarry Stoneworks Middle Floor"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -3347,12 +3131,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Quarry Stoneworks Middle Floor"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -3363,8 +3143,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Quarry Stoneworks Middle Floor"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -3378,12 +3158,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Quarry Stoneworks Middle Floor"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -3657,12 +3433,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Quarry Boathouse"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -3673,8 +3445,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Quarry Boathouse"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -3688,12 +3460,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Quarry Boathouse"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -3883,12 +3651,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Shadows Ledge"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -3899,8 +3663,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Shadows Ledge"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -3914,12 +3678,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Shadows Ledge"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -3943,12 +3703,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Shadows Ledge"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -3959,8 +3715,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Shadows Ledge"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -3974,12 +3730,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Shadows Ledge"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -4007,12 +3759,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Shadows Ledge"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -4023,8 +3771,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Shadows Ledge"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -4038,12 +3786,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Shadows Ledge"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -4071,12 +3815,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Shadows Ledge"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -4087,8 +3827,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Shadows Ledge"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -4102,12 +3842,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Shadows Ledge"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -4166,12 +3902,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Shadows Ledge"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -4182,8 +3914,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Shadows Ledge"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -4197,12 +3929,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Shadows Ledge"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -4220,12 +3948,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Shadows"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -4236,8 +3960,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Shadows"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -4251,12 +3975,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Shadows"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -4344,12 +4064,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Keep 2nd Maze"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -4360,8 +4076,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Keep 2nd Maze"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -4375,12 +4091,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Keep 2nd Maze"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -4402,12 +4114,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Keep 3rd Maze"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -4418,8 +4126,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Keep 3rd Maze"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -4433,12 +4141,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Keep 3rd Maze"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -4531,12 +4235,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Keep 2nd Maze"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -4547,8 +4247,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Keep 2nd Maze"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -4562,12 +4262,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Keep 2nd Maze"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -4618,12 +4314,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Keep 3rd Maze"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -4634,8 +4326,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Keep 3rd Maze"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -4649,12 +4341,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Keep 3rd Maze"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -4878,12 +4566,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Keep 2nd Maze"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -4894,8 +4578,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Keep 2nd Maze"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -4909,12 +4593,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Keep 2nd Maze"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -4932,12 +4612,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Keep 4th Maze"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -4948,8 +4624,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Keep 4th Maze"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -4963,12 +4639,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Keep 4th Maze"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -4986,12 +4658,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Keep 3rd Maze"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -5002,8 +4670,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Keep 3rd Maze"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -5017,12 +4685,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Keep 3rd Maze"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -5040,12 +4704,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Keep"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -5056,8 +4716,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Keep"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -5071,12 +4731,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Keep"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -5109,12 +4765,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Keep"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -5125,8 +4777,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Keep"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -5140,12 +4792,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Keep"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -5163,12 +4811,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Keep 3rd Pressure Plate"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -5179,8 +4823,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Keep 3rd Pressure Plate"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -5194,12 +4838,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Keep 3rd Pressure Plate"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -5217,12 +4857,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Keep 4th Pressure Plate"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -5233,8 +4869,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Keep 4th Pressure Plate"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -5248,12 +4884,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Keep 4th Pressure Plate"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -5271,12 +4903,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Keep 2nd Pressure Plate"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -5287,8 +4915,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Keep 2nd Pressure Plate"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -5302,12 +4930,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Keep 2nd Pressure Plate"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -5408,12 +5032,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Inside Monastery"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -5424,8 +5044,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Inside Monastery"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -5439,12 +5059,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Inside Monastery"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -5488,12 +5104,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Outside Monastery"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -5504,8 +5116,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Outside Monastery"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -5519,12 +5131,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Outside Monastery"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -5542,12 +5150,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Inside Monastery"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -5558,8 +5162,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Inside Monastery"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -5573,12 +5177,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Inside Monastery"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -5644,12 +5244,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Outside Monastery"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -5660,8 +5256,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Outside Monastery"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -5675,12 +5271,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Outside Monastery"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -5698,12 +5290,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Inside Monastery"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -5714,8 +5302,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Inside Monastery"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -5729,12 +5317,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Inside Monastery"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -5978,12 +5562,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -5994,8 +5574,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -6009,12 +5589,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -6139,12 +5715,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -6155,8 +5727,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -6170,12 +5742,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -6225,12 +5793,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -6241,8 +5805,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -6256,12 +5820,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -6324,12 +5884,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -6340,8 +5896,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -6355,12 +5911,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -6516,12 +6068,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -6532,8 +6080,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -6547,12 +6095,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -6570,12 +6114,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town Church"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -6586,8 +6126,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town Church"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -6601,12 +6141,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town Church"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -6652,12 +6188,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town Red Rooftop"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -6668,8 +6200,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town Red Rooftop"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -6683,12 +6215,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town Red Rooftop"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -6729,12 +6257,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -6745,8 +6269,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -6760,12 +6284,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -6783,12 +6303,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town Church"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -6799,8 +6315,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town Church"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -6814,12 +6330,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town Church"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -6865,12 +6377,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town Wooden Rooftop"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -6881,8 +6389,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town Wooden Rooftop"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -6896,12 +6404,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town Wooden Rooftop"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -6919,12 +6423,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -6935,8 +6435,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -6950,12 +6450,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -6997,12 +6493,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town Red Rooftop"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -7013,8 +6505,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town Red Rooftop"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -7028,12 +6520,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town Red Rooftop"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -7080,12 +6568,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town Red Rooftop"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -7096,8 +6580,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town Red Rooftop"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -7111,12 +6595,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town Red Rooftop"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -7134,12 +6614,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -7150,8 +6626,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -7165,12 +6641,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -7208,12 +6680,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town Wooden Rooftop"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -7224,8 +6692,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town Wooden Rooftop"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -7239,12 +6707,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town Wooden Rooftop"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -7262,12 +6726,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -7278,8 +6738,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -7293,12 +6753,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -7346,12 +6802,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town Red Rooftop"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -7362,8 +6814,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town Red Rooftop"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -7377,12 +6829,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town Red Rooftop"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -7400,12 +6848,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Town"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -7416,8 +6860,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Town"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -7431,12 +6875,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Town"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -7592,7 +7032,7 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea18d0b0b80>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea8d7700e00>"
                       ]
                     }
                   }
@@ -7613,7 +7053,7 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea18d0b0c20>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea8d7700ea0>"
                       ]
                     }
                   }
@@ -7768,12 +7208,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Jungle"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -7784,8 +7220,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Jungle"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -7799,12 +7235,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Jungle"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -7848,12 +7280,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Jungle"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -7864,8 +7292,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Jungle"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -7879,12 +7307,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Jungle"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -8088,12 +7512,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Bunker"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -8104,8 +7524,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Bunker"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -8119,12 +7539,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Bunker"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -8166,12 +7582,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Bunker"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -8182,8 +7594,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Bunker"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -8197,12 +7609,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Bunker"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -8311,49 +7719,6 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Bunker Cyan Room>"
-                      ]
-                    }
-                  }
-                },
-                {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "helper",
-                    "name": "condition",
-                    "args": []
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "condition"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "<bound method Region.can_reach of Bunker Elevator>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea18d0b1120>"
-                      ]
-                    }
-                  }
-                },
-                {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "helper",
-                    "name": "condition",
-                    "args": []
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "condition"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
                         "<bound method Region.can_reach of Bunker Green Room>"
                       ]
                     }
@@ -8376,6 +7741,49 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Bunker Laser Platform>"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "all_of",
+                  "element_rule": {
+                    "type": "helper",
+                    "name": "condition",
+                    "args": []
+                  },
+                  "iterator_info": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "condition"
+                    },
+                    "iterator": {
+                      "type": "constant",
+                      "value": [
+                        "<bound method Region.can_reach of Bunker Elevator>",
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea8d77013a0>"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "all_of",
+                  "element_rule": {
+                    "type": "helper",
+                    "name": "condition",
+                    "args": []
+                  },
+                  "iterator_info": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "condition"
+                    },
+                    "iterator": {
+                      "type": "constant",
+                      "value": [
+                        "<bound method Region.can_reach of Bunker Cyan Room>"
                       ]
                     }
                   }
@@ -8411,49 +7819,6 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Bunker Cyan Room>"
-                      ]
-                    }
-                  }
-                },
-                {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "helper",
-                    "name": "condition",
-                    "args": []
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "condition"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "<bound method Region.can_reach of Bunker Elevator>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea18d0b1260>"
-                      ]
-                    }
-                  }
-                },
-                {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "helper",
-                    "name": "condition",
-                    "args": []
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "condition"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
                         "<bound method Region.can_reach of Bunker Green Room>"
                       ]
                     }
@@ -8476,6 +7841,49 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Bunker Laser Platform>"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "all_of",
+                  "element_rule": {
+                    "type": "helper",
+                    "name": "condition",
+                    "args": []
+                  },
+                  "iterator_info": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "condition"
+                    },
+                    "iterator": {
+                      "type": "constant",
+                      "value": [
+                        "<bound method Region.can_reach of Bunker Elevator>",
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea8d77014e0>"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "all_of",
+                  "element_rule": {
+                    "type": "helper",
+                    "name": "condition",
+                    "args": []
+                  },
+                  "iterator_info": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "condition"
+                    },
+                    "iterator": {
+                      "type": "constant",
+                      "value": [
+                        "<bound method Region.can_reach of Bunker Cyan Room>"
                       ]
                     }
                   }
@@ -8800,12 +8208,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Blue Underwater"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -8816,8 +8220,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Blue Underwater"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -8831,12 +8235,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Blue Underwater"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -8963,12 +8363,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Blue Underwater"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -8979,8 +8375,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Blue Underwater"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -8994,12 +8390,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Blue Underwater"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -9069,12 +8461,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Platform"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -9085,8 +8473,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Platform"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -9100,12 +8488,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Platform"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -9145,12 +8529,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Platform"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -9161,8 +8541,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Platform"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -9176,12 +8556,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Platform"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -9230,12 +8606,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Cyan Underwater"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -9246,8 +8618,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Cyan Underwater"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -9261,12 +8633,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Cyan Underwater"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -9316,12 +8684,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Platform"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -9332,8 +8696,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Platform"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -9347,12 +8711,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Platform"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -9370,12 +8730,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Between Bridges Near"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -9386,8 +8742,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Between Bridges Near"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -9401,12 +8757,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Between Bridges Near"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -9474,12 +8826,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Cyan Underwater"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -9490,8 +8838,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Cyan Underwater"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -9505,12 +8853,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Cyan Underwater"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -9645,12 +8989,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Platform"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -9661,8 +9001,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Platform"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -9676,12 +9016,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Platform"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -9699,12 +9035,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Between Bridges Near"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -9715,8 +9047,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Between Bridges Near"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -9730,12 +9062,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Between Bridges Near"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -9753,12 +9081,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Between Bridges Far"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -9769,8 +9093,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Between Bridges Far"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -9784,12 +9108,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Between Bridges Far"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -9826,12 +9146,8 @@
                   "attr": "stale"
                 },
                 "index": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "constant",
-                    "value": "Main Island"
-                  },
-                  "attr": "player"
+                  "type": "constant",
+                  "value": 1
                 }
               },
               "if_true": {
@@ -9842,8 +9158,8 @@
               "if_false": {
                 "type": "compare",
                 "left": {
-                  "type": "constant",
-                  "value": "Main Island"
+                  "type": "name",
+                  "name": "self"
                 },
                 "op": "in",
                 "right": {
@@ -9857,12 +9173,8 @@
                     "attr": "reachable_regions"
                   },
                   "index": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": "Main Island"
-                    },
-                    "attr": "player"
+                    "type": "constant",
+                    "value": 1
                   }
                 }
               }
@@ -9904,12 +9216,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Platform"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -9920,8 +9228,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Platform"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -9935,12 +9243,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Platform"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -9958,12 +9262,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Between Bridges Near"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -9974,8 +9274,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Between Bridges Near"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -9989,12 +9289,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Between Bridges Near"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -10012,12 +9308,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Between Bridges Far"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -10028,8 +9320,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Between Bridges Far"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -10043,12 +9335,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Between Bridges Far"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -10112,12 +9400,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Platform"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -10128,8 +9412,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Platform"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -10143,12 +9427,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Platform"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -10166,12 +9446,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Near Boat"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -10182,8 +9458,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Near Boat"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -10197,12 +9473,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Near Boat"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -10220,12 +9492,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Between Bridges Near"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -10236,8 +9504,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Between Bridges Near"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -10251,12 +9519,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Between Bridges Near"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -10274,12 +9538,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Between Bridges Far"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -10290,8 +9550,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Between Bridges Far"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -10305,12 +9565,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Between Bridges Far"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -10364,12 +9620,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Platform"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -10380,8 +9632,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Platform"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -10395,12 +9647,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Platform"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -10418,12 +9666,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Near Boat"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -10434,8 +9678,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Near Boat"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -10449,12 +9693,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Near Boat"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -10472,12 +9712,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Between Bridges Near"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -10488,8 +9724,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Between Bridges Near"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -10503,12 +9739,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Between Bridges Near"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -10526,12 +9758,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Swamp Between Bridges Far"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -10542,8 +9770,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Swamp Between Bridges Far"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -10557,12 +9785,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Swamp Between Bridges Far"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -11362,12 +10586,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Treehouse Junction"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -11378,8 +10598,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Treehouse Junction"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -11393,12 +10613,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Treehouse Junction"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -11416,12 +10632,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Treehouse Right Orange Bridge"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -11432,8 +10644,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Treehouse Right Orange Bridge"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -11447,12 +10659,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Treehouse Right Orange Bridge"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -11470,12 +10678,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Treehouse Left Orange Bridge"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -11486,8 +10690,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Treehouse Left Orange Bridge"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -11501,12 +10705,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Treehouse Left Orange Bridge"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -11966,12 +11166,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Mountain Floor 1 Back Section"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -11982,8 +11178,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Mountain Floor 1 Back Section"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -11997,12 +11193,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Mountain Floor 1 Back Section"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -12020,12 +11212,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Mountain Floor 1 Bridge"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -12036,8 +11224,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Mountain Floor 1 Bridge"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -12051,12 +11239,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Mountain Floor 1 Bridge"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -12129,7 +11313,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Near>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea18d0b3600>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea8d7703880>"
                       ]
                     }
                   }
@@ -12151,7 +11335,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Far>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea18d0b36a0>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea8d7703920>"
                       ]
                     }
                   }
@@ -12194,12 +11378,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Mountain Floor 1 Back Section"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -12210,8 +11390,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Mountain Floor 1 Back Section"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -12225,12 +11405,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Mountain Floor 1 Back Section"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -12248,12 +11424,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Mountain Floor 1 Bridge"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -12264,8 +11436,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Mountain Floor 1 Bridge"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -12279,12 +11451,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Mountain Floor 1 Bridge"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -12360,12 +11528,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Mountain Floor 2 Light Bridge Room Far"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -12376,8 +11540,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Mountain Floor 2 Light Bridge Room Far"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -12391,12 +11555,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Mountain Floor 2 Light Bridge Room Far"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -12414,12 +11574,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Mountain Floor 2 Light Bridge Room Near"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -12430,8 +11586,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Mountain Floor 2 Light Bridge Room Near"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -12445,12 +11601,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Mountain Floor 2 Light Bridge Room Near"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -12568,7 +11720,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Near>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea18d0b3b00>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea8d7703d80>"
                       ]
                     }
                   }
@@ -12590,7 +11742,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Far>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea18d0b3ba0>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ea8d7703e20>"
                       ]
                     }
                   }
@@ -12689,12 +11841,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Mountain Floor 2 Light Bridge Room Far"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -12705,8 +11853,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Mountain Floor 2 Light Bridge Room Far"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -12720,12 +11868,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Mountain Floor 2 Light Bridge Room Far"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }
@@ -12743,12 +11887,8 @@
                       "attr": "stale"
                     },
                     "index": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "constant",
-                        "value": "Mountain Floor 2 Light Bridge Room Near"
-                      },
-                      "attr": "player"
+                      "type": "constant",
+                      "value": 1
                     }
                   },
                   "if_true": {
@@ -12759,8 +11899,8 @@
                   "if_false": {
                     "type": "compare",
                     "left": {
-                      "type": "constant",
-                      "value": "Mountain Floor 2 Light Bridge Room Near"
+                      "type": "name",
+                      "name": "self"
                     },
                     "op": "in",
                     "right": {
@@ -12774,12 +11914,8 @@
                         "attr": "reachable_regions"
                       },
                       "index": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "constant",
-                          "value": "Mountain Floor 2 Light Bridge Room Near"
-                        },
-                        "attr": "player"
+                        "type": "constant",
+                        "value": 1
                       }
                     }
                   }

@@ -1036,12 +1036,14 @@ class ASTVisitorMixin:
                 elif hasattr(value, 'value') and isinstance(value.value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to enum constant value: {value.value}")
                     return {'type': 'constant', 'value': value.value}
-                # Handle Region objects by extracting their .name attribute
+                # Handle Region objects - DON'T convert to string yet
+                # Keep them as name references so attribute access can still work
                 # We specifically check for 'entrances' attribute which Region objects have
                 # but Location objects don't, to avoid breaking Location.can_reach() patterns
                 elif hasattr(value, 'name') and hasattr(value, 'entrances') and isinstance(value.name, str):
-                    logging.debug(f"visit_Name: Resolved '{name}' from closure to Region name: {value.name}")
-                    return {'type': 'constant', 'value': value.name}
+                    logging.debug(f"visit_Name: Found Region object '{name}' in closure, keeping as name reference for attribute access")
+                    # Don't convert to string here - let attribute access or other operations handle it
+                    pass
                 # Handle NamedTuples - keep them as name references so attribute access still works
                 # The attributes will be resolved later in visit_Attribute
                 elif hasattr(value, '_fields'):
@@ -1061,11 +1063,12 @@ class ASTVisitorMixin:
                     elif hasattr(resolved_value, 'value') and isinstance(resolved_value.value, (int, float, str, bool)):
                         logging.debug(f"visit_Name: Resolved '{name}' from function defaults to enum constant value: {resolved_value.value}")
                         return {'type': 'constant', 'value': resolved_value.value}
-                    # Handle Region objects by extracting their .name attribute
+                    # Handle Region objects - DON'T convert to string yet
                     # Check for 'entrances' to distinguish Region from Location objects
                     elif hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances') and isinstance(resolved_value.name, str):
-                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults to Region name: {resolved_value.name}")
-                        return {'type': 'constant', 'value': resolved_value.name}
+                        logging.debug(f"visit_Name: Found Region object '{name}' in function defaults, keeping as name reference for attribute access")
+                        # Don't convert to string here - let attribute access or other operations handle it
+                        pass
                     # Handle NamedTuples from function defaults - keep as name references for attribute access
                     elif hasattr(resolved_value, '_fields'):
                         logging.debug(f"visit_Name: Found NamedTuple '{name}' in function defaults, keeping as name reference for attribute access")
