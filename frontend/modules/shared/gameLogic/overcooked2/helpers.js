@@ -38,7 +38,7 @@ export function has_enough_stars(snapshot, staticData, requiredStars) {
  * @param {number} stars - Number of stars to check for (1, 2, or 3)
  * @returns {boolean} True if player can earn the stars
  */
-export function has_requirements_for_level_star(snapshot, staticData, level, stars) {
+export function has_requirements_for_level_star(snapshot, staticData, level, stars, context) {
     if (!snapshot || !staticData) {
         return false;
     }
@@ -49,6 +49,32 @@ export function has_requirements_for_level_star(snapshot, staticData, level, sta
         levelId = level.level_id;
     } else if (typeof level === 'number') {
         levelId = level;
+    } else if (level === undefined && context && context.location) {
+        // Try to extract level_id from location name
+        // Location names are like "1-1 (1-Star)", "2-3 Completed", etc.
+        const locationName = context.location.name;
+        const match = locationName.match(/^(\d+-\d+)/);
+        if (match) {
+            const levelName = match[1];
+            // Convert level name to level_id
+            // Level names are like "1-1", "2-3", "K-1", etc.
+            // Level IDs are sequential: 1-1=1, 1-2=2, ..., 1-6=6, 2-1=7, ..., 6-6=36, K-1=37, ..., K-8=44
+            const parts = levelName.split('-');
+            if (parts.length === 2) {
+                const world = parseInt(parts[0]);
+                const level = parseInt(parts[1]);
+                if (!isNaN(world) && !isNaN(level) && world >= 1 && world <= 6 && level >= 1 && level <= 6) {
+                    levelId = (world - 1) * 6 + level;
+                } else if (parts[0] === 'K') {
+                    // Kevin levels: K-1=37, K-2=38, ..., K-8=44
+                    levelId = 36 + level;
+                }
+            }
+        }
+        if (!levelId) {
+            console.warn('[Overcooked2] has_requirements_for_level_star: could not extract level_id from location', locationName);
+            return false;
+        }
     } else {
         console.warn('[Overcooked2] has_requirements_for_level_star: invalid level parameter', level);
         return false;

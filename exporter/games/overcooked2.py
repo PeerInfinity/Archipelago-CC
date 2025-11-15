@@ -38,12 +38,28 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         """Extract game info including level_logic."""
         game_info = super().get_game_info(world)
 
-        # Add level_logic to game info
+        # Add level_logic to game info, converting shortname keys to level_id keys
         try:
             from worlds.overcooked2 import Logic
+            from worlds.overcooked2.Overcooked2Levels import Overcooked2Level
+
             if hasattr(Logic, 'level_logic'):
-                game_info['level_logic'] = Logic.level_logic
-                logger.info(f"Added level_logic with {len(Logic.level_logic)} entries to game_info")
+                # Convert shortname-based logic to level_id-based logic
+                level_logic_by_id = {}
+
+                # Keep the global "*" logic
+                if "*" in Logic.level_logic:
+                    level_logic_by_id["*"] = Logic.level_logic["*"]
+
+                # Convert other entries
+                for level in Overcooked2Level():
+                    shortname = level.shortname
+                    if shortname in Logic.level_logic:
+                        # Map level_id to the logic
+                        level_logic_by_id[level.level_id] = Logic.level_logic[shortname]
+
+                game_info['level_logic'] = level_logic_by_id
+                logger.info(f"Added level_logic with {len(level_logic_by_id)} entries to game_info")
         except Exception as e:
             logger.error(f"Error adding level_logic to game_info: {e}")
 
@@ -67,6 +83,75 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         except Exception as e:
             logger.error(f"Error initializing Overcooked! 2 game data: {e}")
 
+    def override_rule_analysis(self, rule_func, rule_target_name: str = None):
+        """Override rule analysis to properly handle Overcooked! 2 helper functions."""
+        if not hasattr(rule_func, '__code__'):
+            return None
+
+        code = rule_func.__code__
+
+        # Extract closure variables
+        closure_vars = {}
+        if hasattr(rule_func, '__closure__') and rule_func.__closure__:
+            var_names = code.co_freevars
+            for i, cell in enumerate(rule_func.__closure__):
+                if i < len(var_names):
+                    try:
+                        closure_vars[var_names[i]] = cell.cell_contents
+                    except ValueError:
+                        pass
+
+        # Handle entrance rules (has_requirements_for_level_access)
+        if 'has_requirements_for_level_access' in code.co_names:
+            if rule_target_name and ' -> ' in rule_target_name:
+                _, level_name = rule_target_name.split(' -> ', 1)
+
+                # Get the captured parameters
+                level_name_val = closure_vars.get('level_name', level_name)
+                previous_level = closure_vars.get('previous_level_completed_event_name')
+                required_stars = closure_vars.get('required_star_count', 0)
+                allow_tricks = closure_vars.get('allow_ramp_tricks', self.ramp_tricks_enabled)
+
+                # Create a helper rule that we'll expand later
+                return {
+                    'type': 'helper',
+                    'name': 'has_requirements_for_level_access',
+                    'args': [
+                        {'type': 'constant', 'value': level_name_val},
+                        {'type': 'constant', 'value': previous_level},
+                        {'type': 'constant', 'value': required_stars},
+                        {'type': 'constant', 'value': allow_tricks}
+                    ]
+                }
+
+        # Handle location rules (has_requirements_for_level_star)
+        if 'has_requirements_for_level_star' in code.co_names:
+            # Extract level information from closure
+            level_obj = closure_vars.get('level')
+            stars = closure_vars.get('stars', 1)
+
+            # Extract level_id from the level object
+            if level_obj:
+                # level_obj is an Overcooked2GenericLevel instance
+                if hasattr(level_obj, 'level_id'):
+                    level_id = level_obj.level_id
+                else:
+                    # Fallback: try to parse from location name
+                    level_id = None
+
+                # Create a helper rule with the level_id
+                return {
+                    'type': 'helper',
+                    'name': 'has_requirements_for_level_star',
+                    'args': [
+                        {'type': 'constant', 'value': level_id} if level_id else {'type': 'constant', 'value': None},
+                        {'type': 'constant', 'value': stars}
+                    ]
+                }
+
+        # Return None to use default analysis
+        return None
+
     def expand_helper(self, helper_name: str):
         """Expand Overcooked! 2 helper functions."""
         # For now, preserve helpers as-is - they'll be implemented in frontend
@@ -75,6 +160,111 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
             return None  # Keep as helper
 
         return super().expand_helper(helper_name)
+
+    def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Post-process analyzed rules to expand Overcooked! 2-specific helpers."""
+        if not rule:
+            return rule
+
+        # First expand any helpers and resolve variables
+        rule = self._resolve_variables_in_rule(rule)
+
+        # Then call expand_rule to expand any Overcooked! 2-specific helpers
+        return self.expand_rule(rule)
+
+    def _resolve_variables_in_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Resolve variable references in rules by removing them or replacing with actual checks."""
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type')
+
+        # Handle name type - these are variable references that should be resolved
+        if rule_type == 'name':
+            var_name = rule.get('name')
+            # Variables like 'visited' should be ignored (they're internal tracking)
+            if var_name == 'visited':
+                # Return a constant true since visited is just for recursion prevention
+                return {'type': 'constant', 'value': []}
+            # These variables should have been resolved by lambda capture but weren't
+            # We'll return them as-is and let them cause errors if they're actually used
+            return rule
+
+        # Recursively process conditional rules
+        if rule_type == 'conditional':
+            return {
+                'type': 'conditional',
+                'test': self._resolve_variables_in_rule(rule.get('test')),
+                'if_true': self._resolve_variables_in_rule(rule.get('if_true')),
+                'if_false': self._resolve_variables_in_rule(rule.get('if_false'))
+            }
+
+        # Recursively process and/or rules
+        if rule_type in ['and', 'or']:
+            return {
+                'type': rule_type,
+                'conditions': [self._resolve_variables_in_rule(cond) for cond in rule.get('conditions', [])]
+            }
+
+        # Recursively process not rules
+        if rule_type == 'not':
+            return {
+                'type': 'not',
+                'condition': self._resolve_variables_in_rule(rule.get('condition'))
+            }
+
+        # Recursively process compare rules
+        if rule_type == 'compare':
+            return {
+                'type': 'compare',
+                'left': self._resolve_variables_in_rule(rule.get('left')),
+                'op': rule.get('op'),
+                'right': self._resolve_variables_in_rule(rule.get('right'))
+            }
+
+        # Recursively process helper rules
+        if rule_type == 'helper':
+            helper_name = rule.get('name', '')
+            # Expand overworld_logic helper
+            if helper_name == 'overworld_logic':
+                # The overworld_logic helper is actually a check that should always pass
+                # since we're checking if we can reach a region from Menu/Overworld
+                # For now, return constant true - the actual region checks will be
+                # handled by the proper level access logic
+                return {'type': 'constant', 'value': True}
+            # For has_requirements_for_level_star, if the first arg is a 'name' type (unresolved variable),
+            # we can't use it directly. Keep the rule as a helper but mark the variable for special handling
+            if helper_name == 'has_requirements_for_level_star':
+                args = rule.get('args', [])
+                if args and args[0].get('type') == 'name' and args[0].get('name') == 'level':
+                    # The JavaScript helper can't evaluate this without the actual level object
+                    # Since we don't have the level_id at this point, we need to leave it as-is
+                    # The frontend will need to handle this differently
+                    pass
+            # Process args
+            resolved_args = [self._resolve_variables_in_rule(arg) for arg in rule.get('args', [])]
+            rule = dict(rule)
+            rule['args'] = resolved_args
+            return rule
+
+        # Recursively process item_check with name-type items
+        if rule_type == 'item_check':
+            item = rule.get('item')
+            if isinstance(item, dict) and item.get('type') == 'name':
+                # Can't resolve the name, keep as-is
+                return rule
+            return rule
+
+        # Recursively process function_call
+        if rule_type == 'function_call':
+            return {
+                'type': 'function_call',
+                'function': self._resolve_variables_in_rule(rule.get('function')),
+                'args': [self._resolve_variables_in_rule(arg) for arg in rule.get('args', [])]
+            }
+
+        # Return rule as-is for other types
+        return rule
 
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand rule functions with Overcooked! 2-specific handling."""
@@ -368,10 +558,29 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         This checks if the player can earn a specific number of stars on a level.
         """
         args = rule.get('args', [])
-        if len(args) < 3:
+        if len(args) < 2:
             return rule
 
-        # Keep as helper for now - will be implemented in frontend
+        # If the first arg is still a variable reference, we can't expand it here
+        # Instead, keep it as a helper but the frontend will need to handle it
+        level_arg = args[0]
+        stars_arg = args[1]
+
+        if level_arg.get('type') == 'name':
+            # Can't expand without knowing the level - keep as helper
+            return rule
+
+        # Extract level_id and stars
+        level_id = self._resolve_constant(level_arg)
+        stars = self._resolve_constant(stars_arg)
+
+        if level_id is None or stars is None:
+            return rule
+
+        # Look up the level in level_logic to get its shortname
+        # The level_logic uses shortnames like "Story 1-1", not level numbers
+        # We need to figure out the shortname from the level_id
+        # For now, keep as helper - this would require more context
         return rule
 
     def _expand_meets_requirements(self, rule: Dict[str, Any]) -> Dict[str, Any]:
