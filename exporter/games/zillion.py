@@ -3,6 +3,8 @@
 from typing import Dict, Any, Optional, List
 from .generic import GenericGameExportHandler
 import logging
+import json
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -13,8 +15,8 @@ class ZillionGameExportHandler(GenericGameExportHandler):
     The game does not use traditional helper functions - all logic is handled
     by zilliandomizer's internal calculations.
 
-    Access rules are extracted from the zz_loc.req field which contains
-    requirements like gun level, items needed, etc.
+    Access rules need to be determined by testing the location's access_rule function
+    with different item combinations.
     """
     GAME_NAME = 'Zillion'
 
@@ -32,89 +34,70 @@ class ZillionGameExportHandler(GenericGameExportHandler):
 
     def get_custom_location_access_rule(self, location, world) -> Optional[Dict[str, Any]]:
         """
-        Extract access rule from Zillion location's zz_loc.req field.
+        Determine access rule by testing the Zillion location's access_rule function.
 
-        The zz_loc.req contains requirements like:
-        - gun: Gun level requirement (0-3)
-        - jump: Jump requirement (0 or 1)
-        - hp: HP requirement
-        - red: Red ID Card count requirement
-        - floppy: Floppy Disk count requirement
-        - skill: Skill level requirement
+        Zillion uses the zilliandomizer library which has complex internal logic.
+        We need to test what items are required by calling the actual access_rule.
         """
-        # Check if this is a Zillion location with zz_loc attribute
-        if not hasattr(location, 'zz_loc'):
+        # Check if this location has an access_rule we can test
+        if not hasattr(location, 'access_rule') or not location.access_rule:
             return None
 
-        zz_loc = location.zz_loc
-        if not hasattr(zz_loc, 'req'):
-            return None
+        # Get the multiworld and player
+        multiworld = world.multiworld
+        player = world.player
 
-        req = zz_loc.req
-        conditions: List[Dict[str, Any]] = []
+        # Test if the location is accessible with no items (starting state)
+        base_state = multiworld.get_all_state(False)
+        base_state.sweep_for_advancements()  # Collect events that are always available
 
-        # Debug logging for a few locations
         loc_name = location.name if hasattr(location, 'name') else 'unknown'
-        if loc_name in ['C-3 mid far right', 'B-1 mid far left', 'A-3 top left-center', 'B-1 bottom left-center']:
-            logger.info(f"Location '{loc_name}': gun={getattr(req, 'gun', 'N/A')}, jump={getattr(req, 'jump', 'N/A')}, hp={getattr(req, 'hp', 'N/A')}, red={getattr(req, 'red', 'N/A')}, floppy={getattr(req, 'floppy', 'N/A')}")
+        is_accessible = location.access_rule(base_state)
 
-        # Gun requirement (Zillion item upgrades)
-        # Player starts with gun=1, so:
-        # gun <= 1: No Zillion items needed (base gun level)
-        # gun = 2: Need 1 Zillion item
-        # gun = 3: Need 2 Zillion items
-        if hasattr(req, 'gun') and req.gun > 1:
-            conditions.append({
-                'type': 'item_check',
-                'item': 'Zillion',
-                'count': {'type': 'constant', 'value': req.gun - 1}
-            })
+        # Debug logging for specific locations
+        if loc_name in ['C-3 mid far right', 'B-1 mid far left', 'D-2 top left-center']:
+            logger.info(f"Testing {loc_name}: accessible with no items = {is_accessible}")
 
-        # Jump requirement (implied from the requirement value)
-        if hasattr(req, 'jump') and req.jump > 0:
-            # Jump ability is assumed to be available (no specific item for it in Zillion)
-            # This is handled by the zilliandomizer library internally
-            pass
-
-        # Red ID Card requirement
-        if hasattr(req, 'red') and req.red > 0:
-            conditions.append({
-                'type': 'item_check',
-                'item': 'Red ID Card',
-                'count': {'type': 'constant', 'value': req.red}
-            })
-
-        # Floppy Disk requirement
-        if hasattr(req, 'floppy') and req.floppy > 0:
-            conditions.append({
-                'type': 'item_check',
-                'item': 'Floppy Disk',
-                'count': {'type': 'constant', 'value': req.floppy}
-            })
-
-        # Scope requirement (part of skill check)
-        # Note: skill in zilliandomizer might relate to having the Scope item
-        if hasattr(req, 'skill') and req.skill > 0:
-            # Skill might indicate need for Scope, but this is uncertain
-            # For now, we'll leave it out and see what the tests show
-            pass
-
-        # HP requirement - this is tricky as HP isn't a collectable item in AP
-        # It's more about character progression. For now, skip it.
-        if hasattr(req, 'hp') and req.hp > 0:
-            # HP requirements might be implied by other items or progression
-            pass
-
-        # If no conditions, location is always accessible
-        if not conditions:
+        if is_accessible:
+            # Location is accessible from the start
             return {'type': 'constant', 'value': True}
 
-        # If only one condition, return it directly
-        if len(conditions) == 1:
-            return conditions[0]
+        # Test common Zillion items to see what's needed
+        # Zillion items: Zillion (gun upgrade), Jump Shoes, Scope, Red ID Card, Floppy Disk, Bread
+        test_items = ['Zillion', 'Jump Shoes', 'Scope', 'Red ID Card', 'Floppy Disk', 'Bread']
 
-        # If multiple conditions, combine with AND
+        required_items = []
+
+        # Try each item individually first
+        for item_name in test_items:
+            if item_name not in world.item_name_to_id:
+                continue
+
+            test_state = multiworld.get_all_state(False)
+            test_state.sweep_for_advancements()
+            test_state.collect(world.create_item(item_name), prevent_sweep=True)
+
+            # If location becomes accessible with this one item, it might be required
+            if location.access_rule(test_state):
+                # Verify it's actually required by checking if it's not accessible without it
+                if not location.access_rule(base_state):
+                    required_items.append(item_name)
+                    break  # Found the requirement, no need to test more
+
+        # Build the access rule based on what we found
+        if not required_items:
+            # Couldn't determine requirements - mark as needing analysis
+            # Return None to fall back to analyzer
+            return None
+
+        if len(required_items) == 1:
+            return {
+                'type': 'item_check',
+                'item': required_items[0]
+            }
+
+        # Multiple items required (shouldn't happen with current logic, but handle it)
         return {
             'type': 'and',
-            'conditions': conditions
+            'conditions': [{'type': 'item_check', 'item': item} for item in required_items]
         }
