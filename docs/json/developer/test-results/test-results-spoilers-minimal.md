@@ -4,11 +4,11 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-15 19:39:52
+**Generated:** 2025-11-15 23:39:48
 
-**Source Data Created:** 2025-11-15T19:39:38.559543
+**Source Data Created:** 2025-11-15T23:39:33.036230
 
-**Source Data Last Updated:** 2025-11-15T19:39:38.559548
+**Source Data Last Updated:** 2025-11-15T23:39:33.036237
 
 ## Summary
 
@@ -79,7 +79,7 @@
 | Stardew Valley | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Subnautica | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Super Mario Land 2 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Super Mario Land 2 | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Super Mario World | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Super Metroid | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | TUNIC | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
