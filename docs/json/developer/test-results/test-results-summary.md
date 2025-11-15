@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-15 03:45:00
+**Generated:** 2025-11-15 04:29:44
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,7 +12,7 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 43/78 passed (55.1%)
+- **Minimal Test:** 44/78 passed (56.4%)
 - **Full Test:** 29/78 passed (37.2%)
 - **Multiplayer Test:** 33/78 passed (42.3%)
 - **Multiworld Test:** 0/78 passed (0.0%)
@@ -22,8 +22,8 @@ This summary combines results from four types of tests:
 - **Templates passing all 4 tests:** 0/79 (0.0%)
 - **Templates passing 3 tests:** 24/79 (30.4%)
 - **Templates passing 2 tests:** 11/79 (13.9%)
-- **Templates passing 1 test:** 11/79 (13.9%)
-- **Templates passing 0 tests:** 33/79 (41.8%)
+- **Templates passing 1 test:** 12/79 (15.2%)
+- **Templates passing 0 tests:** 32/79 (40.5%)
 
 ## Test Results
 
@@ -35,7 +35,7 @@ This summary combines results from four types of tests:
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | ArchipIDLE | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
-| Blasphemous | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Blasphemous | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
@@ -55,8 +55,8 @@ This summary combines results from four types of tests:
 | Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Inscryption | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
-| Jak and Daxter The Precursor Legacy | ❌ Failed | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
-| Jak and Daxter: The Precursor Legacy | ❓ N/A | ❓ N/A | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Jak and Daxter The Precursor Legacy | ❓ N/A | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed | ❓ N/A | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
 | Kingdom Hearts | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Kingdom Hearts 2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Kirby's Dream Land 3 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
