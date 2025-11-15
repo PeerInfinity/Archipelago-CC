@@ -462,9 +462,9 @@
     "world_directory": "sm"
   },
   "TUNIC": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/tunic.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "tunic"
   },
@@ -504,16 +504,16 @@
     "world_directory": "witness"
   },
   "Timespinner": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/timespinner.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "timespinner"
   },
   "Undertale": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/undertale.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "undertale"
   },
