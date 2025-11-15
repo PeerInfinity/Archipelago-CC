@@ -569,6 +569,7 @@ export function createStateSnapshotInterface(
     _isSnapshotInterface: true,
     inventory: snapshot?.inventory || {},
     events: snapshot?.events || {},
+    prog_items: snapshot?.prog_items || {},
     ...rawInterfaceForHelpers,
     // Add context variables to the interface (e.g., currentLocation for boss defeat rules)
     ...contextVariables,
