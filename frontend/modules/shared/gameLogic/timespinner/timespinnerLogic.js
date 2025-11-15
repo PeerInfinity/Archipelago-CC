@@ -47,8 +47,24 @@ export const timespinnerStateModule = {
    * Process Timespinner event items
    */
   processEventItem(gameState, itemName) {
-    // Timespinner doesn't have special event item processing
-    return null;
+    // Add event items to the events array
+    // Event items like "Killed Maw", "Killed Twins", "Killed Aelana" need to be tracked
+    // for helpers like can_kill_all_3_bosses to work correctly
+
+    // Only process items that start with "Killed" (Timespinner's event naming convention)
+    if (!itemName || !itemName.startsWith('Killed')) {
+      return gameState; // Not an event item, no change
+    }
+
+    const currentEvents = gameState.events || [];
+    if (!currentEvents.includes(itemName)) {
+      return {
+        ...gameState,
+        events: [...currentEvents, itemName],
+      };
+    }
+    // Event already exists, no change
+    return gameState;
   },
 
   /**
