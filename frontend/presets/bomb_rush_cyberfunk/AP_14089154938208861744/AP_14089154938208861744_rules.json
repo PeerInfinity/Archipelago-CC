@@ -2552,27 +2552,45 @@
             "name": "Hideout -> Versum Hill",
             "connected_region": "Versum Hill",
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 20
+              }
             }
           },
           {
             "name": "Hideout -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_square_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             }
           },
           {
             "name": "Hideout -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "type": "helper",
-              "name": "mataan_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             }
           }
         ],
@@ -2693,14 +2711,30 @@
             "name": "Hideout: BMX garage skateboard",
             "id": 2308008,
             "access_rule": {
-              "type": "helper",
-              "name": "bmx",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
                   "type": "constant",
                   "value": 2
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 1
                 }
-              ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "group_check",
+                "group": {
+                  "type": "constant",
+                  "value": "bmx"
+                }
+              }
             },
             "item": {
               "name": "Skateboard (Terrence)",
@@ -2713,14 +2747,15 @@
             "name": "Hideout: Unlock phone app",
             "id": 2308009,
             "access_rule": {
-              "type": "helper",
-              "name": "current_chapter",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 2
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             },
             "item": {
               "name": "Inline Skates (Glaciers)",
@@ -2733,14 +2768,15 @@
             "name": "Hideout: Vinyl joins the crew",
             "id": 2308010,
             "access_rule": {
-              "type": "helper",
-              "name": "current_chapter",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 4
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
             },
             "item": {
               "name": "Inline Skates (Red Industry)",
@@ -2753,14 +2789,15 @@
             "name": "Hideout: Solace joins the crew",
             "id": 2308011,
             "access_rule": {
-              "type": "helper",
-              "name": "current_chapter",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 5
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 4
+              }
             },
             "item": {
               "name": "16 REP",
@@ -2786,14 +2823,11 @@
             "name": "Versum Hill -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_ch1_roadblock",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 0
-                }
-              ]
+              "type": "group_check",
+              "group": {
+                "type": "constant",
+                "value": "graffitil"
+              }
             }
           }
         ],
@@ -2844,14 +2878,30 @@
             "name": "Versum Hill: BMX gate outfit",
             "id": 2308031,
             "access_rule": {
-              "type": "helper",
-              "name": "bmx",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
                   "type": "constant",
                   "value": 2
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 1
                 }
-              ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "group_check",
+                "group": {
+                  "type": "constant",
+                  "value": "bmx"
+                }
+              }
             },
             "item": {
               "name": "24 REP",
@@ -2864,9 +2914,11 @@
             "name": "Versum Hill: Big Polo",
             "id": 2308037,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Music (You Can Say Hi)",
@@ -2879,9 +2931,11 @@
             "name": "Versum Hill: Trash Polo",
             "id": 2308038,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Bel",
@@ -2907,45 +2961,75 @@
             "name": "Versum Hill - After Roadblock -> Versum Hill",
             "connected_region": "Versum Hill",
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 20
+              }
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_square_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill - Underground Mall",
             "connected_region": "Versum Hill - Underground Mall",
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_oldhead",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 120
+              }
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill - Side Street",
             "connected_region": "Versum Hill - Side Street",
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_all_challenges",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 65
+              }
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill - Basketball Court",
             "connected_region": "Versum Hill - Basketball Court",
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_basketball_court",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 90
+              }
             }
           }
         ],
@@ -3052,9 +3136,15 @@
             "name": "Versum Hill: Wallrunning challenge reward",
             "id": 2308022,
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_challenge1",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 50
+              }
             },
             "item": {
               "name": "Solace",
@@ -3067,9 +3157,15 @@
             "name": "Versum Hill: Manual challenge reward",
             "id": 2308023,
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_challenge2",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 58
+              }
             },
             "item": {
               "name": "Graffiti (L - INFINITY)",
@@ -3082,9 +3178,15 @@
             "name": "Versum Hill: Corner challenge reward",
             "id": 2308024,
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_challenge3",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 65
+              }
             },
             "item": {
               "name": "8 REP",
@@ -3097,14 +3199,30 @@
             "name": "Versum Hill: Glass floor skates",
             "id": 2308032,
             "access_rule": {
-              "type": "helper",
-              "name": "inline_skates",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
                   "type": "constant",
                   "value": 2
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 3
                 }
-              ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "group_check",
+                "group": {
+                  "type": "constant",
+                  "value": "skates"
+                }
+              }
             },
             "item": {
               "name": "8 REP",
@@ -3117,14 +3235,15 @@
             "name": "Versum Hill: Frank joins the crew",
             "id": 2308035,
             "access_rule": {
-              "type": "helper",
-              "name": "current_chapter",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 2
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             },
             "item": {
               "name": "24 REP",
@@ -3142,14 +3261,11 @@
             "name": "Versum Hill - Underground Mall -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_ch1_roadblock",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 0
-                }
-              ]
+              "type": "group_check",
+              "group": {
+                "type": "constant",
+                "value": "graffitil"
+              }
             }
           }
         ],
@@ -3210,9 +3326,11 @@
             "name": "Versum Hill: Fruit stand Polo",
             "id": 2308039,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Music (GET ENUF)",
@@ -3230,14 +3348,11 @@
             "name": "Versum Hill - Side Street -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_ch1_roadblock",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 0
-                }
-              ]
+              "type": "group_check",
+              "group": {
+                "type": "constant",
+                "value": "graffitil"
+              }
             }
           }
         ],
@@ -3279,23 +3394,26 @@
             "name": "Versum Hill - Basketball Court -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_ch1_roadblock",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 0
-                }
-              ]
+              "type": "group_check",
+              "group": {
+                "type": "constant",
+                "value": "graffitil"
+              }
             }
           },
           {
             "name": "Versum Hill - Basketball Court -> Versum Hill",
             "connected_region": "Versum Hill",
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 20
+              }
             }
           }
         ],
@@ -3332,14 +3450,15 @@
             "name": "Versum Hill: Basketball court shortcut CD",
             "id": 2308033,
             "access_rule": {
-              "type": "helper",
-              "name": "current_chapter",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 2
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             },
             "item": {
               "name": "Graffiti (M - Stacked Symbols)",
@@ -3405,50 +3524,59 @@
             "name": "Millennium Square -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "type": "helper",
-              "name": "versum_hill_ch1_roadblock",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 0
-                }
-              ]
+              "type": "group_check",
+              "group": {
+                "type": "constant",
+                "value": "graffitil"
+              }
             }
           },
           {
             "name": "Millennium Square -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_entrance",
-              "args": []
+              "type": "and",
+              "rules": [],
+              "conditions": []
             }
           },
           {
             "name": "Millennium Square -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_mall_entrance",
-              "args": []
+              "type": "and",
+              "rules": [],
+              "conditions": []
             }
           },
           {
             "name": "Millennium Square -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
             }
           },
           {
             "name": "Millennium Square -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "type": "helper",
-              "name": "mataan_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             }
           }
         ],
@@ -3681,9 +3809,11 @@
             "name": "Millennium Square: Half pipe Polo",
             "id": 2308056,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Outfit (Red - Winter)",
@@ -3701,36 +3831,60 @@
             "name": "Brink Terminal -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_square_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             }
           },
           {
             "name": "Brink Terminal -> Brink Terminal - Underground",
             "connected_region": "Brink Terminal - Underground",
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_oldhead_underground",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 250
+              }
             }
           },
           {
             "name": "Brink Terminal -> Brink Terminal - Dock",
             "connected_region": "Brink Terminal - Dock",
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_oldhead_dock",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 320
+              }
             }
           },
           {
             "name": "Brink Terminal -> Brink Terminal - Planet Plaza",
             "connected_region": "Brink Terminal - Planet Plaza",
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_plaza",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 220
+              }
             }
           }
         ],
@@ -3739,9 +3893,15 @@
             "name": "Brink Terminal: Upside grind challenge reward",
             "id": 2308057,
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_challenge1",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 188
+              }
             },
             "item": {
               "name": "Music (Light Switch)",
@@ -3754,9 +3914,15 @@
             "name": "Brink Terminal: Manual challenge reward",
             "id": 2308058,
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_challenge2",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 200
+              }
             },
             "item": {
               "name": "16 REP",
@@ -3769,9 +3935,15 @@
             "name": "Brink Terminal: Score challenge reward",
             "id": 2308059,
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_challenge3",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 220
+              }
             },
             "item": {
               "name": "Graffiti (L - RECORD.HEAD)",
@@ -3826,14 +3998,30 @@
             "name": "Brink Terminal: BMX gate graffiti",
             "id": 2308063,
             "access_rule": {
-              "type": "helper",
-              "name": "bmx",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
                   "type": "constant",
                   "value": 2
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 1
                 }
-              ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "group_check",
+                "group": {
+                  "type": "constant",
+                  "value": "bmx"
+                }
+              }
             },
             "item": {
               "name": "Skateboard (Devon)",
@@ -3902,14 +4090,15 @@
             "name": "Brink Terminal: Eclipse joins the crew",
             "id": 2308081,
             "access_rule": {
-              "type": "helper",
-              "name": "current_chapter",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 3
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Skateboard (Just Swell)",
@@ -3922,9 +4111,11 @@
             "name": "Brink Terminal: Behind glass Polo",
             "id": 2308082,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Graffiti (M - Pora)",
@@ -3942,9 +4133,9 @@
             "name": "Brink Terminal - Underground -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_entrance",
-              "args": []
+              "type": "and",
+              "rules": [],
+              "conditions": []
             }
           }
         ],
@@ -3986,9 +4177,9 @@
             "name": "Brink Terminal - Dock -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_entrance",
-              "args": []
+              "type": "and",
+              "rules": [],
+              "conditions": []
             }
           }
         ],
@@ -4106,18 +4297,24 @@
             "name": "Brink Terminal - Planet Plaza -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_entrance",
-              "args": []
+              "type": "and",
+              "rules": [],
+              "conditions": []
             }
           },
           {
             "name": "Brink Terminal - Planet Plaza -> Brink Terminal - Tower",
             "connected_region": "Brink Terminal - Tower",
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_tower",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 280
+              }
             }
           }
         ],
@@ -4145,18 +4342,24 @@
             "name": "Brink Terminal - Tower -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_entrance",
-              "args": []
+              "type": "and",
+              "rules": [],
+              "conditions": []
             }
           },
           {
             "name": "Brink Terminal - Tower -> Brink Terminal - Planet Plaza",
             "connected_region": "Brink Terminal - Planet Plaza",
             "access_rule": {
-              "type": "helper",
-              "name": "brink_terminal_plaza",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 220
+              }
             }
           }
         ],
@@ -4179,14 +4382,30 @@
             "name": "Brink Terminal: Rooftop glass CD",
             "id": 2308073,
             "access_rule": {
-              "type": "helper",
-              "name": "inline_skates",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
                   "type": "constant",
                   "value": 2
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 3
                 }
-              ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "group_check",
+                "group": {
+                  "type": "constant",
+                  "value": "skates"
+                }
+              }
             },
             "item": {
               "name": "8 REP",
@@ -4256,23 +4475,24 @@
             "name": "Millennium Mall -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_square_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             }
           },
           {
             "name": "Millennium Mall -> Millennium Mall - Hanging Lights",
             "connected_region": "Millennium Mall - Hanging Lights",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_mall_oldhead_ceiling",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 0
-                }
-              ]
+              "type": "or",
+              "rules": [],
+              "conditions": []
             }
           },
           {
@@ -4341,14 +4561,30 @@
             "name": "Millennium Mall: Glass cylinder CD",
             "id": 2308086,
             "access_rule": {
-              "type": "helper",
-              "name": "inline_skates",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
                   "type": "constant",
                   "value": 2
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 3
                 }
-              ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "group_check",
+                "group": {
+                  "type": "constant",
+                  "value": "skates"
+                }
+              }
             },
             "item": {
               "name": "Vinyl",
@@ -4380,9 +4616,9 @@
             "name": "Millennium Mall - Hanging Lights -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_mall_entrance",
-              "args": []
+              "type": "and",
+              "rules": [],
+              "conditions": []
             }
           }
         ],
@@ -4410,32 +4646,33 @@
             "name": "Millennium Mall - Atrium -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_mall_entrance",
-              "args": []
+              "type": "and",
+              "rules": [],
+              "conditions": []
             }
           },
           {
             "name": "Millennium Mall - Atrium -> Millennium Mall - Race Track",
             "connected_region": "Millennium Mall - Race Track",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_mall_oldhead_race",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 530
+              }
             }
           },
           {
             "name": "Millennium Mall - Atrium -> Millennium Mall - Theater",
             "connected_region": "Millennium Mall - Theater",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_mall_theater",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 0
-                }
-              ]
+              "type": "and",
+              "rules": [],
+              "conditions": []
             }
           }
         ],
@@ -4458,9 +4695,15 @@
             "name": "Millennium Mall: Trick challenge reward",
             "id": 2308089,
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_mall_challenge1",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 434
+              }
             },
             "item": {
               "name": "Graffiti (XL - FATE)",
@@ -4473,9 +4716,15 @@
             "name": "Millennium Mall: Slide challenge reward",
             "id": 2308090,
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_mall_challenge2",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 442
+              }
             },
             "item": {
               "name": "24 REP",
@@ -4488,9 +4737,15 @@
             "name": "Millennium Mall: Fish challenge reward",
             "id": 2308091,
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_mall_challenge3",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 450
+              }
             },
             "item": {
               "name": "8 REP",
@@ -4503,9 +4758,15 @@
             "name": "Millennium Mall: Score challenge reward",
             "id": 2308092,
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_mall_challenge4",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 458
+              }
             },
             "item": {
               "name": "Inline Skates (Sharpshooters)",
@@ -4574,14 +4835,30 @@
             "name": "Millennium Mall: Atrium BMX gate BMX",
             "id": 2308097,
             "access_rule": {
-              "type": "helper",
-              "name": "bmx",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
                   "type": "constant",
                   "value": 2
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 1
                 }
-              ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "group_check",
+                "group": {
+                  "type": "constant",
+                  "value": "bmx"
+                }
+              }
             },
             "item": {
               "name": "Tryce",
@@ -4608,14 +4885,15 @@
             "name": "Millennium Mall: DOT.EXE joins the crew",
             "id": 2308106,
             "access_rule": {
-              "type": "helper",
-              "name": "current_chapter",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 4
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
             },
             "item": {
               "name": "Graffiti (L - Jd Vila Formosa)",
@@ -4690,9 +4968,9 @@
             "name": "Millennium Mall - Theater -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_mall_entrance",
-              "args": []
+              "type": "and",
+              "rules": [],
+              "conditions": []
             }
           }
         ],
@@ -4757,14 +5035,15 @@
             "name": "Millennium Mall: Shine joins the crew",
             "id": 2308105,
             "access_rule": {
-              "type": "helper",
-              "name": "current_chapter",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 4
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
             },
             "item": {
               "name": "Oldhead",
@@ -4806,18 +5085,30 @@
             "name": "Pyramid Island - Base -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_square_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             }
           },
           {
             "name": "Pyramid Island - Base -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_gate",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 620
+              }
             }
           }
         ],
@@ -4868,14 +5159,30 @@
             "name": "Pyramid Island: BMX gate BMX",
             "id": 2308110,
             "access_rule": {
-              "type": "helper",
-              "name": "bmx",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
                   "type": "constant",
                   "value": 2
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 1
                 }
-              ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "group_check",
+                "group": {
+                  "type": "constant",
+                  "value": "bmx"
+                }
+              }
             },
             "item": {
               "name": "Outfit (Rise - Autumn)",
@@ -4888,9 +5195,11 @@
             "name": "Pyramid Island: Polo pile 1",
             "id": 2308131,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Graffiti (M - 0m33)",
@@ -4903,9 +5212,11 @@
             "name": "Pyramid Island: Polo pile 2",
             "id": 2308132,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Music (DA PEOPLE)",
@@ -4918,9 +5229,11 @@
             "name": "Pyramid Island: Polo pile 3",
             "id": 2308133,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Devil Theory",
@@ -4933,9 +5246,11 @@
             "name": "Pyramid Island: Polo pile 4",
             "id": 2308134,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Outfit (Solace - Winter)",
@@ -4953,18 +5268,30 @@
             "name": "Pyramid Island - After Gate -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
             }
           },
           {
             "name": "Pyramid Island - After Gate -> Pyramid Island - Maze",
             "connected_region": "Pyramid Island - Maze",
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_oldhead",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 780
+              }
             }
           },
           {
@@ -4972,7 +5299,7 @@
             "connected_region": "Pyramid Island - Upper Areas",
             "access_rule": {
               "type": "helper",
-              "name": "pyramid_island_upper_half",
+              "name": "pyramid_island_all_challenges",
               "args": [
                 {
                   "type": "constant",
@@ -5075,9 +5402,9 @@
             "name": "Pyramid Island: Score challenge reward",
             "id": 2308117,
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_challenge1",
-              "args": []
+              "type": "and",
+              "rules": [],
+              "conditions": []
             },
             "item": {
               "name": "8 REP",
@@ -5090,9 +5417,15 @@
             "name": "Pyramid Island: Score challenge 2 reward",
             "id": 2308118,
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_challenge2",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 650
+              }
             },
             "item": {
               "name": "16 REP",
@@ -5105,9 +5438,15 @@
             "name": "Pyramid Island: Quarter pipe challenge reward",
             "id": 2308119,
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_challenge3",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 660
+              }
             },
             "item": {
               "name": "8 REP",
@@ -5125,9 +5464,15 @@
             "name": "Pyramid Island - Maze -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_gate",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 620
+              }
             }
           }
         ],
@@ -5136,14 +5481,30 @@
             "name": "Pyramid Island: Maze outfit",
             "id": 2308128,
             "access_rule": {
-              "type": "helper",
-              "name": "skateboard",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": 2
+                },
+                "op": "==",
+                "right": {
                   "type": "constant",
                   "value": 2
                 }
-              ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "group_check",
+                "group": {
+                  "type": "constant",
+                  "value": "skateboard"
+                }
+              }
             },
             "item": {
               "name": "Graffiti (XL - Web Spitter)",
@@ -5156,9 +5517,11 @@
             "name": "Pyramid Island: Maze glass Polo",
             "id": 2308135,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Graffiti (XL - Gold Rush)",
@@ -5171,9 +5534,11 @@
             "name": "Pyramid Island: Maze classroom Polo",
             "id": 2308136,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Outfit (Rave - Autumn)",
@@ -5186,9 +5551,11 @@
             "name": "Pyramid Island: Maze vent Polo",
             "id": 2308137,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Music (Funk Express)",
@@ -5201,9 +5568,11 @@
             "name": "Pyramid Island: Big maze Polo",
             "id": 2308138,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "8 REP",
@@ -5216,9 +5585,11 @@
             "name": "Pyramid Island: Maze desk Polo",
             "id": 2308139,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "16 REP",
@@ -5231,9 +5602,11 @@
             "name": "Pyramid Island: Maze forklift Polo",
             "id": 2308140,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Music (watchyaback!)",
@@ -5251,27 +5624,45 @@
             "name": "Pyramid Island - Upper Areas -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
             }
           },
           {
             "name": "Pyramid Island - Upper Areas -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_gate",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 620
+              }
             }
           },
           {
             "name": "Pyramid Island - Upper Areas -> Pyramid Island - Top",
             "connected_region": "Pyramid Island - Top",
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_top",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 4
+              }
             }
           }
         ],
@@ -5294,14 +5685,30 @@
             "name": "Pyramid Island: Shortcut glass CD",
             "id": 2308121,
             "access_rule": {
-              "type": "helper",
-              "name": "inline_skates",
-              "args": [
-                {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
                   "type": "constant",
                   "value": 2
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 3
                 }
-              ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "group_check",
+                "group": {
+                  "type": "constant",
+                  "value": "skates"
+                }
+              }
             },
             "item": {
               "name": "Music (Trinitron)",
@@ -5370,14 +5777,15 @@
             "name": "Pyramid Island: Devil Theory joins the crew",
             "id": 2308130,
             "access_rule": {
-              "type": "helper",
-              "name": "current_chapter",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 5
-                }
-              ]
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 4
+              }
             },
             "item": {
               "name": "Music (State of Mind)",
@@ -5419,18 +5827,30 @@
             "name": "Pyramid Island - Top -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
             }
           },
           {
             "name": "Pyramid Island - Top -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "type": "helper",
-              "name": "pyramid_island_gate",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 620
+              }
             }
           },
           {
@@ -5438,7 +5858,7 @@
             "connected_region": "Pyramid Island - Upper Areas",
             "access_rule": {
               "type": "helper",
-              "name": "pyramid_island_upper_half",
+              "name": "pyramid_island_all_challenges",
               "args": [
                 {
                   "type": "constant",
@@ -5485,9 +5905,11 @@
             "name": "Pyramid Island: Rise joins the crew",
             "id": 2308129,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "16 REP",
@@ -5513,18 +5935,24 @@
             "name": "Mataan - Streets -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "type": "helper",
-              "name": "millennium_square_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             }
           },
           {
             "name": "Mataan - Streets -> Mataan - After Smoke Wall",
             "connected_region": "Mataan - After Smoke Wall",
             "access_rule": {
-              "type": "helper",
-              "name": "mataan_smoke_wall",
-              "args": []
+              "type": "and",
+              "rules": [],
+              "conditions": []
             }
           }
         ],
@@ -5580,9 +6008,15 @@
             "name": "Mataan - After Smoke Wall -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "type": "helper",
-              "name": "mataan_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             }
           },
           {
@@ -5679,9 +6113,11 @@
             "name": "Mataan: Trash Polo",
             "id": 2308167,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "8 REP",
@@ -5699,18 +6135,24 @@
             "name": "Mataan - Deep City -> Mataan - After Smoke Wall",
             "connected_region": "Mataan - After Smoke Wall",
             "access_rule": {
-              "type": "helper",
-              "name": "mataan_smoke_wall",
-              "args": []
+              "type": "and",
+              "rules": [],
+              "conditions": []
             }
           },
           {
             "name": "Mataan - Deep City -> Mataan - Red Light District",
             "connected_region": "Mataan - Red Light District",
             "access_rule": {
-              "type": "helper",
-              "name": "mataan_oldhead",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 935
+              }
             }
           },
           {
@@ -5813,9 +6255,15 @@
             "name": "Mataan: Score challenge reward",
             "id": 2308153,
             "access_rule": {
-              "type": "helper",
-              "name": "mataan_challenge3",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "rep"
+              },
+              "count": {
+                "type": "constant",
+                "value": 920
+              }
             },
             "item": {
               "name": "Outfit (Rave - Winter)",
@@ -5985,9 +6433,15 @@
             "name": "Mataan - Skyscrapers -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "type": "helper",
-              "name": "mataan_entrance",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Chapter Completed"
+              },
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
             }
           }
         ],
@@ -6104,9 +6558,11 @@
             "name": "Mataan: Shopping Polo",
             "id": 2308168,
             "access_rule": {
-              "type": "helper",
-              "name": "camera",
-              "args": []
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Camera App"
+              }
             },
             "item": {
               "name": "Outfit (Felix - Winter)",
@@ -8275,6 +8731,28 @@
         "advancement": true,
         "useful": false,
         "trap": false
+      },
+      "Chapter Completed": {
+        "name": "Chapter Completed",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 4
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": null,
+        "max_count": 1
       }
     }
   },
