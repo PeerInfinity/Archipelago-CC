@@ -650,32 +650,37 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
 
         # Start regions
         try:
-            # Try to get Menu region first (common default)
-            default_start_region = 'Menu'
-            try:
-                menu_region = multiworld.get_region('Menu', player)
-            except Exception as e:
-                # Menu region doesn't exist, need to find actual starting region
-                logger.debug(f"Menu region not found for player {player}, looking for actual starting region")
-                menu_region = None
-                
-                # Find the actual starting region
-                player_regions = [
-                    region for region in multiworld.get_regions() 
-                    if region.player == player
-                ]
-                
-                # For single-region games, use that region as the starting region
-                if len(player_regions) == 1:
-                    default_start_region = player_regions[0].name
-                    logger.debug(f"Using single region '{default_start_region}' as starting region for player {player}")
-                else:
-                    # Look for regions with no entrances (typically starting regions)
-                    for region in player_regions:
-                        if not region.entrances:
-                            default_start_region = region.name
-                            logger.debug(f"Found region '{default_start_region}' with no entrances as starting region for player {player}")
-                            break
+            # First, check if the world has an origin_region_name attribute
+            default_start_region = 'Menu'  # Default fallback
+            if hasattr(world, 'origin_region_name') and world.origin_region_name:
+                default_start_region = world.origin_region_name
+                logger.debug(f"Using world.origin_region_name '{default_start_region}' as starting region for player {player}")
+            else:
+                # Try to get Menu region first (common default)
+                try:
+                    menu_region = multiworld.get_region('Menu', player)
+                except Exception as e:
+                    # Menu region doesn't exist, need to find actual starting region
+                    logger.debug(f"Menu region not found for player {player}, looking for actual starting region")
+                    menu_region = None
+
+                    # Find the actual starting region
+                    player_regions = [
+                        region for region in multiworld.get_regions()
+                        if region.player == player
+                    ]
+
+                    # For single-region games, use that region as the starting region
+                    if len(player_regions) == 1:
+                        default_start_region = player_regions[0].name
+                        logger.debug(f"Using single region '{default_start_region}' as starting region for player {player}")
+                    else:
+                        # Look for regions with no entrances (typically starting regions)
+                        for region in player_regions:
+                            if not region.entrances:
+                                default_start_region = region.name
+                                logger.debug(f"Found region '{default_start_region}' with no entrances as starting region for player {player}")
+                                break
 
             available_regions = []
             player_regions = [
