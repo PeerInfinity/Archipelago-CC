@@ -47,6 +47,13 @@ Exit access rules contain unresolved variable references that prevent the rule e
    - `PROGRESSIVE_ITEMS` - list of 9 progressive item names
    - `PROGRESSIVE_DOORS_BY_ROOM` - maps room -> door -> progression info
 
+2. ✅ Added `postprocess_entrance_rule` method to simplify entrance rules:
+   - Extracts door information from entrance names
+   - Simplifies "if door is None" conditionals
+   - Replaces 'room' variable references with actual room names
+   - Converts world.player_logic.door_reqs lookups to settings.door_reqs lookups
+
 **Remaining work**:
-- Update rule engine to detect and handle these unresolved variable patterns
-- Use the exported data to evaluate the rules correctly at runtime
+- Further simplify entrance rules by evaluating `item_by_door.get(room)` checks at export time
+- Update rule engine to handle remaining unresolved variable patterns (`world`, nested function calls)
+- OR complete full evaluation of entrance logic at export time to produce simple rules
