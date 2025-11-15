@@ -3,7 +3,7 @@
   "game_name": "Jak and Daxter: The Precursor Legacy",
   "game_directory": "jak_and_daxter__the_precursor_legacy",
   "archipelago_version": "0.6.4",
-  "generation_seed": 1,
+  "generation_seed": 9,
   "player_names": {
     "1": "Player1"
   },
@@ -48,9 +48,9 @@
               "count": 7
             },
             "item": {
-              "name": "Scout Fly - Misty Island",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -63,7 +63,7 @@
               "count": 7
             },
             "item": {
-              "name": "Scout Fly - Spider Cave",
+              "name": "Scout Fly - Citadel",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -80,7 +80,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -93,7 +93,7 @@
               "count": 7
             },
             "item": {
-              "name": "Scout Fly - Lava Tube",
+              "name": "Scout Fly - Rock Village",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -138,9 +138,9 @@
               "count": 7
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Green Eco Pill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -153,7 +153,7 @@
               "count": 7
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Misty Island",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -168,7 +168,7 @@
               "count": 7
             },
             "item": {
-              "name": "Scout Fly - Sentinel Beach",
+              "name": "Blue Eco Switch",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -185,7 +185,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -198,7 +198,7 @@
               "count": 7
             },
             "item": {
-              "name": "Jungle Elevator",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -213,7 +213,7 @@
               "count": 7
             },
             "item": {
-              "name": "Scout Fly - Snowy Mountain",
+              "name": "Scout Fly - Boggy Swamp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -228,7 +228,7 @@
               "count": 7
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Fire Canyon",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -243,9 +243,9 @@
               "count": 7
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Spider Cave",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -258,9 +258,9 @@
               "count": 7
             },
             "item": {
-              "name": "Scout Fly - Boggy Swamp",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -273,7 +273,7 @@
               "count": 7
             },
             "item": {
-              "name": "Scout Fly - Lost Precursor City",
+              "name": "Scout Fly - Geyser Rock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -356,7 +356,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Sandover Village",
+              "name": "Scout Fly - Misty Island",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -370,7 +370,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Rock Village",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -384,7 +384,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Mountain Pass",
+              "name": "Scout Fly - Fire Canyon",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -398,7 +398,7 @@
               "value": true
             },
             "item": {
-              "name": "Fisherman's Boat",
+              "name": "Scout Fly - Sandover Village",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -412,7 +412,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Rock Village",
+              "name": "Scout Fly - Boggy Swamp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -428,7 +428,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -440,7 +440,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Citadel",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -484,9 +484,9 @@
               "value": true
             },
             "item": {
-              "name": "Green Eco Pill",
+              "name": "Freed The Yellow Sage",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -660,7 +660,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Fire Canyon",
+              "name": "Scout Fly - Lost Precursor City",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -677,7 +677,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Lava Tube",
+              "name": "Scout Fly - Sandover Village",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -694,7 +694,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Mountain Pass",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -708,7 +708,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Misty Island",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -724,7 +724,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -738,7 +738,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -750,9 +750,9 @@
               "value": true
             },
             "item": {
-              "name": "Green Eco Pill",
+              "name": "Scout Fly - Snowy Mountain",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -834,9 +834,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Geyser Rock",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -941,7 +941,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Misty Island",
+              "name": "Scout Fly - Forbidden Jungle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1019,7 +1019,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Precursor Basin",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1084,7 +1084,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1096,7 +1096,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Lost Precursor City",
+              "name": "Scout Fly - Spider Cave",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1178,7 +1178,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Freed The Green Sage",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1192,7 +1192,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Fire Canyon",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1208,7 +1208,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1222,7 +1222,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1234,9 +1234,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Forbidden Jungle",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -1298,7 +1298,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Geyser Rock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1328,7 +1328,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Rock Village",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1344,7 +1344,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1356,7 +1356,7 @@
               "value": true
             },
             "item": {
-              "name": "Freed The Green Sage",
+              "name": "Scout Fly - Rock Village",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1370,7 +1370,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Rock Village",
+              "name": "Scout Fly - Citadel",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1402,7 +1402,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1414,7 +1414,7 @@
               "value": true
             },
             "item": {
-              "name": "Flut Flut",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1478,7 +1478,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Snowy Mountain",
+              "name": "Scout Fly - Lava Tube",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1669,7 +1669,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Misty Island",
+              "name": "Scout Fly - Snowy Mountain",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1683,7 +1683,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Lost Precursor City",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1697,7 +1697,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Boggy Swamp",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1711,7 +1711,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Precursor Basin",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1725,7 +1725,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Mountain Pass",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1739,7 +1739,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Sentinel Beach",
+              "name": "Scout Fly - Mountain Pass",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1753,9 +1753,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Volcanic Crater",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1794,7 +1794,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Boggy Swamp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1808,7 +1808,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Geyser Rock",
+              "name": "Warrior's Pontoons",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1822,7 +1822,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Lava Tube",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1869,9 +1869,9 @@
               ]
             },
             "item": {
-              "name": "Green Eco Pill",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -1912,7 +1912,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Misty Island",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1986,7 +1986,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Forbidden Jungle",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2036,7 +2036,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -2138,7 +2138,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Snowy Mountain",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2232,7 +2232,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Precursor Basin",
+              "name": "Scout Fly - Rock Village",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2264,7 +2264,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Lava Tube",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2303,7 +2303,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Sentinel Beach",
+              "name": "Scout Fly - Fire Canyon",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2331,7 +2331,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Mountain Pass",
+              "name": "Scout Fly - Citadel",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2377,9 +2377,9 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Fire Canyon",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2409,7 +2409,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Precursor Basin",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2531,7 +2531,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Precursor Basin",
+              "name": "Scout Fly - Volcanic Crater",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2569,7 +2569,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Volcanic Crater",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2680,7 +2680,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Sandover Village",
+              "name": "Scout Fly - Sentinel Beach",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2736,7 +2736,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Lost Precursor City",
+              "name": "Scout Fly - Sandover Village",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2768,9 +2768,9 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Lava Tube",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -2832,9 +2832,9 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Rock Village",
+              "name": "Green Eco Pill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -2887,9 +2887,9 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Green Eco Pill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -2917,7 +2917,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Citadel",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2931,7 +2931,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Fisherman's Boat",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2945,7 +2945,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Rock Village",
+              "name": "Scout Fly - Fire Canyon",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2961,7 +2961,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2973,7 +2973,7 @@
               "value": true
             },
             "item": {
-              "name": "Warrior's Pontoons",
+              "name": "Scout Fly - Precursor Basin",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2989,7 +2989,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3001,7 +3001,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Sandover Village",
+              "name": "Scout Fly - Forbidden Jungle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3015,9 +3015,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Fire Canyon",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -3081,7 +3081,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Green Eco Pill",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3098,7 +3098,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Lost Precursor City",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3115,7 +3115,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Fire Canyon",
+              "name": "Scout Fly - Volcanic Crater",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3132,7 +3132,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Fire Canyon",
+              "name": "Scout Fly - Spider Cave",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3158,7 +3158,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Forbidden Jungle",
+              "name": "Snowy Fort Gate",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3172,7 +3172,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Forbidden Jungle",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3186,9 +3186,9 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Precursor Basin",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3218,7 +3218,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Volcanic Crater",
+              "name": "Scout Fly - Boggy Swamp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3250,7 +3250,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Geyser Rock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3282,7 +3282,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Fire Canyon",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3314,7 +3314,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Snowy Mountain",
+              "name": "Scout Fly - Forbidden Jungle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3367,7 +3367,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Boggy Swamp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3448,9 +3448,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Mountain Pass",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -3507,7 +3507,7 @@
               "value": true
             },
             "item": {
-              "name": "Snowy Fort Gate",
+              "name": "Scout Fly - Volcanic Crater",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3521,7 +3521,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Sentinel Beach",
+              "name": "Freed The Blue Sage",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3537,7 +3537,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3549,7 +3549,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Spider Cave",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3563,9 +3563,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Green Eco Pill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3577,7 +3577,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Precursor Basin",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3591,7 +3591,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Volcanic Crater",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3605,7 +3605,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Misty Island",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3619,7 +3619,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Geyser Rock",
+              "name": "Flut Flut",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3633,7 +3633,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Spider Cave",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3647,7 +3647,7 @@
               "value": true
             },
             "item": {
-              "name": "Blue Eco Switch",
+              "name": "Scout Fly - Lost Precursor City",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3675,7 +3675,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Geyser Rock",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3786,7 +3786,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Geyser Rock",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3834,7 +3834,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Sentinel Beach",
+              "name": "Scout Fly - Geyser Rock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3890,7 +3890,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Citadel",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3928,7 +3928,7 @@
               "item": "Jump Dive"
             },
             "item": {
-              "name": "Scout Fly - Sandover Village",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3956,9 +3956,9 @@
               "item": "Jump Dive"
             },
             "item": {
-              "name": "Green Eco Pill",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3988,7 +3988,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Forbidden Jungle",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4002,7 +4002,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Forbidden Jungle",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4016,7 +4016,7 @@
               "value": true
             },
             "item": {
-              "name": "Freed The Yellow Sage",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4109,7 +4109,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Snowy Mountain",
+              "name": "Yellow Eco Switch",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4147,9 +4147,9 @@
               "item": "Jump Dive"
             },
             "item": {
-              "name": "Scout Fly - Lava Tube",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -4236,7 +4236,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Snowy Mountain",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4250,7 +4250,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Rock Village",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4334,7 +4334,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Geyser Rock",
+              "name": "Scout Fly - Rock Village",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4416,7 +4416,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Precursor Basin",
+              "name": "Scout Fly - Misty Island",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4475,7 +4475,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -4534,7 +4534,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Lost Precursor City",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4615,7 +4615,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Precursor Basin",
+              "name": "Scout Fly - Boggy Swamp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4660,9 +4660,9 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Boggy Swamp",
+              "name": "Green Eco Pill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -4811,9 +4811,9 @@
               ]
             },
             "item": {
-              "name": "Green Eco Pill",
+              "name": "Scout Fly - Boggy Swamp",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -4939,7 +4939,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Boggy Swamp",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4969,9 +4969,9 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Mountain Pass",
+              "name": "Green Eco Pill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -5030,9 +5030,9 @@
               "value": true
             },
             "item": {
-              "name": "Green Eco Pill",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5143,7 +5143,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -5440,7 +5440,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -5514,7 +5514,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Volcanic Crater",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5528,7 +5528,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Spider Cave",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5542,9 +5542,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Precursor Basin",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5570,7 +5570,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Snowy Mountain",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5584,7 +5584,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Sandover Village",
+              "name": "Snowy Mountain Gondola",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5600,7 +5600,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5612,7 +5612,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Fire Canyon",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5642,9 +5642,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Spider Cave",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -5692,7 +5692,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Snowy Mountain",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5718,7 +5718,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Forbidden Jungle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5744,7 +5744,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Boggy Swamp",
+              "name": "Scout Fly - Mountain Pass",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5770,9 +5770,9 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Jungle Elevator",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5787,9 +5787,9 @@
               ]
             },
             "item": {
-              "name": "Green Eco Pill",
+              "name": "Scout Fly - Sentinel Beach",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5813,7 +5813,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Sandover Village",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5829,7 +5829,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5859,7 +5859,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Volcanic Crater",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5891,7 +5891,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Sandover Village",
+              "name": "Scout Fly - Lava Tube",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5923,9 +5923,9 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Lost Precursor City",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5955,7 +5955,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Spider Cave",
+              "name": "Scout Fly - Forbidden Jungle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5987,7 +5987,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Forbidden Jungle",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6019,7 +6019,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Citadel",
+              "name": "Scout Fly - Spider Cave",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6065,9 +6065,9 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Mountain Pass",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -6155,9 +6155,9 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Lava Tube",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6171,7 +6171,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6183,7 +6183,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Misty Island",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6197,7 +6197,7 @@
               "value": true
             },
             "item": {
-              "name": "Snowy Mountain Gondola",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6211,9 +6211,9 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Rock Village",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6225,9 +6225,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Green Eco Pill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -6281,9 +6281,9 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Mountain Pass",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -6304,7 +6304,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6334,9 +6334,9 @@
               ]
             },
             "item": {
-              "name": "Green Eco Pill",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -6460,7 +6460,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Snowy Mountain",
+              "name": "Scout Fly - Mountain Pass",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6546,7 +6546,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Misty Island",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6636,7 +6636,7 @@
               "value": true
             },
             "item": {
-              "name": "Freed The Blue Sage",
+              "name": "Scout Fly - Mountain Pass",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6790,9 +6790,9 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Mountain Pass",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -6866,7 +6866,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -6938,7 +6938,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Spider Cave",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7131,7 +7131,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Spider Cave",
+              "name": "Scout Fly - Geyser Rock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7161,9 +7161,9 @@
               "item": "Yellow Eco Switch"
             },
             "item": {
-              "name": "Green Eco Pill",
+              "name": "Scout Fly - Citadel",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -7252,9 +7252,9 @@
               ]
             },
             "item": {
-              "name": "Green Eco Pill",
+              "name": "Scout Fly - Rock Village",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -7282,7 +7282,7 @@
               "item": "Flut Flut"
             },
             "item": {
-              "name": "Scout Fly - Lava Tube",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7443,7 +7443,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Spider Cave",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7475,7 +7475,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Precursor Basin",
+              "name": "Scout Fly - Snowy Mountain",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7564,7 +7564,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Lava Tube",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7594,7 +7594,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Mountain Pass",
+              "name": "Scout Fly - Forbidden Jungle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7608,7 +7608,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Spider Cave",
+              "name": "Power Cell",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7732,7 +7732,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Lava Tube",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7748,7 +7748,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -7760,9 +7760,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Green Eco Pill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -7774,7 +7774,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Sandover Village",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7822,9 +7822,9 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Misty Island",
+              "name": "Green Eco Pill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -7854,7 +7854,7 @@
             "item": {
               "name": "Power Cell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -7882,9 +7882,9 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Sentinel Beach",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -7896,7 +7896,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Boggy Swamp",
+              "name": "Scout Fly - Citadel",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7910,7 +7910,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Volcanic Crater",
+              "name": "Scout Fly - Sandover Village",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7924,7 +7924,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Volcanic Crater",
+              "name": "Scout Fly - Sentinel Beach",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7938,7 +7938,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Geyser Rock",
+              "name": "Scout Fly - Fire Canyon",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7952,7 +7952,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Citadel",
+              "name": "Scout Fly - Lost Precursor City",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7966,7 +7966,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Fire Canyon",
+              "name": "Scout Fly - Snowy Mountain",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7980,7 +7980,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Citadel",
+              "name": "Scout Fly - Misty Island",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8054,9 +8054,9 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Lava Tube",
+              "name": "Green Eco Pill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -8319,7 +8319,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Snowy Mountain",
+              "name": "Scout Fly - Rock Village",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8410,7 +8410,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Sentinel Beach",
+              "name": "Scout Fly - Precursor Basin",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8441,7 +8441,7 @@
               ]
             },
             "item": {
-              "name": "Freed The Red Sage",
+              "name": "Scout Fly - Sentinel Beach",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8455,9 +8455,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Cell",
+              "name": "Scout Fly - Sandover Village",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8523,9 +8523,9 @@
               ]
             },
             "item": {
-              "name": "Green Eco Pill",
+              "name": "Scout Fly - Lost Precursor City",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8537,7 +8537,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Forbidden Jungle",
+              "name": "Scout Fly - Precursor Basin",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8551,7 +8551,7 @@
               "value": true
             },
             "item": {
-              "name": "Scout Fly - Lost Precursor City",
+              "name": "Scout Fly - Sentinel Beach",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8598,9 +8598,9 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Lost Precursor City",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8629,7 +8629,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Lava Tube",
+              "name": "Scout Fly - Sentinel Beach",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8643,7 +8643,7 @@
               "value": true
             },
             "item": {
-              "name": "Yellow Eco Switch",
+              "name": "Scout Fly - Misty Island",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8657,9 +8657,9 @@
               "value": true
             },
             "item": {
-              "name": "Green Eco Pill",
+              "name": "Freed The Red Sage",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -8758,7 +8758,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Boggy Swamp",
+              "name": "Scout Fly - Sentinel Beach",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8789,7 +8789,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Volcanic Crater",
+              "name": "Scout Fly - Geyser Rock",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8821,7 +8821,7 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Citadel",
+              "name": "Scout Fly - Sandover Village",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8933,9 +8933,9 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Geyser Rock",
+              "name": "Power Cell",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8965,9 +8965,9 @@
               ]
             },
             "item": {
-              "name": "Scout Fly - Lost Precursor City",
+              "name": "Green Eco Pill",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }

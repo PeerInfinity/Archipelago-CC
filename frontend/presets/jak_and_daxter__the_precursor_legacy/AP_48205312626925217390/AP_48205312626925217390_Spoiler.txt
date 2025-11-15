@@ -1,0 +1,527 @@
+﻿Archipelago Version 0.6.4  -  Seed: 9
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Jak and Daxter: The Precursor Legacy
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Enable Move Randomizer:          No
+Enable Orbsanity:                Off
+Global Orbsanity Bundle Size:    20 Orbs
+Per Level Orbsanity Bundle Size: 25 Orbs
+Fire Canyon Cell Count:          20
+Mountain Pass Cell Count:        45
+Lava Tube Cell Count:            72
+Enable Ordered Cell Counts:      Yes
+Require Punch For Klaww:         Yes
+Citizen Orb Trade Amount:        90
+Oracle Orb Trade Amount:         120
+Filler Power Cells Replaced With Traps:0
+Filler Orb Bundles Replaced With Traps:0
+Trap Effect Duration:            30
+Trap Weights:                    Camera Trap: 1, Darkness Trap: 1, Despair Trap: 1, Earthquake Trap: 1, Ecoless Trap: 1, Gravity Trap: 1, Health Trap: 1, Ledge Trap: 1, Mirror Trap: 1, Pacifism Trap: 1, Slippery Trap: 1, Teleport Trap: 1, Trip Trap: 1, Zoomer Trap: 1
+Completion Condition:            Defeat Gol And Maia
+Start Inventory from Pool:       
+
+
+Starting Items:
+
+Crouch
+Crouch Jump
+Crouch Uppercut
+Roll
+Roll Jump
+Double Jump
+Jump Dive
+Jump Kick
+Punch
+Punch Uppercut
+Kick
+
+Locations:
+
+GR: Free 7 Scout Flies: Power Cell
+SV: Free 7 Scout Flies: Scout Fly - Citadel
+FJ: Free 7 Scout Flies: Power Cell
+SB: Free 7 Scout Flies: Scout Fly - Rock Village
+MI: Free 7 Scout Flies: Power Cell
+FC: Free 7 Scout Flies: Green Eco Pill
+RV: Free 7 Scout Flies: Green Eco Pill
+PB: Free 7 Scout Flies: Scout Fly - Misty Island
+LPC: Free 7 Scout Flies: Blue Eco Switch
+BS: Free 7 Scout Flies: Power Cell
+MP: Free 7 Scout Flies: Power Cell
+VC: Free 7 Scout Flies: Scout Fly - Boggy Swamp
+SC: Free 7 Scout Flies: Scout Fly - Fire Canyon
+SM: Free 7 Scout Flies: Scout Fly - Spider Cave
+LT: Free 7 Scout Flies: Power Cell
+GMC: Free 7 Scout Flies: Scout Fly - Geyser Rock
+GR: Find The Cell On The Path: Power Cell
+GR: Open The Precursor Door: Scout Fly - Misty Island
+GR: Scout Fly On Ground, Front: Scout Fly - Rock Village
+GR: Scout Fly On Ground, Back: Scout Fly - Fire Canyon
+GR: Scout Fly On Left Ledge: Scout Fly - Sandover Village
+GR: Scout Fly On Right Ledge: Scout Fly - Boggy Swamp
+GR: Scout Fly On Middle Ledge, Left: Power Cell
+GR: Scout Fly On Middle Ledge, Right: Power Cell
+GR: Scout Fly On Top Ledge: Power Cell
+GR: Climb Up The Cliff: Freed The Yellow Sage
+SV: Herd The Yakows Into The Pen: Scout Fly - Lost Precursor City
+SV: Bring 90 Orbs To The Mayor: Scout Fly - Sandover Village
+SV: Bring 90 Orbs to Your Uncle: Scout Fly - Mountain Pass
+SV: Scout Fly In Fisherman's House: Power Cell
+SV: Scout Fly In Mayor's House: Power Cell
+SV: Scout Fly Under Bridge: Power Cell
+SV: Scout Fly Behind Sculptor's House: Scout Fly - Snowy Mountain
+SV: Scout Fly In Farmer's House: Power Cell
+Orb Cache in Sandover Village: Scout Fly - Geyser Rock
+SV: Scout Fly Overlooking Farmer's House: Power Cell
+SV: Bring 120 Orbs To The Oracle (1): Power Cell
+SV: Bring 120 Orbs To The Oracle (2): Scout Fly - Forbidden Jungle
+SV: Scout Fly Near Oracle: Power Cell
+FJ: Scout Fly At End Of Path: Power Cell
+FJ: Connect The Eco Beams: Power Cell
+FJ: Open The Locked Temple Door: Scout Fly - Spider Cave
+FJ: Scout Fly Behind Lurker Machine: Power Cell
+FJ: Catch 200 Pounds Of Fish: Power Cell
+FJ: Follow The Canyon To The Sea: Freed The Green Sage
+FJ: Scout Fly Near Dark Eco Boxes: Power Cell
+FJ: Scout Fly At End Of River: Power Cell
+Fisherman's Boat: Power Cell
+Orb Cache in Forbidden Jungle: Scout Fly - Forbidden Jungle
+FJ: Scout Fly On Spiral Of Stumps: Scout Fly - Geyser Rock
+FJ: Get To The Top Of The Temple: Power Cell
+FJ: Scout Fly Around Temple Spire: Power Cell
+FJ: Scout Fly On Top Of Temple: Scout Fly - Rock Village
+Jungle Elevator: Scout Fly - Citadel
+FJ: Find The Blue Vent Switch: Power Cell
+Blue Eco Switch: Power Cell
+FJ: Defeat The Dark Eco Plant: Scout Fly - Lava Tube
+SB: Chase The Seagulls: Scout Fly - Snowy Mountain
+SB: Explore The Beach: Scout Fly - Lost Precursor City
+SB: Climb The Sentinel: Power Cell
+SB: Scout Fly At Entrance: Scout Fly - Precursor Basin
+SB: Scout Fly Overlooking Locked Boxes: Scout Fly - Mountain Pass
+SB: Scout Fly On Path To Flut Flut: Scout Fly - Mountain Pass
+SB: Scout Fly Under Wood Pillars: Scout Fly - Volcanic Crater
+SB: Scout Fly On Sentinel: Scout Fly - Boggy Swamp
+Orb Cache near Flut Flut Egg: Warrior's Pontoons
+Orb Cache near Pelican's Nest: Scout Fly - Lava Tube
+SB: Get The Power Cell From The Pelican: Power Cell
+SB: Push The Flut Flut Egg Off The Cliff: Power Cell
+Flut Flut: Power Cell
+SB: Unblock The Eco Harvesters: Power Cell
+SB: Scout Fly Overlooking Green Eco Vents: Power Cell
+SB: Scout Fly Overlooking Blue Eco Vent: Power Cell
+SB: Launch Up To The Cannon Tower: Scout Fly - Snowy Mountain
+MI: Catch The Sculptor's Muse: Scout Fly - Rock Village
+MI: Scout Fly Overlooking Entrance: Scout Fly - Lava Tube
+MI: Destroy the Balloon Lurkers: Scout Fly - Fire Canyon
+MI: Use Zoomer To Reach Power Cell: Power Cell
+MI: Scout Fly On Zoomer Ramps: Scout Fly - Citadel
+MI: Climb The Lurker Ship: Power Cell
+MI: Scout Fly On Ship: Scout Fly - Precursor Basin
+MI: Scout Fly On Ledge Near Arena Exit: Scout Fly - Volcanic Crater
+Orb Cache on Misty Island: Power Cell
+MI: Scout Fly On Barrel Ramps: Power Cell
+MI: Stop The Cannon: Scout Fly - Sentinel Beach
+MI: Scout Fly On Ledge Near Arena Entrance: Scout Fly - Sandover Village
+MI: Scout Fly Near Arena Door: Scout Fly - Lava Tube
+MI: Use Blue Eco To Reach Power Cell: Green Eco Pill
+MI: Return To The Dark Eco Pool: Green Eco Pill
+FC: Reach The End Of Fire Canyon: Power Cell
+FC: Scout Fly 1: Fisherman's Boat
+FC: Scout Fly 2: Scout Fly - Fire Canyon
+FC: Scout Fly 3: Power Cell
+FC: Scout Fly 4: Scout Fly - Precursor Basin
+FC: Scout Fly 5: Power Cell
+FC: Scout Fly 6: Scout Fly - Forbidden Jungle
+FC: Scout Fly 7: Scout Fly - Fire Canyon
+RV: Bring 90 Orbs To The Gambler: Green Eco Pill
+RV: Bring 90 Orbs To The Geologist: Power Cell
+RV: Bring 90 Orbs To The Warrior: Scout Fly - Volcanic Crater
+RV: Bring 120 Orbs To The Oracle (1): Scout Fly - Spider Cave
+RV: Bring 120 Orbs To The Oracle (2): Snowy Fort Gate
+RV: Scout Fly Behind Geologist: Power Cell
+RV: Scout Fly Behind Fiery Boulder: Power Cell
+RV: Scout Fly Behind Sage's Hut: Scout Fly - Boggy Swamp
+RV: Scout Fly Near Waterfall: Scout Fly - Geyser Rock
+RV: Scout Fly On Dock: Scout Fly - Fire Canyon
+RV: Scout Fly At Pontoon Bridge: Scout Fly - Forbidden Jungle
+Warrior's Pontoons: Green Eco Pill
+Orb Cache in Rock Village: Scout Fly - Boggy Swamp
+RV: Scout Fly At Boggy Swamp Entrance: Scout Fly - Mountain Pass
+PB: Herd The Moles Into Their Hole: Power Cell
+PB: Catch The Flying Lurkers: Scout Fly - Volcanic Crater
+PB: Beat Record Time On The Gorge: Freed The Blue Sage
+PB: Get The Power Cell Over The Lake: Power Cell
+PB: Cure Dark Eco Infected Plants: Power Cell
+PB: Navigate The Purple Precursor Rings: Green Eco Pill
+PB: Navigate The Blue Precursor Rings: Scout Fly - Precursor Basin
+PB: Scout Fly Overlooking Entrance: Scout Fly - Volcanic Crater
+PB: Scout Fly Near Mole Hole: Power Cell
+PB: Scout Fly At Purple Ring Start: Flut Flut
+PB: Scout Fly Near Dark Eco Plant, Above: Scout Fly - Spider Cave
+PB: Scout Fly At Blue Ring Start: Scout Fly - Lost Precursor City
+PB: Scout Fly Before Big Jump: Scout Fly - Volcanic Crater
+PB: Scout Fly Near Dark Eco Plant, Below: Power Cell
+LPC: Scout Fly First Room: Power Cell
+Orb Cache in First Sunken Chamber: Scout Fly - Geyser Rock
+LPC: Scout Fly Before Second Room: Scout Fly - Citadel
+LPC: Follow The Colored Pipes: Power Cell
+LPC: Scout Fly Second Room, Green Pipe: Power Cell
+LPC: Scout Fly Second Room, Blue Pipe: Power Cell
+LPC: Scout Fly Second Room, On Path To Cell: Power Cell
+LPC: Scout Fly Second Room, Near Orb Vent: Power Cell
+Orb Cache in Second Sunken Chamber: Power Cell
+LPC: Reach The Center Of The Complex: Power Cell
+LPC: Match The Platform Colors: Yellow Eco Switch
+LPC: Quickly Cross The Dangerous Pool: Power Cell
+LPC: Raise The Chamber: Scout Fly - Snowy Mountain
+LPC: Scout Fly Across Steam Vents: Power Cell
+LPC: Reach The Bottom Of The City: Scout Fly - Rock Village
+LPC: Climb The Slide Tube: Scout Fly - Misty Island
+BS: Scout Fly Near Entrance: Power Cell
+BS: Scout Fly Over First Jump Pad: Scout Fly - Lost Precursor City
+BS: Break The Tethers To The Zeppelin (4): Scout Fly - Boggy Swamp
+BS: Scout Fly Over Second Jump Pad: Green Eco Pill
+BS: Break The Tethers To The Zeppelin (1): Scout Fly - Boggy Swamp
+BS: Scout Fly Across Black Swamp: Power Cell
+BS: Defeat The Lurker Ambush: Power Cell
+BS: Break The Tethers To The Zeppelin (2): Green Eco Pill
+BS: Ride The Flut Flut: Power Cell
+BS: Scout Fly Overlooking Flut Flut: Power Cell
+BS: Scout Fly On Flut Flut Platforms: Power Cell
+BS: Protect Farthy's Snacks: Power Cell
+BS: Scout Fly In Field Of Boxes: Power Cell
+BS: Break The Tethers To The Zeppelin (3): Power Cell
+MP: Defeat Klaww: Power Cell
+MP: Reach The End Of The Mountain Pass: Scout Fly - Volcanic Crater
+MP: Scout Fly 1: Power Cell
+MP: Scout Fly 2: Scout Fly - Precursor Basin
+MP: Scout Fly 3: Power Cell
+MP: Scout Fly 4: Scout Fly - Snowy Mountain
+MP: Scout Fly 5: Snowy Mountain Gondola
+MP: Scout Fly 6: Power Cell
+MP: Scout Fly 7: Power Cell
+MP: Find The Hidden Power Cell: Scout Fly - Spider Cave
+VC: Bring 90 Orbs To The Miners (1): Power Cell
+VC: Bring 90 Orbs To The Miners (2): Scout Fly - Forbidden Jungle
+VC: Bring 90 Orbs To The Miners (3): Scout Fly - Mountain Pass
+VC: Bring 90 Orbs To The Miners (4): Jungle Elevator
+VC: Bring 120 Orbs To The Oracle (1): Scout Fly - Sentinel Beach
+VC: Bring 120 Orbs To The Oracle (2): Power Cell
+VC: Find The Hidden Power Cell: Power Cell
+VC: Scout Fly In Miner's Cave: Power Cell
+VC: Scout Fly Near Oracle: Scout Fly - Lava Tube
+VC: Scout Fly On Stone Platforms: Scout Fly - Lost Precursor City
+VC: Scout Fly Near Lava Tube: Scout Fly - Forbidden Jungle
+VC: Scout Fly At Minecart Junction: Power Cell
+VC: Scout Fly Near Spider Cave: Scout Fly - Spider Cave
+VC: Scout Fly Near Mountain Pass: Power Cell
+Snowy Mountain Gondola: Power Cell
+SC: Use Your Goggles To Shoot The Gnawing Lurkers: Power Cell
+SC: Climb the Precursor Platforms: Power Cell
+SC: Scout Fly Near Dark Cave Entrance: Scout Fly - Misty Island
+SC: Scout Fly Main Cave, Overlooking Entrance: Power Cell
+SC: Scout Fly Main Cave, Near Dark Crystal: Power Cell
+SC: Scout Fly Main Cave, Near Robot Cave Entrance: Green Eco Pill
+SC: Destroy The Dark Eco Crystals: Power Cell
+SC: Explore The Dark Cave: Power Cell
+SC: Scout Fly In Dark Cave: Power Cell
+SC: Scout Fly Robot Cave, At Bottom Level: Scout Fly - Mountain Pass
+SC: Climb The Giant Robot: Scout Fly - Misty Island
+SC: Scout Fly Robot Cave, At Top Level: Power Cell
+SC: Launch To The Poles: Power Cell
+SC: Navigate The Spider Tunnel: Scout Fly - Mountain Pass
+SM: Scout Fly Near Entrance: Power Cell
+SM: Stop The 3 Lurker Glacier Troops: Power Cell
+SM: Deactivate The Precursor Blockers: Power Cell
+SM: Scout Fly Near Frozen Box: Scout Fly - Geyser Rock
+SM: Open The Frozen Crate: Scout Fly - Citadel
+SM: Scout Fly On Cliff near Flut Flut: Scout Fly - Rock Village
+SM: Open The Lurker Fort Gate: Power Cell
+Snowy Fort Gate: Power Cell
+SM: Scout Fly Near Yellow Eco Switch: Scout Fly - Spider Cave
+SM: Scout Fly Under Bridge To Fort: Scout Fly - Snowy Mountain
+SM: Survive The Lurker Infested Cave: Scout Fly - Lava Tube
+SM: Find The Yellow Vent Switch: Scout Fly - Forbidden Jungle
+Yellow Eco Switch: Power Cell
+SM: Scout Fly On Top Of Fort Tower: Scout Fly - Lava Tube
+Orb Cache in Snowy Fort (1): Power Cell
+Orb Cache in Snowy Fort (2): Green Eco Pill
+Orb Cache in Snowy Fort (3): Scout Fly - Sandover Village
+SM: Scout Fly On Top Of Fort: Green Eco Pill
+SM: Get Through The Lurker Fort: Power Cell
+LT: Cross The Lava Tube: Power Cell
+LT: Scout Fly 1: Scout Fly - Citadel
+LT: Scout Fly 2: Scout Fly - Sandover Village
+LT: Scout Fly 3: Scout Fly - Sentinel Beach
+LT: Scout Fly 4: Scout Fly - Fire Canyon
+LT: Scout Fly 5: Scout Fly - Lost Precursor City
+LT: Scout Fly 6: Scout Fly - Snowy Mountain
+LT: Scout Fly 7: Scout Fly - Misty Island
+GMC: Scout Fly At Entrance: Green Eco Pill
+GMC: Scout Fly Main Room, Right of Robot: Scout Fly - Rock Village
+GMC: Free The Yellow Sage: Scout Fly - Precursor Basin
+Freed The Yellow Sage: Scout Fly - Sentinel Beach
+GMC: Scout Fly At Launch Pad Room: Scout Fly - Sandover Village
+GMC: Scout Fly Main Room, Left of Robot: Scout Fly - Lost Precursor City
+Orb Cache at End of Launch Pad Room: Scout Fly - Precursor Basin
+Orb Cache at Start of Launch Pad Room: Scout Fly - Sentinel Beach
+GMC: Free The Blue Sage: Power Cell
+Freed The Blue Sage: Scout Fly - Sentinel Beach
+GMC: Scout Fly At Blast Furnace: Scout Fly - Misty Island
+Orb Cache at End of Blast Furnace: Freed The Red Sage
+GMC: Free The Red Sage: Scout Fly - Sentinel Beach
+Freed The Red Sage: Scout Fly - Geyser Rock
+GMC: Scout Fly Before Jumping Lurkers: Scout Fly - Sandover Village
+GMC: Free The Green Sage: Scout Fly - Citadel
+Freed The Green Sage: Power Cell
+GMC: Scout Fly Top Of Rotating Tower: Green Eco Pill
+
+Playthrough:
+
+0: {
+  Crouch
+  Crouch Jump
+  Crouch Uppercut
+  Double Jump
+  Jump Dive
+  Jump Kick
+  Kick
+  Punch
+  Punch Uppercut
+  Roll
+  Roll Jump
+}
+1: {
+  FJ: Catch 200 Pounds Of Fish: Power Cell
+  FJ: Connect The Eco Beams: Power Cell
+  FJ: Follow The Canyon To The Sea: Freed The Green Sage
+  FJ: Get To The Top Of The Temple: Power Cell
+  FJ: Open The Locked Temple Door: Scout Fly - Spider Cave
+  FJ: Scout Fly At End Of Path: Power Cell
+  FJ: Scout Fly Behind Lurker Machine: Power Cell
+  FJ: Scout Fly Near Dark Eco Boxes: Power Cell
+  FJ: Scout Fly On Spiral Of Stumps: Scout Fly - Geyser Rock
+  FJ: Scout Fly On Top Of Temple: Scout Fly - Rock Village
+  Flut Flut: Power Cell
+  GR: Climb Up The Cliff: Freed The Yellow Sage
+  GR: Find The Cell On The Path: Power Cell
+  GR: Open The Precursor Door: Scout Fly - Misty Island
+  GR: Scout Fly On Ground, Back: Scout Fly - Fire Canyon
+  GR: Scout Fly On Ground, Front: Scout Fly - Rock Village
+  GR: Scout Fly On Left Ledge: Scout Fly - Sandover Village
+  GR: Scout Fly On Middle Ledge, Left: Power Cell
+  GR: Scout Fly On Middle Ledge, Right: Power Cell
+  GR: Scout Fly On Right Ledge: Scout Fly - Boggy Swamp
+  Jungle Elevator: Scout Fly - Citadel
+  Orb Cache in Forbidden Jungle: Scout Fly - Forbidden Jungle
+  Orb Cache in Sandover Village: Scout Fly - Geyser Rock
+  Orb Cache near Flut Flut Egg: Warrior's Pontoons
+  Orb Cache near Pelican's Nest: Scout Fly - Lava Tube
+  SB: Chase The Seagulls: Scout Fly - Snowy Mountain
+  SB: Climb The Sentinel: Power Cell
+  SB: Explore The Beach: Scout Fly - Lost Precursor City
+  SB: Get The Power Cell From The Pelican: Power Cell
+  SB: Push The Flut Flut Egg Off The Cliff: Power Cell
+  SB: Scout Fly At Entrance: Scout Fly - Precursor Basin
+  SB: Scout Fly On Path To Flut Flut: Scout Fly - Mountain Pass
+  SB: Scout Fly On Sentinel: Scout Fly - Boggy Swamp
+  SB: Scout Fly Overlooking Blue Eco Vent: Power Cell
+  SB: Scout Fly Overlooking Locked Boxes: Scout Fly - Mountain Pass
+  SB: Scout Fly Under Wood Pillars: Scout Fly - Volcanic Crater
+  SB: Unblock The Eco Harvesters: Power Cell
+  SV: Herd The Yakows Into The Pen: Scout Fly - Lost Precursor City
+  SV: Scout Fly Behind Sculptor's House: Scout Fly - Snowy Mountain
+  SV: Scout Fly In Farmer's House: Power Cell
+  SV: Scout Fly In Fisherman's House: Power Cell
+  SV: Scout Fly In Mayor's House: Power Cell
+  SV: Scout Fly Near Oracle: Power Cell
+  SV: Scout Fly Overlooking Farmer's House: Power Cell
+}
+2: {
+  BS: Break The Tethers To The Zeppelin (1): Scout Fly - Boggy Swamp
+  BS: Break The Tethers To The Zeppelin (3): Power Cell
+  BS: Break The Tethers To The Zeppelin (4): Scout Fly - Boggy Swamp
+  BS: Defeat The Lurker Ambush: Power Cell
+  BS: Protect Farthy's Snacks: Power Cell
+  BS: Scout Fly Across Black Swamp: Power Cell
+  BS: Scout Fly In Field Of Boxes: Power Cell
+  BS: Scout Fly Over First Jump Pad: Scout Fly - Lost Precursor City
+  FC: Reach The End Of Fire Canyon: Power Cell
+  FC: Scout Fly 1: Fisherman's Boat
+  FC: Scout Fly 2: Scout Fly - Fire Canyon
+  FC: Scout Fly 4: Scout Fly - Precursor Basin
+  FC: Scout Fly 6: Scout Fly - Forbidden Jungle
+  FC: Scout Fly 7: Scout Fly - Fire Canyon
+  LPC: Climb The Slide Tube: Scout Fly - Misty Island
+  LPC: Follow The Colored Pipes: Power Cell
+  LPC: Match The Platform Colors: Yellow Eco Switch
+  LPC: Raise The Chamber: Scout Fly - Snowy Mountain
+  LPC: Reach The Bottom Of The City: Scout Fly - Rock Village
+  LPC: Reach The Center Of The Complex: Power Cell
+  LPC: Scout Fly Across Steam Vents: Power Cell
+  LPC: Scout Fly Before Second Room: Scout Fly - Citadel
+  LPC: Scout Fly First Room: Power Cell
+  LPC: Scout Fly Second Room, Blue Pipe: Power Cell
+  LPC: Scout Fly Second Room, Green Pipe: Power Cell
+  LPC: Scout Fly Second Room, Near Orb Vent: Power Cell
+  LPC: Scout Fly Second Room, On Path To Cell: Power Cell
+  Orb Cache in First Sunken Chamber: Scout Fly - Geyser Rock
+  Orb Cache in Rock Village: Scout Fly - Boggy Swamp
+  Orb Cache in Second Sunken Chamber: Power Cell
+  PB: Beat Record Time On The Gorge: Freed The Blue Sage
+  PB: Catch The Flying Lurkers: Scout Fly - Volcanic Crater
+  PB: Cure Dark Eco Infected Plants: Power Cell
+  PB: Get The Power Cell Over The Lake: Power Cell
+  PB: Herd The Moles Into Their Hole: Power Cell
+  PB: Navigate The Blue Precursor Rings: Scout Fly - Precursor Basin
+  PB: Scout Fly At Blue Ring Start: Scout Fly - Lost Precursor City
+  PB: Scout Fly At Purple Ring Start: Flut Flut
+  PB: Scout Fly Before Big Jump: Scout Fly - Volcanic Crater
+  PB: Scout Fly Near Dark Eco Plant, Above: Scout Fly - Spider Cave
+  PB: Scout Fly Near Dark Eco Plant, Below: Power Cell
+  PB: Scout Fly Near Mole Hole: Power Cell
+  PB: Scout Fly Overlooking Entrance: Scout Fly - Volcanic Crater
+  RV: Scout Fly At Boggy Swamp Entrance: Scout Fly - Mountain Pass
+  RV: Scout Fly At Pontoon Bridge: Scout Fly - Forbidden Jungle
+  RV: Scout Fly Behind Geologist: Power Cell
+  RV: Scout Fly Behind Sage's Hut: Scout Fly - Boggy Swamp
+  RV: Scout Fly Near Waterfall: Scout Fly - Geyser Rock
+  RV: Scout Fly On Dock: Scout Fly - Fire Canyon
+}
+3: {
+  BS: Ride The Flut Flut: Power Cell
+  BS: Scout Fly On Flut Flut Platforms: Power Cell
+  BS: Scout Fly Overlooking Flut Flut: Power Cell
+  MI: Catch The Sculptor's Muse: Scout Fly - Rock Village
+  MI: Destroy the Balloon Lurkers: Scout Fly - Fire Canyon
+  MI: Scout Fly Near Arena Door: Scout Fly - Lava Tube
+  MI: Scout Fly On Barrel Ramps: Power Cell
+  MI: Scout Fly On Ledge Near Arena Entrance: Scout Fly - Sandover Village
+  MI: Scout Fly On Ledge Near Arena Exit: Scout Fly - Volcanic Crater
+  MI: Scout Fly On Ship: Scout Fly - Precursor Basin
+  MI: Scout Fly On Zoomer Ramps: Scout Fly - Citadel
+  MI: Scout Fly Overlooking Entrance: Scout Fly - Lava Tube
+  MI: Stop The Cannon: Scout Fly - Sentinel Beach
+  Orb Cache on Misty Island: Power Cell
+}
+4: {
+  MP: Defeat Klaww: Power Cell
+  MP: Find The Hidden Power Cell: Scout Fly - Spider Cave
+  MP: Reach The End Of The Mountain Pass: Scout Fly - Volcanic Crater
+  MP: Scout Fly 1: Power Cell
+  MP: Scout Fly 2: Scout Fly - Precursor Basin
+  MP: Scout Fly 4: Scout Fly - Snowy Mountain
+  MP: Scout Fly 5: Snowy Mountain Gondola
+  MP: Scout Fly 7: Power Cell
+  SC: Climb The Giant Robot: Scout Fly - Misty Island
+  SC: Climb the Precursor Platforms: Power Cell
+  SC: Launch To The Poles: Power Cell
+  SC: Navigate The Spider Tunnel: Scout Fly - Mountain Pass
+  SC: Scout Fly In Dark Cave: Power Cell
+  SC: Scout Fly Main Cave, Overlooking Entrance: Power Cell
+  SC: Scout Fly Near Dark Cave Entrance: Scout Fly - Misty Island
+  SC: Scout Fly Robot Cave, At Bottom Level: Scout Fly - Mountain Pass
+  SC: Scout Fly Robot Cave, At Top Level: Power Cell
+  VC: Find The Hidden Power Cell: Power Cell
+  VC: Scout Fly At Minecart Junction: Power Cell
+  VC: Scout Fly In Miner's Cave: Power Cell
+  VC: Scout Fly Near Lava Tube: Scout Fly - Forbidden Jungle
+  VC: Scout Fly Near Mountain Pass: Power Cell
+  VC: Scout Fly Near Oracle: Scout Fly - Lava Tube
+  VC: Scout Fly Near Spider Cave: Scout Fly - Spider Cave
+  VC: Scout Fly On Stone Platforms: Scout Fly - Lost Precursor City
+}
+5: {
+  RV: Bring 120 Orbs To The Oracle (1): Scout Fly - Spider Cave
+  RV: Bring 120 Orbs To The Oracle (2): Snowy Fort Gate
+  RV: Bring 90 Orbs To The Geologist: Power Cell
+  RV: Bring 90 Orbs To The Warrior: Scout Fly - Volcanic Crater
+  SM: Deactivate The Precursor Blockers: Power Cell
+  SM: Find The Yellow Vent Switch: Scout Fly - Forbidden Jungle
+  SM: Open The Frozen Crate: Scout Fly - Citadel
+  SM: Open The Lurker Fort Gate: Power Cell
+  SM: Scout Fly Near Frozen Box: Scout Fly - Geyser Rock
+  SM: Scout Fly Near Yellow Eco Switch: Scout Fly - Spider Cave
+  SM: Scout Fly On Cliff near Flut Flut: Scout Fly - Rock Village
+  SM: Scout Fly Under Bridge To Fort: Scout Fly - Snowy Mountain
+  SM: Stop The 3 Lurker Glacier Troops: Power Cell
+  SM: Survive The Lurker Infested Cave: Scout Fly - Lava Tube
+  SV: Bring 120 Orbs To The Oracle (1): Power Cell
+  SV: Bring 120 Orbs To The Oracle (2): Scout Fly - Forbidden Jungle
+  SV: Bring 90 Orbs To The Mayor: Scout Fly - Sandover Village
+  SV: Bring 90 Orbs to Your Uncle: Scout Fly - Mountain Pass
+  Snowy Fort Gate: Power Cell
+  VC: Bring 120 Orbs To The Oracle (1): Scout Fly - Sentinel Beach
+  VC: Bring 120 Orbs To The Oracle (2): Power Cell
+  VC: Bring 90 Orbs To The Miners (1): Power Cell
+  VC: Bring 90 Orbs To The Miners (2): Scout Fly - Forbidden Jungle
+  VC: Bring 90 Orbs To The Miners (3): Scout Fly - Mountain Pass
+  VC: Bring 90 Orbs To The Miners (4): Jungle Elevator
+  Yellow Eco Switch: Power Cell
+}
+6: {
+  Blue Eco Switch: Power Cell
+  FJ: Free 7 Scout Flies: Power Cell
+  MP: Free 7 Scout Flies: Power Cell
+  Orb Cache in Snowy Fort (3): Scout Fly - Sandover Village
+  SM: Get Through The Lurker Fort: Power Cell
+  SM: Scout Fly On Top Of Fort Tower: Scout Fly - Lava Tube
+  VC: Free 7 Scout Flies: Scout Fly - Boggy Swamp
+}
+7: {
+  BS: Free 7 Scout Flies: Power Cell
+}
+8: {
+  Freed The Blue Sage: Scout Fly - Sentinel Beach
+  Freed The Red Sage: Scout Fly - Geyser Rock
+  Freed The Yellow Sage: Scout Fly - Sentinel Beach
+  GMC: Free The Red Sage: Scout Fly - Sentinel Beach
+  GMC: Free The Yellow Sage: Scout Fly - Precursor Basin
+  GMC: Scout Fly At Blast Furnace: Scout Fly - Misty Island
+  GMC: Scout Fly At Launch Pad Room: Scout Fly - Sandover Village
+  GMC: Scout Fly Before Jumping Lurkers: Scout Fly - Sandover Village
+  GMC: Scout Fly Main Room, Left of Robot: Scout Fly - Lost Precursor City
+  GMC: Scout Fly Main Room, Right of Robot: Scout Fly - Rock Village
+  LT: Scout Fly 1: Scout Fly - Citadel
+  LT: Scout Fly 2: Scout Fly - Sandover Village
+  LT: Scout Fly 3: Scout Fly - Sentinel Beach
+  LT: Scout Fly 4: Scout Fly - Fire Canyon
+  LT: Scout Fly 5: Scout Fly - Lost Precursor City
+  LT: Scout Fly 6: Scout Fly - Snowy Mountain
+  LT: Scout Fly 7: Scout Fly - Misty Island
+  Orb Cache at End of Blast Furnace: Freed The Red Sage
+  Orb Cache at End of Launch Pad Room: Scout Fly - Precursor Basin
+  Orb Cache at Start of Launch Pad Room: Scout Fly - Sentinel Beach
+}
+9: {
+  GMC: Free The Green Sage: Scout Fly - Citadel
+  LPC: Free 7 Scout Flies: Blue Eco Switch
+  PB: Free 7 Scout Flies: Scout Fly - Misty Island
+  SB: Free 7 Scout Flies: Scout Fly - Rock Village
+  SV: Free 7 Scout Flies: Scout Fly - Citadel
+}
+10: {
+  FJ: Defeat The Dark Eco Plant: Scout Fly - Lava Tube
+  GMC: Free 7 Scout Flies: Scout Fly - Geyser Rock
+  SB: Launch Up To The Cannon Tower: Scout Fly - Snowy Mountain
+}
+11: {
+  SM: Free 7 Scout Flies: Scout Fly - Spider Cave
+}
+12: {
+  SC: Free 7 Scout Flies: Scout Fly - Fire Canyon
+}
