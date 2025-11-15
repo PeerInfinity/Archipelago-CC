@@ -230,6 +230,7 @@ class LADXGameExportHandler(GenericGameExportHandler):
             'BOMB': 'Bomb',
             'BOOMERANG': 'Boomerang',
             'BOW': 'Bow',
+            'BOWWOW': 'BowWow',
             'ROOSTER': 'Rooster',
             'FLIPPERS': 'Flippers',
             'RUPEES': 'RUPEES',  # Special case for currency
@@ -260,8 +261,18 @@ class LADXGameExportHandler(GenericGameExportHandler):
             'SONG1': 'Ballad of the Wind Fish',
             'SONG2': 'Manbo\'s Mambo',
             'SONG3': 'Frog\'s Song of Soul',
+            # Instruments
+            'INSTRUMENT1': 'Full Moon Cello',
+            'INSTRUMENT2': 'Conch Horn',
+            'INSTRUMENT3': 'Sea Lily\'s Bell',
+            'INSTRUMENT4': 'Surf Harp',
+            'INSTRUMENT5': 'Wind Marimba',
+            'INSTRUMENT6': 'Coral Triangle',
+            'INSTRUMENT7': 'Organ of Evening Calm',
+            'INSTRUMENT8': 'Thunder Drum',
             # Collectibles
             'SEASHELL': 'Seashell',
+            'GOLD_LEAF': 'Gold Leaf',
             # Trading Quest Items
             'TRADING_ITEM_FISHING_HOOK': 'Fishing Hook',
             'TRADING_ITEM_NECKLACE': 'Necklace',
