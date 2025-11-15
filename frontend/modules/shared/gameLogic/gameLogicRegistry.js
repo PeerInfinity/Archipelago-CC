@@ -284,6 +284,7 @@ import { helperFunctions as smHelperFunctions } from './super_metroid/smLogic.js
 import * as stardewValleyHelpers from './stardew_valley/helpers.js';
 import * as terrariaLogic from './terraria/terrariaLogic.js';
 import * as timespinnerLogic from './timespinner/timespinnerLogic.js';
+import * as twwLogic from './tww/twwLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -565,6 +566,12 @@ const GAME_REGISTRY = {
     helperFunctions: timespinnerLogic.helperFunctions,
     worldClasses: ['TimespinnerWorld'],
     aliases: ['Timespinner']
+  },
+  'The Wind Waker': {
+    logicModule: genericLogic.genericStateModule, // Using generic state module for now
+    helperFunctions: twwLogic.default,
+    worldClasses: ['TWWWorld'],
+    aliases: ['The Wind Waker', 'TWW', 'Wind Waker']
   },
   // Add more games here as they're implemented
   'Generic': {
