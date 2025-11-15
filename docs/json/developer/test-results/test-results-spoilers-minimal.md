@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-15 03:45:00
+**Generated:** 2025-11-15 04:31:13
 
 **Source Data Created:** 2025-11-15T03:44:47.986699
 
-**Source Data Last Updated:** 2025-11-15T03:44:47.986704
+**Source Data Last Updated:** 2025-11-15T04:31:13.679020
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 43 (55.1%)
-- **Failed:** 35 (44.9%)
+- **Passed:** 44 (56.4%)
+- **Failed:** 34 (43.6%)
 
 ## Test Results
 
@@ -26,7 +26,7 @@
 | Adventure | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | ArchipIDLE | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Blasphemous | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Blasphemous | ❌ Failed seed 1 | 1 | 3.2 | 13.1 | 🟡 24.4% | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
@@ -54,7 +54,7 @@
 | Lingo | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Links Awakening DX | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Lufia II Ancient Cave | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Mario & Luigi Superstar Saga | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Mario & Luigi Superstar Saga | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Mega Man 2 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | MegaMan Battle Network 3 | ❌ Failed seed 5 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
