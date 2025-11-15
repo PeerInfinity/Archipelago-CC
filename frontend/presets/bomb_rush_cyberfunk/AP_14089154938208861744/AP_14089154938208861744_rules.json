@@ -2552,45 +2552,27 @@
             "name": "Hideout -> Versum Hill",
             "connected_region": "Versum Hill",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 20
-              }
+              "type": "helper",
+              "name": "versum_hill_entrance",
+              "args": []
             }
           },
           {
             "name": "Hideout -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "type": "helper",
+              "name": "millennium_square_entrance",
+              "args": []
             }
           },
           {
             "name": "Hideout -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "type": "helper",
+              "name": "mataan_entrance",
+              "args": []
             }
           }
         ],
@@ -2823,11 +2805,14 @@
             "name": "Versum Hill -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "type": "group_check",
-              "group": {
-                "type": "constant",
-                "value": "graffitil"
-              }
+              "type": "helper",
+              "name": "versum_hill_ch1_roadblock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             }
           }
         ],
@@ -2961,75 +2946,45 @@
             "name": "Versum Hill - After Roadblock -> Versum Hill",
             "connected_region": "Versum Hill",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 20
-              }
+              "type": "helper",
+              "name": "versum_hill_entrance",
+              "args": []
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "type": "helper",
+              "name": "millennium_square_entrance",
+              "args": []
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill - Underground Mall",
             "connected_region": "Versum Hill - Underground Mall",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 120
-              }
+              "type": "helper",
+              "name": "versum_hill_oldhead",
+              "args": []
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill - Side Street",
             "connected_region": "Versum Hill - Side Street",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 65
-              }
+              "type": "helper",
+              "name": "versum_hill_all_challenges",
+              "args": []
             }
           },
           {
             "name": "Versum Hill - After Roadblock -> Versum Hill - Basketball Court",
             "connected_region": "Versum Hill - Basketball Court",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 90
-              }
+              "type": "helper",
+              "name": "versum_hill_basketball_court",
+              "args": []
             }
           }
         ],
@@ -3261,11 +3216,14 @@
             "name": "Versum Hill - Underground Mall -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "type": "group_check",
-              "group": {
-                "type": "constant",
-                "value": "graffitil"
-              }
+              "type": "helper",
+              "name": "versum_hill_ch1_roadblock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             }
           }
         ],
@@ -3348,11 +3306,14 @@
             "name": "Versum Hill - Side Street -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "type": "group_check",
-              "group": {
-                "type": "constant",
-                "value": "graffitil"
-              }
+              "type": "helper",
+              "name": "versum_hill_ch1_roadblock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             }
           }
         ],
@@ -3394,26 +3355,23 @@
             "name": "Versum Hill - Basketball Court -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "type": "group_check",
-              "group": {
-                "type": "constant",
-                "value": "graffitil"
-              }
+              "type": "helper",
+              "name": "versum_hill_ch1_roadblock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             }
           },
           {
             "name": "Versum Hill - Basketball Court -> Versum Hill",
             "connected_region": "Versum Hill",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 20
-              }
+              "type": "helper",
+              "name": "versum_hill_entrance",
+              "args": []
             }
           }
         ],
@@ -3524,59 +3482,50 @@
             "name": "Millennium Square -> Versum Hill - After Roadblock",
             "connected_region": "Versum Hill - After Roadblock",
             "access_rule": {
-              "type": "group_check",
-              "group": {
-                "type": "constant",
-                "value": "graffitil"
-              }
+              "type": "helper",
+              "name": "versum_hill_ch1_roadblock",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             }
           },
           {
             "name": "Millennium Square -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "type": "and",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "brink_terminal_entrance",
+              "args": []
             }
           },
           {
             "name": "Millennium Square -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "type": "and",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "millennium_mall_entrance",
+              "args": []
             }
           },
           {
             "name": "Millennium Square -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 3
-              }
+              "type": "helper",
+              "name": "pyramid_island_entrance",
+              "args": []
             }
           },
           {
             "name": "Millennium Square -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "type": "helper",
+              "name": "mataan_entrance",
+              "args": []
             }
           }
         ],
@@ -3831,60 +3780,36 @@
             "name": "Brink Terminal -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "type": "helper",
+              "name": "millennium_square_entrance",
+              "args": []
             }
           },
           {
             "name": "Brink Terminal -> Brink Terminal - Underground",
             "connected_region": "Brink Terminal - Underground",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 250
-              }
+              "type": "helper",
+              "name": "brink_terminal_oldhead_underground",
+              "args": []
             }
           },
           {
             "name": "Brink Terminal -> Brink Terminal - Dock",
             "connected_region": "Brink Terminal - Dock",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 320
-              }
+              "type": "helper",
+              "name": "brink_terminal_oldhead_dock",
+              "args": []
             }
           },
           {
             "name": "Brink Terminal -> Brink Terminal - Planet Plaza",
             "connected_region": "Brink Terminal - Planet Plaza",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 220
-              }
+              "type": "helper",
+              "name": "brink_terminal_plaza",
+              "args": []
             }
           }
         ],
@@ -4133,9 +4058,9 @@
             "name": "Brink Terminal - Underground -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "type": "and",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "brink_terminal_entrance",
+              "args": []
             }
           }
         ],
@@ -4177,9 +4102,9 @@
             "name": "Brink Terminal - Dock -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "type": "and",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "brink_terminal_entrance",
+              "args": []
             }
           }
         ],
@@ -4297,24 +4222,18 @@
             "name": "Brink Terminal - Planet Plaza -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "type": "and",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "brink_terminal_entrance",
+              "args": []
             }
           },
           {
             "name": "Brink Terminal - Planet Plaza -> Brink Terminal - Tower",
             "connected_region": "Brink Terminal - Tower",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 280
-              }
+              "type": "helper",
+              "name": "brink_terminal_tower",
+              "args": []
             }
           }
         ],
@@ -4342,24 +4261,18 @@
             "name": "Brink Terminal - Tower -> Brink Terminal",
             "connected_region": "Brink Terminal",
             "access_rule": {
-              "type": "and",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "brink_terminal_entrance",
+              "args": []
             }
           },
           {
             "name": "Brink Terminal - Tower -> Brink Terminal - Planet Plaza",
             "connected_region": "Brink Terminal - Planet Plaza",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 220
-              }
+              "type": "helper",
+              "name": "brink_terminal_plaza",
+              "args": []
             }
           }
         ],
@@ -4475,24 +4388,23 @@
             "name": "Millennium Mall -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "type": "helper",
+              "name": "millennium_square_entrance",
+              "args": []
             }
           },
           {
             "name": "Millennium Mall -> Millennium Mall - Hanging Lights",
             "connected_region": "Millennium Mall - Hanging Lights",
             "access_rule": {
-              "type": "or",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "millennium_mall_oldhead_ceiling",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             }
           },
           {
@@ -4616,9 +4528,9 @@
             "name": "Millennium Mall - Hanging Lights -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "type": "and",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "millennium_mall_entrance",
+              "args": []
             }
           }
         ],
@@ -4646,33 +4558,32 @@
             "name": "Millennium Mall - Atrium -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "type": "and",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "millennium_mall_entrance",
+              "args": []
             }
           },
           {
             "name": "Millennium Mall - Atrium -> Millennium Mall - Race Track",
             "connected_region": "Millennium Mall - Race Track",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 530
-              }
+              "type": "helper",
+              "name": "millennium_mall_oldhead_race",
+              "args": []
             }
           },
           {
             "name": "Millennium Mall - Atrium -> Millennium Mall - Theater",
             "connected_region": "Millennium Mall - Theater",
             "access_rule": {
-              "type": "and",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "millennium_mall_theater",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             }
           }
         ],
@@ -4968,9 +4879,9 @@
             "name": "Millennium Mall - Theater -> Millennium Mall",
             "connected_region": "Millennium Mall",
             "access_rule": {
-              "type": "and",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "millennium_mall_entrance",
+              "args": []
             }
           }
         ],
@@ -5085,30 +4996,18 @@
             "name": "Pyramid Island - Base -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "type": "helper",
+              "name": "millennium_square_entrance",
+              "args": []
             }
           },
           {
             "name": "Pyramid Island - Base -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 620
-              }
+              "type": "helper",
+              "name": "pyramid_island_gate",
+              "args": []
             }
           }
         ],
@@ -5268,30 +5167,18 @@
             "name": "Pyramid Island - After Gate -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 3
-              }
+              "type": "helper",
+              "name": "pyramid_island_entrance",
+              "args": []
             }
           },
           {
             "name": "Pyramid Island - After Gate -> Pyramid Island - Maze",
             "connected_region": "Pyramid Island - Maze",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 780
-              }
+              "type": "helper",
+              "name": "pyramid_island_oldhead",
+              "args": []
             }
           },
           {
@@ -5299,7 +5186,7 @@
             "connected_region": "Pyramid Island - Upper Areas",
             "access_rule": {
               "type": "helper",
-              "name": "pyramid_island_all_challenges",
+              "name": "pyramid_island_upper_half",
               "args": [
                 {
                   "type": "constant",
@@ -5464,15 +5351,9 @@
             "name": "Pyramid Island - Maze -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 620
-              }
+              "type": "helper",
+              "name": "pyramid_island_gate",
+              "args": []
             }
           }
         ],
@@ -5624,45 +5505,27 @@
             "name": "Pyramid Island - Upper Areas -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 3
-              }
+              "type": "helper",
+              "name": "pyramid_island_entrance",
+              "args": []
             }
           },
           {
             "name": "Pyramid Island - Upper Areas -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 620
-              }
+              "type": "helper",
+              "name": "pyramid_island_gate",
+              "args": []
             }
           },
           {
             "name": "Pyramid Island - Upper Areas -> Pyramid Island - Top",
             "connected_region": "Pyramid Island - Top",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 4
-              }
+              "type": "helper",
+              "name": "pyramid_island_top",
+              "args": []
             }
           }
         ],
@@ -5827,30 +5690,18 @@
             "name": "Pyramid Island - Top -> Pyramid Island - Base",
             "connected_region": "Pyramid Island - Base",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 3
-              }
+              "type": "helper",
+              "name": "pyramid_island_entrance",
+              "args": []
             }
           },
           {
             "name": "Pyramid Island - Top -> Pyramid Island - After Gate",
             "connected_region": "Pyramid Island - After Gate",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 620
-              }
+              "type": "helper",
+              "name": "pyramid_island_gate",
+              "args": []
             }
           },
           {
@@ -5858,7 +5709,7 @@
             "connected_region": "Pyramid Island - Upper Areas",
             "access_rule": {
               "type": "helper",
-              "name": "pyramid_island_all_challenges",
+              "name": "pyramid_island_upper_half",
               "args": [
                 {
                   "type": "constant",
@@ -5935,24 +5786,18 @@
             "name": "Mataan - Streets -> Millennium Square",
             "connected_region": "Millennium Square",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "type": "helper",
+              "name": "millennium_square_entrance",
+              "args": []
             }
           },
           {
             "name": "Mataan - Streets -> Mataan - After Smoke Wall",
             "connected_region": "Mataan - After Smoke Wall",
             "access_rule": {
-              "type": "and",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "mataan_smoke_wall",
+              "args": []
             }
           }
         ],
@@ -6008,15 +5853,9 @@
             "name": "Mataan - After Smoke Wall -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "type": "helper",
+              "name": "mataan_entrance",
+              "args": []
             }
           },
           {
@@ -6135,24 +5974,18 @@
             "name": "Mataan - Deep City -> Mataan - After Smoke Wall",
             "connected_region": "Mataan - After Smoke Wall",
             "access_rule": {
-              "type": "and",
-              "rules": [],
-              "conditions": []
+              "type": "helper",
+              "name": "mataan_smoke_wall",
+              "args": []
             }
           },
           {
             "name": "Mataan - Deep City -> Mataan - Red Light District",
             "connected_region": "Mataan - Red Light District",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "rep"
-              },
-              "count": {
-                "type": "constant",
-                "value": 935
-              }
+              "type": "helper",
+              "name": "mataan_oldhead",
+              "args": []
             }
           },
           {
@@ -6433,15 +6266,9 @@
             "name": "Mataan - Skyscrapers -> Mataan - Streets",
             "connected_region": "Mataan - Streets",
             "access_rule": {
-              "type": "item_check",
-              "item": {
-                "type": "constant",
-                "value": "Chapter Completed"
-              },
-              "count": {
-                "type": "constant",
-                "value": 1
-              }
+              "type": "helper",
+              "name": "mataan_entrance",
+              "args": []
             }
           }
         ],

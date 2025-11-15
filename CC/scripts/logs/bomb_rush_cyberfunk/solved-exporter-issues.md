@@ -57,3 +57,17 @@ This document tracks resolved exporter issues.
 - mataan_faux
 
 **Result:** These functions are now properly exported as helper calls with correct arguments, and the JavaScript implementations in bombRushCyberfunkLogic.js can handle them.
+
+---
+
+### Issue 3: Region entrance functions returning empty rules
+**Resolved:** 2025-11-15
+**Fix:** Added all region entrance and sub-region access functions to preserve list
+
+**Problem:** Region entrance functions like `brink_terminal_entrance`, `millennium_mall_entrance`, and `mataan_smoke_wall` were failing to be analyzed, resulting in empty `and` rules. This made regions accessible immediately instead of when they should be gated by chapter completion, REP requirements, or other conditions.
+
+**Solution:** Added comprehensive list of region entrance and sub-region access functions to `should_preserve_as_helper()`:
+- Main region entrances: versum_hill_entrance, millennium_square_entrance, brink_terminal_entrance, millennium_mall_entrance, pyramid_island_entrance, mataan_entrance
+- Sub-region access functions: versum_hill_ch1_roadblock, versum_hill_oldhead, versum_hill_all_challenges, versum_hill_basketball_court, brink_terminal_plaza, brink_terminal_tower, brink_terminal_oldhead_underground, brink_terminal_oldhead_dock, millennium_mall_theater, millennium_mall_oldhead_ceiling, millennium_mall_oldhead_race, pyramid_island_gate, pyramid_island_oldhead, pyramid_island_top, pyramid_island_upper_half, mataan_smoke_wall, mataan_oldhead
+
+**Result:** All region entrances now have proper access requirements. The spoiler test now passes completely with all 186 state updates validated successfully across 10.9 spheres.
