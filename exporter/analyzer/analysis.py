@@ -119,6 +119,26 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                 local_closure_vars['self'] = rule_func.__self__
                 logging.debug("Added 'self' to local closure vars from method binding.")
 
+            # Extract default parameter values and add to closure vars
+            # This handles cases like: lambda state, loc=q_loc: (loc.can_reach(state))
+            try:
+                if hasattr(rule_func, '__defaults__') and rule_func.__defaults__:
+                    if hasattr(rule_func, '__code__'):
+                        arg_names = rule_func.__code__.co_varnames[:rule_func.__code__.co_argcount]
+                        defaults = rule_func.__defaults__
+
+                        # Map default values to parameter names (defaults apply to last N parameters)
+                        if len(defaults) > 0:
+                            default_start = len(arg_names) - len(defaults)
+                            for i, default_value in enumerate(defaults):
+                                param_name = arg_names[default_start + i]
+                                # Don't override existing closure vars and skip state/player
+                                if param_name not in local_closure_vars and param_name not in ('state', 'player'):
+                                    local_closure_vars[param_name] = default_value
+                                    logging.debug(f"Added default parameter '{param_name}' to closure vars: {default_value}")
+            except Exception as def_err:
+                logging.warning(f"Error extracting default parameters: {def_err}")
+
             # Clean the source
             cleaned_source = _clean_source(rule_func)
             if cleaned_source is None:
