@@ -68,17 +68,7 @@ export const helperFunctions = {
    * @returns {boolean} True if player has the item
    */
   has(snapshot, staticData, itemName) {
-    const result = !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
-    // DEBUG for Movement Pack
-    if (itemName === 'Movement Pack') {
-      console.log('[DEBUG-HAS] Checking Movement Pack:', {
-        itemName,
-        inventory: snapshot?.inventory,
-        hasItem: snapshot?.inventory?.[itemName],
-        result
-      });
-    }
-    return result;
+    return !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
   },
 
   /**
