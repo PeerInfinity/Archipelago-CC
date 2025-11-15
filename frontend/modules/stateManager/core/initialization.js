@@ -375,6 +375,7 @@ function initializeGameLogic(sm, jsonData, selectedPlayerId) {
   const logic = getGameLogic(gameName);
   sm.logicModule = logic.logicModule;
   sm.helperFunctions = logic.helperFunctions;
+  sm.stateMethods = logic.stateMethods; // For game-specific state methods (e.g., has_from_list_unique for Mario Land 2)
 
   // Initialize state
   sm.gameStateModule = sm.logicModule.initializeState();

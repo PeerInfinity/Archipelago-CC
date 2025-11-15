@@ -523,12 +523,17 @@ export const evaluateRule = (rule, context, depth = 0) => {
         // try to resolve from game settings (self in Python rules = world/rules class instance with options)
         if (baseObject === undefined && rule.object && rule.object.type === 'name' && rule.object.name === 'self') {
           // Try to get the setting value from context
-          if (context.getStaticData) {
-            const staticData = context.getStaticData();
+          if (context.getStaticData || context.staticData) {
+            const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
             const playerId = context.playerId || context.getPlayerSlot?.() || '1';
 
+            // Special case: if accessing self.options, return the settings object so nested attributes work
+            if (rule.attr === 'options' && staticData?.settings && staticData.settings[playerId]) {
+              return staticData.settings[playerId];
+            }
+
             // Check if the setting exists
-            if (staticData.settings && staticData.settings[playerId]) {
+            if (staticData?.settings && staticData.settings[playerId]) {
               const settingValue = staticData.settings[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
@@ -1309,10 +1314,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
           } else if (testResult) {
             result = evaluateRule(rule.if_true, context, depth + 1);
           } else {
-            // Handle null if_false as true (no additional requirements)
+            // Handle null if_false as false (location not accessible)
             result =
               rule.if_false === null
-                ? true
+                ? false
                 : evaluateRule(rule.if_false, context, depth + 1);
           }
         }
