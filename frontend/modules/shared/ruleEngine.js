@@ -1060,6 +1060,15 @@ export const evaluateRule = (rule, context, depth = 0) => {
               result = true; // Define behavior: true if right side isn't iterable (consistent with 'not in' semantics)
             }
             break;
+          case 'is':
+            // Python 'is' operator - checks identity (same object)
+            // In JavaScript, use === for strict equality which is closest
+            result = left === right;
+            break;
+          case 'is not':
+            // Python 'is not' operator - checks non-identity
+            result = left !== right;
+            break;
           default:
             log(
               'warn',

@@ -96,3 +96,47 @@ class LingoGameExportHandler(GenericGameExportHandler):
         # Replace all set literals with sorted versions
         result = re.sub(r'\{([^{}]*)\}', sort_set, s)
         return result
+
+    def get_location_attributes(self, location, world) -> Dict[str, Any]:
+        """
+        Add AccessRequirements data to Lingo locations.
+
+        This exports the location.access field which contains AccessRequirements data
+        needed by the _lingo_can_satisfy_requirements helper function.
+        """
+        attributes = {}
+
+        # The location is a LingoLocation, not a PlayerLocation
+        # We need to look up the PlayerLocation from world.player_logic
+        if hasattr(world, 'player_logic') and hasattr(world.player_logic, 'locations_by_room'):
+            # Extract room name from location name (format: "Room Name - Panel Name")
+            # Some locations don't have a dash (achievements, etc.), so handle both cases
+            location_name = location.name
+
+            # Search for the PlayerLocation in all rooms
+            player_location = None
+            for room_locations in world.player_logic.locations_by_room.values():
+                for ploc in room_locations:
+                    if ploc.name == location_name:
+                        player_location = ploc
+                        break
+                if player_location:
+                    break
+
+            if player_location and hasattr(player_location, 'access'):
+                access_req = player_location.access
+
+                # Serialize the AccessRequirements object
+                attributes['access'] = {
+                    'rooms': sorted(list(access_req.rooms)) if hasattr(access_req, 'rooms') else [],
+                    'doors': [{'room': door.room, 'door': door.door} for door in sorted(access_req.doors, key=lambda d: (d.room or '', d.door))] if hasattr(access_req, 'doors') else [],
+                    'colors': sorted(list(access_req.colors)) if hasattr(access_req, 'colors') else [],
+                    'items': sorted(list(access_req.items)) if hasattr(access_req, 'items') else [],
+                    'progression': dict(access_req.progression) if hasattr(access_req, 'progression') else {},
+                    'the_master': access_req.the_master if hasattr(access_req, 'the_master') else False,
+                    'postgame': access_req.postgame if hasattr(access_req, 'postgame') else False
+                }
+
+                logger.debug(f"Added AccessRequirements to location {location_name}: {attributes['access']}")
+
+        return attributes
