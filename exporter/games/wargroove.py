@@ -26,53 +26,69 @@ class WargrooveGameExportHandler(GenericGameExportHandler):
         self.current_region = context_name
 
     def handle_complex_exit_rule(self, exit_name: str, exit_rule) -> Optional[Dict[str, Any]]:
-        """Handle complex exit rules for Wargroove."""
-        # Build mapping of regions to their locations (lazy initialization)
-        if self.region_to_locations is None:
-            self._build_region_location_mapping()
+        """Handle complex exit rules for Wargroove.
 
-        # The current region should have been set via set_context
-        # For Wargroove, the exit rules use any(location.access_rule(state) for location in locations)
-        # We need to look up the actual location access rules and combine them with 'or'
+        Wargroove uses set_region_exit_rules() which creates lambdas like:
+        lambda state: any(location.access_rule(state) for location in locations)
 
-        if self.current_region and self.current_region in self.region_to_locations:
-            location_names = self.region_to_locations[self.current_region]
+        We need to extract the locations from the lambda's closure and analyze their rules.
+        """
+        # Try to extract locations from the lambda's closure
+        if hasattr(exit_rule, '__closure__') and exit_rule.__closure__:
+            # Look for the 'locations' variable in the closure
+            locations = None
+            for cell in exit_rule.__closure__:
+                try:
+                    cell_contents = cell.cell_contents
+                    # Check if this is a list of location objects
+                    if isinstance(cell_contents, list) and len(cell_contents) > 0:
+                        # Check if the first item looks like a location (has access_rule)
+                        if hasattr(cell_contents[0], 'access_rule'):
+                            locations = cell_contents
+                            break
+                except (AttributeError, ValueError):
+                    continue
 
-            # Get the access rules for each location
-            # We need to import safe_expand_rule from the exporter module
-            import exporter.exporter as exp_module
-            location_access_rules = []
-            for loc_name in location_names:
-                # Look up the location in the world
-                if self.world:
-                    try:
-                        from BaseClasses import MultiWorld
-                        multiworld = getattr(self.world, 'multiworld', None)
-                        if multiworld and isinstance(multiworld, MultiWorld):
-                            location = multiworld.get_location(loc_name, self.player)
-                            if hasattr(location, 'access_rule') and location.access_rule:
-                                # Analyze the location's access rule
-                                loc_rule = exp_module.safe_expand_rule(
-                                    self,
-                                    location.access_rule,
-                                    loc_name,
-                                    target_type='Location',
-                                    world=self.world
-                                )
-                                if loc_rule:
-                                    location_access_rules.append(loc_rule)
-                    except Exception as e:
-                        logger.debug(f"Could not get location rule for {loc_name}: {e}")
+            # If we found locations, analyze their access rules
+            if locations:
+                from exporter.analyzer import analyze_rule
+                location_access_rules = []
 
-            # If we got location rules, combine them with 'or'
-            if location_access_rules:
-                if len(location_access_rules) == 1:
-                    return location_access_rules[0]
+                for location in locations:
+                    if hasattr(location, 'access_rule') and location.access_rule:
+                        loc_name = getattr(location, 'name', 'Unknown')
+                        try:
+                            # Get the raw access rule function
+                            access_rule_func = location.access_rule
+
+                            # Analyze it with the proper context
+                            analyzed_rule = analyze_rule(
+                                rule_func=access_rule_func,
+                                game_handler=self,
+                                player_context=self.player
+                            )
+
+                            if analyzed_rule and analyzed_rule.get('type') != 'error':
+                                # Expand the rule using the game handler
+                                expanded_rule = self.expand_rule(analyzed_rule)
+                                if expanded_rule:
+                                    location_access_rules.append(expanded_rule)
+                                else:
+                                    # If expansion failed, use the analyzed rule as-is
+                                    location_access_rules.append(analyzed_rule)
+                        except Exception as e:
+                            logger.warning(f"Could not analyze location rule for {loc_name}: {e}")
+                            # Try to continue with other locations
+
+                # If we got location rules, combine them with 'or'
+                if location_access_rules:
+                    if len(location_access_rules) == 1:
+                        return location_access_rules[0]
+                    else:
+                        return {'type': 'or', 'conditions': location_access_rules}
                 else:
-                    return {'type': 'or', 'conditions': location_access_rules}
-
-            # Fallback to True if we couldn't get location rules
-            return {'type': 'constant', 'value': True}
+                    # If we found locations but couldn't analyze their rules, log a warning
+                    logger.warning(f"Found locations for exit {exit_name} from region {self.current_region} - no rules could be analyzed")
 
         return None  # Let normal analysis proceed
 
