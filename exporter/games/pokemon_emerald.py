@@ -1,15 +1,27 @@
 # exporter/games/pokemon_emerald.py
 
-from .base import BaseGameExportHandler
+from .generic import GenericGameExportHandler
 from typing import Any, Dict, Optional
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class PokemonEmeraldGameExportHandler(BaseGameExportHandler):
+class PokemonEmeraldGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Pokemon Emerald'
     """Pokemon Emerald specific export handler."""
+
+    # Mapping of HM names to helper function names
+    HM_TO_HELPER = {
+        "HM01 Cut": "can_cut",
+        "HM02 Fly": "can_fly",
+        "HM03 Surf": "can_surf",
+        "HM04 Strength": "can_strength",
+        "HM05 Flash": "can_flash",
+        "HM06 Rock Smash": "can_rock_smash",
+        "HM07 Waterfall": "can_waterfall",
+        "HM08 Dive": "can_dive",
+    }
 
     def __init__(self, world=None):
         super().__init__()
@@ -38,3 +50,42 @@ class PokemonEmeraldGameExportHandler(BaseGameExportHandler):
             settings_dict['hm_requirements'] = world.hm_requirements
 
         return settings_dict
+
+    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Expand Pokemon Emerald specific rule patterns.
+
+        Specifically handles hm_rules["HM_NAME"]() pattern and converts it
+        to helper function calls like can_surf(), can_cut(), etc.
+        """
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        # Handle function_call with subscript accessing hm_rules
+        if rule.get('type') == 'function_call':
+            func = rule.get('function', {})
+            if (isinstance(func, dict) and
+                func.get('type') == 'subscript' and
+                isinstance(func.get('value'), dict) and
+                func['value'].get('type') == 'name' and
+                func['value'].get('name') == 'hm_rules' and
+                isinstance(func.get('index'), dict) and
+                func['index'].get('type') == 'constant'):
+
+                # Extract the HM name from the subscript index
+                hm_name = func['index'].get('value')
+
+                # Convert to helper function call
+                if hm_name in self.HM_TO_HELPER:
+                    helper_name = self.HM_TO_HELPER[hm_name]
+                    logger.debug(f"Converting hm_rules['{hm_name}']() to helper '{helper_name}'")
+                    return {
+                        'type': 'helper',
+                        'name': helper_name,
+                        'args': []
+                    }
+                else:
+                    logger.warning(f"Unknown HM in hm_rules: {hm_name}")
+
+        # Recursively expand nested rules
+        return super().expand_rule(rule)

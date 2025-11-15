@@ -439,6 +439,96 @@ class ASTVisitorMixin:
                 return result
             # *** END ADDED ***
 
+            # *** Special handling for any(GeneratorExp) ***
+            if func_name == 'any' and len(filtered_args) == 1 and filtered_args[0].get('type') == 'generator_expression':
+                logging.debug(f"Detected any(GeneratorExp) pattern.")
+                gen_exp = filtered_args[0] # The result from visit_GeneratorExp
+
+                # Try to resolve the iterator if it's a name reference
+                iterator_info = gen_exp['comprehension']
+                if iterator_info.get('iterator', {}).get('type') == 'name':
+                    iterator_name = iterator_info['iterator']['name']
+                    logging.debug(f"any(GeneratorExp): Attempting to resolve iterator '{iterator_name}'")
+
+                    resolved_value = self.expression_resolver.resolve_variable(iterator_name)
+
+                    # Convert frozensets/sets/tuples to lists for uniform handling
+                    if resolved_value is not None:
+                        if isinstance(resolved_value, (frozenset, set, tuple)):
+                            resolved_value = list(resolved_value)
+                            logging.debug(f"any(GeneratorExp): Converted {type(resolved_value).__name__} to list")
+
+                    if resolved_value is not None and isinstance(resolved_value, list):
+                        logging.debug(f"any(GeneratorExp): Resolved '{iterator_name}' to list with {len(resolved_value)} items")
+
+                        # Check if items are callables (old behavior)
+                        if all(callable(item) for item in resolved_value):
+                            from .analysis import analyze_rule
+                            analyzed_items = []
+                            for item_func in resolved_value:
+                                try:
+                                    item_result = analyze_rule(rule_func=item_func, closure_vars=self.closure_vars.copy(),
+                                                              seen_funcs=self.seen_funcs, game_handler=self.game_handler,
+                                                              player_context=self.player_context)
+                                    if item_result and item_result.get('type') != 'error':
+                                        analyzed_items.append(item_result)
+                                    else:
+                                        logging.debug(f"Could not analyze item in {iterator_name} list, falling back to unresolved")
+                                        analyzed_items = None
+                                        break
+                                except Exception as e:
+                                    logging.debug(f"Error analyzing item in {iterator_name}: {e}")
+                                    analyzed_items = None
+                                    break
+
+                            if analyzed_items:
+                                # Successfully analyzed all items - return an 'or' of all items (different from 'all')
+                                logging.debug(f"any(GeneratorExp): Successfully analyzed {len(analyzed_items)} items, returning 'or' rule")
+                                if len(analyzed_items) == 1:
+                                    return analyzed_items[0]
+                                else:
+                                    return {'type': 'or', 'conditions': analyzed_items}
+
+                        # NEW: Handle simple values (strings, numbers, etc.) - expand the comprehension
+                        else:
+                            logging.debug(f"any(GeneratorExp): Iterator contains non-callable values, expanding comprehension")
+                            target_name = iterator_info.get('target', {}).get('name')
+                            if not target_name:
+                                logging.warning(f"any(GeneratorExp): Could not extract target variable name from comprehension")
+                            else:
+                                element_rule = gen_exp['element']
+                                expanded_conditions = []
+
+                                for value in resolved_value:
+                                    # Substitute the target variable with the current value in the element rule
+                                    substituted_rule = self._substitute_variable_in_rule(element_rule, target_name, value)
+                                    if substituted_rule:
+                                        expanded_conditions.append(substituted_rule)
+                                    else:
+                                        logging.warning(f"any(GeneratorExp): Failed to substitute {target_name}={value} in element rule")
+                                        expanded_conditions = None
+                                        break
+
+                                if expanded_conditions:
+                                    logging.debug(f"any(GeneratorExp): Successfully expanded to {len(expanded_conditions)} conditions")
+                                    if len(expanded_conditions) == 0:
+                                        # Empty iterator - any() of empty is False
+                                        return {'type': 'constant', 'value': False}
+                                    elif len(expanded_conditions) == 1:
+                                        return expanded_conditions[0]
+                                    else:
+                                        return {'type': 'or', 'conditions': expanded_conditions}
+
+                # If we couldn't resolve, represent this as a specific 'any_of' rule type
+                result = {
+                    'type': 'any_of',
+                    'element_rule': gen_exp['element'],
+                    'iterator_info': iterator_info
+                }
+                logging.debug(f"Created 'any_of' result: {result}")
+                return result
+            # *** END any() HANDLING ***
+
             # *** Special handling for zip() function ***
             if func_name == 'zip':
                 logging.debug(f"Detected zip() function call with {len(filtered_args)} args")
@@ -770,6 +860,90 @@ class ASTVisitorMixin:
                 logging.debug(f"Created helper result for logic method: {result}")
                 return result
 
+            # Handle Location object method calls (e.g., loc.can_reach(state))
+            elif obj_name and method_name == 'can_reach':
+                logging.debug(f"Processing potential Location method call: {obj_name}.{method_name}")
+
+                # Try to resolve the object from closure_vars
+                resolved_obj = self.expression_resolver.resolve_variable(obj_name)
+
+                # Check if it's a Location object (has 'name' but not 'entrances')
+                if (resolved_obj is not None and
+                    hasattr(resolved_obj, 'name') and
+                    not hasattr(resolved_obj, 'entrances') and
+                    isinstance(resolved_obj.name, str)):
+
+                    location_name = resolved_obj.name
+                    logging.debug(f"Resolved {obj_name} to Location object with name: {location_name}")
+
+                    # Convert loc.can_reach(state) to state.can_reach(location_name, "Location", player)
+                    # Note: player argument will be provided by the state manager
+                    result = {
+                        'type': 'state_method',
+                        'method': 'can_reach',
+                        'args': [
+                            {'type': 'constant', 'value': location_name},
+                            {'type': 'constant', 'value': 'Location'}
+                        ]
+                    }
+                    logging.debug(f"Converted Location.can_reach to state_method: {result}")
+                    return result
+
+            # Handle module-based helper calls (e.g., StateLogic.canDig, Rules.method)
+            # These are calls to functions from imported modules that should be treated as helpers
+            else:
+                # Check if this is a module name that contains helper functions
+                # Common patterns: StateLogic, Rules, Logic (capitalized module names)
+                if obj_name and (obj_name.endswith('Logic') or obj_name == 'Rules'):
+                    logging.debug(f"Processing module-based helper call: {obj_name}.{method_name}")
+
+                    # Filter out state/world/player arguments
+                    filtered_args = self._filter_special_args(args_with_nodes)
+
+                    # Resolve variable references in arguments
+                    resolved_args = []
+                    for arg in filtered_args:
+                        if arg and arg.get('type') == 'name':
+                            if arg['name'] == 'world':
+                                logging.debug(f"Skipping resolution of 'world' argument in module call")
+                                continue
+                            resolved_value = self.expression_resolver.resolve_variable(arg['name'])
+                            if resolved_value is not None and is_simple_value(resolved_value):
+                                if hasattr(resolved_value, 'value'):
+                                    final_value = resolved_value.value
+                                else:
+                                    final_value = resolved_value
+                                final_value = make_json_serializable(final_value)
+                                logging.debug(f"Resolved module helper argument variable '{arg['name']}' to {final_value}")
+                                resolved_args.append({'type': 'constant', 'value': final_value})
+                            else:
+                                resolved_args.append(arg)
+                        elif arg and arg.get('type') == 'attribute':
+                            resolved_value = self.expression_resolver.resolve_expression(arg)
+                            if resolved_value is not None and is_simple_value(resolved_value):
+                                if hasattr(resolved_value, 'value'):
+                                    final_value = resolved_value.value
+                                else:
+                                    final_value = resolved_value
+                                final_value = make_json_serializable(final_value)
+                                logging.debug(f"Resolved module helper argument attribute to {final_value}")
+                                resolved_args.append({'type': 'constant', 'value': final_value})
+                            else:
+                                resolved_args.append(arg)
+                        else:
+                            resolved_args.append(arg)
+
+                    filtered_args = resolved_args
+
+                    # Create helper result
+                    result = {
+                        'type': 'helper',
+                        'name': method_name,
+                        'args': filtered_args
+                    }
+                    logging.debug(f"Created helper result for module method: {result}")
+                    return result
+
         # 3. Fallback for other types of calls (e.g., calling result of another function)
         logging.debug(f"Fallback function call type. func_info = {func_info}")
         filtered_args = self._filter_special_args(args_with_nodes)
@@ -788,15 +962,24 @@ class ASTVisitorMixin:
             logging.debug(f"visit_Attribute: Visiting object {type(node.value).__name__}")
             obj_result = self.visit(node.value) # Get returned result
             # attr_name = node.attr # Moved up
-            
+
             # Specifically log if we are processing self.player
             if isinstance(node.value, ast.Name) and node.value.id == 'self' and attr_name == 'player':
                  logging.debug("visit_Attribute: Detected access to self.player")
 
             if obj_result:
-                 result = {'type': 'attribute', 'object': obj_result, 'attr': attr_name}
-                 logging.debug(f"visit_Attribute: Returning result {result}")
-                 return result # Return the result
+                 # Try to resolve the attribute access to a constant value
+                 attr_structure = {'type': 'attribute', 'object': obj_result, 'attr': attr_name}
+                 resolved_value = self.expression_resolver.resolve_expression(attr_structure)
+
+                 # If resolved to a simple value, return it as a constant
+                 if resolved_value is not None and isinstance(resolved_value, (int, float, str, bool)):
+                     logging.debug(f"visit_Attribute: Resolved {attr_name} to constant value: {resolved_value}")
+                     return {'type': 'constant', 'value': resolved_value}
+
+                 # Otherwise return the attribute access structure
+                 logging.debug(f"visit_Attribute: Returning attribute structure {attr_structure}")
+                 return attr_structure
             else:
                  # Handle case where object visit failed
                  logging.error(f"visit_Attribute: Failed to get result for object in {ast.dump(node)}")
@@ -835,13 +1018,12 @@ class ASTVisitorMixin:
                 elif hasattr(value, 'name') and hasattr(value, 'entrances') and isinstance(value.name, str):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to Region name: {value.name}")
                     return {'type': 'constant', 'value': value.name}
-                # Handle NamedTuples (like RoomAndDoor) by converting to list/dict
+                # Handle NamedTuples - keep them as name references so attribute access still works
+                # The attributes will be resolved later in visit_Attribute
                 elif hasattr(value, '_fields'):
-                    # This is a NamedTuple - convert to a serializable format
-                    # Convert to list to preserve order
-                    serialized = list(value)
-                    logging.debug(f"visit_Name: Resolved '{name}' from closure to NamedTuple as list: {serialized}")
-                    return {'type': 'constant', 'value': serialized}
+                    logging.debug(f"visit_Name: Found NamedTuple '{name}' in closure, keeping as name reference for attribute access")
+                    # Don't convert to list here - let attribute access resolve the fields
+                    pass
 
             # Also check function defaults for lambda parameters
             if name not in self.closure_vars:
@@ -860,11 +1042,11 @@ class ASTVisitorMixin:
                     elif hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances') and isinstance(resolved_value.name, str):
                         logging.debug(f"visit_Name: Resolved '{name}' from function defaults to Region name: {resolved_value.name}")
                         return {'type': 'constant', 'value': resolved_value.name}
-                    # Handle NamedTuples from function defaults
+                    # Handle NamedTuples from function defaults - keep as name references for attribute access
                     elif hasattr(resolved_value, '_fields'):
-                        serialized = list(resolved_value)
-                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults to NamedTuple as list: {serialized}")
-                        return {'type': 'constant', 'value': serialized}
+                        logging.debug(f"visit_Name: Found NamedTuple '{name}' in function defaults, keeping as name reference for attribute access")
+                        # Don't convert to list here - let attribute access resolve the fields
+                        pass
 
             # Use game handler to replace names if available
             if self.game_handler and hasattr(self.game_handler, 'replace_name'):

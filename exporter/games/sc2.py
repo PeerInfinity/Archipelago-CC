@@ -124,4 +124,28 @@ class SC2GameExportHandler(GenericGameExportHandler):
                 elif isinstance(option, (bool, int, str, float)):
                     settings_dict[option_name] = option
 
+        # Also export computed logic properties that are used in rules
+        # These are computed from options but accessed as attributes on the logic object
+        try:
+            from worlds.sc2.Rules import SC2Logic
+            logic = SC2Logic(world)
+
+            # Export computed boolean properties that are referenced in access rules
+            logic_properties = [
+                'advanced_tactics',
+                'story_tech_granted',
+                'story_levels_granted',
+                'take_over_ai_allies',
+                'kerrigan_unit_available'
+            ]
+
+            for prop_name in logic_properties:
+                if hasattr(logic, prop_name):
+                    prop_value = getattr(logic, prop_name)
+                    # Only export simple types
+                    if isinstance(prop_value, (bool, int, str, float)):
+                        settings_dict[prop_name] = prop_value
+        except Exception as e:
+            logger.warning(f"Could not export SC2 logic properties: {e}")
+
         return settings_dict

@@ -495,12 +495,41 @@ function mataan_faux(snapshot, staticData, limit, glitched) {
            graffitiM(snapshot, staticData, limit, 122);
 }
 
+// Helper to get options from static data
+function getOptionsFromStaticData(staticData) {
+    const settings = staticData?.settings?.['1'];  // Player 1
+    if (!settings) {
+        return {
+            movestyle: 2,  // Default: skateboard
+            limit: false,
+            glitched: false
+        };
+    }
+
+    return {
+        movestyle: settings.starting_movestyle ?? 2,
+        limit: settings.limited_graffiti ?? false,
+        glitched: settings.logic ?? false
+    };
+}
+
 // Spot counting functions based on Python implementation
 function spots_s_glitchless(snapshot, staticData, limit, accessCache) {
+    // Extract actual value if limit comes as a rule tree object
+    if (typeof limit === 'object' && limit?.type === 'constant') {
+        limit = limit.value;
+    }
+
+    // If accessCache is a name reference or undefined, build it
+    if (!accessCache || (typeof accessCache === 'object' && accessCache?.type === 'name')) {
+        const options = getOptionsFromStaticData(staticData);
+        accessCache = build_access_cache(snapshot, staticData, options.movestyle, options.limit, options.glitched);
+    }
+
     // Small spots can be tagged without any graffiti items
     // Starting with 10 spots accessible in the Hideout
     let total = 10;
-    
+
     // Additional spots become available as regions are accessed
     const conditions = [
         ["versum_hill_entrance", 1],
@@ -524,7 +553,7 @@ function spots_s_glitchless(snapshot, staticData, limit, accessCache) {
         ["mataan_oldhead", 3],
         ["mataan_deepest", 2]
     ];
-    
+
     // Add graffiti counts for accessible regions, stop at first inaccessible
     for (const [accessName, graffitiCount] of conditions) {
         if (accessCache[accessName]) {
@@ -533,7 +562,7 @@ function spots_s_glitchless(snapshot, staticData, limit, accessCache) {
             break;
         }
     }
-    
+
     if (limit) {
         // With limit, spots are limited by character count
         let characterCount = 0;
@@ -554,13 +583,24 @@ function spots_s_glitchless(snapshot, staticData, limit, accessCache) {
 }
 
 function spots_s_glitched(snapshot, staticData, limit, accessCache) {
+    // Extract actual value if limit comes as a rule tree object
+    if (typeof limit === 'object' && limit?.type === 'constant') {
+        limit = limit.value;
+    }
+
+    // If accessCache is a name reference or undefined, build it
+    if (!accessCache || (typeof accessCache === 'object' && accessCache?.type === 'name')) {
+        const options = getOptionsFromStaticData(staticData);
+        accessCache = build_access_cache(snapshot, staticData, options.movestyle, options.limit, options.glitched);
+    }
+
     let total = 75;
-    
+
     const conditions = [
         ["brink_terminal_entrance", 13],
         ["chapter3", 6]
     ];
-    
+
     for (const [accessName, graffitiCount] of conditions) {
         if (accessCache[accessName]) {
             total += graffitiCount;
@@ -568,7 +608,7 @@ function spots_s_glitched(snapshot, staticData, limit, accessCache) {
             break;
         }
     }
-    
+
     if (limit) {
         let characterCount = 0;
         if (snapshot?.inventory) {
@@ -1133,5 +1173,16 @@ export const helperFunctions = {
     mataan_smoke_wall2,
     mataan_deepest,
     mataan_crew_battle,
-    mataan_faux
+    mataan_faux,
+
+    // Internal spot counting functions (exported for use by helpers.js)
+    spots_s_glitchless,
+    spots_s_glitched,
+    spots_m_glitchless,
+    spots_m_glitched,
+    spots_l_glitchless,
+    spots_l_glitched,
+    spots_xl_glitchless,
+    spots_xl_glitched,
+    build_access_cache
 };

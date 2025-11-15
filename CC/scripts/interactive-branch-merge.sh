@@ -216,6 +216,11 @@ perform_merge_only() {
 
             # Unstage and discard changes in CC/scripts/logs/
             if [ -d "CC/scripts/logs" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^CC/scripts/logs/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
                 git reset -- CC/scripts/logs/ 2>/dev/null || true
                 git checkout -- CC/scripts/logs/ 2>/dev/null || true
                 git clean -fd CC/scripts/logs/ 2>/dev/null || true
@@ -223,6 +228,11 @@ perform_merge_only() {
 
             # Unstage and discard changes in frontend/presets/
             if [ -d "frontend/presets" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^frontend/presets/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
                 git reset -- frontend/presets/ 2>/dev/null || true
                 git checkout -- frontend/presets/ 2>/dev/null || true
                 git clean -fd frontend/presets/ 2>/dev/null || true
@@ -230,10 +240,45 @@ perform_merge_only() {
 
             # Unstage and discard changes in scripts/output/
             if [ -d "scripts/output" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^scripts/output/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
                 git reset -- scripts/output/ 2>/dev/null || true
                 git checkout -- scripts/output/ 2>/dev/null || true
                 git clean -fd scripts/output/ 2>/dev/null || true
             fi
+
+            # Unstage and discard changes in docs/json/developer/test-results/
+            if [ -d "docs/json/developer/test-results" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^docs/json/developer/test-results/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
+                git reset -- docs/json/developer/test-results/ 2>/dev/null || true
+                git checkout -- docs/json/developer/test-results/ 2>/dev/null || true
+                git clean -fd docs/json/developer/test-results/ 2>/dev/null || true
+            fi
+
+            # Remove text files in project root directory
+            shopt -s nullglob
+            for txtfile in *.txt; do
+                # First, check if file has merge conflicts and resolve by removing
+                if git diff --name-only --diff-filter=U | grep -q "^${txtfile}$"; then
+                    rm -f "$txtfile"
+                    git add "$txtfile" 2>/dev/null || true
+                    echo "  Removed conflicted: $txtfile"
+                # Check if file is NOT tracked in the repository (using ls-tree on HEAD)
+                elif [ -z "$(git ls-tree HEAD "$txtfile" 2>/dev/null)" ]; then
+                    # File is not in the repository, safe to remove
+                    git reset -- "$txtfile" 2>/dev/null || true
+                    rm -f "$txtfile"
+                    echo "  Removed: $txtfile"
+                fi
+            done
+            shopt -u nullglob
 
             echo -e "${GREEN}Temporary files cleaned.${NC}"
         else
@@ -359,6 +404,11 @@ fetch_and_merge() {
 
             # Unstage and discard changes in CC/scripts/logs/
             if [ -d "CC/scripts/logs" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^CC/scripts/logs/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
                 git reset -- CC/scripts/logs/ 2>/dev/null || true
                 git checkout -- CC/scripts/logs/ 2>/dev/null || true
                 git clean -fd CC/scripts/logs/ 2>/dev/null || true
@@ -366,6 +416,11 @@ fetch_and_merge() {
 
             # Unstage and discard changes in frontend/presets/
             if [ -d "frontend/presets" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^frontend/presets/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
                 git reset -- frontend/presets/ 2>/dev/null || true
                 git checkout -- frontend/presets/ 2>/dev/null || true
                 git clean -fd frontend/presets/ 2>/dev/null || true
@@ -373,10 +428,45 @@ fetch_and_merge() {
 
             # Unstage and discard changes in scripts/output/
             if [ -d "scripts/output" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^scripts/output/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
                 git reset -- scripts/output/ 2>/dev/null || true
                 git checkout -- scripts/output/ 2>/dev/null || true
                 git clean -fd scripts/output/ 2>/dev/null || true
             fi
+
+            # Unstage and discard changes in docs/json/developer/test-results/
+            if [ -d "docs/json/developer/test-results" ]; then
+                # First, resolve any merge conflicts in this directory by removing the files
+                git diff --name-only --diff-filter=U | grep "^docs/json/developer/test-results/" | while read -r file; do
+                    rm -f "$file"
+                    git add "$file" 2>/dev/null || true
+                done
+                git reset -- docs/json/developer/test-results/ 2>/dev/null || true
+                git checkout -- docs/json/developer/test-results/ 2>/dev/null || true
+                git clean -fd docs/json/developer/test-results/ 2>/dev/null || true
+            fi
+
+            # Remove text files in project root directory
+            shopt -s nullglob
+            for txtfile in *.txt; do
+                # First, check if file has merge conflicts and resolve by removing
+                if git diff --name-only --diff-filter=U | grep -q "^${txtfile}$"; then
+                    rm -f "$txtfile"
+                    git add "$txtfile" 2>/dev/null || true
+                    echo "  Removed conflicted: $txtfile"
+                # Check if file is NOT tracked in the repository (using ls-tree on HEAD)
+                elif [ -z "$(git ls-tree HEAD "$txtfile" 2>/dev/null)" ]; then
+                    # File is not in the repository, safe to remove
+                    git reset -- "$txtfile" 2>/dev/null || true
+                    rm -f "$txtfile"
+                    echo "  Removed: $txtfile"
+                fi
+            done
+            shopt -u nullglob
 
             echo -e "${GREEN}Temporary files cleaned.${NC}"
         else

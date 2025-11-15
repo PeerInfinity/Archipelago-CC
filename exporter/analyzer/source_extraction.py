@@ -65,7 +65,7 @@ def get_multiline_lambda_source(func: Callable) -> Optional[str]:
                 source_code = file_content_cache[filename]
             else:
                 # 3. Read from disk as a last resort
-                with open(filename, 'r', encoding='utf-8') as f:
+                with open(filename, 'r', encoding='utf-8-sig') as f:
                     source_code = f.read()
                 file_content_cache[filename] = source_code
 
@@ -115,7 +115,7 @@ def _read_multiline_lambda(func: Callable) -> Optional[str]:
             logging.debug(f"_read_multiline_lambda: Using cached content for {filename}")
         else:
             logging.debug(f"_read_multiline_lambda: Reading and caching content for {filename}")
-            with open(filename, 'r') as f:
+            with open(filename, 'r', encoding='utf-8-sig') as f:
                 # Read the file line by line
                 lines = f.readlines()
             file_content_cache[filename] = lines  # Store in cache

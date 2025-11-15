@@ -113,7 +113,9 @@ export function can_learn_hm(snapshot, staticData, move) {
   if (moveIndex === -1) return false;
 
   for (const [pokemon, data] of Object.entries(local_poke_data)) {
-    if (has(snapshot, staticData, pokemon) && data.tms && data.tms[6]) {
+    // Check for both base Pokemon name and "Static {pokemon}" prefix
+    if ((has(snapshot, staticData, pokemon) || has(snapshot, staticData, `Static ${pokemon}`))
+        && data.tms && data.tms[6]) {
       // Check if the Pokemon can learn this HM
       if (data.tms[6] & (1 << (moveIndex + 2))) {
         return true;

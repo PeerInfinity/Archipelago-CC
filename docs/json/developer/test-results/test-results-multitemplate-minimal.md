@@ -4,23 +4,23 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-14 06:30:33
+**Generated:** 2025-11-14 05:19:55
 
 **Source Data Created:** 2025-11-13T04:22:57.318664
 
-**Source Data Last Updated:** 2025-11-14T06:30:32.995264
+**Source Data Last Updated:** 2025-11-13T05:14:21.928876
 
 ## Summary
 
 - **Total Games:** 1
 - **Total Template Configurations:** 174
-- **Passed Configurations:** 136 (78.2%)
-- **Failed Configurations:** 34 (19.5%)
+- **Passed Configurations:** 138 (79.3%)
+- **Failed Configurations:** 32 (18.4%)
 - **Invalid Configurations:** 4 (2.3%)
 
 ## A Link to the Past
 
-**Results:** 136/174 passed (78.2%)  
+**Results:** 138/174 passed (79.3%)  
 **Custom Exporter:** ✅ Yes | **Custom GameLogic:** ✅ Yes
 
 | Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |
@@ -84,21 +84,21 @@
 | fully_randomized | ❌ Failed | 0 | 0 | 14.1 | 0.0% |
 | glitch_boots_false | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | glitch_boots_true | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
-| glitched_logic | ❌ Failed | 0 | 0.1 | 15.1 | 0.7% |
+| glitched_logic | ❌ Failed | 0 | 0 | 15.1 | 0.0% |
 | glitches_required_hybrid_major_glitches | ❌ Failed | 0 | 0 | 14.1 | 0.0% |
 | glitches_required_minor_glitches | ❌ Failed | 0 | 0.3 | 22.1 | 1.4% |
 | glitches_required_no_glitches | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | glitches_required_no_logic | ✅ Passed | 0 | 0.131 | 0.131 | 100.0% |
-| glitches_required_overworld_glitches | ❌ Failed | 0 | 0.1 | 14.1 | 0.7% |
+| glitches_required_overworld_glitches | ❌ Failed | 0 | 0 | 14.1 | 0.0% |
 | goal_bosses | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | goal_crystals | ❌ Failed | 0 | 6.1 | 21.3 | 28.6% |
 | goal_ganon | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | goal_ganon_pedestal | ❌ Failed | 0 | 6.1 | 21.3 | 28.6% |
 | goal_ganon_triforce_hunt | ❌ Failed | 0 | 1.9 | 17.1 | 11.1% |
 | goal_local_ganon_triforce_hunt | ❌ Failed | 0 | 1.9 | 17.1 | 11.1% |
-| goal_local_triforce_hunt | ❌ Failed | 0 | 4.1 | 17.1 | 24.0% |
+| goal_local_triforce_hunt | ✅ Passed | 0 | 17.1 | 17.1 | 100.0% |
 | goal_pedestal | ✅ Passed | 0 | 25.3 | 25.3 | 100.0% |
-| goal_triforce_hunt | ❌ Failed | 0 | 4.1 | 17.1 | 24.0% |
+| goal_triforce_hunt | ✅ Passed | 0 | 17.1 | 17.1 | 100.0% |
 | hard_mode | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | hints_full | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |
 | hints_off | ✅ Passed | 0 | 22.1 | 22.1 | 100.0% |

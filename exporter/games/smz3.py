@@ -20,23 +20,96 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         super().__init__()
         logger.info("SMZ3 exporter initialized")
 
+    def _handle_entrance_rule(self, rule_func, entrance_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Handle SMZ3 entrance rules by extracting the region's CanEnter method.
+
+        SMZ3 entrance rules have signature: lambda state, region=region: region.CanEnter(state.smz3state[player])
+        We extract the region object and analyze its CanEnter method.
+
+        Args:
+            rule_func: The entrance rule function
+            entrance_name: Name of the entrance (e.g., "Menu->Castle Tower")
+
+        Returns:
+            Analyzed rule dict, or None to fall back to standard analysis
+        """
+        logger.info(f"Processing entrance: {entrance_name}")
+
+        # Try to extract the 'region' object from default arguments
+        region_object = None
+        if hasattr(rule_func, '__code__') and hasattr(rule_func, '__defaults__'):
+            arg_names = rule_func.__code__.co_varnames[:rule_func.__code__.co_argcount]
+            defaults = rule_func.__defaults__ or ()
+
+            logger.info(f"Entrance args for {entrance_name}: {arg_names}, defaults: {len(defaults)}")
+
+            # SMZ3 entrance rules have signature: lambda state, region=region: ...
+            if len(arg_names) >= 2 and 'region' in arg_names:
+                region_index = list(arg_names).index('region')
+                defaults_offset = len(arg_names) - len(defaults)
+                if region_index >= defaults_offset:
+                    region_object = defaults[region_index - defaults_offset]
+                    logger.info(f"Found 'region' object from defaults: {type(region_object)}")
+
+        if not region_object:
+            logger.info(f"No 'region' object found in defaults for {entrance_name}")
+            return None
+
+        # Check if this looks like a TotalSMZ3 Region object
+        has_can_enter = hasattr(region_object, 'CanEnter')
+        logger.info(f"region_object attributes - CanEnter: {has_can_enter}, type: {type(region_object)}")
+
+        if not has_can_enter:
+            logger.info(f"Not a TotalSMZ3 Region object for {entrance_name}")
+            return None
+
+        logger.info(f"Found TotalSMZ3 Region object for '{entrance_name}', extracting CanEnter logic")
+
+        # Extract and analyze the CanEnter method
+        try:
+            can_enter_func = region_object.CanEnter
+
+            # Import the analyzer here to avoid circular imports
+            from exporter.analyzer import analyze_rule
+
+            # Analyze the CanEnter function
+            # This function has signature: lambda items: <requirements>
+            # where items is a TotalSMZ3 Progression object
+            analyzed_rule = analyze_rule(can_enter_func)
+
+            if analyzed_rule:
+                logger.info(f"Successfully extracted entrance logic for '{entrance_name}'")
+                return analyzed_rule
+            else:
+                logger.warning(f"Failed to analyze CanEnter for '{entrance_name}', falling back to default")
+                return None
+
+        except Exception as e:
+            logger.error(f"Error analyzing TotalSMZ3 entrance logic for '{entrance_name}': {e}")
+            return None
+
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """
         Override rule analysis for SMZ3-specific patterns.
 
-        This method is called before the standard rule analysis. It detects
-        SMZ3 location access rules that use loc.Available() and extracts the
-        actual item requirements from the TotalSMZ3 Location object.
+        This method is called before the standard rule analysis. It handles:
+        1. Location access rules that use loc.Available()
+        2. Entrance rules that use region.CanEnter()
 
         Returns None to fall back to standard analysis, or a dict with the analyzed rule.
         """
-        # Only handle location access rules (not entrance rules or item rules)
+        # Only handle rules with a target name
         if not rule_target_name:
             return None
 
-        # Skip entrance rules (contain "->") and item rules (contain "Item Rule")
-        if "->" in str(rule_target_name) or "Item Rule" in str(rule_target_name):
+        # Skip item rules
+        if "Item Rule" in str(rule_target_name):
             return None
+
+        # Handle entrance rules (contain "->")
+        if "->" in str(rule_target_name):
+            return self._handle_entrance_rule(rule_func, rule_target_name)
 
         logger.info(f"Processing location: {rule_target_name}")
 
@@ -107,9 +180,36 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         1. region.CanEnter(state.smz3state[player]) patterns
         2. loc.Available(state.smz3state[player]) patterns (if override_rule_analysis didn't handle it)
         3. Custom smz3state collection state access
+        4. Convert "items" variable references to proper state lookups
         """
         if not isinstance(rule, dict):
             return rule
+
+        # Handle attribute access patterns
+        if rule.get('type') == 'attribute':
+            obj = rule.get('object')
+            attr = rule.get('attr')
+
+            # Handle items.AttributeName - convert to item check
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'items':
+                logger.debug(f"Converting items.{attr} to item_check")
+                return {
+                    'type': 'item_check',
+                    'item': attr
+                }
+
+            # Handle self.AttributeName - try to resolve to static data or constant
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self':
+                # For now, convert self.Config and similar to a helper call that can access static data
+                # This is a placeholder - ideally we'd resolve these at export time
+                logger.debug(f"Converting self.{attr} to static data reference")
+                return {
+                    'type': 'static_ref',
+                    'ref': attr
+                }
+
+            # Recursively process the object part of attribute access
+            rule['object'] = self.postprocess_rule(obj)
 
         # Handle region.CanEnter() and loc.Available() patterns
         # These appear as: {type: "function_call", function: {type: "attribute", object: {type: "name", name: "region"/"loc"}, attr: "CanEnter"/"Available"}, args: [...]}
@@ -153,6 +253,52 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                     'value': True
                 }
 
+        # Handle function calls
+        if rule.get('type') == 'function_call':
+            func = rule.get('function')
+            args = rule.get('args', [])
+
+            # Filter out 'items' name arguments (JavaScript helpers get items from snapshot)
+            filtered_args = [arg for arg in args if not (isinstance(arg, dict) and arg.get('type') == 'name' and arg.get('name') == 'items')]
+
+            if isinstance(func, dict) and func.get('type') == 'attribute':
+                obj = func.get('object')
+                method_name = func.get('attr')
+
+                # Handle items.MethodName() - convert to helper call
+                if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'items':
+                    logger.debug(f"Converting items.{method_name}() to helper call")
+                    return {
+                        'type': 'helper',
+                        'name': f'smz3_{method_name}',
+                        'args': [self.postprocess_rule(arg) for arg in filtered_args]
+                    }
+
+                # Handle self.world.CanEnter(region_name, items) - convert to region_accessible
+                if (isinstance(obj, dict) and obj.get('type') == 'attribute' and
+                    obj.get('attr') == 'world' and
+                    isinstance(obj.get('object'), dict) and
+                    obj['object'].get('type') == 'name' and
+                    obj['object'].get('name') == 'self' and
+                    method_name == 'CanEnter'):
+
+                    if filtered_args and len(filtered_args) > 0:
+                        region_name_arg = self.postprocess_rule(filtered_args[0])
+                        logger.debug(f"Converting self.world.CanEnter() to region_accessible check")
+                        return {
+                            'type': 'region_accessible',
+                            'region': region_name_arg.get('value') if isinstance(region_name_arg, dict) and region_name_arg.get('type') == 'constant' else region_name_arg
+                        }
+
+            # Update args in the rule if we filtered anything
+            if len(filtered_args) != len(args):
+                rule = rule.copy()
+                rule['args'] = [self.postprocess_rule(arg) for arg in filtered_args]
+                # Recursively process the function
+                if func:
+                    rule['function'] = self.postprocess_rule(func)
+                return rule
+
         # Recursively process nested rules
         if rule.get('type') == 'and' and rule.get('conditions'):
             rule['conditions'] = [self.postprocess_rule(cond) for cond in rule['conditions']]
@@ -167,5 +313,17 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 rule['if_true'] = self.postprocess_rule(rule['if_true'])
             if rule.get('if_false'):
                 rule['if_false'] = self.postprocess_rule(rule['if_false'])
+        elif rule.get('type') == 'compare':
+            # Process both left and right sides of comparisons
+            if rule.get('left'):
+                rule['left'] = self.postprocess_rule(rule['left'])
+            if rule.get('right'):
+                rule['right'] = self.postprocess_rule(rule['right'])
+        elif rule.get('type') == 'function_call':
+            # Process function and args if not already handled above
+            if rule.get('function'):
+                rule['function'] = self.postprocess_rule(rule['function'])
+            if rule.get('args'):
+                rule['args'] = [self.postprocess_rule(arg) for arg in rule['args']]
 
         return rule

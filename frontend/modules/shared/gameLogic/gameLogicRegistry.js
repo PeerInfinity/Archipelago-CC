@@ -249,6 +249,8 @@ import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
 import * as mlssLogic from './mlss/mlssLogic.js';
 import { mlssStateModule } from './mlss/mlssLogic.js';
 import * as marioland2Logic from './marioland2/marioland2Logic.js';
+import * as messengerLogic from './messenger/messengerLogic.js';
+import { messengerStateModule } from './messenger/messengerLogic.js';
 import * as mmbn3Logic from './mmbn3/mmbn3Logic.js';
 import { mmbn3StateModule } from './mmbn3/mmbn3Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
@@ -267,6 +269,8 @@ import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
 import * as cv64Logic from './cv64/cv64Logic.js';
+import * as darkSouls3Logic from './dark_souls_3/darkSouls3Logic.js';
+import { darkSouls3StateModule } from './dark_souls_3/darkSouls3Logic.js';
 import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
 import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
 import * as paintLogic from './paint/paintLogic.js';
@@ -277,6 +281,12 @@ import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
 import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
 import { helperFunctions as smHelperFunctions } from './super_metroid/smLogic.js';
+import * as stardewValleyHelpers from './stardew_valley/helpers.js';
+import * as terrariaLogic from './terraria/terrariaLogic.js';
+import * as timespinnerLogic from './timespinner/timespinnerLogic.js';
+import * as twwLogic from './tww/twwLogic.js';
+import { helperFunctions as yoshisislandHelperFunctions } from './yoshisisland/yoshisislandLogic.js';
+import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -342,6 +352,12 @@ const GAME_REGISTRY = {
     worldClasses: ['CV64World'],
     aliases: ['Castlevania 64', 'CV64', 'cv64']
   },
+  'Dark Souls III': {
+    logicModule: darkSouls3Logic.darkSouls3StateModule,
+    helperFunctions: darkSouls3Logic.helperFunctions,
+    worldClasses: ['DarkSouls3World'],
+    aliases: ['Dark Souls III', 'Dark Souls 3', 'dark_souls_3', 'DS3']
+  },
   'DLCQuest': {
     logicModule: dlcquestLogic.dlcquestStateModule,
     helperFunctions: dlcquestLogic.helperFunctions,
@@ -401,6 +417,12 @@ const GAME_REGISTRY = {
     helperFunctions: mmbn3Logic.helperFunctions,
     worldClasses: ['MMBN3World'],
     aliases: ['MegaMan Battle Network 3', 'MMBN3', 'mmbn3']
+  },
+  'The Messenger': {
+    logicModule: messengerLogic.messengerStateModule,
+    helperFunctions: messengerLogic.helperFunctions,
+    worldClasses: ['MessengerWorld'],
+    aliases: ['The Messenger', 'Messenger']
   },
   'Pokemon Red and Blue': {
     logicModule: pokemon_rbLogic.pokemon_rbStateModule,
@@ -498,6 +520,12 @@ const GAME_REGISTRY = {
     worldClasses: ['SoEWorld'],
     aliases: ['Secret of Evermore', 'SOE', 'soe']
   },
+  'Stardew Valley': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: stardewValleyHelpers,
+    worldClasses: ['StardewValleyWorld'],
+    aliases: ['Stardew Valley', 'SDV', 'stardew_valley']
+  },
   'shapez': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: shapezLogic.helpers,
@@ -528,6 +556,36 @@ const GAME_REGISTRY = {
     helperFunctions: smHelperFunctions,
     worldClasses: ['SMWorld'],
     aliases: ['Super Metroid', 'SM']
+  },
+  'Terraria': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: terrariaLogic.helperFunctions,
+    worldClasses: ['TerrariaWorld'],
+    aliases: ['Terraria']
+  },
+  'Timespinner': {
+    logicModule: timespinnerLogic.timespinnerStateModule,
+    helperFunctions: timespinnerLogic.helperFunctions,
+    worldClasses: ['TimespinnerWorld'],
+    aliases: ['Timespinner']
+  },
+  'The Wind Waker': {
+    logicModule: genericLogic.genericStateModule, // Using generic state module for now
+    helperFunctions: twwLogic.default,
+    worldClasses: ['TWWWorld'],
+    aliases: ['The Wind Waker', 'TWW', 'Wind Waker']
+  },
+  "Yoshi's Island": {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: yoshisislandHelperFunctions,
+    worldClasses: ['YoshisIslandWorld'],
+    aliases: ["Yoshi's Island"]
+  },
+  'Yu-Gi-Oh! 2006': {
+    logicModule: genericLogic.genericStateModule, // Using generic state module
+    helperFunctions: yugioh06Logic.helperFunctions,
+    worldClasses: ['Yugioh06World'],
+    aliases: ['Yu-Gi-Oh! 2006', 'yugioh06']
   },
   // Add more games here as they're implemented
   'Generic': {

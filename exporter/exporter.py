@@ -97,9 +97,109 @@ def resolve_attribute_nodes_in_rule(rule: Dict[str, Any], world) -> Dict[str, An
 
         return attr_node
 
+    # Helper function to resolve subscript nodes
+    def resolve_subscript(subscript_node):
+        if not isinstance(subscript_node, dict) or subscript_node.get('type') != 'subscript':
+            return subscript_node
+
+        value_node = subscript_node.get('value')
+        index_node = subscript_node.get('index')
+
+        if not value_node or not index_node:
+            return subscript_node
+
+        try:
+            # First resolve the value (the object being subscripted)
+            resolved_value = resolve_attribute_nodes_in_rule(value_node, world)
+
+            # Then resolve the index
+            resolved_index = resolve_attribute_nodes_in_rule(index_node, world)
+
+            # If both resolved to constants, perform the subscript operation
+            if (resolved_value.get('type') == 'constant' and
+                resolved_index.get('type') == 'constant'):
+                obj = resolved_value.get('value')
+                idx = resolved_index.get('value')
+
+                if obj is not None and idx is not None:
+                    try:
+                        # Try direct subscript first
+                        result = obj[idx]
+                    except (KeyError, TypeError):
+                        # If that fails and obj is a dict, try to match Enum keys by their .value
+                        if isinstance(obj, dict):
+                            result = None
+                            for key, value in obj.items():
+                                # Check if the key is an Enum and its value matches idx
+                                if hasattr(key, 'value') and key.value == idx:
+                                    result = value
+                                    break
+                            if result is None:
+                                logger.debug(f"Could not find key {idx} in dict with keys: {list(obj.keys())}")
+                                return subscript_node
+                        else:
+                            logger.debug(f"Could not resolve subscript: {idx}")
+                            return subscript_node
+                    except (IndexError, Exception) as e:
+                        logger.debug(f"Could not resolve subscript: {e}")
+                        return subscript_node
+
+                    # Convert result to proper JSON-serializable format
+                    try:
+                        if isinstance(result, dict):
+                            logger.debug(f"Resolved subscript to dict: {result}")
+                            return {'type': 'constant', 'value': dict(result)}
+                        elif isinstance(result, (list, tuple)):
+                            logger.debug(f"Resolved subscript to list: {result}")
+                            return {'type': 'constant', 'value': list(result)}
+                        elif isinstance(result, (str, int, bool, float, type(None))):
+                            logger.debug(f"Resolved subscript to value: {result}")
+                            return {'type': 'constant', 'value': result}
+                        else:
+                            logger.debug(f"Resolved subscript to object: {type(result)}")
+                            return {'type': 'constant', 'value': result}
+                    except Exception as e:
+                        logger.debug(f"Could not convert result to JSON: {e}")
+                        return subscript_node
+        except Exception as e:
+            logger.debug(f"Error resolving subscript: {e}")
+
+        return subscript_node
+
     # If the rule itself is an attribute node, try to resolve it
     if rule.get('type') == 'attribute':
         return resolve_attribute(rule)
+
+    # If the rule itself is a subscript node, try to resolve it
+    if rule.get('type') == 'subscript':
+        resolved = resolve_subscript(rule)
+        # If we resolved to a constant containing a dict/list, this might need
+        # further transformation for state_method calls
+        return resolved
+
+    # Process state_method rules with complex arguments
+    if rule.get('type') == 'state_method':
+        method = rule.get('method')
+        args = rule.get('args', [])
+
+        # Resolve args recursively first
+        if args:
+            resolved_args = [resolve_attribute_nodes_in_rule(arg, world) if isinstance(arg, dict) else arg for arg in args]
+            rule['args'] = resolved_args
+
+            # For has_all_counts and has_all, if the first arg is now a constant (dict/list),
+            # inline it into the rule structure
+            if method == 'has_all_counts' and len(resolved_args) > 0:
+                first_arg = resolved_args[0]
+                if first_arg.get('type') == 'constant' and isinstance(first_arg.get('value'), dict):
+                    # Transform to inline items dict
+                    rule['args'] = [{'type': 'constant', 'value': dict(first_arg['value'])}]
+
+            elif method == 'has_all' and len(resolved_args) > 0:
+                first_arg = resolved_args[0]
+                if first_arg.get('type') == 'constant' and isinstance(first_arg.get('value'), (list, tuple)):
+                    # Transform to inline items list
+                    rule['args'] = [{'type': 'constant', 'value': list(first_arg['value'])}]
 
     # Process item_check rules
     if rule.get('type') == 'item_check':
@@ -550,32 +650,37 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
 
         # Start regions
         try:
-            # Try to get Menu region first (common default)
-            default_start_region = 'Menu'
-            try:
-                menu_region = multiworld.get_region('Menu', player)
-            except Exception as e:
-                # Menu region doesn't exist, need to find actual starting region
-                logger.debug(f"Menu region not found for player {player}, looking for actual starting region")
-                menu_region = None
-                
-                # Find the actual starting region
-                player_regions = [
-                    region for region in multiworld.get_regions() 
-                    if region.player == player
-                ]
-                
-                # For single-region games, use that region as the starting region
-                if len(player_regions) == 1:
-                    default_start_region = player_regions[0].name
-                    logger.debug(f"Using single region '{default_start_region}' as starting region for player {player}")
-                else:
-                    # Look for regions with no entrances (typically starting regions)
-                    for region in player_regions:
-                        if not region.entrances:
-                            default_start_region = region.name
-                            logger.debug(f"Found region '{default_start_region}' with no entrances as starting region for player {player}")
-                            break
+            # First, check if the world has an origin_region_name attribute
+            default_start_region = 'Menu'  # Default fallback
+            if hasattr(world, 'origin_region_name') and world.origin_region_name:
+                default_start_region = world.origin_region_name
+                logger.debug(f"Using world.origin_region_name '{default_start_region}' as starting region for player {player}")
+            else:
+                # Try to get Menu region first (common default)
+                try:
+                    menu_region = multiworld.get_region('Menu', player)
+                except Exception as e:
+                    # Menu region doesn't exist, need to find actual starting region
+                    logger.debug(f"Menu region not found for player {player}, looking for actual starting region")
+                    menu_region = None
+
+                    # Find the actual starting region
+                    player_regions = [
+                        region for region in multiworld.get_regions()
+                        if region.player == player
+                    ]
+
+                    # For single-region games, use that region as the starting region
+                    if len(player_regions) == 1:
+                        default_start_region = player_regions[0].name
+                        logger.debug(f"Using single region '{default_start_region}' as starting region for player {player}")
+                    else:
+                        # Look for regions with no entrances (typically starting regions)
+                        for region in player_regions:
+                            if not region.entrances:
+                                default_start_region = region.name
+                                logger.debug(f"Found region '{default_start_region}' with no entrances as starting region for player {player}")
+                                break
 
             available_regions = []
             player_regions = [
@@ -696,10 +801,15 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
             if cache_key in _rule_analysis_cache:
                 return _rule_analysis_cache[cache_key]
 
-            # Check if game handler has an override for rule analysis (e.g., Blasphemous)
+            # Check if game handler has an override for rule analysis (e.g., Blasphemous, Terraria)
             if game_handler and hasattr(game_handler, 'override_rule_analysis'):
                 override_result = game_handler.override_rule_analysis(rule_func, rule_target_name)
                 if override_result:
+                    # Check for Terraria's sentinel value for "always accessible"
+                    if isinstance(override_result, dict) and override_result.get('__terraria_handled__'):
+                        actual_result = override_result.get('__value__')
+                        _rule_analysis_cache[cache_key] = actual_result
+                        return actual_result
                     # Cache the override result before returning
                     _rule_analysis_cache[cache_key] = override_result
                     return override_result
@@ -732,6 +842,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
             # Add world object to closure_vars if provided (may override closure value)
             if world is not None:
                 closure_vars['world'] = world
+
+            # Allow game handler to prepare/modify closure_vars before analysis
+            if hasattr(game_handler, 'prepare_closure_vars'):
+                closure_vars = game_handler.prepare_closure_vars(rule_func, closure_vars)
 
             # Directly call analyze_rule, which handles recursion internally for combined rules
             context_info = f"{target_type} '{rule_target_name or 'unknown'}'"
@@ -937,14 +1051,16 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                 # Process exits
                 if hasattr(region, 'exits'):
+                    # Set region context before processing exits (for handlers that need source region)
+                    region_name = getattr(region, 'name', 'Unknown')
+                    if hasattr(game_handler, 'set_context'):
+                        game_handler.set_context(region_name)
+
                     for exit in region.exits:
                         try:
                             expanded_rule = None
                             exit_name = getattr(exit, 'name', None)
                             if hasattr(exit, 'access_rule') and exit.access_rule:
-                                # Set context for game handlers that need it (e.g., metamath)
-                                if hasattr(game_handler, 'set_context'):
-                                    game_handler.set_context(exit_name)
                                 # Try special handling first for complex exit rules
                                 if game_handler and hasattr(game_handler, 'handle_complex_exit_rule'):
                                     special_rule = game_handler.handle_complex_exit_rule(exit_name, exit.access_rule)
@@ -994,14 +1110,29 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                 # Set context for game handlers that need it (e.g., Bomb Rush Cyberfunk)
                                 if hasattr(game_handler, 'set_context'):
                                     game_handler.set_context(location_name)
-                                # Use normal analysis
-                                access_rule_result = safe_expand_rule(
-                                    game_handler,
-                                    location.access_rule,
-                                    location_name,
-                                    target_type='Location',
-                                    world=world
-                                )
+                                # Check if game handler can extract custom access rule (e.g., Zillion)
+                                if game_handler and hasattr(game_handler, 'get_custom_location_access_rule'):
+                                    custom_rule = game_handler.get_custom_location_access_rule(location, world)
+                                    if custom_rule:
+                                        access_rule_result = game_handler.expand_rule(custom_rule)
+                                    else:
+                                        # Fall back to normal analysis
+                                        access_rule_result = safe_expand_rule(
+                                            game_handler,
+                                            location.access_rule,
+                                            location_name,
+                                            target_type='Location',
+                                            world=world
+                                        )
+                                else:
+                                    # Use normal analysis
+                                    access_rule_result = safe_expand_rule(
+                                        game_handler,
+                                        location.access_rule,
+                                        location_name,
+                                        target_type='Location',
+                                        world=world
+                                    )
                                 
                                 # Post-process the rule if the game handler supports it
                                 if access_rule_result and game_handler and hasattr(game_handler, 'postprocess_rule'):

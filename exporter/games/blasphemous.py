@@ -67,6 +67,35 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
 
     def override_rule_analysis(self, rule_func, rule_target_name: str = None) -> Optional[Dict[str, Any]]:
         """Override rule analysis for Blasphemous to reconstruct from original logic data."""
+        # Check if this is a boss check method - these need special handling to preserve boss names
+        if hasattr(rule_func, '__name__'):
+            boss_mapping = {
+                'can_beat_brotherhood_boss': 'warden',
+                'can_beat_mercy_boss': 'ten-piedad',
+                'can_beat_convent_boss': 'charred-visage',
+                'can_beat_grievance_boss': 'tres-angustias',
+                'can_beat_bridge_boss': 'esdras',
+                'can_beat_mothers_boss': 'melquiades',
+                'can_beat_canvases_boss': 'exposito',
+                'can_beat_prison_boss': 'quirce',
+                'can_beat_rooftops_boss': 'crisanta',
+                'can_beat_ossuary_boss': 'isidora',
+                'can_beat_mourning_boss': 'sierpes',
+                'can_beat_graveyard_boss': 'amanecida',
+                'can_beat_jondo_boss': 'amanecida',
+                'can_beat_patio_boss': 'amanecida',
+                'can_beat_wall_boss': 'amanecida',
+                'can_beat_hall_boss': 'laudes',
+            }
+
+            func_name = rule_func.__name__
+            if func_name in boss_mapping:
+                boss_name = boss_mapping[func_name]
+                # Let the normal analysis happen, but we'll fix it in postprocess
+                # Store the boss name in a way we can retrieve it later
+                # For now, just let it proceed and we'll handle in postprocess
+                pass
+
         # First try to extract from closure variables if this is a lambda with clauses
         closure_result = self._try_extract_from_closure(rule_func)
         if closure_result:
@@ -331,6 +360,12 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
         """Postprocess rules to handle Blasphemous-specific runtime lambda issues."""
         if not rule:
             return rule
+
+        # Handle incorrect "Boss Strength" item checks - these should be helper calls
+        if rule.get('type') == 'item_check' and rule.get('item') == 'Boss Strength':
+            # This is actually a has_boss_strength call that the analyzer misinterpreted
+            # For now, return a helper call without boss name (generic boss strength check)
+            return {'type': 'helper', 'name': 'has_boss_strength', 'args': []}
 
         # Handle attribute access chains like self.world.options.difficulty
         if rule.get('type') == 'attribute':

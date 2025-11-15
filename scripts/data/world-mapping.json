@@ -323,9 +323,9 @@
   },
   "Old School Runescape": {
     "exporter_path": "exporter/games/osrs.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/osrs/osrsLogic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "osrs"
   },
   "Overcooked! 2": {
@@ -462,58 +462,58 @@
     "world_directory": "sm"
   },
   "TUNIC": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/tunic.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "tunic"
   },
   "Terraria": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/terraria.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/terraria/terrariaLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "terraria"
   },
   "The Legend of Zelda": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/tloz.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "tloz"
   },
   "The Messenger": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/messenger.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/messenger/messengerLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "messenger"
   },
   "The Wind Waker": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/tww.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/tww/twwLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "tww"
   },
   "The Witness": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/witness.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "witness"
   },
   "Timespinner": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/timespinner.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "timespinner"
   },
   "Undertale": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/undertale.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "undertale"
   },
@@ -525,9 +525,9 @@
     "world_directory": "v6"
   },
   "Wargroove": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/wargroove.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "wargroove"
   },
@@ -546,23 +546,23 @@
     "world_directory": "yachtdice"
   },
   "Yoshi's Island": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/yoshisisland.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/yoshisisland/yoshisislandLogic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "yoshisisland"
   },
   "Yu-Gi-Oh! 2006": {
-    "exporter_path": null,
-    "game_logic_path": null,
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
+    "exporter_path": "exporter/games/yugioh06.py",
+    "game_logic_path": "frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js",
+    "has_custom_exporter": true,
+    "has_custom_game_logic": true,
     "world_directory": "yugioh06"
   },
   "Zillion": {
-    "exporter_path": null,
+    "exporter_path": "exporter/games/zillion.py",
     "game_logic_path": null,
-    "has_custom_exporter": false,
+    "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "zillion"
   },

@@ -3,13 +3,26 @@
 from typing import Dict, Any, List, Optional
 from .base import BaseGameExportHandler
 import logging
+import importlib
 
 logger = logging.getLogger(__name__)
 
 class KDL3GameExportHandler(BaseGameExportHandler):
     GAME_NAME = "Kirby's Dream Land 3"
     """Handle KDL3-specific rule expansions and f-string conversions."""
-    
+
+    def __init__(self):
+        """Initialize the KDL3 export handler and load location_name module."""
+        super().__init__()
+        # Import location_name module to access level_names_inverse
+        try:
+            location_name_mod = importlib.import_module('worlds.kdl3.names.location_name')
+            self.level_names_inverse = getattr(location_name_mod, 'level_names_inverse', {})
+            logger.debug(f"Loaded level_names_inverse: {self.level_names_inverse}")
+        except Exception as e:
+            logger.warning(f"Could not load location_name module: {e}")
+            self.level_names_inverse = {}
+
     def expand_helper(self, helper_name: str):
         """Return None to preserve helper nodes as-is."""
         return None
@@ -66,6 +79,14 @@ class KDL3GameExportHandler(BaseGameExportHandler):
                     # Handle binary operations like "3 - 1"
                     result = self._evaluate_binary_op(value_node)
                     result_parts.append(str(result))
+                elif value_node.get('type') == 'subscript':
+                    # Handle subscript expressions like location_name.level_names_inverse[level]
+                    result = self._evaluate_subscript(value_node)
+                    if result is not None:
+                        result_parts.append(str(result))
+                    else:
+                        logger.warning(f"Could not evaluate subscript in f-string: {value_node}")
+                        result_parts.append(str(value_node))
                 else:
                     # Other expression types - convert to string representation
                     logger.warning(f"Complex expression in f-string: {value_node}")
@@ -74,19 +95,60 @@ class KDL3GameExportHandler(BaseGameExportHandler):
         # Join all parts into a single string
         return ''.join(result_parts)
     
+    def _evaluate_subscript(self, node: Dict[str, Any]) -> Any:
+        """
+        Evaluate a subscript expression node.
+        Handles expressions like location_name.level_names_inverse[level].
+        """
+        if node.get('type') != 'subscript':
+            return None
+
+        # Get the value being subscripted (e.g., location_name.level_names_inverse)
+        value_node = node.get('value', {})
+        # Get the index (e.g., level or 1)
+        index_node = node.get('index', {})
+
+        # Evaluate the index - it should be a constant in most cases
+        if index_node.get('type') == 'constant':
+            index_value = index_node.get('value')
+        else:
+            logger.debug(f"Non-constant index in subscript: {index_node}")
+            return None
+
+        # Check if the value is an attribute access (e.g., location_name.level_names_inverse)
+        if value_node.get('type') == 'attribute':
+            attr_name = value_node.get('attr')
+
+            # Check if this is accessing level_names_inverse
+            if attr_name == 'level_names_inverse':
+                # Use our cached level_names_inverse dictionary
+                if index_value in self.level_names_inverse:
+                    result = self.level_names_inverse[index_value]
+                    logger.debug(f"Resolved subscript level_names_inverse[{index_value}] to: {result}")
+                    return result
+                else:
+                    logger.warning(f"Index {index_value} not found in level_names_inverse")
+                    return None
+            else:
+                logger.debug(f"Unknown attribute in subscript: {attr_name}")
+                return None
+        else:
+            logger.debug(f"Non-attribute value in subscript: {value_node}")
+            return None
+
     def _evaluate_binary_op(self, node: Dict[str, Any]) -> Any:
         """Evaluate a binary operation node."""
         if node.get('type') != 'binary_op':
             return node
-            
+
         left = node.get('left', {})
         right = node.get('right', {})
         op = node.get('op', '')
-        
+
         # Get values
         left_val = left.get('value') if left.get('type') == 'constant' else left
         right_val = right.get('value') if right.get('type') == 'constant' else right
-        
+
         # Perform operation
         if op == '-':
             return left_val - right_val

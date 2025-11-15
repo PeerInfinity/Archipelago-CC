@@ -448,7 +448,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
         let hasUndefined = false;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
-          if (conditionResult === false) {
+          // Check for falsiness (but not undefined, which is handled separately)
+          if (!conditionResult && conditionResult !== undefined) {
             result = false;
             hasUndefined = false; // Definitively false
             break;
@@ -469,7 +470,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
         let hasUndefined = false;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
-          if (conditionResult === true) {
+          // Check for truthiness (but not undefined, which is handled separately)
+          if (conditionResult && conditionResult !== undefined) {
             result = true;
             hasUndefined = false; // Definitively true
             break;
@@ -998,7 +1000,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
                 result = right.some(item => {
                   if (Array.isArray(item)) {
                     // Deep array comparison
-                    return item.length === left.length && 
+                    return item.length === left.length &&
                            item.every((val, index) => val === left[index]);
                   } else {
                     return item === left;
@@ -1012,6 +1014,9 @@ export const evaluateRule = (rule, context, depth = 0) => {
             } else if (right instanceof Set) {
               // Handle Set
               result = right.has(left);
+            } else if (typeof right === 'object' && right !== null) {
+              // Handle object (dictionary) membership check
+              result = left in right;
             } else {
               log(
                 'warn',
@@ -1020,6 +1025,49 @@ export const evaluateRule = (rule, context, depth = 0) => {
               );
               result = false; // Define behavior: false if right side isn't iterable
             }
+            break;
+          case 'not in':
+            // Same logic as 'in' but negated
+            if (Array.isArray(right)) {
+              // Handle array comparison with deep equality for nested arrays
+              if (Array.isArray(left)) {
+                result = !right.some(item => {
+                  if (Array.isArray(item)) {
+                    // Deep array comparison
+                    return item.length === left.length &&
+                           item.every((val, index) => val === left[index]);
+                  } else {
+                    return item === left;
+                  }
+                });
+              } else {
+                result = !right.includes(left);
+              }
+            } else if (typeof right === 'string') {
+              result = !right.includes(left);
+            } else if (right instanceof Set) {
+              // Handle Set
+              result = !right.has(left);
+            } else if (typeof right === 'object' && right !== null) {
+              // Handle object (dictionary) membership check
+              result = !(left in right);
+            } else {
+              log(
+                'warn',
+                '[evaluateRule] "not in" operator used with invalid right side type:',
+                { left, right }
+              );
+              result = true; // Define behavior: true if right side isn't iterable (consistent with 'not in' semantics)
+            }
+            break;
+          case 'is':
+            // Python 'is' operator - checks identity (same object)
+            // In JavaScript, use === for strict equality which is closest
+            result = left === right;
+            break;
+          case 'is not':
+            // Python 'is not' operator - checks non-identity
+            result = left !== right;
             break;
           default:
             log(
@@ -1118,6 +1166,23 @@ export const evaluateRule = (rule, context, depth = 0) => {
           }
         } else {
           log('warn', '[evaluateRule] context.isLocationAccessible is not a function for location_check.');
+          result = undefined;
+        }
+        break;
+      }
+
+      case 'region_check': {
+        // Check if a region is accessible (can be reached)
+        const regionName = evaluateRule(rule.region, context, depth + 1);
+        if (regionName === undefined) {
+          result = undefined;
+        } else if (typeof context.isRegionAccessible === 'function') {
+          result = context.isRegionAccessible(regionName);
+          if (result === undefined) {
+            log('warn', `[evaluateRule] Region ${regionName} accessibility could not be determined`);
+          }
+        } else {
+          log('warn', '[evaluateRule] context.isRegionAccessible is not a function for region_check.');
           result = undefined;
         }
         break;
@@ -1423,6 +1488,68 @@ export const evaluateRule = (rule, context, depth = 0) => {
         break;
       }
 
+      case 'can_reach_entrance': {
+        // Check if an entrance is reachable
+        // An entrance is reachable if we can reach its source region AND satisfy its access rule
+        const entranceName = rule.entrance;
+        if (!entranceName) {
+          log('warn', '[evaluateRule] can_reach_entrance rule missing entrance name');
+          result = undefined;
+          break;
+        }
+
+        // Find the entrance in the regions data
+        let entrance = null;
+        let sourceRegion = null;
+
+        if (typeof context.getStaticData === 'function') {
+          const staticData = context.getStaticData();
+          const regionsData = staticData?.regions;
+
+          if (regionsData && regionsData instanceof Map) {
+            // staticData.regions is a Map of region name -> region data
+            // Search for the entrance in all regions
+            for (const [regionName, regionData] of regionsData.entries()) {
+              const exits = regionData.exits || [];
+              const foundExit = exits.find(exit => exit.name === entranceName);
+              if (foundExit) {
+                entrance = foundExit;
+                sourceRegion = regionName;
+                break;
+              }
+            }
+          }
+        }
+
+        if (!entrance || !sourceRegion) {
+          log('warn', `[evaluateRule] Entrance "${entranceName}" not found in regions data`);
+          result = undefined;
+          break;
+        }
+
+        // Check if source region is reachable
+        if (typeof context.isRegionReachable !== 'function') {
+          log('warn', '[evaluateRule] context.isRegionReachable is not a function for can_reach_entrance.');
+          result = undefined;
+          break;
+        }
+
+        const sourceReachable = context.isRegionReachable(sourceRegion);
+        if (!sourceReachable) {
+          result = false;
+          break;
+        }
+
+        // Evaluate the entrance's access rule
+        if (entrance.access_rule) {
+          result = evaluateRule(entrance.access_rule, context, depth + 1);
+        } else {
+          // No access rule means the entrance is accessible if the region is reachable
+          result = true;
+        }
+        break;
+      }
+
       default: {
         log('warn', `[evaluateRule] Unknown rule type: ${ruleType}`, { rule });
         result = undefined;
@@ -1494,6 +1621,15 @@ export function debugRule(rule, indent = 0) {
       } else {
         log('info', `${prefix}Location (complex):`);
         debugRule(rule.location, indent + 2);
+      }
+      break;
+
+    case 'region_check':
+      if (typeof rule.region === 'string') {
+        log('info', `${prefix}Region: ${rule.region}`);
+      } else {
+        log('info', `${prefix}Region (complex):`);
+        debugRule(rule.region, indent + 2);
       }
       break;
 

@@ -138,15 +138,16 @@ class SoEGameExportHandler(BaseGameExportHandler):
                     'provides': []
                 }
 
-            # Add provides information (list of [count, progress_id])
-            if item.provides:
-                for count, progress_id in item.provides:
-                    progress_name = self.progress_id_to_name.get(progress_id, f"P_{progress_id}")
-                    item_data[item.name]['provides'].append({
-                        'count': count,
-                        'progress_id': progress_id,
-                        'progress_name': progress_name
-                    })
+                # Add provides information (list of [count, progress_id])
+                # Only add provides once per unique item name
+                if item.provides:
+                    for count, progress_id in item.provides:
+                        progress_name = self.progress_id_to_name.get(progress_id, f"P_{progress_id}")
+                        item_data[item.name]['provides'].append({
+                            'count': count,
+                            'progress_id': progress_id,
+                            'progress_name': progress_name
+                        })
 
         # Also add logic rules that provide progress when requirements are met
         # These act like "virtual items" that the frontend can check
@@ -172,22 +173,103 @@ class SoEGameExportHandler(BaseGameExportHandler):
 
         return item_data
 
+    def _convert_logic_has_call(self, rule) -> Optional[Dict[str, Any]]:
+        """
+        Convert a self.logic.has(...) call to a helper call.
+
+        Expected input: {
+            'type': 'function_call',
+            'function': {'type': 'attribute', 'object': {...'self'...}, 'attr': 'has'},
+            'args': [{'type': 'attribute', 'object': {'type': 'name', 'name': 'pyevermizer'}, 'attr': 'P_XXX'}]
+        }
+        """
+        if not isinstance(rule, dict) or rule.get('type') != 'function_call':
+            return None
+
+        # Check if it's a call to self.logic.has
+        func = rule.get('function', {})
+        if func.get('type') == 'attribute' and func.get('attr') == 'has':
+            # Get the progress constant from the args
+            args = rule.get('args', [])
+            if len(args) >= 1:
+                arg = args[0]
+                # Check if it's pyevermizer.P_XXX
+                if arg.get('type') == 'attribute' and arg.get('object', {}).get('name') == 'pyevermizer':
+                    progress_name = arg.get('attr', '')
+                    # Look up the progress ID
+                    progress_id = None
+                    for pid, name in self.progress_id_to_name.items():
+                        if name == progress_name:
+                            progress_id = pid
+                            break
+
+                    if progress_id is not None:
+                        # Convert to a helper call
+                        return {
+                            'type': 'helper',
+                            'name': 'has',
+                            'args': [
+                                {'type': 'constant', 'value': progress_id},
+                                {'type': 'constant', 'value': 1}
+                            ],
+                            'comment': f"Requires 1x {progress_name}"
+                        }
+
+        return None
+
+    def _rule_has_unresolved_names(self, rule) -> bool:
+        """Check if a rule contains unresolved Python-specific names like 'self' or 'pyevermizer'."""
+        if not isinstance(rule, dict):
+            return False
+
+        # Check if this is a name reference to Python-specific objects
+        if rule.get('type') == 'name' and rule.get('name') in ('self', 'pyevermizer'):
+            return True
+
+        # Recursively check nested structures
+        for key, value in rule.items():
+            if isinstance(value, dict):
+                if self._rule_has_unresolved_names(value):
+                    return True
+            elif isinstance(value, list):
+                for item in value:
+                    if isinstance(item, dict) and self._rule_has_unresolved_names(item):
+                        return True
+
+        return False
+
+    def postprocess_rule(self, rule) -> Dict[str, Any]:
+        """
+        Post-process analyzed rules to convert SOE-specific patterns.
+        This is called after the analyzer processes Python rules.
+        """
+        if not rule:
+            return rule
+
+        # Try to convert self.logic.has() calls
+        converted = self._convert_logic_has_call(rule)
+        if converted:
+            return converted
+
+        # If the rule has unresolved names, return None to signal it should be replaced
+        if self._rule_has_unresolved_names(rule):
+            print(f"[SOE] postprocess_rule: Discarding malformed rule with unresolved names")
+            return None
+
+        return rule
+
     def get_location_attributes(self, location, world) -> Dict[str, Any]:
         """
-        Override to add pyevermizer requirements to locations that don't have Python rules.
+        Override to add pyevermizer requirements for locations that don't have Python rules.
         """
         try:
             location_name = getattr(location, 'name', None)
             print(f"[SOE] get_location_attributes called for location {location_name}")
-            attrs = super().get_location_attributes(location, world)
-            print(f"[SOE] super() returned attrs: {list(attrs.keys()) if attrs else 'empty'}")
-
-            # Only skip evermizer rules if the base class successfully analyzed the Python rule
-            if attrs and 'access_rule' in attrs and attrs['access_rule'] is not None:
-                print(f"[SOE] Location {location_name} has analyzed Python access_rule, using it")
-                return attrs
+            attrs = {}
 
             # Try to get evermizer requirements from the raw location data
+            # Note: If the location has a Python rule, it will be processed by postprocess_rule first.
+            # If postprocess_rule returns None, the main exporter will call this method to get a replacement.
             in_map = location_name in self.location_id_to_raw if location_name else False
             print(f"[SOE] Location: {location_name}, in map: {in_map}")
             if location_name and in_map:
