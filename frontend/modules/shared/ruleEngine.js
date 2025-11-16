@@ -897,6 +897,16 @@ export const evaluateRule = (rule, context, depth = 0) => {
           break;
         }
 
+        // Special case: If func is a boolean, it means rule.function was a rule object
+        // that was already evaluated. In this case, the boolean is the result.
+        // This happens when the exporter creates function_call structures where
+        // the function field contains a complete rule (e.g., an 'and' rule) instead
+        // of a function reference.
+        if (typeof func === 'boolean') {
+          result = func;
+          break;
+        }
+
         const args = (rule.args || []).map(
           (arg) => evaluateRule(arg, context, depth + 1) // Evaluate args recursively
         );
