@@ -7955,8 +7955,14 @@
             "name": "Market Bazaar Item 6",
             "id": 67081,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive_Wallet"
+                }
+              ]
             },
             "item": {
               "name": "Buy Arrows (50)",
@@ -8177,8 +8183,16 @@
             "name": "Market Potion Shop Item 1",
             "id": 67084,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "CollectionState"
+                },
+                "attr": "_oot_has_bottle"
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Green Potion",
@@ -8191,8 +8205,16 @@
             "name": "Market Potion Shop Item 2",
             "id": 67085,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "CollectionState"
+                },
+                "attr": "_oot_has_bottle"
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Blue Fire",
@@ -8219,8 +8241,16 @@
             "name": "Market Potion Shop Item 4",
             "id": 67087,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "CollectionState"
+                },
+                "attr": "_oot_has_bottle"
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Fairy's Spirit",
@@ -8247,8 +8277,16 @@
             "name": "Market Potion Shop Item 6",
             "id": 67089,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "CollectionState"
+                },
+                "attr": "_oot_has_bottle"
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Bottle Bug",
@@ -8261,8 +8299,16 @@
             "name": "Market Potion Shop Item 7",
             "id": 67090,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "CollectionState"
+                },
+                "attr": "_oot_has_bottle"
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Poe",
@@ -8275,8 +8321,16 @@
             "name": "Market Potion Shop Item 8",
             "id": 67091,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "CollectionState"
+                },
+                "attr": "_oot_has_bottle"
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Fish",
@@ -8339,8 +8393,14 @@
             "name": "Market Bombchu Shop Item 1",
             "id": 67092,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "found_bombchus"
+                }
+              ]
             },
             "item": {
               "name": "Buy Bombchu (5)",
@@ -8353,8 +8413,14 @@
             "name": "Market Bombchu Shop Item 2",
             "id": 67093,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "found_bombchus"
+                }
+              ]
             },
             "item": {
               "name": "Buy Bombchu (10)",
@@ -8367,8 +8433,14 @@
             "name": "Market Bombchu Shop Item 3",
             "id": 67094,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "found_bombchus"
+                }
+              ]
             },
             "item": {
               "name": "Buy Bombchu (10)",
@@ -8381,8 +8453,14 @@
             "name": "Market Bombchu Shop Item 4",
             "id": 67095,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "found_bombchus"
+                }
+              ]
             },
             "item": {
               "name": "Buy Bombchu (10)",
@@ -8395,8 +8473,14 @@
             "name": "Market Bombchu Shop Item 5",
             "id": 67096,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive_Wallet and found_bombchus"
+                }
+              ]
             },
             "item": {
               "name": "Buy Bombchu (20)",
@@ -8409,8 +8493,14 @@
             "name": "Market Bombchu Shop Item 6",
             "id": 67097,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive_Wallet and found_bombchus"
+                }
+              ]
             },
             "item": {
               "name": "Buy Bombchu (20)",
@@ -8423,8 +8513,14 @@
             "name": "Market Bombchu Shop Item 7",
             "id": 67098,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive_Wallet and found_bombchus"
+                }
+              ]
             },
             "item": {
               "name": "Buy Bombchu (20)",
@@ -8437,8 +8533,14 @@
             "name": "Market Bombchu Shop Item 8",
             "id": 67099,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive_Wallet and found_bombchus"
+                }
+              ]
             },
             "item": {
               "name": "Buy Bombchu (20)",
@@ -9747,8 +9849,14 @@
             "name": "Kak Bazaar Item 6",
             "id": 67144,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive_Wallet"
+                }
+              ]
             },
             "item": {
               "name": "Buy Arrows (50)",
@@ -12123,8 +12231,14 @@
             "name": "GC Shop Item 4",
             "id": 67190,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive_Wallet"
+                }
+              ]
             },
             "item": {
               "name": "Buy Bombs (30)",
@@ -12137,8 +12251,14 @@
             "name": "GC Shop Item 5",
             "id": 67191,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive_Wallet"
+                }
+              ]
             },
             "item": {
               "name": "Buy Goron Tunic",
@@ -14957,8 +15077,14 @@
             "name": "ZD Shop Item 1",
             "id": 67221,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "(Progressive_Wallet, 2)"
+                }
+              ]
             },
             "item": {
               "name": "Buy Zora Tunic",
@@ -15027,8 +15153,14 @@
             "name": "ZD Shop Item 6",
             "id": 67226,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive_Wallet"
+                }
+              ]
             },
             "item": {
               "name": "Buy Arrows (50)",
@@ -15041,8 +15173,16 @@
             "name": "ZD Shop Item 7",
             "id": 67227,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "CollectionState"
+                },
+                "attr": "_oot_has_bottle"
+              },
+              "args": []
             },
             "item": {
               "name": "Buy Fish",

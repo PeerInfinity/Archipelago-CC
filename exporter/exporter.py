@@ -1171,7 +1171,11 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                     'advancement': getattr(location.item, 'advancement', False),
                                     'type': effective_type
                                 }
-                            
+
+                            # Allow game handler to post-process location data before adding to region
+                            if game_handler and hasattr(game_handler, 'post_process_location_data'):
+                                location_data = game_handler.post_process_location_data(location_data, location_name)
+
                             region_data['locations'].append(location_data)
                         except Exception as e:
                             logger.error(f"Error processing location {getattr(location, 'name', 'Unknown')}: {str(e)}")

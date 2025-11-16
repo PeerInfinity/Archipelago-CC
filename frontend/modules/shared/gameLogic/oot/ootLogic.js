@@ -262,6 +262,19 @@ function createEvaluationContext(snapshot, staticData) {
     logic_graveyard_poh: () => false,
     logic_zora_river_lower: () => false,
     logic_link_goron_dins: () => false,
+
+    // found_bombchus helper (from LogicHelpers.json)
+    found_bombchus: () => {
+      const bombchusInLogic = settings?.bombchus_in_logic || false;
+      if (bombchusInLogic) {
+        // Check for any bombchu items
+        return context.hasItem('Bombchus') || context.hasItem('Bombchus_5') ||
+               context.hasItem('Bombchus_10') || context.hasItem('Bombchus_20');
+      } else {
+        // Just need bomb bag
+        return context.hasItem('Bomb_Bag');
+      }
+    },
   };
 
   return context;

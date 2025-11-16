@@ -47,6 +47,24 @@ class OOTGameExportHandler(GenericGameExportHandler):
         # Remove comments and strip
         rule_string = rule_string.split('#', 1)[0].strip()
 
+        # Check if the rule_string is just "True" but the rule_func is not trivial
+        # This happens when add_rule() was used to add requirements to a shop item
+        # In this case, we should NOT use the rule_string and let the analyzer handle it
+        if rule_string == "True" and rule_func is not None:
+            # Try to analyze the lambda to see if it has additional logic
+            # If it's a simple "always true" lambda, we can use the rule_string
+            # But if add_rule() was called, the lambda will be more complex
+            try:
+                import inspect
+                source = inspect.getsource(rule_func).strip()
+                # If the source contains "and" or "or", it's a combined rule from add_rule()
+                if " and " in source or " or " in source:
+                    logger.debug(f"OOT: {rule_target_name} has combined rule from add_rule(), skipping rule_string")
+                    return None  # Let the analyzer handle it
+            except (OSError, TypeError):
+                # Can't get source, continue with rule_string
+                pass
+
         logger.debug(f"OOT: Parsing rule string for {rule_target_name}: {rule_string[:100]}")
 
         try:
@@ -143,6 +161,59 @@ class OOTGameExportHandler(GenericGameExportHandler):
                 logger.debug(f"OOT: Exported setting {setting_name} = {settings_dict[setting_name]}")
 
         return settings_dict
+
+    def post_process_location_data(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
+        """Post-process location data after export, adding OOT-specific requirements."""
+        # Add shop wallet requirements
+        return self.add_shop_wallet_requirements(location_data, location_name)
+
+    def add_shop_wallet_requirements(self, location_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
+        """Add wallet requirements to shop items based on the item being sold."""
+        item_name = location_data.get('item', {}).get('name', '')
+        access_rule = location_data.get('access_rule')
+
+        # Only process if access_rule is constant True (original rule before add_rule())
+        if not (access_rule and access_rule.get('type') == 'constant' and access_rule.get('value') is True):
+            return location_data
+
+        # Shop items that require Progressive Wallet (from worlds/oot/Rules.py set_shop_rules)
+        wallet_items = ['Buy Arrows (50)', 'Buy Fish', 'Buy Goron Tunic', 'Buy Bombchu (20)', 'Buy Bombs (30)']
+        wallet2_items = ['Buy Zora Tunic', 'Buy Blue Fire']
+        bombchu_items = ['Buy Bombchu (10)', 'Buy Bombchu (20)', 'Buy Bombchu (5)']
+
+        new_rule = None
+
+        # Buy Bombchu (20) requires BOTH wallet AND found_bombchus
+        if item_name == 'Buy Bombchu (20)':
+            new_rule = {
+                "type": "helper",
+                "name": "parse_oot_rule",
+                "args": [{"type": "constant", "value": "Progressive_Wallet and found_bombchus"}]
+            }
+        elif item_name in wallet_items:
+            new_rule = {
+                "type": "helper",
+                "name": "parse_oot_rule",
+                "args": [{"type": "constant", "value": "Progressive_Wallet"}]
+            }
+        elif item_name in wallet2_items:
+            new_rule = {
+                "type": "helper",
+                "name": "parse_oot_rule",
+                "args": [{"type": "constant", "value": "(Progressive_Wallet, 2)"}]
+            }
+        elif item_name in bombchu_items:
+            new_rule = {
+                "type": "helper",
+                "name": "parse_oot_rule",
+                "args": [{"type": "constant", "value": "found_bombchus"}]
+            }
+
+        if new_rule:
+            logger.debug(f"OOT: Adding requirement to shop item {location_name} ({item_name})")
+            location_data['access_rule'] = new_rule
+
+        return location_data
 
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Expand OOT-specific rules, handling special closure variables."""
