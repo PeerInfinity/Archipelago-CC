@@ -529,6 +529,15 @@ export function _createSelfSnapshotInterface(sm) {
         return sm.settings[name];
       }
 
+      // Check if this is a game-specific variable (e.g., required_technologies for Factorio)
+      // These are stored in game_info[playerId].variables in the rules.json
+      const staticData = getStaticGameData(sm);
+      const currentPlayerId = sm.playerSlot || '1';
+      if (staticData?.game_info?.[currentPlayerId]?.variables &&
+          staticData.game_info[currentPlayerId].variables[name]) {
+        return staticData.game_info[currentPlayerId].variables[name];
+      }
+
       // Game-specific location variable extraction hook
       // For variables not found elsewhere, try to extract from current location name
       const currentLoc = anInterface.currentLocation || anInterface.location;

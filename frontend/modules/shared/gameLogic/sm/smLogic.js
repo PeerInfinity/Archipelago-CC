@@ -47,6 +47,26 @@ export function any(snapshot, staticData, iterable) {
 }
 
 /**
+ * Constructor for SMBool objects
+ * In Python, SMBool(value, difficulty) creates an object with boolean and difficulty.
+ * For simplified cases where the value is a constant, we just return that constant.
+ *
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {*} value - The boolean value or SMBool result
+ * @param {number} difficulty - Difficulty rating (optional)
+ * @returns {*} The value or an SMBool-like object
+ */
+export function SMBool(snapshot, staticData, value, difficulty = 0) {
+  // For constant boolean values, just return them directly
+  if (typeof value === 'boolean') {
+    return value;
+  }
+  // Otherwise, return an SMBool-like object
+  return { bool: value, difficulty: difficulty || 0 };
+}
+
+/**
  * Stub for evalSMBool - Super Metroid's SMBool evaluation
  * The SMBoolManager evaluates logic functions that return SMBool objects
  * (which have both a boolean value and a difficulty rating).
@@ -106,6 +126,7 @@ export const helperFunctions = {
   has,
   count,
   any,
+  SMBool,
   evalSMBool,
   func,
   rule
