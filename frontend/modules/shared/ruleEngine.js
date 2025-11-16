@@ -520,6 +520,57 @@ export const evaluateRule = (rule, context, depth = 0) => {
         break;
       }
 
+      case 'count_true': {
+        // Count how many conditions evaluate to true
+        // Returns true if at least rule.count conditions are true
+        const requiredCount = rule.count || 0;
+        const conditions = rule.conditions || [];
+
+        if (requiredCount === 0) {
+          // No conditions required, always true
+          result = true;
+          break;
+        }
+
+        if (conditions.length === 0) {
+          // No conditions to evaluate
+          result = requiredCount === 0;
+          break;
+        }
+
+        let trueCount = 0;
+        let undefinedCount = 0;
+
+        for (const condition of conditions) {
+          const conditionResult = evaluateRule(condition, context, depth + 1);
+          if (conditionResult === true) {
+            trueCount++;
+          } else if (conditionResult === undefined) {
+            undefinedCount++;
+          }
+          // Short-circuit if we already have enough true conditions
+          if (trueCount >= requiredCount) {
+            result = true;
+            break;
+          }
+        }
+
+        // If we didn't short-circuit with true, determine the result
+        if (result !== true) {
+          if (trueCount >= requiredCount) {
+            // We have enough true conditions
+            result = true;
+          } else if (trueCount + undefinedCount >= requiredCount) {
+            // We might have enough if some undefineds are true
+            result = undefined;
+          } else {
+            // Impossible to reach required count even if all undefineds were true
+            result = false;
+          }
+        }
+        break;
+      }
+
       case 'not': {
         // Handle both 'operand' and 'condition' field names for compatibility
         const conditionToNegate = rule.operand || rule.condition;
@@ -1860,6 +1911,19 @@ export function debugRule(rule, indent = 0) {
         `${prefix}${rule.type.toUpperCase()} with ${
           rule.conditions.length
         } conditions:`
+      );
+      rule.conditions.forEach((cond, i) => {
+        log('info', `${prefix}  Condition ${i + 1}:`);
+        debugRule(cond, indent + 4);
+      });
+      break;
+
+    case 'count_true':
+      log(
+        'info',
+        `${prefix}COUNT_TRUE (at least ${rule.count} of ${
+          rule.conditions.length
+        } conditions):`
       );
       rule.conditions.forEach((cond, i) => {
         log('info', `${prefix}  Condition ${i + 1}:`);
