@@ -98,6 +98,16 @@ export function getSnapshot(sm) {
   if (sm.inventory) {
     // In canonical format, inventory is already a plain object with all items
     inventorySnapshot = { ...sm.inventory };
+
+    // Debug logging for Diamond Eye
+    if (sm.inventory['Diamond Eye'] !== undefined) {
+      const now = Date.now();
+      console.log(`[DEBUG getSnapshot @ ${now}] Creating snapshot with Diamond Eye = ${sm.inventory['Diamond Eye']}`);
+      if (sm._diamondEyeTimestamp && sm._diamondEyeTimestamp.length > 0) {
+        const lastSet = sm._diamondEyeTimestamp[sm._diamondEyeTimestamp.length - 1];
+        console.log(`[DEBUG getSnapshot @ ${now}] Last set was at ${lastSet.time} (${now - lastSet.time}ms ago) with value ${lastSet.value}, but now seeing ${sm.inventory['Diamond Eye']}`);
+      }
+    }
   } else {
     log(
       'warn',
@@ -732,6 +742,11 @@ export function applyRuntimeState(sm, payload) {
     const gameNameForInventory = sm.settings
       ? sm.settings.game
       : sm.rules?.game_name || 'UnknownGame';
+
+    // Debug logging
+    const oldDiamondEye = sm.inventory ? sm.inventory['Diamond Eye'] : 'no inventory';
+    console.log(`[DEBUG applyRuntimeState] FULL RESET - Diamond Eye was ${oldDiamondEye}, about to reset inventory`);
+
     sm.inventory = sm._createInventoryInstance(gameNameForInventory);
     sm._logDebug(
       `[StateManager applyRuntimeState] Inventory re-initialized via _createInventoryInstance for ${gameNameForInventory}.`

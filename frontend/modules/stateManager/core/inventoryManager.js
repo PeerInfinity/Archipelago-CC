@@ -267,6 +267,16 @@ export function _addItemToInventory(sm, itemName, count = 1) {
 
   sm.inventory[itemName] = Math.min(currentCount + count, maxCount);
 
+  // Debug logging for Diamond Eye
+  if (itemName === 'Diamond Eye') {
+    const now = Date.now();
+    console.log(`[DEBUG _addItemToInventory @ ${now}] Diamond Eye: was ${currentCount}, adding ${count}, now ${sm.inventory[itemName]}, max ${maxCount}`);
+    console.log(`[DEBUG _addItemToInventory @ ${now}] Verifying immediately: sm.inventory['Diamond Eye'] = ${sm.inventory['Diamond Eye']}`);
+    // Store the timestamp for comparison
+    if (!sm._diamondEyeTimestamp) sm._diamondEyeTimestamp = [];
+    sm._diamondEyeTimestamp.push({ time: now, value: sm.inventory[itemName] });
+  }
+
   // Handle progression mapping (e.g., REP items in Bomb Rush Cyberfunk)
   if (sm.progressionMapping) {
     for (const [virtualItemName, mapping] of Object.entries(sm.progressionMapping)) {
