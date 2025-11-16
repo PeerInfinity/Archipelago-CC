@@ -3,7 +3,7 @@
   "game_name": "Kingdom Hearts",
   "game_directory": "kh1",
   "archipelago_version": "0.6.4",
-  "generation_seed": 1,
+  "generation_seed": 2,
   "player_names": {
     "1": "Player1"
   },
@@ -83,9 +83,9 @@
               "value": true
             },
             "item": {
-              "name": "Jack-In-The-Box",
+              "name": "Mega-Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -124,7 +124,7 @@
               ]
             },
             "item": {
-              "name": "Cosmic Arts",
+              "name": "Violetta",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -138,9 +138,9 @@
               "item": "Progressive Blizzard"
             },
             "item": {
-              "name": "Elixir",
+              "name": "Puppies 73-75",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -152,9 +152,9 @@
               "value": true
             },
             "item": {
-              "name": "Potion",
+              "name": "Puppies 16-18",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -166,7 +166,7 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 22-24",
+              "name": "Progressive Thunder",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -180,7 +180,7 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 58-60",
+              "name": "Puppies 22-24",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -194,9 +194,9 @@
               "value": true
             },
             "item": {
-              "name": "Blizzaga Ring",
+              "name": "Puppies 52-54",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -208,9 +208,9 @@
               "value": true
             },
             "item": {
-              "name": "Ether",
+              "name": "Monstro",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -222,9 +222,9 @@
               "value": true
             },
             "item": {
-              "name": "Master Earring",
+              "name": "Puppies 82-84",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -236,9 +236,9 @@
               "value": true
             },
             "item": {
-              "name": "Prime Cap",
+              "name": "Progressive Blizzard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -250,9 +250,9 @@
               "value": true
             },
             "item": {
-              "name": "Combo Plus",
+              "name": "Puppies 34-36",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -264,7 +264,7 @@
               "item": "Red Trinity"
             },
             "item": {
-              "name": "Mega-Potion",
+              "name": "Hi-Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -278,7 +278,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega-Potion",
+              "name": "Power Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -292,9 +292,9 @@
               "value": true
             },
             "item": {
-              "name": "Omega Arts",
+              "name": "Puppies 64-66",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -306,9 +306,9 @@
               "value": true
             },
             "item": {
-              "name": "MP Haste",
+              "name": "Postcard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -320,9 +320,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Up",
+              "name": "Progressive Blizzard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -334,9 +334,9 @@
               "value": true
             },
             "item": {
-              "name": "Moogle Badge",
+              "name": "Puppies 13-15",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -348,7 +348,7 @@
               "value": true
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Cottage",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -362,7 +362,7 @@
               "item": "Red Trinity"
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Megalixir",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -417,9 +417,9 @@
               ]
             },
             "item": {
-              "name": "Blue Trinity",
+              "name": "Mega-Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -489,7 +489,7 @@
               ]
             },
             "item": {
-              "name": "Power Up",
+              "name": "Camping Set",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -544,7 +544,7 @@
               ]
             },
             "item": {
-              "name": "AP Up",
+              "name": "Golem Shield",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -599,7 +599,7 @@
               ]
             },
             "item": {
-              "name": "Megalixir",
+              "name": "Camping Set",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -654,7 +654,7 @@
               ]
             },
             "item": {
-              "name": "Spellbinder",
+              "name": "Tent",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -709,7 +709,7 @@
               ]
             },
             "item": {
-              "name": "Titan Chain",
+              "name": "Master Earring",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -764,7 +764,7 @@
               ]
             },
             "item": {
-              "name": "Power Up",
+              "name": "Elixir",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -819,7 +819,7 @@
               ]
             },
             "item": {
-              "name": "Simba",
+              "name": "Gravity Arts",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -874,7 +874,7 @@
               ]
             },
             "item": {
-              "name": "Puppies 19-21",
+              "name": "Progressive Aero",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -888,9 +888,9 @@
               "item": "Progressive Thunder"
             },
             "item": {
-              "name": "Cheer",
+              "name": "Puppies 61-63",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -902,7 +902,7 @@
               "item": "Progressive Thunder"
             },
             "item": {
-              "name": "Jungle King",
+              "name": "Postcard",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -916,9 +916,9 @@
               "value": true
             },
             "item": {
-              "name": "Agrabah",
+              "name": "AP Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -930,9 +930,9 @@
               "value": true
             },
             "item": {
-              "name": "Forget-Me-Not",
+              "name": "Mega-Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -944,9 +944,9 @@
               "value": true
             },
             "item": {
-              "name": "Mega-Ether",
+              "name": "Postcard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -971,7 +971,7 @@
               ]
             },
             "item": {
-              "name": "Blizzara Ring",
+              "name": "Mega-Ether",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -998,7 +998,7 @@
               ]
             },
             "item": {
-              "name": "Leaf Bracer",
+              "name": "Puppies 70-72",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1025,9 +1025,9 @@
               ]
             },
             "item": {
-              "name": "Puppies 04-06",
+              "name": "Jackpot",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1093,9 +1093,9 @@
               ]
             },
             "item": {
-              "name": "Gaia Bangle",
+              "name": "Progressive Aero",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1107,7 +1107,7 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 34-36",
+              "name": "Postcard",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1164,7 +1164,7 @@
               ]
             },
             "item": {
-              "name": "Holy Circlet",
+              "name": "Aerial Sweep",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1184,7 +1184,7 @@
               ]
             },
             "item": {
-              "name": "Megalixir",
+              "name": "Mega-Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1204,9 +1204,9 @@
               ]
             },
             "item": {
-              "name": "Postcard",
+              "name": "Defense Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1218,9 +1218,9 @@
               "item": "Postcard"
             },
             "item": {
-              "name": "Meteor Strike",
+              "name": "Puppies 43-45",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1236,7 +1236,7 @@
               }
             },
             "item": {
-              "name": "Encounter Plus",
+              "name": "Ether",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1254,9 +1254,9 @@
               }
             },
             "item": {
-              "name": "White Fang",
+              "name": "Puppies 76-78",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1272,7 +1272,7 @@
               }
             },
             "item": {
-              "name": "Progressive Gravity",
+              "name": "Puppies 28-30",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1290,9 +1290,9 @@
               }
             },
             "item": {
-              "name": "Tent",
+              "name": "Dumbo",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1308,7 +1308,7 @@
               }
             },
             "item": {
-              "name": "Mega-Potion",
+              "name": "Ability Stud",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1326,9 +1326,9 @@
               }
             },
             "item": {
-              "name": "Oblivion",
+              "name": "Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1344,9 +1344,9 @@
               }
             },
             "item": {
-              "name": "Progressive Fire",
+              "name": "Defense Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1362,7 +1362,7 @@
               }
             },
             "item": {
-              "name": "Progressive Cure",
+              "name": "Dodge Roll",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1380,9 +1380,9 @@
               }
             },
             "item": {
-              "name": "Empty Bottle",
+              "name": "Moogle Badge",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1460,9 +1460,9 @@
               ]
             },
             "item": {
-              "name": "White Trinity",
+              "name": "Mega-Ether",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1509,7 +1509,7 @@
               ]
             },
             "item": {
-              "name": "Tech Boost",
+              "name": "EXP Ring",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1581,9 +1581,9 @@
               ]
             },
             "item": {
-              "name": "Gravity Break",
+              "name": "Puppies 55-57",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1653,9 +1653,9 @@
               ]
             },
             "item": {
-              "name": "Ansem's Report 4",
+              "name": "AP Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1725,7 +1725,7 @@
               ]
             },
             "item": {
-              "name": "Progressive Aero",
+              "name": "Puppies 19-21",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1797,7 +1797,7 @@
               ]
             },
             "item": {
-              "name": "Olympia",
+              "name": "Olympus Coliseum",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1869,7 +1869,7 @@
               ]
             },
             "item": {
-              "name": "Protera Chain",
+              "name": "Megalixir",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1941,9 +1941,9 @@
               ]
             },
             "item": {
-              "name": "Puppies 10-12",
+              "name": "Combo Plus",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2013,9 +2013,9 @@
               ]
             },
             "item": {
-              "name": "Puppies 07-09",
+              "name": "Cottage",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2085,9 +2085,9 @@
               ]
             },
             "item": {
-              "name": "Hollow Bastion",
+              "name": "Mega-Ether",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2157,7 +2157,7 @@
               ]
             },
             "item": {
-              "name": "Oathkeeper",
+              "name": "Combo Master",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2229,7 +2229,7 @@
               ]
             },
             "item": {
-              "name": "Wisdom Staff",
+              "name": "Fira Ring",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2301,7 +2301,7 @@
               ]
             },
             "item": {
-              "name": "Postcard",
+              "name": "Bambi",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2373,9 +2373,9 @@
               ]
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Hercules Cup",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2387,9 +2387,9 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 67-69",
+              "name": "Mega-Ether",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2401,9 +2401,9 @@
               "value": true
             },
             "item": {
-              "name": "Deep Jungle",
+              "name": "Tent",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2415,9 +2415,9 @@
               "item": "White Trinity"
             },
             "item": {
-              "name": "Combo Plus",
+              "name": "Jack-In-The-Box",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2455,9 +2455,9 @@
               ]
             },
             "item": {
-              "name": "Power Up",
+              "name": "Progressive Thunder",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2495,9 +2495,9 @@
               ]
             },
             "item": {
-              "name": "Hurricane Blast",
+              "name": "Fire Arts",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2535,7 +2535,7 @@
               ]
             },
             "item": {
-              "name": "Stun Impact",
+              "name": "Save the Queen",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2575,9 +2575,9 @@
               ]
             },
             "item": {
-              "name": "Sliding Dash",
+              "name": "Pegasus Cup",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2615,7 +2615,7 @@
               ]
             },
             "item": {
-              "name": "Megalixir",
+              "name": "Mega-Ether",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2655,7 +2655,7 @@
               ]
             },
             "item": {
-              "name": "Defense Up",
+              "name": "Ether",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2675,7 +2675,7 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Chaos Ring",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2689,7 +2689,7 @@
               "item": "Footprints"
             },
             "item": {
-              "name": "Elixir",
+              "name": "Ifrit Belt",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2703,7 +2703,7 @@
               "item": "Footprints"
             },
             "item": {
-              "name": "Diamond Dust",
+              "name": "Camping Set",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2717,7 +2717,7 @@
               "item": "Footprints"
             },
             "item": {
-              "name": "Combo Plus",
+              "name": "Grand Mallet",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2731,9 +2731,9 @@
               "item": "Footprints"
             },
             "item": {
-              "name": "Megalixir",
+              "name": "Red Trinity",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2745,9 +2745,9 @@
               "item": "Footprints"
             },
             "item": {
-              "name": "Firagun Band",
+              "name": "Leaf Bracer",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2777,7 +2777,7 @@
               ]
             },
             "item": {
-              "name": "Crabclaw",
+              "name": "Metal Chocobo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2831,9 +2831,9 @@
               ]
             },
             "item": {
-              "name": "Morning Star",
+              "name": "Neverland",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2845,9 +2845,9 @@
               "value": true
             },
             "item": {
-              "name": "Ifrit Belt",
+              "name": "Progressive Gravity",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2868,7 +2868,7 @@
               ]
             },
             "item": {
-              "name": "Dodge Roll",
+              "name": "Stop Arts",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2891,7 +2891,7 @@
               ]
             },
             "item": {
-              "name": "High Jump",
+              "name": "Progressive Gravity",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2914,7 +2914,7 @@
               ]
             },
             "item": {
-              "name": "Grand Mallet",
+              "name": "Ramuh Belt",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2941,7 +2941,7 @@
               ]
             },
             "item": {
-              "name": "Megalixir",
+              "name": "Elixir",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2968,9 +2968,9 @@
               ]
             },
             "item": {
-              "name": "Postcard",
+              "name": "Genji Shield",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2995,7 +2995,7 @@
               ]
             },
             "item": {
-              "name": "Zantetsuken",
+              "name": "White Fang",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3009,7 +3009,7 @@
               "value": true
             },
             "item": {
-              "name": "Mythril Shield",
+              "name": "Mega-Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3023,7 +3023,7 @@
               "value": true
             },
             "item": {
-              "name": "Postcard",
+              "name": "Olympia",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3047,7 +3047,7 @@
               ]
             },
             "item": {
-              "name": "Lord Fortune",
+              "name": "Angel Bangle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3061,7 +3061,7 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Trinity Limit",
+              "name": "Zantetsuken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3119,7 +3119,7 @@
               ]
             },
             "item": {
-              "name": "Potion",
+              "name": "Elixir",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3177,9 +3177,9 @@
               ]
             },
             "item": {
-              "name": "Hercules Cup",
+              "name": "Inferno Band",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3236,9 +3236,9 @@
               ]
             },
             "item": {
-              "name": "Three Stars",
+              "name": "Halloween Town",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3268,9 +3268,9 @@
               ]
             },
             "item": {
-              "name": "Progressive Aero",
+              "name": "Ray of Light",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -3288,9 +3288,9 @@
               "value": true
             },
             "item": {
-              "name": "Thunder Arts",
+              "name": "Guard Earring",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3302,7 +3302,7 @@
               "item": "Entry Pass"
             },
             "item": {
-              "name": "Save the King",
+              "name": "Hi-Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3320,7 +3320,7 @@
               }
             },
             "item": {
-              "name": "Cottage",
+              "name": "Mega-Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3338,7 +3338,7 @@
               }
             },
             "item": {
-              "name": "Pegasus Cup",
+              "name": "Progressive Stop",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3352,9 +3352,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Up",
+              "name": "Wonderland",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3366,9 +3366,9 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Bambi",
+              "name": "Ragnarok",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3380,7 +3380,7 @@
               "item": "Entry Pass"
             },
             "item": {
-              "name": "Aerial Sweep",
+              "name": "Power Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3394,9 +3394,9 @@
               "value": true
             },
             "item": {
-              "name": "Theon Vol. 6",
+              "name": "Power Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3408,9 +3408,9 @@
               "item": "Blue Trinity"
             },
             "item": {
-              "name": "Slapshot",
+              "name": "MP Rage",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3422,9 +3422,9 @@
               "item": "Blue Trinity"
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Oblivion",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3436,7 +3436,7 @@
               "item": "White Trinity"
             },
             "item": {
-              "name": "Warhammer",
+              "name": "Mega-Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3450,9 +3450,9 @@
               "item": "Entry Pass"
             },
             "item": {
-              "name": "Guard",
+              "name": "Air Combo Plus",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -3470,7 +3470,7 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Power Up",
+              "name": "Seven Elements",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3484,9 +3484,9 @@
               "item": "Blue Trinity"
             },
             "item": {
-              "name": "Thundagun Band",
+              "name": "Progressive Fire",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3498,7 +3498,7 @@
               "item": "Progressive Blizzard"
             },
             "item": {
-              "name": "Seven Elements",
+              "name": "Mega-Ether",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3512,7 +3512,7 @@
               "item": "Progressive Fire"
             },
             "item": {
-              "name": "Tech Boost",
+              "name": "Mighty Shield",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3526,7 +3526,7 @@
               "item": "Progressive Blizzard"
             },
             "item": {
-              "name": "Ether",
+              "name": "MP Haste",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3540,9 +3540,9 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Progressive Glide",
+              "name": "Combo Plus",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3554,7 +3554,7 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Phil Cup",
+              "name": "Second Chance",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3577,9 +3577,9 @@
               ]
             },
             "item": {
-              "name": "Power Up",
+              "name": "Postcard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3591,9 +3591,9 @@
               "value": true
             },
             "item": {
-              "name": "Defense Up",
+              "name": "Ansem's Report 1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3605,7 +3605,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy Bangle",
+              "name": "Blizzagun Band",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3619,9 +3619,9 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Wishing Star",
+              "name": "Cosmic Arts",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3633,9 +3633,9 @@
               "item": "Blue Trinity"
             },
             "item": {
-              "name": "Mega-Potion",
+              "name": "Aero Arts",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3647,7 +3647,7 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Puppies 73-75",
+              "name": "Puppies 94-96",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3661,7 +3661,7 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Counterattack",
+              "name": "Ars Arcanum",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3675,7 +3675,7 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Wooden Sword",
+              "name": "Herc's Shield",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3689,7 +3689,7 @@
               "value": true
             },
             "item": {
-              "name": "Genji Shield",
+              "name": "Blizzard Ring",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3703,9 +3703,9 @@
               "value": true
             },
             "item": {
-              "name": "AP Up",
+              "name": "Puppies 01-03",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3730,9 +3730,9 @@
               ]
             },
             "item": {
-              "name": "Elixir",
+              "name": "Ansem's Report 4",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3744,9 +3744,9 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Empty Bottle",
+              "name": "Vortex",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3758,7 +3758,7 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Element Ring",
+              "name": "Omega Arts",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3772,7 +3772,7 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Fantasista",
+              "name": "Firaga Ring",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3786,7 +3786,7 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Raven's Claw",
+              "name": "Blizzaga Ring",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3800,7 +3800,7 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Chaos Ring",
+              "name": "Fire Ring",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3814,9 +3814,9 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Second Chance",
+              "name": "Three Stars",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3828,7 +3828,7 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Ragnarok",
+              "name": "Slapshot",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3842,7 +3842,7 @@
               "value": true
             },
             "item": {
-              "name": "Ars Arcanum",
+              "name": "Mega-Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3856,7 +3856,7 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 52-54",
+              "name": "Hollow Bastion",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3870,9 +3870,9 @@
               "value": true
             },
             "item": {
-              "name": "Ribbon",
+              "name": "Progressive Glide",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3884,7 +3884,7 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 31-33",
+              "name": "Puppies 04-06",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3898,9 +3898,9 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Puppies 43-45",
+              "name": "Ultima Weapon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3921,9 +3921,9 @@
               ]
             },
             "item": {
-              "name": "Stout Shield",
+              "name": "Puppies 25-27",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3935,9 +3935,9 @@
               "value": true
             },
             "item": {
-              "name": "Ramuh Belt",
+              "name": "Mushu",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3949,7 +3949,7 @@
               "value": true
             },
             "item": {
-              "name": "Empty Bottle",
+              "name": "Slides",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3963,7 +3963,7 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Stop",
+              "name": "Empty Bottle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3977,9 +3977,9 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Postcard",
+              "name": "Ribbon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3991,9 +3991,9 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Gigas Fist",
+              "name": "Ansem's Report 3",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4005,9 +4005,9 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Cure Arts",
+              "name": "Treasure Magnet",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4019,9 +4019,9 @@
               "item": "Slides"
             },
             "item": {
-              "name": "Progressive Stop",
+              "name": "Hi-Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -4039,7 +4039,7 @@
               "value": true
             },
             "item": {
-              "name": "Treasure Magnet",
+              "name": "Warhammer",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4053,7 +4053,7 @@
               "value": true
             },
             "item": {
-              "name": "Ether",
+              "name": "Stun Impact",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4067,9 +4067,9 @@
               "value": true
             },
             "item": {
-              "name": "Green Trinity",
+              "name": "Gigas Fist",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4081,9 +4081,9 @@
               "value": true
             },
             "item": {
-              "name": "Ray of Light",
+              "name": "Empty Bottle",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4095,7 +4095,7 @@
               "value": true
             },
             "item": {
-              "name": "Power Up",
+              "name": "Gravity Break",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4109,7 +4109,7 @@
               "value": true
             },
             "item": {
-              "name": "Onyx Shield",
+              "name": "Cheer",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4136,7 +4136,7 @@
               ]
             },
             "item": {
-              "name": "Jackpot",
+              "name": "Obsidian Ring",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4150,7 +4150,7 @@
               "value": true
             },
             "item": {
-              "name": "Fira Ring",
+              "name": "Wisdom Staff",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4164,7 +4164,7 @@
               "value": true
             },
             "item": {
-              "name": "Tech Boost",
+              "name": "Magus Staff",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4178,7 +4178,7 @@
               "value": true
             },
             "item": {
-              "name": "Air Combo Plus",
+              "name": "Firagun Band",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4192,9 +4192,9 @@
               "value": true
             },
             "item": {
-              "name": "Ansem's Report 2",
+              "name": "Ripple Drive",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4206,7 +4206,7 @@
               "value": true
             },
             "item": {
-              "name": "Potion",
+              "name": "Protera Chain",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4220,9 +4220,9 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 70-72",
+              "name": "Megalixir",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4282,9 +4282,9 @@
               ]
             },
             "item": {
-              "name": "Cottage",
+              "name": "Wishing Star",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4296,7 +4296,7 @@
               "item": "White Trinity"
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Tent",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4310,7 +4310,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega-Potion",
+              "name": "Dream Rod (Donald)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4324,7 +4324,7 @@
               "value": true
             },
             "item": {
-              "name": "Halloween Town",
+              "name": "Empty Bottle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4360,7 +4360,7 @@
               ]
             },
             "item": {
-              "name": "Mega-Potion",
+              "name": "Blitz",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4396,7 +4396,7 @@
               ]
             },
             "item": {
-              "name": "Dark Ring",
+              "name": "Mega-Ether",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4410,9 +4410,9 @@
               "value": true
             },
             "item": {
-              "name": "Three Wishes",
+              "name": "Onyx Shield",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4424,9 +4424,9 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 79-81",
+              "name": "Rune Armlet",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4438,7 +4438,7 @@
               "item": "Blue Trinity"
             },
             "item": {
-              "name": "Air Combo Plus",
+              "name": "Shooting Star",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4452,9 +4452,9 @@
               "value": true
             },
             "item": {
-              "name": "Elixir",
+              "name": "Progressive Stop",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4466,7 +4466,7 @@
               "value": true
             },
             "item": {
-              "name": "Defender",
+              "name": "Critical Plus",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4480,9 +4480,9 @@
               "value": true
             },
             "item": {
-              "name": "Empty Bottle",
+              "name": "Prime Cap",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4494,7 +4494,7 @@
               "value": true
             },
             "item": {
-              "name": "Ansem's Report 3",
+              "name": "Puppies 58-60",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4508,9 +4508,9 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Blizzard",
+              "name": "Thundagun Band",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4522,7 +4522,7 @@
               "value": true
             },
             "item": {
-              "name": "Lucky Strike",
+              "name": "Smasher",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4536,7 +4536,7 @@
               "value": true
             },
             "item": {
-              "name": "Adamant Shield",
+              "name": "Camping Set",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4550,7 +4550,7 @@
               "value": true
             },
             "item": {
-              "name": "Dream Shield (Goofy)",
+              "name": "EXP Earring",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4564,7 +4564,7 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 82-84",
+              "name": "Progressive Aero",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4609,7 +4609,7 @@
               ]
             },
             "item": {
-              "name": "Ansem's Report 1",
+              "name": "Three Wishes",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4623,7 +4623,7 @@
               "value": true
             },
             "item": {
-              "name": "Tent",
+              "name": "Royal Crown",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4708,7 +4708,7 @@
               ]
             },
             "item": {
-              "name": "Brave Warrior",
+              "name": "Combo Plus",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4731,9 +4731,9 @@
               ]
             },
             "item": {
-              "name": "Postcard",
+              "name": "Sonic Blade",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4745,9 +4745,9 @@
               "value": true
             },
             "item": {
-              "name": "Stop Arts",
+              "name": "Titan Chain",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4759,9 +4759,9 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 28-30",
+              "name": "Shiva Belt",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4773,9 +4773,9 @@
               "value": true
             },
             "item": {
-              "name": "Vortex",
+              "name": "White Trinity",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4787,9 +4787,9 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 40-42",
+              "name": "Thunder Ring",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4801,9 +4801,9 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 76-78",
+              "name": "Mythril Shield",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4815,7 +4815,7 @@
               "value": true
             },
             "item": {
-              "name": "EXP Necklace",
+              "name": "Spellbinder",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4829,7 +4829,7 @@
               "value": true
             },
             "item": {
-              "name": "Fire Ring",
+              "name": "Morning Star",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4843,9 +4843,9 @@
               "value": true
             },
             "item": {
-              "name": "One-Winged Angel",
+              "name": "Puppies 37-39",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4857,7 +4857,7 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Angel Bangle",
+              "name": "Tent",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4877,9 +4877,9 @@
               "value": true
             },
             "item": {
-              "name": "Gravity Arts",
+              "name": "Tent",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4891,9 +4891,9 @@
               "value": true
             },
             "item": {
-              "name": "Neverland",
+              "name": "Hi-Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4905,7 +4905,7 @@
               "value": true
             },
             "item": {
-              "name": "Metal Chocobo",
+              "name": "Cottage",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4919,9 +4919,9 @@
               "value": true
             },
             "item": {
-              "name": "Hi-Potion",
+              "name": "Cure Arts",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4942,9 +4942,9 @@
               ]
             },
             "item": {
-              "name": "Mushu",
+              "name": "Thundaga Ring",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4965,7 +4965,7 @@
               ]
             },
             "item": {
-              "name": "Megalixir",
+              "name": "Encounter Plus",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4988,9 +4988,9 @@
               ]
             },
             "item": {
-              "name": "Puppies 94-96",
+              "name": "Tent",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5002,9 +5002,9 @@
               "value": true
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Green Trinity",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5016,9 +5016,9 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Cure",
+              "name": "Strike Raid",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5030,9 +5030,9 @@
               "item": "High Jump"
             },
             "item": {
-              "name": "Tinker Bell",
+              "name": "Golem Chain",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5044,7 +5044,7 @@
               "value": true
             },
             "item": {
-              "name": "Tent",
+              "name": "Defense Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5085,9 +5085,9 @@
               ]
             },
             "item": {
-              "name": "Power Up",
+              "name": "Blue Trinity",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5108,9 +5108,9 @@
               ]
             },
             "item": {
-              "name": "Progressive Cure",
+              "name": "Energy Bangle",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5149,9 +5149,9 @@
               ]
             },
             "item": {
-              "name": "Silver Mallet",
+              "name": "Puppies 91-93",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5163,9 +5163,9 @@
               "item": "White Trinity"
             },
             "item": {
-              "name": "Puppies 64-66",
+              "name": "Stout Shield",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5177,9 +5177,9 @@
               "value": true
             },
             "item": {
-              "name": "AP Up",
+              "name": "Progressive Fire",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5209,7 +5209,7 @@
               ]
             },
             "item": {
-              "name": "Ultima Weapon",
+              "name": "Treasure Magnet",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5223,7 +5223,7 @@
               "value": true
             },
             "item": {
-              "name": "Hi-Potion",
+              "name": "AP Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5255,7 +5255,7 @@
               ]
             },
             "item": {
-              "name": "Puppies 61-63",
+              "name": "Jungle King",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5278,7 +5278,7 @@
               ]
             },
             "item": {
-              "name": "Puppies 13-15",
+              "name": "Puppies 79-81",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5301,7 +5301,7 @@
               ]
             },
             "item": {
-              "name": "Treasure Magnet",
+              "name": "Camping Set",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5315,7 +5315,7 @@
               "value": true
             },
             "item": {
-              "name": "Genie",
+              "name": "Puppies 49-51",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5329,9 +5329,9 @@
               "value": true
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Progressive Glide",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -5354,9 +5354,9 @@
               "item": "Forget-Me-Not"
             },
             "item": {
-              "name": "Lionheart",
+              "name": "Camping Set",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5399,9 +5399,9 @@
               ]
             },
             "item": {
-              "name": "Tech Boost",
+              "name": "Blizzard Arts",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5440,9 +5440,9 @@
               ]
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Progressive Stop",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5463,7 +5463,7 @@
               ]
             },
             "item": {
-              "name": "Monstro",
+              "name": "Progressive Cure",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5534,9 +5534,9 @@
               ]
             },
             "item": {
-              "name": "AP Up",
+              "name": "Phil Cup",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5605,7 +5605,7 @@
               ]
             },
             "item": {
-              "name": "AP Up",
+              "name": "Tent",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5676,7 +5676,7 @@
               ]
             },
             "item": {
-              "name": "Combo Plus",
+              "name": "Adamant Shield",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5747,9 +5747,9 @@
               ]
             },
             "item": {
-              "name": "EXP Bracelet",
+              "name": "Ansem's Report 2",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5771,7 +5771,7 @@
               ]
             },
             "item": {
-              "name": "Smasher",
+              "name": "Magic Armlet",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5842,9 +5842,9 @@
               ]
             },
             "item": {
-              "name": "Elixir",
+              "name": "Postcard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5913,7 +5913,7 @@
               ]
             },
             "item": {
-              "name": "Megalixir",
+              "name": "Ether",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5927,9 +5927,9 @@
               "value": true
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Progressive Cure",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5981,9 +5981,9 @@
               ]
             },
             "item": {
-              "name": "Puppies 49-51",
+              "name": "Megalixir",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6048,7 +6048,7 @@
               ]
             },
             "item": {
-              "name": "Save the Queen",
+              "name": "Lord Fortune",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6115,7 +6115,7 @@
               ]
             },
             "item": {
-              "name": "MP Rage",
+              "name": "Puppies 97-99",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6129,9 +6129,9 @@
               "value": true
             },
             "item": {
-              "name": "Obsidian Ring",
+              "name": "Puppies 46-48",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6143,7 +6143,7 @@
               "value": true
             },
             "item": {
-              "name": "Potion",
+              "name": "EXP Bracelet",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6157,9 +6157,9 @@
               "value": true
             },
             "item": {
-              "name": "Yellow Trinity",
+              "name": "Silver Mallet",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6180,7 +6180,7 @@
               ]
             },
             "item": {
-              "name": "Progressive Gravity",
+              "name": "Puppies 07-09",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6203,7 +6203,7 @@
               ]
             },
             "item": {
-              "name": "Guard Earring",
+              "name": "Mega-Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6227,7 +6227,7 @@
               ]
             },
             "item": {
-              "name": "Thunder Ring",
+              "name": "Defense Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6298,9 +6298,9 @@
               ]
             },
             "item": {
-              "name": "Dream Rod (Donald)",
+              "name": "Theon Vol. 6",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6321,7 +6321,7 @@
               ]
             },
             "item": {
-              "name": "Ether",
+              "name": "Element Ring",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6392,7 +6392,7 @@
               ]
             },
             "item": {
-              "name": "Ability Stud",
+              "name": "Raven's Claw",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6463,7 +6463,7 @@
               ]
             },
             "item": {
-              "name": "Magus Staff",
+              "name": "Diamond Dust",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6534,9 +6534,9 @@
               ]
             },
             "item": {
-              "name": "Slides",
+              "name": "Protega Chain",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -6554,9 +6554,9 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Royal Crown",
+              "name": "Yellow Trinity",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6568,9 +6568,9 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Empty Bottle",
+              "name": "Tent",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6602,9 +6602,9 @@
               ]
             },
             "item": {
-              "name": "Rune Armlet",
+              "name": "Tinker Bell",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6616,7 +6616,7 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Crystal Crown",
+              "name": "Hurricane Blast",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6630,7 +6630,7 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Scan",
+              "name": "Brave Warrior",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6644,7 +6644,7 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Hi-Potion",
+              "name": "Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6658,7 +6658,7 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Megalixir",
+              "name": "Berserk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6672,9 +6672,9 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 16-18",
+              "name": "Sliding Dash",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6686,9 +6686,9 @@
               "item": "Yellow Trinity"
             },
             "item": {
-              "name": "Puppies 01-03",
+              "name": "Heartguard",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6717,7 +6717,7 @@
               ]
             },
             "item": {
-              "name": "Cottage",
+              "name": "Camping Set",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6748,7 +6748,7 @@
               ]
             },
             "item": {
-              "name": "Red Trinity",
+              "name": "Empty Bottle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6762,9 +6762,9 @@
               "item": "Yellow Trinity"
             },
             "item": {
-              "name": "Puppies 55-57",
+              "name": "Fantasista",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6776,9 +6776,9 @@
               "item": "Yellow Trinity"
             },
             "item": {
-              "name": "Golem Chain",
+              "name": "Agrabah",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6790,7 +6790,7 @@
               "item": "Yellow Trinity"
             },
             "item": {
-              "name": "Blitz",
+              "name": "AP Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6804,9 +6804,9 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Puppies 88-90",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6827,7 +6827,7 @@
               ]
             },
             "item": {
-              "name": "Puppies 85-87",
+              "name": "Deep Jungle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6841,7 +6841,7 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Dumbo",
+              "name": "Progressive Gravity",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6855,7 +6855,7 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Mega-Potion",
+              "name": "Crabclaw",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6869,9 +6869,9 @@
               "item": "Green Trinity"
             },
             "item": {
-              "name": "Progressive Fire",
+              "name": "Wooden Sword",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -6889,7 +6889,7 @@
               "value": true
             },
             "item": {
-              "name": "Blizzard Arts",
+              "name": "Postcard",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6903,9 +6903,9 @@
               "value": true
             },
             "item": {
-              "name": "Ripple Drive",
+              "name": "Puppies 40-42",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6917,9 +6917,9 @@
               "value": true
             },
             "item": {
-              "name": "Hi-Potion",
+              "name": "Puppies 67-69",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6997,7 +6997,7 @@
               ]
             },
             "item": {
-              "name": "Protect Chain",
+              "name": "Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7103,9 +7103,9 @@
               ]
             },
             "item": {
-              "name": "Shiva Belt",
+              "name": "Thunder Arts",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -7183,7 +7183,7 @@
               ]
             },
             "item": {
-              "name": "Puppies 91-93",
+              "name": "Divine Rose",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7228,9 +7228,9 @@
               ]
             },
             "item": {
-              "name": "Mighty Shield",
+              "name": "Postcard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -7273,7 +7273,7 @@
               ]
             },
             "item": {
-              "name": "Protega Chain",
+              "name": "Ifrit's Horn",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7318,7 +7318,7 @@
               ]
             },
             "item": {
-              "name": "Heartguard",
+              "name": "Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7363,7 +7363,7 @@
               ]
             },
             "item": {
-              "name": "Shooting Star",
+              "name": "Wizard's Relic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7377,7 +7377,7 @@
               "value": true
             },
             "item": {
-              "name": "Critical Plus",
+              "name": "Trinity Limit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7422,9 +7422,9 @@
               ]
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Empty Bottle",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -7436,9 +7436,9 @@
               "value": true
             },
             "item": {
-              "name": "Empty Bottle",
+              "name": "Scan",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -7450,7 +7450,7 @@
               "value": true
             },
             "item": {
-              "name": "Violetta",
+              "name": "One-Winged Angel",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7813,7 +7813,7 @@
               ]
             },
             "item": {
-              "name": "Power Up",
+              "name": "Tech Boost",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7858,7 +7858,7 @@
               ]
             },
             "item": {
-              "name": "Magic Armlet",
+              "name": "Holy Circlet",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7903,9 +7903,9 @@
               ]
             },
             "item": {
-              "name": "Progressive Blizzard",
+              "name": "EXP Necklace",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -7948,7 +7948,7 @@
               ]
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Air Combo Plus",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7993,9 +7993,9 @@
               ]
             },
             "item": {
-              "name": "Progressive Glide",
+              "name": "Atlas Armlet",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8038,9 +8038,9 @@
               ]
             },
             "item": {
-              "name": "Berserk",
+              "name": "Puppies 31-33",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8092,9 +8092,9 @@
               ]
             },
             "item": {
-              "name": "Progressive Thunder",
+              "name": "Dream Shield (Goofy)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8146,7 +8146,7 @@
               ]
             },
             "item": {
-              "name": "Camping Set",
+              "name": "Ether",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8191,9 +8191,9 @@
               ]
             },
             "item": {
-              "name": "Sonic Blade",
+              "name": "Guard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8205,7 +8205,7 @@
               "value": true
             },
             "item": {
-              "name": "Ether",
+              "name": "Mega-Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8219,9 +8219,9 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Thunder",
+              "name": "Elixir",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8233,7 +8233,7 @@
               "value": true
             },
             "item": {
-              "name": "Critical Plus",
+              "name": "Hi-Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8278,9 +8278,9 @@
               ]
             },
             "item": {
-              "name": "Puppies 37-39",
+              "name": "Thundara Ring",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8323,9 +8323,9 @@
               ]
             },
             "item": {
-              "name": "Atlas Armlet",
+              "name": "High Jump",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8337,9 +8337,9 @@
               "value": true
             },
             "item": {
-              "name": "Defense Up",
+              "name": "Forget-Me-Not",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8351,9 +8351,9 @@
               "value": true
             },
             "item": {
-              "name": "Footprints",
+              "name": "Cottage",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8405,7 +8405,7 @@
               ]
             },
             "item": {
-              "name": "Progressive Thunder",
+              "name": "Oathkeeper",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8459,7 +8459,7 @@
               ]
             },
             "item": {
-              "name": "Fire Arts",
+              "name": "Empty Bottle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8473,9 +8473,9 @@
               "item": "Progressive Gravity"
             },
             "item": {
-              "name": "Olympus Coliseum",
+              "name": "Power Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8487,9 +8487,9 @@
               "item": "Progressive Gravity"
             },
             "item": {
-              "name": "Postcard",
+              "name": "Defender",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8550,9 +8550,9 @@
               ]
             },
             "item": {
-              "name": "Blizzard Ring",
+              "name": "Entry Pass",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8577,7 +8577,7 @@
               ]
             },
             "item": {
-              "name": "Lady Luck",
+              "name": "Pumpkinhead",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8604,9 +8604,9 @@
               ]
             },
             "item": {
-              "name": "Power Up",
+              "name": "Progressive Cure",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8680,9 +8680,9 @@
               ]
             },
             "item": {
-              "name": "Postcard",
+              "name": "Blizzara Ring",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8694,7 +8694,7 @@
               "value": true
             },
             "item": {
-              "name": "Golem Shield",
+              "name": "Crystal Crown",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8739,7 +8739,7 @@
               ]
             },
             "item": {
-              "name": "Puppies 46-48",
+              "name": "Puppies 10-12",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8753,9 +8753,9 @@
               "value": true
             },
             "item": {
-              "name": "Entry Pass",
+              "name": "Gaia Bangle",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8767,9 +8767,9 @@
               "item": "White Trinity"
             },
             "item": {
-              "name": "Progressive Fire",
+              "name": "Tech Boost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8812,9 +8812,9 @@
               ]
             },
             "item": {
-              "name": "AP Up",
+              "name": "Lionheart",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8857,9 +8857,9 @@
               ]
             },
             "item": {
-              "name": "Fairy Harp",
+              "name": "Lucky Strike",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8902,7 +8902,7 @@
               ]
             },
             "item": {
-              "name": "Postcard",
+              "name": "Progressive Blizzard",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8947,9 +8947,9 @@
               ]
             },
             "item": {
-              "name": "Combo Master",
+              "name": "Potion",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8992,9 +8992,9 @@
               ]
             },
             "item": {
-              "name": "Herc's Shield",
+              "name": "Puppies 85-87",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9028,7 +9028,7 @@
               ]
             },
             "item": {
-              "name": "Strike Raid",
+              "name": "Potion",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9042,9 +9042,9 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Stop",
+              "name": "Power Chain",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9056,9 +9056,9 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Aero",
+              "name": "Meteor Strike",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -9076,7 +9076,7 @@
               "value": true
             },
             "item": {
-              "name": "Blizzagun Band",
+              "name": "AP Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9090,7 +9090,7 @@
               "value": true
             },
             "item": {
-              "name": "AP Up",
+              "name": "Critical Plus",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9104,7 +9104,7 @@
               "value": true
             },
             "item": {
-              "name": "Inferno Band",
+              "name": "Power Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9118,9 +9118,9 @@
               "value": true
             },
             "item": {
-              "name": "Aero Arts",
+              "name": "Ether",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9132,9 +9132,9 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 97-99",
+              "name": "AP Up",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9146,7 +9146,7 @@
               "value": true
             },
             "item": {
-              "name": "Thundaga Ring",
+              "name": "Combo Plus",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9160,7 +9160,7 @@
               "value": true
             },
             "item": {
-              "name": "Megalixir",
+              "name": "Defense Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9174,7 +9174,7 @@
               "value": true
             },
             "item": {
-              "name": "Wonderland",
+              "name": "Simba",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9188,7 +9188,7 @@
               "value": true
             },
             "item": {
-              "name": "Critical Plus",
+              "name": "Power Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9202,9 +9202,9 @@
               "value": true
             },
             "item": {
-              "name": "Ifrit's Horn",
+              "name": "Postcard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9216,9 +9216,9 @@
               "value": true
             },
             "item": {
-              "name": "Pumpkinhead",
+              "name": "Dark Ring",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9230,7 +9230,7 @@
               "value": true
             },
             "item": {
-              "name": "Wizard's Relic",
+              "name": "Tent",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9253,7 +9253,7 @@
               ]
             },
             "item": {
-              "name": "Progressive Gravity",
+              "name": "Progressive Thunder",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9267,7 +9267,7 @@
               "value": true
             },
             "item": {
-              "name": "Potion",
+              "name": "Critical Plus",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9281,9 +9281,9 @@
               "value": true
             },
             "item": {
-              "name": "Postcard",
+              "name": "Counterattack",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9317,9 +9317,9 @@
               ]
             },
             "item": {
-              "name": "Tent",
+              "name": "Progressive Fire",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9331,7 +9331,7 @@
               "item": "Progressive Glide"
             },
             "item": {
-              "name": "Firaga Ring",
+              "name": "Save the King",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9345,7 +9345,7 @@
               "value": true
             },
             "item": {
-              "name": "Divine Rose",
+              "name": "Postcard",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9390,9 +9390,9 @@
               ]
             },
             "item": {
-              "name": "Progressive Blizzard",
+              "name": "Tech Boost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9404,9 +9404,9 @@
               "value": true
             },
             "item": {
-              "name": "Power Chain",
+              "name": "Fairy Harp",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9418,9 +9418,9 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 88-90",
+              "name": "Tech Boost",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9432,9 +9432,9 @@
               "value": true
             },
             "item": {
-              "name": "Thundara Ring",
+              "name": "Footprints",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9446,7 +9446,7 @@
               "value": true
             },
             "item": {
-              "name": "Puppies 25-27",
+              "name": "Genie",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9460,9 +9460,9 @@
               "value": true
             },
             "item": {
-              "name": "EXP Earring",
+              "name": "Lady Luck",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9474,7 +9474,7 @@
               "value": true
             },
             "item": {
-              "name": "EXP Ring",
+              "name": "Power Up",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9488,7 +9488,7 @@
               "value": true
             },
             "item": {
-              "name": "Cottage",
+              "name": "Protect Chain",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9734,7 +9734,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Max MP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9784,7 +9784,7 @@
               ]
             },
             "item": {
-              "name": "Max MP Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9884,7 +9884,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9934,7 +9934,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10034,7 +10034,7 @@
               ]
             },
             "item": {
-              "name": "Item Slot Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10084,7 +10084,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10134,7 +10134,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10184,7 +10184,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10234,7 +10234,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10284,7 +10284,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10334,7 +10334,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Max MP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10384,7 +10384,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10434,7 +10434,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10534,7 +10534,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10584,7 +10584,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10634,7 +10634,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10684,7 +10684,7 @@
               ]
             },
             "item": {
-              "name": "Max MP Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10734,7 +10734,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10834,7 +10834,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10884,7 +10884,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10934,7 +10934,7 @@
               ]
             },
             "item": {
-              "name": "Accessory Slot Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10984,7 +10984,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11034,7 +11034,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11084,7 +11084,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Max MP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11134,7 +11134,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Accessory Slot Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11184,7 +11184,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11234,7 +11234,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11284,7 +11284,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11334,7 +11334,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Max MP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11384,7 +11384,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11434,7 +11434,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11484,7 +11484,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11534,7 +11534,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11634,7 +11634,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11684,7 +11684,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11734,7 +11734,7 @@
               ]
             },
             "item": {
-              "name": "Item Slot Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11934,7 +11934,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11984,7 +11984,7 @@
               ]
             },
             "item": {
-              "name": "Max MP Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12034,7 +12034,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12084,7 +12084,7 @@
               ]
             },
             "item": {
-              "name": "Max MP Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12134,7 +12134,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12184,7 +12184,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12234,7 +12234,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12284,7 +12284,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Max MP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12334,7 +12334,7 @@
               ]
             },
             "item": {
-              "name": "Max MP Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12384,7 +12384,7 @@
               ]
             },
             "item": {
-              "name": "Item Slot Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12434,7 +12434,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12484,7 +12484,7 @@
               ]
             },
             "item": {
-              "name": "Max MP Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12534,7 +12534,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12584,7 +12584,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12634,7 +12634,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12684,7 +12684,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12834,7 +12834,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12884,7 +12884,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12934,7 +12934,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12984,7 +12984,7 @@
               ]
             },
             "item": {
-              "name": "Max MP Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13034,7 +13034,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13134,7 +13134,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13334,7 +13334,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13384,7 +13384,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13434,7 +13434,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Max MP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13484,7 +13484,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13534,7 +13534,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Item Slot Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13584,7 +13584,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Max HP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13684,7 +13684,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Item Slot Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13734,7 +13734,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13784,7 +13784,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Max MP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13884,7 +13884,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13984,7 +13984,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14034,7 +14034,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14084,7 +14084,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14234,7 +14234,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14334,7 +14334,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14384,7 +14384,7 @@
               ]
             },
             "item": {
-              "name": "Strength Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14434,7 +14434,7 @@
               ]
             },
             "item": {
-              "name": "Defense Increase",
+              "name": "Max AP Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14534,7 +14534,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14584,7 +14584,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Defense Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14634,7 +14634,7 @@
               ]
             },
             "item": {
-              "name": "Max AP Increase",
+              "name": "Strength Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14684,7 +14684,7 @@
               ]
             },
             "item": {
-              "name": "Max HP Increase",
+              "name": "Item Slot Increase",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15014,7 +15014,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 12
       },
       "Hi-Potion": {
         "name": "Hi-Potion",
@@ -15028,7 +15028,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 10
       },
       "Ether": {
         "name": "Ether",
@@ -15056,7 +15056,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 8
       },
       "Mega-Potion": {
         "name": "Mega-Potion",
@@ -15070,7 +15070,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 20
       },
       "Mega-Ether": {
         "name": "Mega-Ether",
@@ -15084,7 +15084,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 14
       },
       "Megalixir": {
         "name": "Megalixir",
@@ -15098,7 +15098,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 18
+        "max_count": 8
       },
       "Protect Chain": {
         "name": "Protect Chain",
@@ -16512,7 +16512,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 18
       },
       "Camping Set": {
         "name": "Camping Set",
@@ -16526,7 +16526,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 28
+        "max_count": 14
       },
       "Cottage": {
         "name": "Cottage",
@@ -16596,7 +16596,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 22
+        "max_count": 14
       },
       "Defense Up": {
         "name": "Defense Up",
@@ -16610,7 +16610,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 10
       },
       "AP Up": {
         "name": "AP Up",
@@ -16624,7 +16624,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 12
       },
       "Fire Arts": {
         "name": "Fire Arts",
@@ -20071,7 +20071,7 @@
   },
   "itempool_counts": {
     "1": {
-      "AP Up": 14,
+      "AP Up": 12,
       "Ability Stud": 2,
       "Accessory Slot Increase": 1,
       "Adamant Shield": 2,
@@ -20096,7 +20096,7 @@
       "Blizzard Ring": 2,
       "Blue Trinity": 2,
       "Brave Warrior": 2,
-      "Camping Set": 28,
+      "Camping Set": 14,
       "Chaos Ring": 2,
       "Cheer": 2,
       "Combo Master": 2,
@@ -20112,7 +20112,7 @@
       "Deep Jungle": 2,
       "Defender": 2,
       "Defense Increase": 24,
-      "Defense Up": 6,
+      "Defense Up": 10,
       "Diamond Dust": 2,
       "Divine Rose": 2,
       "Dodge Roll": 2,
@@ -20124,7 +20124,7 @@
       "EXP Necklace": 2,
       "EXP Ring": 2,
       "Element Ring": 2,
-      "Elixir": 10,
+      "Elixir": 8,
       "Emblem Piece (Chest)": 1,
       "Emblem Piece (Flame)": 1,
       "Emblem Piece (Fountain)": 1,
@@ -20159,7 +20159,7 @@
       "Heartguard": 2,
       "Herc's Shield": 2,
       "Hercules Cup": 2,
-      "Hi-Potion": 8,
+      "Hi-Potion": 10,
       "High Jump": 2,
       "Hollow Bastion": 2,
       "Holy Circlet": 2,
@@ -20184,9 +20184,9 @@
       "Max AP Increase": 18,
       "Max HP Increase": 23,
       "Max MP Increase": 7,
-      "Mega-Ether": 2,
-      "Mega-Potion": 14,
-      "Megalixir": 18,
+      "Mega-Ether": 14,
+      "Mega-Potion": 20,
+      "Megalixir": 8,
       "Metal Chocobo": 2,
       "Meteor Strike": 2,
       "Mighty Shield": 2,
@@ -20207,9 +20207,9 @@
       "Pegasus Cup": 2,
       "Phil Cup": 2,
       "Postcard": 20,
-      "Potion": 10,
+      "Potion": 12,
       "Power Chain": 2,
-      "Power Up": 22,
+      "Power Up": 14,
       "Prime Cap": 2,
       "Progressive Aero": 6,
       "Progressive Blizzard": 6,
@@ -20286,7 +20286,7 @@
       "Strike Raid": 2,
       "Stun Impact": 2,
       "Tech Boost": 8,
-      "Tent": 8,
+      "Tent": 18,
       "Theon Vol. 6": 2,
       "Three Stars": 2,
       "Three Wishes": 2,
