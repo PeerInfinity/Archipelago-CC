@@ -19,7 +19,8 @@ function getPlayer(staticData) {
  * Check if advanced tactics are enabled
  */
 function isAdvancedTactics(staticData) {
-    const settings = staticData?.settings;
+    const playerId = staticData?.player || '1';
+    const settings = staticData?.settings?.[playerId];
     const logicLevel = settings?.required_tactics;
     // RequiredTactics.option_standard = 0, anything else means advanced tactics
     return logicLevel !== undefined && logicLevel !== 0;
@@ -335,7 +336,9 @@ export function zerg_competent_anti_air(snapshot, staticData) {
  */
 export function zerg_basic_anti_air(snapshot, staticData) {
     const advancedTactics = isAdvancedTactics(staticData);
-    const kerriganUnitAvailable = staticData?.settings?.kerrigan_unit_available || false;
+    const playerId = staticData?.player || '1';
+    const settings = staticData?.settings?.[playerId];
+    const kerriganUnitAvailable = settings?.kerrigan_unit_available || false;
 
     // Check if zerg_competent_anti_air is satisfied
     if (zerg_competent_anti_air(snapshot, staticData)) {
@@ -420,10 +423,10 @@ export function two_kerrigan_actives(snapshot, staticData) {
     const kerriganActivesTiers = [
         ['Kinetic Blast (Kerrigan Tier 1)', 'Leaping Strike (Kerrigan Tier 1)'],
         ['Crushing Grip (Kerrigan Tier 2)', 'Psionic Shift (Kerrigan Tier 2)'],
-        [],  // Tier 2 has no actives
-        ['Wild Mutation (Kerrigan Tier 4)', 'Spawn Banelings (Kerrigan Tier 1)', 'Mend (Kerrigan Tier 4)'],
-        [],  // Tier 4 has no actives
+        [],  // Tier 3 has no actives
+        ['Wild Mutation (Kerrigan Tier 4)', 'Spawn Banelings (Kerrigan Tier 4)', 'Mend (Kerrigan Tier 4)'],
         [],  // Tier 5 has no actives
+        [],  // Tier 6 has no actives
         ['Apocalypse (Kerrigan Tier 7)', 'Spawn Leviathan (Kerrigan Tier 7)', 'Drop-Pods (Kerrigan Tier 7)']
     ];
 
@@ -449,7 +452,7 @@ export function basic_kerrigan(snapshot, staticData) {
         'Leaping Strike (Kerrigan Tier 1)',
         'Crushing Grip (Kerrigan Tier 2)',
         'Psionic Shift (Kerrigan Tier 2)',
-        'Spawn Banelings (Kerrigan Tier 1)'
+        'Spawn Banelings (Kerrigan Tier 4)'
     ];
 
     // On standard tactics (not advanced), require at least one direct combat ability
@@ -465,7 +468,7 @@ export function basic_kerrigan(snapshot, staticData) {
         'Chain Reaction (Kerrigan Tier 2)',
         'Crushing Grip (Kerrigan Tier 2)',
         'Psionic Shift (Kerrigan Tier 2)',
-        'Spawn Banelings (Kerrigan Tier 1)',
+        'Spawn Banelings (Kerrigan Tier 4)',
         'Infest Broodlings (Kerrigan Tier 6)',
         'Fury (Kerrigan Tier 6)'
     ];
@@ -488,7 +491,8 @@ export function basic_kerrigan(snapshot, staticData) {
  * Kerrigan levels - check if player has enough Kerrigan levels
  */
 export function kerrigan_levels(snapshot, staticData, target) {
-    const settings = staticData?.settings || {};
+    const playerId = staticData?.player || '1';
+    const settings = staticData?.settings?.[playerId] || {};
     const storyLevelsGranted = settings.story_levels_granted || false;
     const kerriganUnitAvailable = settings.kerrigan_unit_available || false;
 
@@ -748,7 +752,9 @@ export default {
      * Brothers in Arms mission requirement
      */
     brothers_in_arms_requirement: (snapshot, staticData) => {
-        const take_over_ai_allies = staticData?.settings?.take_over_ai_allies || staticData?.settings?.['1']?.take_over_ai_allies || false;
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const take_over_ai_allies = settings?.take_over_ai_allies || false;
 
         return (
             protoss_common_unit(snapshot, staticData)
@@ -796,7 +802,8 @@ export default {
     templars_return_requirement: () => false,
     templars_charge_requirement: () => false,
     the_infinite_cycle_requirement: (snapshot, staticData) => {
-        const settings = staticData?.settings || {};
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId] || {};
         const storyTechGranted = settings.story_tech_granted || false;
         const kerriganUnitAvailable = settings.kerrigan_unit_available || false;
 
