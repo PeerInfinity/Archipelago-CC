@@ -34,49 +34,12 @@ export function has_enough_stars(snapshot, staticData, requiredStars) {
  *
  * @param {Object} snapshot - Game state snapshot
  * @param {Object} staticData - Static game data (includes level_logic in game_info)
- * @param {Object} level - Level object (or level_id)
+ * @param {string} levelShortname - Level shortname (e.g., "Story 1-1", "Chinese 1-3")
  * @param {number} stars - Number of stars to check for (1, 2, or 3)
  * @returns {boolean} True if player can earn the stars
  */
-export function has_requirements_for_level_star(snapshot, staticData, level, stars, context) {
+export function has_requirements_for_level_star(snapshot, staticData, levelShortname, stars, context) {
     if (!snapshot || !staticData) {
-        return false;
-    }
-
-    // Extract level_id from level parameter
-    let levelId;
-    if (typeof level === 'object' && level !== null) {
-        levelId = level.level_id;
-    } else if (typeof level === 'number') {
-        levelId = level;
-    } else if (level === undefined && context && context.location) {
-        // Try to extract level_id from location name
-        // Location names are like "1-1 (1-Star)", "2-3 Completed", etc.
-        const locationName = context.location.name;
-        const match = locationName.match(/^(\d+-\d+)/);
-        if (match) {
-            const levelName = match[1];
-            // Convert level name to level_id
-            // Level names are like "1-1", "2-3", "K-1", etc.
-            // Level IDs are sequential: 1-1=1, 1-2=2, ..., 1-6=6, 2-1=7, ..., 6-6=36, K-1=37, ..., K-8=44
-            const parts = levelName.split('-');
-            if (parts.length === 2) {
-                const world = parseInt(parts[0]);
-                const level = parseInt(parts[1]);
-                if (!isNaN(world) && !isNaN(level) && world >= 1 && world <= 6 && level >= 1 && level <= 6) {
-                    levelId = (world - 1) * 6 + level;
-                } else if (parts[0] === 'K') {
-                    // Kevin levels: K-1=37, K-2=38, ..., K-8=44
-                    levelId = 36 + level;
-                }
-            }
-        }
-        if (!levelId) {
-            console.warn('[Overcooked2] has_requirements_for_level_star: could not extract level_id from location', locationName);
-            return false;
-        }
-    } else {
-        console.warn('[Overcooked2] has_requirements_for_level_star: invalid level parameter', level);
         return false;
     }
 
@@ -88,28 +51,47 @@ export function has_requirements_for_level_star(snapshot, staticData, level, sta
         return true;
     }
 
-    // Get level-specific requirements or fallback to global "*"
-    let levelRequirements = levelLogic[levelId];
-
-    // If level-specific requirements are all empty, use global "*" requirements
-    if (!levelRequirements || !Array.isArray(levelRequirements)) {
-        levelRequirements = levelLogic["*"];
+    // First check global "*" requirements for this star count
+    // (Python: if not meets_requirements(state, "*", stars, player): return False)
+    const globalRequirements = levelLogic["*"];
+    if (globalRequirements && Array.isArray(globalRequirements)) {
+        if (!checkStarRequirements(snapshot, globalRequirements, stars)) {
+            return false;
+        }
     }
 
-    if (!levelRequirements || !Array.isArray(levelRequirements)) {
-        // No requirements defined - assume accessible
-        return true;
+    // Then check level-specific requirements for all stars up through this one
+    // (Python: return all(meets_requirements(state, level.shortname, s, player) for s in range(1, stars + 1)))
+    const levelRequirements = levelLogic[levelShortname];
+    if (levelRequirements && Array.isArray(levelRequirements)) {
+        for (let s = 1; s <= stars; s++) {
+            if (!checkStarRequirements(snapshot, levelRequirements, s)) {
+                return false;
+            }
+        }
     }
 
+    // All requirements met
+    return true;
+}
+
+/**
+ * Helper function to check if requirements for a specific star count are met
+ * @param {Object} snapshot - Game state snapshot
+ * @param {Array} requirements - Array of requirement tuples for each star level
+ * @param {number} stars - Star count to check (1, 2, or 3)
+ * @returns {boolean} True if requirements are met
+ */
+function checkStarRequirements(snapshot, requirements, stars) {
     // Get the requirements for this star count (stars is 1, 2, or 3)
     // Array index is stars - 1 (0-indexed)
     const starIndex = stars - 1;
-    if (starIndex < 0 || starIndex >= levelRequirements.length) {
+    if (starIndex < 0 || starIndex >= requirements.length) {
         // Invalid star count - assume accessible
         return true;
     }
 
-    const starRequirement = levelRequirements[starIndex];
+    const starRequirement = requirements[starIndex];
     if (!Array.isArray(starRequirement) || starRequirement.length < 2) {
         // Invalid structure - assume accessible
         return true;
@@ -156,8 +138,8 @@ export function has_requirements_for_level_star(snapshot, staticData, level, sta
             }
         }
 
-        // Need at least weight of 1.0 to complete
-        if (totalWeight < 1.0) {
+        // Need at least weight of 1.0 to complete (with tolerance for rounding)
+        if (totalWeight < 0.99) {
             return false;
         }
     }
