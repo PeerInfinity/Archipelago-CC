@@ -20,6 +20,90 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         super().__init__()
         logger.info("SMZ3 exporter initialized")
 
+    def _handle_medallion_entrance(self, region_object, entrance_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Handle entrances to dungeons that require medallions (Misery Mire, Turtle Rock).
+
+        These dungeons have a CanEnter method that checks self.Medallion against enum values.
+        We need to convert this to a rule that checks for the actual medallion item.
+
+        Args:
+            region_object: The TotalSMZ3 Region object
+            entrance_name: Name of the entrance
+
+        Returns:
+            Analyzed rule dict with medallion check
+        """
+        from exporter.analyzer import analyze_rule
+
+        # Get the medallion enum value (0=Bombos, 1=Ether, 2=Quake)
+        medallion = region_object.Medallion
+        medallion_names = ['Bombos', 'Ether', 'Quake']
+
+        # Get the actual medallion value (it's an enum)
+        if hasattr(medallion, 'value'):
+            medallion_value = medallion.value
+        else:
+            medallion_value = int(medallion) if isinstance(medallion, int) else 0
+
+        medallion_item = medallion_names[medallion_value]
+        logger.info(f"Medallion requirement for '{entrance_name}': {medallion_item} (value={medallion_value})")
+
+        # Build the medallion check
+        medallion_rule = {
+            'type': 'item_check',
+            'item': medallion_item
+        }
+
+        # For Misery Mire: Sword, MoonPearl, (Boots or Hookshot), and can enter Dark World Mire
+        # For Turtle Rock: Sword, MoonPearl, CanLiftHeavy, Hammer, Somaria, and can enter Light World Death Mountain East
+
+        # Common requirements for both
+        common_requirements = [
+            medallion_rule,
+            {'type': 'item_check', 'item': 'ProgressiveSword'},
+            {'type': 'item_check', 'item': 'MoonPearl'}
+        ]
+
+        # Region-specific requirements
+        region_name = region_object.Name
+        if region_name == "Misery Mire":
+            # Boots OR Hookshot
+            specific_requirements = [
+                {
+                    'type': 'or',
+                    'conditions': [
+                        {'type': 'item_check', 'item': 'Boots'},
+                        {'type': 'item_check', 'item': 'Hookshot'}
+                    ]
+                },
+                # Can enter Dark World Mire (this will be a region check)
+                {'type': 'region_check', 'region': 'Dark World Mire'}
+            ]
+        elif region_name == "Turtle Rock":
+            # CanLiftHeavy, Hammer, Somaria
+            specific_requirements = [
+                {'type': 'helper', 'name': 'smz3_CanLiftHeavy', 'args': []},
+                {'type': 'item_check', 'item': 'Hammer'},
+                {'type': 'item_check', 'item': 'Somaria'},
+                # Can enter Light World Death Mountain East (this will be a region check)
+                {'type': 'region_check', 'region': 'Light World Death Mountain East'}
+            ]
+        else:
+            logger.warning(f"Unknown medallion dungeon: {region_name}")
+            return None
+
+        # Combine all requirements with AND
+        all_requirements = common_requirements + specific_requirements
+
+        result = {
+            'type': 'and',
+            'conditions': all_requirements
+        }
+
+        logger.info(f"Built medallion entrance rule for '{entrance_name}'")
+        return result
+
     def _handle_entrance_rule(self, rule_func, entrance_name: str) -> Optional[Dict[str, Any]]:
         """
         Handle SMZ3 entrance rules by extracting the region's CanEnter method.
@@ -65,6 +149,14 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             return None
 
         logger.info(f"Found TotalSMZ3 Region object for '{entrance_name}', extracting CanEnter logic")
+
+        # Check if this region requires a medallion (Misery Mire or Turtle Rock)
+        has_medallion = hasattr(region_object, 'Medallion') and region_object.Medallion is not None
+
+        if has_medallion:
+            logger.info(f"Region '{entrance_name}' has medallion requirement: {region_object.Medallion}")
+            # Handle medallion-based entrance specially
+            return self._handle_medallion_entrance(region_object, entrance_name)
 
         # Extract and analyze the CanEnter method
         try:
@@ -327,6 +419,18 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 if func:
                     rule['function'] = self.postprocess_rule(func)
                 return rule
+
+        # Handle helper rules - add smz3_ prefix if not already present
+        if rule.get('type') == 'helper':
+            helper_name = rule.get('name', '')
+            if helper_name and not helper_name.startswith('smz3_'):
+                logger.debug(f"Adding smz3_ prefix to helper: {helper_name}")
+                rule = rule.copy()
+                rule['name'] = f'smz3_{helper_name}'
+            # Filter out 'items' arguments (JavaScript helpers get items from snapshot)
+            if rule.get('args'):
+                filtered_args = [arg for arg in rule['args'] if not (isinstance(arg, dict) and arg.get('type') == 'name' and arg.get('name') == 'items')]
+                rule['args'] = [self.postprocess_rule(arg) for arg in filtered_args]
 
         # Recursively process nested rules
         if rule.get('type') == 'and' and rule.get('conditions'):
