@@ -135132,6 +135132,32 @@
         "event": true,
         "type": "Event",
         "max_count": 1
+      },
+      "Received Progression Percent": {
+        "name": "Received Progression Percent",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 100
+      },
+      "Received Progression Item": {
+        "name": "Received Progression Item",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": true,
+        "type": "Event",
+        "max_count": 1000
       }
     }
   },

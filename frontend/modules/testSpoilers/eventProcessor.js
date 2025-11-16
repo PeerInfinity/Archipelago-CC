@@ -754,8 +754,9 @@ export class EventProcessor {
     const sphereLocations = currentPlayerData.sphere_locations || [];
     const inventoryDelta = currentPlayerData.new_inventory_details || currentPlayerData.inventory_details || {};
     const newItems = inventoryDelta.base_items || inventoryDelta.new_base_items || {};
+    const resolvedItems = inventoryDelta.resolved_items || {};
 
-    this.logCallback('info', `Processing multiworld sphere ${context.sphere_number} for player ${this.playerId}: ${sphereLocations.length} locations, ${Object.keys(newItems).length} new items`);
+    this.logCallback('info', `Processing multiworld sphere ${context.sphere_number} for player ${this.playerId}: ${sphereLocations.length} locations, ${Object.keys(newItems).length} new items, ${Object.keys(resolvedItems).length} resolved items`);
 
     // Step 1: Check the current player's locations
     for (const locationName of sphereLocations) {
@@ -821,6 +822,32 @@ export class EventProcessor {
               await stateManager.addItemToInventory(itemName, 1);
             }
           }
+        }
+      }
+    }
+
+    // Step 3: Add virtual/event items from resolved_items that aren't in base_items
+    // These are items like "Received Progression Percent" that are computed automatically
+    if (Object.keys(resolvedItems).length > 0) {
+      const afterSnapshot = await stateManager.getFullSnapshot();
+      const afterInventory = afterSnapshot.inventory || {};
+
+      for (const [itemName, expectedCount] of Object.entries(resolvedItems)) {
+        // Skip if this item is already in base_items (we've already processed it)
+        if (itemName in newItems) {
+          continue;
+        }
+
+        const currentCount = afterInventory[itemName] || 0;
+        const itemsToAdd = expectedCount - currentCount;
+
+        if (itemsToAdd > 0) {
+          this.logCallback('info', `  [Player ${this.playerId}] Adding ${itemsToAdd}x virtual/event item: "${itemName}" (from resolved_items)`);
+          for (let i = 0; i < itemsToAdd; i++) {
+            await stateManager.addItemToInventory(itemName, 1);
+          }
+        } else if (itemsToAdd < 0) {
+          this.logCallback('warn', `  [Player ${this.playerId}] Virtual item "${itemName}" has ${currentCount} but expected ${expectedCount}`);
         }
       }
     }

@@ -42,6 +42,52 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
             'can_complete_bundle',
         }
 
+    def get_item_data(self, world):
+        """Override to add Stardew Valley's virtual event items.
+
+        Stardew Valley uses virtual event items like "Received Progression Percent"
+        and "Received Progression Item" that are automatically computed by the
+        CollectionState. These need to be added to the items list so the frontend
+        can track them properly.
+        """
+        # Get the base item data from the generic handler
+        item_data = super().get_item_data(world)
+
+        # Add virtual event items that are computed by CollectionState
+        # but not present in the item table
+        virtual_items = {
+            'Received Progression Percent': {
+                'name': 'Received Progression Percent',
+                'id': None,  # Event items have no ID
+                'groups': ['Event'],
+                'advancement': True,
+                'useful': False,
+                'trap': False,
+                'event': True,
+                'type': 'Event',
+                'max_count': 100  # Can receive up to 100%
+            },
+            'Received Progression Item': {
+                'name': 'Received Progression Item',
+                'id': None,  # Event items have no ID
+                'groups': ['Event'],
+                'advancement': True,
+                'useful': False,
+                'trap': False,
+                'event': True,
+                'type': 'Event',
+                'max_count': 1000  # Arbitrary high limit
+            }
+        }
+
+        # Add virtual items to the item data
+        for item_name, item_info in virtual_items.items():
+            if item_name not in item_data:
+                item_data[item_name] = item_info
+                logger.debug(f"Added virtual event item: {item_name}")
+
+        return item_data
+
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Override rule analysis to handle Stardew Valley's custom StardewRule objects.
 
