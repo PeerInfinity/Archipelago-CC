@@ -6,6 +6,9 @@
  * collected enough items to reach a certain progress count.
  */
 
+// Call counter for debugging
+let _callCounter = 0;
+
 /**
  * Count how many units of a progress ID the player has
  * @param {Object} snapshot - Canonical state snapshot
@@ -17,6 +20,7 @@
 function countProgress(snapshot, staticData, progressId, visitedRules = new Set()) {
   try {
     const DEBUG = progressId === 12 || progressId === 31; // Enable debug logging for progress 12 and 31
+    const callId = ++_callCounter;
 
     if (!snapshot || !staticData) {
       console.error('[SOE] countProgress: missing snapshot or staticData');
@@ -34,15 +38,9 @@ function countProgress(snapshot, staticData, progressId, visitedRules = new Set(
     }
 
     if (DEBUG) {
-      console.log('[SOE countProgress] Checking progress_id', progressId);
-      console.log('[SOE countProgress] Inventory keys:', Object.keys(inventory));
-      console.log('[SOE countProgress] Inventory with count > 0:', Object.keys(inventory).filter(k => inventory[k] > 0));
-      console.log('[SOE countProgress] Diamond Eye count:', inventory['Diamond Eye']);
-      console.log('[SOE countProgress] Knight Basher count:', inventory['Knight Basher']);
-      console.log('[SOE countProgress] prog_items:', snapshot.prog_items ? Object.keys(snapshot.prog_items).filter(k => snapshot.prog_items[k] > 0) : 'undefined');
-      console.log('[SOE countProgress] Items with provides:', Object.keys(items).filter(k => items[k]?.provides?.length > 0).length);
-      console.log('[SOE countProgress] staticData has items:', !!staticData.items);
-      console.log('[SOE countProgress] Diamond Eye item data exists:', !!items['Diamond Eye']);
+      console.log(`[SOE countProgress #${callId}] Checking progress_id ${progressId}, visitedRules: [${Array.from(visitedRules).join(',')}]`);
+      console.log(`[SOE countProgress #${callId}] Diamond Eye count:`, inventory['Diamond Eye']);
+      console.log(`[SOE countProgress #${callId}] Snapshot count:`, snapshot.snapshotCount || 'unknown');
     }
 
     let count = 0;
@@ -56,7 +54,7 @@ function countProgress(snapshot, staticData, progressId, visitedRules = new Set(
             if (provide.progress_id === progressId) {
               count += itemCount * provide.count;
               if (DEBUG) {
-                console.log(`[SOE countProgress] Found ${itemName} (count ${itemCount}) provides progress_id ${progressId}: +${itemCount * provide.count}, total now: ${count}`);
+                console.log(`[SOE countProgress #${callId}] Found ${itemName} (count ${itemCount}) provides progress_id ${progressId}: +${itemCount * provide.count}, total now: ${count}`);
               }
             }
           }
@@ -104,21 +102,24 @@ function countProgress(snapshot, staticData, progressId, visitedRules = new Set(
             if (provide.progress_id === progressId) {
               count += provide.count;
               if (DEBUG) {
-                console.log(`[SOE countProgress] Rule ${i} activated, provides progress_id ${progressId}: +${provide.count}, total now: ${count}`);
+                console.log(`[SOE countProgress #${callId}] Rule ${i} activated, provides progress_id ${progressId}: +${provide.count}, total now: ${count}`);
               }
             }
           }
         } else if (DEBUG && providesThisProgress) {
-          console.log(`[SOE countProgress] Rule ${i} NOT activated (requirements not met), would provide progress_id ${progressId}`);
+          console.log(`[SOE countProgress #${callId}] Rule ${i} NOT activated (requirements not met), would provide progress_id ${progressId}`);
           // Log which requirements failed
           for (const req of rule.requires) {
             const reqCount = countProgress(snapshot, staticData, req.progress_id, new Set(visitedRules).add(i));
-            console.log(`[SOE countProgress]   - requires ${req.count}x progress ${req.progress_id}, have ${reqCount}: ${reqCount >= req.count ? 'OK' : 'MISSING'}`);
+            console.log(`[SOE countProgress #${callId}]   - requires ${req.count}x progress ${req.progress_id}, have ${reqCount}: ${reqCount >= req.count ? 'OK' : 'MISSING'}`);
           }
         }
       }
     }
 
+    if (DEBUG) {
+      console.log(`[SOE countProgress #${callId}] RETURN ${count} for progress_id ${progressId}`);
+    }
     return count;
   } catch (error) {
     console.error('[SOE] Error in countProgress:', error);
