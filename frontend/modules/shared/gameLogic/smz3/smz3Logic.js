@@ -114,6 +114,25 @@ export function smz3_CanKillManyEnemies(snapshot, staticData) {
          (hasItem(snapshot, 'Byrna') && smz3_CanExtendMagic(snapshot, staticData, 2));
 }
 
+/**
+ * Check if player can beat dungeon bosses (has appropriate weapons).
+ * This is a generic helper that covers requirements for all dungeon bosses.
+ * Most bosses can be beaten with: Sword, Hammer, Bow, Firerod, Icerod, Byrna, or Somaria
+ * Python (from DesertPalace): def CanBeatBoss(self, items: Progression):
+ *     return items.Sword or items.Hammer or items.Bow or \
+ *            items.Firerod or items.Icerod or \
+ *            items.Byrna or items.Somaria
+ */
+export function smz3_CanBeatBoss(snapshot, staticData) {
+  return hasItem(snapshot, 'ProgressiveSword') ||
+         hasItem(snapshot, 'Hammer') ||
+         hasItem(snapshot, 'Bow') ||
+         hasItem(snapshot, 'Firerod') ||
+         hasItem(snapshot, 'Icerod') ||
+         hasItem(snapshot, 'Byrna') ||
+         hasItem(snapshot, 'Somaria');
+}
+
 // ====================
 // Super Metroid Helper Functions
 // ====================
