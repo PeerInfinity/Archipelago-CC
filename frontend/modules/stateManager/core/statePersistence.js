@@ -463,21 +463,34 @@ export function _createSelfSnapshotInterface(sm) {
       if (name === 'inventory') return sm.inventory; // The inventory instance
       // Return gameStateModule with optional game-specific transformation
       if (name === 'state') {
+        let stateObject;
         if (sm.gameStateModule && sm.settings?.game) {
           // Check if the game has a custom state builder hook
           const gameLogic = getGameLogic(sm.settings.game);
           if (gameLogic?.stateModule?.buildStateWithMultiworld) {
-            return gameLogic.stateModule.buildStateWithMultiworld(
+            stateObject = gameLogic.stateModule.buildStateWithMultiworld(
               sm.gameStateModule,
               sm.settings,
               sm.playerSlot
             );
+          } else {
+            // Fallback: return gameStateModule as-is
+            stateObject = sm.gameStateModule;
           }
-          // Fallback: return gameStateModule as-is
-          return sm.gameStateModule;
         } else {
-          return sm.state; // For other games, return the state instance
+          stateObject = sm.state; // For other games, return the state instance
         }
+
+        // Always include prog_items in the state object for games that use it
+        // This allows rules to access state.prog_items[playerId][itemName]
+        if (sm.prog_items && Object.keys(sm.prog_items).length > 0) {
+          return {
+            ...stateObject,
+            prog_items: sm.prog_items
+          };
+        }
+
+        return stateObject;
       }
       if (name === 'settings') return sm.settings; // The settings object for the current game
       // Note: 'helpers' itself is usually not resolved by name directly in rules this way,
