@@ -54,3 +54,44 @@ Running Generate.py for Blasphemous.yaml...
   [Memory] Blasphemous.yaml - after generation: 34.2 MB RSS
 Running spoiler test...
   Command: npm test --mode=test-spoilers --game=blasphemous --seed=1
+  [Memory] Blasphemous.yaml - after spoiler test: 34.2 MB RSS
+Running test analysis...
+Completed Blasphemous.yaml: Generation=[PASS], Test=[FAIL], Gen Errors=0, Sphere Reached=0.0, Max Spheres=13.1
+❌ Seed 1 FAILED
+Stopping at first failure (seed 1)
+
+=== Seed Range Summary for Blasphemous.yaml ===
+Seeds tested: 1
+Passed: 0
+Failed: 1
+First failure at seed: 1
+Consecutive passes before failure: 0
+Failure reason: Test failed at sphere 0.0
+Results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+
+=== Running Post-Processing Scripts ===
+
+Generating test results charts...
+✓ Test charts generated successfully
+  Processing all test types...
+  Processing minimal spoiler test results...
+  ✓ Minimal spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-minimal.md
+  Processing full spoiler test results...
+  ✓ Full spoiler chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-spoilers-full.md
+  Processing multiplayer test results...
+  ✓ Multiplayer chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiplayer.md
+  Processing multiworld test results...
+  ✓ Multiworld chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multiworld.md
+  Processing multitemplate minimal test results...
+  ✓ Multitemplate minimal chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-minimal.md
+  Processing multitemplate full test results...
+  ✓ Multitemplate full chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-multitemplate-full.md
+  ✓ Summary chart saved to: /home/user/Archipelago-CC/docs/json/developer/test-results/test-results-summary.md
+
+Skipping preset files update (extend_sphere_log_to_all_locations is false)
+
+=== Post-Processing Complete ===
+❌ Blasphemous.yaml still failing. Stopping retest.
+
+Retest stopped at first still-failing test: Blasphemous.yaml
+Timestamped results saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results_2025-11-16_04-17-13.json
