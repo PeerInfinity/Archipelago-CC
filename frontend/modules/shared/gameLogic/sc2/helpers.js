@@ -146,6 +146,67 @@ export function terran_basic_anti_air(snapshot, staticData) {
 /**
  * Ability to deal with most hard missions
  */
+/**
+ * Defense rating for terran units
+ */
+export function terran_defense_rating(snapshot, staticData, zergEnemy, airEnemy = true) {
+    // Base defense ratings for units
+    const defenseRatings = {
+        'Siege Tank': 5,
+        'Planetary Fortress': 3,
+        'Perdition Turret': 2,
+        'Vulture': 1,
+        'Liberator': 2,
+        'Bunker': 1,
+        'Missile Turret': 1,
+        'Battlecruiser': 1
+    };
+
+    let defenseScore = 0;
+
+    // Add defense score for each unit the player has
+    for (const [unit, rating] of Object.entries(defenseRatings)) {
+        if (has(snapshot, unit)) {
+            defenseScore += rating;
+        }
+    }
+
+    // Manned bunker bonus
+    if (has(snapshot, 'Bunker') && (has(snapshot, 'Marine') || has(snapshot, 'Marauder'))) {
+        defenseScore += 2;
+    }
+
+    // Siege Tank with specific upgrades
+    if (has_all(snapshot, ['Siege Tank', 'Maelstrom Rounds (Siege Tank)'])) {
+        defenseScore += 2;
+    }
+    if (has_all(snapshot, ['Siege Tank', 'Graduating Range (Siege Tank)'])) {
+        defenseScore += 1;
+    }
+
+    // Widow Mine bonus
+    if (has_all(snapshot, ['Widow Mine', 'Concealment (Widow Mine)'])) {
+        defenseScore += 1;
+    }
+
+    // Spider Mine bonus
+    if (has(snapshot, 'Spider Mine')) {
+        defenseScore += 1;
+    }
+
+    // Valkyrie bonus against zerg air
+    if (airEnemy && zergEnemy && has(snapshot, 'Valkyrie')) {
+        defenseScore += 2;
+    }
+
+    // Advanced Tactics bumps defense rating down by 2
+    if (isAdvancedTactics(staticData)) {
+        defenseScore += 2;
+    }
+
+    return defenseScore;
+}
+
 export function terran_competent_comp(snapshot, staticData) {
     return (
         (
@@ -576,102 +637,24 @@ export default {
 
     // Add stubs for all other helpers that may be needed
     // These will return false for now and can be implemented as needed
-    terran_defense_rating: (snapshot, staticData, zergEnemy, airEnemy = true) => {
-        // Base defense ratings for units
-        const defenseRatings = {
-            'Siege Tank': 5,
-            'Planetary Fortress': 3,
-            'Perdition Turret': 2,
-            'Vulture': 1,
-            'Banshee': 1,
-            'Battlecruiser': 1,
-            'Liberator': 4,
-            'Widow Mine': 1
-        };
-
-        // Zerg-specific defense ratings
-        const zergDefenseRatings = {
-            'Perdition Turret': 2,
-            'Liberator': -2,  // Liberator is worse against zerg
-            'Hive Mind Emulator': 3,
-            'Psi Disrupter': 3
-        };
-
-        // Air-specific defense ratings
-        const airDefenseRatings = {
-            'Missile Turret': 2
-        };
-
-        let defenseScore = 0;
-
-        // Sum base defense ratings
-        for (const [item, rating] of Object.entries(defenseRatings)) {
-            if (has(snapshot, item)) {
-                defenseScore += rating;
-            }
-        }
-
-        // Manned Bunker
-        if (has_any(snapshot, ['Marine', 'Marauder']) && has(snapshot, 'Bunker')) {
-            defenseScore += 3;
-        } else if (zergEnemy && has(snapshot, 'Firebat') && has(snapshot, 'Bunker')) {
-            defenseScore += 2;
-        }
-
-        // Siege Tank upgrades
-        if (has_all(snapshot, ['Siege Tank', 'Maelstrom Rounds (Siege Tank)'])) {
-            defenseScore += 2;
-        }
-        if (has_all(snapshot, ['Siege Tank', 'Graduating Range (Siege Tank)'])) {
-            defenseScore += 1;
-        }
-
-        // Widow Mine upgrade
-        if (has_all(snapshot, ['Widow Mine', 'Concealment (Widow Mine)'])) {
-            defenseScore += 1;
-        }
-
-        // Viking with splash
-        if (has_all(snapshot, ['Viking', 'Shredder Rounds (Viking)'])) {
-            defenseScore += 2;
-        }
-
-        // Enemy-specific ratings
-        if (zergEnemy) {
-            for (const [item, rating] of Object.entries(zergDefenseRatings)) {
-                if (has(snapshot, item)) {
-                    defenseScore += rating;
-                }
-            }
-        }
-
-        if (airEnemy) {
-            for (const [item, rating] of Object.entries(airDefenseRatings)) {
-                if (has(snapshot, item)) {
-                    defenseScore += rating;
-                }
-            }
-        }
-
-        // Valkyries shred mass Mutas
-        if (airEnemy && zergEnemy && has(snapshot, 'Valkyrie')) {
-            defenseScore += 2;
-        }
-
-        // Advanced Tactics bumps defense rating down by 2
-        if (isAdvancedTactics(staticData)) {
-            defenseScore += 2;
-        }
-
-        return defenseScore;
-    },
+    terran_defense_rating,
     terran_mobile_detector: () => false,
     terran_beats_protoss_deathball: () => false,
     terran_base_trasher: () => false,
     terran_can_rescue: () => false,
     terran_cliffjumper: () => false,
     terran_able_to_snipe_defiler: () => false,
-    terran_respond_to_colony_infestations: () => false,
+    terran_respond_to_colony_infestations: (snapshot, staticData) => {
+        return (
+            terran_common_unit(snapshot, staticData)
+            && terran_competent_anti_air(snapshot, staticData)
+            && (
+                terran_air_anti_air(snapshot, staticData)
+                || has_any(snapshot, ['Battlecruiser', 'Valkyrie'])
+            )
+            && terran_defense_rating(snapshot, staticData, true) >= 3
+        );
+    },
     terran_survives_rip_field: () => false,
     terran_sustainable_mech_heal: () => false,
 

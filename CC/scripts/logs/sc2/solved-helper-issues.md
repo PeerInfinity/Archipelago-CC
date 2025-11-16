@@ -57,3 +57,28 @@ The helper now properly checks for units capable of stopping trains:
 
 **Result:**
 Test now progresses past sphere 14.1 and fails at sphere 14.2 instead.
+
+---
+
+## Issue 3: Missing implementation for terran_respond_to_colony_infestations helper (Sphere 14.2) - SOLVED
+
+**Locations affected:**
+- Haven's Fall: East Colony Base
+- Haven's Fall: Middle Colony Base
+- Haven's Fall: Northeast Colony Base
+- Haven's Fall: Southeast Colony Base
+- Haven's Fall: Southwest Colony Base
+
+**Root cause:**
+The `terran_respond_to_colony_infestations` helper was a stub function that always returned `false`.
+
+**Implementation:**
+The helper now properly checks for ability to deal with Brood Lords and Mutalisks:
+- Must have: terran_common_unit AND terran_competent_anti_air
+- Must have: (terran_air_anti_air OR Battlecruiser OR Valkyrie)
+- Must have: terran_defense_rating (vs zerg) >= 3
+
+Also refactored `terran_defense_rating` from an arrow function in the export to a standalone exported function so it can be called from other helpers.
+
+**Result:**
+Test now progresses past sphere 14.2 and fails at sphere 14.9 instead.
