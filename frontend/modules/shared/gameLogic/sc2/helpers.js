@@ -798,7 +798,12 @@ export default {
     enemy_shadow_tripwires_tool: () => false,
     enemy_shadow_domination: () => false,
     salvation_requirement: () => false,
-    steps_of_the_rite_requirement: () => false,
+    steps_of_the_rite_requirement: (snapshot, staticData) => {
+        return protoss_competent_comp(snapshot, staticData)
+            || (protoss_common_unit(snapshot, staticData)
+                && protoss_competent_anti_air(snapshot, staticData)
+                && protoss_static_defense(snapshot, staticData));
+    },
     templars_return_requirement: () => false,
     templars_charge_requirement: () => false,
     the_infinite_cycle_requirement: (snapshot, staticData) => {
@@ -813,7 +818,17 @@ export default {
                 && basic_kerrigan(snapshot, staticData)
                 && kerrigan_levels(snapshot, staticData, 70));
     },
-    harbinger_of_oblivion_requirement: () => false,
+    harbinger_of_oblivion_requirement: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const take_over_ai_allies = settings?.take_over_ai_allies || false;
+
+        return protoss_anti_armor_anti_air(snapshot, staticData) && (
+            take_over_ai_allies
+            || (protoss_common_unit(snapshot, staticData)
+                && protoss_hybrid_counter(snapshot, staticData))
+        );
+    },
     supreme_requirement: () => false,
     the_host_requirement: () => false,
     into_the_void_requirement: () => false,
