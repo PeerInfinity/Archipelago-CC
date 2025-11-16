@@ -151,8 +151,8 @@ export function hasGroupUnique(snapshot, staticData, groupName, player, countNee
 
   const playerSlot = snapshot?.player?.slot || '1';
 
-  // Get the items in this group
-  const items = staticData?.items?.[playerSlot];
+  // Get the items data - check multiple possible locations
+  const items = staticData?.itemsByPlayer?.[playerSlot] || staticData?.itemData || staticData?.items?.[playerSlot];
   if (!items) return false;
 
   // Find all items that belong to this group

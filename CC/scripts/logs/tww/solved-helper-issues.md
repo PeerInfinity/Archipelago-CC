@@ -33,3 +33,41 @@ Rewrote all helper functions in `frontend/modules/shared/gameLogic/tww/twwLogic.
 - Test now progresses from Sphere 0 (where it was failing before) to Sphere 12.2
 - All basic helper functions work correctly
 - Progressive items are handled correctly
+
+---
+
+## Issue 2: hasGroupUnique not accessing items data correctly
+
+**Status:** SOLVED
+**Solved Date:** 2025-11-16
+**Priority:** High
+**Category:** Helper Implementation
+
+**Description:**
+The `hasGroupUnique` function was only checking `staticData?.items?.[playerSlot]` for items data, but the items can be stored in multiple possible locations depending on the game.
+
+**Error Messages:**
+```
+REGION MISMATCH found for: {"type":"state_update","sphere_number":"12.2","player_id":"1"}
+> Regions accessible in LOG but NOT in STATE: Master Sword Chamber
+ISSUE: Region Master Sword Chamber is not reachable
+ISSUE: Access rule evaluation failed
+```
+
+**Root Cause:**
+The `hasGroupUnique` function was not checking all possible locations for items data. Different games and contexts may store items in `staticData.itemsByPlayer`, `staticData.itemData`, or `staticData.items`.
+
+**Solution:**
+Updated `hasGroupUnique` to check multiple possible locations for items data, following the ALTTP pattern:
+```javascript
+const items = staticData?.itemsByPlayer?.[playerSlot] || staticData?.itemData || staticData?.items?.[playerSlot];
+```
+
+**Files Modified:**
+- frontend/modules/shared/gameLogic/tww/twwLogic.js
+
+**Result:**
+- Test now passes completely with all 67 steps passing
+- hasGroupUnique correctly counts Triforce Shards
+- Master Sword Chamber region is now accessible
+- TWW spoiler test passes completely!
