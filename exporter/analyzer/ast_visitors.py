@@ -1672,7 +1672,29 @@ class ASTVisitorMixin:
                     else:
                         orelse_result = {'type': 'or', 'conditions': orelse_results}
                 else:
-                    orelse_result = self.visit(node.orelse[0])
+                    # Special case: If statement without else in orelse, and more statements follow
+                    # This handles if-elif-else chains where elif/else are separate statements
+                    if (isinstance(node.orelse[0], ast.If) and
+                        not node.orelse[0].orelse and
+                        len(node.orelse) > 1):
+                        logging.debug(f"visit_If: If statement without else in orelse, analyzing remaining {len(node.orelse) - 1} statements as implicit else")
+                        # Create a synthetic If node with the remaining statements as the else block
+                        if_node = node.orelse[0]
+                        remaining_stmts = node.orelse[1:]
+
+                        # Create a synthetic if-node that includes the remaining statements as the else block
+                        synthetic_if = ast.If(
+                            test=if_node.test,
+                            body=if_node.body,
+                            orelse=remaining_stmts,
+                            lineno=if_node.lineno if hasattr(if_node, 'lineno') else 0,
+                            col_offset=if_node.col_offset if hasattr(if_node, 'col_offset') else 0
+                        )
+
+                        # Visit this synthetic if-statement
+                        orelse_result = self.visit_If(synthetic_if)
+                    else:
+                        orelse_result = self.visit(node.orelse[0])
             else:
                  # Handle cases with no 'else' - could return None or a specific structure
                  logging.debug("visit_If: No 'else' block found.")
