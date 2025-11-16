@@ -1,0 +1,162 @@
+﻿Archipelago Version 0.6.4  -  Seed: 2
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Super Mario Land 2
+Progression Balancing:           50
+Accessibility:                   Items
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Shuffle Golden Coins:            Vanilla
+Golden Coins Required:           6
+Mario Coin Fragment Percentage:  20
+Mario Coin Fragments Required Percentage:75
+Coinsanity:                      No
+Coinsanity Checks:               150
+Shuffle Midway Bells:            No
+Mario's Castle Midway Bell:      No
+Shuffle Pipe Traversal:          Off
+Auto Scroll Mode:                Always
+Auto Scroll Chance:              -1
+Difficulty Mode:                 Normal
+Randomize Enemies:               No
+Randomize Platforms:             No
+Randomize Music:                 No
+Energy Link:                     Yes
+
+
+Starting Items:
+
+Pipe Traversal
+
+Locations:
+
+Mushroom Zone - Normal Exit: Pumpkin Zone Secret 2
+Mushroom Zone - Midway Bell: Super Star Duration Increase
+Scenic Course - Normal Exit: Space Zone Progression
+Tree Zone 1 - Normal Exit: Super Star Duration Increase
+Tree Zone 1 - Midway Bell: Mario Zone Progression
+Tree Zone 2 - Normal Exit: Super Star Duration Increase
+Tree Zone 2 - Secret Exit: Tree Zone Progression
+Tree Zone 2 - Midway Bell: Super Star Duration Increase
+Tree Zone 3 - Normal Exit: Macro Zone Secret 1
+Tree Zone 4 - Normal Exit: Super Star Duration Increase
+Tree Zone 4 - Midway Bell: Super Star Duration Increase
+Tree Zone 5 - Boss: Tree Coin
+Tree Zone 5 - Midway Bell: Fire Flower
+Tree Zone Secret Course - Normal Exit: Pumpkin Zone Progression
+Hippo Zone - Normal or Secret Exit: Hippo Bubble
+Space Zone 1 - Normal Exit: Super Star Duration Increase
+Space Zone 1 - Secret Exit: Super Star Duration Increase
+Space Zone 1 - Midway Bell: Macro Zone Progression
+Space Zone Secret Course - Normal Exit: Super Star Duration Increase
+Space Zone 2 - Boss: Space Coin
+Space Zone 2 - Midway Bell: Mario Zone Progression
+Macro Zone 1 - Normal Exit: Super Star Duration Increase
+Macro Zone 1 - Secret Exit: Super Star Duration Increase
+Macro Zone 1 - Midway Bell: Super Star Duration Increase
+Macro Zone 2 - Normal Exit: Super Star Duration Increase
+Macro Zone 2 - Midway Bell: Space Physics
+Macro Zone 3 - Normal Exit: Macro Zone Progression
+Macro Zone 3 - Midway Bell: Tree Zone Progression
+Macro Zone 4 - Boss: Macro Coin
+Macro Zone 4 - Midway Bell: Space Zone Secret
+Macro Zone Secret Course - Normal Exit: Tree Zone Progression
+Pumpkin Zone 1 - Normal Exit: Mushroom
+Pumpkin Zone 1 - Midway Bell: Super Star Duration Increase
+Pumpkin Zone 2 - Normal Exit: Turtle Zone Secret
+Pumpkin Zone 2 - Secret Exit: Super Star Duration Increase
+Pumpkin Zone 2 - Midway Bell: Pumpkin Zone Secret 1
+Pumpkin Zone 3 - Normal Exit: Super Star Duration Increase
+Pumpkin Zone 3 - Secret Exit: Turtle Zone Progression
+Pumpkin Zone 3 - Midway Bell: Macro Zone Progression
+Pumpkin Zone 4 - Boss: Pumpkin Coin
+Pumpkin Zone 4 - Midway Bell: Super Star Duration Increase
+Pumpkin Zone Secret Course 1 - Normal Exit: Super Star Duration Increase
+Pumpkin Zone Secret Course 2 - Normal Exit: Tree Zone Secret
+Mario Zone 1 - Normal Exit: Pumpkin Zone Progression
+Mario Zone 1 - Midway Bell: Super Star Duration Increase
+Mario Zone 2 - Normal Exit: Super Star Duration Increase
+Mario Zone 2 - Midway Bell: Turtle Zone Progression
+Mario Zone 3 - Normal Exit: Mario Zone Progression
+Mario Zone 3 - Midway Bell: Carrot
+Mario Zone 4 - Boss: Mario Coin
+Mario Zone 4 - Midway Bell: Super Star Duration Increase
+Turtle Zone 1 - Normal Exit: Super Star Duration Increase
+Turtle Zone 1 - Midway Bell: Water Physics
+Turtle Zone 2 - Normal Exit: Super Star Duration Increase
+Turtle Zone 2 - Secret Exit: Macro Zone Secret 2
+Turtle Zone 2 - Midway Bell: Super Star Duration Increase
+Turtle Zone 3 - Boss: Turtle Coin
+Turtle Zone 3 - Midway Bell: Super Star Duration Increase
+Turtle Zone Secret Course - Normal Exit: Pumpkin Zone Progression
+Mario's Castle - Wario: Wario Defeated
+
+Playthrough:
+
+0: {
+  Pipe Traversal
+}
+1: {
+  Mushroom Zone - Normal Exit: Pumpkin Zone Secret 2
+  Pumpkin Zone 1 - Normal Exit: Mushroom
+  Scenic Course - Normal Exit: Space Zone Progression
+  Tree Zone 1 - Midway Bell: Mario Zone Progression
+  Turtle Zone 1 - Midway Bell: Water Physics
+}
+2: {
+  Hippo Zone - Normal or Secret Exit: Hippo Bubble
+  Mario Zone 1 - Normal Exit: Pumpkin Zone Progression
+  Mario Zone 2 - Midway Bell: Turtle Zone Progression
+}
+3: {
+  Pumpkin Zone 2 - Midway Bell: Pumpkin Zone Secret 1
+  Pumpkin Zone 2 - Normal Exit: Turtle Zone Secret
+  Space Zone 1 - Midway Bell: Macro Zone Progression
+  Space Zone 2 - Boss: Space Coin
+  Space Zone 2 - Midway Bell: Mario Zone Progression
+  Turtle Zone 2 - Secret Exit: Macro Zone Secret 2
+}
+4: {
+  Macro Zone 2 - Midway Bell: Space Physics
+  Mario Zone 3 - Midway Bell: Carrot
+  Mario Zone 3 - Normal Exit: Mario Zone Progression
+}
+5: {
+  Mario Zone 4 - Boss: Mario Coin
+  Turtle Zone Secret Course - Normal Exit: Pumpkin Zone Progression
+}
+6: {
+  Pumpkin Zone 3 - Midway Bell: Macro Zone Progression
+  Pumpkin Zone 3 - Secret Exit: Turtle Zone Progression
+  Pumpkin Zone Secret Course 2 - Normal Exit: Tree Zone Secret
+}
+7: {
+  Macro Zone 3 - Midway Bell: Tree Zone Progression
+  Macro Zone 3 - Normal Exit: Macro Zone Progression
+  Turtle Zone 3 - Boss: Turtle Coin
+}
+8: {
+  Macro Zone 4 - Boss: Macro Coin
+  Macro Zone 4 - Midway Bell: Space Zone Secret
+  Macro Zone Secret Course - Normal Exit: Tree Zone Progression
+  Tree Zone 2 - Secret Exit: Tree Zone Progression
+  Tree Zone Secret Course - Normal Exit: Pumpkin Zone Progression
+}
+9: {
+  Pumpkin Zone 4 - Boss: Pumpkin Coin
+  Tree Zone 3 - Normal Exit: Macro Zone Secret 1
+  Tree Zone 5 - Boss: Tree Coin
+  Tree Zone 5 - Midway Bell: Fire Flower
+}
+10: {
+  Mario's Castle - Wario: Wario Defeated
+}
