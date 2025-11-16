@@ -128,6 +128,15 @@ def combine_results(input_files: List[str]) -> Dict[str, Any]:
 
             if first_failure_seed:
                 base_result['first_failure_seed'] = first_failure_seed
+            else:
+                base_result['first_failure_seed'] = None
+
+            # Add summary field for compatibility with is_test_passing
+            base_result['summary'] = {
+                'all_passed': all_passed,
+                'any_failed': not all_passed,
+                'failure_rate': seeds_failed / len(seed_results) if len(seed_results) > 0 else 0
+            }
 
             combined_results[template_name] = base_result
 

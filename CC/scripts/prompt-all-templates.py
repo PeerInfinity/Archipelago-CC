@@ -96,11 +96,17 @@ def get_first_failing_seed(template_file, test_results):
 
     # Check if there's a first_failure_seed field
     if 'first_failure_seed' in result and result['first_failure_seed'] is not None:
-        # Check if seed 1 passed
+        # Check if seed 1 passed - try individual_results first, then top-level spoiler_test
         individual_results = result.get('individual_results', {})
         if '1' in individual_results:
             seed_1_result = individual_results['1']
             spoiler_test = seed_1_result.get('spoiler_test', {})
+            if spoiler_test.get('pass_fail') == 'passed':
+                # Seed 1 passed, but another seed failed
+                return result['first_failure_seed']
+        else:
+            # No individual_results, check top-level spoiler_test (this is seed 1's result)
+            spoiler_test = result.get('spoiler_test', {})
             if spoiler_test.get('pass_fail') == 'passed':
                 # Seed 1 passed, but another seed failed
                 return result['first_failure_seed']
