@@ -913,7 +913,16 @@
           {
             "name": "Kokiri Forest Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_plant_bean"
+                }
+              ]
+            },
             "item": {
               "name": "Kokiri Forest Subrule 1",
               "player": 1,
@@ -1824,7 +1833,16 @@
           {
             "name": "Lost Woods Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_plant_bean"
+                }
+              ]
+            },
             "item": {
               "name": "Lost Woods Subrule 1",
               "player": 1,
@@ -1835,7 +1853,16 @@
           {
             "name": "Lost Woods Subrule 2",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_blast_or_smash"
+                }
+              ]
+            },
             "item": {
               "name": "Lost Woods Subrule 2",
               "player": 1,
@@ -2045,7 +2072,16 @@
           {
             "name": "LW Beyond Mido Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_plant_bean"
+                }
+              ]
+            },
             "item": {
               "name": "LW Beyond Mido Subrule 1",
               "player": 1,
@@ -2628,7 +2664,16 @@
           {
             "name": "Hyrule Field Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_blast_or_smash"
+                }
+              ]
+            },
             "item": {
               "name": "Hyrule Field Subrule 1",
               "player": 1,
@@ -2639,7 +2684,16 @@
           {
             "name": "Hyrule Field Subrule 2",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state._oot_reach_as_age('Hyrule Field', 'child', 1) and state.has('Kokiri Emerald', 1) and state.has('Goron Ruby', 1) and state.has('Zora Sapphire', 1)"
+                }
+              ]
+            },
             "item": {
               "name": "Hyrule Field Subrule 2",
               "player": 1,
@@ -3057,7 +3111,16 @@
           {
             "name": "Lake Hylia Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_plant_bean"
+                }
+              ]
+            },
             "item": {
               "name": "Lake Hylia Subrule 1",
               "player": 1,
@@ -5799,7 +5862,16 @@
           {
             "name": "Desert Colossus Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_plant_bean"
+                }
+              ]
+            },
             "item": {
               "name": "Desert Colossus Subrule 1",
               "player": 1,
@@ -10317,7 +10389,16 @@
           {
             "name": "Graveyard Subrule 2",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_plant_bean"
+                }
+              ]
+            },
             "item": {
               "name": "Graveyard Subrule 2",
               "player": 1,
@@ -11084,7 +11165,16 @@
           {
             "name": "Death Mountain Subrule 2",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state._oot_reach_as_age('Death Mountain', 'child', 1) and state._oot_has_beans(player=1) and (state.has('Bomb Bag', 1) or state.has('Progressive Strength Upgrade', 1))"
+                }
+              ]
+            },
             "item": {
               "name": "Death Mountain Subrule 2",
               "player": 1,
@@ -11095,7 +11185,16 @@
           {
             "name": "Death Mountain Subrule 3",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state._oot_reach_as_age('Death Mountain', 'child', 1) and state._oot_has_beans(player=1) and state.has('Progressive Strength Upgrade', 1)"
+                }
+              ]
+            },
             "item": {
               "name": "Death Mountain Subrule 3",
               "player": 1,
@@ -11251,7 +11350,16 @@
           {
             "name": "Death Mountain Summit Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_blast_or_smash"
+                }
+              ]
+            },
             "item": {
               "name": "Death Mountain Summit Subrule 1",
               "player": 1,
@@ -12247,7 +12355,16 @@
           {
             "name": "DMC Upper Nearby Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_blast_or_smash"
+                }
+              ]
+            },
             "item": {
               "name": "DMC Upper Nearby Subrule 1",
               "player": 1,
@@ -12826,7 +12943,16 @@
           {
             "name": "DMC Central Nearby Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_plant_bean"
+                }
+              ]
+            },
             "item": {
               "name": "DMC Central Nearby Subrule 1",
               "player": 1,
@@ -13108,7 +13234,16 @@
           {
             "name": "DMC Central Local Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state._oot_reach_as_age('DMC Central Local', 'adult', 1) and state.has('Progressive Hookshot', 1) or (state._oot_reach_as_age('DMC Central Local', 'adult', 1) and state.has('Hover Boots', 1)) or (state._oot_reach_as_age('DMC Central Local', 'child', 1) and state._oot_has_beans(player=1))"
+                }
+              ]
+            },
             "item": {
               "name": "DMC Central Local Subrule 1",
               "player": 1,
@@ -13119,7 +13254,16 @@
           {
             "name": "DMC Central Local Subrule 2",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_plant_bean"
+                }
+              ]
+            },
             "item": {
               "name": "DMC Central Local Subrule 2",
               "player": 1,
@@ -13776,7 +13920,16 @@
           {
             "name": "Zora River Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_plant_bean"
+                }
+              ]
+            },
             "item": {
               "name": "Zora River Subrule 1",
               "player": 1,
@@ -13787,7 +13940,16 @@
           {
             "name": "Zora River Subrule 2",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_blast_or_smash"
+                }
+              ]
+            },
             "item": {
               "name": "Zora River Subrule 2",
               "player": 1,
@@ -20078,7 +20240,16 @@
           {
             "name": "Deku Tree Lobby Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "has_shield"
+                }
+              ]
+            },
             "item": {
               "name": "Deku Tree Lobby Subrule 1",
               "player": 1,
@@ -20214,7 +20385,16 @@
           {
             "name": "Deku Tree Basement Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state.has('Dins Fire', 1) and state.has('Magic Meter', 1) or (state._oot_reach_as_age('Deku Tree Basement', 'adult', 1) and state.has('Fire Arrows', 1) and state.has('Bow', 1) and state.has('Magic Meter', 1)) or (state._oot_reach_as_age('Deku Tree Basement', 'child', 1) and (state.has('Buy Deku Stick (1)', 1) or state.has('Deku Stick Drop', 1))) or (state._oot_reach_as_age('Deku Tree Basement', 'adult', 1) and state.has('Bow', 1))"
+                }
+              ]
+            },
             "item": {
               "name": "Deku Tree Basement Subrule 1",
               "player": 1,
@@ -20225,7 +20405,16 @@
           {
             "name": "Deku Tree Basement Subrule 2",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state._oot_reach_as_age('Deku Tree Basement', 'child', 1) and state.has('Slingshot', 1) or (state._oot_reach_as_age('Deku Tree Basement', 'adult', 1) and state.has('Bow', 1))"
+                }
+              ]
+            },
             "item": {
               "name": "Deku Tree Basement Subrule 2",
               "player": 1,
@@ -20278,7 +20467,16 @@
           {
             "name": "Deku Tree Basement Back Room Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state.has('Dins Fire', 1) and state.has('Magic Meter', 1) or (state._oot_reach_as_age('Deku Tree Basement Back Room', 'adult', 1) and state.has('Fire Arrows', 1) and state.has('Bow', 1) and state.has('Magic Meter', 1)) or (state._oot_reach_as_age('Deku Tree Basement Back Room', 'child', 1) and (state.has('Buy Deku Stick (1)', 1) or state.has('Deku Stick Drop', 1))) or (state._oot_reach_as_age('Deku Tree Basement Back Room', 'adult', 1) and state.has('Bow', 1))"
+                }
+              ]
+            },
             "item": {
               "name": "Deku Tree Basement Back Room Subrule 1",
               "player": 1,
@@ -20289,7 +20487,16 @@
           {
             "name": "Deku Tree Basement Back Room Subrule 2",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "can_blast_or_smash"
+                }
+              ]
+            },
             "item": {
               "name": "Deku Tree Basement Back Room Subrule 2",
               "player": 1,
@@ -20336,7 +20543,16 @@
           {
             "name": "Deku Tree Basement Ledge Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state.has('Dins Fire', 1) and state.has('Magic Meter', 1) or (state._oot_reach_as_age('Deku Tree Basement Ledge', 'adult', 1) and state.has('Fire Arrows', 1) and state.has('Bow', 1) and state.has('Magic Meter', 1)) or (state._oot_reach_as_age('Deku Tree Basement Ledge', 'child', 1) and (state.has('Buy Deku Stick (1)', 1) or state.has('Deku Stick Drop', 1))) or (state.has('logic deku b1 webs with bow', 1) and state._oot_reach_as_age('Deku Tree Basement Ledge', 'adult', 1) and state.has('Bow', 1))"
+                }
+              ]
+            },
             "item": {
               "name": "Deku Tree Basement Ledge Subrule 1",
               "player": 1,
@@ -20411,7 +20627,16 @@
           {
             "name": "Deku Tree Before Boss Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "has_shield"
+                }
+              ]
+            },
             "item": {
               "name": "Deku Tree Before Boss Subrule 1",
               "player": 1,
@@ -20452,7 +20677,16 @@
           {
             "name": "Dodongos Cavern Beginning Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state.has('Bomb Bag', 1) or (state._oot_reach_as_age('Dodongos Cavern Beginning', 'adult', 1) and state.has('Megaton Hammer', 1)) or state.has('Progressive Strength Upgrade', 1)"
+                }
+              ]
+            },
             "item": {
               "name": "Dodongos Cavern Beginning Subrule 1",
               "player": 1,
@@ -20909,7 +21143,16 @@
           {
             "name": "Dodongos Cavern Torch Room Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state._oot_reach_as_age('Dodongos Cavern Torch Room', 'adult', 1) or state.has('Buy Deku Stick (1)', 1) or state.has('Deku Stick Drop', 1) or (state.has('Dins Fire', 1) and state.has('Magic Meter', 1))"
+                }
+              ]
+            },
             "item": {
               "name": "Dodongos Cavern Torch Room Subrule 1",
               "player": 1,
@@ -21196,7 +21439,16 @@
           {
             "name": "Dodongos Cavern Climb Subrule 2",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state.has('Bomb Bag', 1) or (state._oot_reach_as_age('Dodongos Cavern Climb', 'adult', 1) and state.has('Megaton Hammer', 1)) or state.has('Progressive Strength Upgrade', 1)"
+                }
+              ]
+            },
             "item": {
               "name": "Dodongos Cavern Climb Subrule 2",
               "player": 1,
@@ -22365,7 +22617,16 @@
           {
             "name": "Forest Temple NW Outdoors Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state._oot_reach_as_age('Forest Temple NW Outdoors', 'adult', 1) or state.has('Bomb Bag', 1) or ((state.has('Boomerang', 1) or state.has('Buy Deku Nut (5)', 1) or state.has('Buy Deku Nut (10)', 1) or state.has('Deku Nut Drop', 1) or state.has('Buy Deku Shield', 1) or state.has('Deku Shield Drop', 1)) and (state.has('Buy Deku Stick (1)', 1) or state.has('Deku Stick Drop', 1) or state.has('Kokiri Sword', 1) or state.has('Slingshot', 1)))"
+                }
+              ]
+            },
             "item": {
               "name": "Forest Temple NW Outdoors Subrule 1",
               "player": 1,
@@ -22758,7 +23019,16 @@
           {
             "name": "Forest Temple Outside Upper Ledge Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state._oot_reach_as_age('Forest Temple Outside Upper Ledge', 'adult', 1) and state.has('Progressive Hookshot', 1) or (state._oot_reach_as_age('Forest Temple Outside Upper Ledge', 'child', 1) and state.has('Boomerang', 1))"
+                }
+              ]
+            },
             "item": {
               "name": "Forest Temple Outside Upper Ledge Subrule 1",
               "player": 1,
@@ -23105,7 +23375,16 @@
           {
             "name": "Forest Temple Falling Room Subrule 2",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state._oot_reach_as_age('Forest Temple Falling Room', 'adult', 1) and state.has('Bow', 1) or (state.has('Dins Fire', 1) and state.has('Magic Meter', 1)) or state.has('Bomb Bag', 1)"
+                }
+              ]
+            },
             "item": {
               "name": "Forest Temple Falling Room Subrule 2",
               "player": 1,
@@ -24951,7 +25230,16 @@
           {
             "name": "Ice Cavern Beginning Subrule 1",
             "id": null,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_python_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "state._oot_reach_as_age('Ice Cavern Beginning', 'adult', 1) or state.has('Bomb Bag', 1) or (state.has('Dins Fire', 1) and state.has('Magic Meter', 1))"
+                }
+              ]
+            },
             "item": {
               "name": "Ice Cavern Beginning Subrule 1",
               "player": 1,

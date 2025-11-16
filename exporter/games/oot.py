@@ -21,10 +21,19 @@ class OOTGameExportHandler(GenericGameExportHandler):
         self.world = world
         self.rule_string_map = {}
 
-        # Access the parser's delayed_rules to get AST nodes for subrules
+        # Access the parser's delayed_rules_for_export to get AST nodes for subrules
         # This allows us to capture rule strings without modifying world files
-        if hasattr(world, 'parser') and hasattr(world.parser, 'delayed_rules'):
-            for region_name, node, subrule_name in world.parser.delayed_rules:
+        # Note: We use delayed_rules_for_export (saved before clearing) not delayed_rules (which gets cleared)
+        delayed_rules_source = None
+        if hasattr(world, 'parser'):
+            if hasattr(world.parser, 'delayed_rules_for_export'):
+                delayed_rules_source = world.parser.delayed_rules_for_export
+            elif hasattr(world.parser, 'delayed_rules'):
+                # Fallback to delayed_rules if delayed_rules_for_export doesn't exist (older code)
+                delayed_rules_source = world.parser.delayed_rules
+
+        if delayed_rules_source:
+            for region_name, node, subrule_name in delayed_rules_source:
                 try:
                     # Unparse the AST node to get the rule string
                     rule_string = ast.unparse(node)
