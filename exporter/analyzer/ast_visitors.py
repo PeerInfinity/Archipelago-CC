@@ -191,6 +191,11 @@ class ASTVisitorMixin:
                         final_value = make_json_serializable(final_value)
                         logging.debug(f"Resolved argument variable '{arg['name']}' to {final_value}")
                         resolved_args.append({'type': 'constant', 'value': final_value})
+                    # Handle Region objects - extract the .name attribute
+                    elif resolved_value is not None and hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances'):
+                        region_name = resolved_value.name
+                        logging.debug(f"Resolved argument variable '{arg['name']}' (Region object) to region name: {region_name}")
+                        resolved_args.append({'type': 'constant', 'value': region_name})
                     else:
                         # Keep unresolved or complex objects as name references
                         resolved_args.append(arg)
@@ -572,6 +577,11 @@ class ASTVisitorMixin:
                             final_value = make_json_serializable(final_value)
                             logging.debug(f"Resolved state method argument variable '{arg['name']}' to {final_value}")
                             resolved_args.append({'type': 'constant', 'value': final_value})
+                        # Handle Region objects - extract the .name attribute
+                        elif resolved_value is not None and hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances'):
+                            region_name = resolved_value.name
+                            logging.debug(f"Resolved state method argument variable '{arg['name']}' (Region object) to region name: {region_name}")
+                            resolved_args.append({'type': 'constant', 'value': region_name})
                         else:
                             # Keep unresolved or complex objects as name references
                             resolved_args.append(arg)
@@ -930,6 +940,11 @@ class ASTVisitorMixin:
                                 final_value = make_json_serializable(final_value)
                                 logging.debug(f"Resolved module helper argument variable '{arg['name']}' to {final_value}")
                                 resolved_args.append({'type': 'constant', 'value': final_value})
+                            # Handle Region objects - extract the .name attribute
+                            elif resolved_value is not None and hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances'):
+                                region_name = resolved_value.name
+                                logging.debug(f"Resolved module helper argument variable '{arg['name']}' (Region object) to region name: {region_name}")
+                                resolved_args.append({'type': 'constant', 'value': region_name})
                             else:
                                 resolved_args.append(arg)
                         elif arg and arg.get('type') == 'attribute':
