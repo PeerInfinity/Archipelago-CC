@@ -33,3 +33,27 @@ The SC2 naming convention is `<upgrade> (<unit>)`, not `<unit> <upgrade>`.
 
 **Result:**
 Test now progresses past sphere 12.6 and fails at sphere 14.1 instead.
+
+---
+
+## Issue 2: Missing implementation for great_train_robbery_train_stopper helper (Sphere 14.1) - SOLVED
+
+**Locations affected:**
+- Beat The Great Train Robbery
+- The Great Train Robbery: 2 Trains Destroyed
+- The Great Train Robbery: 4 Trains Destroyed
+- The Great Train Robbery: 6 Trains Destroyed
+- The Great Train Robbery: Flawless
+- The Great Train Robbery: Kill Team
+- The Great Train Robbery: Victory
+
+**Root cause:**
+The `great_train_robbery_train_stopper` helper was a stub function that always returned `false`.
+
+**Implementation:**
+The helper now properly checks for units capable of stopping trains:
+- Basic: Siege Tank, Diamondback, Marauder, Cyclone, or Banshee
+- Advanced Tactics: Reaper + G-4 Clusterbomb, Spectre + Psionic Lash, Vulture, or Liberator
+
+**Result:**
+Test now progresses past sphere 14.1 and fails at sphere 14.2 instead.

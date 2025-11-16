@@ -733,7 +733,18 @@ export default {
     nova_heal: () => false,
     nova_escape_assist: () => false,
 
-    great_train_robbery_train_stopper: () => false,
+    great_train_robbery_train_stopper: (snapshot, staticData) => {
+        const advancedTactics = isAdvancedTactics(staticData);
+
+        return (
+            has_any(snapshot, ['Siege Tank', 'Diamondback', 'Marauder', 'Cyclone', 'Banshee'])
+            || (advancedTactics && (
+                has_all(snapshot, ['Reaper', 'G-4 Clusterbomb (Reaper)'])
+                || has_all(snapshot, ['Spectre', 'Psionic Lash (Spectre)'])
+                || has_any(snapshot, ['Vulture', 'Liberator'])
+            ))
+        );
+    },
     welcome_to_the_jungle_requirement: () => false,
     night_terrors_requirement: () => false,
     engine_of_destruction_requirement: () => false,
