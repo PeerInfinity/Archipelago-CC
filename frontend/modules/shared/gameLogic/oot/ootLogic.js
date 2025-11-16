@@ -429,6 +429,16 @@ function createEvaluationContext(snapshot, staticData) {
       return canUseBoomerang || canUseHookshot || hasBombs || beehiveTrick;
     },
 
+    // can_bonk: deadly_bonks != 'ohko' or Fairy or can_use(Nayrus_Love)
+    can_bonk: () => {
+      const deadlyBonks = settings?.deadly_bonks || 'none';
+      if (deadlyBonks !== 'ohko') return true;
+      // If deadly bonks is OHKO, need Fairy or Nayru's Love
+      if (context.hasItem('Fairy') || context.hasItem('Buy_Fairys_Spirit')) return true;
+      // can_use(Nayrus_Love) - need the spell and magic meter
+      return context.hasItem('Nayrus_Love') && context.hasItem('Magic_Meter');
+    },
+
     // found_bombchus helper (from LogicHelpers.json)
     found_bombchus: () => {
       const bombchusInLogic = settings?.bombchus_in_logic || false;
