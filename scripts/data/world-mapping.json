@@ -477,9 +477,9 @@
   },
   "The Legend of Zelda": {
     "exporter_path": "exporter/games/tloz.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "tloz"
   },
   "The Messenger": {
