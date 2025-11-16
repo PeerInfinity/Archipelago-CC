@@ -84,52 +84,17 @@ class ASTVisitorMixin:
                     if_node = body_to_analyze[0]
                     remaining_stmts = body_to_analyze[1:]
 
-                    # Analyze the test condition
-                    test_result = self.visit(if_node.test)
+                    # Create a synthetic if-node that includes the remaining statements as the else block
+                    synthetic_if = ast.If(
+                        test=if_node.test,
+                        body=if_node.body,
+                        orelse=remaining_stmts,
+                        lineno=if_node.lineno if hasattr(if_node, 'lineno') else 0,
+                        col_offset=if_node.col_offset if hasattr(if_node, 'col_offset') else 0
+                    )
 
-                    # Analyze the if body (should be a single statement, typically a return)
-                    body_result = None
-                    if if_node.body:
-                        body_result = self.visit(if_node.body[0])
-
-                    # Analyze remaining statements as the implicit else
-                    # If there's only one remaining statement, visit it directly
-                    # If there are multiple, we need to chain them
-                    if len(remaining_stmts) == 1:
-                        orelse_result = self.visit(remaining_stmts[0])
-                    else:
-                        # Multiple remaining statements - create a synthetic function to analyze them
-                        synthetic_func = ast.FunctionDef(
-                            name='synthetic_else',
-                            args=node.args,
-                            body=remaining_stmts,
-                            decorator_list=[],
-                            returns=None
-                        )
-                        orelse_result = self.visit_FunctionDef(synthetic_func)
-
-                    if test_result is None or body_result is None:
-                        logging.error(f"Failed to analyze If statement in function body")
-                        return None
-
-                    # Optimize: If test is a constant, statically evaluate the conditional
-                    if test_result.get('type') == 'constant':
-                        test_value = test_result.get('value')
-                        logging.debug(f"visit_FunctionDef: Test is constant with value: {test_value}")
-                        is_truthy = bool(test_value) if test_value is not None else False
-                        if is_truthy:
-                            logging.debug("visit_FunctionDef: Test is truthy, returning if_true branch")
-                            return body_result
-                        else:
-                            logging.debug("visit_FunctionDef: Test is falsy, returning if_false branch (implicit)")
-                            return orelse_result
-
-                    return {
-                        'type': 'conditional',
-                        'test': test_result,
-                        'if_true': body_result,
-                        'if_false': orelse_result
-                    }
+                    # Visit this synthetic if-statement, which will use visit_If and its multistatement handling
+                    return self.visit_If(synthetic_if)
                 else:
                     return self.visit(body_to_analyze[0])
             logging.warning(f"visit_FunctionDef: Empty function body for '{node.name}', returning None")
@@ -1575,17 +1540,80 @@ class ASTVisitorMixin:
             logging.debug(f"\n--- visit_If ---")
             test_result = self.visit(node.test)
 
-            # Assume simple structure where body/orelse contain a single statement (e.g., return)
-            # and visit that statement directly.
+            # Check if we should process multiple statements in if-bodies
+            should_process_multistatement = False
+            if self.game_handler and hasattr(self.game_handler, 'should_process_multistatement_if_bodies'):
+                should_process_multistatement = self.game_handler.should_process_multistatement_if_bodies()
+                logging.debug(f"visit_If: should_process_multistatement_if_bodies = {should_process_multistatement}")
+
+            # Process the if-body
             body_result = None
             if node.body:
-                 body_result = self.visit(node.body[0]) # Visit the first statement in the 'if' block
+                if should_process_multistatement and len(node.body) > 1:
+                    # Multiple statements in the if-body: analyze them and combine them
+                    logging.debug(f"visit_If: Processing {len(node.body)} statements in if-body")
+                    body_results = []
+                    for i, stmt in enumerate(node.body):
+                        stmt_result = self.visit(stmt)
+                        if stmt_result is not None:
+                            # Simplify: if stmt_result is a conditional with if_true=true and if_false=null/false,
+                            # extract just the test condition
+                            if stmt_result.get('type') == 'conditional':
+                                if_true = stmt_result.get('if_true')
+                                if_false = stmt_result.get('if_false')
+
+                                # Pattern: if condition: return True (no else) -> just use condition
+                                if (if_true and if_true.get('type') == 'constant' and if_true.get('value') is True and
+                                    (if_false is None or (if_false.get('type') == 'constant' and if_false.get('value') is False))):
+                                    logging.debug(f"visit_If: Simplifying conditional {i}: extracting test condition")
+                                    body_results.append(stmt_result.get('test'))
+                                else:
+                                    # Keep the full conditional
+                                    body_results.append(stmt_result)
+                            elif isinstance(stmt, ast.Return) and stmt.value:
+                                # Direct return statement
+                                inner_result = self.visit(stmt.value)
+                                if inner_result and inner_result.get('type') != 'constant':
+                                    body_results.append(inner_result)
+
+                    # Combine multiple conditions with OR logic
+                    # If any condition is true, the whole body evaluates to true
+                    if len(body_results) == 0:
+                        body_result = {'type': 'constant', 'value': True}
+                    elif len(body_results) == 1:
+                        body_result = body_results[0]
+                    else:
+                        body_result = {'type': 'or', 'conditions': body_results}
+                else:
+                    # Single statement or multistatement processing disabled
+                    body_result = self.visit(node.body[0])
             else:
                  logging.warning("visit_If: 'if' block is empty.")
 
             orelse_result = None
             if node.orelse:
-                 orelse_result = self.visit(node.orelse[0]) # Visit the first statement in the 'else' block
+                if should_process_multistatement and len(node.orelse) > 1:
+                    # Multiple statements in the else-block
+                    logging.debug(f"visit_If: Processing {len(node.orelse)} statements in else-block")
+                    orelse_results = []
+                    for stmt in node.orelse:
+                        stmt_result = self.visit(stmt)
+                        if stmt_result is not None:
+                            if isinstance(stmt, ast.Return) and stmt.value:
+                                inner_result = self.visit(stmt.value)
+                                if inner_result and inner_result.get('type') != 'constant':
+                                    orelse_results.append(inner_result)
+                            elif stmt_result.get('type') == 'conditional':
+                                orelse_results.append(stmt_result)
+
+                    if len(orelse_results) == 0:
+                        orelse_result = {'type': 'constant', 'value': True}
+                    elif len(orelse_results) == 1:
+                        orelse_result = orelse_results[0]
+                    else:
+                        orelse_result = {'type': 'or', 'conditions': orelse_results}
+                else:
+                    orelse_result = self.visit(node.orelse[0])
             else:
                  # Handle cases with no 'else' - could return None or a specific structure
                  logging.debug("visit_If: No 'else' block found.")
