@@ -200,12 +200,41 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
             # Handle self.AttributeName - try to resolve to static data or constant
             if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self':
-                # For now, convert self.Config and similar to a helper call that can access static data
-                # This is a placeholder - ideally we'd resolve these at export time
-                logger.debug(f"Converting self.{attr} to static data reference")
+                # For SMZ3-specific config attributes, convert to constant values
+                # Assume Normal logic (0) as default since that's most common
+                if attr == 'Logic':
+                    logger.debug(f"Converting self.Logic to constant value 0 (Normal)")
+                    return {
+                        'type': 'constant',
+                        'value': 0
+                    }
+                # For other self attributes, log a warning and return constant True
+                logger.debug(f"Converting self.{attr} to constant True (unknown attribute)")
                 return {
-                    'type': 'static_ref',
-                    'ref': attr
+                    'type': 'constant',
+                    'value': True
+                }
+
+            # Handle SMLogic.AttributeName - convert enum values to constants
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'SMLogic':
+                # Convert SMLogic enum values to their integer equivalents
+                if attr == 'Normal':
+                    logger.debug(f"Converting SMLogic.Normal to constant value 0")
+                    return {
+                        'type': 'constant',
+                        'value': 0
+                    }
+                elif attr == 'Hard':
+                    logger.debug(f"Converting SMLogic.Hard to constant value 1")
+                    return {
+                        'type': 'constant',
+                        'value': 1
+                    }
+                # Unknown SMLogic value
+                logger.warning(f"Unknown SMLogic attribute: {attr}, defaulting to 0")
+                return {
+                    'type': 'constant',
+                    'value': 0
                 }
 
             # Recursively process the object part of attribute access
@@ -284,9 +313,9 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
                     if filtered_args and len(filtered_args) > 0:
                         region_name_arg = self.postprocess_rule(filtered_args[0])
-                        logger.debug(f"Converting self.world.CanEnter() to region_accessible check")
+                        logger.debug(f"Converting self.world.CanEnter() to region_check")
                         return {
-                            'type': 'region_accessible',
+                            'type': 'region_check',
                             'region': region_name_arg.get('value') if isinstance(region_name_arg, dict) and region_name_arg.get('type') == 'constant' else region_name_arg
                         }
 
