@@ -419,7 +419,38 @@ export function _removeItemFromInventory(sm, itemName, count = 1) {
  * @returns {boolean} True if item count > 0
  */
 export function hasItem(sm, itemName) {
-  return (sm.inventory[itemName] || 0) > 0;
+  // First check if the item is directly in inventory
+  if ((sm.inventory[itemName] || 0) > 0) {
+    return true;
+  }
+
+  // Check if this item is part of a progressive item sequence
+  // For example, if checking for "logistic-science-pack" and player has "progressive-science-pack",
+  // we need to check if they have enough progressive items to have reached this level
+  if (sm.progressionMapping) {
+    for (const [progressiveItemName, mapping] of Object.entries(sm.progressionMapping)) {
+      // Skip additive progression (like "rep"), only handle sequential progression
+      if (mapping.type === 'additive') {
+        continue;
+      }
+
+      // Check if this item is in the progression sequence
+      if (mapping.items && Array.isArray(mapping.items)) {
+        const itemLevel = mapping.items.findIndex(levelItem => levelItem.name === itemName);
+        if (itemLevel !== -1) {
+          // Found the item in this progressive sequence
+          // Check if player has enough of the progressive item to have reached this level
+          const progressiveCount = sm.inventory[progressiveItemName] || 0;
+          // Levels are 1-indexed, findIndex is 0-indexed, so level 1 is at index 0
+          if (progressiveCount > itemLevel) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -430,7 +461,36 @@ export function hasItem(sm, itemName) {
  * @returns {number} Item count
  */
 export function countItem(sm, itemName) {
-  return sm.inventory[itemName] || 0;
+  // First check if the item is directly in inventory
+  const directCount = sm.inventory[itemName] || 0;
+  if (directCount > 0) {
+    return directCount;
+  }
+
+  // Check if this item is part of a progressive item sequence
+  // For progressive items, we return 1 if the player has reached this level
+  if (sm.progressionMapping) {
+    for (const [progressiveItemName, mapping] of Object.entries(sm.progressionMapping)) {
+      // Skip additive progression (like "rep"), only handle sequential progression
+      if (mapping.type === 'additive') {
+        continue;
+      }
+
+      // Check if this item is in the progression sequence
+      if (mapping.items && Array.isArray(mapping.items)) {
+        const itemLevel = mapping.items.findIndex(levelItem => levelItem.name === itemName);
+        if (itemLevel !== -1) {
+          // Found the item in this progressive sequence
+          // Check if player has enough of the progressive item to have reached this level
+          const progressiveCount = sm.inventory[progressiveItemName] || 0;
+          // Return 1 if player has reached this level, 0 otherwise
+          return progressiveCount > itemLevel ? 1 : 0;
+        }
+      }
+    }
+  }
+
+  return 0;
 }
 
 /**
