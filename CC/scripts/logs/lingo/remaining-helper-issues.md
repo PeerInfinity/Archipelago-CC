@@ -4,11 +4,18 @@ This file tracks outstanding issues with the Lingo game helper functions.
 
 ## Test Results Summary
 
-- **Sphere 0 Test**: FAILED
-- Many locations are marked as accessible that shouldn't be
-- 5 locations that should be accessible are not
+**After fixes:**
+- **Sphere 0 Test**: STILL FAILING but much improved
+- Missing locations: 5 → 0 ✓
+- Extra locations: 96 → 21 (78% reduction!)
+- Extra regions: 114 (unchanged)
 
-## Identified Issues
+## Fixed Issues (see solved-helper-issues.md)
+
+1. ✓ Fixed `_lingo_can_satisfy_requirements` to use `snapshot.regionReachability` instead of `snapshot.reachableRegions`
+2. ✓ Fixed color requirements check (removed invalid shuffle_colors condition)
+
+## Remaining Issues
 
 ### Issue 1: lingo_can_use_location returns true unconditionally (CRITICAL)
 
