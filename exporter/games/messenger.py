@@ -70,6 +70,24 @@ class MessengerGameExportHandler(GenericGameExportHandler):
                             'location': location_name_rule
                         }
 
+        # Detect and expand helper functions that are inferred as items/capabilities
+        # has_vertical: self.has_wingsuit(state) or self.has_dart(state)
+        if rule.get('type') == 'item_check' and rule.get('inferred') and rule.get('item') == 'Vertical':
+            logger.debug("Detected has_vertical helper, converting to Wingsuit OR Dart check")
+            return {
+                'type': 'or',
+                'conditions': [
+                    {
+                        'type': 'item_check',
+                        'item': {'type': 'constant', 'value': 'Wingsuit'}
+                    },
+                    {
+                        'type': 'item_check',
+                        'item': {'type': 'constant', 'value': 'Dart'}
+                    }
+                ]
+            }
+
         # Detect and expand capability rules for Messenger-specific abilities
         if rule.get('type') == 'capability':
             capability = rule.get('capability')
