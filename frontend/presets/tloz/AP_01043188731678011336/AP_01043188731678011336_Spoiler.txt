@@ -1,0 +1,252 @@
+﻿Archipelago Version 0.6.4  -  Seed: 2
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            The Legend of Zelda
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Expanded Item Pool:              Yes
+Triforce Locations:              Vanilla
+Starting Position:               Safe
+
+
+Locations:
+
+Level 1 Item (Bow): Heart Container
+Level 1 Item (Boomerang): Bomb
+Level 1 Map: Five Rupees
+Level 1 Compass: Magical Shield
+Level 1 Boss: Stepladder
+Level 1 Triforce: Triforce Fragment
+Level 1 Key Drop (Keese Entrance): Heart Container
+Level 1 Key Drop (Stalfos Middle): Small Key
+Level 1 Key Drop (Moblins): Boomerang
+Level 1 Key Drop (Stalfos Water): Heart Container
+Level 1 Key Drop (Stalfos Entrance): Bomb
+Level 1 Key Drop (Wallmasters): Silver Arrow
+Level 2 Item (Magical Boomerang): Fairy
+Level 2 Map: Magical Boomerang
+Level 2 Compass: Small Key
+Level 2 Boss: Small Key
+Level 2 Triforce: Triforce Fragment
+Level 2 Key Drop (Ropes West): Small Key
+Level 2 Key Drop (Moldorms): Bomb
+Level 2 Key Drop (Ropes Middle): Raft
+Level 2 Key Drop (Ropes Entrance): Red Ring
+Level 2 Bomb Drop (Keese): Heart Container
+Level 2 Bomb Drop (Moblins): Bomb
+Level 2 Rupee Drop (Gels): Fairy
+Level 3 Item (Raft): Five Rupees
+Level 3 Map: Small Key
+Level 3 Compass: Small Key
+Level 3 Boss: Small Key
+Level 3 Triforce: Triforce Fragment
+Level 3 Key Drop (Zols and Keese West): Small Key
+Level 3 Key Drop (Keese North): Bomb
+Level 3 Key Drop (Zols Central): Water of Life (Blue)
+Level 3 Key Drop (Zols South): Heart Container
+Level 3 Key Drop (Zols Entrance): Small Key
+Level 3 Bomb Drop (Darknuts West): Five Rupees
+Level 3 Bomb Drop (Keese Corridor): Clock
+Level 3 Bomb Drop (Darknuts Central): Five Rupees
+Level 3 Rupee Drop (Zols and Keese East): Small Key
+Level 4 Item (Stepladder): Bomb
+Level 4 Map: Red Candle
+Level 4 Compass: Small Key
+Level 4 Boss: Blue Ring
+Level 4 Triforce: Triforce Fragment
+Level 4 Key Drop (Keese Entrance): Bomb
+Level 4 Key Drop (Keese Central): Five Rupees
+Level 4 Key Drop (Zols): Small Key
+Level 4 Key Drop (Keese North): Heart Container
+Level 5 Item (Recorder): Bomb
+Level 5 Map: Small Key
+Level 5 Compass: Small Key
+Level 5 Boss: Bomb
+Level 5 Triforce: Triforce Fragment
+Level 5 Key Drop (Keese North): Small Key
+Level 5 Key Drop (Gibdos North): Five Rupees
+Level 5 Key Drop (Gibdos Central): Food
+Level 5 Key Drop (Pols Voice Entrance): Power Bracelet
+Level 5 Key Drop (Gibdos Entrance): Bow
+Level 5 Key Drop (Gibdos, Keese, and Pols Voice): Clock
+Level 5 Key Drop (Zols): Five Rupees
+Level 5 Bomb Drop (Gibdos): Bomb
+Level 5 Bomb Drop (Dodongos): White Sword
+Level 5 Rupee Drop (Zols): Bomb
+Level 6 Item (Magical Rod): Five Rupees
+Level 6 Map: Letter
+Level 6 Compass: Water of Life (Red)
+Level 6 Boss: Small Key
+Level 6 Triforce: Triforce Fragment
+Level 6 Key Drop (Wizzrobes Entrance): Heart Container
+Level 6 Key Drop (Keese): Five Rupees
+Level 6 Key Drop (Wizzrobes North Island): Bomb
+Level 6 Key Drop (Wizzrobes North Stream): Small Key
+Level 6 Key Drop (Vires): Bomb
+Level 6 Bomb Drop (Wizzrobes): Small Key
+Level 6 Rupee Drop (Wizzrobes): Heart Container
+Level 7 Item (Red Candle): Bomb
+Level 7 Map: Small Key
+Level 7 Compass: Five Rupees
+Level 7 Boss: Small Key
+Level 7 Triforce: Triforce Fragment
+Level 7 Key Drop (Ropes): Heart Container
+Level 7 Key Drop (Goriyas): Small Key
+Level 7 Key Drop (Stalfos): Small Key
+Level 7 Key Drop (Moldorms): Bomb
+Level 7 Bomb Drop (Goriyas South): Small Key
+Level 7 Bomb Drop (Keese and Spikes): Small Key
+Level 7 Bomb Drop (Moldorms South): Small Key
+Level 7 Bomb Drop (Moldorms North): Five Rupees
+Level 7 Bomb Drop (Goriyas North): Heart Container
+Level 7 Bomb Drop (Dodongos): Bomb
+Level 7 Bomb Drop (Digdogger): Fairy
+Level 7 Rupee Drop (Goriyas Central): Five Rupees
+Level 7 Rupee Drop (Dodongos): Bomb
+Level 7 Rupee Drop (Goriyas North): Small Key
+Level 8 Item (Magical Key): Small Key
+Level 8 Map: Bomb
+Level 8 Compass: Bomb
+Level 8 Item (Book of Magic): Small Key
+Level 8 Boss: Small Key
+Level 8 Triforce: Triforce Fragment
+Level 8 Key Drop (Darknuts West): Five Rupees
+Level 8 Key Drop (Darknuts Far West): Bomb
+Level 8 Key Drop (Pols Voice South): Heart Container
+Level 8 Key Drop (Pols Voice and Keese): Five Rupees
+Level 8 Key Drop (Darknuts Central): Small Key
+Level 8 Key Drop (Keese and Zols Entrance): Magical Shield
+Level 8 Bomb Drop (Darknuts North): Bomb
+Level 8 Bomb Drop (Darknuts East): Recovery Heart
+Level 8 Bomb Drop (Pols Voice North): Small Key
+Level 8 Rupee Drop (Manhandla Entrance West): Food
+Level 8 Rupee Drop (Manhandla Entrance North): Heart Container
+Level 8 Rupee Drop (Darknuts and Gibdos): Water of Life (Blue)
+Level 9 Item (Silver Arrow): Heart Container
+Level 9 Item (Red Ring): Five Rupees
+Level 9 Map: Bomb
+Level 9 Compass: Clock
+Level 9 Key Drop (Patra Southwest): Small Key
+Level 9 Key Drop (Like Likes and Zols East): Small Key
+Level 9 Key Drop (Wizzrobes and Bubbles East): Small Key
+Level 9 Key Drop (Wizzrobes East Island): Candle
+Level 9 Bomb Drop (Blue Lanmolas): Small Key
+Level 9 Bomb Drop (Gels Lake): Small Key
+Level 9 Bomb Drop (Like Likes and Zols Corridor): Bomb
+Level 9 Bomb Drop (Patra Northeast): Fairy
+Level 9 Bomb Drop (Vires): Five Rupees
+Level 9 Rupee Drop (Wizzrobes West Island): Five Rupees
+Level 9 Rupee Drop (Red Lanmolas): Small Key
+Level 9 Rupee Drop (Keese Southwest): Fairy
+Level 9 Rupee Drop (Keese Central Island): Small Key
+Level 9 Rupee Drop (Wizzrobes Central): Sword
+Level 9 Rupee Drop (Wizzrobes North Island): Fairy
+Level 9 Rupee Drop (Gels East): Small Key
+Starting Sword Cave: Magical Sword
+White Sword Pond: Magical Key
+Magical Sword Grave: Small Key
+Take Any Item Left: Small Key
+Take Any Item Middle: Five Rupees
+Take Any Item Right: Small Key
+Armos Knights: Magical Shield
+Ocean Heart Container: Small Key
+Letter Cave: Water of Life (Blue)
+Arrow Shop Item Left: Bomb
+Arrow Shop Item Middle: Magical Rod
+Arrow Shop Item Right: Arrow
+Candle Shop Item Left: Book of Magic
+Candle Shop Item Middle: Water of Life (Red)
+Candle Shop Item Right: Small Key
+Blue Ring Shop Item Left: Recorder
+Blue Ring Shop Item Middle: Small Key
+Blue Ring Shop Item Right: Small Key
+Shield Shop Item Left: Bomb
+Shield Shop Item Middle: Small Key
+Shield Shop Item Right: Bomb
+Potion Shop Item Left: Small Key
+Potion Shop Item Middle: Sword
+Potion Shop Item Right: Small Key
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Starting Sword Cave: Magical Sword
+}
+2: {
+  Arrow Shop Item Left: Bomb
+  Arrow Shop Item Middle: Magical Rod
+  Arrow Shop Item Right: Arrow
+  Blue Ring Shop Item Left: Recorder
+  Candle Shop Item Left: Book of Magic
+  Level 1 Boss: Stepladder
+  Level 1 Boss Status: Boss 1 Defeated
+  Level 1 Item (Bow): Heart Container
+  Level 1 Key Drop (Keese Entrance): Heart Container
+  Level 1 Key Drop (Stalfos Water): Heart Container
+  Level 1 Key Drop (Wallmasters): Silver Arrow
+}
+3: {
+  Level 1 Triforce: Triforce Fragment
+  Level 2 Bomb Drop (Keese): Heart Container
+  Level 2 Boss Status: Boss 2 Defeated
+  Level 2 Key Drop (Ropes Entrance): Red Ring
+  Level 2 Key Drop (Ropes Middle): Raft
+  Level 3 Boss Status: Boss 3 Defeated
+  Level 3 Key Drop (Zols South): Heart Container
+  Level 4 Boss: Blue Ring
+  Level 4 Boss Status: Boss 4 Defeated
+  Level 4 Key Drop (Keese North): Heart Container
+  Level 4 Map: Red Candle
+}
+4: {
+  Level 2 Triforce: Triforce Fragment
+  Level 3 Triforce: Triforce Fragment
+  Level 4 Triforce: Triforce Fragment
+  Level 5 Bomb Drop (Dodongos): White Sword
+  Level 5 Boss Status: Boss 5 Defeated
+  Level 5 Key Drop (Gibdos Central): Food
+  Level 5 Key Drop (Gibdos Entrance): Bow
+  Level 6 Key Drop (Wizzrobes Entrance): Heart Container
+  Level 6 Map: Letter
+  Level 6 Rupee Drop (Wizzrobes): Heart Container
+  Level 7 Key Drop (Ropes): Heart Container
+  Level 8 Boss Status: Boss 8 Defeated
+  Level 8 Key Drop (Pols Voice South): Heart Container
+  Level 8 Rupee Drop (Manhandla Entrance North): Heart Container
+  Level 8 Rupee Drop (Manhandla Entrance West): Food
+}
+5: {
+  Level 5 Triforce: Triforce Fragment
+  Level 6 Boss Status: Boss 6 Defeated
+  Level 7 Bomb Drop (Goriyas North): Heart Container
+  Level 7 Boss Status: Boss 7 Defeated
+  Level 8 Triforce: Triforce Fragment
+  Potion Shop Item Middle: Sword
+}
+6: {
+  Level 6 Triforce: Triforce Fragment
+  Level 7 Triforce: Triforce Fragment
+}
+7: {
+  Ganon: Triforce of Power
+  Level 9 Item (Silver Arrow): Heart Container
+  Level 9 Key Drop (Wizzrobes East Island): Candle
+  Level 9 Rupee Drop (Wizzrobes Central): Sword
+}
+8: {
+  Zelda: Rescued Zelda!
+}
