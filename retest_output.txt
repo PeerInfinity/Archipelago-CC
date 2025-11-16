@@ -1,0 +1,53 @@
+[WARNING] HTTP development server not running!
+
+The spoiler tests require a local development server.
+Starting server automatically: python -m http.server 8000
+
+Waiting for server to start... Server started successfully!
+Server running at: http://localhost:8000/frontend/
+Server PID: 40313
+
+Retest mode: Found 21 templates to test
+  - Blasphemous.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Castlevania 64.yaml: will test seed 10
+  - Factorio.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Kingdom Hearts 2.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Kingdom Hearts.yaml: will test seed 5 (and continue to seed 10 if it passes)
+  - Kirby's Dream Land 3.yaml: will test seed 3 (and continue to seed 10 if it passes)
+  - Lingo.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - MegaMan Battle Network 3.yaml: will test seed 5 (and continue to seed 10 if it passes)
+  - Ocarina of Time.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Overcooked! 2.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Pokemon Emerald.yaml: will test seed 3 (and continue to seed 10 if it passes)
+  - SMZ3.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Secret of Evermore.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Starcraft 2.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Stardew Valley.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Super Metroid.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - TUNIC.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - The Messenger.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - The Witness.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Yu-Gi-Oh! 2006.yaml: will test seed 1 (and continue to seed 10 if it passes)
+  - Zillion.yaml: will test seed 1 (and continue to seed 10 if it passes)
+Found 82 template files (21 testable, 61 filtered by retest mode (21 templates))
+Skipping: 61 files (too many to list)
+Backup of existing results saved to: test-results_backup_2025-11-16_04-17-13.json
+Results will be saved to: /home/user/Archipelago-CC/scripts/output/spoiler-minimal/test-results.json
+Timestamped backup will be saved to: test-results_2025-11-16_04-17-13.json
+Testing templates from: /home/user/Archipelago-CC/Players/Templates
+Building world mapping...
+World mapping built successfully
+Using seed 1 -> AP_14089154938208861744
+Starting batch processing of 21 templates...
+
+[1/21] Processing Blasphemous.yaml
+Testing seeds 1-10 (failing seed + continue)
+
+=== Testing Blasphemous.yaml with 10 seeds ===
+
+--- Seed 1 (1/10) ---
+
+=== Testing Blasphemous.yaml ===
+  [Memory] Blasphemous.yaml - start: 34.2 MB RSS
+Running Generate.py for Blasphemous.yaml...
+  Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Blasphemous.yaml --multi 1 --seed 1

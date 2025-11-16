@@ -1003,9 +1003,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }
@@ -1106,9 +1107,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 },
                 {
                   "type": "and",
@@ -1160,9 +1162,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 },
                 {
                   "type": "and",
@@ -1226,9 +1229,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }
@@ -1318,9 +1322,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 },
                 {
                   "type": "item_check",
@@ -1436,9 +1441,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             },
@@ -1662,7 +1668,7 @@
                       "type": "item_check",
                       "item": {
                         "type": "constant",
-                        "value": "Dart"
+                        "value": "Rope Dart"
                       }
                     }
                   ]
@@ -1745,9 +1751,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 },
                 {
                   "type": "or",
@@ -1851,9 +1858,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }
@@ -1878,9 +1886,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }
@@ -1928,9 +1937,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }
@@ -1965,9 +1975,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             },
@@ -2467,9 +2478,10 @@
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dart",
-                      "inferred": true,
-                      "description": "Requires having Dart"
+                      "item": {
+                        "type": "constant",
+                        "value": "Rope Dart"
+                      }
                     },
                     {
                       "type": "and",
@@ -2839,9 +2851,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             },
@@ -2971,10 +2984,11 @@
                       ]
                     },
                     {
-                      "type": "capability",
-                      "capability": "destroy_projectiles",
-                      "inferred": true,
-                      "description": "Requires ability to destroy projectiles"
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Strike of the Ninja"
+                      }
                     }
                   ]
                 },
@@ -3440,9 +3454,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Tabi",
-                  "inferred": true,
-                  "description": "Requires having Tabi"
+                  "item": {
+                    "type": "constant",
+                    "value": "Lightfoot Tabi"
+                  }
                 },
                 {
                   "type": "item_check",
@@ -3564,9 +3579,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }
@@ -3630,15 +3646,17 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 },
                 {
-                  "type": "capability",
-                  "capability": "destroy_projectiles",
-                  "inferred": true,
-                  "description": "Requires ability to destroy projectiles"
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Strike of the Ninja"
+                  }
                 }
               ]
             }
@@ -3710,9 +3728,10 @@
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dart",
-                      "inferred": true,
-                      "description": "Requires having Dart"
+                      "item": {
+                        "type": "constant",
+                        "value": "Rope Dart"
+                      }
                     },
                     {
                       "type": "and",
@@ -3724,10 +3743,11 @@
                           "description": "Requires having Wingsuit"
                         },
                         {
-                          "type": "capability",
-                          "capability": "destroy_projectiles",
-                          "inferred": true,
-                          "description": "Requires ability to destroy projectiles"
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Strike of the Ninja"
+                          }
                         }
                       ]
                     }
@@ -4025,9 +4045,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }
@@ -4166,9 +4187,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 },
                 {
                   "type": "and",
@@ -4383,9 +4405,10 @@
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dart",
-                      "inferred": true,
-                      "description": "Requires having Dart"
+                      "item": {
+                        "type": "constant",
+                        "value": "Rope Dart"
+                      }
                     },
                     {
                       "type": "and",
@@ -4495,9 +4518,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }
@@ -4630,7 +4654,7 @@
                       "type": "item_check",
                       "item": {
                         "type": "constant",
-                        "value": "Dart"
+                        "value": "Rope Dart"
                       }
                     }
                   ]
@@ -4672,9 +4696,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 },
                 {
                   "type": "item_check",
@@ -4702,9 +4727,10 @@
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dart",
-                      "inferred": true,
-                      "description": "Requires having Dart"
+                      "item": {
+                        "type": "constant",
+                        "value": "Rope Dart"
+                      }
                     },
                     {
                       "type": "and",
@@ -4814,9 +4840,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }
@@ -4849,9 +4876,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }
@@ -4964,7 +4992,7 @@
                       "type": "item_check",
                       "item": {
                         "type": "constant",
-                        "value": "Dart"
+                        "value": "Rope Dart"
                       }
                     }
                   ]
@@ -5023,7 +5051,7 @@
                       "type": "item_check",
                       "item": {
                         "type": "constant",
-                        "value": "Dart"
+                        "value": "Rope Dart"
                       }
                     }
                   ]
@@ -5092,9 +5120,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             },
@@ -5132,9 +5161,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }
@@ -5192,9 +5222,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             },
@@ -5284,16 +5315,18 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "capability",
-                  "capability": "destroy_projectiles",
-                  "inferred": true,
-                  "description": "Requires ability to destroy projectiles"
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Strike of the Ninja"
+                  }
                 },
                 {
                   "type": "item_check",
-                  "item": "Tabi",
-                  "inferred": true,
-                  "description": "Requires having Tabi"
+                  "item": {
+                    "type": "constant",
+                    "value": "Lightfoot Tabi"
+                  }
                 },
                 {
                   "type": "or",
@@ -5309,7 +5342,7 @@
                       "type": "item_check",
                       "item": {
                         "type": "constant",
-                        "value": "Dart"
+                        "value": "Rope Dart"
                       }
                     }
                   ]
@@ -5382,18 +5415,20 @@
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Tabi",
-                      "inferred": true,
-                      "description": "Requires having Tabi"
+                      "item": {
+                        "type": "constant",
+                        "value": "Lightfoot Tabi"
+                      }
                     },
                     {
                       "type": "or",
                       "conditions": [
                         {
-                          "type": "capability",
-                          "capability": "destroy_projectiles",
-                          "inferred": true,
-                          "description": "Requires ability to destroy projectiles"
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Strike of the Ninja"
+                          }
                         },
                         {
                           "type": "item_check",
@@ -5419,9 +5454,10 @@
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Dart",
-                          "inferred": true,
-                          "description": "Requires having Dart"
+                          "item": {
+                            "type": "constant",
+                            "value": "Rope Dart"
+                          }
                         },
                         {
                           "type": "and",
@@ -5455,10 +5491,11 @@
                           ]
                         },
                         {
-                          "type": "capability",
-                          "capability": "destroy_projectiles",
-                          "inferred": true,
-                          "description": "Requires ability to destroy projectiles"
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Strike of the Ninja"
+                          }
                         }
                       ]
                     }
@@ -5545,24 +5582,27 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Tabi",
-                  "inferred": true,
-                  "description": "Requires having Tabi"
+                  "item": {
+                    "type": "constant",
+                    "value": "Lightfoot Tabi"
+                  }
                 },
                 {
-                  "type": "capability",
-                  "capability": "destroy_projectiles",
-                  "inferred": true,
-                  "description": "Requires ability to destroy projectiles"
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Strike of the Ninja"
+                  }
                 },
                 {
                   "type": "and",
                   "conditions": [
                     {
                       "type": "item_check",
-                      "item": "Dart",
-                      "inferred": true,
-                      "description": "Requires having Dart"
+                      "item": {
+                        "type": "constant",
+                        "value": "Rope Dart"
+                      }
                     },
                     {
                       "type": "item_check",
@@ -5646,9 +5686,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }
@@ -5740,9 +5781,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 },
                 {
                   "type": "and",
@@ -5754,10 +5796,11 @@
                       "description": "Requires having Wingsuit"
                     },
                     {
-                      "type": "capability",
-                      "capability": "destroy_projectiles",
-                      "inferred": true,
-                      "description": "Requires ability to destroy projectiles"
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Strike of the Ninja"
+                      }
                     }
                   ]
                 }
@@ -5811,9 +5854,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 },
                 {
                   "type": "and",
@@ -5876,7 +5920,7 @@
                   "type": "item_check",
                   "item": {
                     "type": "constant",
-                    "value": "Dart"
+                    "value": "Rope Dart"
                   }
                 }
               ]
@@ -6153,9 +6197,10 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 },
                 {
                   "type": "item_check",
@@ -6221,21 +6266,36 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 },
                 {
-                  "type": "capability",
-                  "capability": "destroy_projectiles",
-                  "inferred": true,
-                  "description": "Requires ability to destroy projectiles"
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Strike of the Ninja"
+                  }
                 },
                 {
-                  "type": "generic_helper",
-                  "name": "is_aerobatic",
-                  "args": [],
-                  "description": "Requires is aerobatic"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Wingsuit"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Aerobatics Warrior"
+                      }
+                    }
+                  ]
                 }
               ]
             },
@@ -6520,9 +6580,10 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Dart",
-                  "inferred": true,
-                  "description": "Requires having Dart"
+                  "item": {
+                    "type": "constant",
+                    "value": "Rope Dart"
+                  }
                 }
               ]
             }

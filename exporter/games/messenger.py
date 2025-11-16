@@ -73,7 +73,7 @@ class MessengerGameExportHandler(GenericGameExportHandler):
         # Detect and expand helper functions that are inferred as items/capabilities
         # has_vertical: self.has_wingsuit(state) or self.has_dart(state)
         if rule.get('type') == 'item_check' and rule.get('inferred') and rule.get('item') == 'Vertical':
-            logger.debug("Detected has_vertical helper, converting to Wingsuit OR Dart check")
+            logger.debug("Detected has_vertical helper, converting to Wingsuit OR Rope Dart check")
             return {
                 'type': 'or',
                 'conditions': [
@@ -83,7 +83,41 @@ class MessengerGameExportHandler(GenericGameExportHandler):
                     },
                     {
                         'type': 'item_check',
-                        'item': {'type': 'constant', 'value': 'Dart'}
+                        'item': {'type': 'constant', 'value': 'Rope Dart'}
+                    }
+                ]
+            }
+
+        # has_dart: state.has("Rope Dart", player)
+        if rule.get('type') == 'item_check' and rule.get('inferred') and rule.get('item') == 'Dart':
+            logger.debug("Detected has_dart helper, converting to Rope Dart check")
+            return {
+                'type': 'item_check',
+                'item': {'type': 'constant', 'value': 'Rope Dart'}
+            }
+
+        # has_tabi: state.has("Lightfoot Tabi", player)
+        if rule.get('type') == 'item_check' and rule.get('inferred') and rule.get('item') == 'Tabi':
+            logger.debug("Detected has_tabi helper, converting to Lightfoot Tabi check")
+            return {
+                'type': 'item_check',
+                'item': {'type': 'constant', 'value': 'Lightfoot Tabi'}
+            }
+
+        # Detect and expand generic helper functions
+        # is_aerobatic: self.has_wingsuit(state) and state.has("Aerobatics Warrior", player)
+        if rule.get('type') == 'generic_helper' and rule.get('name') == 'is_aerobatic':
+            logger.debug("Detected is_aerobatic helper, converting to Wingsuit AND Aerobatics Warrior check")
+            return {
+                'type': 'and',
+                'conditions': [
+                    {
+                        'type': 'item_check',
+                        'item': {'type': 'constant', 'value': 'Wingsuit'}
+                    },
+                    {
+                        'type': 'item_check',
+                        'item': {'type': 'constant', 'value': 'Aerobatics Warrior'}
                     }
                 ]
             }
@@ -91,6 +125,14 @@ class MessengerGameExportHandler(GenericGameExportHandler):
         # Detect and expand capability rules for Messenger-specific abilities
         if rule.get('type') == 'capability':
             capability = rule.get('capability')
+
+            # can_destroy_projectiles: state.has("Strike of the Ninja", player)
+            if capability == 'destroy_projectiles':
+                logger.debug("Detected can_destroy_projectiles capability, converting to Strike of the Ninja check")
+                return {
+                    'type': 'item_check',
+                    'item': {'type': 'constant', 'value': 'Strike of the Ninja'}
+                }
 
             # can_shop: state.has("Shards", player, self.maximum_price)
             if capability == 'shop':
