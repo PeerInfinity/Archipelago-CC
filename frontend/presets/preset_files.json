@@ -3923,5 +3923,26 @@
         "total_seeds_tested": 10
       }
     }
+  },
+  "soe": {
+    "name": "Secret of Evermore",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Secret of Evermore"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      }
+    }
   }
 }
