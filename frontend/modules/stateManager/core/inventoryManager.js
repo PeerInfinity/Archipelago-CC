@@ -283,6 +283,14 @@ export function _addItemToInventory(sm, itemName, count = 1) {
     }
   }
 
+  // Process event items using game-specific logic module (e.g., for Timespinner boss kills)
+  if (sm.gameStateModule && sm.logicModule && sm.logicModule.processEventItem) {
+    const updatedState = sm.logicModule.processEventItem(sm.gameStateModule, itemName);
+    if (updatedState && updatedState !== sm.gameStateModule) {
+      sm.gameStateModule = updatedState;
+    }
+  }
+
   // Handle prog_items accumulation based on game metadata (generic for all games)
   const gameInfo = sm.gameInfo?.[String(sm.playerSlot)];
   if (gameInfo?.accumulator_rules && sm.prog_items) {
