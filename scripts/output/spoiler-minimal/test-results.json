@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-15T23:39:33.036230",
-    "last_updated": "2025-11-15T23:39:33.036237",
+    "last_updated": "2025-11-16T01:12:55.430818",
     "script_version": "1.0.0"
   },
   "results": {
@@ -302,104 +302,526 @@
       }
     },
     "Blasphemous.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
-      },
       "consecutive_passes_before_failure": 0,
+      "first_failure_reason": "Test failed at sphere 0.0",
       "first_failure_seed": 1,
-      "game_name": "blasphemous",
-      "generation": {
-        "error_count": 1,
-        "error_type": null,
-        "processing_time_seconds": 38.79,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "blasphemous",
+          "generation": {
+            "error_count": 1,
+            "error_type": null,
+            "processing_time_seconds": 37.54,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 3342400,
+            "size_mb": 3.19
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 8,
+            "pass_fail": "failed",
+            "processing_time_seconds": 60.38,
+            "return_code": 1,
+            "sphere_reached": 0.0,
+            "success": false,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_name": "Blasphemous.yaml",
+          "timestamp": "2025-11-16T01:01:07.469400",
+          "world_info": {
+            "exporter_path": "exporter/games/blasphemous.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
+            "game_name_from_yaml": "Blasphemous",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "blasphemous",
+            "world_directory": "blasphemous"
+          }
+        }
       },
-      "rules_file": {
-        "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 3342400,
-        "size_mb": 3.19
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 10,
+      "seeds_failed": 1,
       "seeds_passed": 0,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 113.52,
-        "return_code": 1,
-        "sphere_reached": 0.0,
-        "success": false,
-        "total_spheres": 13.1,
-        "warning_count": 0
+      "stop_on_failure": true,
+      "summary": {
+        "all_passed": false,
+        "any_failed": true,
+        "failure_rate": 1.0
       },
       "template_name": "Blasphemous.yaml",
-      "timestamp": "2025-11-15T23:14:31.293183",
-      "world_info": {
-        "exporter_path": "exporter/games/blasphemous.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
-        "game_name_from_yaml": "Blasphemous",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "blasphemous",
-        "world_directory": "blasphemous"
-      }
+      "timestamp": "2025-11-16T01:01:07.425033",
+      "total_seeds_tested": 1
     },
     "Bomb Rush Cyberfunk.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
+      "consecutive_passes_before_failure": 10,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "bomb_rush_cyberfunk",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.87,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 231676,
+            "size_mb": 0.22
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 50.21,
+            "return_code": 0,
+            "sphere_reached": 10.9,
+            "success": true,
+            "total_spheres": 10.9,
+            "warning_count": 0
+          },
+          "template_name": "Bomb Rush Cyberfunk.yaml",
+          "timestamp": "2025-11-16T01:03:38.557640",
+          "world_info": {
+            "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Bomb Rush Cyberfunk",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "bomb_rush_cyberfunk",
+            "world_directory": "bomb_rush_cyberfunk"
+          }
+        },
+        "10": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "bomb_rush_cyberfunk",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.88,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/bomb_rush_cyberfunk/AP_55941320597534372051/AP_55941320597534372051_rules.json",
+            "size_bytes": 231584,
+            "size_mb": 0.22
+          },
+          "seed": "10",
+          "seed_id": "AP_55941320597534372051",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 44.61,
+            "return_code": 0,
+            "sphere_reached": 7.33,
+            "success": true,
+            "total_spheres": 7.33,
+            "warning_count": 0
+          },
+          "template_name": "Bomb Rush Cyberfunk.yaml",
+          "timestamp": "2025-11-16T01:12:02.968874",
+          "world_info": {
+            "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Bomb Rush Cyberfunk",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "bomb_rush_cyberfunk",
+            "world_directory": "bomb_rush_cyberfunk"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "bomb_rush_cyberfunk",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.02,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/bomb_rush_cyberfunk/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 231679,
+            "size_mb": 0.22
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 53.05,
+            "return_code": 0,
+            "sphere_reached": 9.27,
+            "success": true,
+            "total_spheres": 9.27,
+            "warning_count": 0
+          },
+          "template_name": "Bomb Rush Cyberfunk.yaml",
+          "timestamp": "2025-11-16T01:04:36.548816",
+          "world_info": {
+            "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Bomb Rush Cyberfunk",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "bomb_rush_cyberfunk",
+            "world_directory": "bomb_rush_cyberfunk"
+          }
+        },
+        "3": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "bomb_rush_cyberfunk",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.36,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/bomb_rush_cyberfunk/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 231680,
+            "size_mb": 0.22
+          },
+          "seed": "3",
+          "seed_id": "AP_84719271504320872445",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 47.94,
+            "return_code": 0,
+            "sphere_reached": 8.35,
+            "success": true,
+            "total_spheres": 8.35,
+            "warning_count": 0
+          },
+          "template_name": "Bomb Rush Cyberfunk.yaml",
+          "timestamp": "2025-11-16T01:05:37.547498",
+          "world_info": {
+            "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Bomb Rush Cyberfunk",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "bomb_rush_cyberfunk",
+            "world_directory": "bomb_rush_cyberfunk"
+          }
+        },
+        "4": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "bomb_rush_cyberfunk",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.71,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/bomb_rush_cyberfunk/AP_05594871498841892311/AP_05594871498841892311_rules.json",
+            "size_bytes": 231584,
+            "size_mb": 0.22
+          },
+          "seed": "4",
+          "seed_id": "AP_05594871498841892311",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 43.39,
+            "return_code": 0,
+            "sphere_reached": 7.32,
+            "success": true,
+            "total_spheres": 7.32,
+            "warning_count": 0
+          },
+          "template_name": "Bomb Rush Cyberfunk.yaml",
+          "timestamp": "2025-11-16T01:06:32.721933",
+          "world_info": {
+            "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Bomb Rush Cyberfunk",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "bomb_rush_cyberfunk",
+            "world_directory": "bomb_rush_cyberfunk"
+          }
+        },
+        "5": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "bomb_rush_cyberfunk",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.94,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/bomb_rush_cyberfunk/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 231677,
+            "size_mb": 0.22
+          },
+          "seed": "5",
+          "seed_id": "AP_96945849220684217413",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 48.42,
+            "return_code": 0,
+            "sphere_reached": 7.3,
+            "success": true,
+            "total_spheres": 7.3,
+            "warning_count": 0
+          },
+          "template_name": "Bomb Rush Cyberfunk.yaml",
+          "timestamp": "2025-11-16T01:07:23.605193",
+          "world_info": {
+            "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Bomb Rush Cyberfunk",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "bomb_rush_cyberfunk",
+            "world_directory": "bomb_rush_cyberfunk"
+          }
+        },
+        "6": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "bomb_rush_cyberfunk",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.63,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/bomb_rush_cyberfunk/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+            "size_bytes": 231680,
+            "size_mb": 0.22
+          },
+          "seed": "6",
+          "seed_id": "AP_00679259829289197625",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 46.96,
+            "return_code": 0,
+            "sphere_reached": 7.15,
+            "success": true,
+            "total_spheres": 7.15,
+            "warning_count": 0
+          },
+          "template_name": "Bomb Rush Cyberfunk.yaml",
+          "timestamp": "2025-11-16T01:08:19.808051",
+          "world_info": {
+            "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Bomb Rush Cyberfunk",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "bomb_rush_cyberfunk",
+            "world_directory": "bomb_rush_cyberfunk"
+          }
+        },
+        "7": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "bomb_rush_cyberfunk",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.0,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/bomb_rush_cyberfunk/AP_35931773795037525048/AP_35931773795037525048_rules.json",
+            "size_bytes": 231681,
+            "size_mb": 0.22
+          },
+          "seed": "7",
+          "seed_id": "AP_35931773795037525048",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 49.14,
+            "return_code": 0,
+            "sphere_reached": 8.34,
+            "success": true,
+            "total_spheres": 8.34,
+            "warning_count": 0
+          },
+          "template_name": "Bomb Rush Cyberfunk.yaml",
+          "timestamp": "2025-11-16T01:09:14.248034",
+          "world_info": {
+            "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Bomb Rush Cyberfunk",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "bomb_rush_cyberfunk",
+            "world_directory": "bomb_rush_cyberfunk"
+          }
+        },
+        "8": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "bomb_rush_cyberfunk",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.77,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/bomb_rush_cyberfunk/AP_20777137877808592492/AP_20777137877808592492_rules.json",
+            "size_bytes": 231581,
+            "size_mb": 0.22
+          },
+          "seed": "8",
+          "seed_id": "AP_20777137877808592492",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 48.21,
+            "return_code": 0,
+            "sphere_reached": 8.36,
+            "success": true,
+            "total_spheres": 8.36,
+            "warning_count": 0
+          },
+          "template_name": "Bomb Rush Cyberfunk.yaml",
+          "timestamp": "2025-11-16T01:10:11.247933",
+          "world_info": {
+            "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Bomb Rush Cyberfunk",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "bomb_rush_cyberfunk",
+            "world_directory": "bomb_rush_cyberfunk"
+          }
+        },
+        "9": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "bomb_rush_cyberfunk",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.2,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/bomb_rush_cyberfunk/AP_48205312626925217390/AP_48205312626925217390_rules.json",
+            "size_bytes": 231677,
+            "size_mb": 0.22
+          },
+          "seed": "9",
+          "seed_id": "AP_48205312626925217390",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 48.83,
+            "return_code": 0,
+            "sphere_reached": 7.33,
+            "success": true,
+            "total_spheres": 7.33,
+            "warning_count": 0
+          },
+          "template_name": "Bomb Rush Cyberfunk.yaml",
+          "timestamp": "2025-11-16T01:11:07.081358",
+          "world_info": {
+            "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "Bomb Rush Cyberfunk",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "bomb_rush_cyberfunk",
+            "world_directory": "bomb_rush_cyberfunk"
+          }
+        }
       },
-      "consecutive_passes_before_failure": 8,
-      "first_failure_seed": 9,
-      "game_name": "bomb_rush_cyberfunk",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 4.94,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "rules_file": {
-        "path": "frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 233511,
-        "size_mb": 0.22
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 2,
-      "seeds_passed": 8,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 0,
-        "pass_fail": "passed",
-        "processing_time_seconds": 40.4,
-        "return_code": 0,
-        "sphere_reached": 10.9,
-        "success": true,
-        "total_spheres": 10.9,
-        "warning_count": 0
+      "seeds_failed": 0,
+      "seeds_passed": 10,
+      "stop_on_failure": true,
+      "summary": {
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_name": "Bomb Rush Cyberfunk.yaml",
-      "timestamp": "2025-11-15T23:17:03.896247",
-      "world_info": {
-        "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "Bomb Rush Cyberfunk",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "bomb_rush_cyberfunk",
-        "world_directory": "bomb_rush_cyberfunk"
-      }
+      "timestamp": "2025-11-16T01:03:38.526505",
+      "total_seeds_tested": 10
     },
     "Bumper Stickers.yaml": {
       "analysis": {
