@@ -85,8 +85,13 @@ export function _lingo_can_satisfy_requirements(snapshot, staticData, access) {
   // - the_master: boolean for mastery requirement
   // - postgame: boolean for postgame flag
 
+  // Debug logging
+  console.log('[_lingo_can_satisfy_requirements] Called with access:', JSON.stringify(access));
+  console.log('[_lingo_can_satisfy_requirements] Snapshot reachableRegions type:', snapshot?.reachableRegions?.constructor?.name);
+
   if (!access) {
     // No requirements means always accessible
+    console.log('[_lingo_can_satisfy_requirements] No access requirements, returning true');
     return true;
   }
 
@@ -95,11 +100,16 @@ export function _lingo_can_satisfy_requirements(snapshot, staticData, access) {
   // Check room requirements - all required rooms must be reachable
   if (access.rooms && access.rooms.length > 0) {
     const reachableRegions = snapshot?.reachableRegions || new Set();
+    console.log('[_lingo_can_satisfy_requirements] Checking rooms:', access.rooms);
+    console.log('[_lingo_can_satisfy_requirements] Reachable regions:',
+      reachableRegions instanceof Set ? Array.from(reachableRegions) : reachableRegions);
     for (const roomName of access.rooms) {
       if (!reachableRegions.has(roomName)) {
+        console.log(`[_lingo_can_satisfy_requirements] Room '${roomName}' not reachable, returning false`);
         return false;
       }
     }
+    console.log('[_lingo_can_satisfy_requirements] All required rooms are reachable');
   }
 
   // Check door requirements - all required doors must be openable
@@ -161,10 +171,12 @@ export function _lingo_can_satisfy_requirements(snapshot, staticData, access) {
   if (access.postgame === false) {
     const inventory = snapshot?.inventory || {};
     if (inventory['Prevent Victory'] && inventory['Prevent Victory'] > 0) {
+      console.log('[_lingo_can_satisfy_requirements] Postgame requirement not met, returning false');
       return false;
     }
   }
 
+  console.log('[_lingo_can_satisfy_requirements] All requirements satisfied, returning true');
   return true;
 }
 
