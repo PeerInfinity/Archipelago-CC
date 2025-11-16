@@ -70,6 +70,9 @@ class ZillionGameExportHandler(GenericGameExportHandler):
         """
         Calculate the gun requirement based on character and settings.
 
+        The req_gun value represents the minimum number of Zillion items needed.
+        gun=N means: need N Zillion items (giving gun_prog[N] power for the starting character).
+
         Returns None if accessible from start, otherwise returns rule for Zillion items/rescues.
         """
         if req_gun == 0:
@@ -78,35 +81,25 @@ class ZillionGameExportHandler(GenericGameExportHandler):
         # Get gun progression table for starting character
         gun_prog = char_to_gun.get(self.start_char, {}).get(self.gun_levels, [1])
 
-        # Check if starting power is enough
-        if gun_prog[0] >= req_gun:
-            return None  # Accessible from start
-
-        # Find minimum Zillion items needed for starting character
-        zillion_needed = None
-        for i, power in enumerate(gun_prog):
-            if power >= req_gun:
-                zillion_needed = i
-                break
-
-        if zillion_needed is None:
-            # Requirement can't be met with just Zillion items
-            logger.warning(f"Gun requirement {req_gun} cannot be met by {self.start_char} with {self.gun_levels} settings")
-            return None
-
-        # Build Zillion item condition
+        # The requirement gun=N means we need the gun power from gun_prog[N]
+        # To get gun_prog[N], we need N Zillion items
+        # So the requirement is simply: need >= N Zillion items
         zillion_condition = {
             'type': 'item_check',
             'item': 'Zillion',
-            'count': {'type': 'constant', 'value': zillion_needed}
+            'count': {'type': 'constant', 'value': req_gun}
         }
 
         # Check if rescue items can provide alternative paths
+        # A rescue gives the rescued character's starting power
         rescue_alternatives = []
         for rescue_char in ['Apple', 'Champ']:
             if rescue_char != self.start_char:
                 rescue_prog = char_to_gun.get(rescue_char, {}).get(self.gun_levels, [1])
-                if rescue_prog[0] >= req_gun:
+                # Check if this rescue's starting power is enough
+                # We need gun_prog[req_gun] power, so check if rescue_prog[0] >= gun_prog[req_gun]
+                required_power = gun_prog[req_gun] if req_gun < len(gun_prog) else 999
+                if rescue_prog[0] >= required_power:
                     # This rescue gives enough power immediately
                     rescue_alternatives.append({
                         'type': 'item_check',
@@ -126,6 +119,9 @@ class ZillionGameExportHandler(GenericGameExportHandler):
         """
         Calculate the jump requirement based on character and settings.
 
+        The req_jump value represents the minimum jump level needed.
+        jump=N means: need jump level N (achieved with N * opas_per_level Opa-Opas).
+
         Returns None if accessible from start, otherwise returns rule for Opa-Opa items/rescues.
         """
         if req_jump == 0:
@@ -134,22 +130,9 @@ class ZillionGameExportHandler(GenericGameExportHandler):
         # Get jump progression table for starting character
         jump_prog = char_to_jump.get(self.start_char, {}).get(self.jump_levels, [1])
 
-        # Check if starting power is enough
-        if jump_prog[0] >= req_jump:
-            return None  # Accessible from start
-
-        # Find minimum level (and thus Opa-Opas) needed
-        min_level = None
-        for level, power in enumerate(jump_prog):
-            if power >= req_jump:
-                min_level = level
-                break
-
-        if min_level is None:
-            logger.warning(f"Jump requirement {req_jump} cannot be met by {self.start_char} with {self.jump_levels} settings")
-            return None
-
-        min_opas = min_level * self.opas_per_level
+        # The requirement jump=N means we need the jump power from jump_prog[N]
+        # To get jump_prog[N], we need N levels, which requires N * opas_per_level Opa-Opas
+        min_opas = req_jump * self.opas_per_level
 
         # Build Opa-Opa condition
         opa_condition = {
@@ -159,11 +142,15 @@ class ZillionGameExportHandler(GenericGameExportHandler):
         }
 
         # Check if rescue items can provide alternative paths
+        # A rescue gives the rescued character's starting power
         rescue_alternatives = []
         for rescue_char in ['Apple', 'Champ']:
             if rescue_char != self.start_char:
                 rescue_prog = char_to_jump.get(rescue_char, {}).get(self.jump_levels, [1])
-                if rescue_prog[0] >= req_jump:
+                # Check if this rescue's starting power is enough
+                # We need jump_prog[req_jump] power, so check if rescue_prog[0] >= jump_prog[req_jump]
+                required_power = jump_prog[req_jump] if req_jump < len(jump_prog) else 999
+                if rescue_prog[0] >= required_power:
                     rescue_alternatives.append({
                         'type': 'item_check',
                         'item': rescue_char
@@ -196,8 +183,9 @@ class ZillionGameExportHandler(GenericGameExportHandler):
 
         # Debug logging for problematic locations
         loc_name = location.name if hasattr(location, 'name') else 'unknown'
-        if loc_name in ['C-3 mid far right', 'H-8 top right-center', 'O-5 mid far left', 'B-1 mid far left']:
-            logger.info(f"DEBUG {loc_name}: ALL req fields = {vars(req)}")
+        # Log all locations that have gun=0 AND jump=0 (should be accessible from start)
+        if req.gun == 0 and req.jump == 0 and req.red == 0 and req.floppy == 0:
+            logger.info(f"DEBUG zero-req location: {loc_name}: ALL req fields = {vars(req)}")
 
         conditions = []
 
