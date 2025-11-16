@@ -383,6 +383,15 @@ class Rule_AST_Transformer(ast.NodeTransformer):
             event.show_in_spoiler = False
 
             self.current_spot = event
+            # Store the unparsed AST as a rule_string for the exporter to use
+            # This helps the JSON exporter generate proper access rules for subrules
+            try:
+                # Python 3.9+ has ast.unparse()
+                event.rule_string = ast.unparse(node)
+            except AttributeError:
+                # Fallback for older Python versions - use ast.dump() as a marker
+                event.rule_string = f"__ast_dump__:{ast.dump(node, False)}"
+
             # This could, in theory, create further subrules.
             access_rule = self.make_access_rule(self.visit(node))
             if access_rule is self.rule_cache.get('NameConstant(False)'):

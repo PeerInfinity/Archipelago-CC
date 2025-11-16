@@ -65,12 +65,27 @@ class OOTGameExportHandler(GenericGameExportHandler):
         - "True" -> {"type": "constant", "value": True}
         - "is_adult" -> {"type": "helper", "name": "is_adult"}
         - "is_adult and Hover_Boots" -> {"type": "and", "conditions": [...]}
+
+        Also handles Python AST unparsed strings from Subrule locations.
         """
         # Handle simple constants
         if rule_string == "True":
             return {"type": "constant", "value": True}
         if rule_string == "False":
             return {"type": "constant", "value": False}
+
+        # Check if this is a Python-style rule string (from ast.unparse of Subrule locations)
+        # These will have Python syntax like "state.has('Item', player)" instead of OOT DSL "Item"
+        if "state." in rule_string or ".has" in rule_string or "__ast_dump__:" in rule_string:
+            # This is a Python code string, we need to convert it to OOT DSL
+            # For now, return a helper that will handle the Python-style rule
+            return {
+                "type": "helper",
+                "name": "parse_oot_python_rule",
+                "args": [
+                    {"type": "constant", "value": rule_string}
+                ]
+            }
 
         # For now, return a placeholder helper that includes the original rule string
         # This will allow us to see what rules are being used and implement them progressively

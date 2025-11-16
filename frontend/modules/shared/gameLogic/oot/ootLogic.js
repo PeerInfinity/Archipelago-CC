@@ -523,6 +523,76 @@ function getComparisonValue(str, context) {
 }
 
 /**
+ * Parse and evaluate Python-style rule strings (from Subrule AST unparsing)
+ *
+ * Converts Python code like "state.has('Item', player)" back to evaluation
+ *
+ * @param {Object} snapshot - Game state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {string} pythonRuleString - Python code string from ast.unparse()
+ * @returns {boolean} Evaluation result
+ */
+function parse_oot_python_rule(snapshot, staticData, pythonRuleString) {
+  if (!pythonRuleString || typeof pythonRuleString !== 'string') {
+    return false;
+  }
+
+  // Handle AST dump format (fallback for Python < 3.9)
+  if (pythonRuleString.startsWith('__ast_dump__:')) {
+    console.warn('[OOT] Cannot evaluate AST dump format, returning false:', pythonRuleString.substring(0, 100));
+    return false;
+  }
+
+  try {
+    // Create evaluation context with helper functions
+    const context = createEvaluationContext(snapshot, staticData);
+
+    // Convert Python code to JavaScript and evaluate it
+    // Simple transformations:
+    // - state.has('Item', player) -> context.hasItem('Item')
+    // - state.has_any(...) -> context.hasGroup(...)
+    // - is_adult, is_child -> direct context calls
+
+    // For now, we'll try to extract the core logic from common patterns
+    let jsCode = pythonRuleString;
+
+    // Replace state.has('ItemName', player) with context.hasItem('ItemName')
+    jsCode = jsCode.replace(/state\.has\('([^']+)',\s*player\)/g, "context.hasItem('$1')");
+    jsCode = jsCode.replace(/state\.has\("([^"]+)",\s*player\)/g, 'context.hasItem("$1")');
+
+    // Replace state.has_all(...) patterns
+    jsCode = jsCode.replace(/state\.has_all\(/g, 'context.hasAllItems(');
+
+    // Replace state.has_any(...) patterns
+    jsCode = jsCode.replace(/state\.has_any\(/g, 'context.hasAnyItem(');
+
+    // Replace standalone references to helpers (is_adult, is_child, etc.)
+    // These might appear as just the identifier in the Python code
+    jsCode = jsCode.replace(/\bis_adult\b/g, 'context.is_adult()');
+    jsCode = jsCode.replace(/\bis_child\b/g, 'context.is_child()');
+    jsCode = jsCode.replace(/\bat_night\b/g, 'context.at_night()');
+    jsCode = jsCode.replace(/\bat_day\b/g, 'context.at_day()');
+
+    // Replace 'and' and 'or' with JavaScript equivalents
+    jsCode = jsCode.replace(/\band\b/g, '&&');
+    jsCode = jsCode.replace(/\bor\b/g, '||');
+    jsCode = jsCode.replace(/\bnot\b/g, '!');
+
+    // Replace True/False with JavaScript equivalents
+    jsCode = jsCode.replace(/\bTrue\b/g, 'true');
+    jsCode = jsCode.replace(/\bFalse\b/g, 'false');
+
+    // Evaluate the transformed JavaScript code
+    const result = eval(jsCode);
+    return !!result;
+
+  } catch (error) {
+    console.warn(`[OOT] Failed to parse Python rule: ${pythonRuleString}`, error);
+    return false; // Fail safe - location not accessible if rule can't be parsed
+  }
+}
+
+/**
  * Helper functions exported to the registry
  */
 export const helperFunctions = {
@@ -530,6 +600,11 @@ export const helperFunctions = {
    * Parse and evaluate OOT rule DSL
    */
   parse_oot_rule,
+
+  /**
+   * Parse and evaluate Python-style rules from Subrules
+   */
+  parse_oot_python_rule,
 
   /**
    * Standard has() helper for backward compatibility
