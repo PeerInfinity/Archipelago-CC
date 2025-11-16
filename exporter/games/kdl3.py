@@ -39,7 +39,24 @@ class KDL3GameExportHandler(BaseGameExportHandler):
     def expand_helper(self, helper_name: str):
         """Return None to preserve helper nodes as-is."""
         return None
-        
+
+    def should_preserve_as_helper(self, func_name: str) -> bool:
+        """
+        Preserve all KDL3 helper functions as helper calls to avoid inlining issues.
+
+        This prevents the analyzer from trying to inline complex helpers like
+        can_assemble_rob and can_fix_angel_wings which use advanced Python syntax
+        (array slicing, comprehensions) that the analyzer can't handle.
+        """
+        kdl3_helpers = [
+            'can_reach_boss', 'can_reach_rick', 'can_reach_kine', 'can_reach_coo',
+            'can_reach_nago', 'can_reach_chuchu', 'can_reach_pitch',
+            'can_reach_burning', 'can_reach_stone', 'can_reach_ice', 'can_reach_needle',
+            'can_reach_clean', 'can_reach_parasol', 'can_reach_spark', 'can_reach_cutter',
+            'can_assemble_rob', 'can_fix_angel_wings'
+        ]
+        return func_name in kdl3_helpers
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand and convert KDL3 rules, including f-strings."""
         if not rule:
