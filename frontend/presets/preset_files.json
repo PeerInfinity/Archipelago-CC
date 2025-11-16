@@ -2230,6 +2230,23 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      },
+      "AP_84719271504320872445": {
+        "seed": 3,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Pokemon Emerald"
+          }
+        ],
+        "files": [
+          "AP_84719271504320872445.archipelago",
+          "AP_84719271504320872445_P1_Player1.apemerald",
+          "AP_84719271504320872445_Spoiler.txt",
+          "AP_84719271504320872445_rules.json",
+          "AP_84719271504320872445_spheres_log.jsonl"
+        ]
       }
     },
     "test_result": {
