@@ -691,6 +691,23 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      },
+      "AP_55941320597534372051": {
+        "seed": 10,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Castlevania 64"
+          }
+        ],
+        "files": [
+          "AP_55941320597534372051.archipelago",
+          "AP_55941320597534372051_P1_Player1.apcv64",
+          "AP_55941320597534372051_Spoiler.txt",
+          "AP_55941320597534372051_rules.json",
+          "AP_55941320597534372051_spheres_log.jsonl"
+        ]
       }
     },
     "test_result": {
