@@ -99,13 +99,12 @@ export function _lingo_can_satisfy_requirements(snapshot, staticData, access) {
 
   // Check room requirements - all required rooms must be reachable
   if (access.rooms && access.rooms.length > 0) {
-    const reachableRegions = snapshot?.reachableRegions || new Set();
+    const regionReachability = snapshot?.regionReachability || {};
     console.log('[_lingo_can_satisfy_requirements] Checking rooms:', access.rooms);
-    console.log('[_lingo_can_satisfy_requirements] Reachable regions:',
-      reachableRegions instanceof Set ? Array.from(reachableRegions) : reachableRegions);
+    console.log('[_lingo_can_satisfy_requirements] Region reachability:', regionReachability);
     for (const roomName of access.rooms) {
-      if (!reachableRegions.has(roomName)) {
-        console.log(`[_lingo_can_satisfy_requirements] Room '${roomName}' not reachable, returning false`);
+      if (regionReachability[roomName] !== 'reachable') {
+        console.log(`[_lingo_can_satisfy_requirements] Room '${roomName}' not reachable (status: ${regionReachability[roomName]}), returning false`);
         return false;
       }
     }
@@ -122,20 +121,22 @@ export function _lingo_can_satisfy_requirements(snapshot, staticData, access) {
     }
   }
 
-  // Check color requirements (only if shuffle_colors is enabled)
-  // For now, we'll check if the setting is in staticData
-  const settings = staticData?.settings?.[playerId] || {};
-  const shuffleColors = settings.shuffle_colors;
-
-  if (access.colors && access.colors.length > 0 && shuffleColors) {
+  // Check color requirements
+  // If a location has color requirements, we should always check them
+  // (the exporter wouldn't have added them to access.colors if they weren't needed)
+  if (access.colors && access.colors.length > 0) {
     const inventory = snapshot?.inventory || {};
+    console.log('[_lingo_can_satisfy_requirements] Checking colors:', access.colors);
+    console.log('[_lingo_can_satisfy_requirements] Inventory:', inventory);
     for (const color of access.colors) {
       // Colors are capitalized in the item pool
       const colorItem = color.charAt(0).toUpperCase() + color.slice(1);
       if (!inventory[colorItem] || inventory[colorItem] < 1) {
+        console.log(`[_lingo_can_satisfy_requirements] Color '${colorItem}' not in inventory, returning false`);
         return false;
       }
     }
+    console.log('[_lingo_can_satisfy_requirements] All required colors are in inventory');
   }
 
   // Check item requirements - all required items must be in inventory
