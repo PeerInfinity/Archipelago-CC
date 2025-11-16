@@ -36,5 +36,7 @@ if (typeof func === 'boolean') {
 This allows the rule engine to correctly handle function_call structures where the function field is a rule that evaluates to a boolean, treating the boolean as the result of the "function call".
 
 **Result:**
-Test now progresses past sphere 8.11 successfully. Regions that depend on this fix (like REGION_ARTISAN_CAVE_1F/MAIN, REGION_BATTLE_FRONTIER_OUTSIDE_EAST/ABOVE_WATERFALL, etc.) are now properly accessible when requirements are met.
+Test now passes completely! All spheres process correctly and regions are properly accessible when requirements are met. The spoiler test completes with "Overall Result: true".
+
+Note: Initial test run after the fix showed a timeout at sphere 7.117, but this was a transient issue. Subsequent runs pass consistently.
 
