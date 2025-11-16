@@ -3,7 +3,7 @@
   "game_name": "Bomb Rush Cyberfunk",
   "game_directory": "bomb_rush_cyberfunk",
   "archipelago_version": "0.6.4",
-  "generation_seed": 1,
+  "generation_seed": 10,
   "player_names": {
     "1": "Player1"
   },
@@ -65,9 +65,9 @@
               ]
             },
             "item": {
-              "name": "Graffiti (XL - WILD STRUXXA)",
+              "name": "Music (Two Days Off)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -97,9 +97,9 @@
               ]
             },
             "item": {
-              "name": "Music (Two Days Off)",
+              "name": "Graffiti (M - Zona Leste)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -129,7 +129,7 @@
               ]
             },
             "item": {
-              "name": "Graffiti (XL - Gamex UPA ABL)",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -161,7 +161,7 @@
               ]
             },
             "item": {
-              "name": "Inline Skates (Strawberry Missiles)",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -193,7 +193,7 @@
               ]
             },
             "item": {
-              "name": "8 REP",
+              "name": "Graffiti (L - SpawningSeason)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -225,9 +225,9 @@
               ]
             },
             "item": {
-              "name": "Music (In The Pocket)",
+              "name": "24 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -257,7 +257,7 @@
               ]
             },
             "item": {
-              "name": "Music (Chromebies)",
+              "name": "Music (JACK DA FUNK)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -289,7 +289,7 @@
               ]
             },
             "item": {
-              "name": "Graffiti (XL - Bomb Burner)",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -321,9 +321,9 @@
               ]
             },
             "item": {
-              "name": "Graffiti (L - Campaign Trail)",
+              "name": "Music (Funk Express)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -353,7 +353,7 @@
               ]
             },
             "item": {
-              "name": "16 REP",
+              "name": "Graffiti (M - colorBOMB)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -385,9 +385,9 @@
               ]
             },
             "item": {
-              "name": "BMX (Ceremony)",
+              "name": "Music (DA PEOPLE)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -417,7 +417,7 @@
               ]
             },
             "item": {
-              "name": "Outfit (Mesh - Winter)",
+              "name": "Outfit (Rise - Winter)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -449,9 +449,9 @@
               ]
             },
             "item": {
-              "name": "Music (JACK DA FUNK)",
+              "name": "Coil",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -481,7 +481,7 @@
               ]
             },
             "item": {
-              "name": "Outfit (Solace - Autumn)",
+              "name": "Skateboard (Just Swell)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -513,7 +513,7 @@
               ]
             },
             "item": {
-              "name": "8 REP",
+              "name": "Graffiti (XL - FATE)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -545,7 +545,7 @@
               ]
             },
             "item": {
-              "name": "Graffiti (XL - Raver Funk)",
+              "name": "Inline Skates (Sweet Royale)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -577,9 +577,9 @@
               ]
             },
             "item": {
-              "name": "Music (Bounce Upon A Time)",
+              "name": "16 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -609,7 +609,7 @@
               ]
             },
             "item": {
-              "name": "Shine",
+              "name": "32 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -641,7 +641,7 @@
               ]
             },
             "item": {
-              "name": "8 REP",
+              "name": "Graffiti (M - BOMB BEATS)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -673,9 +673,9 @@
               ]
             },
             "item": {
-              "name": "Music (Condensed milk)",
+              "name": "Vinyl",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -705,7 +705,7 @@
               ]
             },
             "item": {
-              "name": "Inline Skates (Mech Adversary)",
+              "name": "Graffiti (L - WHOLE SIXER)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -737,7 +737,7 @@
               ]
             },
             "item": {
-              "name": "16 REP",
+              "name": "Graffiti (XL - Gamex UPA ABL)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -769,7 +769,7 @@
               ]
             },
             "item": {
-              "name": "Graffiti (L - FREAKS)",
+              "name": "Rise",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -801,7 +801,7 @@
               ]
             },
             "item": {
-              "name": "16 REP",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -833,9 +833,9 @@
               ]
             },
             "item": {
-              "name": "32 REP",
+              "name": "Music (Spectres)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -865,7 +865,7 @@
               ]
             },
             "item": {
-              "name": "Rise",
+              "name": "Graffiti (L - Moai Marathon)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -897,9 +897,9 @@
               ]
             },
             "item": {
-              "name": "Graffiti (M - B-boy Love)",
+              "name": "Skateboard (Lazer Accuracy)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -929,7 +929,7 @@
               ]
             },
             "item": {
-              "name": "BMX (Gum)",
+              "name": "Graffiti (M - BLOCKY)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -961,9 +961,9 @@
               ]
             },
             "item": {
-              "name": "Music (House Cats Mixtape)",
+              "name": "Frank",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -993,7 +993,7 @@
               ]
             },
             "item": {
-              "name": "24 REP",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1025,9 +1025,9 @@
               ]
             },
             "item": {
-              "name": "16 REP",
+              "name": "Outfit (Red - Autumn)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1057,9 +1057,9 @@
               ]
             },
             "item": {
-              "name": "Music (Sunshine Popping Mixtape)",
+              "name": "Graffiti (M - Stacked Symbols)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1089,7 +1089,7 @@
               ]
             },
             "item": {
-              "name": "Flesh Prince",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1121,9 +1121,9 @@
               ]
             },
             "item": {
-              "name": "Frank",
+              "name": "Music (Plume)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1153,7 +1153,7 @@
               ]
             },
             "item": {
-              "name": "Graffiti (L - Graffo Le Fou)",
+              "name": "Graffiti (XL - headphones on Helmet on)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1185,7 +1185,7 @@
               ]
             },
             "item": {
-              "name": "BMX (oyo)",
+              "name": "Graffiti (XL - end 2 end)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1217,7 +1217,7 @@
               ]
             },
             "item": {
-              "name": "16 REP",
+              "name": "Graffiti (M - TeleBinge)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1249,9 +1249,9 @@
               ]
             },
             "item": {
-              "name": "Outfit (Coil - Autumn)",
+              "name": "Devil Theory",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1281,7 +1281,7 @@
               ]
             },
             "item": {
-              "name": "16 REP",
+              "name": "24 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1313,9 +1313,9 @@
               ]
             },
             "item": {
-              "name": "Music (Scraped On The Way Out)",
+              "name": "32 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1345,7 +1345,7 @@
               ]
             },
             "item": {
-              "name": "16 REP",
+              "name": "Graffiti (L - RECORD.HEAD)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1377,9 +1377,9 @@
               ]
             },
             "item": {
-              "name": "Skateboard (Sylk)",
+              "name": "8 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1409,9 +1409,9 @@
               ]
             },
             "item": {
-              "name": "8 REP",
+              "name": "Music (Beastmode Hip Hop Mixtape)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1441,7 +1441,7 @@
               ]
             },
             "item": {
-              "name": "32 REP",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1473,9 +1473,9 @@
               ]
             },
             "item": {
-              "name": "Graffiti (L - Fang It Up!)",
+              "name": "Outfit (Solace - Winter)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1505,9 +1505,9 @@
               ]
             },
             "item": {
-              "name": "8 REP",
+              "name": "Music (You Can Say Hi)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1537,7 +1537,7 @@
               ]
             },
             "item": {
-              "name": "Graffiti (L - Tius)",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1569,9 +1569,9 @@
               ]
             },
             "item": {
-              "name": "16 REP",
+              "name": "Outfit (Solace - Autumn)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1601,9 +1601,9 @@
               ]
             },
             "item": {
-              "name": "Outfit (Tryce - Autumn)",
+              "name": "16 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1633,7 +1633,7 @@
               ]
             },
             "item": {
-              "name": "Music (Precious Thing)",
+              "name": "Outfit (Shine - Winter)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1665,7 +1665,7 @@
               ]
             },
             "item": {
-              "name": "BMX (XXX)",
+              "name": "32 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1697,7 +1697,7 @@
               ]
             },
             "item": {
-              "name": "Coil",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1729,9 +1729,9 @@
               ]
             },
             "item": {
-              "name": "Outfit (Bel - Autumn)",
+              "name": "24 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1761,7 +1761,7 @@
               ]
             },
             "item": {
-              "name": "24 REP",
+              "name": "Graffiti (L - Campaign Trail)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1793,7 +1793,7 @@
               ]
             },
             "item": {
-              "name": "8 REP",
+              "name": "Graffiti (M - QUICK BING)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1825,7 +1825,7 @@
               ]
             },
             "item": {
-              "name": "24 REP",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1857,7 +1857,7 @@
               ]
             },
             "item": {
-              "name": "8 REP",
+              "name": "Graffiti (L - Jd Vila Formosa)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1889,7 +1889,7 @@
               ]
             },
             "item": {
-              "name": "16 REP",
+              "name": "Graffiti (M - Pora)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1921,9 +1921,9 @@
               ]
             },
             "item": {
-              "name": "Music (Breaking Machine Mixtape)",
+              "name": "Graffiti (L - skate or di3)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1953,7 +1953,7 @@
               ]
             },
             "item": {
-              "name": "32 REP",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1985,7 +1985,7 @@
               ]
             },
             "item": {
-              "name": "24 REP",
+              "name": "Rave",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2017,7 +2017,7 @@
               ]
             },
             "item": {
-              "name": "8 REP",
+              "name": "32 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2049,7 +2049,7 @@
               ]
             },
             "item": {
-              "name": "Graffiti (M - TeleBinge)",
+              "name": "Inline Skates (Mech Adversary)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2081,9 +2081,9 @@
               ]
             },
             "item": {
-              "name": "16 REP",
+              "name": "Outfit (Vinyl - Winter)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2113,7 +2113,7 @@
               ]
             },
             "item": {
-              "name": "Graffiti (M - Devil 68)",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2145,7 +2145,7 @@
               ]
             },
             "item": {
-              "name": "Graffiti (L - WHOLE SIXER)",
+              "name": "32 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2177,7 +2177,7 @@
               ]
             },
             "item": {
-              "name": "Graffiti (M - BOMB BEATS)",
+              "name": "BMX (Gum)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2209,9 +2209,9 @@
               ]
             },
             "item": {
-              "name": "Music (Iridium)",
+              "name": "8 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2241,9 +2241,9 @@
               ]
             },
             "item": {
-              "name": "Outfit (Coil - Winter)",
+              "name": "Inline Skates (Sharpshooters)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2273,7 +2273,7 @@
               ]
             },
             "item": {
-              "name": "16 REP",
+              "name": "Graffiti (L - Boom)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2337,7 +2337,7 @@
               ]
             },
             "item": {
-              "name": "Music (Spectres)",
+              "name": "Music (Last Hoorah)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2369,7 +2369,7 @@
               ]
             },
             "item": {
-              "name": "Graffiti (XL - Bomb Croc)",
+              "name": "BMX (Rigid No.6)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2401,9 +2401,9 @@
               ]
             },
             "item": {
-              "name": "Music (Chuckin Up)",
+              "name": "Inline Skates (ck)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2433,7 +2433,7 @@
               ]
             },
             "item": {
-              "name": "8 REP",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2465,7 +2465,7 @@
               ]
             },
             "item": {
-              "name": "8 REP",
+              "name": "Graffiti (XL - SECOND SIGHT)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2497,9 +2497,9 @@
               ]
             },
             "item": {
-              "name": "16 REP",
+              "name": "Outfit (Tryce - Autumn)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2529,9 +2529,9 @@
               ]
             },
             "item": {
-              "name": "Music (Operator)",
+              "name": "Inline Skates (Glaciers)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -2585,7 +2585,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (XL - headphones on Helmet on)",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2599,7 +2599,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (M - Vom'B)",
+              "name": "Graffiti (L - Fang It Up!)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2613,7 +2613,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (M - colorBOMB)",
+              "name": "Flesh Prince",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2627,9 +2627,9 @@
               "value": true
             },
             "item": {
-              "name": "Futurism",
+              "name": "Music (Feel The Funk (Computer Love))",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2641,7 +2641,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (XL - Bombing by FireMan)",
+              "name": "Solace",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2655,9 +2655,9 @@
               "value": true
             },
             "item": {
-              "name": "Music (Refuse)",
+              "name": "Eclipse",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2669,7 +2669,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (L - Moai Marathon)",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2683,7 +2683,7 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "24 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2719,9 +2719,9 @@
               }
             },
             "item": {
-              "name": "Skateboard (Terrence)",
+              "name": "Inline Skates (Ice Cold Killers)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2740,9 +2740,9 @@
               }
             },
             "item": {
-              "name": "Inline Skates (Glaciers)",
+              "name": "Music (In The Pocket)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2761,7 +2761,7 @@
               }
             },
             "item": {
-              "name": "Inline Skates (Red Industry)",
+              "name": "DOT.EXE",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2782,7 +2782,7 @@
               }
             },
             "item": {
-              "name": "16 REP",
+              "name": "BMX (Dedication)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2825,7 +2825,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (M - Zona Leste)",
+              "name": "Bel",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2839,7 +2839,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (M - OVERWHELMME)",
+              "name": "Graffiti (XL - Bomb Croc)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2853,7 +2853,7 @@
               "value": true
             },
             "item": {
-              "name": "24 REP",
+              "name": "Graffiti (XL - Deep Dive)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2889,7 +2889,7 @@
               }
             },
             "item": {
-              "name": "24 REP",
+              "name": "Graffiti (XL - Raver Funk)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2906,7 +2906,7 @@
               }
             },
             "item": {
-              "name": "Music (You Can Say Hi)",
+              "name": "Music (hwbouths)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2923,7 +2923,7 @@
               }
             },
             "item": {
-              "name": "Bel",
+              "name": "Graffiti (XL - Gold Rush)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3011,9 +3011,9 @@
               "value": true
             },
             "item": {
-              "name": "Skateboard (Taiga)",
+              "name": "DJ Cyber",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3025,7 +3025,7 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "Graffiti (L - Tius)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3039,9 +3039,9 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "Outfit (Felix - Autumn)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3053,7 +3053,7 @@
               "value": true
             },
             "item": {
-              "name": "Rietveld",
+              "name": "24 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3067,7 +3067,7 @@
               "value": true
             },
             "item": {
-              "name": "Outfit (Red - Autumn)",
+              "name": "Music (Next To Me)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3081,7 +3081,7 @@
               "value": true
             },
             "item": {
-              "name": "Inline Skates (Orange Blasters)",
+              "name": "Graffiti (L - Graffo Le Fou)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3096,7 +3096,7 @@
               "args": []
             },
             "item": {
-              "name": "Solace",
+              "name": "BMX (Mr. Taupe)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3111,7 +3111,7 @@
               "args": []
             },
             "item": {
-              "name": "Graffiti (L - INFINITY)",
+              "name": "Graffiti (M - Thick Candy)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3126,9 +3126,9 @@
               "args": []
             },
             "item": {
-              "name": "8 REP",
+              "name": "Outfit (Shine - Autumn)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3162,7 +3162,7 @@
               }
             },
             "item": {
-              "name": "8 REP",
+              "name": "Graffiti (L - VoodooBoy)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3183,7 +3183,7 @@
               }
             },
             "item": {
-              "name": "24 REP",
+              "name": "BMX (Terrazza)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3218,9 +3218,9 @@
               "value": true
             },
             "item": {
-              "name": "Outfit (Shine - Autumn)",
+              "name": "16 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3232,9 +3232,9 @@
               "value": true
             },
             "item": {
-              "name": "Skateboard (Death Boogie)",
+              "name": "Graffiti (M - B-boy Love)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3256,7 +3256,7 @@
               ]
             },
             "item": {
-              "name": "Music (Anime Break)",
+              "name": "Outfit (Bel - Autumn)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3273,9 +3273,9 @@
               }
             },
             "item": {
-              "name": "Music (GET ENUF)",
+              "name": "8 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -3308,9 +3308,9 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (L - NOISY NINJA)",
+              "name": "Music (Iridium)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3322,7 +3322,7 @@
               "value": true
             },
             "item": {
-              "name": "Music (Big City Life)",
+              "name": "Outfit (Rise - Autumn)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3366,7 +3366,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (L - wild rush)",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3380,9 +3380,9 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "Music (Morning Glow)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3401,7 +3401,7 @@
               }
             },
             "item": {
-              "name": "Graffiti (M - Stacked Symbols)",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3425,7 +3425,7 @@
               ]
             },
             "item": {
-              "name": "Music (Plume)",
+              "name": "Music (Breaking Machine Mixtape)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3520,7 +3520,7 @@
               "value": true
             },
             "item": {
-              "name": "24 REP",
+              "name": "Graffiti (M - SPRAYTANICPANIC!)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3534,7 +3534,7 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "Graffiti (L - FREAKS)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3548,7 +3548,7 @@
               "value": true
             },
             "item": {
-              "name": "DOT.EXE",
+              "name": "Graffiti (XL - MegaHood)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3590,7 +3590,7 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "Graffiti (L - buttercup)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3604,9 +3604,9 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (L - Messenger Mural)",
+              "name": "Music (Trinitron)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3618,9 +3618,9 @@
               "value": true
             },
             "item": {
-              "name": "Music (Next To Me)",
+              "name": "Graffiti (M - Street classic)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3632,7 +3632,7 @@
               "value": true
             },
             "item": {
-              "name": "32 REP",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3646,7 +3646,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (M - pico pow)",
+              "name": "Graffiti (XL - Bombing by FireMan)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3660,9 +3660,9 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "Skateboard (Taiga)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3674,7 +3674,7 @@
               "value": true
             },
             "item": {
-              "name": "48 REP",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3688,7 +3688,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (XL - Deep Dive)",
+              "name": "24 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3702,9 +3702,9 @@
               "value": true
             },
             "item": {
-              "name": "Music (AGUA)",
+              "name": "8 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3716,9 +3716,9 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (M - QUICK BING)",
+              "name": "Skateboard (Sylk)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3730,9 +3730,9 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (M - BLOCKY)",
+              "name": "Music (Operator)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3747,7 +3747,7 @@
               }
             },
             "item": {
-              "name": "Outfit (Red - Winter)",
+              "name": "Music (Chuckin Up)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3805,9 +3805,9 @@
               "args": []
             },
             "item": {
-              "name": "Music (Light Switch)",
+              "name": "Inline Skates (Orange Blasters)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3820,7 +3820,7 @@
               "args": []
             },
             "item": {
-              "name": "16 REP",
+              "name": "Mesh",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3835,7 +3835,7 @@
               "args": []
             },
             "item": {
-              "name": "Graffiti (L - RECORD.HEAD)",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3849,7 +3849,7 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "Graffiti (L - INFINITY)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3863,9 +3863,9 @@
               "value": true
             },
             "item": {
-              "name": "Skateboard (Lazer Accuracy)",
+              "name": "Graffiti (M - SHOGUN)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3877,7 +3877,7 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3913,9 +3913,9 @@
               }
             },
             "item": {
-              "name": "Skateboard (Devon)",
+              "name": "Graffiti (XL - VIBRATIONS)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3927,7 +3927,7 @@
               "value": true
             },
             "item": {
-              "name": "48 REP",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3941,9 +3941,9 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "Music (Chromebies)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3955,7 +3955,7 @@
               "value": true
             },
             "item": {
-              "name": "Music (Beastmode Hip Hop Mixtape)",
+              "name": "Music (Hair Dun Nails Dun)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3969,9 +3969,9 @@
               "value": true
             },
             "item": {
-              "name": "Outfit (Shine - Winter)",
+              "name": "16 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3990,9 +3990,9 @@
               }
             },
             "item": {
-              "name": "Skateboard (Just Swell)",
+              "name": "BMX (oyo)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4007,9 +4007,9 @@
               }
             },
             "item": {
-              "name": "Graffiti (M - Pora)",
+              "name": "Skateboard (Devon)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -4037,7 +4037,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (XL - end 2 end)",
+              "name": "Graffiti (XL - BiGSHiNYBoMB)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4051,7 +4051,7 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4091,9 +4091,9 @@
               ]
             },
             "item": {
-              "name": "Mesh",
+              "name": "Skateboard (Terrence)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4105,7 +4105,7 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4119,9 +4119,9 @@
               "value": true
             },
             "item": {
-              "name": "Music (hwbouths)",
+              "name": "24 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4133,7 +4133,7 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "32 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4147,9 +4147,9 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "Music (Refuse)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4171,7 +4171,7 @@
               ]
             },
             "item": {
-              "name": "24 REP",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4210,9 +4210,9 @@
               "value": true
             },
             "item": {
-              "name": "Skateboard (Mantra)",
+              "name": "Graffiti (XL - MOTORCYCLE GANG)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -4249,7 +4249,7 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "Graffiti (L - Messenger Mural)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4285,7 +4285,7 @@
               }
             },
             "item": {
-              "name": "8 REP",
+              "name": "24 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4299,7 +4299,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (XL - SECOND SIGHT)",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4313,9 +4313,9 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "Outfit (Vinyl - Autumn)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4399,7 +4399,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (XL - MegaHood)",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4413,9 +4413,9 @@
               "value": true
             },
             "item": {
-              "name": "Music (Morning Glow)",
+              "name": "BMX (XXX)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4427,7 +4427,7 @@
               "value": true
             },
             "item": {
-              "name": "Inline Skates (Sweet Royale)",
+              "name": "BMX (Ceremony)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4463,7 +4463,7 @@
               }
             },
             "item": {
-              "name": "Vinyl",
+              "name": "Graffiti (XL - Bomb Burner)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4477,9 +4477,9 @@
               "value": true
             },
             "item": {
-              "name": "Outfit (Vinyl - Winter)",
+              "name": "16 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -4507,9 +4507,9 @@
               "value": true
             },
             "item": {
-              "name": "Outfit (Mesh - Autumn)",
+              "name": "Graffiti (M - Vom'B)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -4560,7 +4560,7 @@
               "value": true
             },
             "item": {
-              "name": "BMX (Mr. Taupe)",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4575,7 +4575,7 @@
               "args": []
             },
             "item": {
-              "name": "Graffiti (XL - FATE)",
+              "name": "Futurism",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4590,9 +4590,9 @@
               "args": []
             },
             "item": {
-              "name": "24 REP",
+              "name": "Outfit (Coil - Autumn)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4605,9 +4605,9 @@
               "args": []
             },
             "item": {
-              "name": "8 REP",
+              "name": "Outfit (Felix - Winter)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4620,7 +4620,7 @@
               "args": []
             },
             "item": {
-              "name": "Inline Skates (Sharpshooters)",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4634,9 +4634,9 @@
               "value": true
             },
             "item": {
-              "name": "Outfit (Bel - Winter)",
+              "name": "Tryce",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4648,7 +4648,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (L - Boom)",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4662,9 +4662,9 @@
               "value": true
             },
             "item": {
-              "name": "BMX (Terrazza)",
+              "name": "Music (House Cats Mixtape)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4676,9 +4676,9 @@
               "value": true
             },
             "item": {
-              "name": "Music (Last Hoorah)",
+              "name": "Camera App",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4712,7 +4712,7 @@
               }
             },
             "item": {
-              "name": "Tryce",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4726,7 +4726,7 @@
               "value": true
             },
             "item": {
-              "name": "Inline Skates (ck)",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4747,9 +4747,9 @@
               }
             },
             "item": {
-              "name": "Graffiti (L - Jd Vila Formosa)",
+              "name": "Outfit (Tryce - Winter)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -4786,9 +4786,9 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "Skateboard (Mantra)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -4834,7 +4834,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (M - SHOGUN)",
+              "name": "Graffiti (L - Lauder)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4848,9 +4848,9 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (M - Street classic)",
+              "name": "Music (AGUA)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4862,7 +4862,7 @@
               "value": true
             },
             "item": {
-              "name": "Eclipse",
+              "name": "Oldhead",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4876,7 +4876,7 @@
               "value": true
             },
             "item": {
-              "name": "Rave",
+              "name": "Graffiti (XL - WILD STRUXXA)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4897,7 +4897,7 @@
               }
             },
             "item": {
-              "name": "Oldhead",
+              "name": "Graffiti (XL - Pirate's Life 4 Me)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4960,9 +4960,9 @@
               "value": true
             },
             "item": {
-              "name": "Outfit (Felix - Autumn)",
+              "name": "8 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4974,7 +4974,7 @@
               "value": true
             },
             "item": {
-              "name": "Inline Skates (Ice Cold Killers)",
+              "name": "24 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4988,9 +4988,9 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "Outfit (Mesh - Autumn)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5024,9 +5024,9 @@
               }
             },
             "item": {
-              "name": "Outfit (Rise - Autumn)",
+              "name": "8 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5041,9 +5041,9 @@
               }
             },
             "item": {
-              "name": "Graffiti (M - 0m33)",
+              "name": "Music (Sunshine Popping Mixtape)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5058,9 +5058,9 @@
               }
             },
             "item": {
-              "name": "Music (DA PEOPLE)",
+              "name": "Graffiti (M - Devil 68)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5075,9 +5075,9 @@
               }
             },
             "item": {
-              "name": "Devil Theory",
+              "name": "Music (Scraped On The Way Out)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5092,9 +5092,9 @@
               }
             },
             "item": {
-              "name": "Outfit (Solace - Winter)",
+              "name": "24 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -5149,7 +5149,7 @@
               "value": true
             },
             "item": {
-              "name": "24 REP",
+              "name": "Graffiti (M - 0m33)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5163,9 +5163,9 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (XL - BiGSHiNYBoMB)",
+              "name": "Music (I Wanna Kno)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5177,9 +5177,9 @@
               "value": true
             },
             "item": {
-              "name": "Skateboard (Maceo)",
+              "name": "16 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5191,7 +5191,7 @@
               "value": true
             },
             "item": {
-              "name": "32 REP",
+              "name": "Rietveld",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5205,9 +5205,9 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "Outfit (Red - Winter)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5219,7 +5219,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (XL - MOTORCYCLE GANG)",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5249,9 +5249,9 @@
               "args": []
             },
             "item": {
-              "name": "16 REP",
+              "name": "Music (Big City Life)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5316,7 +5316,7 @@
               }
             },
             "item": {
-              "name": "Graffiti (XL - Web Spitter)",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5333,9 +5333,9 @@
               }
             },
             "item": {
-              "name": "Graffiti (XL - Gold Rush)",
+              "name": "Music (watchyaback!)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5350,7 +5350,7 @@
               }
             },
             "item": {
-              "name": "Outfit (Rave - Autumn)",
+              "name": "Music (Bounce Upon A Time)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5367,7 +5367,7 @@
               }
             },
             "item": {
-              "name": "Music (Funk Express)",
+              "name": "Outfit (Rave - Winter)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5384,9 +5384,9 @@
               }
             },
             "item": {
-              "name": "8 REP",
+              "name": "Outfit (Rave - Autumn)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5401,9 +5401,9 @@
               }
             },
             "item": {
-              "name": "16 REP",
+              "name": "Music (Light Switch)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5418,9 +5418,9 @@
               }
             },
             "item": {
-              "name": "Music (watchyaback!)",
+              "name": "Inline Skates (Strawberry Missiles)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -5466,9 +5466,9 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (L - buttercup)",
+              "name": "Music (GET ENUF)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5502,9 +5502,9 @@
               }
             },
             "item": {
-              "name": "Music (Trinitron)",
+              "name": "16 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5516,7 +5516,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (XL - VIBRATIONS)",
+              "name": "Graffiti (XL - Web Spitter)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5530,7 +5530,7 @@
               "value": true
             },
             "item": {
-              "name": "DJ Cyber",
+              "name": "24 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5544,7 +5544,7 @@
               "value": true
             },
             "item": {
-              "name": "24 REP",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5558,9 +5558,9 @@
               "value": true
             },
             "item": {
-              "name": "Outfit (Tryce - Winter)",
+              "name": "8 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5660,7 +5660,7 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5674,9 +5674,9 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "Outfit (Bel - Winter)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5691,7 +5691,7 @@
               }
             },
             "item": {
-              "name": "16 REP",
+              "name": "8 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5738,9 +5738,9 @@
               "value": true
             },
             "item": {
-              "name": "Music (I Wanna Kno)",
+              "name": "Graffiti (M - OVERWHELMME)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5752,7 +5752,7 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5766,7 +5766,7 @@
               "value": true
             },
             "item": {
-              "name": "8 REP",
+              "name": "32 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5814,9 +5814,9 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (L - Lauder)",
+              "name": "Skateboard (Maceo)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5828,9 +5828,9 @@
               "value": true
             },
             "item": {
-              "name": "Camera App",
+              "name": "Skateboard (Death Boogie)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5842,7 +5842,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (M - Teddy 4)",
+              "name": "32 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5856,9 +5856,9 @@
               "value": true
             },
             "item": {
-              "name": "Music (Hair Dun Nails Dun)",
+              "name": "16 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5870,9 +5870,9 @@
               "value": true
             },
             "item": {
-              "name": "24 REP",
+              "name": "Outfit (Coil - Winter)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5944,9 +5944,9 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (L - skate or di3)",
+              "name": "Outfit (Mesh - Winter)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5958,9 +5958,9 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "Music (Condensed milk)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5982,9 +5982,9 @@
               ]
             },
             "item": {
-              "name": "48 REP",
+              "name": "Music (Anime Break)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6006,9 +6006,9 @@
               ]
             },
             "item": {
-              "name": "Music (Feel The Funk (Computer Love))",
+              "name": "Graffiti (L - NOISY NINJA)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6021,9 +6021,9 @@
               "args": []
             },
             "item": {
-              "name": "Outfit (Rave - Winter)",
+              "name": "Shine",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6035,7 +6035,7 @@
               "value": true
             },
             "item": {
-              "name": "BMX (Steel Wheeler)",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6049,7 +6049,7 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "24 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6063,7 +6063,7 @@
               "value": true
             },
             "item": {
-              "name": "BMX (Rigid No.6)",
+              "name": "Graffiti (L - wild rush)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6102,9 +6102,9 @@
               "value": true
             },
             "item": {
-              "name": "Outfit (Vinyl - Autumn)",
+              "name": "16 REP",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6116,7 +6116,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (M - SPRAYTANICPANIC!)",
+              "name": "24 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6173,9 +6173,9 @@
               "value": true
             },
             "item": {
-              "name": "16 REP",
+              "name": "Music (Precious Thing)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -6203,7 +6203,7 @@
               "value": true
             },
             "item": {
-              "name": "BMX (Dedication)",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6217,7 +6217,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (M - Thick Candy)",
+              "name": "Inline Skates (Red Industry)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6231,7 +6231,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (XL - Pirate's Life 4 Me)",
+              "name": "32 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6245,7 +6245,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (L - VoodooBoy)",
+              "name": "Graffiti (M - Teddy 4)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6269,7 +6269,7 @@
               ]
             },
             "item": {
-              "name": "8 REP",
+              "name": "16 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6283,9 +6283,9 @@
               "value": true
             },
             "item": {
-              "name": "Outfit (Rise - Winter)",
+              "name": "BMX (Steel Wheeler)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6297,7 +6297,7 @@
               "value": true
             },
             "item": {
-              "name": "Graffiti (L - SpawningSeason)",
+              "name": "24 REP",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6314,9 +6314,9 @@
               }
             },
             "item": {
-              "name": "Outfit (Felix - Winter)",
+              "name": "Graffiti (M - pico pow)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8464,10 +8464,7 @@
         "id": 2308163,
         "groups": [
           "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false
+        ]
       },
       "Camera App": {
         "classification": "progression",
@@ -8524,11 +8521,10 @@
   },
   "itempool_counts": {
     "1": {
-      "16 REP": 64,
-      "24 REP": 26,
-      "32 REP": 10,
-      "48 REP": 6,
-      "8 REP": 68,
+      "16 REP": 66,
+      "24 REP": 28,
+      "32 REP": 18,
+      "8 REP": 62,
       "BMX (Ceremony)": 2,
       "BMX (Dedication)": 2,
       "BMX (Gum)": 2,

@@ -1,0 +1,489 @@
+﻿Archipelago Version 0.6.4  -  Seed: 4
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Bomb Rush Cyberfunk
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Logic:                           Glitchless
+Skip Intro:                      Yes
+Skip Dreams:                     No
+Skip Statue Hands:               No
+Total REP:                       1400
+Extra REP Required:              No
+Starting Movestyle:              Skateboard
+Limited Graffiti:                No
+Small Graffiti Uses:             Separate
+Skip Polo Photos:                No
+Don't Save Photos:               No
+Score Difficulty:                Normal
+Damage Multiplier:               1
+Death Link:                      No
+
+
+Locations:
+
+Hideout: Half pipe CD: Graffiti (L - VoodooBoy)
+Hideout: Garage tower CD: 24 REP
+Hideout: Rooftop CD: Graffiti (XL - Pirate's Life 4 Me)
+Hideout: Under staircase graffiti: 16 REP
+Hideout: Secret area graffiti: 16 REP
+Hideout: Rear studio graffiti: Graffiti (M - TeleBinge)
+Hideout: Corner ledge graffiti: Music (Plume)
+Hideout: Upper platform skateboard: Graffiti (L - wild rush)
+Hideout: BMX garage skateboard: Music (In The Pocket)
+Hideout: Unlock phone app: 16 REP
+Hideout: Vinyl joins the crew: 16 REP
+Hideout: Solace joins the crew: Graffiti (L - Lauder)
+Versum Hill: Main street Robo Post graffiti: Graffiti (XL - MegaHood)
+Versum Hill: Behind glass graffiti: 16 REP
+Versum Hill: Office room graffiti: Music (Big City Life)
+Versum Hill: Under bridge graffiti: 16 REP
+Versum Hill: Train rail ledge skateboard: Graffiti (L - Fang It Up!)
+Versum Hill: Train station CD: Devil Theory
+Versum Hill: Billboard platform outfit: Graffiti (XL - Raver Funk)
+Versum Hill: Hilltop Robo Post CD: 8 REP
+Versum Hill: Hill secret skateboard: BMX (Rigid No.6)
+Versum Hill: Rooftop CD: Outfit (Mesh - Autumn)
+Versum Hill: Wallrunning challenge reward: 24 REP
+Versum Hill: Manual challenge reward: 16 REP
+Versum Hill: Corner challenge reward: Graffiti (M - BOMB BEATS)
+Versum Hill: Side street alley outfit: 16 REP
+Versum Hill: Side street secret skateboard: Graffiti (XL - VIBRATIONS)
+Versum Hill: Basketball court alley skateboard: 24 REP
+Versum Hill: Basketball court Robo Post CD: 16 REP
+Versum Hill: Underground mall billboard graffiti: 8 REP
+Versum Hill: Underground mall vending machine skateboard: Graffiti (M - BLOCKY)
+Versum Hill: BMX gate outfit: BMX (Mr. Taupe)
+Versum Hill: Glass floor skates: Graffiti (M - B-boy Love)
+Versum Hill: Basketball court shortcut CD: Futurism
+Versum Hill: Rave joins the crew: Music (AGUA)
+Versum Hill: Frank joins the crew: 8 REP
+Versum Hill: Rietveld joins the crew: Outfit (Felix - Winter)
+Versum Hill: Big Polo: Outfit (Bel - Autumn)
+Versum Hill: Trash Polo: 8 REP
+Versum Hill: Fruit stand Polo: Inline Skates (Ice Cold Killers)
+Millennium Square: Center ramp graffiti: 8 REP
+Millennium Square: Rooftop staircase graffiti: Music (DA PEOPLE)
+Millennium Square: Toilet graffiti: BMX (oyo)
+Millennium Square: Trash graffiti: 8 REP
+Millennium Square: Center tower graffiti: Skateboard (Mantra)
+Millennium Square: Rooftop billboard graffiti: 16 REP
+Millennium Square: Center Robo Post CD: 16 REP
+Millennium Square: Parking garage Robo Post CD: Music (You Can Say Hi)
+Millennium Square: Mall ledge outfit: BMX (Terrazza)
+Millennium Square: Alley rooftop outfit: 16 REP
+Millennium Square: Alley staircase skateboard: Outfit (Vinyl - Winter)
+Millennium Square: Secret painting skates: Outfit (Solace - Autumn)
+Millennium Square: Vending machine skates: Music (watchyaback!)
+Millennium Square: Walkway roof skates: Graffiti (L - buttercup)
+Millennium Square: Alley ledge skates: Graffiti (M - Vom'B)
+Millennium Square: DJ Cyber joins the crew: Inline Skates (Sharpshooters)
+Millennium Square: Half pipe Polo: Graffiti (M - Pora)
+Brink Terminal: Upside grind challenge reward: 16 REP
+Brink Terminal: Manual challenge reward: Rietveld
+Brink Terminal: Score challenge reward: Music (Scraped On The Way Out)
+Brink Terminal: Under square ledge graffiti: Graffiti (XL - headphones on Helmet on)
+Brink Terminal: Bus graffiti: 8 REP
+Brink Terminal: Under square Robo Post graffiti: 16 REP
+Brink Terminal: BMX gate graffiti: Camera App
+Brink Terminal: Square tower CD: Skateboard (Maceo)
+Brink Terminal: Trash CD: Graffiti (M - Teddy 4)
+Brink Terminal: Shop roof outfit: 24 REP
+Brink Terminal: Underground glass skates: Music (Operator)
+Brink Terminal: Glass roof skates: Tryce
+Brink Terminal: Mesh's skateboard: 8 REP
+Brink Terminal: Underground ramp skates: Skateboard (Lazer Accuracy)
+Brink Terminal: Rooftop halfpipe graffiti: Graffiti (XL - FATE)
+Brink Terminal: Wire grind CD: BMX (Ceremony)
+Brink Terminal: Rooftop glass CD: Graffiti (L - Boom)
+Brink Terminal: Tower core outfit: 24 REP
+Brink Terminal: High rooftop outfit: 8 REP
+Brink Terminal: Ocean platform CD: 8 REP
+Brink Terminal: End of dock CD: Music (I Wanna Kno)
+Brink Terminal: Dock Robo Post outfit: 8 REP
+Brink Terminal: Control room skates: 16 REP
+Brink Terminal: Mesh joins the crew: 8 REP
+Brink Terminal: Eclipse joins the crew: Outfit (Felix - Autumn)
+Brink Terminal: Behind glass Polo: Outfit (Mesh - Winter)
+Millennium Mall: Warehouse pallet graffiti: 16 REP
+Millennium Mall: Wall alcove graffiti: 8 REP
+Millennium Mall: Maintenance shaft CD: Outfit (Red - Autumn)
+Millennium Mall: Glass cylinder CD: Music (Two Days Off)
+Millennium Mall: Lower Robo Post outfit: 32 REP
+Millennium Mall: Atrium vending machine graffiti: Outfit (Solace - Winter)
+Millennium Mall: Trick challenge reward: Outfit (Coil - Winter)
+Millennium Mall: Slide challenge reward: Graffiti (M - pico pow)
+Millennium Mall: Fish challenge reward: 16 REP
+Millennium Mall: Score challenge reward: Solace
+Millennium Mall: Atrium top floor Robo Post CD: 32 REP
+Millennium Mall: Atrium top floor floating CD: Skateboard (Taiga)
+Millennium Mall: Atrium top floor BMX: Music (Next To Me)
+Millennium Mall: Theater entrance BMX: 16 REP
+Millennium Mall: Atrium BMX gate BMX: Skateboard (Sylk)
+Millennium Mall: Upside down rail outfit: 16 REP
+Millennium Mall: Theater stage corner graffiti: Rise
+Millennium Mall: Theater hanging billboards graffiti: Graffiti (XL - Bomb Burner)
+Millennium Mall: Theater garage graffiti: 16 REP
+Millennium Mall: Theater maintenance CD: 24 REP
+Millennium Mall: Race track Robo Post CD: Inline Skates (Sweet Royale)
+Millennium Mall: Hanging lights CD: Music (Light Switch)
+Millennium Mall: Shine joins the crew: Music (Morning Glow)
+Millennium Mall: DOT.EXE joins the crew: Outfit (Tryce - Autumn)
+Pyramid Island: Lower rooftop graffiti: DOT.EXE
+Pyramid Island: Polo graffiti: Music (Funk Express)
+Pyramid Island: Above entrance graffiti: 16 REP
+Pyramid Island: BMX gate BMX: Skateboard (Just Swell)
+Pyramid Island: Quarter pipe rooftop graffiti: Music (Spectres)
+Pyramid Island: Supply port Robo Post CD: Music (Bounce Upon A Time)
+Pyramid Island: Above gate ledge CD: Outfit (Shine - Winter)
+Pyramid Island: Smoke hole BMX: Graffiti (M - Street classic)
+Pyramid Island: Above gate rail outfit: Graffiti (M - Stacked Symbols)
+Pyramid Island: Rail loop outfit: Graffiti (L - Moai Marathon)
+Pyramid Island: Score challenge reward: Graffiti (L - NOISY NINJA)
+Pyramid Island: Score challenge 2 reward: Music (House Cats Mixtape)
+Pyramid Island: Quarter pipe challenge reward: Music (Iridium)
+Pyramid Island: Wind turbines CD: Music (Sunshine Popping Mixtape)
+Pyramid Island: Shortcut glass CD: BMX (XXX)
+Pyramid Island: Turret jump CD: Graffiti (M - SPRAYTANICPANIC!)
+Pyramid Island: Helipad BMX: 32 REP
+Pyramid Island: Pipe outfit: Skateboard (Terrence)
+Pyramid Island: Trash outfit: BMX (Steel Wheeler)
+Pyramid Island: Pyramid top CD: 16 REP
+Pyramid Island: Pyramid top Robo Post CD: 8 REP
+Pyramid Island: Maze outfit: 16 REP
+Pyramid Island: Rise joins the crew: Graffiti (L - SpawningSeason)
+Pyramid Island: Devil Theory joins the crew: BMX (Gum)
+Pyramid Island: Polo pile 1: Rave
+Pyramid Island: Polo pile 2: BMX (Dedication)
+Pyramid Island: Polo pile 3: 16 REP
+Pyramid Island: Polo pile 4: 8 REP
+Pyramid Island: Maze glass Polo: 24 REP
+Pyramid Island: Maze classroom Polo: Music (Last Hoorah)
+Pyramid Island: Maze vent Polo: Bel
+Pyramid Island: Big maze Polo: Inline Skates (Strawberry Missiles)
+Pyramid Island: Maze desk Polo: Vinyl
+Pyramid Island: Maze forklift Polo: 24 REP
+Mataan: Robo Post graffiti: Graffiti (M - SHOGUN)
+Mataan: Secret ledge BMX: 24 REP
+Mataan: Highway rooftop BMX: 24 REP
+Mataan: Trash CD: 24 REP
+Mataan: Half pipe CD: Outfit (Red - Winter)
+Mataan: Across bull horns graffiti: 8 REP
+Mataan: Small rooftop graffiti: Graffiti (L - RECORD.HEAD)
+Mataan: Trash graffiti: Music (Hair Dun Nails Dun)
+Mataan: Deep city Robo Post CD: 8 REP
+Mataan: Deep city tower CD: Outfit (Vinyl - Autumn)
+Mataan: Race challenge reward: Graffiti (L - skate or di3)
+Mataan: Wallrunning challenge reward: Eclipse
+Mataan: Score challenge reward: Music (Trinitron)
+Mataan: Deep city vent jump BMX: Music (hwbouths)
+Mataan: Deep city side wires outfit: Graffiti (M - 0m33)
+Mataan: Deep city center island outfit: Outfit (Rave - Winter)
+Mataan: Red light rail graffiti: 24 REP
+Mataan: Red light side alley outfit: Music (Breaking Machine Mixtape)
+Mataan: Statue hand outfit: Frank
+Mataan: Crane CD: 24 REP
+Mataan: Elephant tower glass outfit: Inline Skates (Orange Blasters)
+Mataan: Helipad outfit: 24 REP
+Mataan: Vending machine CD: 16 REP
+Mataan: Coil joins the crew: Music (JACK DA FUNK)
+Mataan: Flesh Prince joins the crew: 32 REP
+Mataan: Futurism joins the crew: Graffiti (XL - Web Spitter)
+Mataan: Trash Polo: Graffiti (L - Tius)
+Mataan: Shopping Polo: Graffiti (XL - BiGSHiNYBoMB)
+Tagged 5 Graffiti Spots: 8 REP
+Tagged 10 Graffiti Spots: 8 REP
+Tagged 15 Graffiti Spots: DJ Cyber
+Tagged 20 Graffiti Spots: Graffiti (M - OVERWHELMME)
+Tagged 25 Graffiti Spots: 8 REP
+Tagged 30 Graffiti Spots: 8 REP
+Tagged 35 Graffiti Spots: Oldhead
+Tagged 40 Graffiti Spots: Music (State of Mind)
+Tagged 45 Graffiti Spots: Graffiti (XL - Gold Rush)
+Tagged 50 Graffiti Spots: Graffiti (M - QUICK BING)
+Tagged 55 Graffiti Spots: Music (Chromebies)
+Tagged 60 Graffiti Spots: Music (Anime Break)
+Tagged 65 Graffiti Spots: Outfit (Rise - Winter)
+Tagged 70 Graffiti Spots: Music (Precious Thing)
+Tagged 75 Graffiti Spots: 8 REP
+Tagged 80 Graffiti Spots: 24 REP
+Tagged 85 Graffiti Spots: Graffiti (L - WHOLE SIXER)
+Tagged 90 Graffiti Spots: Outfit (Rave - Autumn)
+Tagged 95 Graffiti Spots: Graffiti (XL - Bomb Croc)
+Tagged 100 Graffiti Spots: 8 REP
+Tagged 105 Graffiti Spots: 24 REP
+Tagged 110 Graffiti Spots: 24 REP
+Tagged 115 Graffiti Spots: 16 REP
+Tagged 120 Graffiti Spots: Outfit (Tryce - Winter)
+Tagged 125 Graffiti Spots: Inline Skates (Glaciers)
+Tagged 130 Graffiti Spots: 8 REP
+Tagged 135 Graffiti Spots: Inline Skates (Mech Adversary)
+Tagged 140 Graffiti Spots: Inline Skates (Red Industry)
+Tagged 145 Graffiti Spots: 16 REP
+Tagged 150 Graffiti Spots: Skateboard (Devon)
+Tagged 155 Graffiti Spots: 8 REP
+Tagged 160 Graffiti Spots: Music (Chuckin Up)
+Tagged 165 Graffiti Spots: Graffiti (L - Messenger Mural)
+Tagged 170 Graffiti Spots: Graffiti (XL - MOTORCYCLE GANG)
+Tagged 175 Graffiti Spots: Graffiti (XL - SECOND SIGHT)
+Tagged 180 Graffiti Spots: 8 REP
+Tagged 185 Graffiti Spots: Outfit (Coil - Autumn)
+Tagged 190 Graffiti Spots: Graffiti (XL - Deep Dive)
+Tagged 195 Graffiti Spots: 16 REP
+Tagged 200 Graffiti Spots: Music (Beastmode Hip Hop Mixtape)
+Tagged 205 Graffiti Spots: 24 REP
+Tagged 210 Graffiti Spots: 32 REP
+Tagged 215 Graffiti Spots: 16 REP
+Tagged 220 Graffiti Spots: Graffiti (L - Graffo Le Fou)
+Tagged 225 Graffiti Spots: 24 REP
+Tagged 230 Graffiti Spots: 8 REP
+Tagged 235 Graffiti Spots: Music (Feel The Funk (Computer Love))
+Tagged 240 Graffiti Spots: Shine
+Tagged 245 Graffiti Spots: 24 REP
+Tagged 250 Graffiti Spots: Graffiti (M - Zona Leste)
+Tagged 255 Graffiti Spots: 16 REP
+Tagged 260 Graffiti Spots: 8 REP
+Tagged 265 Graffiti Spots: Graffiti (XL - end 2 end)
+Tagged 270 Graffiti Spots: 8 REP
+Tagged 275 Graffiti Spots: Music (Refuse)
+Tagged 280 Graffiti Spots: Graffiti (XL - WILD STRUXXA)
+Tagged 285 Graffiti Spots: Graffiti (L - Campaign Trail)
+Tagged 290 Graffiti Spots: Graffiti (XL - Gamex UPA ABL)
+Tagged 295 Graffiti Spots: Outfit (Bel - Winter)
+Tagged 300 Graffiti Spots: Graffiti (L - INFINITY)
+Tagged 305 Graffiti Spots: Outfit (Shine - Autumn)
+Tagged 310 Graffiti Spots: 8 REP
+Tagged 315 Graffiti Spots: Graffiti (M - Thick Candy)
+Tagged 320 Graffiti Spots: Mesh
+Tagged 325 Graffiti Spots: 16 REP
+Tagged 330 Graffiti Spots: Inline Skates (ck)
+Tagged 335 Graffiti Spots: Graffiti (XL - Bombing by FireMan)
+Tagged 340 Graffiti Spots: Coil
+Tagged 345 Graffiti Spots: Music (Condensed milk)
+Tagged 350 Graffiti Spots: 24 REP
+Tagged 355 Graffiti Spots: Graffiti (L - FREAKS)
+Tagged 360 Graffiti Spots: Music (GET ENUF)
+Tagged 365 Graffiti Spots: Outfit (Rise - Autumn)
+Tagged 370 Graffiti Spots: Flesh Prince
+Tagged 375 Graffiti Spots: Graffiti (M - colorBOMB)
+Tagged 380 Graffiti Spots: Graffiti (L - Jd Vila Formosa)
+Tagged 385 Graffiti Spots: Skateboard (Death Boogie)
+Tagged 389 Graffiti Spots: Graffiti (M - Devil 68)
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Hideout: Garage tower CD: 24 REP
+  Hideout: Half pipe CD: Graffiti (L - VoodooBoy)
+  Hideout: Rear studio graffiti: Graffiti (M - TeleBinge)
+  Hideout: Rooftop CD: Graffiti (XL - Pirate's Life 4 Me)
+  Hideout: Secret area graffiti: 16 REP
+  Hideout: Under staircase graffiti: 16 REP
+  Hideout: Upper platform skateboard: Graffiti (L - wild rush)
+  Tagged 10 Graffiti Spots: 8 REP
+  Tagged 5 Graffiti Spots: 8 REP
+}
+2: {
+  Tagged 15 Graffiti Spots: DJ Cyber
+  Tagged 20 Graffiti Spots: Graffiti (M - OVERWHELMME)
+  Tagged 25 Graffiti Spots: 8 REP
+  Tagged 30 Graffiti Spots: 8 REP
+  Tagged 35 Graffiti Spots: Oldhead
+  Tagged 45 Graffiti Spots: Graffiti (XL - Gold Rush)
+  Tagged 50 Graffiti Spots: Graffiti (M - QUICK BING)
+  Tagged 75 Graffiti Spots: 8 REP
+  Versum Hill: Behind glass graffiti: 16 REP
+  Versum Hill: Billboard platform outfit: Graffiti (XL - Raver Funk)
+  Versum Hill: Corner challenge reward: Graffiti (M - BOMB BEATS)
+  Versum Hill: Hill secret skateboard: BMX (Rigid No.6)
+  Versum Hill: Hilltop Robo Post CD: 8 REP
+  Versum Hill: Main street Robo Post graffiti: Graffiti (XL - MegaHood)
+  Versum Hill: Manual challenge reward: 16 REP
+  Versum Hill: Side street alley outfit: 16 REP
+  Versum Hill: Side street secret skateboard: Graffiti (XL - VIBRATIONS)
+  Versum Hill: Train rail ledge skateboard: Graffiti (L - Fang It Up!)
+  Versum Hill: Train station CD: Devil Theory
+  Versum Hill: Under bridge graffiti: 16 REP
+  Versum Hill: Wallrunning challenge reward: 24 REP
+}
+3: {
+  Versum Hill: BMX gate outfit: BMX (Mr. Taupe)
+  Versum Hill: Basketball court Robo Post CD: 16 REP
+  Versum Hill: Basketball court alley skateboard: 24 REP
+  Versum Hill: Complete Chapter 1: Chapter Completed
+  Versum Hill: Underground mall billboard graffiti: 8 REP
+  Versum Hill: Underground mall vending machine skateboard: Graffiti (M - BLOCKY)
+}
+4: {
+  Hideout: Unlock phone app: 16 REP
+  Mataan: Highway rooftop BMX: 24 REP
+  Mataan: Robo Post graffiti: Graffiti (M - SHOGUN)
+  Mataan: Secret ledge BMX: 24 REP
+  Millennium Square: Alley ledge skates: Graffiti (M - Vom'B)
+  Millennium Square: Alley rooftop outfit: 16 REP
+  Millennium Square: Center Robo Post CD: 16 REP
+  Millennium Square: Center ramp graffiti: 8 REP
+  Millennium Square: DJ Cyber joins the crew: Inline Skates (Sharpshooters)
+  Millennium Square: Mall ledge outfit: BMX (Terrazza)
+  Millennium Square: Rooftop billboard graffiti: 16 REP
+  Millennium Square: Toilet graffiti: BMX (oyo)
+  Millennium Square: Trash graffiti: 8 REP
+  Millennium Square: Walkway roof skates: Graffiti (L - buttercup)
+  Tagged 100 Graffiti Spots: 8 REP
+  Tagged 105 Graffiti Spots: 24 REP
+  Tagged 110 Graffiti Spots: 24 REP
+  Tagged 115 Graffiti Spots: 16 REP
+  Tagged 125 Graffiti Spots: Inline Skates (Glaciers)
+  Tagged 130 Graffiti Spots: 8 REP
+  Tagged 135 Graffiti Spots: Inline Skates (Mech Adversary)
+  Tagged 80 Graffiti Spots: 24 REP
+  Tagged 85 Graffiti Spots: Graffiti (L - WHOLE SIXER)
+  Tagged 95 Graffiti Spots: Graffiti (XL - Bomb Croc)
+  Versum Hill: Basketball court shortcut CD: Futurism
+  Versum Hill: Frank joins the crew: 8 REP
+}
+5: {
+  Brink Terminal: BMX gate graffiti: Camera App
+  Brink Terminal: Bus graffiti: 8 REP
+  Brink Terminal: Complete Chapter 2: Chapter Completed
+  Brink Terminal: Control room skates: 16 REP
+  Brink Terminal: Dock Robo Post outfit: 8 REP
+  Brink Terminal: Glass roof skates: Tryce
+  Brink Terminal: High rooftop outfit: 8 REP
+  Brink Terminal: Manual challenge reward: Rietveld
+  Brink Terminal: Mesh joins the crew: 8 REP
+  Brink Terminal: Mesh's skateboard: 8 REP
+  Brink Terminal: Ocean platform CD: 8 REP
+  Brink Terminal: Rooftop glass CD: Graffiti (L - Boom)
+  Brink Terminal: Rooftop halfpipe graffiti: Graffiti (XL - FATE)
+  Brink Terminal: Shop roof outfit: 24 REP
+  Brink Terminal: Tower core outfit: 24 REP
+  Brink Terminal: Trash CD: Graffiti (M - Teddy 4)
+  Brink Terminal: Under square Robo Post graffiti: 16 REP
+  Brink Terminal: Under square ledge graffiti: Graffiti (XL - headphones on Helmet on)
+  Brink Terminal: Upside grind challenge reward: 16 REP
+  Brink Terminal: Wire grind CD: BMX (Ceremony)
+  Tagged 140 Graffiti Spots: Inline Skates (Red Industry)
+  Tagged 145 Graffiti Spots: 16 REP
+  Tagged 155 Graffiti Spots: 8 REP
+  Tagged 165 Graffiti Spots: Graffiti (L - Messenger Mural)
+  Tagged 170 Graffiti Spots: Graffiti (XL - MOTORCYCLE GANG)
+  Tagged 175 Graffiti Spots: Graffiti (XL - SECOND SIGHT)
+  Tagged 180 Graffiti Spots: 8 REP
+  Versum Hill: Glass floor skates: Graffiti (M - B-boy Love)
+}
+6: {
+  Millennium Mall: Atrium top floor Robo Post CD: 32 REP
+  Millennium Mall: Complete Chapter 3: Chapter Completed
+  Millennium Mall: Fish challenge reward: 16 REP
+  Millennium Mall: Lower Robo Post outfit: 32 REP
+  Millennium Mall: Race track Robo Post CD: Inline Skates (Sweet Royale)
+  Millennium Mall: Score challenge reward: Solace
+  Millennium Mall: Slide challenge reward: Graffiti (M - pico pow)
+  Millennium Mall: Theater entrance BMX: 16 REP
+  Millennium Mall: Theater garage graffiti: 16 REP
+  Millennium Mall: Theater hanging billboards graffiti: Graffiti (XL - Bomb Burner)
+  Millennium Mall: Theater maintenance CD: 24 REP
+  Millennium Mall: Theater stage corner graffiti: Rise
+  Millennium Mall: Upside down rail outfit: 16 REP
+  Millennium Mall: Wall alcove graffiti: 8 REP
+  Millennium Mall: Warehouse pallet graffiti: 16 REP
+  Millennium Square: Half pipe Polo: Graffiti (M - Pora)
+  Tagged 190 Graffiti Spots: Graffiti (XL - Deep Dive)
+  Tagged 195 Graffiti Spots: 16 REP
+  Tagged 205 Graffiti Spots: 24 REP
+  Tagged 210 Graffiti Spots: 32 REP
+  Tagged 215 Graffiti Spots: 16 REP
+  Tagged 220 Graffiti Spots: Graffiti (L - Graffo Le Fou)
+  Tagged 225 Graffiti Spots: 24 REP
+  Tagged 230 Graffiti Spots: 8 REP
+  Tagged 240 Graffiti Spots: Shine
+  Tagged 245 Graffiti Spots: 24 REP
+  Tagged 250 Graffiti Spots: Graffiti (M - Zona Leste)
+  Tagged 255 Graffiti Spots: 16 REP
+  Tagged 260 Graffiti Spots: 8 REP
+  Tagged 265 Graffiti Spots: Graffiti (XL - end 2 end)
+  Versum Hill: Fruit stand Polo: Inline Skates (Ice Cold Killers)
+  Versum Hill: Trash Polo: 8 REP
+}
+7: {
+  Hideout: Vinyl joins the crew: 16 REP
+  Pyramid Island: Above entrance graffiti: 16 REP
+  Pyramid Island: Above gate rail outfit: Graffiti (M - Stacked Symbols)
+  Pyramid Island: Big maze Polo: Inline Skates (Strawberry Missiles)
+  Pyramid Island: Complete Chapter 4: Chapter Completed
+  Pyramid Island: Helipad BMX: 32 REP
+  Pyramid Island: Lower rooftop graffiti: DOT.EXE
+  Pyramid Island: Maze desk Polo: Vinyl
+  Pyramid Island: Maze forklift Polo: 24 REP
+  Pyramid Island: Maze glass Polo: 24 REP
+  Pyramid Island: Maze outfit: 16 REP
+  Pyramid Island: Maze vent Polo: Bel
+  Pyramid Island: Polo pile 1: Rave
+  Pyramid Island: Polo pile 2: BMX (Dedication)
+  Pyramid Island: Polo pile 3: 16 REP
+  Pyramid Island: Polo pile 4: 8 REP
+  Pyramid Island: Rail loop outfit: Graffiti (L - Moai Marathon)
+  Pyramid Island: Score challenge reward: Graffiti (L - NOISY NINJA)
+  Pyramid Island: Shortcut glass CD: BMX (XXX)
+  Pyramid Island: Smoke hole BMX: Graffiti (M - Street classic)
+  Pyramid Island: Trash outfit: BMX (Steel Wheeler)
+  Pyramid Island: Turret jump CD: Graffiti (M - SPRAYTANICPANIC!)
+  Tagged 270 Graffiti Spots: 8 REP
+  Tagged 280 Graffiti Spots: Graffiti (XL - WILD STRUXXA)
+  Tagged 285 Graffiti Spots: Graffiti (L - Campaign Trail)
+  Tagged 290 Graffiti Spots: Graffiti (XL - Gamex UPA ABL)
+  Tagged 300 Graffiti Spots: Graffiti (L - INFINITY)
+  Tagged 310 Graffiti Spots: 8 REP
+  Tagged 315 Graffiti Spots: Graffiti (M - Thick Candy)
+  Tagged 320 Graffiti Spots: Mesh
+  Tagged 325 Graffiti Spots: 16 REP
+}
+8: {
+  Defeat Faux: Victory
+  Hideout: Solace joins the crew: Graffiti (L - Lauder)
+  Mataan: Across bull horns graffiti: 8 REP
+  Mataan: Crane CD: 24 REP
+  Mataan: Deep city Robo Post CD: 8 REP
+  Mataan: Deep city side wires outfit: Graffiti (M - 0m33)
+  Mataan: Elephant tower glass outfit: Inline Skates (Orange Blasters)
+  Mataan: Flesh Prince joins the crew: 32 REP
+  Mataan: Futurism joins the crew: Graffiti (XL - Web Spitter)
+  Mataan: Helipad outfit: 24 REP
+  Mataan: Race challenge reward: Graffiti (L - skate or di3)
+  Mataan: Red light rail graffiti: 24 REP
+  Mataan: Shopping Polo: Graffiti (XL - BiGSHiNYBoMB)
+  Mataan: Small rooftop graffiti: Graffiti (L - RECORD.HEAD)
+  Mataan: Statue hand outfit: Frank
+  Mataan: Trash CD: 24 REP
+  Mataan: Trash Polo: Graffiti (L - Tius)
+  Mataan: Vending machine CD: 16 REP
+  Mataan: Wallrunning challenge reward: Eclipse
+  Pyramid Island: Devil Theory joins the crew: BMX (Gum)
+  Pyramid Island: Pyramid top CD: 16 REP
+  Pyramid Island: Pyramid top Robo Post CD: 8 REP
+  Pyramid Island: Rise joins the crew: Graffiti (L - SpawningSeason)
+  Tagged 330 Graffiti Spots: Inline Skates (ck)
+  Tagged 335 Graffiti Spots: Graffiti (XL - Bombing by FireMan)
+  Tagged 340 Graffiti Spots: Coil
+  Tagged 350 Graffiti Spots: 24 REP
+  Tagged 355 Graffiti Spots: Graffiti (L - FREAKS)
+  Tagged 370 Graffiti Spots: Flesh Prince
+  Tagged 375 Graffiti Spots: Graffiti (M - colorBOMB)
+  Tagged 380 Graffiti Spots: Graffiti (L - Jd Vila Formosa)
+  Tagged 389 Graffiti Spots: Graffiti (M - Devil 68)
+}
