@@ -52,7 +52,30 @@ class FactorioGameExportHandler(BaseGameExportHandler):
             rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
             
         return rule
-    
+
+    def get_progression_mapping(self, world) -> Dict[str, Any]:
+        """Return Factorio-specific progression item mapping."""
+        from worlds.factorio.Technologies import progressive_technology_table
+
+        mapping_data = {}
+
+        # Build progression mapping from progressive_technology_table
+        for prog_name, tech_data in progressive_technology_table.items():
+            if tech_data.progressive:
+                mapping_data[prog_name] = {
+                    'items': [],
+                    'base_item': prog_name
+                }
+
+                # Add each level of the progressive tech
+                for level, tech_name in enumerate(tech_data.progressive, start=1):
+                    mapping_data[prog_name]['items'].append({
+                        'name': tech_name,
+                        'level': level
+                    })
+
+        return mapping_data
+
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """Return Factorio-specific item data."""
         from BaseClasses import ItemClassification
