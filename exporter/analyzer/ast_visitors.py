@@ -891,49 +891,29 @@ class ASTVisitorMixin:
                 # Try to resolve the object from closure_vars
                 resolved_obj = self.expression_resolver.resolve_variable(obj_name)
 
-                # Check if it's a Location object (has 'name' but not 'entrances')
-                if (resolved_obj is not None and
-                    hasattr(resolved_obj, 'name') and
-                    not hasattr(resolved_obj, 'entrances') and
-                    isinstance(resolved_obj.name, str)):
+                # Check if we successfully resolved an object with a 'name' attribute
+                if resolved_obj is not None and hasattr(resolved_obj, 'name') and isinstance(resolved_obj.name, str):
+                    # Determine if it's a Region (has 'entrances') or Location (no 'entrances')
+                    has_entrances = hasattr(resolved_obj, 'entrances')
+                    obj_type = 'Region' if has_entrances else 'Location'
+                    obj_name_value = resolved_obj.name
 
-                    location_name = resolved_obj.name
-                    logging.debug(f"Resolved {obj_name} to Location object with name: {location_name}")
+                    logging.debug(f"Resolved {obj_name} to {obj_type} object with name: {obj_name_value}")
 
-                    # Convert loc.can_reach(state) to state.can_reach(location_name, "Location", player)
+                    # Convert [location|region].can_reach(state) to state.can_reach(name, type, player)
                     # Note: player argument will be provided by the state manager
                     result = {
                         'type': 'state_method',
                         'method': 'can_reach',
                         'args': [
-                            {'type': 'constant', 'value': location_name},
-                            {'type': 'constant', 'value': 'Location'}
+                            {'type': 'constant', 'value': obj_name_value},
+                            {'type': 'constant', 'value': obj_type}
                         ]
                     }
-                    logging.debug(f"Converted Location.can_reach to state_method: {result}")
+                    logging.debug(f"Converted {obj_type}.can_reach to state_method: {result}")
                     return result
-
-                # Check if it's a Region object (has both 'name' and 'entrances')
-                elif (resolved_obj is not None and
-                      hasattr(resolved_obj, 'name') and
-                      hasattr(resolved_obj, 'entrances') and
-                      isinstance(resolved_obj.name, str)):
-
-                    region_name = resolved_obj.name
-                    logging.debug(f"Resolved {obj_name} to Region object with name: {region_name}")
-
-                    # Convert region.can_reach(state) to state.can_reach(region_name, "Region", player)
-                    # Note: player argument will be provided by the state manager
-                    result = {
-                        'type': 'state_method',
-                        'method': 'can_reach',
-                        'args': [
-                            {'type': 'constant', 'value': region_name},
-                            {'type': 'constant', 'value': 'Region'}
-                        ]
-                    }
-                    logging.debug(f"Converted Region.can_reach to state_method: {result}")
-                    return result
+                else:
+                    logging.debug(f"Could not resolve {obj_name} for can_reach call, falling through to other handlers")
 
             # Handle module-based helper calls (e.g., StateLogic.canDig, Rules.method)
             # These are calls to functions from imported modules that should be treated as helpers

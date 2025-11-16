@@ -604,11 +604,11 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Keep Tower>",
                         "<bound method Region.can_reach of Keep 3rd Maze>",
+                        "<bound method Region.can_reach of Keep 4th Maze>",
                         "<bound method Region.can_reach of Keep>",
                         "<bound method Region.can_reach of Keep 2nd Maze>",
-                        "<bound method Region.can_reach of Keep 4th Maze>"
+                        "<bound method Region.can_reach of Keep Tower>"
                       ]
                     }
                   }
@@ -629,12 +629,12 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
+                        "<bound method Region.can_reach of Keep 2nd Pressure Plate>",
+                        "<bound method Region.can_reach of Keep 4th Pressure Plate>",
+                        "<bound method Region.can_reach of Keep>",
                         "<bound method Region.can_reach of Keep Tower>",
                         "<bound method Region.can_reach of Keep 3rd Pressure Plate>",
-                        "<bound method Region.can_reach of Keep>",
-                        "<bound method Region.can_reach of Keep 4th Pressure Plate>",
-                        "<bound method Region.can_reach of Keep 2nd Pressure Plate>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eace894ea20>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed34d6b2ca0>"
                       ]
                     }
                   }
@@ -2728,8 +2728,8 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Quarry>",
-                        "<bound method Region.can_reach of Main Island>"
+                        "<bound method Region.can_reach of Quarry Stoneworks Upper Floor>",
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed34d385580>"
                       ]
                     }
                   }
@@ -2750,8 +2750,8 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Quarry Stoneworks Upper Floor>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eace8a91300>"
+                        "<bound method Region.can_reach of Main Island>",
+                        "<bound method Region.can_reach of Quarry>"
                       ]
                     }
                   }
@@ -7032,7 +7032,7 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eace8a92f20>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed34d3871a0>"
                       ]
                     }
                   }
@@ -7053,7 +7053,7 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eace8a92fc0>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed34d387240>"
                       ]
                     }
                   }
@@ -7761,7 +7761,8 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Bunker Laser Platform>"
+                        "<bound method Region.can_reach of Bunker Elevator>",
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed34d387740>"
                       ]
                     }
                   }
@@ -7782,8 +7783,7 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Bunker Elevator>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eace8a934c0>"
+                        "<bound method Region.can_reach of Bunker Laser Platform>"
                       ]
                     }
                   }
@@ -7861,7 +7861,8 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Bunker Laser Platform>"
+                        "<bound method Region.can_reach of Bunker Elevator>",
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed34d387880>"
                       ]
                     }
                   }
@@ -7882,8 +7883,7 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Bunker Elevator>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eace8a93600>"
+                        "<bound method Region.can_reach of Bunker Laser Platform>"
                       ]
                     }
                   }
@@ -11313,7 +11313,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Near>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eace894d9e0>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed34d6b1c60>"
                       ]
                     }
                   }
@@ -11335,7 +11335,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Far>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eace894da80>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed34d6b1d00>"
                       ]
                     }
                   }
@@ -11720,7 +11720,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Near>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eace894dee0>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed34d6b2160>"
                       ]
                     }
                   }
@@ -11742,7 +11742,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Far>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eace894df80>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed34d6b2200>"
                       ]
                     }
                   }
