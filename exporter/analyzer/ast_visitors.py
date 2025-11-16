@@ -884,9 +884,9 @@ class ASTVisitorMixin:
                 logging.debug(f"Created helper result for logic method: {result}")
                 return result
 
-            # Handle Location object method calls (e.g., loc.can_reach(state))
+            # Handle Location and Region object method calls (e.g., loc.can_reach(state) or region.can_reach(state))
             elif obj_name and method_name == 'can_reach':
-                logging.debug(f"Processing potential Location method call: {obj_name}.{method_name}")
+                logging.debug(f"Processing potential Location/Region method call: {obj_name}.{method_name}")
 
                 # Try to resolve the object from closure_vars
                 resolved_obj = self.expression_resolver.resolve_variable(obj_name)
@@ -911,6 +911,28 @@ class ASTVisitorMixin:
                         ]
                     }
                     logging.debug(f"Converted Location.can_reach to state_method: {result}")
+                    return result
+
+                # Check if it's a Region object (has both 'name' and 'entrances')
+                elif (resolved_obj is not None and
+                      hasattr(resolved_obj, 'name') and
+                      hasattr(resolved_obj, 'entrances') and
+                      isinstance(resolved_obj.name, str)):
+
+                    region_name = resolved_obj.name
+                    logging.debug(f"Resolved {obj_name} to Region object with name: {region_name}")
+
+                    # Convert region.can_reach(state) to state.can_reach(region_name, "Region", player)
+                    # Note: player argument will be provided by the state manager
+                    result = {
+                        'type': 'state_method',
+                        'method': 'can_reach',
+                        'args': [
+                            {'type': 'constant', 'value': region_name},
+                            {'type': 'constant', 'value': 'Region'}
+                        ]
+                    }
+                    logging.debug(f"Converted Region.can_reach to state_method: {result}")
                     return result
 
             # Handle module-based helper calls (e.g., StateLogic.canDig, Rules.method)
