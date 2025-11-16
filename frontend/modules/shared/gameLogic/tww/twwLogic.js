@@ -5,17 +5,181 @@
  * and helper functions from Macros.py.
  */
 
+// ============================================================================
+// Core Utility Functions
+// ============================================================================
+
 /**
- * State method handlers for TWW logic.
- * These correspond to the TWWLogic class methods in Python.
+ * Check if player has an item, handling progressive items.
+ *
+ * @param {Object} snapshot - Canonical state snapshot containing inventory, flags, events
+ * @param {Object} staticData - Static game data with progressionMapping
+ * @param {string} itemName - Name of the item to check
+ * @param {number} player - Player ID (optional, defaults to current player)
+ * @param {number} count - Minimum count required (optional, defaults to 1)
+ * @returns {boolean} True if player has the item with at least the specified count
  */
+export function has(snapshot, staticData, itemName, player, count = 1) {
+  // Check if it's in flags
+  if (snapshot.flags && snapshot.flags.includes(itemName)) {
+    return true;
+  }
+
+  // Check events
+  if (snapshot.events && snapshot.events.includes(itemName)) {
+    return true;
+  }
+
+  // Check inventory
+  if (!snapshot.inventory) return false;
+
+  // Get player slot
+  const playerSlot = snapshot?.player?.slot || '1';
+
+  // Direct item check
+  const itemCount = snapshot.inventory[itemName] || 0;
+  if (itemCount >= count) {
+    return true;
+  }
+
+  // Check progressive items
+  if (staticData && staticData.progressionMapping) {
+    const playerProgressionMapping = staticData.progressionMapping[playerSlot] || staticData.progressionMapping;
+
+    // Check if this item is provided by any progressive item
+    for (const [progressiveBase, progression] of Object.entries(playerProgressionMapping)) {
+      const baseCount = snapshot.inventory[progressiveBase] || 0;
+
+      if (baseCount > 0 && progression && progression.items) {
+        // Check each upgrade in the progression
+        for (const upgrade of progression.items) {
+          if (baseCount >= upgrade.level) {
+            // Check if this upgrade provides the item we're looking for
+            if (upgrade.name === itemName ||
+              (upgrade.provides && upgrade.provides.includes(itemName))) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Count how many of an item the player has.
+ *
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data with progressionMapping
+ * @param {string} itemName - Name of the item to count
+ * @param {number} player - Player ID (optional)
+ * @returns {number} Count of the item
+ */
+export function count(snapshot, staticData, itemName, player) {
+  if (!snapshot.inventory) return 0;
+
+  const playerSlot = snapshot?.player?.slot || '1';
+  const playerProgressionMapping = staticData?.progressionMapping?.[playerSlot] || staticData?.progressionMapping;
+
+  // If the item itself is a base progressive item, return its direct count
+  if (playerProgressionMapping && playerProgressionMapping[itemName]) {
+    return snapshot.inventory[itemName] || 0;
+  }
+
+  // Check if itemName is a specific tier of any progressive item we hold
+  if (playerProgressionMapping) {
+    for (const [progressiveBase, progression] of Object.entries(playerProgressionMapping)) {
+      const baseCount = snapshot.inventory[progressiveBase] || 0;
+
+      if (baseCount > 0 && progression && progression.items) {
+        for (const upgrade of progression.items) {
+          if (upgrade.name === itemName ||
+            (upgrade.provides && upgrade.provides.includes(itemName))) {
+            return baseCount >= upgrade.level ? 1 : 0;
+          }
+        }
+      }
+    }
+  }
+
+  // Not a progressive item tier, return direct count
+  return snapshot.inventory[itemName] || 0;
+}
+
+/**
+ * Check if player has at least one of the specified items.
+ *
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {Array<string>} itemNames - Array of item names to check
+ * @param {number} player - Player ID (optional)
+ * @returns {boolean} True if player has at least one of the items
+ */
+export function hasAny(snapshot, staticData, itemNames, player) {
+  if (!Array.isArray(itemNames)) return false;
+  return itemNames.some(itemName => has(snapshot, staticData, itemName, player));
+}
+
+/**
+ * Check if player has all of the specified items.
+ *
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data
+ * @param {Array<string>} itemNames - Array of item names to check
+ * @param {number} player - Player ID (optional)
+ * @returns {boolean} True if player has all of the items
+ */
+export function hasAll(snapshot, staticData, itemNames, player) {
+  if (!Array.isArray(itemNames)) return false;
+  return itemNames.every(itemName => has(snapshot, staticData, itemName, player));
+}
+
+/**
+ * Check if player has a certain number of unique items from a group.
+ *
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data with item groups
+ * @param {string} groupName - Name of the item group
+ * @param {number} player - Player ID (optional)
+ * @param {number} countNeeded - Number of unique items needed from the group
+ * @returns {boolean} True if player has enough unique items from the group
+ */
+export function hasGroupUnique(snapshot, staticData, groupName, player, countNeeded) {
+  if (!snapshot.inventory) return false;
+
+  const playerSlot = snapshot?.player?.slot || '1';
+
+  // Get the items data - check multiple possible locations
+  const items = staticData?.itemsByPlayer?.[playerSlot] || staticData?.itemData || staticData?.items?.[playerSlot];
+  if (!items) return false;
+
+  // Find all items that belong to this group
+  const groupItems = Object.values(items).filter(item =>
+    item.groups && item.groups.includes(groupName)
+  );
+
+  // Count how many unique items from this group the player has
+  let uniqueCount = 0;
+  for (const item of groupItems) {
+    if (has(snapshot, staticData, item.name, player)) {
+      uniqueCount++;
+      if (uniqueCount >= countNeeded) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+// ============================================================================
+// State method handlers for TWW logic
+// ============================================================================
 
 /**
  * Check if player can defeat all required bosses
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data including settings
- * @param {number} player - Player ID (usually 1)
- * @returns {boolean}
  */
 export function _tww_can_defeat_all_required_bosses(snapshot, staticData, player) {
   // This would need to check specific boss locations
@@ -26,11 +190,6 @@ export function _tww_can_defeat_all_required_bosses(snapshot, staticData, player
 
 /**
  * Check if player has the chart for a specific island
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {number} player - Player ID
- * @param {number} islandNumber - The island number to check
- * @returns {boolean}
  */
 export function _tww_has_chart_for_island(snapshot, staticData, player, islandNumber) {
   // TODO: Implement chart checking logic
@@ -142,142 +301,141 @@ export function _tww_tuner_logic_enabled(snapshot, staticData, player) {
   return settings?.logic_tuner_logic_enabled ?? false;
 }
 
-/**
- * Helper functions from Macros.py
- * These are called by the rule engine when evaluating helper type rules
- */
+// ============================================================================
+// Helper functions from Macros.py
+// ============================================================================
 
 // Song/Melody functions
 export function can_play_winds_requiem(snapshot, staticData, player) {
-  return snapshot.hasAll(["Wind Waker", "Wind's Requiem"], player);
+  return hasAll(snapshot, staticData, ["Wind Waker", "Wind's Requiem"], player);
 }
 
 export function can_play_ballad_of_gales(snapshot, staticData, player) {
-  return snapshot.hasAll(["Wind Waker", "Ballad of Gales"], player);
+  return hasAll(snapshot, staticData, ["Wind Waker", "Ballad of Gales"], player);
 }
 
 export function can_play_command_melody(snapshot, staticData, player) {
-  return snapshot.hasAll(["Wind Waker", "Command Melody"], player);
+  return hasAll(snapshot, staticData, ["Wind Waker", "Command Melody"], player);
 }
 
 export function can_play_earth_gods_lyric(snapshot, staticData, player) {
-  return snapshot.hasAll(["Wind Waker", "Earth God's Lyric"], player);
+  return hasAll(snapshot, staticData, ["Wind Waker", "Earth God's Lyric"], player);
 }
 
 export function can_play_wind_gods_aria(snapshot, staticData, player) {
-  return snapshot.hasAll(["Wind Waker", "Wind God's Aria"], player);
+  return hasAll(snapshot, staticData, ["Wind Waker", "Wind God's Aria"], player);
 }
 
 export function can_play_song_of_passing(snapshot, staticData, player) {
-  return snapshot.hasAll(["Wind Waker", "Song of Passing"], player);
+  return hasAll(snapshot, staticData, ["Wind Waker", "Song of Passing"], player);
 }
 
 // Deku Leaf functions
 export function can_fan_with_deku_leaf(snapshot, staticData, player) {
-  return snapshot.has("Deku Leaf", player);
+  return has(snapshot, staticData, "Deku Leaf", player);
 }
 
 export function can_fly_with_deku_leaf_indoors(snapshot, staticData, player) {
-  return snapshot.has("Deku Leaf", player) && has_magic_meter(snapshot, staticData, player);
+  return has(snapshot, staticData, "Deku Leaf", player) && has_magic_meter(snapshot, staticData, player);
 }
 
 export function can_fly_with_deku_leaf_outdoors(snapshot, staticData, player) {
-  return snapshot.has("Deku Leaf", player) &&
+  return has(snapshot, staticData, "Deku Leaf", player) &&
          has_magic_meter(snapshot, staticData, player) &&
          can_play_winds_requiem(snapshot, staticData, player);
 }
 
 // Equipment check functions
 export function has_magic_meter(snapshot, staticData, player) {
-  return snapshot.has("Progressive Magic Meter", player, 1);
+  return has(snapshot, staticData, "Progressive Magic Meter", player, 1);
 }
 
 export function has_magic_meter_upgrade(snapshot, staticData, player) {
-  return snapshot.has("Progressive Magic Meter", player, 2);
+  return has(snapshot, staticData, "Progressive Magic Meter", player, 2);
 }
 
 export function has_heros_sword(snapshot, staticData, player) {
-  return snapshot.has("Progressive Sword", player, 1);
+  return has(snapshot, staticData, "Progressive Sword", player, 1);
 }
 
 export function has_any_master_sword(snapshot, staticData, player) {
-  return snapshot.has("Progressive Sword", player, 2);
+  return has(snapshot, staticData, "Progressive Sword", player, 2);
 }
 
 export function has_full_power_master_sword(snapshot, staticData, player) {
-  return snapshot.has("Progressive Sword", player, 4);
+  return has(snapshot, staticData, "Progressive Sword", player, 4);
 }
 
 export function has_heros_shield(snapshot, staticData, player) {
-  return snapshot.has("Progressive Shield", player, 1);
+  return has(snapshot, staticData, "Progressive Shield", player, 1);
 }
 
 export function has_mirror_shield(snapshot, staticData, player) {
-  return snapshot.has("Progressive Shield", player, 2);
+  return has(snapshot, staticData, "Progressive Shield", player, 2);
 }
 
 export function has_heros_bow(snapshot, staticData, player) {
-  return snapshot.has("Progressive Bow", player, 1);
+  return has(snapshot, staticData, "Progressive Bow", player, 1);
 }
 
 export function has_fire_arrows(snapshot, staticData, player) {
-  return snapshot.has("Progressive Bow", player, 2) && has_magic_meter(snapshot, staticData, player);
+  return has(snapshot, staticData, "Progressive Bow", player, 2) && has_magic_meter(snapshot, staticData, player);
 }
 
 export function has_ice_arrows(snapshot, staticData, player) {
-  return snapshot.has("Progressive Bow", player, 2) && has_magic_meter(snapshot, staticData, player);
+  return has(snapshot, staticData, "Progressive Bow", player, 2) && has_magic_meter(snapshot, staticData, player);
 }
 
 export function has_light_arrows(snapshot, staticData, player) {
-  return snapshot.has("Progressive Bow", player, 3) && has_magic_meter(snapshot, staticData, player);
+  return has(snapshot, staticData, "Progressive Bow", player, 3) && has_magic_meter(snapshot, staticData, player);
 }
 
 export function has_any_wallet_upgrade(snapshot, staticData, player) {
-  return snapshot.has("Wallet Capacity Upgrade", player, 1);
+  return has(snapshot, staticData, "Wallet Capacity Upgrade", player, 1);
 }
 
 export function has_any_quiver_upgrade(snapshot, staticData, player) {
-  return snapshot.has("Quiver Capacity Upgrade", player, 1);
+  return has(snapshot, staticData, "Quiver Capacity Upgrade", player, 1);
 }
 
 // Utility functions
 export function can_aim_mirror_shield(snapshot, staticData, player) {
   return has_mirror_shield(snapshot, staticData, player) && (
-    snapshot.hasAny(["Wind Waker", "Grappling Hook", "Boomerang", "Deku Leaf", "Hookshot"], player) ||
+    hasAny(snapshot, staticData, ["Wind Waker", "Grappling Hook", "Boomerang", "Deku Leaf", "Hookshot"], player) ||
     has_heros_sword(snapshot, staticData, player) ||
     has_heros_bow(snapshot, staticData, player)
   );
 }
 
 export function can_move_boulders(snapshot, staticData, player) {
-  return snapshot.hasAny(["Bombs", "Power Bracelets"], player);
+  return hasAny(snapshot, staticData, ["Bombs", "Power Bracelets"], player);
 }
 
 export function can_defeat_door_flowers(snapshot, staticData, player) {
-  return snapshot.hasAny(["Boomerang", "Bombs", "Hookshot"], player) ||
+  return hasAny(snapshot, staticData, ["Boomerang", "Bombs", "Hookshot"], player) ||
          has_heros_bow(snapshot, staticData, player);
 }
 
 export function can_destroy_seeds_hanging_by_vines(snapshot, staticData, player) {
-  return snapshot.hasAny(["Boomerang", "Bombs", "Hookshot"], player) ||
+  return hasAny(snapshot, staticData, ["Boomerang", "Bombs", "Hookshot"], player) ||
          has_heros_bow(snapshot, staticData, player);
 }
 
 export function can_cut_grass(snapshot, staticData, player) {
-  return snapshot.hasAny(["Skull Hammer", "Boomerang", "Bombs"], player) ||
+  return hasAny(snapshot, staticData, ["Skull Hammer", "Boomerang", "Bombs"], player) ||
          has_heros_sword(snapshot, staticData, player);
 }
 
 // Enemy defeat functions
 export function can_defeat_boko_babas(snapshot, staticData, player) {
-  return snapshot.hasAny(["Boomerang", "Skull Hammer", "Hookshot", "Bombs"], player) ||
+  return hasAny(snapshot, staticData, ["Boomerang", "Skull Hammer", "Hookshot", "Bombs"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player) ||
-         (can_fan_with_deku_leaf(snapshot, staticData, player) && snapshot.has("Grappling Hook", player));
+         (can_fan_with_deku_leaf(snapshot, staticData, player) && has(snapshot, staticData, "Grappling Hook", player));
 }
 
 export function can_defeat_bokoblins(snapshot, staticData, player) {
-  return snapshot.hasAny(["Bombs", "Skull Hammer"], player) ||
+  return hasAny(snapshot, staticData, ["Bombs", "Skull Hammer"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player);
 }
@@ -289,39 +447,39 @@ export function can_defeat_moblins(snapshot, staticData, player) {
 export function can_defeat_darknuts(snapshot, staticData, player) {
   return has_heros_sword(snapshot, staticData, player) ||
          has_light_arrows(snapshot, staticData, player) ||
-         snapshot.has("Skull Hammer", player);
+         has(snapshot, staticData, "Skull Hammer", player);
 }
 
 export function can_defeat_mighty_darknuts(snapshot, staticData, player) {
   return (has_heros_sword(snapshot, staticData, player) || has_light_arrows(snapshot, staticData, player)) ||
-         (snapshot.has("Skull Hammer", player) && _tww_precise_3(snapshot, staticData, player));
+         (has(snapshot, staticData, "Skull Hammer", player) && _tww_precise_3(snapshot, staticData, player));
 }
 
 export function can_defeat_blue_bubbles(snapshot, staticData, player) {
   return has_ice_arrows(snapshot, staticData, player) ||
-         snapshot.has("Bombs", player) ||
+         has(snapshot, staticData, "Bombs", player) ||
          (
-           (can_fan_with_deku_leaf(snapshot, staticData, player) || snapshot.has("Hookshot", player)) &&
-           (snapshot.hasAny(["Grappling Hook", "Skull Hammer"], player) ||
+           (can_fan_with_deku_leaf(snapshot, staticData, player) || has(snapshot, staticData, "Hookshot", player)) &&
+           (hasAny(snapshot, staticData, ["Grappling Hook", "Skull Hammer"], player) ||
             has_heros_sword(snapshot, staticData, player) ||
             has_heros_bow(snapshot, staticData, player))
          );
 }
 
 export function can_defeat_armos(snapshot, staticData, player) {
-  return snapshot.hasAny(["Bombs", "Skull Hammer", "Hookshot"], player) ||
+  return hasAny(snapshot, staticData, ["Bombs", "Skull Hammer", "Hookshot"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player);
 }
 
 export function can_defeat_wizzrobes(snapshot, staticData, player) {
-  return snapshot.hasAny(["Hookshot", "Bombs", "Skull Hammer"], player) ||
+  return hasAny(snapshot, staticData, ["Hookshot", "Bombs", "Skull Hammer"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player);
 }
 
 export function can_defeat_stalfos(snapshot, staticData, player) {
-  return snapshot.hasAny(["Bombs", "Skull Hammer"], player) ||
+  return hasAny(snapshot, staticData, ["Bombs", "Skull Hammer"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
          has_light_arrows(snapshot, staticData, player);
 }
@@ -329,11 +487,11 @@ export function can_defeat_stalfos(snapshot, staticData, player) {
 export function can_defeat_floormasters(snapshot, staticData, player) {
   return has_heros_sword(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player) ||
-         (snapshot.has("Skull Hammer", player) && _tww_precise_1(snapshot, staticData, player));
+         (has(snapshot, staticData, "Skull Hammer", player) && _tww_precise_1(snapshot, staticData, player));
 }
 
 export function can_defeat_mothulas(snapshot, staticData, player) {
-  return snapshot.hasAny(["Bombs", "Skull Hammer"], player) ||
+  return hasAny(snapshot, staticData, ["Bombs", "Skull Hammer"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player);
 }
@@ -343,67 +501,67 @@ export function can_defeat_winged_mothulas(snapshot, staticData, player) {
 }
 
 export function can_defeat_peahats(snapshot, staticData, player) {
-  return snapshot.hasAny(["Boomerang", "Skull Hammer", "Bombs"], player) ||
-         (snapshot.has("Hookshot", player) && has_heros_sword(snapshot, staticData, player)) ||
+  return hasAny(snapshot, staticData, ["Boomerang", "Skull Hammer", "Bombs"], player) ||
+         (has(snapshot, staticData, "Hookshot", player) && has_heros_sword(snapshot, staticData, player)) ||
          (can_fan_with_deku_leaf(snapshot, staticData, player) && has_heros_sword(snapshot, staticData, player)) ||
          has_heros_bow(snapshot, staticData, player);
 }
 
 export function can_remove_peahat_armor(snapshot, staticData, player) {
-  return snapshot.hasAny(["Boomerang", "Hookshot", "Skull Hammer", "Bombs"], player) ||
+  return hasAny(snapshot, staticData, ["Boomerang", "Hookshot", "Skull Hammer", "Bombs"], player) ||
          can_fan_with_deku_leaf(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player);
 }
 
 export function can_stun_magtails(snapshot, staticData, player) {
-  return snapshot.hasAny(["Skull Hammer", "Boomerang", "Hookshot", "Bombs", "Grappling Hook"], player) ||
+  return hasAny(snapshot, staticData, ["Skull Hammer", "Boomerang", "Hookshot", "Bombs", "Grappling Hook"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player);
 }
 
 export function can_defeat_morths(snapshot, staticData, player) {
-  return snapshot.hasAny(["Boomerang", "Hookshot"], player) ||
+  return hasAny(snapshot, staticData, ["Boomerang", "Hookshot"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player);
 }
 
 // Boss defeat functions
 export function can_defeat_gohma(snapshot, staticData, player) {
-  return snapshot.has("Grappling Hook", player);
+  return has(snapshot, staticData, "Grappling Hook", player);
 }
 
 export function can_defeat_kalle_demos(snapshot, staticData, player) {
-  return snapshot.has("Boomerang", player);
+  return has(snapshot, staticData, "Boomerang", player);
 }
 
 export function can_defeat_gohdan(snapshot, staticData, player) {
   return (
     has_heros_bow(snapshot, staticData, player) ||
-    (snapshot.has("Hookshot", player) && _tww_obscure_1(snapshot, staticData, player) && _tww_precise_2(snapshot, staticData, player))
-  ) && snapshot.has("Bombs", player);
+    (has(snapshot, staticData, "Hookshot", player) && _tww_obscure_1(snapshot, staticData, player) && _tww_precise_2(snapshot, staticData, player))
+  ) && has(snapshot, staticData, "Bombs", player);
 }
 
 export function can_defeat_helmaroc_king(snapshot, staticData, player) {
-  return snapshot.has("Skull Hammer", player);
+  return has(snapshot, staticData, "Skull Hammer", player);
 }
 
 export function can_defeat_jalhalla(snapshot, staticData, player) {
   return (
     (can_aim_mirror_shield(snapshot, staticData, player) || has_light_arrows(snapshot, staticData, player)) &&
-    snapshot.has("Power Bracelets", player) &&
+    has(snapshot, staticData, "Power Bracelets", player) &&
     can_defeat_jalhalla_poes(snapshot, staticData, player)
   );
 }
 
 export function can_defeat_jalhalla_poes(snapshot, staticData, player) {
-  return snapshot.hasAny(["Bombs", "Skull Hammer"], player) ||
+  return hasAny(snapshot, staticData, ["Bombs", "Skull Hammer"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player);
 }
 
 export function can_defeat_molgera(snapshot, staticData, player) {
-  return snapshot.has("Hookshot", player) && (
-    snapshot.hasAny(["Boomerang", "Grappling Hook", "Skull Hammer", "Bombs"], player) ||
+  return has(snapshot, staticData, "Hookshot", player) && (
+    hasAny(snapshot, staticData, ["Boomerang", "Grappling Hook", "Skull Hammer", "Bombs"], player) ||
     has_heros_sword(snapshot, staticData, player) ||
     has_heros_bow(snapshot, staticData, player)
   );
@@ -411,45 +569,45 @@ export function can_defeat_molgera(snapshot, staticData, player) {
 
 export function can_defeat_phantom_ganon(snapshot, staticData, player) {
   return (_tww_outside_swordless_mode(snapshot, staticData, player) && has_any_master_sword(snapshot, staticData, player)) ||
-         (_tww_in_swordless_mode(snapshot, staticData, player) && snapshot.has("Skull Hammer", player));
+         (_tww_in_swordless_mode(snapshot, staticData, player) && has(snapshot, staticData, "Skull Hammer", player));
 }
 
 // Dragon Roost Cavern functions
 export function can_reach_dragon_roost_cavern_gaping_maw(snapshot, staticData, player) {
-  return snapshot.has("DRC Small Key", player, 1) && (
-    (snapshot.has("DRC Small Key", player, 4) && can_cut_down_hanging_drc_platform(snapshot, staticData, player)) ||
+  return has(snapshot, staticData, "DRC Small Key", player, 1) && (
+    (has(snapshot, staticData, "DRC Small Key", player, 4) && can_cut_down_hanging_drc_platform(snapshot, staticData, player)) ||
     (can_fly_with_deku_leaf_indoors(snapshot, staticData, player) && _tww_obscure_2(snapshot, staticData, player)) ||
     (has_ice_arrows(snapshot, staticData, player) && _tww_obscure_2(snapshot, staticData, player) && _tww_precise_1(snapshot, staticData, player))
   );
 }
 
 export function can_reach_dragon_roost_cavern_boss_stairs(snapshot, staticData, player) {
-  return snapshot.has("DRC Small Key", player, 4) && (
-    snapshot.hasAny(["Grappling Hook", "Hookshot"], player) ||
+  return has(snapshot, staticData, "DRC Small Key", player, 4) && (
+    hasAny(snapshot, staticData, ["Grappling Hook", "Hookshot"], player) ||
     can_fly_with_deku_leaf_indoors(snapshot, staticData, player) ||
     has_ice_arrows(snapshot, staticData, player)
   );
 }
 
 export function can_cut_down_hanging_drc_platform(snapshot, staticData, player) {
-  return snapshot.hasAny(["Bombs", "Skull Hammer"], player) ||
+  return hasAny(snapshot, staticData, ["Bombs", "Skull Hammer"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player) ||
-         (snapshot.has("Hookshot", player) && _tww_precise_1(snapshot, staticData, player)) ||
-         (snapshot.has("Grappling Hook", player) && _tww_precise_1(snapshot, staticData, player));
+         (has(snapshot, staticData, "Hookshot", player) && _tww_precise_1(snapshot, staticData, player)) ||
+         (has(snapshot, staticData, "Grappling Hook", player) && _tww_precise_1(snapshot, staticData, player));
 }
 
 // Tower of the Gods functions
 export function can_reach_tower_of_the_gods_second_floor(snapshot, staticData, player) {
-  return snapshot.hasAll(["Bombs", "TotG Small Key"], player) && can_defeat_yellow_chuchus(snapshot, staticData, player);
+  return hasAll(snapshot, staticData, ["Bombs", "TotG Small Key"], player) && can_defeat_yellow_chuchus(snapshot, staticData, player);
 }
 
 export function can_defeat_yellow_chuchus(snapshot, staticData, player) {
-  return snapshot.hasAny(["Bombs", "Skull Hammer"], player) ||
-         (snapshot.has("Boomerang", player) && has_heros_sword(snapshot, staticData, player)) ||
+  return hasAny(snapshot, staticData, ["Bombs", "Skull Hammer"], player) ||
+         (has(snapshot, staticData, "Boomerang", player) && has_heros_sword(snapshot, staticData, player)) ||
          has_heros_bow(snapshot, staticData, player) ||
          (can_fan_with_deku_leaf(snapshot, staticData, player) && has_heros_sword(snapshot, staticData, player)) ||
-         (snapshot.has("Grappling Hook", player) && has_heros_sword(snapshot, staticData, player) &&
+         (has(snapshot, staticData, "Grappling Hook", player) && has_heros_sword(snapshot, staticData, player) &&
           _tww_obscure_1(snapshot, staticData, player) && _tww_precise_2(snapshot, staticData, player));
 }
 
@@ -457,17 +615,17 @@ export function can_reach_tower_of_the_gods_third_floor(snapshot, staticData, pl
   return can_reach_tower_of_the_gods_second_floor(snapshot, staticData, player) &&
          can_bring_west_servant_of_the_tower(snapshot, staticData, player) &&
          can_bring_north_servant_of_the_tower(snapshot, staticData, player) &&
-         snapshot.has("Wind Waker", player);
+         has(snapshot, staticData, "Wind Waker", player);
 }
 
 export function can_bring_west_servant_of_the_tower(snapshot, staticData, player) {
-  return (snapshot.has("Grappling Hook", player) || can_fly_with_deku_leaf_indoors(snapshot, staticData, player)) &&
+  return (has(snapshot, staticData, "Grappling Hook", player) || can_fly_with_deku_leaf_indoors(snapshot, staticData, player)) &&
          can_play_command_melody(snapshot, staticData, player) &&
          has_heros_bow(snapshot, staticData, player);
 }
 
 export function can_bring_north_servant_of_the_tower(snapshot, staticData, player) {
-  return snapshot.has("TotG Small Key", player, 2) &&
+  return has(snapshot, staticData, "TotG Small Key", player, 2) &&
          (can_fly_with_deku_leaf_indoors(snapshot, staticData, player) || _tww_obscure_1(snapshot, staticData, player)) &&
          can_play_command_melody(snapshot, staticData, player);
 }
@@ -480,7 +638,7 @@ export function can_reach_earth_temple_sun_statue_room(snapshot, staticData, pla
 }
 
 export function can_defeat_red_chuchus(snapshot, staticData, player) {
-  return snapshot.hasAny(["Skull Hammer", "Bombs"], player) ||
+  return hasAny(snapshot, staticData, ["Skull Hammer", "Bombs"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player);
 }
@@ -492,18 +650,18 @@ export function can_defeat_green_chuchus(snapshot, staticData, player) {
 export function can_reach_earth_temple_right_path(snapshot, staticData, player) {
   return can_reach_earth_temple_sun_statue_room(snapshot, staticData, player) &&
          can_play_command_melody(snapshot, staticData, player) &&
-         snapshot.has("Skull Hammer", player);
+         has(snapshot, staticData, "Skull Hammer", player);
 }
 
 export function can_reach_earth_temple_left_path(snapshot, staticData, player) {
   return can_reach_earth_temple_sun_statue_room(snapshot, staticData, player) &&
-         snapshot.has("ET Small Key", player, 2);
+         has(snapshot, staticData, "ET Small Key", player, 2);
 }
 
 export function can_reach_earth_temple_moblins_and_poes_room(snapshot, staticData, player) {
   return can_reach_earth_temple_left_path(snapshot, staticData, player) &&
          has_fire_arrows(snapshot, staticData, player) &&
-         snapshot.has("Power Bracelets", player) &&
+         has(snapshot, staticData, "Power Bracelets", player) &&
          can_defeat_floormasters(snapshot, staticData, player) &&
          (can_play_command_melody(snapshot, staticData, player) || has_mirror_shield(snapshot, staticData, player));
 }
@@ -522,20 +680,20 @@ export function can_reach_earth_temple_redead_hub_room(snapshot, staticData, pla
 export function can_reach_earth_temple_third_crypt(snapshot, staticData, player) {
   return can_reach_earth_temple_redead_hub_room(snapshot, staticData, player) &&
          (can_play_command_melody(snapshot, staticData, player) || can_aim_mirror_shield(snapshot, staticData, player)) &&
-         snapshot.hasAll(["Power Bracelets", "Skull Hammer"], player) &&
-         snapshot.has("ET Small Key", player, 3) &&
+         hasAll(snapshot, staticData, ["Power Bracelets", "Skull Hammer"], player) &&
+         has(snapshot, staticData, "ET Small Key", player, 3) &&
          (can_defeat_red_bubbles(snapshot, staticData, player) || _tww_precise_2(snapshot, staticData, player)) &&
          can_play_command_melody(snapshot, staticData, player) &&
          can_aim_mirror_shield(snapshot, staticData, player);
 }
 
 export function can_defeat_red_bubbles(snapshot, staticData, player) {
-  return snapshot.hasAny(["Skull Hammer", "Bombs"], player) ||
+  return hasAny(snapshot, staticData, ["Skull Hammer", "Bombs"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
          has_heros_bow(snapshot, staticData, player) ||
          (
-           (can_fan_with_deku_leaf(snapshot, staticData, player) || snapshot.has("Hookshot", player)) &&
-           snapshot.has("Grappling Hook", player)
+           (can_fan_with_deku_leaf(snapshot, staticData, player) || has(snapshot, staticData, "Hookshot", player)) &&
+           has(snapshot, staticData, "Grappling Hook", player)
          );
 }
 
@@ -551,30 +709,30 @@ export function can_reach_earth_temple_many_mirrors_room(snapshot, staticData, p
 // Wind Temple functions
 export function can_reach_wind_temple_kidnapping_room(snapshot, staticData, player) {
   return can_play_command_melody(snapshot, staticData, player) &&
-         snapshot.has("Iron Boots", player) &&
+         has(snapshot, staticData, "Iron Boots", player) &&
          can_fly_with_deku_leaf_indoors(snapshot, staticData, player);
 }
 
 export function can_open_wind_temple_upper_giant_grate(snapshot, staticData, player) {
   return can_reach_end_of_wind_temple_many_cyclones_room(snapshot, staticData, player) &&
-         snapshot.has("Iron Boots", player);
+         has(snapshot, staticData, "Iron Boots", player);
 }
 
 export function can_reach_end_of_wind_temple_many_cyclones_room(snapshot, staticData, player) {
   return can_reach_wind_temple_kidnapping_room(snapshot, staticData, player) && (
     (
-      snapshot.has("Iron Boots", player) &&
+      has(snapshot, staticData, "Iron Boots", player) &&
       can_fan_with_deku_leaf(snapshot, staticData, player) &&
       can_fly_with_deku_leaf_indoors(snapshot, staticData, player) &&
       can_cut_grass(snapshot, staticData, player)
     ) ||
     (
-      snapshot.has("Hookshot", player) &&
+      has(snapshot, staticData, "Hookshot", player) &&
       can_defeat_blue_bubbles(snapshot, staticData, player) &&
       can_fly_with_deku_leaf_indoors(snapshot, staticData, player)
     ) ||
     (
-      snapshot.has("Hookshot", player) &&
+      has(snapshot, staticData, "Hookshot", player) &&
       can_fly_with_deku_leaf_indoors(snapshot, staticData, player) &&
       _tww_obscure_1(snapshot, staticData, player) &&
       _tww_precise_2(snapshot, staticData, player)
@@ -590,27 +748,27 @@ export function can_activate_wind_temple_giant_fan(snapshot, staticData, player)
 export function can_reach_wind_temple_tall_basement_room(snapshot, staticData, player) {
   return can_open_wind_temple_upper_giant_grate(snapshot, staticData, player) &&
          can_open_wind_temple_lower_giant_grate(snapshot, staticData, player) &&
-         snapshot.has("WT Small Key", player, 2);
+         has(snapshot, staticData, "WT Small Key", player, 2);
 }
 
 export function can_open_wind_temple_lower_giant_grate(snapshot, staticData, player) {
   return can_reach_wind_temple_kidnapping_room(snapshot, staticData, player) &&
-         snapshot.has("Hookshot", player) &&
+         has(snapshot, staticData, "Hookshot", player) &&
          can_defeat_blue_bubbles(snapshot, staticData, player);
 }
 
 // Hyrule and Forsaken Fortress functions
 export function can_access_hyrule(snapshot, staticData, player) {
-  return snapshot.hasGroupUnique("Shards", player, 8);
+  return hasGroupUnique(snapshot, staticData, "Shards", player, 8);
 }
 
 export function can_get_inside_forsaken_fortress(snapshot, staticData, player) {
   return can_get_past_forsaken_fortress_gate(snapshot, staticData, player) &&
-         snapshot.has("Skull Hammer", player);
+         has(snapshot, staticData, "Skull Hammer", player);
 }
 
 export function can_get_past_forsaken_fortress_gate(snapshot, staticData, player) {
-  return snapshot.has("Bombs", player) ||
+  return has(snapshot, staticData, "Bombs", player) ||
          (_tww_obscure_1(snapshot, staticData, player) && _tww_precise_1(snapshot, staticData, player)) ||
          (can_open_ganons_tower_dark_portal(snapshot, staticData, player) && _tww_obscure_1(snapshot, staticData, player));
 }
@@ -628,7 +786,7 @@ export function can_reach_ganons_tower_phantom_ganon_room(snapshot, staticData, 
 
 export function can_access_ganons_tower(snapshot, staticData, player) {
   return can_get_past_hyrule_barrier(snapshot, staticData, player) && (
-    snapshot.has("Hookshot", player) || can_fly_with_deku_leaf_indoors(snapshot, staticData, player)
+    has(snapshot, staticData, "Hookshot", player) || can_fly_with_deku_leaf_indoors(snapshot, staticData, player)
   );
 }
 
@@ -651,7 +809,7 @@ export function can_complete_all_memory_dungeons_and_bosses(snapshot, staticData
 }
 
 export function can_complete_memory_dragon_roost_cavern_and_gohma(snapshot, staticData, player) {
-  return snapshot.has("Grappling Hook", player) &&
+  return has(snapshot, staticData, "Grappling Hook", player) &&
          can_fly_with_deku_leaf_indoors(snapshot, staticData, player) &&
          can_defeat_gohma(snapshot, staticData, player);
 }
@@ -673,12 +831,12 @@ export function can_complete_memory_wind_temple_and_molgera(snapshot, staticData
 
 export function can_open_ganons_tower_dark_portal(snapshot, staticData, player) {
   return can_reach_ganons_tower_phantom_ganon_room(snapshot, staticData, player) &&
-         snapshot.has("Boomerang", player);
+         has(snapshot, staticData, "Boomerang", player);
 }
 
 export function can_reach_and_defeat_ganondorf(snapshot, staticData, player) {
   return can_reach_and_defeat_puppet_ganon(snapshot, staticData, player) &&
-         snapshot.hasAll(["Grappling Hook", "Hookshot"], player) &&
+         hasAll(snapshot, staticData, ["Grappling Hook", "Hookshot"], player) &&
          can_defeat_ganondorf(snapshot, staticData, player);
 }
 
@@ -700,13 +858,13 @@ export function can_unlock_puppet_ganon_door(snapshot, staticData, player) {
 
 export function can_defeat_puppet_ganon(snapshot, staticData, player) {
   return has_light_arrows(snapshot, staticData, player) &&
-         (snapshot.has("Boomerang", player) || _tww_precise_2(snapshot, staticData, player));
+         (has(snapshot, staticData, "Boomerang", player) || _tww_precise_2(snapshot, staticData, player));
 }
 
 export function can_defeat_ganondorf(snapshot, staticData, player) {
   return (has_heros_sword(snapshot, staticData, player) || _tww_in_swordless_mode(snapshot, staticData, player)) &&
          (has_heros_shield(snapshot, staticData, player) ||
-          (snapshot.has("Skull Hammer", player) && _tww_obscure_2(snapshot, staticData, player)));
+          (has(snapshot, staticData, "Skull Hammer", player) && _tww_obscure_2(snapshot, staticData, player)));
 }
 
 // Other location access functions
@@ -717,9 +875,9 @@ export function can_reach_outset_island_upper_level(snapshot, staticData, player
 }
 
 export function can_cut_down_outset_trees(snapshot, staticData, player) {
-  return snapshot.hasAny(["Boomerang", "Skull Hammer"], player) ||
+  return hasAny(snapshot, staticData, ["Boomerang", "Skull Hammer"], player) ||
          has_heros_sword(snapshot, staticData, player) ||
-         (snapshot.has("Power Bracelets", player) && _tww_obscure_3(snapshot, staticData, player));
+         (has(snapshot, staticData, "Power Bracelets", player) && _tww_obscure_3(snapshot, staticData, player));
 }
 
 export function can_access_forest_of_fairies(snapshot, staticData, player) {
@@ -728,13 +886,20 @@ export function can_access_forest_of_fairies(snapshot, staticData, player) {
 }
 
 export function can_access_forest_haven(snapshot, staticData, player) {
-  return snapshot.has("Grappling Hook", player) || can_fly_with_deku_leaf_outdoors(snapshot, staticData, player);
+  return has(snapshot, staticData, "Grappling Hook", player) || can_fly_with_deku_leaf_outdoors(snapshot, staticData, player);
 }
 
 /**
  * Export all state methods and helper functions
  */
 export default {
+  // Core utilities
+  has,
+  count,
+  hasAny,
+  hasAll,
+  hasGroupUnique,
+
   // State methods
   _tww_can_defeat_all_required_bosses,
   _tww_has_chart_for_island,
