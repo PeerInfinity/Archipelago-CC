@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-15 23:39:48
+**Generated:** 2025-11-16 01:04:21
 
 **Source Data Created:** 2025-11-15T23:39:33.036230
 
-**Source Data Last Updated:** 2025-11-15T23:39:33.036237
+**Source Data Last Updated:** 2025-11-16T01:04:21.754901
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 48 (61.5%)
-- **Failed:** 30 (38.5%)
+- **Passed:** 49 (62.8%)
+- **Failed:** 29 (37.2%)
 
 ## Test Results
 
@@ -26,7 +26,7 @@
 | Adventure | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | ArchipIDLE | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Blasphemous | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Blasphemous | ❌ Failed seed 1 | 1 | 0 | 13.1 | 🔴 0.0% | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ❌ Failed seed 9 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
@@ -35,7 +35,7 @@
 | ChecksFinder | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | ChocolateChipCookies | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Civilization VI | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| DLCQuest | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | DOOM 1993 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | DOOM II | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Dark Souls III | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
