@@ -53,7 +53,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
 
                 # Convert other entries
                 for level in Overcooked2Level():
-                    shortname = level.shortname
+                    shortname = level.as_generic_level.shortname
                     if shortname in Logic.level_logic:
                         # Map level_id to the logic
                         level_logic_by_id[level.level_id] = Logic.level_logic[shortname]
