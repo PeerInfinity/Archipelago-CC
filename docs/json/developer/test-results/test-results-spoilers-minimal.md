@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-15 23:39:48
+**Generated:** 2025-11-15 17:43:43
 
 **Source Data Created:** 2025-11-15T23:39:33.036230
 
-**Source Data Last Updated:** 2025-11-15T23:39:33.036237
+**Source Data Last Updated:** 2025-11-15T17:43:43.555874
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 48 (61.5%)
-- **Failed:** 30 (38.5%)
+- **Passed:** 49 (62.8%)
+- **Failed:** 29 (37.2%)
 
 ## Test Results
 
@@ -46,7 +46,7 @@
 | Heretic | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Hylics 2 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Jak and Daxter The Precursor Legacy | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Kirby's Dream Land 3 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |

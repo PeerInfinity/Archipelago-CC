@@ -190,9 +190,9 @@
   },
   "Hylics 2": {
     "exporter_path": "exporter/games/hylics2.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/hylics2/hylics2Logic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "hylics2"
   },
   "Inscryption": {
@@ -204,9 +204,9 @@
   },
   "Jak and Daxter: The Precursor Legacy": {
     "exporter_path": "exporter/games/jakanddaxter.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "jakanddaxter"
   },
   "Kingdom Hearts": {
@@ -456,9 +456,9 @@
   },
   "Super Metroid": {
     "exporter_path": "exporter/games/sm.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "sm"
   },
   "TUNIC": {

@@ -1306,7 +1306,7 @@
       }
     }
   },
-  "hylics_2": {
+  "hylics2": {
     "name": "Hylics 2",
     "folders": {
       "AP_14089154938208861744": {
@@ -1396,7 +1396,7 @@
       }
     }
   },
-  "jak_and_daxter__the_precursor_legacy": {
+  "jakanddaxter": {
     "name": "Jak and Daxter: The Precursor Legacy",
     "folders": {
       "AP_14089154938208861744": {
@@ -3921,6 +3921,27 @@
         "consecutive_passes_before_failure": 10,
         "first_failure_seed": null,
         "total_seeds_tested": 10
+      }
+    }
+  },
+  "jak_and_daxter__the_precursor_legacy": {
+    "name": "Jak and Daxter: The Precursor Legacy",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Jak and Daxter: The Precursor Legacy"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
       }
     }
   }
