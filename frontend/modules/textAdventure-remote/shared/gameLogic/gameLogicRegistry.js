@@ -234,13 +234,15 @@ import * as dlcquestLogic from './dlcquest/dlcquestLogic.js';
 import { dlcquestStateModule } from './dlcquest/dlcquestLogic.js';
 import * as hkLogic from './hk/hkLogic.js';
 import { hkStateModule } from './hk/hkLogic.js';
-import * as hylics2Logic from './hylics_2/hylics2Logic.js';
-import { hylics2StateModule } from './hylics_2/hylics2Logic.js';
+import * as hylics2Logic from './hylics2/hylics2Logic.js';
+import { hylics2StateModule } from './hylics2/hylics2Logic.js';
 import * as inscryptionLogic from './inscryption/inscryptionLogic.js';
 import { inscryptionStateModule } from './inscryption/inscryptionLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
+import * as mmbn3Logic from './mmbn3/mmbn3Logic.js';
+import { mmbn3StateModule } from './mmbn3/mmbn3Logic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -335,6 +337,12 @@ const GAME_REGISTRY = {
     helperFunctions: pokemon_rbLogic.helperFunctions,
     worldClasses: ['PokemonRedBlueWorld'],
     aliases: ['Pokemon Red and Blue', 'Pokemon RB', 'pokemon_rb']
+  },
+  'MegaMan Battle Network 3': {
+    logicModule: mmbn3Logic.mmbn3StateModule,
+    helperFunctions: mmbn3Logic.helperFunctions,
+    worldClasses: ['MMBN3World'],
+    aliases: ['MegaMan Battle Network 3', 'MMBN3', 'mmbn3']
   },
   // Add more games here as they're implemented
   'Generic': {

@@ -898,6 +898,123 @@ export const helperFunctions = {
   },
 
   /**
+   * Check if Hades fight is accessible.
+   * Based on worlds/kh2/Rules.py:745-754
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Hades fight
+   */
+  get_hades_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const summons = ['Chicken Little', 'Stitch', 'Genie', 'Peter Pan'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [gapCloser, summons, defensiveTool, formList],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 4; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 3; // normal
+    return categoriesAvailable >= 2; // hard
+  },
+
+  /**
+   * Check if Ansem Riku fight is accessible.
+   * Based on worlds/kh2/Rules.py:516-525
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Ansem Riku fight
+   */
+  get_ansem_riku_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+
+    if (fightLogic === 0) { // easy: 3 of 4 categories
+      const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+        [gapCloser, defensiveTool, ['Limit Form'], groundFinisher],
+        snapshot
+      );
+      return categoriesAvailable >= 3;
+    } else if (fightLogic === 1) { // normal: 2 of 4 categories
+      const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+        [gapCloser, defensiveTool, ['Limit Form'], groundFinisher],
+        snapshot
+      );
+      return categoriesAvailable >= 2;
+    } else { // hard: defensive tool or limit form
+      return helperFunctions.kh2_has_any(['Reflect Element', 'Guard', 'Limit Form'], snapshot);
+    }
+  },
+
+  /**
+   * Check if Final Form region is accessible.
+   * Based on worlds/kh2/Rules.py:372-381
+   *
+   * Can reach one of: TT3, TWTNW post Roxas, BC2, LoD2, or PR2
+   * Checks if player can reach any of the final leveling access locations.
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Final Form region
+   */
+  final_form_region_access(snapshot, staticData) {
+    // These locations are defined in Logic.py:608-614 (final_leveling_access)
+    const finalLevelingLocations = [
+      'Roxas Event Location',
+      'Grim Reaper 2',
+      'Xaldin',
+      'Storm Rider',
+      'Underground Concourse Mythril Gem'
+    ];
+
+    // Check if any of these locations are accessible in the current state
+    // The snapshot contains accessibleLocations (camelCase) which tracks all reachable locations
+    const accessibleLocations = snapshot?.accessibleLocations || [];
+
+    return finalLevelingLocations.some(location =>
+      accessibleLocations.includes(location)
+    );
+  },
+
+  /**
+   * Check if Storm Rider fight is accessible.
+   * Based on worlds/kh2/Rules.py:527-536
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Storm Rider fight
+   */
+  get_storm_rider_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+    const aerialMove = ['Aerial Dive', 'Aerial Spiral', 'Horizontal Slash', 'Aerial Sweep', 'Aerial Finish'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [defensiveTool, partyLimit, aerialMove, formList],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 4; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 3; // normal
+    return categoriesAvailable >= 2; // hard
+  },
+
+  /**
    * Utility: Check if player has any item from a list of item lists.
    * Based on worlds/kh2/Rules.py:101-108
    *

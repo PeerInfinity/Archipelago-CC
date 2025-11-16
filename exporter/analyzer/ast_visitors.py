@@ -84,52 +84,17 @@ class ASTVisitorMixin:
                     if_node = body_to_analyze[0]
                     remaining_stmts = body_to_analyze[1:]
 
-                    # Analyze the test condition
-                    test_result = self.visit(if_node.test)
+                    # Create a synthetic if-node that includes the remaining statements as the else block
+                    synthetic_if = ast.If(
+                        test=if_node.test,
+                        body=if_node.body,
+                        orelse=remaining_stmts,
+                        lineno=if_node.lineno if hasattr(if_node, 'lineno') else 0,
+                        col_offset=if_node.col_offset if hasattr(if_node, 'col_offset') else 0
+                    )
 
-                    # Analyze the if body (should be a single statement, typically a return)
-                    body_result = None
-                    if if_node.body:
-                        body_result = self.visit(if_node.body[0])
-
-                    # Analyze remaining statements as the implicit else
-                    # If there's only one remaining statement, visit it directly
-                    # If there are multiple, we need to chain them
-                    if len(remaining_stmts) == 1:
-                        orelse_result = self.visit(remaining_stmts[0])
-                    else:
-                        # Multiple remaining statements - create a synthetic function to analyze them
-                        synthetic_func = ast.FunctionDef(
-                            name='synthetic_else',
-                            args=node.args,
-                            body=remaining_stmts,
-                            decorator_list=[],
-                            returns=None
-                        )
-                        orelse_result = self.visit_FunctionDef(synthetic_func)
-
-                    if test_result is None or body_result is None:
-                        logging.error(f"Failed to analyze If statement in function body")
-                        return None
-
-                    # Optimize: If test is a constant, statically evaluate the conditional
-                    if test_result.get('type') == 'constant':
-                        test_value = test_result.get('value')
-                        logging.debug(f"visit_FunctionDef: Test is constant with value: {test_value}")
-                        is_truthy = bool(test_value) if test_value is not None else False
-                        if is_truthy:
-                            logging.debug("visit_FunctionDef: Test is truthy, returning if_true branch")
-                            return body_result
-                        else:
-                            logging.debug("visit_FunctionDef: Test is falsy, returning if_false branch (implicit)")
-                            return orelse_result
-
-                    return {
-                        'type': 'conditional',
-                        'test': test_result,
-                        'if_true': body_result,
-                        'if_false': orelse_result
-                    }
+                    # Visit this synthetic if-statement, which will use visit_If and its multistatement handling
+                    return self.visit_If(synthetic_if)
                 else:
                     return self.visit(body_to_analyze[0])
             logging.warning(f"visit_FunctionDef: Empty function body for '{node.name}', returning None")
@@ -226,6 +191,11 @@ class ASTVisitorMixin:
                         final_value = make_json_serializable(final_value)
                         logging.debug(f"Resolved argument variable '{arg['name']}' to {final_value}")
                         resolved_args.append({'type': 'constant', 'value': final_value})
+                    # Handle Region objects - extract the .name attribute
+                    elif resolved_value is not None and hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances'):
+                        region_name = resolved_value.name
+                        logging.debug(f"Resolved argument variable '{arg['name']}' (Region object) to region name: {region_name}")
+                        resolved_args.append({'type': 'constant', 'value': region_name})
                     else:
                         # Keep unresolved or complex objects as name references
                         resolved_args.append(arg)
@@ -316,8 +286,25 @@ class ASTVisitorMixin:
 
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
                  try:
-                     # Check if 'state' is passed as an argument using original AST nodes
-                     has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
+                     # Helper function to check if an AST node references 'state'
+                     def references_state(node):
+                         """Check if an AST node references the name 'state' anywhere."""
+                         if isinstance(node, ast.Name) and node.id == 'state':
+                             return True
+                         # Check in attribute access: state.smbm
+                         if isinstance(node, ast.Attribute):
+                             return references_state(node.value)
+                         # Check in subscript: state.smbm[player]
+                         if isinstance(node, ast.Subscript):
+                             return references_state(node.value)
+                         # Check in other composite nodes
+                         for child in ast.walk(node):
+                             if isinstance(child, ast.Name) and child.id == 'state':
+                                 return True
+                         return False
+
+                     # Check if 'state' is passed as an argument (directly or indirectly)
+                     has_state_arg = any(references_state(arg) for arg in node.args)
                      # Attempt recursion if state arg is present
                      if has_state_arg:
                           # Import analyze_rule locally to avoid forward reference issues
@@ -607,6 +594,11 @@ class ASTVisitorMixin:
                             final_value = make_json_serializable(final_value)
                             logging.debug(f"Resolved state method argument variable '{arg['name']}' to {final_value}")
                             resolved_args.append({'type': 'constant', 'value': final_value})
+                        # Handle Region objects - extract the .name attribute
+                        elif resolved_value is not None and hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances'):
+                            region_name = resolved_value.name
+                            logging.debug(f"Resolved state method argument variable '{arg['name']}' (Region object) to region name: {region_name}")
+                            resolved_args.append({'type': 'constant', 'value': region_name})
                         else:
                             # Keep unresolved or complex objects as name references
                             resolved_args.append(arg)
@@ -727,14 +719,14 @@ class ASTVisitorMixin:
                         # Try to resolve the expression (e.g., ItemName.MasterForm -> "Master Form")
                         resolved_item = self.expression_resolver.resolve_expression(first_arg)
                         if resolved_item is not None and isinstance(resolved_item, str):
-                            # Successfully resolved to a string value
+                            # Successfully resolved to a string value - use the string directly
                             logging.debug(f"Resolved item name: {first_arg} -> {resolved_item}")
-                            item_value = {'type': 'constant', 'value': resolved_item}
-                        elif first_arg.get('type') == 'constant':
-                            # Already a constant, use as-is
-                            item_value = first_arg
+                            item_value = resolved_item
+                        elif first_arg.get('type') == 'constant' and isinstance(first_arg.get('value'), str):
+                            # Already a constant string - extract the value
+                            item_value = first_arg.get('value')
                         else:
-                            # Could not resolve to a constant value, keep as-is
+                            # Could not resolve to a constant value, keep as-is (rule object)
                             logging.debug(f"Could not resolve item name: {first_arg}")
                             item_value = first_arg
 
@@ -758,7 +750,15 @@ class ASTVisitorMixin:
                                 logging.debug(f"Found unresolved count parameter: {second_arg}")
                                 result['count'] = second_arg
                 elif method == 'has_group' and len(filtered_args) >= 1:
-                    result = {'type': 'group_check', 'group': filtered_args[0]}
+                    # Unwrap group name if it's a constant
+                    group_arg = filtered_args[0]
+                    if isinstance(group_arg, dict) and group_arg.get('type') == 'constant' and isinstance(group_arg.get('value'), str):
+                        group_value = group_arg.get('value')
+                    elif isinstance(group_arg, str):
+                        group_value = group_arg
+                    else:
+                        group_value = group_arg
+                    result = {'type': 'group_check', 'group': group_value}
                     # Check for count parameter (now in position 1 after filtering)
                     if len(filtered_args) >= 2:
                         second_arg = filtered_args[1]
@@ -778,11 +778,28 @@ class ASTVisitorMixin:
                                 logging.debug(f"Found unresolved group count parameter: {second_arg}")
                                 result['count'] = second_arg
                 elif method == 'has_any' and len(filtered_args) >= 1 and isinstance(filtered_args[0], list):
-                    result = {'type': 'or', 'conditions': [{'type': 'item_check', 'item': item} for item in filtered_args[0]]}
+                    # Unwrap each item if it's a constant
+                    items = []
+                    for item in filtered_args[0]:
+                        if isinstance(item, dict) and item.get('type') == 'constant' and isinstance(item.get('value'), str):
+                            items.append(item.get('value'))
+                        elif isinstance(item, str):
+                            items.append(item)
+                        else:
+                            items.append(item)
+                    result = {'type': 'or', 'conditions': [{'type': 'item_check', 'item': item} for item in items]}
                 elif method == '_lttp_has_key' and len(filtered_args) >= 1:
+                    # Unwrap item name if it's a constant
+                    item_arg = filtered_args[0]
+                    if isinstance(item_arg, dict) and item_arg.get('type') == 'constant' and isinstance(item_arg.get('value'), str):
+                        item_value = item_arg.get('value')
+                    elif isinstance(item_arg, str):
+                        item_value = item_arg
+                    else:
+                        item_value = item_arg
                     # Count is now in position 1 after player is filtered
                     count = filtered_args[1] if len(filtered_args) >= 2 else {'type': 'constant', 'value': 1}
-                    result = {'type': 'count_check', 'item': filtered_args[0], 'count': count}
+                    result = {'type': 'count_check', 'item': item_value, 'count': count}
                 # Add other state methods like can_reach if needed
                 # elif method == 'can_reach': ...
                 else:
@@ -884,34 +901,36 @@ class ASTVisitorMixin:
                 logging.debug(f"Created helper result for logic method: {result}")
                 return result
 
-            # Handle Location object method calls (e.g., loc.can_reach(state))
+            # Handle Location and Region object method calls (e.g., loc.can_reach(state) or region.can_reach(state))
             elif obj_name and method_name == 'can_reach':
-                logging.debug(f"Processing potential Location method call: {obj_name}.{method_name}")
+                logging.debug(f"Processing potential Location/Region method call: {obj_name}.{method_name}")
 
                 # Try to resolve the object from closure_vars
                 resolved_obj = self.expression_resolver.resolve_variable(obj_name)
 
-                # Check if it's a Location object (has 'name' but not 'entrances')
-                if (resolved_obj is not None and
-                    hasattr(resolved_obj, 'name') and
-                    not hasattr(resolved_obj, 'entrances') and
-                    isinstance(resolved_obj.name, str)):
+                # Check if we successfully resolved an object with a 'name' attribute
+                if resolved_obj is not None and hasattr(resolved_obj, 'name') and isinstance(resolved_obj.name, str):
+                    # Determine if it's a Region (has 'entrances') or Location (no 'entrances')
+                    has_entrances = hasattr(resolved_obj, 'entrances')
+                    obj_type = 'Region' if has_entrances else 'Location'
+                    obj_name_value = resolved_obj.name
 
-                    location_name = resolved_obj.name
-                    logging.debug(f"Resolved {obj_name} to Location object with name: {location_name}")
+                    logging.debug(f"Resolved {obj_name} to {obj_type} object with name: {obj_name_value}")
 
-                    # Convert loc.can_reach(state) to state.can_reach(location_name, "Location", player)
+                    # Convert [location|region].can_reach(state) to state.can_reach(name, type, player)
                     # Note: player argument will be provided by the state manager
                     result = {
                         'type': 'state_method',
                         'method': 'can_reach',
                         'args': [
-                            {'type': 'constant', 'value': location_name},
-                            {'type': 'constant', 'value': 'Location'}
+                            {'type': 'constant', 'value': obj_name_value},
+                            {'type': 'constant', 'value': obj_type}
                         ]
                     }
-                    logging.debug(f"Converted Location.can_reach to state_method: {result}")
+                    logging.debug(f"Converted {obj_type}.can_reach to state_method: {result}")
                     return result
+                else:
+                    logging.debug(f"Could not resolve {obj_name} for can_reach call, falling through to other handlers")
 
             # Handle module-based helper calls (e.g., StateLogic.canDig, Rules.method)
             # These are calls to functions from imported modules that should be treated as helpers
@@ -940,6 +959,11 @@ class ASTVisitorMixin:
                                 final_value = make_json_serializable(final_value)
                                 logging.debug(f"Resolved module helper argument variable '{arg['name']}' to {final_value}")
                                 resolved_args.append({'type': 'constant', 'value': final_value})
+                            # Handle Region objects - extract the .name attribute
+                            elif resolved_value is not None and hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances'):
+                                region_name = resolved_value.name
+                                logging.debug(f"Resolved module helper argument variable '{arg['name']}' (Region object) to region name: {region_name}")
+                                resolved_args.append({'type': 'constant', 'value': region_name})
                             else:
                                 resolved_args.append(arg)
                         elif arg and arg.get('type') == 'attribute':
@@ -1575,17 +1599,80 @@ class ASTVisitorMixin:
             logging.debug(f"\n--- visit_If ---")
             test_result = self.visit(node.test)
 
-            # Assume simple structure where body/orelse contain a single statement (e.g., return)
-            # and visit that statement directly.
+            # Check if we should process multiple statements in if-bodies
+            should_process_multistatement = False
+            if self.game_handler and hasattr(self.game_handler, 'should_process_multistatement_if_bodies'):
+                should_process_multistatement = self.game_handler.should_process_multistatement_if_bodies()
+                logging.debug(f"visit_If: should_process_multistatement_if_bodies = {should_process_multistatement}")
+
+            # Process the if-body
             body_result = None
             if node.body:
-                 body_result = self.visit(node.body[0]) # Visit the first statement in the 'if' block
+                if should_process_multistatement and len(node.body) > 1:
+                    # Multiple statements in the if-body: analyze them and combine them
+                    logging.debug(f"visit_If: Processing {len(node.body)} statements in if-body")
+                    body_results = []
+                    for i, stmt in enumerate(node.body):
+                        stmt_result = self.visit(stmt)
+                        if stmt_result is not None:
+                            # Simplify: if stmt_result is a conditional with if_true=true and if_false=null/false,
+                            # extract just the test condition
+                            if stmt_result.get('type') == 'conditional':
+                                if_true = stmt_result.get('if_true')
+                                if_false = stmt_result.get('if_false')
+
+                                # Pattern: if condition: return True (no else) -> just use condition
+                                if (if_true and if_true.get('type') == 'constant' and if_true.get('value') is True and
+                                    (if_false is None or (if_false.get('type') == 'constant' and if_false.get('value') is False))):
+                                    logging.debug(f"visit_If: Simplifying conditional {i}: extracting test condition")
+                                    body_results.append(stmt_result.get('test'))
+                                else:
+                                    # Keep the full conditional
+                                    body_results.append(stmt_result)
+                            elif isinstance(stmt, ast.Return) and stmt.value:
+                                # Direct return statement
+                                inner_result = self.visit(stmt.value)
+                                if inner_result and inner_result.get('type') != 'constant':
+                                    body_results.append(inner_result)
+
+                    # Combine multiple conditions with OR logic
+                    # If any condition is true, the whole body evaluates to true
+                    if len(body_results) == 0:
+                        body_result = {'type': 'constant', 'value': True}
+                    elif len(body_results) == 1:
+                        body_result = body_results[0]
+                    else:
+                        body_result = {'type': 'or', 'conditions': body_results}
+                else:
+                    # Single statement or multistatement processing disabled
+                    body_result = self.visit(node.body[0])
             else:
                  logging.warning("visit_If: 'if' block is empty.")
 
             orelse_result = None
             if node.orelse:
-                 orelse_result = self.visit(node.orelse[0]) # Visit the first statement in the 'else' block
+                if should_process_multistatement and len(node.orelse) > 1:
+                    # Multiple statements in the else-block
+                    logging.debug(f"visit_If: Processing {len(node.orelse)} statements in else-block")
+                    orelse_results = []
+                    for stmt in node.orelse:
+                        stmt_result = self.visit(stmt)
+                        if stmt_result is not None:
+                            if isinstance(stmt, ast.Return) and stmt.value:
+                                inner_result = self.visit(stmt.value)
+                                if inner_result and inner_result.get('type') != 'constant':
+                                    orelse_results.append(inner_result)
+                            elif stmt_result.get('type') == 'conditional':
+                                orelse_results.append(stmt_result)
+
+                    if len(orelse_results) == 0:
+                        orelse_result = {'type': 'constant', 'value': True}
+                    elif len(orelse_results) == 1:
+                        orelse_result = orelse_results[0]
+                    else:
+                        orelse_result = {'type': 'or', 'conditions': orelse_results}
+                else:
+                    orelse_result = self.visit(node.orelse[0])
             else:
                  # Handle cases with no 'else' - could return None or a specific structure
                  logging.debug("visit_If: No 'else' block found.")

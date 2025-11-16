@@ -124,6 +124,57 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
         if rule.get('type') == 'attribute':
             logger.debug(f"[marioland2] expand_rule called with attribute: attr={rule.get('attr')}, object={rule.get('object')}")
 
+        # Check for state.multiworld.worlds[player].options.* pattern
+        # This pattern looks like:
+        # {"type": "attribute", "attr": "option_name",
+        #  "object": {"type": "attribute", "attr": "options",
+        #   "object": {"type": "subscript", ...worlds[player]...}}}
+        if rule.get('type') == 'attribute':
+            option_name = rule.get('attr')
+            obj = rule.get('object', {})
+
+            # Check if object is attribute with attr="options"
+            if obj.get('type') == 'attribute' and obj.get('attr') == 'options':
+                # Check if the object of that is a subscript (worlds[player])
+                subscript_obj = obj.get('object', {})
+                if subscript_obj.get('type') == 'subscript':
+                    # This matches the pattern state.multiworld.worlds[player].options.*
+                    logger.info(f"[marioland2] Found state.multiworld.worlds[player].options.{option_name} pattern, resolving to constant")
+
+                    # Try to get from cached options first (set in get_settings_data)
+                    if hasattr(self, '_cached_options') and option_name in self._cached_options:
+                        value = self._cached_options[option_name]
+                        logger.info(f"[marioland2] Resolved {option_name} to cached value: {value}")
+                        return {'type': 'constant', 'value': value}
+
+                    # Fallback: try to get from world
+                    if hasattr(self, '_world'):
+                        world = self._world
+                    else:
+                        worlds = self.get_all_worlds()
+                        world = worlds[0] if worlds else None
+
+                    if world and hasattr(world, 'options'):
+                        option_value = getattr(world.options, option_name, None)
+                        if option_value is not None:
+                            # Handle Option objects that have a .value attribute
+                            value = getattr(option_value, 'value', option_value)
+                            logger.info(f"[marioland2] Resolved {option_name} to value: {value}")
+                            return {'type': 'constant', 'value': value}
+                        else:
+                            logger.warning(f"[marioland2] Option {option_name} not found, cannot resolve")
+                    else:
+                        logger.warning(f"[marioland2] Could not access world options to resolve {option_name}")
+
+                    # Final fallback: use default values for known options
+                    default_values = {
+                        'shuffle_midway_bells': 0,  # Toggle, defaults to False
+                    }
+                    if option_name in default_values:
+                        value = default_values[option_name]
+                        logger.warning(f"[marioland2] Using fallback default value for {option_name}: {value}")
+                        return {'type': 'constant', 'value': value}
+
         # Resolve self.options.required_golden_coins to a constant value
         # Check if this is the nested attribute access pattern
         is_required_coins = (
@@ -158,6 +209,33 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
                 logger.warning("[marioland2] Could not resolve self.options.required_golden_coins, using default value 6")
                 return {'type': 'constant', 'value': 6}
 
+        # For 'or' and 'and' rules, recursively expand all conditions
+        if rule.get('type') in ('or', 'and'):
+            conditions = rule.get('conditions', [])
+            if conditions:
+                rule['conditions'] = [self.expand_rule(cond) if isinstance(cond, dict) and 'type' in cond else cond for cond in conditions]
+            return rule
+
+        # For 'conditional' rules, recursively expand test, if_true, and if_false
+        if rule.get('type') == 'conditional':
+            test = rule.get('test')
+            if test and isinstance(test, dict):
+                rule['test'] = self.expand_rule(test)
+            if_true = rule.get('if_true')
+            if if_true and isinstance(if_true, dict):
+                rule['if_true'] = self.expand_rule(if_true)
+            if_false = rule.get('if_false')
+            if if_false and isinstance(if_false, dict):
+                rule['if_false'] = self.expand_rule(if_false)
+            return rule
+
+        # For 'not' rules, recursively expand the condition
+        if rule.get('type') == 'not':
+            condition = rule.get('condition')
+            if condition and isinstance(condition, dict):
+                rule['condition'] = self.expand_rule(condition)
+            return rule
+
         # For state_method rules, recursively expand args to catch nested attribute access
         if rule.get('type') == 'state_method':
             args = rule.get('args', [])
@@ -184,6 +262,9 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
         # Store world reference for use in expand_rule
         self._world = world
 
+        # Store option values for use in expand_rule
+        self._cached_options = {}
+
         # Get base settings from parent
         settings_dict = super().get_settings_data(world, multiworld, player)
 
@@ -192,6 +273,15 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
             # Export required_golden_coins as it's used in access rules
             required_coins = getattr(world.options, 'required_golden_coins', None)
             if required_coins is not None:
-                settings_dict['required_golden_coins'] = getattr(required_coins, 'value', required_coins)
+                value = getattr(required_coins, 'value', required_coins)
+                settings_dict['required_golden_coins'] = value
+                self._cached_options['required_golden_coins'] = value
+
+            # Export shuffle_midway_bells as it's used in access rules
+            shuffle_midway = getattr(world.options, 'shuffle_midway_bells', None)
+            if shuffle_midway is not None:
+                value = getattr(shuffle_midway, 'value', shuffle_midway)
+                settings_dict['shuffle_midway_bells'] = value
+                self._cached_options['shuffle_midway_bells'] = value
 
         return settings_dict

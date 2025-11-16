@@ -504,6 +504,7 @@ export function createStateSnapshotInterface(
       locations: staticData.locationData || staticData.locations,
       regions: staticData.regions, // Use the main regions property for rule engine compatibility
       dungeons: staticData.dungeonData || staticData.dungeons,
+      game_info: staticData.game_info, // Include game_info for variable resolution
     }),
     getStateValue: (pathString) => {
       if (!snapshot) return undefined;
@@ -694,6 +695,21 @@ export function createStateSnapshotInterface(
           }
         }
         return uniqueItemsFound >= count;
+      }
+
+      // Handle count_from_list_unique - returns the count of unique items from a list (ignores duplicates)
+      if (methodName === 'count_from_list_unique' && args.length >= 1) {
+        const items = args[0];
+        if (!Array.isArray(items)) return 0;
+
+        // Count unique items from the list (items with count > 0)
+        let uniqueItemsFound = 0;
+        for (const itemName of items) {
+          if ((finalSnapshotInterface.countItem(itemName) || 0) > 0) {
+            uniqueItemsFound++;
+          }
+        }
+        return uniqueItemsFound;
       }
 
       // Handle has_group_unique - counts unique items from a group (ignores duplicates)

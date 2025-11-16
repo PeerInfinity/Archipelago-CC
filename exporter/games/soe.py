@@ -149,6 +149,15 @@ class SoEGameExportHandler(BaseGameExportHandler):
                             'progress_name': progress_name
                         })
 
+                # Add standard item fields that all items need
+                # These ensure compatibility with the state manager
+                if 'event' not in item_data[item.name]:
+                    item_data[item.name]['event'] = False
+                if 'type' not in item_data[item.name]:
+                    item_data[item.name]['type'] = None
+                if 'max_count' not in item_data[item.name]:
+                    item_data[item.name]['max_count'] = 1
+
         # Also add logic rules that provide progress when requirements are met
         # These act like "virtual items" that the frontend can check
         rules = self.pyevermizer.get_logic()

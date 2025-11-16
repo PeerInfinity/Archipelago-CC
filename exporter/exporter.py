@@ -342,9 +342,10 @@ def get_world_directory_name(game_name: str) -> str:
                     if found_game_name == game_name:
                         return world_dir_name
 
-                # NEW: Handle case where game = CONSTANT_NAME (e.g., game = LINKS_AWAKENING)
+                # NEW: Handle case where game = CONSTANT_NAME (e.g., game = LINKS_AWAKENING or game = jak1_name)
                 # First, look for game = <identifier> (not a string)
-                pattern = r'game\s*=\s*([A-Z_][A-Z0-9_]*)\s*(?:#|$)'
+                # Match both uppercase constants and lowercase identifiers
+                pattern = r'game\s*=\s*([A-Za-z_][A-Za-z0-9_]*)\s*(?:#|$)'
                 match = re.search(pattern, content, re.MULTILINE)
 
                 if match:
@@ -1171,7 +1172,11 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                                     'advancement': getattr(location.item, 'advancement', False),
                                     'type': effective_type
                                 }
-                            
+
+                            # Allow game handler to post-process location data before adding to region
+                            if game_handler and hasattr(game_handler, 'post_process_location_data'):
+                                location_data = game_handler.post_process_location_data(location_data, location_name)
+
                             region_data['locations'].append(location_data)
                         except Exception as e:
                             logger.error(f"Error processing location {getattr(location, 'name', 'Unknown')}: {str(e)}")

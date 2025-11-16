@@ -74,8 +74,9 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
             func_id = id(rule_func)
             # More permissive recursion check
             current_seen_count = seen_funcs.get(func_id, 0)
-            # Allow more recursion depth for multiline lambdas (increased from 2 to 3)
-            if current_seen_count >= 3:
+            # Allow deep recursion for complex games like Super Metroid with cache decorators
+            # SM uses VARIA randomizer with nested cache decorators requiring deeper expansion
+            if current_seen_count >= 10:
                 recursion_msg = (
                     f'Recursion detected: Already analyzing function {rule_func} '
                     f'{current_seen_count+1} times'

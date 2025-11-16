@@ -297,6 +297,39 @@ function isBossDefeatCheck(rule, stateSnapshotInterface) {
 }
 
 /**
+ * Creates a new context with bound iterator variables for all_of/any_of comprehensions.
+ * @param {object} context - The original context
+ * @param {object} iterator_info - Iterator information with target and iterator
+ * @param {any} value - The value to bind to the iterator variable
+ * @returns {object} - A new context with the variable binding
+ */
+function createBoundContext(context, iterator_info, value) {
+  if (!iterator_info || !iterator_info.target || !iterator_info.target.name) {
+    // No variable to bind, return original context
+    return context;
+  }
+
+  const varName = iterator_info.target.name;
+  const boundVariables = { [varName]: value };
+
+  // Create a wrapper context that intercepts resolveName calls
+  return {
+    ...context,
+    resolveName: function(name) {
+      // Check if this is the bound variable
+      if (name in boundVariables) {
+        return boundVariables[name];
+      }
+      // Otherwise delegate to the original context
+      if (context && typeof context.resolveName === 'function') {
+        return context.resolveName(name);
+      }
+      return undefined;
+    }
+  };
+}
+
+/**
  * Evaluates a rule against the provided state context (either StateManager or main thread snapshot).\n * @param {any} rule - The rule object (or primitive) to evaluate.\n * @param {object} context - Either the StateManager instance (or its interface) in the worker,\n *                           or the snapshot interface on the main thread.\n * @param {number} [depth=0] - Current recursion depth for debugging.\n * @returns {boolean|any} - The result of the rule evaluation.\n */
 export const evaluateRule = (rule, context, depth = 0) => {
   // Prevent infinite recursion by limiting depth
@@ -483,6 +516,57 @@ export const evaluateRule = (rule, context, depth = 0) => {
         // Only set to undefined if not definitively true and encountered an undefined condition
         if (result === false && hasUndefined) {
           result = undefined;
+        }
+        break;
+      }
+
+      case 'count_true': {
+        // Count how many conditions evaluate to true
+        // Returns true if at least rule.count conditions are true
+        const requiredCount = rule.count || 0;
+        const conditions = rule.conditions || [];
+
+        if (requiredCount === 0) {
+          // No conditions required, always true
+          result = true;
+          break;
+        }
+
+        if (conditions.length === 0) {
+          // No conditions to evaluate
+          result = requiredCount === 0;
+          break;
+        }
+
+        let trueCount = 0;
+        let undefinedCount = 0;
+
+        for (const condition of conditions) {
+          const conditionResult = evaluateRule(condition, context, depth + 1);
+          if (conditionResult === true) {
+            trueCount++;
+          } else if (conditionResult === undefined) {
+            undefinedCount++;
+          }
+          // Short-circuit if we already have enough true conditions
+          if (trueCount >= requiredCount) {
+            result = true;
+            break;
+          }
+        }
+
+        // If we didn't short-circuit with true, determine the result
+        if (result !== true) {
+          if (trueCount >= requiredCount) {
+            // We have enough true conditions
+            result = true;
+          } else if (trueCount + undefinedCount >= requiredCount) {
+            // We might have enough if some undefineds are true
+            result = undefined;
+          } else {
+            // Impossible to reach required count even if all undefineds were true
+            result = false;
+          }
         }
         break;
       }
@@ -861,6 +945,16 @@ export const evaluateRule = (rule, context, depth = 0) => {
         ) {
           // Evaluate the rule object directly
           result = evaluateRule(func, context, depth + 1);
+          break;
+        }
+
+        // Special case: If func is a boolean, it means rule.function was a rule object
+        // that was already evaluated. In this case, the boolean is the result.
+        // This happens when the exporter creates function_call structures where
+        // the function field contains a complete rule (e.g., an 'and' rule) instead
+        // of a function reference.
+        if (typeof func === 'boolean') {
+          result = func;
           break;
         }
 
@@ -1262,6 +1356,42 @@ export const evaluateRule = (rule, context, depth = 0) => {
         break;
       }
 
+      case 'f_string': {
+        // Evaluate f-string formatting (e.g., "Automated {ingredient}")
+        if (!rule.parts || !Array.isArray(rule.parts)) {
+          log('warn', '[evaluateRule] f_string rule missing parts array', { rule });
+          result = undefined;
+          break;
+        }
+
+        // Build the string by evaluating each part
+        let resultStr = '';
+        for (const part of rule.parts) {
+          if (part.type === 'constant') {
+            resultStr += part.value;
+          } else if (part.type === 'formatted_value') {
+            // Evaluate the value and convert to string
+            const value = evaluateRule(part.value, context, depth + 1);
+            if (value === undefined) {
+              log('warn', '[evaluateRule] f_string formatted_value evaluated to undefined', { part });
+              result = undefined;
+              break;
+            }
+            resultStr += String(value);
+          } else {
+            log('warn', '[evaluateRule] Unknown f_string part type', { part });
+            result = undefined;
+            break;
+          }
+        }
+
+        // If we successfully built the string, return it
+        if (result !== undefined) {
+          result = resultStr;
+        }
+        break;
+      }
+
       case 'setting_check': {
         let settingName = evaluateRule(rule.setting, context, depth + 1);
         let expectedValue = evaluateRule(rule.value, context, depth + 1);
@@ -1445,9 +1575,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
 
         result = true;
         for (const item of iterable) {
-          // For now, evaluate the element_rule directly
-          // TODO: In a full implementation, we'd need to bind the iterator variable
-          const itemResult = evaluateRule(rule.element_rule, context, depth + 1);
+          // Create a new context with the iterator variable bound
+          const boundContext = createBoundContext(context, rule.iterator_info, item);
+
+          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
           if (itemResult === false) {
             result = false;
             break;
@@ -1498,9 +1629,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
         result = false;
         let hasUndefined = false;
         for (const item of iterable) {
-          // For now, evaluate the element_rule directly
-          // TODO: In a full implementation, we'd need to bind the iterator variable
-          const itemResult = evaluateRule(rule.element_rule, context, depth + 1);
+          // Create a new context with the iterator variable bound
+          const boundContext = createBoundContext(context, rule.iterator_info, item);
+
+          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
           if (itemResult === true) {
             result = true;
             break;
@@ -1779,6 +1911,19 @@ export function debugRule(rule, indent = 0) {
         `${prefix}${rule.type.toUpperCase()} with ${
           rule.conditions.length
         } conditions:`
+      );
+      rule.conditions.forEach((cond, i) => {
+        log('info', `${prefix}  Condition ${i + 1}:`);
+        debugRule(cond, indent + 4);
+      });
+      break;
+
+    case 'count_true':
+      log(
+        'info',
+        `${prefix}COUNT_TRUE (at least ${rule.count} of ${
+          rule.conditions.length
+        } conditions):`
       );
       rule.conditions.forEach((cond, i) => {
         log('info', `${prefix}  Condition ${i + 1}:`);

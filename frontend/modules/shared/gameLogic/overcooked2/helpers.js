@@ -83,16 +83,53 @@ export function has_requirements_for_level_star(snapshot, staticData, level, sta
     // Get level logic from game_info
     const playerId = staticData?.playerId || '1';
     const levelLogic = staticData?.game_info?.[playerId]?.level_logic;
-    if (!levelLogic || !levelLogic[levelId]) {
-        // No logic defined for this level - assume accessible
+    if (!levelLogic) {
+        // No logic defined at all - assume accessible
         return true;
     }
 
-    const logic = levelLogic[levelId];
+    // Get level-specific requirements or fallback to global "*"
+    let levelRequirements = levelLogic[levelId];
+
+    // If level-specific requirements are all empty, use global "*" requirements
+    if (!levelRequirements || !Array.isArray(levelRequirements)) {
+        levelRequirements = levelLogic["*"];
+    }
+
+    if (!levelRequirements || !Array.isArray(levelRequirements)) {
+        // No requirements defined - assume accessible
+        return true;
+    }
+
+    // Get the requirements for this star count (stars is 1, 2, or 3)
+    // Array index is stars - 1 (0-indexed)
+    const starIndex = stars - 1;
+    if (starIndex < 0 || starIndex >= levelRequirements.length) {
+        // Invalid star count - assume accessible
+        return true;
+    }
+
+    const starRequirement = levelRequirements[starIndex];
+    if (!Array.isArray(starRequirement) || starRequirement.length < 2) {
+        // Invalid structure - assume accessible
+        return true;
+    }
+
+    // Extract exclusive and additive requirements
+    // starRequirement is [exclusive, additive]
+    const exclusive = starRequirement[0];
+    const additive = starRequirement[1];
 
     // Check exclusive requirements (must have ALL of these items)
-    if (logic.exclusive && logic.exclusive.length > 0) {
-        for (const itemName of logic.exclusive) {
+    // exclusive can be:
+    // - empty object {} (no requirements)
+    // - array of item names
+    if (Array.isArray(exclusive) && exclusive.length > 0) {
+        // Double-check snapshot.items exists (defensive programming)
+        if (!snapshot || !snapshot.items) {
+            return false;
+        }
+        for (const itemName of exclusive) {
             if (!snapshot.items[itemName]) {
                 return false;
             }
@@ -100,11 +137,22 @@ export function has_requirements_for_level_star(snapshot, staticData, level, sta
     }
 
     // Check additive requirements (sum of weights must be >= 1.0)
-    if (logic.additive && Object.keys(logic.additive).length > 0) {
+    // additive can be:
+    // - empty object {} (no requirements)
+    // - array of [itemName, weight] pairs
+    if (Array.isArray(additive) && additive.length > 0) {
+        // Double-check snapshot.items exists (defensive programming)
+        if (!snapshot || !snapshot.items) {
+            return false;
+        }
         let totalWeight = 0;
-        for (const [itemName, weight] of Object.entries(logic.additive)) {
-            if (snapshot.items[itemName]) {
-                totalWeight += weight;
+        for (const pair of additive) {
+            if (Array.isArray(pair) && pair.length >= 2) {
+                const itemName = pair[0];
+                const weight = pair[1];
+                if (snapshot.items[itemName]) {
+                    totalWeight += weight;
+                }
             }
         }
 

@@ -148,7 +148,8 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
         if rule.get('type') == 'item_check':
             item = rule.get('item', {})
             # Check if item is self.world.required_epitaph_pieces_name
-            if (item.get('type') == 'attribute' and
+            if (isinstance(item, dict) and
+                item.get('type') == 'attribute' and
                 item.get('attr') == 'required_epitaph_pieces_name' and
                 item.get('object', {}).get('type') == 'attribute' and
                 item['object'].get('attr') == 'world'):

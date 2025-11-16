@@ -234,11 +234,11 @@ import * as dlcquestLogic from './dlcquest/dlcquestLogic.js';
 import { dlcquestStateModule } from './dlcquest/dlcquestLogic.js';
 import * as hkLogic from './hk/hkLogic.js';
 import { hkStateModule } from './hk/hkLogic.js';
-import * as hylics2Logic from './hylics_2/hylics2Logic.js';
-import { hylics2StateModule } from './hylics_2/hylics2Logic.js';
+import * as hylics2Logic from './hylics2/hylics2Logic.js';
+import { hylics2StateModule } from './hylics2/hylics2Logic.js';
 import * as inscryptionLogic from './inscryption/inscryptionLogic.js';
 import { inscryptionStateModule } from './inscryption/inscryptionLogic.js';
-import * as jak_and_daxter__the_precursor_legacyLogic from './jak_and_daxter__the_precursor_legacy/jak_and_daxter__the_precursor_legacyLogic.js';
+import * as jakanddaxterLogic from './jakanddaxter/jakanddaxterLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
 import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
 import * as kdl3Logic from './kdl3/kdl3Logic.js';
@@ -280,14 +280,16 @@ import * as shiversLogic from './shivers/shiversLogic.js';
 import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
 import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
-import { helperFunctions as smHelperFunctions } from './super_metroid/smLogic.js';
+import { helperFunctions as smHelperFunctions } from './sm/smLogic.js';
 import * as stardewValleyHelpers from './stardew_valley/helpers.js';
 import * as terrariaLogic from './terraria/terrariaLogic.js';
 import * as timespinnerLogic from './timespinner/timespinnerLogic.js';
 import * as twwLogic from './tww/twwLogic.js';
+import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
 import { helperFunctions as yoshisislandHelperFunctions } from './yoshisisland/yoshisislandLogic.js';
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
 import { helperFunctions as osrsHelperFunctions } from './osrs/osrsLogic.js';
+import * as tlozLogic from './tloz/tlozLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -385,7 +387,7 @@ const GAME_REGISTRY = {
   },
   'Jak and Daxter: The Precursor Legacy': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: jak_and_daxter__the_precursor_legacyLogic.helperFunctions,
+    helperFunctions: jakanddaxterLogic.helperFunctions,
     worldClasses: ['JakAndDaxterWorld'],
     aliases: ['Jak and Daxter: The Precursor Legacy', 'Jak and Daxter']
   },
@@ -571,6 +573,12 @@ const GAME_REGISTRY = {
     worldClasses: ['TerrariaWorld'],
     aliases: ['Terraria']
   },
+  'The Legend of Zelda': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: tlozLogic.helperFunctions,
+    worldClasses: ['TLoZWorld'],
+    aliases: ['The Legend of Zelda', 'TLoZ', 'TLOZ']
+  },
   'Timespinner': {
     logicModule: timespinnerLogic.timespinnerStateModule,
     helperFunctions: timespinnerLogic.helperFunctions,
@@ -582,6 +590,13 @@ const GAME_REGISTRY = {
     helperFunctions: twwLogic.default,
     worldClasses: ['TWWWorld'],
     aliases: ['The Wind Waker', 'TWW', 'Wind Waker']
+  },
+  'Wargroove': {
+    logicModule: genericLogic.genericStateModule,
+    helperFunctions: wargrooveLogic.helperFunctions,
+    stateMethods: wargrooveLogic.stateMethods,
+    worldClasses: ['WargrooveWorld'],
+    aliases: ['Wargroove', 'wargroove']
   },
   "Yoshi's Island": {
     logicModule: genericLogic.genericStateModule,
