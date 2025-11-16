@@ -738,43 +738,43 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
         
     def _expand_dynamic_helper(self, helper_name: str):
         """Expand helpers based on common Blasphemous patterns."""
-        
+
+        # All helpers should be returned as helper function calls
+        # that will be looked up in blasphemousLogic.js
+        # The JavaScript helper functions will handle the actual logic
+
         # Boss defeat patterns
         if helper_name.startswith('defeated_'):
-            boss_name = helper_name.replace('defeated_', '').replace('_', ' ').title()
             return {
-                'type': 'boss_check',
-                'boss': boss_name,
-                'description': f'Requires defeating {boss_name}'
+                'type': 'helper',
+                'name': helper_name,
+                'description': f'Requires defeating {helper_name}'
             }
-            
-        # Area access patterns  
+
+        # Area access patterns
         if helper_name.startswith('can_reach_'):
-            area_name = helper_name.replace('can_reach_', '').replace('_', ' ').title()
             return {
-                'type': 'can_reach',
-                'region': area_name,
-                'description': f'Requires access to {area_name}'
+                'type': 'helper',
+                'name': helper_name,
+                'description': f'Requires region access helper: {helper_name}'
             }
-            
-        # Item requirement patterns
+
+        # Item requirement patterns with has_ prefix
         if helper_name.startswith('has_'):
-            item_name = helper_name.replace('has_', '').replace('_', ' ').title()
             return {
-                'type': 'item_check',
-                'item': item_name,
-                'description': f'Requires having {item_name}'
+                'type': 'helper',
+                'name': helper_name,
+                'description': f'Requires item helper: {helper_name}'
             }
-            
+
         # Ability patterns
         if helper_name.startswith('can_'):
-            ability = helper_name.replace('can_', '').replace('_', ' ')
             return {
-                'type': 'capability',
-                'capability': ability,
-                'description': f'Requires ability to {ability}'
+                'type': 'helper',
+                'name': helper_name,
+                'description': f'Requires ability helper: {helper_name}'
             }
-            
+
         # Default to preserving unknown helpers
         return None
         
