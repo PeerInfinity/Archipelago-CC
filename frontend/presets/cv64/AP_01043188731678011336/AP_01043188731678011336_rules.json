@@ -3,7 +3,7 @@
   "game_name": "Castlevania 64",
   "game_directory": "cv64",
   "archipelago_version": "0.6.4",
-  "generation_seed": 1,
+  "generation_seed": 2,
   "player_names": {
     "1": "Player1"
   },
@@ -85,7 +85,7 @@
           },
           {
             "name": "Warp 5",
-            "connected_region": "Room of Clocks",
+            "connected_region": "Tower of Sorcery",
             "access_rule": {
               "type": "item_check",
               "item": {
@@ -100,7 +100,7 @@
           },
           {
             "name": "Warp 6",
-            "connected_region": "Clock Tower: middle",
+            "connected_region": "Room of Clocks",
             "access_rule": {
               "type": "item_check",
               "item": {
@@ -152,7 +152,7 @@
               "value": true
             },
             "item": {
-              "name": "300 GOLD",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -166,7 +166,7 @@
               "value": true
             },
             "item": {
-              "name": "Healing kit",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -180,7 +180,7 @@
               "value": true
             },
             "item": {
-              "name": "Moon card",
+              "name": "300 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -194,7 +194,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -208,7 +208,7 @@
               "value": true
             },
             "item": {
-              "name": "300 GOLD",
+              "name": "Purifying",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -222,9 +222,9 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Special1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -236,7 +236,7 @@
               "value": true
             },
             "item": {
-              "name": "Healing kit",
+              "name": "PowerUp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -250,7 +250,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -264,7 +264,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -278,9 +278,9 @@
               "value": true
             },
             "item": {
-              "name": "Left Tower Key",
+              "name": "Sun card",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -292,7 +292,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Sun card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -306,7 +306,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -320,7 +320,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -334,7 +334,7 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -363,7 +363,7 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -377,7 +377,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -391,7 +391,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -405,7 +405,7 @@
               "value": true
             },
             "item": {
-              "name": "PowerUp",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -419,9 +419,9 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "Storeroom Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -433,7 +433,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -447,7 +447,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -461,9 +461,9 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Special1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -475,7 +475,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Cure ampoule",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -529,7 +529,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "100 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -543,7 +543,7 @@
               "value": true
             },
             "item": {
-              "name": "Moon card",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -557,7 +557,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "300 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -571,7 +571,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -599,7 +599,7 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -619,7 +619,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -648,9 +648,9 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Science Key3",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -662,9 +662,9 @@
               "value": true
             },
             "item": {
-              "name": "Mandragora",
+              "name": "Purifying",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -676,7 +676,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -705,9 +705,9 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Mandragora",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -719,7 +719,7 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "Sun card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -733,7 +733,7 @@
               "value": true
             },
             "item": {
-              "name": "Sun card",
+              "name": "300 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -747,7 +747,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1171,9 +1171,9 @@
               "value": true
             },
             "item": {
-              "name": "Special1",
+              "name": "Healing kit",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1185,7 +1185,7 @@
               "value": true
             },
             "item": {
-              "name": "Science Key1",
+              "name": "Special1",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1199,9 +1199,9 @@
               "value": true
             },
             "item": {
-              "name": "Healing kit",
+              "name": "Garden Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1227,9 +1227,9 @@
               "value": true
             },
             "item": {
-              "name": "Special1",
+              "name": "Roast chicken",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1241,7 +1241,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Purifying",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1255,7 +1255,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1269,7 +1269,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1283,7 +1283,7 @@
               "value": true
             },
             "item": {
-              "name": "PowerUp",
+              "name": "Purifying",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1297,7 +1297,7 @@
               "value": true
             },
             "item": {
-              "name": "300 GOLD",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1311,7 +1311,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1325,7 +1325,7 @@
               "value": true
             },
             "item": {
-              "name": "100 GOLD",
+              "name": "Moon card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1339,7 +1339,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1367,7 +1367,7 @@
               "value": true
             },
             "item": {
-              "name": "100 GOLD",
+              "name": "Cure ampoule",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1381,7 +1381,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "PowerUp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1395,9 +1395,9 @@
               "value": true
             },
             "item": {
-              "name": "Special1",
+              "name": "Moon card",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1409,9 +1409,9 @@
               "value": true
             },
             "item": {
-              "name": "Magical Nitro",
+              "name": "Moon card",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1437,7 +1437,7 @@
               "value": true
             },
             "item": {
-              "name": "Moon card",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1451,7 +1451,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1465,7 +1465,7 @@
               "value": true
             },
             "item": {
-              "name": "Moon card",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1479,9 +1479,9 @@
               "value": true
             },
             "item": {
-              "name": "Special1",
+              "name": "Red jewel(L)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1493,7 +1493,7 @@
               "value": true
             },
             "item": {
-              "name": "Cure ampoule",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1507,7 +1507,7 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1521,7 +1521,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "PowerUp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1535,7 +1535,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "300 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1549,7 +1549,7 @@
               "value": true
             },
             "item": {
-              "name": "PowerUp",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1563,7 +1563,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1595,7 +1595,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1609,7 +1609,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1623,7 +1623,7 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1643,7 +1643,7 @@
               "value": true
             },
             "item": {
-              "name": "Sun card",
+              "name": "PowerUp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1700,7 +1700,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Cure ampoule",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1714,9 +1714,9 @@
               "value": true
             },
             "item": {
-              "name": "Science Key3",
+              "name": "300 GOLD",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1728,7 +1728,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Sun card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1742,7 +1742,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1756,7 +1756,7 @@
               "value": true
             },
             "item": {
-              "name": "Sun card",
+              "name": "Moon card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1770,7 +1770,7 @@
               "value": true
             },
             "item": {
-              "name": "Moon card",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1784,7 +1784,7 @@
               "value": true
             },
             "item": {
-              "name": "Moon card",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1798,7 +1798,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1812,7 +1812,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1826,7 +1826,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1840,7 +1840,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1869,7 +1869,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Sun card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1914,7 +1914,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1928,9 +1928,9 @@
               "value": true
             },
             "item": {
-              "name": "Clocktower Key2",
+              "name": "Red jewel(L)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1970,7 +1970,7 @@
               "value": true
             },
             "item": {
-              "name": "Moon card",
+              "name": "300 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1984,9 +1984,9 @@
               "value": true
             },
             "item": {
-              "name": "Clocktower Key1",
+              "name": "Roast chicken",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1998,7 +1998,7 @@
               "value": true
             },
             "item": {
-              "name": "300 GOLD",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2027,7 +2027,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "PowerUp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2041,7 +2041,7 @@
               "value": true
             },
             "item": {
-              "name": "Sun card",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2055,7 +2055,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2069,9 +2069,9 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Science Key1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2083,7 +2083,7 @@
               "value": true
             },
             "item": {
-              "name": "Cure ampoule",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2097,7 +2097,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2111,9 +2111,9 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Science Key2",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2125,7 +2125,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2139,7 +2139,7 @@
               "value": true
             },
             "item": {
-              "name": "100 GOLD",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2153,9 +2153,9 @@
               "value": true
             },
             "item": {
-              "name": "Archives Key",
+              "name": "Roast chicken",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2167,7 +2167,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2181,7 +2181,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "PowerUp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2195,7 +2195,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "PowerUp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2209,9 +2209,9 @@
               "value": true
             },
             "item": {
-              "name": "Storeroom Key",
+              "name": "Purifying",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -2238,7 +2238,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "PowerUp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2252,7 +2252,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2266,7 +2266,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2280,7 +2280,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "100 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2294,7 +2294,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2308,7 +2308,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2322,7 +2322,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2336,7 +2336,7 @@
               "value": true
             },
             "item": {
-              "name": "Healing kit",
+              "name": "Moon card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2350,9 +2350,9 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Mandragora",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2364,7 +2364,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2378,9 +2378,9 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Magical Nitro",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -2407,7 +2407,7 @@
               "value": true
             },
             "item": {
-              "name": "Clocktower Key3",
+              "name": "Magical Nitro",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2421,7 +2421,7 @@
               "value": true
             },
             "item": {
-              "name": "300 GOLD",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2435,7 +2435,7 @@
               "value": true
             },
             "item": {
-              "name": "300 GOLD",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2449,7 +2449,7 @@
               "value": true
             },
             "item": {
-              "name": "PowerUp",
+              "name": "Sun card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2463,7 +2463,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Healing kit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2477,9 +2477,9 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Special1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -2867,7 +2867,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2881,7 +2881,7 @@
               "value": true
             },
             "item": {
-              "name": "Cure ampoule",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2895,7 +2895,7 @@
               "value": true
             },
             "item": {
-              "name": "Cure ampoule",
+              "name": "Purifying",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2909,7 +2909,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Purifying",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2923,7 +2923,7 @@
               "value": true
             },
             "item": {
-              "name": "Cure ampoule",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2937,7 +2937,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Purifying",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2951,7 +2951,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2965,7 +2965,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Purifying",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2979,7 +2979,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Purifying",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2993,7 +2993,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3007,7 +3007,7 @@
               "value": true
             },
             "item": {
-              "name": "100 GOLD",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3021,7 +3021,7 @@
               "value": true
             },
             "item": {
-              "name": "100 GOLD",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3035,7 +3035,7 @@
               "value": true
             },
             "item": {
-              "name": "PowerUp",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3049,9 +3049,9 @@
               "value": true
             },
             "item": {
-              "name": "Moon card",
+              "name": "Execution Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3063,7 +3063,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3077,7 +3077,7 @@
               "value": true
             },
             "item": {
-              "name": "PowerUp",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3091,7 +3091,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Sun card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3105,9 +3105,9 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Left Tower Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3119,7 +3119,7 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "Sun card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3147,7 +3147,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3161,7 +3161,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3175,9 +3175,9 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Clocktower Key1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3189,7 +3189,7 @@
               "value": true
             },
             "item": {
-              "name": "Mandragora",
+              "name": "Clocktower Key2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3203,7 +3203,7 @@
               "value": true
             },
             "item": {
-              "name": "Sun card",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3217,7 +3217,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3245,9 +3245,9 @@
               "value": true
             },
             "item": {
-              "name": "Special1",
+              "name": "PowerUp",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3259,7 +3259,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3273,7 +3273,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3287,7 +3287,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "100 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3301,7 +3301,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3315,7 +3315,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3329,9 +3329,9 @@
               "value": true
             },
             "item": {
-              "name": "Garden Key",
+              "name": "Red jewel(L)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3343,9 +3343,9 @@
               "value": true
             },
             "item": {
-              "name": "Execution Key",
+              "name": "Red jewel(S)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3357,7 +3357,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Purifying",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3371,7 +3371,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "PowerUp",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3385,15 +3385,29 @@
               "value": true
             },
             "item": {
-              "name": "Science Key2",
+              "name": "Moon card",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
           {
             "name": "Castle Center: Maid sisters room inner table",
             "id": 12992618,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Healing kit",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Castle Center: Invention room maid sisters door",
+            "id": 12992620,
             "access_rule": {
               "type": "constant",
               "value": true
@@ -3406,20 +3420,6 @@
             }
           },
           {
-            "name": "Castle Center: Invention room maid sisters door",
-            "id": 12992620,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Roast beef",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
             "name": "Castle Center: Invention room spike crusher door",
             "id": 12992622,
             "access_rule": {
@@ -3427,7 +3427,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3455,7 +3455,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3469,7 +3469,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3483,7 +3483,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3511,9 +3511,9 @@
               "value": true
             },
             "item": {
-              "name": "Special1",
+              "name": "Roast beef",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -3531,9 +3531,9 @@
               "value": true
             },
             "item": {
-              "name": "Copper Key",
+              "name": "Red jewel(S)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3545,7 +3545,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3559,9 +3559,9 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Special1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3573,9 +3573,9 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Clocktower Key3",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -3593,7 +3593,7 @@
               "value": true
             },
             "item": {
-              "name": "Sun card",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3607,7 +3607,7 @@
               "value": true
             },
             "item": {
-              "name": "500 GOLD",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3695,9 +3695,9 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Special1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3709,7 +3709,7 @@
               "value": true
             },
             "item": {
-              "name": "PowerUp",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3723,7 +3723,7 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "300 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3737,7 +3737,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3785,7 +3785,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3799,7 +3799,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3813,9 +3813,9 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Archives Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3827,7 +3827,7 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3861,7 +3861,7 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3986,7 +3986,7 @@
               "value": true
             },
             "item": {
-              "name": "Sun card",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4014,7 +4014,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4034,7 +4034,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4233,9 +4233,9 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "Copper Key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4247,7 +4247,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4261,7 +4261,7 @@
               "value": true
             },
             "item": {
-              "name": "300 GOLD",
+              "name": "Cure ampoule",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4281,7 +4281,7 @@
               "value": true
             },
             "item": {
-              "name": "300 GOLD",
+              "name": "Purifying",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4295,7 +4295,7 @@
               "value": true
             },
             "item": {
-              "name": "300 GOLD",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4332,7 +4332,7 @@
               "value": true
             },
             "item": {
-              "name": "Purifying",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4346,7 +4346,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4360,7 +4360,7 @@
               "value": true
             },
             "item": {
-              "name": "PowerUp",
+              "name": "Red jewel(S)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4374,7 +4374,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4388,7 +4388,7 @@
               "value": true
             },
             "item": {
-              "name": "PowerUp",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4402,7 +4402,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Moon card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4416,9 +4416,9 @@
               "value": true
             },
             "item": {
-              "name": "Sun card",
+              "name": "Special1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -4445,7 +4445,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(L)",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4459,9 +4459,9 @@
               "value": true
             },
             "item": {
-              "name": "Magical Nitro",
+              "name": "Roast beef",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4473,7 +4473,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Red jewel(L)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4505,7 +4505,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast chicken",
+              "name": "Moon card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4519,7 +4519,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "500 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4562,9 +4562,9 @@
               "value": true
             },
             "item": {
-              "name": "Special1",
+              "name": "Healing kit",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4576,7 +4576,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Roast beef",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4590,7 +4590,7 @@
               "value": true
             },
             "item": {
-              "name": "Roast beef",
+              "name": "Purifying",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4633,7 +4633,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Cure ampoule",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4662,7 +4662,7 @@
               "value": true
             },
             "item": {
-              "name": "Red jewel(S)",
+              "name": "Sun card",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4676,7 +4676,7 @@
               "value": true
             },
             "item": {
-              "name": "PowerUp",
+              "name": "Roast chicken",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4690,7 +4690,7 @@
               "value": true
             },
             "item": {
-              "name": "Sun card",
+              "name": "100 GOLD",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4768,7 +4768,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 66
+        "max_count": 68
       },
       "Special1": {
         "name": "Special1",
@@ -5175,7 +5175,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 36
+        "max_count": 40
       },
       "300 GOLD": {
         "name": "300 GOLD",
@@ -5188,7 +5188,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 18
+        "max_count": 14
       },
       "100 GOLD": {
         "name": "100 GOLD",
@@ -5201,7 +5201,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 8
       },
       "PermaUp": {
         "name": "PermaUp",
@@ -5253,9 +5253,9 @@
   },
   "itempool_counts": {
     "1": {
-      "100 GOLD": 10,
-      "300 GOLD": 18,
-      "500 GOLD": 36,
+      "100 GOLD": 8,
+      "300 GOLD": 14,
+      "500 GOLD": 40,
       "Archives Key": 2,
       "Chamber Key": 2,
       "Clocktower Key1": 2,
@@ -5273,7 +5273,7 @@
       "Moon card": 16,
       "PowerUp": 20,
       "Purifying": 28,
-      "Red jewel(L)": 66,
+      "Red jewel(L)": 68,
       "Red jewel(S)": 58,
       "Roast beef": 48,
       "Roast chicken": 42,

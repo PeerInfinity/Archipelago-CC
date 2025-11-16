@@ -1,13 +1,13 @@
 """Castlevania 64 (CV64) game-specific export handler."""
 
 from typing import Dict, Any
-from .base import BaseGameExportHandler
+from .generic import GenericGameExportHandler
 import logging
 import re
 
 logger = logging.getLogger(__name__)
 
-class Cv64GameExportHandler(BaseGameExportHandler):
+class Cv64GameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Castlevania 64'
     """Export handler for Castlevania 64."""
     
@@ -137,11 +137,17 @@ class Cv64GameExportHandler(BaseGameExportHandler):
         """Post-process entrance rules to resolve warp-specific values and handle Dracula's door."""
         if not rule:
             return rule
-        
-        # Special handling for Dracula's door which has a null constant rule
-        if entrance_name == "Dracula's door" and rule.get('type') == 'constant' and rule.get('value') is None:
-            # Expand the Dracula helper directly
-            return self.expand_helper("Dracula")
+
+        # Special handling for Dracula's door
+        if entrance_name == "Dracula's door":
+            # Check if it's a null constant or a conditional with Dracula-related items
+            if (rule.get('type') == 'constant' and rule.get('value') is None):
+                # Expand the Dracula helper directly
+                return self.expand_helper("Dracula")
+            elif rule.get('type') == 'conditional':
+                # The analyzer exported a complex conditional for Dracula's door
+                # Instead of trying to parse it, just use our helper which knows the correct logic
+                return self.expand_helper("Dracula")
         
         # Check if this is a warp entrance
         warp_match = re.match(r'Warp (\d+)', entrance_name)
