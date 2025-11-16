@@ -95,8 +95,8 @@ export function terran_air_anti_air(snapshot, staticData) {
     const advancedTactics = isAdvancedTactics(staticData);
 
     return has(snapshot, 'Viking')
-        || has_all(snapshot, ['Wraith', 'Wraith Advanced Laser Technology'])
-        || has_all(snapshot, ['Battlecruiser', 'Battlecruiser ATX Laser Battery'])
+        || has_all(snapshot, ['Wraith', 'Advanced Laser Technology (Wraith)'])
+        || has_all(snapshot, ['Battlecruiser', 'ATX Laser Battery (Battlecruiser)'])
         || (advancedTactics && has_any(snapshot, ['Wraith', 'Valkyrie', 'Battlecruiser']));
 }
 
@@ -125,7 +125,7 @@ export function terran_bio_heal(snapshot, staticData) {
     const advancedTactics = isAdvancedTactics(staticData);
 
     return has_any(snapshot, ['Medic', 'Medivac'])
-        || (advancedTactics && has_all(snapshot, ['Raven', 'Raven Bio-Mechanical Repair Drone']));
+        || (advancedTactics && has_all(snapshot, ['Raven', 'Bio Mechanical Repair Drone (Raven)']));
 }
 
 /**
@@ -151,7 +151,7 @@ export function terran_competent_comp(snapshot, staticData) {
         (
             (has_any(snapshot, ['Marine', 'Marauder']) && terran_bio_heal(snapshot, staticData))
             || has_any(snapshot, ['Thor', 'Banshee', 'Siege Tank'])
-            || has_all(snapshot, ['Liberator', 'Liberator Raid Artillery'])
+            || has_all(snapshot, ['Liberator', 'Raid Artillery (Liberator)'])
         )
         && terran_competent_anti_air(snapshot, staticData)
     ) || (
@@ -201,7 +201,7 @@ export function protoss_basic_anti_air(snapshot, staticData) {
             'Phoenix', 'Mirage', 'Corsair', 'Carrier', 'Scout',
             'Dark Archon', 'Wrathwalker', 'Mothership'
         ])
-        || has_all(snapshot, ['Warp Prism', 'Warp Prism Phase Blaster'])
+        || has_all(snapshot, ['Warp Prism', 'Phase Blaster (Warp Prism)'])
         || (advancedTactics && has_any(snapshot, [
             'High Templar', 'Signifier', 'Ascendant', 'Dark Templar',
             'Sentry', 'Energizer'
