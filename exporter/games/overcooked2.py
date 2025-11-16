@@ -38,28 +38,14 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         """Extract game info including level_logic."""
         game_info = super().get_game_info(world)
 
-        # Add level_logic to game info, converting shortname keys to level_id keys
+        # Add level_logic to game info (keep shortname keys as-is)
         try:
             from worlds.overcooked2 import Logic
-            from worlds.overcooked2.Overcooked2Levels import Overcooked2Level
 
             if hasattr(Logic, 'level_logic'):
-                # Convert shortname-based logic to level_id-based logic
-                level_logic_by_id = {}
-
-                # Keep the global "*" logic
-                if "*" in Logic.level_logic:
-                    level_logic_by_id["*"] = Logic.level_logic["*"]
-
-                # Convert other entries
-                for level in Overcooked2Level():
-                    shortname = level.as_generic_level.shortname
-                    if shortname in Logic.level_logic:
-                        # Map level_id to the logic
-                        level_logic_by_id[level.level_id] = Logic.level_logic[shortname]
-
-                game_info['level_logic'] = level_logic_by_id
-                logger.info(f"Added level_logic with {len(level_logic_by_id)} entries to game_info")
+                # Use the level_logic dictionary as-is (with shortname keys)
+                game_info['level_logic'] = Logic.level_logic
+                logger.info(f"Added level_logic with {len(Logic.level_logic)} entries to game_info")
         except Exception as e:
             logger.error(f"Error adding level_logic to game_info: {e}")
 
@@ -146,21 +132,22 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
             level_obj = closure_vars.get('level')
             stars = closure_vars.get('stars', 1)
 
-            # Extract level_id from the level object
+            # Extract shortname from the level object (used for level_logic lookup)
             if level_obj:
                 # level_obj is an Overcooked2GenericLevel instance
-                if hasattr(level_obj, 'level_id'):
-                    level_id = level_obj.level_id
+                if hasattr(level_obj, 'shortname'):
+                    shortname = level_obj.shortname
+                    logger.info(f"[{rule_target_name}] Extracted shortname={shortname}, stars={stars}")
                 else:
                     # Fallback: try to parse from location name
-                    level_id = None
+                    shortname = None
 
-                # Create a helper rule with the level_id
+                # Create a helper rule with the shortname
                 return {
                     'type': 'helper',
                     'name': 'has_requirements_for_level_star',
                     'args': [
-                        {'type': 'constant', 'value': level_id} if level_id else {'type': 'constant', 'value': None},
+                        {'type': 'constant', 'value': shortname} if shortname else {'type': 'constant', 'value': None},
                         {'type': 'constant', 'value': stars}
                     ]
                 }
