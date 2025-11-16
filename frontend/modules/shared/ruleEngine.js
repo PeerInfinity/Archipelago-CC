@@ -297,6 +297,39 @@ function isBossDefeatCheck(rule, stateSnapshotInterface) {
 }
 
 /**
+ * Creates a new context with bound iterator variables for all_of/any_of comprehensions.
+ * @param {object} context - The original context
+ * @param {object} iterator_info - Iterator information with target and iterator
+ * @param {any} value - The value to bind to the iterator variable
+ * @returns {object} - A new context with the variable binding
+ */
+function createBoundContext(context, iterator_info, value) {
+  if (!iterator_info || !iterator_info.target || !iterator_info.target.name) {
+    // No variable to bind, return original context
+    return context;
+  }
+
+  const varName = iterator_info.target.name;
+  const boundVariables = { [varName]: value };
+
+  // Create a wrapper context that intercepts resolveName calls
+  return {
+    ...context,
+    resolveName: function(name) {
+      // Check if this is the bound variable
+      if (name in boundVariables) {
+        return boundVariables[name];
+      }
+      // Otherwise delegate to the original context
+      if (context && typeof context.resolveName === 'function') {
+        return context.resolveName(name);
+      }
+      return undefined;
+    }
+  };
+}
+
+/**
  * Evaluates a rule against the provided state context (either StateManager or main thread snapshot).\n * @param {any} rule - The rule object (or primitive) to evaluate.\n * @param {object} context - Either the StateManager instance (or its interface) in the worker,\n *                           or the snapshot interface on the main thread.\n * @param {number} [depth=0] - Current recursion depth for debugging.\n * @returns {boolean|any} - The result of the rule evaluation.\n */
 export const evaluateRule = (rule, context, depth = 0) => {
   // Prevent infinite recursion by limiting depth
@@ -1262,6 +1295,42 @@ export const evaluateRule = (rule, context, depth = 0) => {
         break;
       }
 
+      case 'f_string': {
+        // Evaluate f-string formatting (e.g., "Automated {ingredient}")
+        if (!rule.parts || !Array.isArray(rule.parts)) {
+          log('warn', '[evaluateRule] f_string rule missing parts array', { rule });
+          result = undefined;
+          break;
+        }
+
+        // Build the string by evaluating each part
+        let resultStr = '';
+        for (const part of rule.parts) {
+          if (part.type === 'constant') {
+            resultStr += part.value;
+          } else if (part.type === 'formatted_value') {
+            // Evaluate the value and convert to string
+            const value = evaluateRule(part.value, context, depth + 1);
+            if (value === undefined) {
+              log('warn', '[evaluateRule] f_string formatted_value evaluated to undefined', { part });
+              result = undefined;
+              break;
+            }
+            resultStr += String(value);
+          } else {
+            log('warn', '[evaluateRule] Unknown f_string part type', { part });
+            result = undefined;
+            break;
+          }
+        }
+
+        // If we successfully built the string, return it
+        if (result !== undefined) {
+          result = resultStr;
+        }
+        break;
+      }
+
       case 'setting_check': {
         let settingName = evaluateRule(rule.setting, context, depth + 1);
         let expectedValue = evaluateRule(rule.value, context, depth + 1);
@@ -1445,9 +1514,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
 
         result = true;
         for (const item of iterable) {
-          // For now, evaluate the element_rule directly
-          // TODO: In a full implementation, we'd need to bind the iterator variable
-          const itemResult = evaluateRule(rule.element_rule, context, depth + 1);
+          // Create a new context with the iterator variable bound
+          const boundContext = createBoundContext(context, rule.iterator_info, item);
+
+          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
           if (itemResult === false) {
             result = false;
             break;
@@ -1498,9 +1568,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
         result = false;
         let hasUndefined = false;
         for (const item of iterable) {
-          // For now, evaluate the element_rule directly
-          // TODO: In a full implementation, we'd need to bind the iterator variable
-          const itemResult = evaluateRule(rule.element_rule, context, depth + 1);
+          // Create a new context with the iterator variable bound
+          const boundContext = createBoundContext(context, rule.iterator_info, item);
+
+          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
           if (itemResult === true) {
             result = true;
             break;
