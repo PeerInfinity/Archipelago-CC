@@ -179,16 +179,15 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "can_shop"
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Shards"
                   },
-                  "args": []
+                  "count": {
+                    "type": "constant",
+                    "value": 4566
+                  }
                 }
               ]
             }
@@ -199,26 +198,14 @@
             "name": "The Shop - Karuta Plates",
             "id": 11391079,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 27
               }
             },
             "item": {
@@ -226,32 +213,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 27
           },
           {
             "name": "The Shop - Serendipitous Bodies",
             "id": 11391080,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 318
               }
             },
             "item": {
@@ -259,32 +235,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 318
           },
           {
             "name": "The Shop - Path of Resilience",
             "id": 11391081,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 467
               }
             },
             "item": {
@@ -292,32 +257,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 467
           },
           {
             "name": "The Shop - Kusari Jacket",
             "id": 11391082,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 675
               }
             },
             "item": {
@@ -325,32 +279,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 675
           },
           {
             "name": "The Shop - Energy Shuriken",
             "id": 11391083,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 92
               }
             },
             "item": {
@@ -358,32 +301,21 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "cost": 92
           },
           {
             "name": "The Shop - Serendipitous Minds",
             "id": 11391084,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 201
               }
             },
             "item": {
@@ -391,32 +323,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 201
           },
           {
             "name": "The Shop - Prepared Mind",
             "id": 11391085,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 546
               }
             },
             "item": {
@@ -424,32 +345,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 546
           },
           {
             "name": "The Shop - Meditation",
             "id": 11391086,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 1368
               }
             },
             "item": {
@@ -457,32 +367,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 1368
           },
           {
             "name": "The Shop - Rejuvenative Spirit",
             "id": 11391087,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 1881
               }
             },
             "item": {
@@ -490,32 +389,21 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "cost": 1881
           },
           {
             "name": "The Shop - Centered Mind",
             "id": 11391088,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 2140
               }
             },
             "item": {
@@ -523,32 +411,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 2140
           },
           {
             "name": "The Shop - Strike of the Ninja",
             "id": 11391089,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 67
               }
             },
             "item": {
@@ -556,32 +433,21 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "cost": 67
           },
           {
             "name": "The Shop - Second Wind",
             "id": 11391090,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 237
               }
             },
             "item": {
@@ -589,32 +455,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 237
           },
           {
             "name": "The Shop - Currents Master",
             "id": 11391091,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 743
               }
             },
             "item": {
@@ -622,32 +477,21 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "cost": 743
           },
           {
             "name": "The Shop - Aerobatics Warrior",
             "id": 11391092,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 1124
               }
             },
             "item": {
@@ -655,32 +499,21 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "cost": 1124
           },
           {
             "name": "The Shop - Demon's Bane",
             "id": 11391093,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 3532
               }
             },
             "item": {
@@ -688,32 +521,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 3532
           },
           {
             "name": "The Shop - Devil's Due",
             "id": 11391094,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 56
               }
             },
             "item": {
@@ -721,32 +543,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 56
           },
           {
             "name": "The Shop - Time Sense",
             "id": 11391095,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 142
               }
             },
             "item": {
@@ -754,32 +565,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 142
           },
           {
             "name": "The Shop - Power Sense",
             "id": 11391096,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 621
               }
             },
             "item": {
@@ -787,32 +587,21 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 621
           },
           {
             "name": "The Shop - Focused Power Sense",
             "id": 11391097,
             "access_rule": {
-              "type": "subscript",
-              "value": {
-                "type": "attribute",
-                "object": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "multiworld"
-                },
-                "attr": "worlds"
+              "type": "item_check",
+              "item": {
+                "type": "constant",
+                "value": "Shards"
               },
-              "index": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "player"
+              "count": {
+                "type": "constant",
+                "value": 1034
               }
             },
             "item": {
@@ -820,7 +609,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "cost": 1034
           }
         ]
       },
@@ -1094,33 +884,11 @@
             "name": "Ninja Village - Candle",
             "id": 11390988,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "multiworld"
-                    },
-                    "attr": "get_location"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Searing Crags - Astral Tea Leaves"
-                    }
-                  ]
-                },
-                "attr": "can_reach"
-              },
-              "args": []
+              "type": "location_check",
+              "location": {
+                "type": "constant",
+                "value": "Searing Crags - Astral Tea Leaves"
+              }
             },
             "item": {
               "name": "Time Shard (300)",
@@ -1246,28 +1014,16 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -1373,28 +1129,41 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Path of Resilience"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Meditation"
+                          }
+                        }
+                      ]
                     },
-                    "attr": "can_dboost"
-                  },
-                  "args": []
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Second Wind"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -1417,28 +1186,41 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Path of Resilience"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Meditation"
+                          }
+                        }
+                      ]
                     },
-                    "attr": "can_dboost"
-                  },
-                  "args": []
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Second Wind"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -1464,28 +1246,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -1577,28 +1347,16 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 }
               ]
             }
@@ -1701,28 +1459,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             },
@@ -1777,16 +1523,10 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
                   "type": "item_check",
@@ -1942,28 +1682,41 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_vertical"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Vertical",
+                  "inferred": true,
+                  "description": "Requires having Vertical"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Path of Resilience"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Meditation"
+                          }
+                        }
+                      ]
                     },
-                    "attr": "can_dboost"
-                  },
-                  "args": []
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Second Wind"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -2011,43 +1764,50 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 },
                 {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Path of Resilience"
+                              }
+                            },
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Meditation"
+                              }
+                            }
+                          ]
                         },
-                        "attr": "can_dboost"
-                      },
-                      "args": []
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Second Wind"
+                          }
+                        }
+                      ]
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "has_wingsuit"
-                      },
-                      "args": []
+                      "type": "item_check",
+                      "item": "Wingsuit",
+                      "inferred": true,
+                      "description": "Requires having Wingsuit"
                     }
                   ]
                 }
@@ -2104,28 +1864,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -2143,28 +1891,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -2205,28 +1941,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -2254,28 +1978,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             },
@@ -2765,43 +2477,50 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "has_dart"
-                      },
-                      "args": []
+                      "type": "item_check",
+                      "item": "Dart",
+                      "inferred": true,
+                      "description": "Requires having Dart"
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Path of Resilience"
+                              }
+                            },
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Meditation"
+                              }
+                            }
+                          ]
                         },
-                        "attr": "can_dboost"
-                      },
-                      "args": []
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Second Wind"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -3084,28 +2803,41 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Path of Resilience"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Meditation"
+                          }
+                        }
+                      ]
                     },
-                    "attr": "can_dboost"
-                  },
-                  "args": []
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Second Wind"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -3135,28 +2867,16 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             },
@@ -3258,40 +2978,47 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "has_wingsuit"
-                      },
-                      "args": []
+                      "type": "item_check",
+                      "item": "Wingsuit",
+                      "inferred": true,
+                      "description": "Requires having Wingsuit"
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Path of Resilience"
+                              }
+                            },
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Meditation"
+                              }
+                            }
+                          ]
                         },
-                        "attr": "can_dboost"
-                      },
-                      "args": []
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Second Wind"
+                          }
+                        }
+                      ]
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "can_destroy_projectiles"
-                      },
-                      "args": []
+                      "type": "capability",
+                      "capability": "destroy_projectiles",
+                      "inferred": true,
+                      "description": "Requires ability to destroy projectiles"
                     }
                   ]
                 },
@@ -3762,28 +3489,16 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_tabi"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Tabi",
+                  "inferred": true,
+                  "description": "Requires having Tabi"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 }
               ]
             }
@@ -3904,28 +3619,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -3994,28 +3697,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "can_destroy_projectiles"
-                  },
-                  "args": []
+                  "type": "capability",
+                  "capability": "destroy_projectiles",
+                  "inferred": true,
+                  "description": "Requires ability to destroy projectiles"
                 }
               ]
             }
@@ -4092,43 +3783,25 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "has_dart"
-                      },
-                      "args": []
+                      "type": "item_check",
+                      "item": "Dart",
+                      "inferred": true,
+                      "description": "Requires having Dart"
                     },
                     {
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "has_wingsuit"
-                          },
-                          "args": []
+                          "type": "item_check",
+                          "item": "Wingsuit",
+                          "inferred": true,
+                          "description": "Requires having Wingsuit"
                         },
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "can_destroy_projectiles"
-                          },
-                          "args": []
+                          "type": "capability",
+                          "capability": "destroy_projectiles",
+                          "inferred": true,
+                          "description": "Requires ability to destroy projectiles"
                         }
                       ]
                     }
@@ -4187,33 +3860,11 @@
             "name": "Searing Crags - Astral Tea Leaves",
             "id": 11390987,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "multiworld"
-                    },
-                    "attr": "get_location"
-                  },
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Ninja Village - Astral Seed"
-                    }
-                  ]
-                },
-                "attr": "can_reach"
-              },
-              "args": []
+              "type": "location_check",
+              "location": {
+                "type": "constant",
+                "value": "Ninja Village - Astral Seed"
+              }
             },
             "item": {
               "name": "Time Shard (50)",
@@ -4387,33 +4038,11 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "state"
-                          },
-                          "attr": "multiworld"
-                        },
-                        "attr": "get_location"
-                      },
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Quillshroom Marsh - Queen of Quills"
-                        }
-                      ]
-                    },
-                    "attr": "can_reach"
-                  },
-                  "args": []
+                  "type": "location_check",
+                  "location": {
+                    "type": "constant",
+                    "value": "Quillshroom Marsh - Queen of Quills"
+                  }
                 }
               ]
             }
@@ -4469,28 +4098,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -4634,43 +4251,50 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 },
                 {
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Path of Resilience"
+                              }
+                            },
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Meditation"
+                              }
+                            }
+                          ]
                         },
-                        "attr": "can_dboost"
-                      },
-                      "args": []
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Second Wind"
+                          }
+                        }
+                      ]
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "has_wingsuit"
-                      },
-                      "args": []
+                      "type": "item_check",
+                      "item": "Wingsuit",
+                      "inferred": true,
+                      "description": "Requires having Wingsuit"
                     }
                   ]
                 }
@@ -4844,43 +4468,50 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "has_dart"
-                      },
-                      "args": []
+                      "type": "item_check",
+                      "item": "Dart",
+                      "inferred": true,
+                      "description": "Requires having Dart"
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Path of Resilience"
+                              }
+                            },
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Meditation"
+                              }
+                            }
+                          ]
                         },
-                        "attr": "can_dboost"
-                      },
-                      "args": []
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Second Wind"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -4900,28 +4531,41 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Path of Resilience"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Meditation"
+                          }
+                        }
+                      ]
                     },
-                    "attr": "can_dboost"
-                  },
-                  "args": []
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Second Wind"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -4939,28 +4583,16 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -5086,28 +4718,36 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_vertical"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Vertical",
+                  "inferred": true,
+                  "description": "Requires having Vertical"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Path of Resilience"
+                      }
                     },
-                    "attr": "can_double_dboost"
-                  },
-                  "args": []
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Meditation"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Second Wind"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -5119,28 +4759,16 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 }
               ]
             }
@@ -5152,43 +4780,50 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "has_dart"
-                      },
-                      "args": []
+                      "type": "item_check",
+                      "item": "Dart",
+                      "inferred": true,
+                      "description": "Requires having Dart"
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Path of Resilience"
+                              }
+                            },
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Meditation"
+                              }
+                            }
+                          ]
                         },
-                        "attr": "can_dboost"
-                      },
-                      "args": []
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Second Wind"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -5266,28 +4901,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -5313,28 +4936,16 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -5367,28 +4978,41 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Path of Resilience"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Meditation"
+                          }
+                        }
+                      ]
                     },
-                    "attr": "can_dboost"
-                  },
-                  "args": []
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Second Wind"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -5421,28 +5045,41 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_vertical"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Vertical",
+                  "inferred": true,
+                  "description": "Requires having Vertical"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Path of Resilience"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Meditation"
+                          }
+                        }
+                      ]
                     },
-                    "attr": "can_dboost"
-                  },
-                  "args": []
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Second Wind"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -5454,28 +5091,41 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_vertical"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Vertical",
+                  "inferred": true,
+                  "description": "Requires having Vertical"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Path of Resilience"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Meditation"
+                          }
+                        }
+                      ]
                     },
-                    "attr": "can_dboost"
-                  },
-                  "args": []
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Second Wind"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -5503,28 +5153,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             },
@@ -5555,28 +5193,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -5630,28 +5256,16 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             },
@@ -5750,40 +5364,22 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "can_destroy_projectiles"
-                  },
-                  "args": []
+                  "type": "capability",
+                  "capability": "destroy_projectiles",
+                  "inferred": true,
+                  "description": "Requires ability to destroy projectiles"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_tabi"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Tabi",
+                  "inferred": true,
+                  "description": "Requires having Tabi"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_vertical"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Vertical",
+                  "inferred": true,
+                  "description": "Requires having Vertical"
                 }
               ]
             }
@@ -5811,16 +5407,10 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_wingsuit"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Wingsuit",
+                  "inferred": true,
+                  "description": "Requires having Wingsuit"
                 },
                 {
                   "type": "item_check",
@@ -5861,43 +5451,25 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "has_tabi"
-                      },
-                      "args": []
+                      "type": "item_check",
+                      "item": "Tabi",
+                      "inferred": true,
+                      "description": "Requires having Tabi"
                     },
                     {
                       "type": "or",
                       "conditions": [
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "can_destroy_projectiles"
-                          },
-                          "args": []
+                          "type": "capability",
+                          "capability": "destroy_projectiles",
+                          "inferred": true,
+                          "description": "Requires ability to destroy projectiles"
                         },
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "has_wingsuit"
-                          },
-                          "args": []
+                          "type": "item_check",
+                          "item": "Wingsuit",
+                          "inferred": true,
+                          "description": "Requires having Wingsuit"
                         }
                       ]
                     }
@@ -5907,55 +5479,56 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "has_wingsuit"
-                      },
-                      "args": []
+                      "type": "item_check",
+                      "item": "Wingsuit",
+                      "inferred": true,
+                      "description": "Requires having Wingsuit"
                     },
                     {
                       "type": "or",
                       "conditions": [
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "has_dart"
-                          },
-                          "args": []
+                          "type": "item_check",
+                          "item": "Dart",
+                          "inferred": true,
+                          "description": "Requires having Dart"
                         },
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": {
+                                    "type": "constant",
+                                    "value": "Path of Resilience"
+                                  }
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": {
+                                    "type": "constant",
+                                    "value": "Meditation"
+                                  }
+                                }
+                              ]
                             },
-                            "attr": "can_dboost"
-                          },
-                          "args": []
+                            {
+                              "type": "item_check",
+                              "item": {
+                                "type": "constant",
+                                "value": "Second Wind"
+                              }
+                            }
+                          ]
                         },
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "self"
-                            },
-                            "attr": "can_destroy_projectiles"
-                          },
-                          "args": []
+                          "type": "capability",
+                          "capability": "destroy_projectiles",
+                          "inferred": true,
+                          "description": "Requires ability to destroy projectiles"
                         }
                       ]
                     }
@@ -6044,55 +5617,31 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_tabi"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Tabi",
+                  "inferred": true,
+                  "description": "Requires having Tabi"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "can_destroy_projectiles"
-                  },
-                  "args": []
+                  "type": "capability",
+                  "capability": "destroy_projectiles",
+                  "inferred": true,
+                  "description": "Requires ability to destroy projectiles"
                 },
                 {
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "has_dart"
-                      },
-                      "args": []
+                      "type": "item_check",
+                      "item": "Dart",
+                      "inferred": true,
+                      "description": "Requires having Dart"
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "has_wingsuit"
-                      },
-                      "args": []
+                      "type": "item_check",
+                      "item": "Wingsuit",
+                      "inferred": true,
+                      "description": "Requires having Wingsuit"
                     }
                   ]
                 }
@@ -6175,16 +5724,10 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -6275,43 +5818,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 },
                 {
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "has_wingsuit"
-                      },
-                      "args": []
+                      "type": "item_check",
+                      "item": "Wingsuit",
+                      "inferred": true,
+                      "description": "Requires having Wingsuit"
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "self"
-                        },
-                        "attr": "can_destroy_projectiles"
-                      },
-                      "args": []
+                      "type": "capability",
+                      "capability": "destroy_projectiles",
+                      "inferred": true,
+                      "description": "Requires ability to destroy projectiles"
                     }
                   ]
                 }
@@ -6367,28 +5892,41 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Path of Resilience"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Meditation"
+                          }
+                        }
+                      ]
                     },
-                    "attr": "can_dboost"
-                  },
-                  "args": []
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Second Wind"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -6407,16 +5945,10 @@
             "name": "Riviere Turquoise Seal - Launch of Faith",
             "id": 11391040,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "attr": "has_vertical"
-              },
-              "args": []
+              "type": "item_check",
+              "item": "Vertical",
+              "inferred": true,
+              "description": "Requires having Vertical"
             },
             "item": {
               "name": "Magic Firefly",
@@ -6698,16 +6230,10 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 },
                 {
                   "type": "item_check",
@@ -6775,40 +6301,22 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "can_destroy_projectiles"
-                  },
-                  "args": []
+                  "type": "capability",
+                  "capability": "destroy_projectiles",
+                  "inferred": true,
+                  "description": "Requires ability to destroy projectiles"
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "is_aerobatic"
-                  },
-                  "args": []
+                  "type": "generic_helper",
+                  "name": "is_aerobatic",
+                  "args": [],
+                  "description": "Requires is aerobatic"
                 }
               ]
             },
@@ -7070,28 +6578,41 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Path of Resilience"
+                          }
+                        },
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "constant",
+                            "value": "Meditation"
+                          }
+                        }
+                      ]
                     },
-                    "attr": "can_dboost"
-                  },
-                  "args": []
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Second Wind"
+                      }
+                    }
+                  ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "has_dart"
-                  },
-                  "args": []
+                  "type": "item_check",
+                  "item": "Dart",
+                  "inferred": true,
+                  "description": "Requires having Dart"
                 }
               ]
             }
@@ -8325,7 +7846,20 @@
     }
   },
   "progression_mapping": {
-    "1": {}
+    "1": {
+      "Shards": {
+        "type": "additive",
+        "items": {
+          "Time Shard": 1,
+          "Time Shard (10)": 10,
+          "Time Shard (50)": 50,
+          "Time Shard (100)": 100,
+          "Time Shard (300)": 300,
+          "Time Shard (500)": 500
+        },
+        "base_item": "Shards"
+      }
+    }
   },
   "starting_items": {
     "1": []

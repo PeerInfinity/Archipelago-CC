@@ -9,6 +9,153 @@ logger = logging.getLogger(__name__)
 class MessengerGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'The Messenger'
 
+    def __init__(self, world=None):
+        super().__init__()
+        self.world = world
+
+    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Expand rules with special handling for location dependency patterns and shop capabilities.
+
+        Detects the pattern: state.multiworld.get_location(location_name, player).can_reach(state)
+        And converts it to: {"type": "location_check", "location": location_name}
+
+        Also detects "shop" capability rules and converts them to Shards item checks.
+        """
+        if not rule:
+            return rule
+
+        # First, call parent implementation to handle standard expansion and recursion
+        rule = super().expand_rule(rule)
+
+        # After parent processing, check for patterns we need to transform
+
+        # Detect location dependency pattern:
+        # {type: "function_call", function: {type: "attribute", attr: "can_reach",
+        #   object: {type: "function_call", function: {type: "attribute", attr: "get_location",
+        #     object: {type: "attribute", attr: "multiworld",
+        #       object: {type: "name", name: "state"}}}}}}
+
+        if (rule.get('type') == 'function_call' and
+            rule.get('function', {}).get('type') == 'attribute' and
+            rule.get('function', {}).get('attr') == 'can_reach'):
+
+            func = rule.get('function', {})
+            obj = func.get('object', {})
+
+            # Check if this is a get_location call
+            if (obj.get('type') == 'function_call' and
+                obj.get('function', {}).get('type') == 'attribute' and
+                obj.get('function', {}).get('attr') == 'get_location'):
+
+                get_loc_func = obj.get('function', {})
+                multiworld_obj = get_loc_func.get('object', {})
+
+                # Check if this is state.multiworld
+                if (multiworld_obj.get('type') == 'attribute' and
+                    multiworld_obj.get('attr') == 'multiworld' and
+                    multiworld_obj.get('object', {}).get('type') == 'name' and
+                    multiworld_obj.get('object', {}).get('name') == 'state'):
+
+                    # Extract the location name from the args
+                    location_args = obj.get('args', [])
+                    if location_args and len(location_args) > 0:
+                        location_name_rule = location_args[0]
+
+                        logger.debug(f"Detected location dependency pattern, converting to location_check for: {location_name_rule}")
+
+                        # Return a location_check rule
+                        return {
+                            'type': 'location_check',
+                            'location': location_name_rule
+                        }
+
+        # Detect and expand capability rules for Messenger-specific abilities
+        if rule.get('type') == 'capability':
+            capability = rule.get('capability')
+
+            # can_shop: state.has("Shards", player, self.maximum_price)
+            if capability == 'shop':
+                # Calculate maximum_price the same way MessengerRules does
+                # maximum_price = min(cost_of_demons_bane + cost_of_focused_power, world.total_shards)
+                if self.world:
+                    try:
+                        # Get the costs from the shop locations
+                        demons_bane = self.world.multiworld.get_location("The Shop - Demon's Bane", self.world.player)
+                        focused_power = self.world.multiworld.get_location("The Shop - Focused Power Sense", self.world.player)
+
+                        max_shop_price = demons_bane.cost + focused_power.cost
+                        maximum_price = min(max_shop_price, self.world.total_shards)
+
+                        logger.debug(f"Detected can_shop capability, converting to Shards check with count={maximum_price}")
+
+                        return {
+                            'type': 'item_check',
+                            'item': {
+                                'type': 'constant',
+                                'value': 'Shards'
+                            },
+                            'count': {
+                                'type': 'constant',
+                                'value': maximum_price
+                            }
+                        }
+                    except Exception as e:
+                        logger.warning(f"Could not calculate maximum_price for can_shop: {e}")
+
+            # can_dboost: state.has_any({"Path of Resilience", "Meditation"}, player) and state.has("Second Wind", player)
+            elif capability == 'dboost':
+                logger.debug("Detected can_dboost capability, converting to item checks")
+                return {
+                    'type': 'and',
+                    'conditions': [
+                        {
+                            'type': 'or',
+                            'conditions': [
+                                {
+                                    'type': 'item_check',
+                                    'item': {'type': 'constant', 'value': 'Path of Resilience'}
+                                },
+                                {
+                                    'type': 'item_check',
+                                    'item': {'type': 'constant', 'value': 'Meditation'}
+                                }
+                            ]
+                        },
+                        {
+                            'type': 'item_check',
+                            'item': {'type': 'constant', 'value': 'Second Wind'}
+                        }
+                    ]
+                }
+
+            # can_double_dboost: state.has_all({"Path of Resilience", "Meditation", "Second Wind"}, player)
+            elif capability == 'double_dboost':
+                logger.debug("Detected can_double_dboost capability, converting to item checks")
+                return {
+                    'type': 'and',
+                    'conditions': [
+                        {
+                            'type': 'item_check',
+                            'item': {'type': 'constant', 'value': 'Path of Resilience'}
+                        },
+                        {
+                            'type': 'item_check',
+                            'item': {'type': 'constant', 'value': 'Meditation'}
+                        },
+                        {
+                            'type': 'item_check',
+                            'item': {'type': 'constant', 'value': 'Second Wind'}
+                        }
+                    ]
+                }
+
+        # For and/or rules, recursively expand conditions to catch nested capability rules
+        if rule.get('type') in ['and', 'or']:
+            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
+
+        return rule
+
     def get_progression_mapping(self, world) -> Dict[str, Any]:
         """
         Export progression mapping for Time Shards -> Shards accumulation.
