@@ -46,28 +46,20 @@ class SMGameExportHandler(GenericGameExportHandler):
         """Try to simplify evalSMBool calls with known patterns.
 
         Patterns:
-        1. evalSMBool(func(state.smbm[player]), state.smbm[player].maxDiff)
-           where func or rule is a helper call - always simplify to True
-        2. evalSMBool(SMBool(True), maxDiff) -> constant True
+        1. evalSMBool(SMBool(True), maxDiff) -> constant True
         """
         if len(args) < 2:
             return None
 
         smbool_arg = args[0]
 
-        # Pattern: func(state.smbm[player]) or rule(state.smbm[player]) where func/rule are helpers
-        # These are VARIA logic functions that we can't replicate in JavaScript
-        # The Python backend has already evaluated these, so we trust the sphere log
-        if smbool_arg.get('type') == 'helper' and smbool_arg.get('name') in ('func', 'rule'):
-            # Simplify to constant True - actual logic is enforced by sphere log comparison
-            logger.debug(f"SM: Simplifying evalSMBool({smbool_arg.get('name')}(...), maxDiff) to constant True")
-            return {'type': 'constant', 'value': True}
-
         # Pattern: Direct SMBool(True) construction
         if self._check_smbool_true_pattern(smbool_arg):
             logger.debug("SM: Found SMBool(True) pattern, simplifying to constant True")
             return {'type': 'constant', 'value': True}
 
+        # For other patterns, DON'T simplify - let the frontend evaluate them
+        # The frontend needs to actually evaluate the logic to match the sphere log
         return None
 
     _expand_call_count = 0

@@ -316,8 +316,25 @@ class ASTVisitorMixin:
 
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
                  try:
-                     # Check if 'state' is passed as an argument using original AST nodes
-                     has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
+                     # Helper function to check if an AST node references 'state'
+                     def references_state(node):
+                         """Check if an AST node references the name 'state' anywhere."""
+                         if isinstance(node, ast.Name) and node.id == 'state':
+                             return True
+                         # Check in attribute access: state.smbm
+                         if isinstance(node, ast.Attribute):
+                             return references_state(node.value)
+                         # Check in subscript: state.smbm[player]
+                         if isinstance(node, ast.Subscript):
+                             return references_state(node.value)
+                         # Check in other composite nodes
+                         for child in ast.walk(node):
+                             if isinstance(child, ast.Name) and child.id == 'state':
+                                 return True
+                         return False
+
+                     # Check if 'state' is passed as an argument (directly or indirectly)
+                     has_state_arg = any(references_state(arg) for arg in node.args)
                      # Attempt recursion if state arg is present
                      if has_state_arg:
                           # Import analyze_rule locally to avoid forward reference issues
