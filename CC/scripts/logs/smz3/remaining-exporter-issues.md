@@ -1,46 +1,46 @@
 # SMZ3 Remaining Exporter Issues
 
-## Issue 1: Medallion Entrance Rules Return None
+## Issue 1: Region-Specific Helper Methods Need Inlining
 
 **Priority:** High
-**Status:** Not Started
-**Location:** Menu->Misery Mire and Menu->Turtle Rock entrances
+**Status:** In Progress
+**Location:** Various dungeon locations (e.g., Tower of Hera - Moldorm)
 
 ### Description
-The entrance rules for Misery Mire and Turtle Rock are returning error rules with type "error" and message "Analysis did not produce a result structure (returned None)."
+Dungeon-specific helper methods like `CanBeatBoss` are being converted to generic helpers (e.g., `smz3_CanBeatBoss`), but each dungeon has its own specific requirements. The generic helper is too permissive, causing locations to be accessible earlier than they should be.
 
-### Root Cause
-The CanEnter methods for these dungeons use `self.Medallion` compared to enum values:
-
+For example, Tower of Hera - Moldorm requires:
 ```python
-def CanEnter(self, items: Progression):
-    from ...WorldState import Medallion
-    return (items.Bombos if self.Medallion == Medallion.Bombos else (
-                items.Ether if self.Medallion == Medallion.Ether else items.Quake)) and items.Sword and \
-        items.MoonPearl and (items.Boots or items.Hookshot) and \
-        self.world.CanEnter("Dark World Mire", items)
+lambda items: items.BigKeyTH and self.CanBeatBoss(items)
+
+def CanBeatBoss(self, items: Progression):
+    return items.Sword or items.Hammer
 ```
 
-The analyzer appears to be unable to handle the nested ternary conditional with `self.Medallion` enum comparisons and returns None.
+But our generic smz3_CanBeatBoss allows many more weapons (Bow, Firerod, Icerod, Byrna, Somaria), making the location accessible too early.
+
+### Root Cause
+When the analyzer encounters `self.MethodName(items)`, it converts it to a helper call. The exporter then adds the `smz3_` prefix. However, methods like `CanBeatBoss` are defined differently in each dungeon region class, so using a single generic helper doesn't work.
 
 ### Files Affected
 - `exporter/games/smz3.py` - SMZ3 game exporter
-- `exporter/analyzer.py` - Rule analyzer (may need to handle enum comparisons)
-- `worlds/smz3/TotalSMZ3/Regions/Zelda/MiseryMire.py:37-42` - Source Python code
-- `worlds/smz3/TotalSMZ3/Regions/Zelda/TurtleRock.py:49-54` - Source Python code
+- `exporter/analyzer.py` - Rule analyzer
+- `worlds/smz3/TotalSMZ3/Regions/Zelda/*.py` - Various dungeon region files
+- `frontend/modules/shared/gameLogic/smz3/smz3Logic.js` - SMZ3 helper functions
 
-### Proposed Solution
-The exporter needs to handle the medallion requirement specially. Options:
-1. **Add medallion resolution in the exporter**: Check the region's `Medallion` attribute and generate the appropriate rule directly
-2. **Improve analyzer handling of enums**: Make the analyzer better at handling enum comparisons
-3. **Use dungeon metadata**: Export medallion requirements as part of dungeon data and check it separately
+### Proposed Solutions
+1. **Inline region-specific methods**: When extracting location rules, detect calls to `self.MethodName()` and inline the method logic directly into the rule
+2. **Region-specific helpers**: Create unique helper names like `smz3_TowerOfHera_CanBeatBoss` for each region
+3. **Pass region context**: Modify helpers to accept region name as parameter and implement region-specific logic
+
+Option 1 (inlining) is preferred as it's most accurate to the Python logic.
 
 ### Expected Behavior
-The entrance rules should correctly reflect the medallion requirement (Bombos, Ether, or Quake) along with the other access requirements (Sword, MoonPearl, Boots/Hookshot, and ability to enter the respective overworld region).
+Each location's access rule should accurately reflect the specific requirements from its region's methods, not a generic approximation.
 
 ### Testing
 After fix:
 1. Run generation: `python Generate.py --weights_file_path "Templates/SMZ3.yaml" --multi 1 --seed 1`
-2. Check that no error rules exist in rules.json
-3. Verify the Misery Mire and Turtle Rock entrance rules are correct
-4. Run spoiler test: `npm test --mode=test-spoilers --game=smz3 --seed=1`
+2. Check Tower of Hera - Moldorm access rule only requires Sword OR Hammer (not other weapons)
+3. Run spoiler test: `npm test --mode=test-spoilers --game=smz3 --seed=1`
+4. Verify locations are accessible in the correct spheres
