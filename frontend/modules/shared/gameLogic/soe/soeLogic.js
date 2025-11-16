@@ -16,8 +16,6 @@
  */
 function countProgress(snapshot, staticData, progressId, visitedRules = new Set()) {
   try {
-    const DEBUG = false; // Enable debug logging
-
     if (!snapshot || !staticData) {
       console.error('[SOE] countProgress: missing snapshot or staticData');
       return 0;
@@ -33,13 +31,6 @@ function countProgress(snapshot, staticData, progressId, visitedRules = new Set(
       return 0;
     }
 
-    if (DEBUG && progressId === 1) {
-      console.log('[SOE countProgress] Checking progress_id', progressId);
-      console.log('[SOE countProgress] Inventory:', Object.keys(inventory).filter(k => inventory[k] > 0));
-      console.log('[SOE countProgress] prog_items:', snapshot.prog_items ? Object.keys(snapshot.prog_items).filter(k => snapshot.prog_items[k] > 0) : 'undefined');
-      console.log('[SOE countProgress] Items with provides:', Object.keys(items).filter(k => items[k]?.provides?.length > 0).length);
-    }
-
     let count = 0;
 
     // Count progress from items in inventory
@@ -50,9 +41,6 @@ function countProgress(snapshot, staticData, progressId, visitedRules = new Set(
           for (const provide of itemData.provides) {
             if (provide.progress_id === progressId) {
               count += itemCount * provide.count;
-              if (DEBUG && progressId === 1) {
-                console.log(`[SOE countProgress] Found ${itemName} provides progress_id ${progressId}: +${itemCount * provide.count}`);
-              }
             }
           }
         }
@@ -129,12 +117,6 @@ export function has(snapshot, staticData, progressId, requiredCount = 1) {
       return false;
     }
 
-    // Debug logging
-    const DEBUG = false; // Set to true to enable debug logging
-    if (DEBUG) {
-      console.log(`[SOE has] Checking progress_id ${progressId}, required count: ${requiredCount}`);
-    }
-
     // Special handling for P_ALLOW_OOB (25) and P_ALLOW_SEQUENCE_BREAKS (26)
     // These are controlled by settings
     const settings = staticData?.settings?.[1];
@@ -162,13 +144,6 @@ export function has(snapshot, staticData, progressId, requiredCount = 1) {
 
     const count = countProgress(snapshot, staticData, progressId);
     const result = count >= requiredCount;
-
-    if (DEBUG) {
-      console.log(`[SOE has] progress_id ${progressId}: count=${count}, required=${requiredCount}, result=${result}`);
-      if (!result && count > 0) {
-        console.log(`[SOE has] MISSING: progress_id ${progressId} has ${count} but needs ${requiredCount}`);
-      }
-    }
 
     return result;
   } catch (error) {
