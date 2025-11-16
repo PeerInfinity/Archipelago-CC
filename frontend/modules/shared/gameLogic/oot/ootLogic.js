@@ -250,18 +250,184 @@ function createEvaluationContext(snapshot, staticData) {
       return dungeonShortcuts.includes('Dodongos Cavern');
     },
 
-    // Logic trick helpers (all default to false for safety)
-    logic_visible_collisions: () => false,
-    logic_kakariko_rooftop_gs: () => false,
-    logic_man_on_roof: () => false,
-    logic_mido_backflip: () => false,
-    logic_dmt_climb_hovers: () => false,
-    logic_adult_kokiri_gs: () => false,
-    logic_lab_diving: () => false,
-    logic_windmill_poh: () => false,
-    logic_graveyard_poh: () => false,
-    logic_zora_river_lower: () => false,
-    logic_link_goron_dins: () => false,
+    // Logic trick helpers - check if trick is enabled in settings
+    logic_visible_collisions: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Visible Collision');
+    },
+    logic_kakariko_rooftop_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Kakariko Rooftop GS');
+    },
+    logic_man_on_roof: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Man on Roof');
+    },
+    logic_mido_backflip: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Mido Backflip');
+    },
+    logic_dmt_climb_hovers: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('DMT Climb with Hover Boots');
+    },
+    logic_adult_kokiri_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Adult Kokiri GS');
+    },
+    logic_lab_diving: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Lab Diving');
+    },
+    logic_windmill_poh: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Windmill PoH');
+    },
+    logic_graveyard_poh: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Graveyard PoH');
+    },
+    logic_zora_river_lower: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Zora River Lower');
+    },
+    logic_link_goron_dins: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Link Goron Dins');
+    },
+    logic_lab_wall_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Lab Wall GS');
+    },
+    logic_kakariko_tower_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Kakariko Tower GS');
+    },
+    logic_beehives_bombchus: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Beehives with Bombchus');
+    },
+    logic_grottos_without_agony: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Grottos without Stone of Agony');
+    },
+
+    // Additional helpers from LogicHelpers.json
+
+    // can_leave_forest: open_forest != 'closed' or is_adult or is_glitched or Deku_Tree_Clear
+    can_leave_forest: () => {
+      const openForest = settings?.open_forest || 'closed';
+      if (openForest !== 'closed') return true;
+      if (context.is_adult()) return true;
+      if (context.is_glitched()) return true;
+      // Check for Deku_Tree_Clear event
+      return context.hasEvent('Deku_Tree_Clear');
+    },
+
+    // has_shield: (is_adult and Hylian_Shield) or (is_child and Deku_Shield)
+    has_shield: () => {
+      if (context.is_adult()) {
+        return context.hasItem('Hylian_Shield') || context.hasItem('Buy_Hylian_Shield');
+      }
+      if (context.is_child()) {
+        return context.hasItem('Deku_Shield') || context.hasItem('Buy_Deku_Shield') ||
+               context.hasItem('Deku_Shield_Drop');
+      }
+      return false;
+    },
+
+    // can_shield: (is_adult and (Hylian_Shield or Mirror_Shield)) or (is_child and Deku_Shield)
+    can_shield: () => {
+      if (context.is_adult()) {
+        return context.hasItem('Hylian_Shield') || context.hasItem('Buy_Hylian_Shield') ||
+               context.hasItem('Mirror_Shield');
+      }
+      if (context.is_child()) {
+        return context.hasItem('Deku_Shield') || context.hasItem('Buy_Deku_Shield') ||
+               context.hasItem('Deku_Shield_Drop');
+      }
+      return false;
+    },
+
+    // deku_tree_shortcuts: 'Deku Tree' in dungeon_shortcuts
+    deku_tree_shortcuts: () => {
+      const dungeonShortcuts = settings?.dungeon_shortcuts || [];
+      return Array.isArray(dungeonShortcuts) && dungeonShortcuts.includes('Deku Tree');
+    },
+
+    // is_glitched: logic_rules != 'glitchless'
+    is_glitched: () => {
+      const logicRules = settings?.logic_rules || 'glitchless';
+      return logicRules !== 'glitchless';
+    },
+
+    // can_child_attack: is_child and (Slingshot or Boomerang or Sticks or Kokiri_Sword or has_explosives or can_use(Dins_Fire))
+    can_child_attack: () => {
+      if (!context.is_child()) return false;
+      return context.hasItem('Slingshot') || context.hasItem('Boomerang') ||
+             context.hasItem('Sticks') || context.hasItem('Buy_Deku_Stick_1') || context.hasItem('Deku_Stick_Drop') ||
+             context.hasItem('Kokiri_Sword') || context.has_explosives() ||
+             (context.hasItem('Dins_Fire') && context.hasItem('Magic_Meter'));
+    },
+
+    // can_child_damage: is_child and (Slingshot or Sticks or Kokiri_Sword or has_explosives or can_use(Dins_Fire))
+    can_child_damage: () => {
+      if (!context.is_child()) return false;
+      return context.hasItem('Slingshot') ||
+             context.hasItem('Sticks') || context.hasItem('Buy_Deku_Stick_1') || context.hasItem('Deku_Stick_Drop') ||
+             context.hasItem('Kokiri_Sword') || context.has_explosives() ||
+             (context.hasItem('Dins_Fire') && context.hasItem('Magic_Meter'));
+    },
+
+    // can_stun_deku: is_adult or (Slingshot or Boomerang or Sticks or Kokiri_Sword or has_explosives or can_use(Dins_Fire) or Nuts or Deku_Shield)
+    can_stun_deku: () => {
+      if (context.is_adult()) return true;
+      return context.hasItem('Slingshot') || context.hasItem('Boomerang') ||
+             context.hasItem('Sticks') || context.hasItem('Buy_Deku_Stick_1') || context.hasItem('Deku_Stick_Drop') ||
+             context.hasItem('Kokiri_Sword') || context.has_explosives() ||
+             (context.hasItem('Dins_Fire') && context.hasItem('Magic_Meter')) ||
+             context.hasItem('Nuts') || context.hasItem('Buy_Deku_Nut_5') || context.hasItem('Buy_Deku_Nut_10') ||
+             context.hasItem('Deku_Nut_Drop') ||
+             context.hasItem('Deku_Shield') || context.hasItem('Buy_Deku_Shield') || context.hasItem('Deku_Shield_Drop');
+    },
+
+    // has_all_stones: Kokiri_Emerald and Goron_Ruby and Zora_Sapphire
+    has_all_stones: () => {
+      return context.hasItem('Kokiri_Emerald') &&
+             context.hasItem('Goron_Ruby') &&
+             context.hasItem('Zora_Sapphire');
+    },
+
+    // has_all_medallions: Forest_Medallion and Fire_Medallion and Water_Medallion and Shadow_Medallion and Spirit_Medallion and Light_Medallion
+    has_all_medallions: () => {
+      return context.hasItem('Forest_Medallion') &&
+             context.hasItem('Fire_Medallion') &&
+             context.hasItem('Water_Medallion') &&
+             context.hasItem('Shadow_Medallion') &&
+             context.hasItem('Spirit_Medallion') &&
+             context.hasItem('Light_Medallion');
+    },
+
+    // can_break_upper_beehive: can_use(Boomerang) or can_use(Hookshot) or (logic_beehives_bombchus and has_bombchus)
+    can_break_upper_beehive: () => {
+      // can_use(Boomerang) - child only
+      const canUseBoomerang = context.is_child() && context.hasItem('Boomerang');
+      // can_use(Hookshot) - adult only
+      const canUseHookshot = context.is_adult() && context.hasItem('Progressive_Hookshot');
+      const beehiveTrick = context.logic_beehives_bombchus() && context.has_bombchus();
+      return canUseBoomerang || canUseHookshot || beehiveTrick;
+    },
+
+    // can_break_lower_beehive: can_use(Boomerang) or can_use(Hookshot) or Bombs or (logic_beehives_bombchus and has_bombchus)
+    can_break_lower_beehive: () => {
+      // can_use(Boomerang) - child only
+      const canUseBoomerang = context.is_child() && context.hasItem('Boomerang');
+      // can_use(Hookshot) - adult only
+      const canUseHookshot = context.is_adult() && context.hasItem('Progressive_Hookshot');
+      const hasBombs = context.hasItem('Bomb_Bag');
+      const beehiveTrick = context.logic_beehives_bombchus() && context.has_bombchus();
+      return canUseBoomerang || canUseHookshot || hasBombs || beehiveTrick;
+    },
 
     // found_bombchus helper (from LogicHelpers.json)
     found_bombchus: () => {
