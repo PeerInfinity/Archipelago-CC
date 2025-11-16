@@ -798,31 +798,8 @@
                         {
                           "type": "not",
                           "condition": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "subscript",
-                                "value": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "state"
-                                    },
-                                    "attr": "multiworld"
-                                  },
-                                  "attr": "worlds"
-                                },
-                                "index": {
-                                  "type": "name",
-                                  "name": "player"
-                                }
-                              },
-                              "attr": "options"
-                            },
-                            "attr": "shuffle_midway_bells"
+                            "type": "constant",
+                            "value": 0
                           }
                         }
                       ]
@@ -38123,7 +38100,8 @@
     "1": {
       "game": "Super Mario Land 2",
       "assume_bidirectional_exits": false,
-      "required_golden_coins": 6
+      "required_golden_coins": 6,
+      "shuffle_midway_bells": 0
     }
   },
   "game_info": {
