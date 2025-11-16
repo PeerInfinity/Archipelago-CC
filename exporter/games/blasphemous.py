@@ -738,43 +738,43 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
         
     def _expand_dynamic_helper(self, helper_name: str):
         """Expand helpers based on common Blasphemous patterns."""
-        
+
+        # All helpers should be returned as helper function calls
+        # that will be looked up in blasphemousLogic.js
+        # The JavaScript helper functions will handle the actual logic
+
         # Boss defeat patterns
         if helper_name.startswith('defeated_'):
-            boss_name = helper_name.replace('defeated_', '').replace('_', ' ').title()
             return {
-                'type': 'boss_check',
-                'boss': boss_name,
-                'description': f'Requires defeating {boss_name}'
+                'type': 'helper',
+                'name': helper_name,
+                'description': f'Requires defeating {helper_name}'
             }
-            
-        # Area access patterns  
+
+        # Area access patterns
         if helper_name.startswith('can_reach_'):
-            area_name = helper_name.replace('can_reach_', '').replace('_', ' ').title()
             return {
-                'type': 'can_reach',
-                'region': area_name,
-                'description': f'Requires access to {area_name}'
+                'type': 'helper',
+                'name': helper_name,
+                'description': f'Requires region access helper: {helper_name}'
             }
-            
-        # Item requirement patterns
+
+        # Item requirement patterns with has_ prefix
         if helper_name.startswith('has_'):
-            item_name = helper_name.replace('has_', '').replace('_', ' ').title()
             return {
-                'type': 'item_check',
-                'item': item_name,
-                'description': f'Requires having {item_name}'
+                'type': 'helper',
+                'name': helper_name,
+                'description': f'Requires item helper: {helper_name}'
             }
-            
+
         # Ability patterns
         if helper_name.startswith('can_'):
-            ability = helper_name.replace('can_', '').replace('_', ' ')
             return {
-                'type': 'capability',
-                'capability': ability,
-                'description': f'Requires ability to {ability}'
+                'type': 'helper',
+                'name': helper_name,
+                'description': f'Requires ability helper: {helper_name}'
             }
-            
+
         # Default to preserving unknown helpers
         return None
         
@@ -844,8 +844,13 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
 
         blasphemous_items_data = {}
 
-        # Process regular items from item_table
-        for item_name, item_data in item_table.items():
+        # Process regular items from item_table (which is a list of dicts in Blasphemous)
+        for item_data in item_table:
+            # item_data is a dict with 'name', 'count', and 'classification' keys
+            item_name = item_data.get('name')
+            if not item_name:
+                continue
+
             # Get groups this item belongs to
             groups = [
                 group_name for group_name, items in getattr(world, 'item_name_groups', {}).items()
@@ -853,7 +858,7 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
             ]
 
             try:
-                item_classification = getattr(item_data, 'classification', None)
+                item_classification = item_data.get('classification')
                 is_advancement = item_classification == ItemClassification.progression if item_classification else False
                 is_useful = item_classification == ItemClassification.useful if item_classification else False
                 is_trap = item_classification == ItemClassification.trap if item_classification else False
@@ -865,14 +870,14 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
 
             blasphemous_items_data[item_name] = {
                 'name': item_name,
-                'id': getattr(item_data, 'code', None),
+                'id': None,  # Blasphemous items in item_table don't have codes
                 'groups': sorted(groups),
                 'advancement': is_advancement,
                 'useful': is_useful,
                 'trap': is_trap,
                 'event': False,  # Regular items are not events
                 'type': None,
-                'max_count': 1
+                'max_count': item_data.get('count', 1)
             }
 
         # Handle dynamically created event items that are placed at locations
