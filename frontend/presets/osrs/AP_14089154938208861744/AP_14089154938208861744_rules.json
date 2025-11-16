@@ -62,25 +62,14 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "quest_points"
-                },
+                "type": "helper",
+                "name": "quest_points",
                 "args": []
               },
               "op": ">",
               "right": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "location_row"
-                },
-                "attr": "qp"
+                "type": "constant",
+                "value": 6
               }
             },
             "item": {
@@ -96,25 +85,14 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "self"
-                  },
-                  "attr": "quest_points"
-                },
+                "type": "helper",
+                "name": "quest_points",
                 "args": []
               },
               "op": ">",
               "right": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "location_row"
-                },
-                "attr": "qp"
+                "type": "constant",
+                "value": 2
               }
             },
             "item": {
@@ -212,25 +190,14 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "location_row"
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 2
                   }
                 },
                 {
@@ -743,16 +710,18 @@
             "name": "Points: Cook's Assistant",
             "id": 458900,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Cook's Assistant"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "1 QP (Cook's Assistant)",
@@ -827,16 +796,18 @@
             "name": "Points: The Restless Ghost",
             "id": 458902,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: The Restless Ghost"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "1 QP (The Restless Ghost)",
@@ -911,16 +882,18 @@
             "name": "Points: Rune Mysteries",
             "id": 458916,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Rune Mysteries"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "1 QP (Rune Mysteries)",
@@ -995,16 +968,18 @@
             "name": "Points: X Marks the Spot",
             "id": 458919,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: X Marks the Spot"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "1 QP (X Marks The Spot)",
@@ -1134,16 +1109,18 @@
             "name": "Points: Misthalin Mystery",
             "id": 458917,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Misthalin Mystery"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "1 QP (Misthalin Mystery)",
@@ -1410,16 +1387,18 @@
             "name": "Points: Sheep Shearer",
             "id": 458904,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Sheep Shearer"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "1 QP (Sheep Shearer)",
@@ -2216,16 +2195,18 @@
             "name": "Points: Demon Slayer",
             "id": 458901,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Demon Slayer"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "3 QP (Demon Slayer)",
@@ -2319,16 +2300,18 @@
             "name": "Points: Romeo & Juliet",
             "id": 458903,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Romeo & Juliet"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "5 QP (Romeo & Juliet)",
@@ -2422,16 +2405,18 @@
             "name": "Points: Shield of Arrav",
             "id": 458905,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Shield of Arrav"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "1 QP (Shield of Arrav)",
@@ -3789,16 +3774,18 @@
             "name": "Points: Ernest the Chicken",
             "id": 458906,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Ernest the Chicken"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "4 QP (Ernest the Chicken)",
@@ -4057,16 +4044,18 @@
             "name": "Points: Doric's Quest",
             "id": 458910,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Doric's Quest"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "1 QP (Doric's Quest)",
@@ -4188,25 +4177,14 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "location_row"
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 12
                   }
                 },
                 {
@@ -4324,16 +4302,18 @@
             "name": "Points: Black Knights' Fortress",
             "id": 458911,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Black Knights' Fortress"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "3 QP (Black Knights' Fortress)",
@@ -4351,25 +4331,14 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "location_row"
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 16
                   }
                 },
                 {
@@ -4513,16 +4482,18 @@
             "name": "Points: Below Ice Mountain",
             "id": 458920,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Below Ice Mountain"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "1 QP (Below Ice Mountain)",
@@ -4672,16 +4643,18 @@
             "name": "Points: Goblin Diplomacy",
             "id": 458914,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Goblin Diplomacy"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "5 QP (Goblin Diplomacy)",
@@ -5217,16 +5190,18 @@
             "name": "Points: The Knight's Sword",
             "id": 458913,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: The Knight's Sword"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "1 QP (The Knight's Sword)",
@@ -5421,15 +5396,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">=",
@@ -5727,16 +5695,18 @@
             "name": "Points: Pirate's Treasure",
             "id": 458915,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Pirate's Treasure"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "2 QP (Pirate's Treasure)",
@@ -5874,15 +5844,8 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "world"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">=",
@@ -6180,25 +6143,14 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "location_row"
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 32
                   }
                 },
                 {
@@ -6608,16 +6560,18 @@
             "name": "Points: Witch's Potion",
             "id": 458912,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Witch's Potion"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "1 QP (Witch's Potion)",
@@ -6692,16 +6646,18 @@
             "name": "Points: The Corsair Curse",
             "id": 458918,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: The Corsair Curse"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "2 QP (The Corsair Curse)",
@@ -7604,16 +7560,18 @@
             "name": "Points: Vampyre Slayer",
             "id": 458907,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Vampyre Slayer"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "3 QP (Vampyre Slayer)",
@@ -7727,16 +7685,18 @@
             "name": "Points: Imp Catcher",
             "id": 458908,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Imp Catcher"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "1 QP (Imp Catcher)",
@@ -8083,16 +8043,18 @@
             "name": "Points: Prince Ali Rescue",
             "id": 458909,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "loc"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Quest: Prince Ali Rescue"
                 },
-                "attr": "can_reach"
-              },
-              "args": []
+                {
+                  "type": "constant",
+                  "value": "Location"
+                }
+              ]
             },
             "item": {
               "name": "3 QP (Prince Ali Rescue)",
@@ -8684,25 +8646,14 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "location_row"
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 8
                   }
                 },
                 {
@@ -8982,25 +8933,14 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "location_row"
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 4
                   }
                 },
                 {
@@ -9515,25 +9455,14 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "location_row"
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 6
                   }
                 },
                 {
@@ -9783,25 +9712,14 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "location_row"
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 6
                   }
                 },
                 {
@@ -10059,25 +9977,14 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "location_row"
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 6
                   }
                 },
                 {
@@ -10627,25 +10534,14 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "quest_points"
-                    },
+                    "type": "helper",
+                    "name": "quest_points",
                     "args": []
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "location_row"
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 2
                   }
                 },
                 {
