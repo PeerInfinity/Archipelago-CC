@@ -828,26 +828,20 @@ export class EventProcessor {
 
     // Step 3: Add virtual/event items from resolved_items that aren't in base_items
     // These are items like "Received Progression Percent" that are computed automatically
+    // Note: resolved_items contains DELTAS (new items in this sphere), not cumulative totals
     if (Object.keys(resolvedItems).length > 0) {
-      const afterSnapshot = await stateManager.getFullSnapshot();
-      const afterInventory = afterSnapshot.inventory || {};
-
-      for (const [itemName, expectedCount] of Object.entries(resolvedItems)) {
+      for (const [itemName, deltaCount] of Object.entries(resolvedItems)) {
         // Skip if this item is already in base_items (we've already processed it)
         if (itemName in newItems) {
           continue;
         }
 
-        const currentCount = afterInventory[itemName] || 0;
-        const itemsToAdd = expectedCount - currentCount;
-
-        if (itemsToAdd > 0) {
-          this.logCallback('info', `  [Player ${this.playerId}] Adding ${itemsToAdd}x virtual/event item: "${itemName}" (from resolved_items)`);
-          for (let i = 0; i < itemsToAdd; i++) {
+        // deltaCount is the number of this item added in this sphere
+        if (deltaCount > 0) {
+          this.logCallback('info', `  [Player ${this.playerId}] Adding ${deltaCount}x virtual/event item: "${itemName}" (from resolved_items)`);
+          for (let i = 0; i < deltaCount; i++) {
             await stateManager.addItemToInventory(itemName, 1);
           }
-        } else if (itemsToAdd < 0) {
-          this.logCallback('warn', `  [Player ${this.playerId}] Virtual item "${itemName}" has ${currentCount} but expected ${expectedCount}`);
         }
       }
     }
