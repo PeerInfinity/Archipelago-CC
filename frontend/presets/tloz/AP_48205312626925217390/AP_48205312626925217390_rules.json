@@ -3,7 +3,7 @@
   "game_name": "The Legend of Zelda",
   "game_directory": "tloz",
   "archipelago_version": "0.6.4",
-  "generation_seed": 1,
+  "generation_seed": 9,
   "player_names": {
     "1": "Player1"
   },
@@ -27,7 +27,7 @@
               }
             },
             "item": {
-              "name": "Small Key",
+              "name": "Five Rupees",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -44,9 +44,9 @@
               }
             },
             "item": {
-              "name": "Stepladder",
+              "name": "Small Key",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -61,9 +61,9 @@
               }
             },
             "item": {
-              "name": "Candle",
+              "name": "Five Rupees",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -78,9 +78,9 @@
               }
             },
             "item": {
-              "name": "Magical Rod",
+              "name": "Small Key",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -95,7 +95,7 @@
               }
             },
             "item": {
-              "name": "Bomb",
+              "name": "Recovery Heart",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -141,7 +141,7 @@
               }
             },
             "item": {
-              "name": "Small Key",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -158,7 +158,7 @@
               }
             },
             "item": {
-              "name": "Magical Boomerang",
+              "name": "Five Rupees",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -175,9 +175,9 @@
               }
             },
             "item": {
-              "name": "Small Key",
+              "name": "Heart Container",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -209,7 +209,7 @@
               }
             },
             "item": {
-              "name": "Bomb",
+              "name": "Five Rupees",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -226,7 +226,7 @@
               }
             },
             "item": {
-              "name": "Small Key",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -380,7 +380,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Magical Shield",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -492,9 +492,9 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Recorder",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -604,9 +604,9 @@
               ]
             },
             "item": {
-              "name": "Sword",
+              "name": "Fairy",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -716,9 +716,9 @@
               ]
             },
             "item": {
-              "name": "Heart Container",
+              "name": "Small Key",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -952,9 +952,9 @@
               ]
             },
             "item": {
-              "name": "Heart Container",
+              "name": "Five Rupees",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1064,7 +1064,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Water of Life (Blue)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1176,7 +1176,7 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1288,7 +1288,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1400,7 +1400,7 @@
               ]
             },
             "item": {
-              "name": "Heart Container",
+              "name": "Blue Ring",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1512,9 +1512,9 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Candle",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1624,7 +1624,7 @@
               ]
             },
             "item": {
-              "name": "Fairy",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1873,7 +1873,7 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1985,7 +1985,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2097,7 +2097,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Magical Boomerang",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2209,7 +2209,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Water of Life (Blue)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2445,7 +2445,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Water of Life (Blue)",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2557,9 +2557,9 @@
               ]
             },
             "item": {
-              "name": "Heart Container",
+              "name": "Five Rupees",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2781,7 +2781,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2893,7 +2893,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Five Rupees",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3005,7 +3005,7 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3117,9 +3117,9 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Silver Arrow",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3229,9 +3229,9 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Heart Container",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3341,9 +3341,9 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Stepladder",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3644,7 +3644,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3822,7 +3822,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3988,7 +3988,7 @@
               ]
             },
             "item": {
-              "name": "Boomerang",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4570,7 +4570,7 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4736,7 +4736,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Magical Shield",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4902,7 +4902,7 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5080,7 +5080,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5591,7 +5591,7 @@
               ]
             },
             "item": {
-              "name": "Magical Key",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5751,7 +5751,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Five Rupees",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5923,7 +5923,7 @@
               ]
             },
             "item": {
-              "name": "Water of Life (Blue)",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6267,9 +6267,9 @@
               ]
             },
             "item": {
-              "name": "Sword",
+              "name": "Boomerang",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6427,9 +6427,9 @@
               ]
             },
             "item": {
-              "name": "Book of Magic",
+              "name": "Small Key",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6587,7 +6587,7 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Fairy",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6783,9 +6783,9 @@
               ]
             },
             "item": {
-              "name": "Heart Container",
+              "name": "Water of Life (Red)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6943,9 +6943,9 @@
               ]
             },
             "item": {
-              "name": "Fairy",
+              "name": "Red Ring",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -7139,9 +7139,9 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Heart Container",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -7299,9 +7299,9 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Letter",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -7619,7 +7619,7 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Clock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7779,7 +7779,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Five Rupees",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8284,7 +8284,7 @@
               ]
             },
             "item": {
-              "name": "Magical Shield",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8444,7 +8444,7 @@
               ]
             },
             "item": {
-              "name": "Fairy",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8628,9 +8628,9 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Heart Container",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8984,9 +8984,9 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Food",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9144,7 +9144,7 @@
               ]
             },
             "item": {
-              "name": "Fairy",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9464,9 +9464,9 @@
               ]
             },
             "item": {
-              "name": "Red Ring",
+              "name": "Power Bracelet",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9784,7 +9784,7 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9944,9 +9944,9 @@
               ]
             },
             "item": {
-              "name": "Letter",
+              "name": "Five Rupees",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -10313,7 +10313,7 @@
               ]
             },
             "item": {
-              "name": "Magical Sword",
+              "name": "Heart Container",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10669,7 +10669,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Magical Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10853,9 +10853,9 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Magical Rod",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -11221,7 +11221,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11577,7 +11577,7 @@
               ]
             },
             "item": {
-              "name": "Magical Shield",
+              "name": "Five Rupees",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11749,7 +11749,7 @@
               ]
             },
             "item": {
-              "name": "Recovery Heart",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -11921,7 +11921,7 @@
               ]
             },
             "item": {
-              "name": "Magical Shield",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12093,9 +12093,9 @@
               ]
             },
             "item": {
-              "name": "Heart Container",
+              "name": "Fairy",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -12265,7 +12265,7 @@
               ]
             },
             "item": {
-              "name": "Red Candle",
+              "name": "Heart Container",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -12449,7 +12449,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -12633,9 +12633,9 @@
               ]
             },
             "item": {
-              "name": "Heart Container",
+              "name": "Small Key",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -12817,9 +12817,9 @@
               ]
             },
             "item": {
-              "name": "Raft",
+              "name": "Small Key",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -12989,7 +12989,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Five Rupees",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13161,9 +13161,9 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Heart Container",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -13333,7 +13333,7 @@
               ]
             },
             "item": {
-              "name": "Water of Life (Blue)",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -13934,7 +13934,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14106,7 +14106,7 @@
               ]
             },
             "item": {
-              "name": "Recorder",
+              "name": "Sword",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -14278,7 +14278,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Five Rupees",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -14450,9 +14450,9 @@
               ]
             },
             "item": {
-              "name": "Blue Ring",
+              "name": "Fairy",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -14646,7 +14646,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Five Rupees",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15026,7 +15026,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Fairy",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15198,7 +15198,7 @@
               ]
             },
             "item": {
-              "name": "Fairy",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15614,7 +15614,7 @@
               ]
             },
             "item": {
-              "name": "Water of Life (Red)",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -15786,9 +15786,9 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Bow",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -15958,9 +15958,9 @@
               ]
             },
             "item": {
-              "name": "Heart Container",
+              "name": "Fairy",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -16178,7 +16178,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -16350,7 +16350,7 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -16558,9 +16558,9 @@
               ]
             },
             "item": {
-              "name": "Food",
+              "name": "Clock",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -16730,7 +16730,7 @@
               ]
             },
             "item": {
-              "name": "Water of Life (Blue)",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -17074,7 +17074,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -17459,9 +17459,9 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Heart Container",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -17647,7 +17647,7 @@
               ]
             },
             "item": {
-              "name": "Fairy",
+              "name": "Five Rupees",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -17835,7 +17835,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -18023,7 +18023,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -18211,7 +18211,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -18399,9 +18399,9 @@
               ]
             },
             "item": {
-              "name": "Heart Container",
+              "name": "Small Key",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -18775,7 +18775,7 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -18963,9 +18963,9 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Heart Container",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -19151,9 +19151,9 @@
               ]
             },
             "item": {
-              "name": "Silver Arrow",
+              "name": "Bomb",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -19339,7 +19339,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -19527,9 +19527,9 @@
               ]
             },
             "item": {
-              "name": "Heart Container",
+              "name": "Magical Shield",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -19715,9 +19715,9 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Raft",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -20091,9 +20091,9 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Heart Container",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -20279,9 +20279,9 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "White Sword",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -20467,7 +20467,7 @@
               ]
             },
             "item": {
-              "name": "Bomb",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -20843,7 +20843,7 @@
               ]
             },
             "item": {
-              "name": "Power Bracelet",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -21031,9 +21031,9 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Heart Container",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -21550,7 +21550,7 @@
               "value": true
             },
             "item": {
-              "name": "White Sword",
+              "name": "Red Candle",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -21571,9 +21571,9 @@
               }
             },
             "item": {
-              "name": "Heart Container",
+              "name": "Five Rupees",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -21621,7 +21621,7 @@
               ]
             },
             "item": {
-              "name": "Heart Container",
+              "name": "Book of Magic",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -21679,9 +21679,9 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Magical Sword",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -21693,7 +21693,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Key",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -21710,9 +21710,9 @@
               }
             },
             "item": {
-              "name": "Food",
+              "name": "Small Key",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -21724,7 +21724,7 @@
               "value": true
             },
             "item": {
-              "name": "Clock",
+              "name": "Five Rupees",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -21741,40 +21741,6 @@
               }
             },
             "item": {
-              "name": "Small Key",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Arrow Shop Item Middle",
-            "id": 7141,
-            "access_rule": {
-              "type": "group_check",
-              "group": {
-                "type": "constant",
-                "value": "weapons"
-              }
-            },
-            "item": {
-              "name": "Bomb",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Arrow Shop Item Right",
-            "id": 7142,
-            "access_rule": {
-              "type": "group_check",
-              "group": {
-                "type": "constant",
-                "value": "weapons"
-              }
-            },
-            "item": {
               "name": "Arrow",
               "player": 1,
               "advancement": true,
@@ -21782,8 +21748,8 @@
             }
           },
           {
-            "name": "Candle Shop Item Left",
-            "id": 7143,
+            "name": "Arrow Shop Item Middle",
+            "id": 7141,
             "access_rule": {
               "type": "group_check",
               "group": {
@@ -21799,6 +21765,40 @@
             }
           },
           {
+            "name": "Arrow Shop Item Right",
+            "id": 7142,
+            "access_rule": {
+              "type": "group_check",
+              "group": {
+                "type": "constant",
+                "value": "weapons"
+              }
+            },
+            "item": {
+              "name": "Small Key",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Candle Shop Item Left",
+            "id": 7143,
+            "access_rule": {
+              "type": "group_check",
+              "group": {
+                "type": "constant",
+                "value": "weapons"
+              }
+            },
+            "item": {
+              "name": "Heart Container",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
             "name": "Candle Shop Item Middle",
             "id": 7144,
             "access_rule": {
@@ -21809,7 +21809,7 @@
               }
             },
             "item": {
-              "name": "Water of Life (Red)",
+              "name": "Bomb",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -21826,9 +21826,9 @@
               }
             },
             "item": {
-              "name": "Bow",
+              "name": "Water of Life (Red)",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -21860,9 +21860,9 @@
               }
             },
             "item": {
-              "name": "Clock",
+              "name": "Bomb",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -21877,7 +21877,7 @@
               }
             },
             "item": {
-              "name": "Clock",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -21918,9 +21918,9 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Sword",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -21959,7 +21959,7 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -22029,9 +22029,9 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Food",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -22058,7 +22058,7 @@
               ]
             },
             "item": {
-              "name": "Five Rupees",
+              "name": "Small Key",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -22087,7 +22087,7 @@
               ]
             },
             "item": {
-              "name": "Small Key",
+              "name": "Clock",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -22212,7 +22212,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Book of Magic": {
         "name": "Book of Magic",
@@ -22295,7 +22295,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Magical Sword": {
         "name": "Magical Sword",
@@ -22721,7 +22721,7 @@
       "Raft": 2,
       "Recorder": 2,
       "Recovery Heart": 2,
-      "Red Candle": 2,
+      "Red Candle": 1,
       "Red Ring": 2,
       "Rescued Zelda!": 1,
       "Silver Arrow": 2,
@@ -22732,7 +22732,7 @@
       "Triforce of Power": 1,
       "Water of Life (Blue)": 6,
       "Water of Life (Red)": 3,
-      "White Sword": 1
+      "White Sword": 2
     }
   },
   "progression_mapping": {

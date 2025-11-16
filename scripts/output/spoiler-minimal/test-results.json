@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-15T23:39:33.036230",
-    "last_updated": "2025-11-15T23:39:33.036237",
+    "last_updated": "2025-11-16T01:13:34.758652",
     "script_version": "1.0.0"
   },
   "results": {
@@ -302,54 +302,67 @@
       }
     },
     "Blasphemous.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
-      },
       "consecutive_passes_before_failure": 0,
+      "first_failure_reason": "Test failed at sphere 0.0",
       "first_failure_seed": 1,
-      "game_name": "blasphemous",
-      "generation": {
-        "error_count": 1,
-        "error_type": null,
-        "processing_time_seconds": 38.79,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "blasphemous",
+          "generation": {
+            "error_count": 1,
+            "error_type": null,
+            "processing_time_seconds": 39.94,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 3342400,
+            "size_mb": 3.19
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 8,
+            "pass_fail": "failed",
+            "processing_time_seconds": 74.65,
+            "return_code": 1,
+            "sphere_reached": 0.0,
+            "success": false,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_name": "Blasphemous.yaml",
+          "timestamp": "2025-11-16T01:08:21.203993",
+          "world_info": {
+            "exporter_path": "exporter/games/blasphemous.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
+            "game_name_from_yaml": "Blasphemous",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "blasphemous",
+            "world_directory": "blasphemous"
+          }
+        }
       },
-      "rules_file": {
-        "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 3342400,
-        "size_mb": 3.19
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 10,
+      "seeds_failed": 1,
       "seeds_passed": 0,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 113.52,
-        "return_code": 1,
-        "sphere_reached": 0.0,
-        "success": false,
-        "total_spheres": 13.1,
-        "warning_count": 0
+      "stop_on_failure": true,
+      "summary": {
+        "all_passed": false,
+        "any_failed": true,
+        "failure_rate": 1.0
       },
       "template_name": "Blasphemous.yaml",
-      "timestamp": "2025-11-15T23:14:31.293183",
-      "world_info": {
-        "exporter_path": "exporter/games/blasphemous.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
-        "game_name_from_yaml": "Blasphemous",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "blasphemous",
-        "world_directory": "blasphemous"
-      }
+      "timestamp": "2025-11-16T01:08:21.159899",
+      "total_seeds_tested": 1
     },
     "Bomb Rush Cyberfunk.yaml": {
       "analysis": {
@@ -3165,54 +3178,463 @@
       }
     },
     "The Legend of Zelda.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
+      "consecutive_passes_before_failure": 10,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "tloz",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.98,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/tloz/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 899419,
+            "size_mb": 0.86
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.1,
+            "return_code": 0,
+            "sphere_reached": 10.1,
+            "success": true,
+            "total_spheres": 10.1,
+            "warning_count": 0
+          },
+          "template_name": "The Legend of Zelda.yaml",
+          "timestamp": "2025-11-16T01:10:47.975575",
+          "world_info": {
+            "exporter_path": "exporter/games/tloz.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
+            "game_name_from_yaml": "The Legend of Zelda",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "tloz",
+            "world_directory": "tloz"
+          }
+        },
+        "10": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "tloz",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.51,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/tloz/AP_55941320597534372051/AP_55941320597534372051_rules.json",
+            "size_bytes": 899420,
+            "size_mb": 0.86
+          },
+          "seed": "10",
+          "seed_id": "AP_55941320597534372051",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.97,
+            "return_code": 0,
+            "sphere_reached": 9.1,
+            "success": true,
+            "total_spheres": 9.1,
+            "warning_count": 0
+          },
+          "template_name": "The Legend of Zelda.yaml",
+          "timestamp": "2025-11-16T01:13:18.646131",
+          "world_info": {
+            "exporter_path": "exporter/games/tloz.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
+            "game_name_from_yaml": "The Legend of Zelda",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "tloz",
+            "world_directory": "tloz"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "tloz",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.31,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/tloz/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 899419,
+            "size_mb": 0.86
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.38,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
+            "total_spheres": 7.1,
+            "warning_count": 0
+          },
+          "template_name": "The Legend of Zelda.yaml",
+          "timestamp": "2025-11-16T01:11:04.588389",
+          "world_info": {
+            "exporter_path": "exporter/games/tloz.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
+            "game_name_from_yaml": "The Legend of Zelda",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "tloz",
+            "world_directory": "tloz"
+          }
+        },
+        "3": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "tloz",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.34,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/tloz/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 899419,
+            "size_mb": 0.86
+          },
+          "seed": "3",
+          "seed_id": "AP_84719271504320872445",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.15,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
+            "total_spheres": 7.1,
+            "warning_count": 0
+          },
+          "template_name": "The Legend of Zelda.yaml",
+          "timestamp": "2025-11-16T01:11:21.787610",
+          "world_info": {
+            "exporter_path": "exporter/games/tloz.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
+            "game_name_from_yaml": "The Legend of Zelda",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "tloz",
+            "world_directory": "tloz"
+          }
+        },
+        "4": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "tloz",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.45,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/tloz/AP_05594871498841892311/AP_05594871498841892311_rules.json",
+            "size_bytes": 899419,
+            "size_mb": 0.86
+          },
+          "seed": "4",
+          "seed_id": "AP_05594871498841892311",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.21,
+            "return_code": 0,
+            "sphere_reached": 8.1,
+            "success": true,
+            "total_spheres": 8.1,
+            "warning_count": 0
+          },
+          "template_name": "The Legend of Zelda.yaml",
+          "timestamp": "2025-11-16T01:11:38.805080",
+          "world_info": {
+            "exporter_path": "exporter/games/tloz.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
+            "game_name_from_yaml": "The Legend of Zelda",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "tloz",
+            "world_directory": "tloz"
+          }
+        },
+        "5": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "tloz",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.32,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/tloz/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 899419,
+            "size_mb": 0.86
+          },
+          "seed": "5",
+          "seed_id": "AP_96945849220684217413",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.04,
+            "return_code": 0,
+            "sphere_reached": 6.1,
+            "success": true,
+            "total_spheres": 6.1,
+            "warning_count": 0
+          },
+          "template_name": "The Legend of Zelda.yaml",
+          "timestamp": "2025-11-16T01:11:55.968947",
+          "world_info": {
+            "exporter_path": "exporter/games/tloz.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
+            "game_name_from_yaml": "The Legend of Zelda",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "tloz",
+            "world_directory": "tloz"
+          }
+        },
+        "6": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "tloz",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.21,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/tloz/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+            "size_bytes": 899419,
+            "size_mb": 0.86
+          },
+          "seed": "6",
+          "seed_id": "AP_00679259829289197625",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.21,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
+            "total_spheres": 7.1,
+            "warning_count": 0
+          },
+          "template_name": "The Legend of Zelda.yaml",
+          "timestamp": "2025-11-16T01:12:12.829952",
+          "world_info": {
+            "exporter_path": "exporter/games/tloz.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
+            "game_name_from_yaml": "The Legend of Zelda",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "tloz",
+            "world_directory": "tloz"
+          }
+        },
+        "7": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "tloz",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.49,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/tloz/AP_35931773795037525048/AP_35931773795037525048_rules.json",
+            "size_bytes": 899419,
+            "size_mb": 0.86
+          },
+          "seed": "7",
+          "seed_id": "AP_35931773795037525048",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.17,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
+            "total_spheres": 7.1,
+            "warning_count": 0
+          },
+          "template_name": "The Legend of Zelda.yaml",
+          "timestamp": "2025-11-16T01:12:29.719998",
+          "world_info": {
+            "exporter_path": "exporter/games/tloz.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
+            "game_name_from_yaml": "The Legend of Zelda",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "tloz",
+            "world_directory": "tloz"
+          }
+        },
+        "8": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "tloz",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.02,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/tloz/AP_20777137877808592492/AP_20777137877808592492_rules.json",
+            "size_bytes": 899419,
+            "size_mb": 0.86
+          },
+          "seed": "8",
+          "seed_id": "AP_20777137877808592492",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.09,
+            "return_code": 0,
+            "sphere_reached": 9.1,
+            "success": true,
+            "total_spheres": 9.1,
+            "warning_count": 0
+          },
+          "template_name": "The Legend of Zelda.yaml",
+          "timestamp": "2025-11-16T01:12:45.889209",
+          "world_info": {
+            "exporter_path": "exporter/games/tloz.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
+            "game_name_from_yaml": "The Legend of Zelda",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "tloz",
+            "world_directory": "tloz"
+          }
+        },
+        "9": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "tloz",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 7.01,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 2
+          },
+          "rules_file": {
+            "path": "frontend/presets/tloz/AP_48205312626925217390/AP_48205312626925217390_rules.json",
+            "size_bytes": 899419,
+            "size_mb": 0.86
+          },
+          "seed": "9",
+          "seed_id": "AP_48205312626925217390",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.67,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
+            "total_spheres": 7.1,
+            "warning_count": 0
+          },
+          "template_name": "The Legend of Zelda.yaml",
+          "timestamp": "2025-11-16T01:13:02.490047",
+          "world_info": {
+            "exporter_path": "exporter/games/tloz.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
+            "game_name_from_yaml": "The Legend of Zelda",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "tloz",
+            "world_directory": "tloz"
+          }
+        }
       },
-      "consecutive_passes_before_failure": 1,
-      "first_failure_seed": 2,
-      "game_name": "tloz",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 3.65,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 2
-      },
-      "rules_file": {
-        "path": "frontend/presets/tloz/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 899419,
-        "size_mb": 0.86
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 7,
-      "seeds_passed": 3,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 0,
-        "pass_fail": "passed",
-        "processing_time_seconds": 5.83,
-        "return_code": 0,
-        "sphere_reached": 10.1,
-        "success": true,
-        "total_spheres": 10.1,
-        "warning_count": 0
+      "seeds_failed": 0,
+      "seeds_passed": 10,
+      "stop_on_failure": true,
+      "summary": {
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_name": "The Legend of Zelda.yaml",
-      "timestamp": "2025-11-15T23:33:01.880209",
-      "world_info": {
-        "exporter_path": "exporter/games/tloz.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "The Legend of Zelda",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "tloz",
-        "world_directory": "tloz"
-      }
+      "timestamp": "2025-11-16T01:10:47.920910",
+      "total_seeds_tested": 10
     },
     "The Messenger.yaml": {
       "analysis": {
