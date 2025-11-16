@@ -1,0 +1,588 @@
+﻿Archipelago Version 0.6.4  -  Seed: 8
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Timespinner
+Death Link:                      No
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start with Jewelry Box:          No
+Downloadable items:              Yes
+Eye Spy:                         No
+Start with Meyef:                No
+Quick seed:                      No
+Specific Keycards:               No
+Inverted:                        No
+Gyre Archives:                   No
+Cantoran:                        No
+Lore Checks:                     No
+Boss Randomization:              Off
+Enemy Randomization:             Off
+Damage Rando:                    Off
+Damage Rando Overrides:          Blade: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Blood: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Blue: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Empire: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Eye: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Fire: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, ForbiddenTome: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Gun: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Ice: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Iron: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Nether: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Plasma: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Radiant: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Shattered: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Umbra: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}, Wind: {'MinusOdds': 1, 'NormalOdds': 1, 'PlusOdds': 1}
+HP Cap:                          999
+Aura Cap:                        999
+Level Cap:                       99
+Extra Earrings XP:               0
+Heal After Bosses:               Yes
+Shop Inventory:                  Default
+Always Sell Warp Shards:         Yes
+Shop Price Multiplier:           1
+Loot Pool:                       Vanilla
+Drop Rate Category:              Tiered
+Fixed Drop Rate:                 5
+Loot Tier Distrubution:          Default Weight
+Show Bestiary Entries:           No
+Show Bestiary Item Drops:        No
+Enter Sandman:                   No
+Dad Percent:                     No
+Rising Tides:                    No
+Rising Tides Overrides:          AncientPyramidShaft: {'Dry': 67, 'Flooded': 33}, CastleBasement: {'Dry': 66, 'Flooded': 17, 'FloodedWithSavePointAvailable': 17}, CastleCourtyard: {'Dry': 67, 'Flooded': 33}, CastleMoat: {'Dry': 67, 'Flooded': 33}, Lab: {'Dry': 67, 'Flooded': 33}, LakeDesolation: {'Dry': 67, 'Flooded': 33}, LakeSerene: {'Dry': 33, 'Flooded': 67}, LakeSereneBridge: {'Dry': 67, 'Flooded': 33}, Maw: {'Dry': 67, 'Flooded': 33}, Sandman: {'Dry': 67, 'Flooded': 33}, Xarion: {'Dry': 67, 'Flooded': 33}
+Unchained Keys:                  No
+Back to the future:              No
+Prism Break:                     No
+Lock Key Amadeus:                No
+Risky Warps:                     No
+Pyramid Start:                   No
+Gate Keep:                       No
+Royal Roadblock:                 No
+Trap Chance:                     10
+Traps Types:                     Meteor Sparrow Trap, Poison Trap, Chaos Trap, Neurotoxin Trap, Bee Trap, Throw Stun Trap
+Twin Pyramid Keys unlock:        GateRoyalTowers
+
+
+Locations:
+
+Tutorial: Yo Momma 1: Umbra Orb
+Tutorial: Yo Momma 2: Plasma Geyser
+Lake Desolation: Starter chest 2: Timespinner Gear 2
+Lake Desolation: Starter chest 3: Plasma Crystal
+Lake Desolation: Starter chest 1: Tablet
+Lake Desolation (Lower): Timespinner Wheel room: Talaria Attachment
+Lake Desolation: Forget me not chest: Berry Pick-Mi-Up
+Lake Desolation (Lower): Chicken chest: Twin Pyramid Key
+Lake Desolation (Upper): Oxygen recovery room: Blue Orb
+Lake Desolation (Upper): Secret room: Pendulum
+Lake Desolation (Upper): Double jump cave platform: Demon
+Lake Desolation (Upper): Double jump cave floor: Aura Serpent
+Lake Desolation (Upper): Sparrow chest: Chaos Rose
+Lake Desolation (Upper): Crash site pedestal: Frozen Spires
+Lake Desolation (Upper): Crash site chest 1: Hi-Ether
+Lake Desolation (Upper): Crash site chest 2: Djinn Inferno
+Lake Desolation (Lower): Not so secret room: Celestial Sash
+Lake Desolation (Upper): Tank chest: Max Aura
+Lake Desolation: Kitty Boss: Timespinner Wheel
+Library: Basement: Antidote
+Library: Warp gate: Hope Ring
+Library: Librarian: Max Aura
+Library: Reading nook chest: Lab Glasses
+Library: Storage room chest 1: Kobo
+Library: Storage room chest 2: Antidote
+Library: Storage room chest 3: Water Mask
+Library: Terminal 2 (Lachiem): Ether
+Library: Terminal 1 (Windaria): Eternal Brooch
+Library: Terminal 3 (Emperor Nuvius): Max Aura
+Library: V terminal 1 (War of the Sisters): Midnight Cloak
+Library: V terminal 2 (Lake Desolation Map): Crimson Vortex
+Library: V terminal 3 (Vilete): Gun Orb
+Library: Backer room chest 5: Captain's Uniform
+Library: Backer room chest 4: Max Sand
+Library: Backer room chest 3: Sunglasses
+Library: Backer room chest 2: Max Sand
+Library: Backer room chest 1: Max Sand
+Library: Backer room terminal (Vandagray Metropolis Map): Gas Mask
+Varndagroth Towers (Left): Elevator Key not required: Aura Blast
+Varndagroth Towers (Left): Ye olde Timespinner: Max Sand
+Varndagroth Towers (Left): Bottom floor: Max HP
+Varndagroth Towers (Left): Air vents secret: Max HP
+Varndagroth Towers (Left): Elevator chest: Oculus Ring
+Varndagroth Towers: Bridge: Max HP
+Varndagroth Towers (Right): Elevator card chest: Blood Orb
+Varndagroth Towers (Right): Air vents right chest: Empire Orb
+Varndagroth Towers (Right): Air vents left chest: Scythe Ring
+Varndagroth Towers (Right): Bottom floor: Wyrm Brooch
+Varndagroth Towers (Right): Elevator chest: Trendy Jacket
+Varndagroth Towers (Right): Varndagroth: Eternal Crown
+Varndagroth Towers (Right): Spider Hell: Glass Pumpkin
+Varndagroth Towers (Right): Medbay terminal (Bleakness Research): Hi-Potion
+Sealed Caves (Sirens): Water hook: Berry Pick-Mi-Up+
+Sealed Caves (Sirens): Siren room underwater right: Warp Shard
+Sealed Caves (Sirens): Siren room underwater left: Security Keycard A
+Sealed Caves (Sirens): Cave after sirens chest 1: Radiant Orb
+Sealed Caves (Sirens): Cave after sirens chest 2: Hi-Ether
+Military Fortress: Bomber chest: Max Aura
+Military Fortress: Close combat room: Arm Cannon
+Military Fortress: Soldiers bridge: Wind Orb
+Military Fortress: Giantess room: Shadow Seal
+Military Fortress: Giantess bridge: Max Sand
+Military Fortress: B door chest 2: Ether
+Military Fortress: B door chest 1: Max HP
+Military Fortress: Pedestal: Berry Pick-Mi-Up
+Lab: Coffee break: Selen's Bangle
+Lab: Lower trash right: Chaos Trap
+Lab: Lower trash left: Chaos Trap
+Lab: Below lab entrance: Timespinner Spindle
+Lab: Experiment 13 terminal (W.R.E.C Farewell): Succubus Hairpin
+Lab: Left terminal (Biotechnology): Lab Coat
+Lab: Trash jump room: Star of Lachiem
+Lab: Dynamo Works: Griffin
+Lab: Experiment #13: Eye Orb
+Lab: Spider Hell: Iron Orb
+Lab: Middle terminal (Amadeus Laboratory Map): Bleak Ring
+Lab: Sentry platform terminal (Origins): Security Keycard C
+Lab: Right terminal (Experiment #11): Max HP
+Lab: Genza (Blob Mom): Elevator Keycard
+Lab: Download and chest room chest: Mind Refresh
+Lab: Lab secret: Economizer Ring
+Lab: Download and chest room terminal (Experiment #13): Plasma Orb
+Emperor's Tower: Courtyard bottom chest: Librarian Hat
+Emperor's Tower: Courtyard floor secret: Potion
+Emperor's Tower: Courtyard upper chest: Merchant Crow
+Emperor's Tower: Galactic sage room: Max Aura
+Emperor's Tower: Bottom right tower: Metal Wristband
+Emperor's Tower: Wayyyy up there: Alchemy Tools
+Emperor's Tower: Left tower balcony: Infernal Flames
+Emperor's Tower: Emperor's Chambers chest: Max HP
+Emperor's Tower: Emperor's Chambers pedestal: Librarian Robe
+Killed Emperor: Killed Emperor
+Sealed Caves (Xarion): Skeleton: Greed Brooch
+Sealed Caves (Xarion): Shroom jump room: Nether Orb
+Sealed Caves (Xarion): Double shroom room: Pointy Hat
+Sealed Caves (Xarion): Jacksquat room: Goddess Brooch
+Sealed Caves (Xarion): Below Jacksquat room: Blade Orb
+Sealed Caves (Xarion): Secret room: Max Sand
+Sealed Caves (Xarion): Bottom left room: Lightwall
+Sealed Caves (Xarion): Last chance before Xarion: Plasma IV Bag
+Sealed Caves (Xarion): Xarion: Library Keycard V
+Refugee Camp: Neliste's Bra: Sun Ring
+Refugee Camp: Storage chest 3: Sand Bottle
+Refugee Camp: Storage chest 2: Max Aura
+Refugee Camp: Storage chest 1: Meyef
+Forest: Refugee camp roof: Gilded Egg
+Forest: Bat jump ledge: Filigree Clasp
+Forest: Green platform secret: Max HP
+Forest: Rats guarded chest: Colossal Blade
+Forest: Waterfall chest 1: Max HP
+Forest: Waterfall chest 2: Max Aura
+Forest: Batcave: Icicle Ring
+Castle Ramparts: In the moat: Tailwind Ring
+Forest: Before Serene single bat cave: Storm Eye
+Lake Serene (Lower): Under the eels: Max Sand
+Lake Serene (Lower): Past the eels: Silence Ring
+Lake Serene (Upper): Rat nest: Captain's Cap
+Lake Serene (Upper): Double jump cave platform: Max HP
+Lake Serene (Upper): Double jump cave floor: Hi-Ether
+Lake Serene (Upper): Cave secret: Viletian Crown
+Lake Serene: Before Big Bird: Old Coat
+Lake Serene: Behind the vines: Max HP
+Lake Serene: Pyramid keys room: Traveler's Cloak
+Lake Serene (Upper): Chicken ledge: Shattered Orb
+Lake Serene (Lower): Deep dive: Ice Orb
+Lake Serene (Lower): Water spikes room: Forbidden Tome
+Lake Serene (Lower): Underwater secret: Princess Dress
+Lake Serene (Lower): T chest: Food Synthesizer
+Lake Serene (Lower): Underwater pedestal: Buckle Hat
+Caves of Banishment (Maw): Shroom jump room: Max Aura
+Caves of Banishment (Maw): Secret room: Mind Refresh
+Caves of Banishment (Maw): Bottom left room: Max Sand
+Caves of Banishment (Maw): Single shroom room: Max Aura
+Caves of Banishment (Maw): Jackpot room chest 1: Ancient Coin
+Caves of Banishment (Maw): Jackpot room chest 2: Herb
+Caves of Banishment (Maw): Jackpot room chest 3: Bombardment
+Caves of Banishment (Maw): Jackpot room chest 4: Galaxy Earrings
+Caves of Banishment (Maw): Pedestal: Sprite
+Caves of Banishment (Maw): Last chance before Maw: Max Sand
+Caves of Banishment (Maw): Plasma Crystal: Max Aura
+Killed Maw: Killed Maw
+Caves of Banishment (Maw): Mineshaft: Corruption
+Caves of Banishment (Sirens): Wyvern room: Ether
+Caves of Banishment (Sirens): Siren room above water chest: Sanguine Ring
+Caves of Banishment (Sirens): Siren room underwater left chest: Security Keycard B
+Caves of Banishment (Sirens): Siren room underwater right chest: Dark Flames
+Caves of Banishment (Sirens): Siren room underwater right ground: Pyro Ring
+Caves of Banishment (Sirens): Water hook: Empress Robe
+Castle Ramparts: Bomber chest: Fire Orb
+Castle Ramparts: Freeze the engineer: Royal Ring
+Castle Ramparts: Giantess guarded room: Soul Scanner
+Castle Ramparts: Knight and archer guarded room: Colossal Hammer
+Castle Ramparts: Pedestal: Filigree Tea
+Castle Keep: Under the twins: Hi-Ether
+Killed Twins: Killed Twins
+Castle Keep: Advisor jump: Sand Vial
+Castle Keep: Twins: Dusk Ring
+Castle Keep: Royal guard tiny room: Empire Crown
+Castle Basement: Secret pedestal: Max Aura
+Castle Basement: Clean the castle basement: Max Sand
+Castle Basement: Giantess guarded chest: Eternal Coat
+Castle Basement: Omelette chest: Shield Ring
+Castle Basement: Just an egg: Chaos Blades
+Castle Keep: Yas queen room: Max HP
+Royal Towers: Floor secret: Jerky
+Royal Towers: Pre-climb gap: Max Aura
+Royal Towers: Long balcony: Security Keycard D
+Royal Towers: Past bottom struggle juggle: Max Sand
+Royal Towers: Bottom struggle juggle: Max Aura
+Royal Towers: Right tower freebie: Timespinner Gear 3
+Royal Towers: Top struggle juggle: Spaghetti
+Royal Towers: No struggle required: Max Sand
+Royal Towers: Left tower small balcony: Jewelry Box
+Royal Towers: Left tower royal guard: Max HP
+Royal Towers: Before Aelana: Bird Statue
+Killed Aelana: Killed Aelana
+Royal Towers: Aelana's attic: Antidote
+Royal Towers: Aelana's chest: Bee Trap
+Royal Towers: Aelana's pedestal: Timespinner Gear 1
+Ancient Pyramid: Why not it's right there: Max Sand
+Ancient Pyramid: Conviction guarded room: Throw Stun Trap
+Ancient Pyramid: Pit secret room: Max Sand
+Ancient Pyramid: Regret chest: Shiny Rock
+Ancient Pyramid: Nightmare Door chest: Galaxy Stone
+Killed Nightmare: Killed Nightmare
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Lake Desolation (Lower): Timespinner Wheel room: Talaria Attachment
+  Lake Desolation: Starter chest 1: Tablet
+  Lake Desolation: Starter chest 2: Timespinner Gear 2
+  Tutorial: Yo Momma 2: Plasma Geyser
+}
+2: {
+  Lake Desolation (Lower): Not so secret room: Celestial Sash
+  Lake Desolation: Kitty Boss: Timespinner Wheel
+  Library: Backer room terminal (Vandagray Metropolis Map): Gas Mask
+}
+3: {
+  Lake Desolation (Lower): Chicken chest: Twin Pyramid Key
+}
+4: {
+  Castle Ramparts: Bomber chest: Fire Orb
+  Castle Ramparts: Freeze the engineer: Royal Ring
+  Killed Aelana: Killed Aelana
+  Killed Twins: Killed Twins
+  Royal Towers: Aelana's pedestal: Timespinner Gear 1
+  Royal Towers: Long balcony: Security Keycard D
+  Royal Towers: Right tower freebie: Timespinner Gear 3
+}
+5: {
+  Library: Storage room chest 3: Water Mask
+}
+6: {
+  Caves of Banishment (Sirens): Siren room underwater left chest: Security Keycard B
+  Caves of Banishment (Sirens): Siren room underwater right ground: Pyro Ring
+  Killed Maw: Killed Maw
+}
+7: {
+  Emperor's Tower: Left tower balcony: Infernal Flames
+  Killed Emperor: Killed Emperor
+  Lab: Below lab entrance: Timespinner Spindle
+  Lab: Download and chest room terminal (Experiment #13): Plasma Orb
+  Lab: Experiment 13 terminal (W.R.E.C Farewell): Succubus Hairpin
+  Lab: Genza (Blob Mom): Elevator Keycard
+  Lab: Sentry platform terminal (Origins): Security Keycard C
+  Lake Desolation (Upper): Crash site chest 2: Djinn Inferno
+}
+8: {
+  Killed Nightmare: Killed Nightmare
+  Sealed Caves (Sirens): Siren room underwater left: Security Keycard A
+}
+9: {
+  Sealed Caves (Xarion): Bottom left room: Lightwall
+  Sealed Caves (Xarion): Xarion: Library Keycard V
+}
+
+Paths:
+
+Castle Ramparts: Bomber chest
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Skeleton Shaft
+   =>   Skeleton Shaft -> Skeleton Shaft -> Space time continuum
+   =>   Space time continuum -> Space time continuum -> Royal towers (lower)
+   =>   Royal towers (lower) -> Royal towers (lower) -> Castle Keep
+   =>   Castle Keep -> Castle Keep -> Castle Ramparts
+   =>   Castle Ramparts
+Castle Ramparts: Freeze the engineer
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Skeleton Shaft
+   =>   Skeleton Shaft -> Skeleton Shaft -> Space time continuum
+   =>   Space time continuum -> Space time continuum -> Royal towers (lower)
+   =>   Royal towers (lower) -> Royal towers (lower) -> Castle Keep
+   =>   Castle Keep -> Castle Keep -> Castle Ramparts
+   =>   Castle Ramparts
+Caves of Banishment (Sirens): Siren room underwater left chest
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Skeleton Shaft
+   =>   Skeleton Shaft -> Skeleton Shaft -> Space time continuum
+   =>   Space time continuum -> Space time continuum -> Royal towers (lower)
+   =>   Royal towers (lower) -> Royal towers (lower) -> Castle Keep
+   =>   Castle Keep -> Castle Keep -> Castle Ramparts
+   =>   Castle Ramparts -> Castle Ramparts -> Forest
+   =>   Forest -> Forest -> Caves of Banishment (Sirens)
+   =>   Caves of Banishment (Sirens)
+Caves of Banishment (Sirens): Siren room underwater right ground
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Skeleton Shaft
+   =>   Skeleton Shaft -> Skeleton Shaft -> Space time continuum
+   =>   Space time continuum -> Space time continuum -> Royal towers (lower)
+   =>   Royal towers (lower) -> Royal towers (lower) -> Castle Keep
+   =>   Castle Keep -> Castle Keep -> Castle Ramparts
+   =>   Castle Ramparts -> Castle Ramparts -> Forest
+   =>   Forest -> Forest -> Caves of Banishment (Sirens)
+   =>   Caves of Banishment (Sirens)
+Emperor's Tower: Left tower balcony
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Library
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Military Fortress
+   =>   Military Fortress -> Military Fortress -> Military Fortress (hangar)
+   =>   Military Fortress (hangar) -> Military Fortress (hangar) -> The lab
+   =>   The lab -> The lab -> The lab (power off)
+   =>   The lab (power off) -> The lab (power off) -> The lab (upper)
+   =>   The lab (upper) -> The lab (upper) -> Emperors tower
+   =>   Emperors tower
+Killed Aelana
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Skeleton Shaft
+   =>   Skeleton Shaft -> Skeleton Shaft -> Space time continuum
+   =>   Space time continuum -> Space time continuum -> Royal towers (lower)
+   =>   Royal towers (lower) -> Royal towers (lower) -> Royal towers
+   =>   Royal towers -> Royal towers -> Royal towers (upper)
+   =>   Royal towers (upper)
+Killed Emperor
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Library
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Military Fortress
+   =>   Military Fortress -> Military Fortress -> Military Fortress (hangar)
+   =>   Military Fortress (hangar) -> Military Fortress (hangar) -> The lab
+   =>   The lab -> The lab -> The lab (power off)
+   =>   The lab (power off) -> The lab (power off) -> The lab (upper)
+   =>   The lab (upper) -> The lab (upper) -> Emperors tower
+   =>   Emperors tower
+Killed Maw
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Skeleton Shaft
+   =>   Skeleton Shaft -> Skeleton Shaft -> Space time continuum
+   =>   Space time continuum -> Space time continuum -> Royal towers (lower)
+   =>   Royal towers (lower) -> Royal towers (lower) -> Castle Keep
+   =>   Castle Keep -> Castle Keep -> Castle Ramparts
+   =>   Castle Ramparts -> Castle Ramparts -> Forest
+   =>   Forest -> Forest -> Left Side forest Caves
+   =>   Left Side forest Caves -> Left Side forest Caves -> Lower Lake Serene
+   =>   Lower Lake Serene -> Lower Lake Serene -> Caves of Banishment (upper)
+   =>   Caves of Banishment (upper) -> Caves of Banishment (upper) -> Caves of Banishment (Maw)
+   =>   Caves of Banishment (Maw)
+Killed Nightmare
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Library
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Military Fortress
+   =>   Military Fortress -> Military Fortress -> Military Fortress (hangar)
+   =>   Military Fortress (hangar) -> Military Fortress (hangar) -> The lab
+   =>   The lab -> The lab -> The lab (power off)
+   =>   The lab (power off) -> The lab (power off) -> The lab (upper)
+   =>   The lab (upper) -> The lab (upper) -> Ancient Pyramid (entrance)
+   =>   Ancient Pyramid (entrance) -> Ancient Pyramid (entrance) -> Ancient Pyramid (left)
+   =>   Ancient Pyramid (left) -> Ancient Pyramid (left) -> Ancient Pyramid (right)
+   =>   Ancient Pyramid (right)
+Killed Twins
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Skeleton Shaft
+   =>   Skeleton Shaft -> Skeleton Shaft -> Space time continuum
+   =>   Space time continuum -> Space time continuum -> Royal towers (lower)
+   =>   Royal towers (lower) -> Royal towers (lower) -> Castle Keep
+   =>   Castle Keep
+Lab: Below lab entrance
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Library
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Military Fortress
+   =>   Military Fortress -> Military Fortress -> Military Fortress (hangar)
+   =>   Military Fortress (hangar) -> Military Fortress (hangar) -> The lab
+   =>   The lab
+Lab: Download and chest room terminal (Experiment #13)
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Library
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Military Fortress
+   =>   Military Fortress -> Military Fortress -> Military Fortress (hangar)
+   =>   Military Fortress (hangar) -> Military Fortress (hangar) -> The lab
+   =>   The lab -> The lab -> The lab (power off)
+   =>   The lab (power off) -> The lab (power off) -> The lab (upper)
+   =>   The lab (upper)
+Lab: Experiment 13 terminal (W.R.E.C Farewell)
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Library
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Military Fortress
+   =>   Military Fortress -> Military Fortress -> Military Fortress (hangar)
+   =>   Military Fortress (hangar) -> Military Fortress (hangar) -> The lab
+   =>   The lab
+Lab: Genza (Blob Mom)
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Library
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Military Fortress
+   =>   Military Fortress -> Military Fortress -> Military Fortress (hangar)
+   =>   Military Fortress (hangar) -> Military Fortress (hangar) -> The lab
+   =>   The lab -> The lab -> The lab (power off)
+   =>   The lab (power off) -> The lab (power off) -> The lab (upper)
+   =>   The lab (upper)
+Lab: Sentry platform terminal (Origins)
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Library
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Military Fortress
+   =>   Military Fortress -> Military Fortress -> Military Fortress (hangar)
+   =>   Military Fortress (hangar) -> Military Fortress (hangar) -> The lab
+   =>   The lab -> The lab -> The lab (power off)
+   =>   The lab (power off)
+Lake Desolation (Lower): Chicken chest
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation
+Lake Desolation (Lower): Not so secret room
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation
+Lake Desolation (Lower): Timespinner Wheel room
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation
+Lake Desolation (Upper): Crash site chest 2
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Upper lake desolation
+   =>   Upper lake desolation
+Lake Desolation: Kitty Boss
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation
+Lake Desolation: Starter chest 1
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation
+Lake Desolation: Starter chest 2
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation
+Library: Backer room terminal (Vandagray Metropolis Map)
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Library
+   =>   Library -> Library -> Library top
+   =>   Library top
+Library: Storage room chest 3
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Library
+   =>   Library
+Royal Towers: Aelana's pedestal
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Skeleton Shaft
+   =>   Skeleton Shaft -> Skeleton Shaft -> Space time continuum
+   =>   Space time continuum -> Space time continuum -> Royal towers (lower)
+   =>   Royal towers (lower) -> Royal towers (lower) -> Royal towers
+   =>   Royal towers -> Royal towers -> Royal towers (upper)
+   =>   Royal towers (upper)
+Royal Towers: Long balcony
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Skeleton Shaft
+   =>   Skeleton Shaft -> Skeleton Shaft -> Space time continuum
+   =>   Space time continuum -> Space time continuum -> Royal towers (lower)
+   =>   Royal towers (lower) -> Royal towers (lower) -> Royal towers
+   =>   Royal towers
+Royal Towers: Right tower freebie
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Skeleton Shaft
+   =>   Skeleton Shaft -> Skeleton Shaft -> Space time continuum
+   =>   Space time continuum -> Space time continuum -> Royal towers (lower)
+   =>   Royal towers (lower) -> Royal towers (lower) -> Royal towers
+   =>   Royal towers
+Sealed Caves (Sirens): Siren room underwater left
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Library
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
+   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens)
+Sealed Caves (Xarion): Bottom left room
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Skeleton Shaft
+   =>   Skeleton Shaft -> Skeleton Shaft -> Sealed Caves (Xarion)
+   =>   Sealed Caves (Xarion)
+Sealed Caves (Xarion): Xarion
+        Menu -> Tutorial
+   =>   Tutorial -> Start Game
+   =>   Lake desolation -> Lake desolation -> Skeleton Shaft
+   =>   Skeleton Shaft -> Skeleton Shaft -> Sealed Caves (Xarion)
+   =>   Sealed Caves (Xarion)
+Tutorial: Yo Momma 2
+        Menu -> Tutorial
+   =>   Tutorial
