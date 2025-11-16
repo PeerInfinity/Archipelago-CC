@@ -519,15 +519,8 @@
             "name": "World 6 -> 6-8",
             "connected_region": "6-8",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "bosses"
-                },
-                "attr": "castle_access"
-              },
+              "type": "helper",
+              "name": "castle_access",
               "args": []
             }
           }
@@ -691,15 +684,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 }
               ]
@@ -805,15 +791,8 @@
             "name": "1-4 -> Burt The Bashful's Boss Room",
             "connected_region": "Burt The Bashful's Boss Room",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_14Clear"
-              },
+              "type": "helper",
+              "name": "_14Clear",
               "args": []
             }
           }
@@ -870,15 +849,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
@@ -909,15 +881,8 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "has_midring"
-                      },
+                      "type": "helper",
+                      "name": "has_midring",
                       "args": []
                     },
                     {
@@ -942,15 +907,8 @@
             "name": "Burt The Bashful's Fort: Level Clear",
             "id": 3166255,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_14CanFightBoss"
-              },
+              "type": "helper",
+              "name": "_14CanFightBoss",
               "args": []
             },
             "item": {
@@ -970,15 +928,8 @@
             "name": "Burt The Bashful's Boss Room",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_14Boss"
-              },
+              "type": "helper",
+              "name": "_14Boss",
               "args": []
             },
             "item": {
@@ -1029,27 +980,13 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "cansee_clouds"
-                  },
+                  "type": "helper",
+                  "name": "cansee_clouds",
                   "args": []
                 }
               ]
@@ -1136,15 +1073,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "logic"
-                            },
-                            "attr": "has_midring"
-                          },
+                          "type": "helper",
+                          "name": "has_midring",
                           "args": []
                         },
                         {
@@ -1160,15 +1090,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "logic"
-                            },
-                            "attr": "has_midring"
-                          },
+                          "type": "helper",
+                          "name": "has_midring",
                           "args": []
                         },
                         {
@@ -1273,27 +1196,17 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "logic"
-                      },
-                      "attr": "cansee_clouds"
+                      "type": "helper",
+                      "name": "cansee_clouds",
+                      "args": []
                     },
                     {
                       "type": "state_method",
@@ -1338,15 +1251,8 @@
             "name": "Touch Fuzzy Get Dizzy: Gather Coins",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_17Game"
-              },
+              "type": "helper",
+              "name": "_17Game",
               "args": []
             },
             "item": {
@@ -1365,15 +1271,8 @@
             "name": "1-8 -> Salvo The Slime's Boss Room",
             "connected_region": "Salvo The Slime's Boss Room",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_18Clear"
-              },
+              "type": "helper",
+              "name": "_18Clear",
               "args": []
             }
           }
@@ -1420,15 +1319,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
@@ -1469,15 +1361,8 @@
             "name": "Salvo The Slime's Castle: Level Clear",
             "id": 3166272,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_18CanFightBoss"
-              },
+              "type": "helper",
+              "name": "_18CanFightBoss",
               "args": []
             },
             "item": {
@@ -1497,15 +1382,8 @@
             "name": "Salvo The Slime's Boss Room",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_18Boss"
-              },
+              "type": "helper",
+              "name": "_18Boss",
               "args": []
             },
             "item": {
@@ -1582,15 +1460,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 }
               ]
@@ -1687,15 +1558,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "has_midring"
-                      },
+                      "type": "helper",
+                      "name": "has_midring",
                       "args": []
                     },
                     {
@@ -1848,15 +1712,8 @@
             "name": "2-4 -> Bigger Boo's Boss Room",
             "connected_region": "Bigger Boo's Boss Room",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_24Clear"
-              },
+              "type": "helper",
+              "name": "_24Clear",
               "args": []
             }
           }
@@ -1931,15 +1788,8 @@
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 }
               ]
@@ -1955,15 +1805,8 @@
             "name": "Bigger Boo's Fort: Level Clear",
             "id": 3166288,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_24CanFightBoss"
-              },
+              "type": "helper",
+              "name": "_24CanFightBoss",
               "args": []
             },
             "item": {
@@ -1983,15 +1826,8 @@
             "name": "Bigger Boo's Boss Room",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_24Boss"
-              },
+              "type": "helper",
+              "name": "_24Boss",
               "args": []
             },
             "item": {
@@ -2139,15 +1975,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 }
               ]
@@ -2180,15 +2009,8 @@
             "name": "The Cave Of the Mystery Maze: Seed Spitting Contest",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_26Game"
-              },
+              "type": "helper",
+              "name": "_26Game",
               "args": []
             },
             "item": {
@@ -2227,15 +2049,8 @@
                       ]
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
@@ -2279,15 +2094,8 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     },
                     {
@@ -2322,15 +2130,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 }
               ]
@@ -2369,15 +2170,8 @@
             "name": "Lakitu's Wall: Gather Coins",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_27Game"
-              },
+              "type": "helper",
+              "name": "_27Game",
               "args": []
             },
             "item": {
@@ -2396,15 +2190,8 @@
             "name": "2-8 -> Roger The Ghost's Boss Room",
             "connected_region": "Roger The Ghost's Boss Room",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_28Clear"
-              },
+              "type": "helper",
+              "name": "_28Clear",
               "args": []
             }
           }
@@ -2509,15 +2296,8 @@
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
@@ -2544,15 +2324,8 @@
             "name": "The Potted Ghost's Castle: Level Clear",
             "id": 3166304,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_28CanFightBoss"
-              },
+              "type": "helper",
+              "name": "_28CanFightBoss",
               "args": []
             },
             "item": {
@@ -2572,15 +2345,8 @@
             "name": "Roger The Ghost's Boss Room",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_28Boss"
-              },
+              "type": "helper",
+              "name": "_28Boss",
               "args": []
             },
             "item": {
@@ -2628,15 +2394,8 @@
             "name": "Welcome To Monkey World!: Stars",
             "id": 3166307,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "has_midring"
-              },
+              "type": "helper",
+              "name": "has_midring",
               "args": []
             },
             "item": {
@@ -2719,15 +2478,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
@@ -2828,15 +2580,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
@@ -2893,15 +2638,8 @@
             "name": "3-4 -> Prince Froggy's Boss Room",
             "connected_region": "Prince Froggy's Boss Room",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_34Clear"
-              },
+              "type": "helper",
+              "name": "_34Clear",
               "args": []
             }
           }
@@ -2945,15 +2683,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
@@ -2978,15 +2709,8 @@
             "name": "Prince Froggy's Fort: Stars",
             "id": 3166319,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "has_midring"
-              },
+              "type": "helper",
+              "name": "has_midring",
               "args": []
             },
             "item": {
@@ -3000,15 +2724,8 @@
             "name": "Prince Froggy's Fort: Level Clear",
             "id": 3166320,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_34CanFightBoss"
-              },
+              "type": "helper",
+              "name": "_34CanFightBoss",
               "args": []
             },
             "item": {
@@ -3028,15 +2745,8 @@
             "name": "Prince Froggy's Boss Room",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_34Boss"
-              },
+              "type": "helper",
+              "name": "_34Boss",
               "args": []
             },
             "item": {
@@ -3080,15 +2790,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "melon_item"
-                  },
+                  "type": "helper",
+                  "name": "melon_item",
                   "args": []
                 }
               ]
@@ -3113,15 +2816,8 @@
                       "type": "or",
                       "conditions": [
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "logic"
-                            },
-                            "attr": "has_midring"
-                          },
+                          "type": "helper",
+                          "name": "has_midring",
                           "args": []
                         },
                         {
@@ -3134,15 +2830,8 @@
                       ]
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "cansee_clouds"
-                      },
+                      "type": "helper",
+                      "name": "cansee_clouds",
                       "args": []
                     }
                   ]
@@ -3151,15 +2840,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "has_midring"
-                      },
+                      "type": "helper",
+                      "name": "has_midring",
                       "args": []
                     },
                     {
@@ -3275,15 +2957,8 @@
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 }
               ]
@@ -3416,15 +3091,8 @@
             "name": "3-8 -> Naval Piranha's Boss Room",
             "connected_region": "Naval Piranha's Boss Room",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_38Clear"
-              },
+              "type": "helper",
+              "name": "_38Clear",
               "args": []
             }
           }
@@ -3448,15 +3116,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "combat_item"
-                  },
+                  "type": "helper",
+                  "name": "combat_item",
                   "args": []
                 }
               ]
@@ -3486,15 +3147,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "combat_item"
-                  },
+                  "type": "helper",
+                  "name": "combat_item",
                   "args": []
                 }
               ]
@@ -3513,15 +3167,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
@@ -3544,15 +3191,8 @@
             "name": "Naval Piranha's Castle: Level Clear",
             "id": 3166336,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_38CanFightBoss"
-              },
+              "type": "helper",
+              "name": "_38CanFightBoss",
               "args": []
             },
             "item": {
@@ -3572,15 +3212,8 @@
             "name": "Naval Piranha's Boss Room",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_38Boss"
-              },
+              "type": "helper",
+              "name": "_38Boss",
               "args": []
             },
             "item": {
@@ -3637,15 +3270,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
@@ -3659,15 +3285,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "cansee_clouds"
-                      },
+                      "type": "helper",
+                      "name": "cansee_clouds",
                       "args": []
                     }
                   ]
@@ -3854,15 +3473,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "has_midring"
-                      },
+                      "type": "helper",
+                      "name": "has_midring",
                       "args": []
                     },
                     {
@@ -3916,15 +3528,8 @@
             "name": "4-4 -> Marching Milde's Boss Room",
             "connected_region": "Marching Milde's Boss Room",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_44Clear"
-              },
+              "type": "helper",
+              "name": "_44Clear",
               "args": []
             }
           }
@@ -3967,15 +3572,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
@@ -4025,15 +3623,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
@@ -4064,15 +3655,8 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "has_midring"
-                      },
+                      "type": "helper",
+                      "name": "has_midring",
                       "args": []
                     },
                     {
@@ -4083,15 +3667,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "cansee_clouds"
-                      },
+                      "type": "helper",
+                      "name": "cansee_clouds",
                       "args": []
                     }
                   ]
@@ -4109,15 +3686,8 @@
             "name": "Marching Milde's Fort: Level Clear",
             "id": 3166352,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_44CanFightBoss"
-              },
+              "type": "helper",
+              "name": "_44CanFightBoss",
               "args": []
             },
             "item": {
@@ -4137,15 +3707,8 @@
             "name": "Marching Milde's Boss Room",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_44Boss"
-              },
+              "type": "helper",
+              "name": "_44Boss",
               "args": []
             },
             "item": {
@@ -4284,15 +3847,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
@@ -4336,15 +3892,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
@@ -4368,15 +3917,8 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "has_midring"
-                      },
+                      "type": "helper",
+                      "name": "has_midring",
                       "args": []
                     },
                     {
@@ -4390,15 +3932,8 @@
                           }
                         },
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "logic"
-                            },
-                            "attr": "cansee_clouds"
-                          },
+                          "type": "helper",
+                          "name": "cansee_clouds",
                           "args": []
                         }
                       ]
@@ -4416,15 +3951,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
@@ -4452,15 +3980,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "combat_item"
-                  },
+                  "type": "helper",
+                  "name": "combat_item",
                   "args": []
                 }
               ]
@@ -4522,15 +4043,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "has_midring"
-                      },
+                      "type": "helper",
+                      "name": "has_midring",
                       "args": []
                     },
                     {
@@ -4579,15 +4093,8 @@
             "name": "Ride Like The Wind: Gather Coins",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_47Game"
-              },
+              "type": "helper",
+              "name": "_47Game",
               "args": []
             },
             "item": {
@@ -4606,15 +4113,8 @@
             "name": "4-8 -> Hookbill The Koopa's Boss Room",
             "connected_region": "Hookbill The Koopa's Boss Room",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_48Clear"
-              },
+              "type": "helper",
+              "name": "_48Clear",
               "args": []
             }
           }
@@ -4675,15 +4175,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
@@ -4712,15 +4205,8 @@
             "name": "Hookbill The Koopa's Castle: Level Clear",
             "id": 3166368,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_48CanFightBoss"
-              },
+              "type": "helper",
+              "name": "_48CanFightBoss",
               "args": []
             },
             "item": {
@@ -4740,15 +4226,8 @@
             "name": "Hookbill The Koopa's Boss Room",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_48Boss"
-              },
+              "type": "helper",
+              "name": "_48Boss",
               "args": []
             },
             "item": {
@@ -4808,15 +4287,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "cansee_clouds"
-                  },
+                  "type": "helper",
+                  "name": "cansee_clouds",
                   "args": []
                 },
                 {
@@ -4826,15 +4298,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "logic"
-                            },
-                            "attr": "has_midring"
-                          },
+                          "type": "helper",
+                          "name": "has_midring",
                           "args": []
                         },
                         {
@@ -4919,15 +4384,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
@@ -4983,15 +4441,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "melon_item"
-                      },
+                      "type": "helper",
+                      "name": "melon_item",
                       "args": []
                     }
                   ]
@@ -5038,15 +4489,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "melon_item"
-                      },
+                      "type": "helper",
+                      "name": "melon_item",
                       "args": []
                     }
                   ]
@@ -5084,15 +4528,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "has_midring"
-                      },
+                      "type": "helper",
+                      "name": "has_midring",
                       "args": []
                     },
                     {
@@ -5106,15 +4543,8 @@
                           }
                         },
                         {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "logic"
-                            },
-                            "attr": "melon_item"
-                          },
+                          "type": "helper",
+                          "name": "melon_item",
                           "args": []
                         }
                       ]
@@ -5170,15 +4600,8 @@
             "name": "5-4 -> Sluggy The Unshaven's Boss Room",
             "connected_region": "Sluggy The Unshaven's Boss Room",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_54Clear"
-              },
+              "type": "helper",
+              "name": "_54Clear",
               "args": []
             }
           }
@@ -5255,15 +4678,8 @@
                       ]
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "has_midring"
-                      },
+                      "type": "helper",
+                      "name": "has_midring",
                       "args": []
                     }
                   ]
@@ -5272,15 +4688,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "cansee_clouds"
-                      },
+                      "type": "helper",
+                      "name": "cansee_clouds",
                       "args": []
                     },
                     {
@@ -5312,15 +4721,8 @@
             "name": "Sluggy The Unshaven's Fort: Level Clear",
             "id": 3166384,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_54CanFightBoss"
-              },
+              "type": "helper",
+              "name": "_54CanFightBoss",
               "args": []
             },
             "item": {
@@ -5340,15 +4742,8 @@
             "name": "Sluggy The Unshaven's Boss Room",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_54Boss"
-              },
+              "type": "helper",
+              "name": "_54Boss",
               "args": []
             },
             "item": {
@@ -5414,15 +4809,8 @@
             "name": "Goonie Rides!: Stars",
             "id": 3166387,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "has_midring"
-              },
+              "type": "helper",
+              "name": "has_midring",
               "args": []
             },
             "item": {
@@ -5496,15 +4884,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
@@ -5561,15 +4942,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "combat_item"
-                  },
+                  "type": "helper",
+                  "name": "combat_item",
                   "args": []
                 }
               ]
@@ -5599,15 +4973,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "combat_item"
-                  },
+                  "type": "helper",
+                  "name": "combat_item",
                   "args": []
                 }
               ]
@@ -5623,15 +4990,8 @@
             "name": "Shifting Platforms Ahead: Stars",
             "id": 3166395,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "has_midring"
-              },
+              "type": "helper",
+              "name": "has_midring",
               "args": []
             },
             "item": {
@@ -5664,15 +5024,8 @@
             "name": "5-8 -> Raphael The Raven's Boss Room",
             "connected_region": "Raphael The Raven's Boss Room",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_58Clear"
-              },
+              "type": "helper",
+              "name": "_58Clear",
               "args": []
             }
           }
@@ -5731,15 +5084,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
@@ -5762,15 +5108,8 @@
             "name": "Raphael The Raven's Castle: Level Clear",
             "id": 3166400,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_58CanFightBoss"
-              },
+              "type": "helper",
+              "name": "_58CanFightBoss",
               "args": []
             },
             "item": {
@@ -5790,15 +5129,8 @@
             "name": "Raphael The Raven's Boss Room",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_58Boss"
-              },
+              "type": "helper",
+              "name": "_58Boss",
               "args": []
             },
             "item": {
@@ -5874,15 +5206,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 }
               ]
@@ -5964,27 +5289,13 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "cansee_clouds"
-                  },
+                  "type": "helper",
+                  "name": "cansee_clouds",
                   "args": []
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 }
               ]
@@ -6084,15 +5395,8 @@
             "name": "6-4 -> Tap-Tap The Red Nose's Boss Room",
             "connected_region": "Tap-Tap The Red Nose's Boss Room",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_64Clear"
-              },
+              "type": "helper",
+              "name": "_64Clear",
               "args": []
             }
           }
@@ -6134,15 +5438,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
@@ -6192,15 +5489,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
@@ -6221,15 +5511,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 },
                 {
@@ -6260,15 +5543,8 @@
             "name": "Tap-Tap The Red Nose's Fort: Level Clear",
             "id": 3166416,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_64CanFightBoss"
-              },
+              "type": "helper",
+              "name": "_64CanFightBoss",
               "args": []
             },
             "item": {
@@ -6288,15 +5564,8 @@
             "name": "Tap-Tap The Red Nose's Boss Room",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_64Boss"
-              },
+              "type": "helper",
+              "name": "_64Boss",
               "args": []
             },
             "item": {
@@ -6340,15 +5609,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
@@ -6390,15 +5652,8 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
@@ -6440,29 +5695,15 @@
                       }
                     },
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "combat_item"
-                      },
+                      "type": "helper",
+                      "name": "combat_item",
                       "args": []
                     }
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "has_midring"
-                  },
+                  "type": "helper",
+                  "name": "has_midring",
                   "args": []
                 }
               ]
@@ -6566,15 +5807,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "logic"
-                        },
-                        "attr": "has_midring"
-                      },
+                      "type": "helper",
+                      "name": "has_midring",
                       "args": []
                     },
                     {
@@ -6651,15 +5885,8 @@
                   }
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "combat_item"
-                  },
+                  "type": "helper",
+                  "name": "combat_item",
                   "args": []
                 }
               ]
@@ -6692,15 +5919,8 @@
             "name": "KEEP MOVING!!!!: Stars",
             "id": 3166427,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "has_midring"
-              },
+              "type": "helper",
+              "name": "has_midring",
               "args": []
             },
             "item": {
@@ -6733,15 +5953,8 @@
             "name": "6-8 -> Bowser's Room",
             "connected_region": "Bowser's Room",
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "bosses"
-                },
-                "attr": "castle_clear"
-              },
+              "type": "helper",
+              "name": "castle_clear",
               "args": []
             }
           }
@@ -6767,15 +5980,8 @@
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "_68CollectibleRoute"
-                  },
+                  "type": "helper",
+                  "name": "_68CollectibleRoute",
                   "args": []
                 }
               ]
@@ -6807,15 +6013,8 @@
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "_68CollectibleRoute"
-                  },
+                  "type": "helper",
+                  "name": "_68CollectibleRoute",
                   "args": []
                 }
               ]
@@ -6847,15 +6046,8 @@
                   ]
                 },
                 {
-                  "type": "function_call",
-                  "function": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "logic"
-                    },
-                    "attr": "_68Route"
-                  },
+                  "type": "helper",
+                  "name": "_68Route",
                   "args": []
                 }
               ]
@@ -6877,15 +6069,8 @@
             "name": "King Bowser's Castle: Level Clear",
             "id": null,
             "access_rule": {
-              "type": "function_call",
-              "function": {
-                "type": "attribute",
-                "object": {
-                  "type": "name",
-                  "name": "logic"
-                },
-                "attr": "_68Clear"
-              },
+              "type": "helper",
+              "name": "_68Clear",
               "args": []
             },
             "item": {
@@ -7329,20 +6514,6 @@
         "type": null,
         "max_count": 10
       },
-      "Secret Lens": {
-        "name": "Secret Lens",
-        "id": 3154049,
-        "groups": [
-          "Everything",
-          "Items"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
       "World 1 Gate": {
         "name": "World 1 Gate",
         "id": 3154030,
@@ -7601,6 +6772,20 @@
         "groups": [
           "Everything",
           "Panels"
+        ],
+        "advancement": false,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Secret Lens": {
+        "name": "Secret Lens",
+        "id": 3154049,
+        "groups": [
+          "Everything",
+          "Items"
         ],
         "advancement": false,
         "useful": false,
@@ -8006,7 +7191,15 @@
   "settings": {
     "1": {
       "game": "Yoshi's Island",
-      "assume_bidirectional_exits": false
+      "assume_bidirectional_exits": false,
+      "StageLogic": 0,
+      "HiddenObjectVisibility": 1,
+      "ShuffleMiddleRings": 0,
+      "ItemLogic": 0,
+      "BowserDoorMode": 0,
+      "LuigiPiecesRequired": 25,
+      "CastleClearCondition": 0,
+      "CastleOpenCondition": 5
     }
   },
   "game_info": {

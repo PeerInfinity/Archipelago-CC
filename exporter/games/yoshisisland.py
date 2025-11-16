@@ -51,27 +51,29 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
 
     def _transform_logic_attribute_access(self, rule: Any) -> Any:
         """
-        Recursively transform logic.method attribute access patterns to helper calls.
+        Recursively transform logic.method and bosses.method attribute access patterns to helper calls.
 
         Converts patterns like:
             {"type": "attribute", "object": {"type": "name", "name": "logic"}, "attr": "method_name"}
+            {"type": "attribute", "object": {"type": "name", "name": "bosses"}, "attr": "method_name"}
         Into:
             {"type": "helper", "name": "method_name", "args": []}
 
-        This handles a bug in the Python code where logic methods are accessed
+        This handles a bug in the Python code where logic/bosses methods are accessed
         as attributes instead of being called as functions.
         """
         if not isinstance(rule, dict):
             return rule
 
-        # Check if this is a logic attribute access pattern
+        # Check if this is a logic or bosses attribute access pattern
         if (rule.get('type') == 'attribute' and
             isinstance(rule.get('object'), dict) and
             rule['object'].get('type') == 'name' and
-            rule['object'].get('name') == 'logic'):
+            rule['object'].get('name') in ['logic', 'bosses']):
             # Convert to helper call
             method_name = rule.get('attr')
-            logger.debug(f"Converting logic.{method_name} attribute access to helper call")
+            module_name = rule['object'].get('name')
+            logger.debug(f"Converting {module_name}.{method_name} attribute access to helper call")
             return {
                 'type': 'helper',
                 'name': method_name,
@@ -93,6 +95,24 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
                 rule['if_true'] = self._transform_logic_attribute_access(rule['if_true'])
             if 'if_false' in rule:
                 rule['if_false'] = self._transform_logic_attribute_access(rule['if_false'])
+        elif rule.get('type') == 'function_call':
+            # Transform function_call with bosses/logic attribute access to helper
+            if 'function' in rule:
+                func = rule['function']
+                if (isinstance(func, dict) and
+                    func.get('type') == 'attribute' and
+                    isinstance(func.get('object'), dict) and
+                    func['object'].get('type') == 'name' and
+                    func['object'].get('name') in ['logic', 'bosses']):
+                    # Convert to helper call
+                    method_name = func.get('attr')
+                    module_name = func['object'].get('name')
+                    logger.debug(f"Converting {module_name}.{method_name} function_call to helper call")
+                    return {
+                        'type': 'helper',
+                        'name': method_name,
+                        'args': []
+                    }
 
         return rule
 
@@ -154,5 +174,11 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
 
             # Luigi Pieces Required (needed for reconstitute_luigi)
             settings_dict['LuigiPiecesRequired'] = extract_option('luigi_pieces_required')
+
+            # Castle Clear Condition (needed for castle_clear)
+            settings_dict['CastleClearCondition'] = extract_option('castle_clear_condition')
+
+            # Castle Open Condition (needed for castle_access)
+            settings_dict['CastleOpenCondition'] = extract_option('castle_open_condition')
 
         return settings_dict
