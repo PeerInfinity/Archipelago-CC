@@ -104,7 +104,22 @@ class BombRushCyberfunkGameExportHandler(BaseGameExportHandler):
             'mataan_smoke_wall2',
             'mataan_deepest',
             'mataan_crew_battle',
-            'mataan_faux'
+            'mataan_faux',
+            # Individual challenge functions
+            'versum_hill_challenge1',
+            'versum_hill_challenge2',
+            'versum_hill_challenge3',
+            'brink_terminal_challenge1',
+            'brink_terminal_challenge2',
+            'brink_terminal_challenge3',
+            'millennium_mall_challenge1',
+            'millennium_mall_challenge2',
+            'millennium_mall_challenge3',
+            'millennium_mall_challenge4',
+            'pyramid_island_challenge1',
+            'pyramid_island_challenge2',
+            'pyramid_island_challenge3',
+            'mataan_challenge3'
         ]
         return func_name in preserve_list
     
