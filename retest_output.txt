@@ -51,3 +51,6 @@ Testing seeds 1-10 (failing seed + continue)
   [Memory] Blasphemous.yaml - start: 34.2 MB RSS
 Running Generate.py for Blasphemous.yaml...
   Command: python Generate.py --weights_file_path /home/user/Archipelago-CC/Players/Templates/Blasphemous.yaml --multi 1 --seed 1
+  [Memory] Blasphemous.yaml - after generation: 34.2 MB RSS
+Running spoiler test...
+  Command: npm test --mode=test-spoilers --game=blasphemous --seed=1
