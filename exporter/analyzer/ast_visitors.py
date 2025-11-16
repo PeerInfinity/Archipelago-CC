@@ -727,14 +727,14 @@ class ASTVisitorMixin:
                         # Try to resolve the expression (e.g., ItemName.MasterForm -> "Master Form")
                         resolved_item = self.expression_resolver.resolve_expression(first_arg)
                         if resolved_item is not None and isinstance(resolved_item, str):
-                            # Successfully resolved to a string value
+                            # Successfully resolved to a string value - use the string directly
                             logging.debug(f"Resolved item name: {first_arg} -> {resolved_item}")
-                            item_value = {'type': 'constant', 'value': resolved_item}
-                        elif first_arg.get('type') == 'constant':
-                            # Already a constant, use as-is
-                            item_value = first_arg
+                            item_value = resolved_item
+                        elif first_arg.get('type') == 'constant' and isinstance(first_arg.get('value'), str):
+                            # Already a constant string - extract the value
+                            item_value = first_arg.get('value')
                         else:
-                            # Could not resolve to a constant value, keep as-is
+                            # Could not resolve to a constant value, keep as-is (rule object)
                             logging.debug(f"Could not resolve item name: {first_arg}")
                             item_value = first_arg
 
@@ -758,7 +758,15 @@ class ASTVisitorMixin:
                                 logging.debug(f"Found unresolved count parameter: {second_arg}")
                                 result['count'] = second_arg
                 elif method == 'has_group' and len(filtered_args) >= 1:
-                    result = {'type': 'group_check', 'group': filtered_args[0]}
+                    # Unwrap group name if it's a constant
+                    group_arg = filtered_args[0]
+                    if isinstance(group_arg, dict) and group_arg.get('type') == 'constant' and isinstance(group_arg.get('value'), str):
+                        group_value = group_arg.get('value')
+                    elif isinstance(group_arg, str):
+                        group_value = group_arg
+                    else:
+                        group_value = group_arg
+                    result = {'type': 'group_check', 'group': group_value}
                     # Check for count parameter (now in position 1 after filtering)
                     if len(filtered_args) >= 2:
                         second_arg = filtered_args[1]
@@ -778,11 +786,28 @@ class ASTVisitorMixin:
                                 logging.debug(f"Found unresolved group count parameter: {second_arg}")
                                 result['count'] = second_arg
                 elif method == 'has_any' and len(filtered_args) >= 1 and isinstance(filtered_args[0], list):
-                    result = {'type': 'or', 'conditions': [{'type': 'item_check', 'item': item} for item in filtered_args[0]]}
+                    # Unwrap each item if it's a constant
+                    items = []
+                    for item in filtered_args[0]:
+                        if isinstance(item, dict) and item.get('type') == 'constant' and isinstance(item.get('value'), str):
+                            items.append(item.get('value'))
+                        elif isinstance(item, str):
+                            items.append(item)
+                        else:
+                            items.append(item)
+                    result = {'type': 'or', 'conditions': [{'type': 'item_check', 'item': item} for item in items]}
                 elif method == '_lttp_has_key' and len(filtered_args) >= 1:
+                    # Unwrap item name if it's a constant
+                    item_arg = filtered_args[0]
+                    if isinstance(item_arg, dict) and item_arg.get('type') == 'constant' and isinstance(item_arg.get('value'), str):
+                        item_value = item_arg.get('value')
+                    elif isinstance(item_arg, str):
+                        item_value = item_arg
+                    else:
+                        item_value = item_arg
                     # Count is now in position 1 after player is filtered
                     count = filtered_args[1] if len(filtered_args) >= 2 else {'type': 'constant', 'value': 1}
-                    result = {'type': 'count_check', 'item': filtered_args[0], 'count': count}
+                    result = {'type': 'count_check', 'item': item_value, 'count': count}
                 # Add other state methods like can_reach if needed
                 # elif method == 'can_reach': ...
                 else:

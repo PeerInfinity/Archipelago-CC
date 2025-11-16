@@ -844,8 +844,13 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
 
         blasphemous_items_data = {}
 
-        # Process regular items from item_table
-        for item_name, item_data in item_table.items():
+        # Process regular items from item_table (which is a list of dicts in Blasphemous)
+        for item_data in item_table:
+            # item_data is a dict with 'name', 'count', and 'classification' keys
+            item_name = item_data.get('name')
+            if not item_name:
+                continue
+
             # Get groups this item belongs to
             groups = [
                 group_name for group_name, items in getattr(world, 'item_name_groups', {}).items()
@@ -853,7 +858,7 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
             ]
 
             try:
-                item_classification = getattr(item_data, 'classification', None)
+                item_classification = item_data.get('classification')
                 is_advancement = item_classification == ItemClassification.progression if item_classification else False
                 is_useful = item_classification == ItemClassification.useful if item_classification else False
                 is_trap = item_classification == ItemClassification.trap if item_classification else False
@@ -865,14 +870,14 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
 
             blasphemous_items_data[item_name] = {
                 'name': item_name,
-                'id': getattr(item_data, 'code', None),
+                'id': None,  # Blasphemous items in item_table don't have codes
                 'groups': sorted(groups),
                 'advancement': is_advancement,
                 'useful': is_useful,
                 'trap': is_trap,
                 'event': False,  # Regular items are not events
                 'type': None,
-                'max_count': 1
+                'max_count': item_data.get('count', 1)
             }
 
         # Handle dynamically created event items that are placed at locations
