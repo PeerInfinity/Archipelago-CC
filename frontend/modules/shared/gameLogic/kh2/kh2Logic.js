@@ -970,20 +970,30 @@ export const helperFunctions = {
    */
   final_form_region_access(snapshot, staticData) {
     // These locations are defined in Logic.py:608-614 (final_leveling_access)
-    const finalLevelingLocations = [
-      'Roxas Event Location',
-      'Grim Reaper 2',
-      'Xaldin',
-      'Storm Rider',
-      'Underground Concourse Mythril Gem'
+    // The Python code checks if any of these locations can be reached, which means:
+    // 1. The parent region of the location is accessible
+    // 2. The location's access rule passes
+    //
+    // To avoid circular dependencies (since checking location access would require
+    // region access which requires this helper), we check the parent regions instead.
+    // From the Python code: "The access rules of each of the locations in final_leveling_access
+    // do not check for being able to reach other locations or other regions, so it is only
+    // the parent region of each location that needs to be added as an indirect condition."
+    //
+    // Parent regions (from rules.json):
+    const finalLevelingRegions = [
+      'Roxas',                // Roxas Event Location
+      'Grim Reaper 2',        // (PR2) Grim Reaper 2 Bonus: Sora Slot 1
+      'Xaldin',               // (BC2) Xaldin Bonus: Sora Slot 1
+      'Storm Rider',          // (LoD2) Storm Rider Bonus: Sora Slot 1
+      'Twilight Town 3'       // (TT3) Underground Concourse Mythril Gem
     ];
 
-    // Check if any of these locations are accessible in the current state
-    // The snapshot contains accessibleLocations (camelCase) which tracks all reachable locations
-    const accessibleLocations = snapshot?.accessibleLocations || [];
+    // Check if any of these parent regions are accessible
+    const regionReachability = snapshot?.regionReachability || {};
 
-    return finalLevelingLocations.some(location =>
-      accessibleLocations.includes(location)
+    return finalLevelingRegions.some(region =>
+      regionReachability[region] === 'reachable'
     );
   },
 
@@ -1012,6 +1022,37 @@ export const helperFunctions = {
     if (fightLogic === 0) return categoriesAvailable >= 4; // easy
     if (fightLogic === 1) return categoriesAvailable >= 3; // normal
     return categoriesAvailable >= 2; // hard
+  },
+
+  /**
+   * Check if Barbosa fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_barbosa_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Barbosa fight
+   */
+  get_barbosa_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const elementalMagic = ['Blizzard Element', 'Thunder Element'];
+
+    if (fightLogic === 0) { // easy: 2+ Blizzard/Thunder AND defensive tool
+      const magicCount = elementalMagic.reduce((sum, item) =>
+        sum + (snapshot?.inventory?.[item] > 0 ? 1 : 0), 0);
+      const hasDefensive = defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0);
+      return magicCount >= 2 && hasDefensive;
+    } else if (fightLogic === 1) { // normal: 2+ of (defensive tool, Blizzard, Thunder)
+      const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+        [defensiveTool, elementalMagic],
+        snapshot
+      );
+      return categoriesAvailable >= 2;
+    } else { // hard: defensive tool only
+      return defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0);
+    }
   },
 
   /**
