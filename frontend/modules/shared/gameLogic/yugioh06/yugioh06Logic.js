@@ -58,6 +58,17 @@ export function has(snapshot, staticData, itemName) {
  * @returns {number} Number of items
  */
 export function count(snapshot, staticData, itemName) {
+  // Check events first (events are binary - either 1 or 0)
+  if (snapshot.events && snapshot.events.includes(itemName)) {
+    return 1;
+  }
+
+  // Check flags
+  if (snapshot.flags && snapshot.flags.includes(itemName)) {
+    return 1;
+  }
+
+  // Check inventory
   if (!snapshot.inventory) return 0;
   return snapshot.inventory[itemName] || 0;
 }
