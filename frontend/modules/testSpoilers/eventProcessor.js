@@ -163,21 +163,21 @@ export class EventProcessor {
         }
 
         // Use accumulated data from sphereState
-        const inventory_from_log = sphereData.inventoryDetails?.base_items || {};
+        // Use resolved_items which includes starting items and progressive item resolutions
+        const inventory_from_log = sphereData.inventoryDetails?.resolved_items || {};
+
+        // DEBUG: Log inventory details for Sphere 0
+        if (event.sphere_index === 0 || event.sphere_index === '0') {
+          this.logCallback('error', `[DEBUG Sphere 0] previousInventory: ${JSON.stringify(this.previousInventory)}`);
+          this.logCallback('error', `[DEBUG Sphere 0] inventory_from_log: ${JSON.stringify(inventory_from_log)}`);
+        }
 
         // Find newly added items by comparing with previous inventory
         newlyAddedItems = this.findNewlyAddedItems(this.previousInventory, inventory_from_log);
 
-        // Log newly added items before the status message
-        if (newlyAddedItems.length > 0) {
-          const itemCounts = {};
-          newlyAddedItems.forEach(item => {
-            itemCounts[item] = (itemCounts[item] || 0) + 1;
-          });
-          const itemList = Object.entries(itemCounts).map(([item, count]) =>
-            count > 1 ? `${item} (x${count})` : item
-          ).join(', ');
-          this.logCallback('info', `📦 Recently added item${newlyAddedItems.length > 1 ? 's' : ''}: ${itemList}`);
+        // DEBUG: Check newlyAddedItems for Sphere 0
+        if (event.sphere_index === 0 || event.sphere_index === '0') {
+          this.logCallback('error', `[DEBUG Sphere 0] newlyAddedItems: ${JSON.stringify(newlyAddedItems)}, length: ${newlyAddedItems.length}`);
         }
 
         const accessible_from_log = sphereData.accessibleLocations || [];
@@ -209,6 +209,26 @@ export class EventProcessor {
           } else {
             if (this.verboseMode) {
               this.logCallback('debug', `Keeping accumulated state for sphere ${context.sphere_number}.`);
+            }
+          }
+
+          // Add newly added items to inventory (after clearing event items)
+          if (newlyAddedItems.length > 0) {
+            const itemCounts = {};
+            newlyAddedItems.forEach(item => {
+              itemCounts[item] = (itemCounts[item] || 0) + 1;
+            });
+            const itemList = Object.entries(itemCounts).map(([item, count]) =>
+              count > 1 ? `${item} (x${count})` : item
+            ).join(', ');
+            this.logCallback('info', `📦 Recently added item${newlyAddedItems.length > 1 ? 's' : ''}: ${itemList}`);
+
+            // Actually add these items to the state manager's inventory
+            this.logCallback('error', `[DEBUG] About to add ${newlyAddedItems.length} items to inventory AFTER clearEventItems`);
+            for (const itemName of newlyAddedItems) {
+              this.logCallback('error', `[DEBUG] Adding item: ${itemName}`);
+              await stateManager.addItemToInventory(itemName, 1);
+              this.logCallback('error', `[DEBUG] Added item: ${itemName}`);
             }
           }
 
@@ -560,7 +580,8 @@ export class EventProcessor {
     if (eventType === 'state_update') {
       const sphereData = this._getSphereDataFromSphereState(this.currentLogIndex);
       if (sphereData) {
-        this.previousInventory = JSON.parse(JSON.stringify(sphereData.inventoryDetails?.base_items || {}));
+        // Use resolved_items to track the actual inventory state including starting items
+        this.previousInventory = JSON.parse(JSON.stringify(sphereData.inventoryDetails?.resolved_items || {}));
       }
     }
 
