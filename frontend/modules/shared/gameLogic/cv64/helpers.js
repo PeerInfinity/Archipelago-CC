@@ -15,8 +15,9 @@ export function location_item_name(snapshot, staticData, locationName) {
 
     // Use the locationItems map which contains the item placement data
     if (staticData?.locationItems) {
-        if (locationName in staticData.locationItems) {
-            const item = staticData.locationItems[locationName];
+        // locationItems is a Map, use Map methods
+        if (staticData.locationItems.has(locationName)) {
+            const item = staticData.locationItems.get(locationName);
             if (item) {
                 const result = [item.name, item.player];
                 console.log('[CV64 Helper] Found via locationItems, returning:', result);
@@ -24,7 +25,7 @@ export function location_item_name(snapshot, staticData, locationName) {
             }
         } else {
             // Debug: show what's available
-            const availableKeys = Object.keys(staticData.locationItems);
+            const availableKeys = Array.from(staticData.locationItems.keys());
             console.log('[CV64 Helper] Location not in map. Sample keys:', availableKeys.slice(0, 5));
             const matching = availableKeys.filter(k => k.includes('Storeroom'));
             if (matching.length > 0) {
