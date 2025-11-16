@@ -1,0 +1,2253 @@
+Archipelago (0.6.4) logging initialized on Linux-4.4.0-x86_64-with-glibc2.39 process 19372 running Python 3.11.14
+Weights: /home/user/Archipelago-CC/Players/Templates/SMZ3.yaml >> Default SMZ3 Template
+Generating for 1 player, 14089154938208861744 Seed 1 with plando: connections, texts, bosses
+[SM MODULE] Loading Super Metroid exporter handler
+Archipelago Version 0.6.4  -  Seed: 1
+
+Found 82 World Types:
+ Adventure                               : Items:   15 | Locations:    24
+ A Hat in Time                           : Items:   58 | Locations:   455
+ A Link to the Past                      : Items:  146 | Locations:   286
+ Aquaria                                 : Items:  134 | Locations:   218
+ ChocolateChipCookies                    : Items:   15 | Locations:    15
+ Blasphemous                             : Items:  204 | Locations:   306
+ Bomb Rush Cyberfunk                     : Items:  165 | Locations:   247
+ Bumper Stickers                         : Items:   12 | Locations:   100
+ Celeste 64                              : Items:   24 | Locations:    56
+ ChecksFinder                            : Items:    3 | Locations:    25
+ Civilization VI                         : Items:  167 | Locations:   278
+ WebDevJourney                           : Items:   51 | Locations:    61
+ Castlevania 64                          : Items:   36 | Locations:   352
+ Castlevania - Circle of the Moon        : Items:   31 | Locations:   125
+ Dark Souls III                          : Items: 1204 | Locations:  1506
+ Donkey Kong Country 3                   : Items:    8 | Locations:   230
+ DLCQuest                                : Items:   51 | Locations: 18913
+ DOOM 1993                               : Items:  195 | Locations:   474
+ DOOM II                                 : Items:  178 | Locations:   479
+ Factorio                                : Items:  233 | Locations:  6993
+ Faxanadu                                : Items:   30 | Locations:   110
+ Final Fantasy                           : Items:  194 | Locations:   255
+ Final Fantasy Mystic Quest              : Items:   67 | Locations:   266
+ Heretic                                 : Items:  269 | Locations:  1014
+ Hollow Knight                           : Items:  249 | Locations:   740
+ Hylics 2                                : Items:   70 | Locations:   166
+ Inscryption                             : Items:   42 | Locations:   100
+ Jak and Daxter: The Precursor Legacy    : Items:   75 | Locations:  4239
+ Kirby's Dream Land 3                    : Items:   24 | Locations:   876
+ Kingdom Hearts                          : Items:  361 | Locations:   520
+ Kingdom Hearts 2                        : Items:  293 | Locations:   724
+ Links Awakening DX                      : Items:  118 | Locations:   255
+ Landstalker - The Treasures of King Nole: Items:   62 | Locations:   292
+ Lingo                                   : Items:  276 | Locations:   872
+ Lufia II Ancient Cave                   : Items:  415 | Locations:   123
+ Super Mario Land 2                      : Items: 2727 | Locations:  2659
+ MathProof2p2e4                          : Items:   10 | Locations:    10
+ Meritous                                : Items:   23 | Locations:   104
+ The Messenger                           : Items:   64 | Locations:   136
+ Metamath                                : Items:  108 | Locations:   100
+ Mario & Luigi Superstar Saga            : Items:  146 | Locations:   600
+ Mega Man 2                              : Items:   23 | Locations:    71
+ MegaMan Battle Network 3                : Items:  224 | Locations:   263
+ Muse Dash                               : Items:  672 | Locations:  1314
+ Noita                                   : Items:   32 | Locations:   672
+ Ocarina of Time                         : Items:  143 | Locations:  1623
+ Old School Runescape                    : Items:   86 | Locations:   169
+ Overcooked! 2                           : Items:   45 | Locations:    43
+ Paint                                   : Items:   27 | Locations:   380
+ Pokemon Emerald                         : Items:  291 | Locations:  1338
+ Pokemon Red and Blue                    : Items:  207 | Locations:   709
+ Raft                                    : Items:  325 | Locations:   154
+ Risk of Rain 2                          : Items:   51 | Locations:   954
+ Sonic Adventure 2 Battle                : Items:  182 | Locations:  2555
+ Saving Princess                         : Items:   20 | Locations:    36
+ Starcraft 2                             : Items:  595 | Locations:   663
+ shapez                                  : Items:   67 | Locations:  3543
+ Shivers                                 : Items:   76 | Locations:   117
+ A Short Hike                            : Items:   37 | Locations:   131
+ Super Metroid                           : Items:   24 | Locations:   101
+ Super Mario 64                          : Items:   29 | Locations:   164
+ Super Mario World                       : Items:   29 | Locations:   765
+ SMZ3                                    : Items:  151 | Locations:   316
+ Secret of Evermore                      : Items:  165 | Locations:   913
+ Stardew Valley                          : Items:  964 | Locations:  3291
+ Subnautica                              : Items:  104 | Locations:   181
+ Terraria                                : Items:  188 | Locations:   159
+ Timespinner                             : Items:  198 | Locations:   215
+ The Legend of Zelda                     : Items:   33 | Locations:   155
+ TUNIC                                   : Items:  157 | Locations:  6835
+ The Wind Waker                          : Items:  152 | Locations:   313
+ Undertale                               : Items:   85 | Locations:   122
+ VVVVVV                                  : Items:   20 | Locations:    20
+ Wargroove                               : Items:   31 | Locations:    38
+ The Witness                             : Items:  267 | Locations:  1004
+ Yacht Dice                              : Items:   47 | Locations:  1000
+ Yoshi's Island                          : Items:   69 | Locations:   235
+ Yu-Gi-Oh! 2006                          : Items:  172 | Locations:   165
+ Zillion                                 : Items:   12 | Locations:  1555
+
+Creating MultiWorld.
+Creating Items.
+Calculating Access Rules.
+Running Item Plando.
+Running Pre Main Fill.
+Filling the multiworld with 231 items.
+Progression balancing skipped.
+Beginning output...
+Generating output files (3/3).
+Calculating playthrough.
+Attempting to open spoiler log file for sphere data at: /tmp/tmpc45951ho/AP_14089154938208861744_spheres_log.jsonl
+Spoiler sphere log will be written to: /tmp/tmpc45951ho/AP_14089154938208861744_spheres_log.jsonl
+SMZ3 exporter initialized
+Closed spoiler log file: /tmp/tmpc45951ho/AP_14089154938208861744_spheres_log.jsonl
+Processing entrance: Castle Tower->Menu
+Entrance args for Castle Tower->Menu: ('state',), defaults: 0
+No 'region' object found in defaults for Castle Tower->Menu
+Processing entrance: Menu->Castle Tower
+Entrance args for Menu->Castle Tower: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.CastleTower.CastleTower'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.CastleTower.CastleTower'>
+Found TotalSMZ3 Region object for 'Menu->Castle Tower', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Castle Tower'
+Processing entrance: Menu->Eastern Palace
+Entrance args for Menu->Eastern Palace: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.EasternPalace.EasternPalace'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.EasternPalace.EasternPalace'>
+Found TotalSMZ3 Region object for 'Menu->Eastern Palace', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Eastern Palace'
+Processing entrance: Menu->Desert Palace
+Entrance args for Menu->Desert Palace: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DesertPalace.DesertPalace'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DesertPalace.DesertPalace'>
+Found TotalSMZ3 Region object for 'Menu->Desert Palace', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Desert Palace'
+Processing entrance: Menu->Tower of Hera
+Entrance args for Menu->Tower of Hera: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.TowerOfHera.TowerOfHera'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.TowerOfHera.TowerOfHera'>
+Found TotalSMZ3 Region object for 'Menu->Tower of Hera', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Tower of Hera'
+Processing entrance: Menu->Palace of Darkness
+Entrance args for Menu->Palace of Darkness: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.PalaceOfDarkness.PalaceOfDarkness'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.PalaceOfDarkness.PalaceOfDarkness'>
+Found TotalSMZ3 Region object for 'Menu->Palace of Darkness', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Palace of Darkness'
+Processing entrance: Menu->Swamp Palace
+Entrance args for Menu->Swamp Palace: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.SwampPalace.SwampPalace'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.SwampPalace.SwampPalace'>
+Found TotalSMZ3 Region object for 'Menu->Swamp Palace', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Swamp Palace'
+Processing entrance: Menu->Skull Woods
+Entrance args for Menu->Skull Woods: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.SkullWoods.SkullWoods'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.SkullWoods.SkullWoods'>
+Found TotalSMZ3 Region object for 'Menu->Skull Woods', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Skull Woods'
+Processing entrance: Menu->Thieves' Town
+Entrance args for Menu->Thieves' Town: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.ThievesTown.ThievesTown'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.ThievesTown.ThievesTown'>
+Found TotalSMZ3 Region object for 'Menu->Thieves' Town', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Thieves' Town'
+Processing entrance: Menu->Ice Palace
+Entrance args for Menu->Ice Palace: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.IcePalace.IcePalace'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.IcePalace.IcePalace'>
+Found TotalSMZ3 Region object for 'Menu->Ice Palace', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Ice Palace'
+Processing entrance: Menu->Misery Mire
+Entrance args for Menu->Misery Mire: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.MiseryMire.MiseryMire'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.MiseryMire.MiseryMire'>
+Found TotalSMZ3 Region object for 'Menu->Misery Mire', extracting CanEnter logic
+Region 'Menu->Misery Mire' has medallion requirement: Medallion.Quake
+Medallion requirement for 'Menu->Misery Mire': Quake (value=2)
+Built medallion entrance rule for 'Menu->Misery Mire'
+Processing entrance: Menu->Turtle Rock
+Entrance args for Menu->Turtle Rock: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.TurtleRock.TurtleRock'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.TurtleRock.TurtleRock'>
+Found TotalSMZ3 Region object for 'Menu->Turtle Rock', extracting CanEnter logic
+Region 'Menu->Turtle Rock' has medallion requirement: Medallion.Ether
+Medallion requirement for 'Menu->Turtle Rock': Ether (value=1)
+Built medallion entrance rule for 'Menu->Turtle Rock'
+Processing entrance: Menu->Ganon's Tower
+Entrance args for Menu->Ganon's Tower: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.GanonsTower.GanonsTower'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.GanonsTower.GanonsTower'>
+Found TotalSMZ3 Region object for 'Menu->Ganon's Tower', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Ganon's Tower'
+Processing entrance: Menu->Light World Death Mountain West
+Entrance args for Menu->Light World Death Mountain West: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.LightWorld.DeathMountain.West.West'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.LightWorld.DeathMountain.West.West'>
+Found TotalSMZ3 Region object for 'Menu->Light World Death Mountain West', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Light World Death Mountain West'
+Processing entrance: Menu->Light World Death Mountain East
+Entrance args for Menu->Light World Death Mountain East: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.LightWorld.DeathMountain.East.East'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.LightWorld.DeathMountain.East.East'>
+Found TotalSMZ3 Region object for 'Menu->Light World Death Mountain East', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Light World Death Mountain East'
+Processing entrance: Menu->Light World North West
+Entrance args for Menu->Light World North West: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.LightWorld.NorthWest.NorthWest'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.LightWorld.NorthWest.NorthWest'>
+Found TotalSMZ3 Region object for 'Menu->Light World North West', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Light World North West'
+Processing entrance: Menu->Light World North East
+Entrance args for Menu->Light World North East: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.LightWorld.NorthEast.NorthEast'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.LightWorld.NorthEast.NorthEast'>
+Found TotalSMZ3 Region object for 'Menu->Light World North East', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Light World North East'
+Processing entrance: Menu->Light World South
+Entrance args for Menu->Light World South: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.LightWorld.South.South'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.LightWorld.South.South'>
+Found TotalSMZ3 Region object for 'Menu->Light World South', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Light World South'
+Processing entrance: Menu->Hyrule Castle
+Entrance args for Menu->Hyrule Castle: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.HyruleCastle.HyruleCastle'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.HyruleCastle.HyruleCastle'>
+Found TotalSMZ3 Region object for 'Menu->Hyrule Castle', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Hyrule Castle'
+Processing entrance: Menu->Dark World Death Mountain West
+Entrance args for Menu->Dark World Death Mountain West: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DarkWorld.DeathMountain.West.West'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DarkWorld.DeathMountain.West.West'>
+Found TotalSMZ3 Region object for 'Menu->Dark World Death Mountain West', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Dark World Death Mountain West'
+Processing entrance: Menu->Dark World Death Mountain East
+Entrance args for Menu->Dark World Death Mountain East: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DarkWorld.DeathMountain.East.East'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DarkWorld.DeathMountain.East.East'>
+Found TotalSMZ3 Region object for 'Menu->Dark World Death Mountain East', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Dark World Death Mountain East'
+Processing entrance: Menu->Dark World North West
+Entrance args for Menu->Dark World North West: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DarkWorld.NorthWest.NorthWest'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DarkWorld.NorthWest.NorthWest'>
+Found TotalSMZ3 Region object for 'Menu->Dark World North West', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Dark World North West'
+Processing entrance: Menu->Dark World North East
+Entrance args for Menu->Dark World North East: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DarkWorld.NorthEast.NorthEast'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DarkWorld.NorthEast.NorthEast'>
+Found TotalSMZ3 Region object for 'Menu->Dark World North East', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Dark World North East'
+Processing entrance: Menu->Dark World South
+Entrance args for Menu->Dark World South: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DarkWorld.South.South'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DarkWorld.South.South'>
+Found TotalSMZ3 Region object for 'Menu->Dark World South', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Dark World South'
+Processing entrance: Menu->Dark World Mire
+Entrance args for Menu->Dark World Mire: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DarkWorld.Mire.Mire'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.Zelda.DarkWorld.Mire.Mire'>
+Found TotalSMZ3 Region object for 'Menu->Dark World Mire', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Dark World Mire'
+Processing entrance: Menu->Crateria West
+Entrance args for Menu->Crateria West: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Crateria.West.West'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Crateria.West.West'>
+Found TotalSMZ3 Region object for 'Menu->Crateria West', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Crateria West'
+Processing entrance: Menu->Crateria Central
+Entrance args for Menu->Crateria Central: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Crateria.Central.Central'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Crateria.Central.Central'>
+Found TotalSMZ3 Region object for 'Menu->Crateria Central', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Crateria Central'
+Processing entrance: Menu->Crateria East
+Entrance args for Menu->Crateria East: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Crateria.East.East'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Crateria.East.East'>
+Found TotalSMZ3 Region object for 'Menu->Crateria East', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Crateria East'
+Processing entrance: Menu->Brinstar Blue
+Entrance args for Menu->Brinstar Blue: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Brinstar.Blue.Blue'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Brinstar.Blue.Blue'>
+Found TotalSMZ3 Region object for 'Menu->Brinstar Blue', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Brinstar Blue'
+Processing entrance: Menu->Brinstar Green
+Entrance args for Menu->Brinstar Green: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Brinstar.Green.Green'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Brinstar.Green.Green'>
+Found TotalSMZ3 Region object for 'Menu->Brinstar Green', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Brinstar Green'
+Processing entrance: Menu->Brinstar Pink
+Entrance args for Menu->Brinstar Pink: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Brinstar.Pink.Pink'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Brinstar.Pink.Pink'>
+Found TotalSMZ3 Region object for 'Menu->Brinstar Pink', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Brinstar Pink'
+Processing entrance: Menu->Brinstar Red
+Entrance args for Menu->Brinstar Red: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Brinstar.Red.Red'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Brinstar.Red.Red'>
+Found TotalSMZ3 Region object for 'Menu->Brinstar Red', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Brinstar Red'
+Processing entrance: Menu->Brinstar Kraid
+Entrance args for Menu->Brinstar Kraid: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Brinstar.Kraid.Kraid'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Brinstar.Kraid.Kraid'>
+Found TotalSMZ3 Region object for 'Menu->Brinstar Kraid', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Brinstar Kraid'
+Processing entrance: Menu->Wrecked Ship
+Entrance args for Menu->Wrecked Ship: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.WreckedShip.WreckedShip'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.WreckedShip.WreckedShip'>
+Found TotalSMZ3 Region object for 'Menu->Wrecked Ship', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Wrecked Ship'
+Processing entrance: Menu->Maridia Outer
+Entrance args for Menu->Maridia Outer: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Maridia.Outer.Outer'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Maridia.Outer.Outer'>
+Found TotalSMZ3 Region object for 'Menu->Maridia Outer', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Maridia Outer'
+Processing entrance: Menu->Maridia Inner
+Entrance args for Menu->Maridia Inner: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Maridia.Inner.Inner'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.Maridia.Inner.Inner'>
+Found TotalSMZ3 Region object for 'Menu->Maridia Inner', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Maridia Inner'
+Processing entrance: Menu->Norfair Upper West
+Entrance args for Menu->Norfair Upper West: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.NorfairUpper.West.West'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.NorfairUpper.West.West'>
+Found TotalSMZ3 Region object for 'Menu->Norfair Upper West', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Norfair Upper West'
+Processing entrance: Menu->Norfair Upper East
+Entrance args for Menu->Norfair Upper East: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.NorfairUpper.East.East'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.NorfairUpper.East.East'>
+Found TotalSMZ3 Region object for 'Menu->Norfair Upper East', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Norfair Upper East'
+Processing entrance: Menu->Norfair Upper Crocomire
+Entrance args for Menu->Norfair Upper Crocomire: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.NorfairUpper.Crocomire.Crocomire'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.NorfairUpper.Crocomire.Crocomire'>
+Found TotalSMZ3 Region object for 'Menu->Norfair Upper Crocomire', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Norfair Upper Crocomire'
+Processing entrance: Menu->Norfair Lower West
+Entrance args for Menu->Norfair Lower West: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.NorfairLower.West.West'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.NorfairLower.West.West'>
+Found TotalSMZ3 Region object for 'Menu->Norfair Lower West', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Norfair Lower West'
+Processing entrance: Menu->Norfair Lower East
+Entrance args for Menu->Norfair Lower East: ('state', 'region'), defaults: 1
+Found 'region' object from defaults: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.NorfairLower.East.East'>
+region_object attributes - CanEnter: True, type: <class 'worlds.smz3.TotalSMZ3.Regions.SuperMetroid.NorfairLower.East.East'>
+Found TotalSMZ3 Region object for 'Menu->Norfair Lower East', extracting CanEnter logic
+Successfully extracted entrance logic for 'Menu->Norfair Lower East'
+Processing location: Castle Tower - Foyer
+Function args for Castle Tower - Foyer: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Castle Tower - Foyer', extracting canAccess logic
+Successfully extracted location logic for 'Castle Tower - Foyer'
+Processing location: Castle Tower - Dark Maze
+Function args for Castle Tower - Dark Maze: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Castle Tower - Dark Maze', extracting canAccess logic
+Successfully extracted location logic for 'Castle Tower - Dark Maze'
+Processing location: Eastern Palace - Cannonball Chest
+Function args for Eastern Palace - Cannonball Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Eastern Palace - Cannonball Chest', extracting canAccess logic
+Successfully extracted location logic for 'Eastern Palace - Cannonball Chest'
+Processing location: Eastern Palace - Map Chest
+Function args for Eastern Palace - Map Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Eastern Palace - Map Chest', extracting canAccess logic
+Successfully extracted location logic for 'Eastern Palace - Map Chest'
+Processing location: Eastern Palace - Compass Chest
+Function args for Eastern Palace - Compass Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Eastern Palace - Compass Chest', extracting canAccess logic
+Successfully extracted location logic for 'Eastern Palace - Compass Chest'
+Processing location: Eastern Palace - Big Chest
+Function args for Eastern Palace - Big Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Eastern Palace - Big Chest', extracting canAccess logic
+Successfully extracted location logic for 'Eastern Palace - Big Chest'
+Processing location: Eastern Palace - Big Key Chest
+Function args for Eastern Palace - Big Key Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Eastern Palace - Big Key Chest', extracting canAccess logic
+Successfully extracted location logic for 'Eastern Palace - Big Key Chest'
+Processing location: Eastern Palace - Armos Knights
+Function args for Eastern Palace - Armos Knights: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Eastern Palace - Armos Knights', extracting canAccess logic
+Successfully extracted location logic for 'Eastern Palace - Armos Knights'
+Processing location: Desert Palace - Big Chest
+Function args for Desert Palace - Big Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Desert Palace - Big Chest', extracting canAccess logic
+Successfully extracted location logic for 'Desert Palace - Big Chest'
+Processing location: Desert Palace - Torch
+Function args for Desert Palace - Torch: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Desert Palace - Torch', extracting canAccess logic
+Successfully extracted location logic for 'Desert Palace - Torch'
+Processing location: Desert Palace - Map Chest
+Function args for Desert Palace - Map Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Desert Palace - Map Chest', extracting canAccess logic
+Successfully extracted location logic for 'Desert Palace - Map Chest'
+Processing location: Desert Palace - Big Key Chest
+Function args for Desert Palace - Big Key Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Desert Palace - Big Key Chest', extracting canAccess logic
+Successfully extracted location logic for 'Desert Palace - Big Key Chest'
+Processing location: Desert Palace - Compass Chest
+Function args for Desert Palace - Compass Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Desert Palace - Compass Chest', extracting canAccess logic
+Successfully extracted location logic for 'Desert Palace - Compass Chest'
+Processing location: Desert Palace - Lanmolas
+Function args for Desert Palace - Lanmolas: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Desert Palace - Lanmolas', extracting canAccess logic
+Successfully extracted location logic for 'Desert Palace - Lanmolas'
+Processing location: Tower of Hera - Basement Cage
+Function args for Tower of Hera - Basement Cage: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Tower of Hera - Basement Cage', extracting canAccess logic
+Successfully extracted location logic for 'Tower of Hera - Basement Cage'
+Processing location: Tower of Hera - Map Chest
+Function args for Tower of Hera - Map Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Tower of Hera - Map Chest', extracting canAccess logic
+Successfully extracted location logic for 'Tower of Hera - Map Chest'
+Processing location: Tower of Hera - Big Key Chest
+Function args for Tower of Hera - Big Key Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Tower of Hera - Big Key Chest', extracting canAccess logic
+Successfully extracted location logic for 'Tower of Hera - Big Key Chest'
+Processing location: Tower of Hera - Compass Chest
+Function args for Tower of Hera - Compass Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Tower of Hera - Compass Chest', extracting canAccess logic
+Successfully extracted location logic for 'Tower of Hera - Compass Chest'
+Processing location: Tower of Hera - Big Chest
+Function args for Tower of Hera - Big Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Tower of Hera - Big Chest', extracting canAccess logic
+Successfully extracted location logic for 'Tower of Hera - Big Chest'
+Processing location: Tower of Hera - Moldorm
+Function args for Tower of Hera - Moldorm: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Tower of Hera - Moldorm', extracting canAccess logic
+Successfully extracted location logic for 'Tower of Hera - Moldorm'
+Processing location: Palace of Darkness - Shooter Room
+Function args for Palace of Darkness - Shooter Room: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - Shooter Room', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - Shooter Room'
+Processing location: Palace of Darkness - Big Key Chest
+Function args for Palace of Darkness - Big Key Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - Big Key Chest', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - Big Key Chest'
+Processing location: Palace of Darkness - Stalfos Basement
+Function args for Palace of Darkness - Stalfos Basement: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - Stalfos Basement', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - Stalfos Basement'
+Processing location: Palace of Darkness - The Arena - Bridge
+Function args for Palace of Darkness - The Arena - Bridge: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - The Arena - Bridge', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - The Arena - Bridge'
+Processing location: Palace of Darkness - The Arena - Ledge
+Function args for Palace of Darkness - The Arena - Ledge: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - The Arena - Ledge', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - The Arena - Ledge'
+Processing location: Palace of Darkness - Map Chest
+Function args for Palace of Darkness - Map Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - Map Chest', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - Map Chest'
+Processing location: Palace of Darkness - Compass Chest
+Function args for Palace of Darkness - Compass Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - Compass Chest', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - Compass Chest'
+Processing location: Palace of Darkness - Harmless Hellway
+Function args for Palace of Darkness - Harmless Hellway: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - Harmless Hellway', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - Harmless Hellway'
+Processing location: Palace of Darkness - Dark Basement - Left
+Function args for Palace of Darkness - Dark Basement - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - Dark Basement - Left', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - Dark Basement - Left'
+Processing location: Palace of Darkness - Dark Basement - Right
+Function args for Palace of Darkness - Dark Basement - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - Dark Basement - Right', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - Dark Basement - Right'
+Processing location: Palace of Darkness - Dark Maze - Top
+Function args for Palace of Darkness - Dark Maze - Top: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - Dark Maze - Top', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - Dark Maze - Top'
+Processing location: Palace of Darkness - Dark Maze - Bottom
+Function args for Palace of Darkness - Dark Maze - Bottom: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - Dark Maze - Bottom', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - Dark Maze - Bottom'
+Processing location: Palace of Darkness - Big Chest
+Function args for Palace of Darkness - Big Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - Big Chest', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - Big Chest'
+Processing location: Palace of Darkness - Helmasaur King
+Function args for Palace of Darkness - Helmasaur King: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Palace of Darkness - Helmasaur King', extracting canAccess logic
+Successfully extracted location logic for 'Palace of Darkness - Helmasaur King'
+Processing location: Swamp Palace - Entrance
+Function args for Swamp Palace - Entrance: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Swamp Palace - Entrance', extracting canAccess logic
+Successfully extracted location logic for 'Swamp Palace - Entrance'
+Processing location: Swamp Palace - Map Chest
+Function args for Swamp Palace - Map Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Swamp Palace - Map Chest', extracting canAccess logic
+Successfully extracted location logic for 'Swamp Palace - Map Chest'
+Processing location: Swamp Palace - Big Chest
+Function args for Swamp Palace - Big Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Swamp Palace - Big Chest', extracting canAccess logic
+Successfully extracted location logic for 'Swamp Palace - Big Chest'
+Processing location: Swamp Palace - Compass Chest
+Function args for Swamp Palace - Compass Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Swamp Palace - Compass Chest', extracting canAccess logic
+Successfully extracted location logic for 'Swamp Palace - Compass Chest'
+Processing location: Swamp Palace - West Chest
+Function args for Swamp Palace - West Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Swamp Palace - West Chest', extracting canAccess logic
+Successfully extracted location logic for 'Swamp Palace - West Chest'
+Processing location: Swamp Palace - Big Key Chest
+Function args for Swamp Palace - Big Key Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Swamp Palace - Big Key Chest', extracting canAccess logic
+Successfully extracted location logic for 'Swamp Palace - Big Key Chest'
+Processing location: Swamp Palace - Flooded Room - Left
+Function args for Swamp Palace - Flooded Room - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Swamp Palace - Flooded Room - Left', extracting canAccess logic
+Successfully extracted location logic for 'Swamp Palace - Flooded Room - Left'
+Processing location: Swamp Palace - Flooded Room - Right
+Function args for Swamp Palace - Flooded Room - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Swamp Palace - Flooded Room - Right', extracting canAccess logic
+Successfully extracted location logic for 'Swamp Palace - Flooded Room - Right'
+Processing location: Swamp Palace - Waterfall Room
+Function args for Swamp Palace - Waterfall Room: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Swamp Palace - Waterfall Room', extracting canAccess logic
+Successfully extracted location logic for 'Swamp Palace - Waterfall Room'
+Processing location: Swamp Palace - Arrghus
+Function args for Swamp Palace - Arrghus: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Swamp Palace - Arrghus', extracting canAccess logic
+Successfully extracted location logic for 'Swamp Palace - Arrghus'
+Processing location: Skull Woods - Pot Prison
+Function args for Skull Woods - Pot Prison: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Skull Woods - Pot Prison', extracting canAccess logic
+Successfully extracted location logic for 'Skull Woods - Pot Prison'
+Processing location: Skull Woods - Compass Chest
+Function args for Skull Woods - Compass Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Skull Woods - Compass Chest', extracting canAccess logic
+Successfully extracted location logic for 'Skull Woods - Compass Chest'
+Processing location: Skull Woods - Big Chest
+Function args for Skull Woods - Big Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Skull Woods - Big Chest', extracting canAccess logic
+Successfully extracted location logic for 'Skull Woods - Big Chest'
+Processing location: Skull Woods - Map Chest
+Function args for Skull Woods - Map Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Skull Woods - Map Chest', extracting canAccess logic
+Successfully extracted location logic for 'Skull Woods - Map Chest'
+Processing location: Skull Woods - Pinball Room
+Function args for Skull Woods - Pinball Room: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Skull Woods - Pinball Room', extracting canAccess logic
+Successfully extracted location logic for 'Skull Woods - Pinball Room'
+Processing location: Skull Woods - Big Key Chest
+Function args for Skull Woods - Big Key Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Skull Woods - Big Key Chest', extracting canAccess logic
+Successfully extracted location logic for 'Skull Woods - Big Key Chest'
+Processing location: Skull Woods - Bridge Room
+Function args for Skull Woods - Bridge Room: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Skull Woods - Bridge Room', extracting canAccess logic
+Successfully extracted location logic for 'Skull Woods - Bridge Room'
+Processing location: Skull Woods - Mothula
+Function args for Skull Woods - Mothula: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Skull Woods - Mothula', extracting canAccess logic
+Successfully extracted location logic for 'Skull Woods - Mothula'
+Processing location: Thieves' Town - Map Chest
+Function args for Thieves' Town - Map Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Thieves' Town - Map Chest', extracting canAccess logic
+Successfully extracted location logic for 'Thieves' Town - Map Chest'
+Processing location: Thieves' Town - Ambush Chest
+Function args for Thieves' Town - Ambush Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Thieves' Town - Ambush Chest', extracting canAccess logic
+Successfully extracted location logic for 'Thieves' Town - Ambush Chest'
+Processing location: Thieves' Town - Compass Chest
+Function args for Thieves' Town - Compass Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Thieves' Town - Compass Chest', extracting canAccess logic
+Successfully extracted location logic for 'Thieves' Town - Compass Chest'
+Processing location: Thieves' Town - Big Key Chest
+Function args for Thieves' Town - Big Key Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Thieves' Town - Big Key Chest', extracting canAccess logic
+Successfully extracted location logic for 'Thieves' Town - Big Key Chest'
+Processing location: Thieves' Town - Attic
+Function args for Thieves' Town - Attic: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Thieves' Town - Attic', extracting canAccess logic
+Successfully extracted location logic for 'Thieves' Town - Attic'
+Processing location: Thieves' Town - Blind's Cell
+Function args for Thieves' Town - Blind's Cell: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Thieves' Town - Blind's Cell', extracting canAccess logic
+Successfully extracted location logic for 'Thieves' Town - Blind's Cell'
+Processing location: Thieves' Town - Big Chest
+Function args for Thieves' Town - Big Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Thieves' Town - Big Chest', extracting canAccess logic
+Successfully extracted location logic for 'Thieves' Town - Big Chest'
+Processing location: Thieves' Town - Blind
+Function args for Thieves' Town - Blind: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Thieves' Town - Blind', extracting canAccess logic
+Successfully extracted location logic for 'Thieves' Town - Blind'
+Processing location: Ice Palace - Compass Chest
+Function args for Ice Palace - Compass Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ice Palace - Compass Chest', extracting canAccess logic
+Successfully extracted location logic for 'Ice Palace - Compass Chest'
+Processing location: Ice Palace - Spike Room
+Function args for Ice Palace - Spike Room: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ice Palace - Spike Room', extracting canAccess logic
+Successfully extracted location logic for 'Ice Palace - Spike Room'
+Processing location: Ice Palace - Map Chest
+Function args for Ice Palace - Map Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ice Palace - Map Chest', extracting canAccess logic
+Successfully extracted location logic for 'Ice Palace - Map Chest'
+Processing location: Ice Palace - Big Key Chest
+Function args for Ice Palace - Big Key Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ice Palace - Big Key Chest', extracting canAccess logic
+Successfully extracted location logic for 'Ice Palace - Big Key Chest'
+Processing location: Ice Palace - Iced T Room
+Function args for Ice Palace - Iced T Room: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ice Palace - Iced T Room', extracting canAccess logic
+Successfully extracted location logic for 'Ice Palace - Iced T Room'
+Processing location: Ice Palace - Freezor Chest
+Function args for Ice Palace - Freezor Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ice Palace - Freezor Chest', extracting canAccess logic
+Successfully extracted location logic for 'Ice Palace - Freezor Chest'
+Processing location: Ice Palace - Big Chest
+Function args for Ice Palace - Big Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ice Palace - Big Chest', extracting canAccess logic
+Successfully extracted location logic for 'Ice Palace - Big Chest'
+Processing location: Ice Palace - Kholdstare
+Function args for Ice Palace - Kholdstare: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ice Palace - Kholdstare', extracting canAccess logic
+Successfully extracted location logic for 'Ice Palace - Kholdstare'
+Processing location: Misery Mire - Main Lobby
+Function args for Misery Mire - Main Lobby: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Misery Mire - Main Lobby', extracting canAccess logic
+Successfully extracted location logic for 'Misery Mire - Main Lobby'
+Processing location: Misery Mire - Map Chest
+Function args for Misery Mire - Map Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Misery Mire - Map Chest', extracting canAccess logic
+Successfully extracted location logic for 'Misery Mire - Map Chest'
+Processing location: Misery Mire - Bridge Chest
+Function args for Misery Mire - Bridge Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Misery Mire - Bridge Chest', extracting canAccess logic
+Successfully extracted location logic for 'Misery Mire - Bridge Chest'
+Processing location: Misery Mire - Spike Chest
+Function args for Misery Mire - Spike Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Misery Mire - Spike Chest', extracting canAccess logic
+Successfully extracted location logic for 'Misery Mire - Spike Chest'
+Processing location: Misery Mire - Compass Chest
+Function args for Misery Mire - Compass Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Misery Mire - Compass Chest', extracting canAccess logic
+Successfully extracted location logic for 'Misery Mire - Compass Chest'
+Processing location: Misery Mire - Big Key Chest
+Function args for Misery Mire - Big Key Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Misery Mire - Big Key Chest', extracting canAccess logic
+Successfully extracted location logic for 'Misery Mire - Big Key Chest'
+Processing location: Misery Mire - Big Chest
+Function args for Misery Mire - Big Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Misery Mire - Big Chest', extracting canAccess logic
+Successfully extracted location logic for 'Misery Mire - Big Chest'
+Processing location: Misery Mire - Vitreous
+Function args for Misery Mire - Vitreous: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Misery Mire - Vitreous', extracting canAccess logic
+Successfully extracted location logic for 'Misery Mire - Vitreous'
+Processing location: Turtle Rock - Compass Chest
+Function args for Turtle Rock - Compass Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Turtle Rock - Compass Chest', extracting canAccess logic
+Successfully extracted location logic for 'Turtle Rock - Compass Chest'
+Processing location: Turtle Rock - Roller Room - Left
+Function args for Turtle Rock - Roller Room - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Turtle Rock - Roller Room - Left', extracting canAccess logic
+Successfully extracted location logic for 'Turtle Rock - Roller Room - Left'
+Processing location: Turtle Rock - Roller Room - Right
+Function args for Turtle Rock - Roller Room - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Turtle Rock - Roller Room - Right', extracting canAccess logic
+Successfully extracted location logic for 'Turtle Rock - Roller Room - Right'
+Processing location: Turtle Rock - Chain Chomps
+Function args for Turtle Rock - Chain Chomps: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Turtle Rock - Chain Chomps', extracting canAccess logic
+Successfully extracted location logic for 'Turtle Rock - Chain Chomps'
+Processing location: Turtle Rock - Big Key Chest
+Function args for Turtle Rock - Big Key Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Turtle Rock - Big Key Chest', extracting canAccess logic
+Successfully extracted location logic for 'Turtle Rock - Big Key Chest'
+Processing location: Turtle Rock - Big Chest
+Function args for Turtle Rock - Big Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Turtle Rock - Big Chest', extracting canAccess logic
+Successfully extracted location logic for 'Turtle Rock - Big Chest'
+Processing location: Turtle Rock - Crystaroller Room
+Function args for Turtle Rock - Crystaroller Room: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Turtle Rock - Crystaroller Room', extracting canAccess logic
+Successfully extracted location logic for 'Turtle Rock - Crystaroller Room'
+Processing location: Turtle Rock - Eye Bridge - Top Right
+Function args for Turtle Rock - Eye Bridge - Top Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Turtle Rock - Eye Bridge - Top Right', extracting canAccess logic
+Successfully extracted location logic for 'Turtle Rock - Eye Bridge - Top Right'
+Processing location: Turtle Rock - Eye Bridge - Top Left
+Function args for Turtle Rock - Eye Bridge - Top Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Turtle Rock - Eye Bridge - Top Left', extracting canAccess logic
+Successfully extracted location logic for 'Turtle Rock - Eye Bridge - Top Left'
+Processing location: Turtle Rock - Eye Bridge - Bottom Right
+Function args for Turtle Rock - Eye Bridge - Bottom Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Turtle Rock - Eye Bridge - Bottom Right', extracting canAccess logic
+Successfully extracted location logic for 'Turtle Rock - Eye Bridge - Bottom Right'
+Processing location: Turtle Rock - Eye Bridge - Bottom Left
+Function args for Turtle Rock - Eye Bridge - Bottom Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Turtle Rock - Eye Bridge - Bottom Left', extracting canAccess logic
+Successfully extracted location logic for 'Turtle Rock - Eye Bridge - Bottom Left'
+Processing location: Turtle Rock - Trinexx
+Function args for Turtle Rock - Trinexx: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Turtle Rock - Trinexx', extracting canAccess logic
+Successfully extracted location logic for 'Turtle Rock - Trinexx'
+Processing location: Ganon's Tower - Bob's Torch
+Function args for Ganon's Tower - Bob's Torch: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Bob's Torch', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Bob's Torch'
+Processing location: Ganon's Tower - DMs Room - Top Left
+Function args for Ganon's Tower - DMs Room - Top Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - DMs Room - Top Left', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - DMs Room - Top Left'
+Processing location: Ganon's Tower - DMs Room - Top Right
+Function args for Ganon's Tower - DMs Room - Top Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - DMs Room - Top Right', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - DMs Room - Top Right'
+Processing location: Ganon's Tower - DMs Room - Bottom Left
+Function args for Ganon's Tower - DMs Room - Bottom Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - DMs Room - Bottom Left', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - DMs Room - Bottom Left'
+Processing location: Ganon's Tower - DMs Room - Bottom Right
+Function args for Ganon's Tower - DMs Room - Bottom Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - DMs Room - Bottom Right', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - DMs Room - Bottom Right'
+Processing location: Ganon's Tower - Map Chest
+Function args for Ganon's Tower - Map Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Map Chest', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Map Chest'
+Processing location: Ganon's Tower - Firesnake Room
+Function args for Ganon's Tower - Firesnake Room: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Firesnake Room', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Firesnake Room'
+Processing location: Ganon's Tower - Randomizer Room - Top Left
+Function args for Ganon's Tower - Randomizer Room - Top Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Randomizer Room - Top Left', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Randomizer Room - Top Left'
+Processing location: Ganon's Tower - Randomizer Room - Top Right
+Function args for Ganon's Tower - Randomizer Room - Top Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Randomizer Room - Top Right', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Randomizer Room - Top Right'
+Processing location: Ganon's Tower - Randomizer Room - Bottom Left
+Function args for Ganon's Tower - Randomizer Room - Bottom Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Randomizer Room - Bottom Left', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Randomizer Room - Bottom Left'
+Processing location: Ganon's Tower - Randomizer Room - Bottom Right
+Function args for Ganon's Tower - Randomizer Room - Bottom Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Randomizer Room - Bottom Right', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Randomizer Room - Bottom Right'
+Processing location: Ganon's Tower - Hope Room - Left
+Function args for Ganon's Tower - Hope Room - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Hope Room - Left', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Hope Room - Left'
+Processing location: Ganon's Tower - Hope Room - Right
+Function args for Ganon's Tower - Hope Room - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Hope Room - Right', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Hope Room - Right'
+Processing location: Ganon's Tower - Tile Room
+Function args for Ganon's Tower - Tile Room: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Tile Room', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Tile Room'
+Processing location: Ganon's Tower - Compass Room - Top Left
+Function args for Ganon's Tower - Compass Room - Top Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Compass Room - Top Left', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Compass Room - Top Left'
+Processing location: Ganon's Tower - Compass Room - Top Right
+Function args for Ganon's Tower - Compass Room - Top Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Compass Room - Top Right', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Compass Room - Top Right'
+Processing location: Ganon's Tower - Compass Room - Bottom Left
+Function args for Ganon's Tower - Compass Room - Bottom Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Compass Room - Bottom Left', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Compass Room - Bottom Left'
+Processing location: Ganon's Tower - Compass Room - Bottom Right
+Function args for Ganon's Tower - Compass Room - Bottom Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Compass Room - Bottom Right', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Compass Room - Bottom Right'
+Processing location: Ganon's Tower - Bob's Chest
+Function args for Ganon's Tower - Bob's Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Bob's Chest', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Bob's Chest'
+Processing location: Ganon's Tower - Big Chest
+Function args for Ganon's Tower - Big Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Big Chest', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Big Chest'
+Processing location: Ganon's Tower - Big Key Chest
+Function args for Ganon's Tower - Big Key Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Big Key Chest', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Big Key Chest'
+Processing location: Ganon's Tower - Big Key Room - Left
+Function args for Ganon's Tower - Big Key Room - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Big Key Room - Left', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Big Key Room - Left'
+Processing location: Ganon's Tower - Big Key Room - Right
+Function args for Ganon's Tower - Big Key Room - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Big Key Room - Right', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Big Key Room - Right'
+Processing location: Ganon's Tower - Mini Helmasaur Room - Left
+Function args for Ganon's Tower - Mini Helmasaur Room - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Mini Helmasaur Room - Left', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Mini Helmasaur Room - Left'
+Processing location: Ganon's Tower - Mini Helmasaur Room - Right
+Function args for Ganon's Tower - Mini Helmasaur Room - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Mini Helmasaur Room - Right', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Mini Helmasaur Room - Right'
+Processing location: Ganon's Tower - Pre-Moldorm Chest
+Function args for Ganon's Tower - Pre-Moldorm Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Pre-Moldorm Chest', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Pre-Moldorm Chest'
+Processing location: Ganon's Tower - Moldorm Chest
+Function args for Ganon's Tower - Moldorm Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ganon's Tower - Moldorm Chest', extracting canAccess logic
+Successfully extracted location logic for 'Ganon's Tower - Moldorm Chest'
+Processing location: Ether Tablet
+Function args for Ether Tablet: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ether Tablet', extracting canAccess logic
+Successfully extracted location logic for 'Ether Tablet'
+Processing location: Spectacle Rock
+Function args for Spectacle Rock: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Spectacle Rock', extracting canAccess logic
+Successfully extracted location logic for 'Spectacle Rock'
+Processing location: Spectacle Rock Cave
+Function args for Spectacle Rock Cave: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Spectacle Rock Cave', extracting canAccess logic
+Successfully extracted location logic for 'Spectacle Rock Cave'
+Processing location: Old Man
+Function args for Old Man: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Old Man', extracting canAccess logic
+Successfully extracted location logic for 'Old Man'
+Processing location: Floating Island
+Function args for Floating Island: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Floating Island', extracting canAccess logic
+Successfully extracted location logic for 'Floating Island'
+Processing location: Spiral Cave
+Function args for Spiral Cave: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Spiral Cave', extracting canAccess logic
+Successfully extracted location logic for 'Spiral Cave'
+Processing location: Paradox Cave Upper - Left
+Function args for Paradox Cave Upper - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Paradox Cave Upper - Left', extracting canAccess logic
+Successfully extracted location logic for 'Paradox Cave Upper - Left'
+Processing location: Paradox Cave Upper - Right
+Function args for Paradox Cave Upper - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Paradox Cave Upper - Right', extracting canAccess logic
+Successfully extracted location logic for 'Paradox Cave Upper - Right'
+Processing location: Paradox Cave Lower - Far Left
+Function args for Paradox Cave Lower - Far Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Paradox Cave Lower - Far Left', extracting canAccess logic
+Successfully extracted location logic for 'Paradox Cave Lower - Far Left'
+Processing location: Paradox Cave Lower - Left
+Function args for Paradox Cave Lower - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Paradox Cave Lower - Left', extracting canAccess logic
+Successfully extracted location logic for 'Paradox Cave Lower - Left'
+Processing location: Paradox Cave Lower - Middle
+Function args for Paradox Cave Lower - Middle: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Paradox Cave Lower - Middle', extracting canAccess logic
+Successfully extracted location logic for 'Paradox Cave Lower - Middle'
+Processing location: Paradox Cave Lower - Right
+Function args for Paradox Cave Lower - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Paradox Cave Lower - Right', extracting canAccess logic
+Successfully extracted location logic for 'Paradox Cave Lower - Right'
+Processing location: Paradox Cave Lower - Far Right
+Function args for Paradox Cave Lower - Far Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Paradox Cave Lower - Far Right', extracting canAccess logic
+Successfully extracted location logic for 'Paradox Cave Lower - Far Right'
+Processing location: Mimic Cave
+Function args for Mimic Cave: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Mimic Cave', extracting canAccess logic
+Successfully extracted location logic for 'Mimic Cave'
+Processing location: Master Sword Pedestal
+Function args for Master Sword Pedestal: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Master Sword Pedestal', extracting canAccess logic
+Successfully extracted location logic for 'Master Sword Pedestal'
+Processing location: Mushroom
+Function args for Mushroom: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Mushroom', extracting canAccess logic
+Successfully extracted location logic for 'Mushroom'
+Processing location: Lost Woods Hideout
+Function args for Lost Woods Hideout: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Lost Woods Hideout', extracting canAccess logic
+Successfully extracted location logic for 'Lost Woods Hideout'
+Processing location: Lumberjack Tree
+Function args for Lumberjack Tree: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Lumberjack Tree', extracting canAccess logic
+Successfully extracted location logic for 'Lumberjack Tree'
+Processing location: Pegasus Rocks
+Function args for Pegasus Rocks: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Pegasus Rocks', extracting canAccess logic
+Successfully extracted location logic for 'Pegasus Rocks'
+Processing location: Graveyard Ledge
+Function args for Graveyard Ledge: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Graveyard Ledge', extracting canAccess logic
+Successfully extracted location logic for 'Graveyard Ledge'
+Processing location: King's Tomb
+Function args for King's Tomb: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'King's Tomb', extracting canAccess logic
+Successfully extracted location logic for 'King's Tomb'
+Processing location: Kakariko Well - Top
+Function args for Kakariko Well - Top: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Kakariko Well - Top', extracting canAccess logic
+Successfully extracted location logic for 'Kakariko Well - Top'
+Processing location: Kakariko Well - Left
+Function args for Kakariko Well - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Kakariko Well - Left', extracting canAccess logic
+Successfully extracted location logic for 'Kakariko Well - Left'
+Processing location: Kakariko Well - Middle
+Function args for Kakariko Well - Middle: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Kakariko Well - Middle', extracting canAccess logic
+Successfully extracted location logic for 'Kakariko Well - Middle'
+Processing location: Kakariko Well - Right
+Function args for Kakariko Well - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Kakariko Well - Right', extracting canAccess logic
+Successfully extracted location logic for 'Kakariko Well - Right'
+Processing location: Kakariko Well - Bottom
+Function args for Kakariko Well - Bottom: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Kakariko Well - Bottom', extracting canAccess logic
+Successfully extracted location logic for 'Kakariko Well - Bottom'
+Processing location: Blind's Hideout - Top
+Function args for Blind's Hideout - Top: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Blind's Hideout - Top', extracting canAccess logic
+Successfully extracted location logic for 'Blind's Hideout - Top'
+Processing location: Blind's Hideout - Far Left
+Function args for Blind's Hideout - Far Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Blind's Hideout - Far Left', extracting canAccess logic
+Successfully extracted location logic for 'Blind's Hideout - Far Left'
+Processing location: Blind's Hideout - Left
+Function args for Blind's Hideout - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Blind's Hideout - Left', extracting canAccess logic
+Successfully extracted location logic for 'Blind's Hideout - Left'
+Processing location: Blind's Hideout - Right
+Function args for Blind's Hideout - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Blind's Hideout - Right', extracting canAccess logic
+Successfully extracted location logic for 'Blind's Hideout - Right'
+Processing location: Blind's Hideout - Far Right
+Function args for Blind's Hideout - Far Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Blind's Hideout - Far Right', extracting canAccess logic
+Successfully extracted location logic for 'Blind's Hideout - Far Right'
+Processing location: Bottle Merchant
+Function args for Bottle Merchant: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Bottle Merchant', extracting canAccess logic
+Successfully extracted location logic for 'Bottle Merchant'
+Processing location: Chicken House
+Function args for Chicken House: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Chicken House', extracting canAccess logic
+Successfully extracted location logic for 'Chicken House'
+Processing location: Sick Kid
+Function args for Sick Kid: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Sick Kid', extracting canAccess logic
+Successfully extracted location logic for 'Sick Kid'
+Processing location: Kakariko Tavern
+Function args for Kakariko Tavern: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Kakariko Tavern', extracting canAccess logic
+Successfully extracted location logic for 'Kakariko Tavern'
+Processing location: Magic Bat
+Function args for Magic Bat: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Magic Bat', extracting canAccess logic
+Successfully extracted location logic for 'Magic Bat'
+Processing location: King Zora
+Function args for King Zora: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'King Zora', extracting canAccess logic
+Successfully extracted location logic for 'King Zora'
+Processing location: Zora's Ledge
+Function args for Zora's Ledge: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Zora's Ledge', extracting canAccess logic
+Successfully extracted location logic for 'Zora's Ledge'
+Processing location: Waterfall Fairy - Left
+Function args for Waterfall Fairy - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Waterfall Fairy - Left', extracting canAccess logic
+Successfully extracted location logic for 'Waterfall Fairy - Left'
+Processing location: Waterfall Fairy - Right
+Function args for Waterfall Fairy - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Waterfall Fairy - Right', extracting canAccess logic
+Successfully extracted location logic for 'Waterfall Fairy - Right'
+Processing location: Potion Shop
+Function args for Potion Shop: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Potion Shop', extracting canAccess logic
+Successfully extracted location logic for 'Potion Shop'
+Processing location: Sahasrahla's Hut - Left
+Function args for Sahasrahla's Hut - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Sahasrahla's Hut - Left', extracting canAccess logic
+Successfully extracted location logic for 'Sahasrahla's Hut - Left'
+Processing location: Sahasrahla's Hut - Middle
+Function args for Sahasrahla's Hut - Middle: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Sahasrahla's Hut - Middle', extracting canAccess logic
+Successfully extracted location logic for 'Sahasrahla's Hut - Middle'
+Processing location: Sahasrahla's Hut - Right
+Function args for Sahasrahla's Hut - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Sahasrahla's Hut - Right', extracting canAccess logic
+Successfully extracted location logic for 'Sahasrahla's Hut - Right'
+Processing location: Sahasrahla
+Function args for Sahasrahla: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Sahasrahla', extracting canAccess logic
+Successfully extracted location logic for 'Sahasrahla'
+Processing location: Maze Race
+Function args for Maze Race: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Maze Race', extracting canAccess logic
+Successfully extracted location logic for 'Maze Race'
+Processing location: Library
+Function args for Library: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Library', extracting canAccess logic
+Successfully extracted location logic for 'Library'
+Processing location: Flute Spot
+Function args for Flute Spot: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Flute Spot', extracting canAccess logic
+Successfully extracted location logic for 'Flute Spot'
+Processing location: South of Grove
+Function args for South of Grove: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'South of Grove', extracting canAccess logic
+Successfully extracted location logic for 'South of Grove'
+Processing location: Link's House
+Function args for Link's House: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Link's House', extracting canAccess logic
+Successfully extracted location logic for 'Link's House'
+Processing location: Aginah's Cave
+Function args for Aginah's Cave: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Aginah's Cave', extracting canAccess logic
+Successfully extracted location logic for 'Aginah's Cave'
+Processing location: Mini Moldorm Cave - Far Left
+Function args for Mini Moldorm Cave - Far Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Mini Moldorm Cave - Far Left', extracting canAccess logic
+Successfully extracted location logic for 'Mini Moldorm Cave - Far Left'
+Processing location: Mini Moldorm Cave - Left
+Function args for Mini Moldorm Cave - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Mini Moldorm Cave - Left', extracting canAccess logic
+Successfully extracted location logic for 'Mini Moldorm Cave - Left'
+Processing location: Mini Moldorm Cave - NPC
+Function args for Mini Moldorm Cave - NPC: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Mini Moldorm Cave - NPC', extracting canAccess logic
+Successfully extracted location logic for 'Mini Moldorm Cave - NPC'
+Processing location: Mini Moldorm Cave - Right
+Function args for Mini Moldorm Cave - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Mini Moldorm Cave - Right', extracting canAccess logic
+Successfully extracted location logic for 'Mini Moldorm Cave - Right'
+Processing location: Mini Moldorm Cave - Far Right
+Function args for Mini Moldorm Cave - Far Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Mini Moldorm Cave - Far Right', extracting canAccess logic
+Successfully extracted location logic for 'Mini Moldorm Cave - Far Right'
+Processing location: Desert Ledge
+Function args for Desert Ledge: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Desert Ledge', extracting canAccess logic
+Successfully extracted location logic for 'Desert Ledge'
+Processing location: Checkerboard Cave
+Function args for Checkerboard Cave: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Checkerboard Cave', extracting canAccess logic
+Successfully extracted location logic for 'Checkerboard Cave'
+Processing location: Bombos Tablet
+Function args for Bombos Tablet: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Bombos Tablet', extracting canAccess logic
+Successfully extracted location logic for 'Bombos Tablet'
+Processing location: Floodgate Chest
+Function args for Floodgate Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Floodgate Chest', extracting canAccess logic
+Successfully extracted location logic for 'Floodgate Chest'
+Processing location: Sunken Treasure
+Function args for Sunken Treasure: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Sunken Treasure', extracting canAccess logic
+Successfully extracted location logic for 'Sunken Treasure'
+Processing location: Lake Hylia Island
+Function args for Lake Hylia Island: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Lake Hylia Island', extracting canAccess logic
+Successfully extracted location logic for 'Lake Hylia Island'
+Processing location: Hobo
+Function args for Hobo: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hobo', extracting canAccess logic
+Successfully extracted location logic for 'Hobo'
+Processing location: Ice Rod Cave
+Function args for Ice Rod Cave: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ice Rod Cave', extracting canAccess logic
+Successfully extracted location logic for 'Ice Rod Cave'
+Processing location: Sanctuary
+Function args for Sanctuary: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Sanctuary', extracting canAccess logic
+Successfully extracted location logic for 'Sanctuary'
+Processing location: Sewers - Secret Room - Left
+Function args for Sewers - Secret Room - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Sewers - Secret Room - Left', extracting canAccess logic
+Successfully extracted location logic for 'Sewers - Secret Room - Left'
+Processing location: Sewers - Secret Room - Middle
+Function args for Sewers - Secret Room - Middle: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Sewers - Secret Room - Middle', extracting canAccess logic
+Successfully extracted location logic for 'Sewers - Secret Room - Middle'
+Processing location: Sewers - Secret Room - Right
+Function args for Sewers - Secret Room - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Sewers - Secret Room - Right', extracting canAccess logic
+Successfully extracted location logic for 'Sewers - Secret Room - Right'
+Processing location: Sewers - Dark Cross
+Function args for Sewers - Dark Cross: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Sewers - Dark Cross', extracting canAccess logic
+Successfully extracted location logic for 'Sewers - Dark Cross'
+Processing location: Hyrule Castle - Map Chest
+Function args for Hyrule Castle - Map Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hyrule Castle - Map Chest', extracting canAccess logic
+Successfully extracted location logic for 'Hyrule Castle - Map Chest'
+Processing location: Hyrule Castle - Boomerang Chest
+Function args for Hyrule Castle - Boomerang Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hyrule Castle - Boomerang Chest', extracting canAccess logic
+Successfully extracted location logic for 'Hyrule Castle - Boomerang Chest'
+Processing location: Hyrule Castle - Zelda's Cell
+Function args for Hyrule Castle - Zelda's Cell: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hyrule Castle - Zelda's Cell', extracting canAccess logic
+Successfully extracted location logic for 'Hyrule Castle - Zelda's Cell'
+Processing location: Link's Uncle
+Function args for Link's Uncle: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Link's Uncle', extracting canAccess logic
+Successfully extracted location logic for 'Link's Uncle'
+Processing location: Secret Passage
+Function args for Secret Passage: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Secret Passage', extracting canAccess logic
+Successfully extracted location logic for 'Secret Passage'
+Processing location: Spike Cave
+Function args for Spike Cave: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Spike Cave', extracting canAccess logic
+Successfully extracted location logic for 'Spike Cave'
+Processing location: Hookshot Cave - Top Right
+Function args for Hookshot Cave - Top Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hookshot Cave - Top Right', extracting canAccess logic
+Successfully extracted location logic for 'Hookshot Cave - Top Right'
+Processing location: Hookshot Cave - Top Left
+Function args for Hookshot Cave - Top Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hookshot Cave - Top Left', extracting canAccess logic
+Successfully extracted location logic for 'Hookshot Cave - Top Left'
+Processing location: Hookshot Cave - Bottom Left
+Function args for Hookshot Cave - Bottom Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hookshot Cave - Bottom Left', extracting canAccess logic
+Successfully extracted location logic for 'Hookshot Cave - Bottom Left'
+Processing location: Hookshot Cave - Bottom Right
+Function args for Hookshot Cave - Bottom Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hookshot Cave - Bottom Right', extracting canAccess logic
+Successfully extracted location logic for 'Hookshot Cave - Bottom Right'
+Processing location: Superbunny Cave - Top
+Function args for Superbunny Cave - Top: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Superbunny Cave - Top', extracting canAccess logic
+Successfully extracted location logic for 'Superbunny Cave - Top'
+Processing location: Superbunny Cave - Bottom
+Function args for Superbunny Cave - Bottom: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Superbunny Cave - Bottom', extracting canAccess logic
+Successfully extracted location logic for 'Superbunny Cave - Bottom'
+Processing location: Bumper Cave
+Function args for Bumper Cave: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Bumper Cave', extracting canAccess logic
+Successfully extracted location logic for 'Bumper Cave'
+Processing location: Chest Game
+Function args for Chest Game: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Chest Game', extracting canAccess logic
+Successfully extracted location logic for 'Chest Game'
+Processing location: C-Shaped House
+Function args for C-Shaped House: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'C-Shaped House', extracting canAccess logic
+Successfully extracted location logic for 'C-Shaped House'
+Processing location: Brewery
+Function args for Brewery: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Brewery', extracting canAccess logic
+Successfully extracted location logic for 'Brewery'
+Processing location: Hammer Pegs
+Function args for Hammer Pegs: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hammer Pegs', extracting canAccess logic
+Successfully extracted location logic for 'Hammer Pegs'
+Processing location: Blacksmith
+Function args for Blacksmith: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Blacksmith', extracting canAccess logic
+Successfully extracted location logic for 'Blacksmith'
+Processing location: Purple Chest
+Function args for Purple Chest: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Purple Chest', extracting canAccess logic
+Successfully extracted location logic for 'Purple Chest'
+Processing location: Catfish
+Function args for Catfish: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Catfish', extracting canAccess logic
+Successfully extracted location logic for 'Catfish'
+Processing location: Pyramid
+Function args for Pyramid: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Pyramid', extracting canAccess logic
+Successfully extracted location logic for 'Pyramid'
+Processing location: Pyramid Fairy - Left
+Function args for Pyramid Fairy - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Pyramid Fairy - Left', extracting canAccess logic
+Successfully extracted location logic for 'Pyramid Fairy - Left'
+Processing location: Pyramid Fairy - Right
+Function args for Pyramid Fairy - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Pyramid Fairy - Right', extracting canAccess logic
+Successfully extracted location logic for 'Pyramid Fairy - Right'
+Processing location: Digging Game
+Function args for Digging Game: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Digging Game', extracting canAccess logic
+Successfully extracted location logic for 'Digging Game'
+Processing location: Stumpy
+Function args for Stumpy: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Stumpy', extracting canAccess logic
+Successfully extracted location logic for 'Stumpy'
+Processing location: Hype Cave - Top
+Function args for Hype Cave - Top: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hype Cave - Top', extracting canAccess logic
+Successfully extracted location logic for 'Hype Cave - Top'
+Processing location: Hype Cave - Middle Right
+Function args for Hype Cave - Middle Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hype Cave - Middle Right', extracting canAccess logic
+Successfully extracted location logic for 'Hype Cave - Middle Right'
+Processing location: Hype Cave - Middle Left
+Function args for Hype Cave - Middle Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hype Cave - Middle Left', extracting canAccess logic
+Successfully extracted location logic for 'Hype Cave - Middle Left'
+Processing location: Hype Cave - Bottom
+Function args for Hype Cave - Bottom: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hype Cave - Bottom', extracting canAccess logic
+Successfully extracted location logic for 'Hype Cave - Bottom'
+Processing location: Hype Cave - NPC
+Function args for Hype Cave - NPC: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hype Cave - NPC', extracting canAccess logic
+Successfully extracted location logic for 'Hype Cave - NPC'
+Processing location: Mire Shed - Left
+Function args for Mire Shed - Left: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Mire Shed - Left', extracting canAccess logic
+Successfully extracted location logic for 'Mire Shed - Left'
+Processing location: Mire Shed - Right
+Function args for Mire Shed - Right: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Mire Shed - Right', extracting canAccess logic
+Successfully extracted location logic for 'Mire Shed - Right'
+Processing location: Energy Tank, Terminator
+Function args for Energy Tank, Terminator: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Terminator', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Terminator'
+Processing location: Energy Tank, Gauntlet
+Function args for Energy Tank, Gauntlet: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Gauntlet', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Gauntlet'
+Processing location: Missile (Crateria gauntlet right)
+Function args for Missile (Crateria gauntlet right): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Crateria gauntlet right)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Crateria gauntlet right)'
+Processing location: Missile (Crateria gauntlet left)
+Function args for Missile (Crateria gauntlet left): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Crateria gauntlet left)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Crateria gauntlet left)'
+Processing location: Power Bomb (Crateria surface)
+Function args for Power Bomb (Crateria surface): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Power Bomb (Crateria surface)', extracting canAccess logic
+Successfully extracted location logic for 'Power Bomb (Crateria surface)'
+Processing location: Missile (Crateria middle)
+Function args for Missile (Crateria middle): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Crateria middle)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Crateria middle)'
+Processing location: Missile (Crateria bottom)
+Function args for Missile (Crateria bottom): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Crateria bottom)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Crateria bottom)'
+Processing location: Super Missile (Crateria)
+Function args for Super Missile (Crateria): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Super Missile (Crateria)', extracting canAccess logic
+Successfully extracted location logic for 'Super Missile (Crateria)'
+Processing location: Bombs
+Function args for Bombs: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Bombs', extracting canAccess logic
+Successfully extracted location logic for 'Bombs'
+Processing location: Missile (outside Wrecked Ship bottom)
+Function args for Missile (outside Wrecked Ship bottom): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (outside Wrecked Ship bottom)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (outside Wrecked Ship bottom)'
+Processing location: Missile (outside Wrecked Ship top)
+Function args for Missile (outside Wrecked Ship top): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (outside Wrecked Ship top)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (outside Wrecked Ship top)'
+Processing location: Missile (outside Wrecked Ship middle)
+Function args for Missile (outside Wrecked Ship middle): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (outside Wrecked Ship middle)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (outside Wrecked Ship middle)'
+Processing location: Missile (Crateria moat)
+Function args for Missile (Crateria moat): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Crateria moat)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Crateria moat)'
+Processing location: Morphing Ball
+Function args for Morphing Ball: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Morphing Ball', extracting canAccess logic
+Successfully extracted location logic for 'Morphing Ball'
+Processing location: Power Bomb (blue Brinstar)
+Function args for Power Bomb (blue Brinstar): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Power Bomb (blue Brinstar)', extracting canAccess logic
+Successfully extracted location logic for 'Power Bomb (blue Brinstar)'
+Processing location: Missile (blue Brinstar middle)
+Function args for Missile (blue Brinstar middle): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (blue Brinstar middle)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (blue Brinstar middle)'
+Processing location: Energy Tank, Brinstar Ceiling
+Function args for Energy Tank, Brinstar Ceiling: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Brinstar Ceiling', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Brinstar Ceiling'
+Processing location: Missile (blue Brinstar bottom)
+Function args for Missile (blue Brinstar bottom): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (blue Brinstar bottom)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (blue Brinstar bottom)'
+Processing location: Missile (blue Brinstar top)
+Function args for Missile (blue Brinstar top): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (blue Brinstar top)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (blue Brinstar top)'
+Processing location: Missile (blue Brinstar behind missile)
+Function args for Missile (blue Brinstar behind missile): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (blue Brinstar behind missile)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (blue Brinstar behind missile)'
+Processing location: Power Bomb (green Brinstar bottom)
+Function args for Power Bomb (green Brinstar bottom): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Power Bomb (green Brinstar bottom)', extracting canAccess logic
+Successfully extracted location logic for 'Power Bomb (green Brinstar bottom)'
+Processing location: Missile (green Brinstar below super missile)
+Function args for Missile (green Brinstar below super missile): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (green Brinstar below super missile)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (green Brinstar below super missile)'
+Processing location: Super Missile (green Brinstar top)
+Function args for Super Missile (green Brinstar top): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Super Missile (green Brinstar top)', extracting canAccess logic
+Successfully extracted location logic for 'Super Missile (green Brinstar top)'
+Processing location: Reserve Tank, Brinstar
+Function args for Reserve Tank, Brinstar: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Reserve Tank, Brinstar', extracting canAccess logic
+Successfully extracted location logic for 'Reserve Tank, Brinstar'
+Processing location: Missile (green Brinstar behind missile)
+Function args for Missile (green Brinstar behind missile): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (green Brinstar behind missile)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (green Brinstar behind missile)'
+Processing location: Missile (green Brinstar behind reserve tank)
+Function args for Missile (green Brinstar behind reserve tank): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (green Brinstar behind reserve tank)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (green Brinstar behind reserve tank)'
+Processing location: Energy Tank, Etecoons
+Function args for Energy Tank, Etecoons: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Etecoons', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Etecoons'
+Processing location: Super Missile (green Brinstar bottom)
+Function args for Super Missile (green Brinstar bottom): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Super Missile (green Brinstar bottom)', extracting canAccess logic
+Successfully extracted location logic for 'Super Missile (green Brinstar bottom)'
+Processing location: Super Missile (pink Brinstar)
+Function args for Super Missile (pink Brinstar): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Super Missile (pink Brinstar)', extracting canAccess logic
+Successfully extracted location logic for 'Super Missile (pink Brinstar)'
+Processing location: Missile (pink Brinstar top)
+Function args for Missile (pink Brinstar top): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (pink Brinstar top)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (pink Brinstar top)'
+Processing location: Missile (pink Brinstar bottom)
+Function args for Missile (pink Brinstar bottom): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (pink Brinstar bottom)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (pink Brinstar bottom)'
+Processing location: Charge Beam
+Function args for Charge Beam: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Charge Beam', extracting canAccess logic
+Successfully extracted location logic for 'Charge Beam'
+Processing location: Power Bomb (pink Brinstar)
+Function args for Power Bomb (pink Brinstar): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Power Bomb (pink Brinstar)', extracting canAccess logic
+Successfully extracted location logic for 'Power Bomb (pink Brinstar)'
+Processing location: Missile (green Brinstar pipe)
+Function args for Missile (green Brinstar pipe): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (green Brinstar pipe)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (green Brinstar pipe)'
+Processing location: Energy Tank, Waterway
+Function args for Energy Tank, Waterway: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Waterway', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Waterway'
+Processing location: Energy Tank, Brinstar Gate
+Function args for Energy Tank, Brinstar Gate: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Brinstar Gate', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Brinstar Gate'
+Processing location: X-Ray Scope
+Function args for X-Ray Scope: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'X-Ray Scope', extracting canAccess logic
+Successfully extracted location logic for 'X-Ray Scope'
+Processing location: Power Bomb (red Brinstar sidehopper room)
+Function args for Power Bomb (red Brinstar sidehopper room): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Power Bomb (red Brinstar sidehopper room)', extracting canAccess logic
+Successfully extracted location logic for 'Power Bomb (red Brinstar sidehopper room)'
+Processing location: Power Bomb (red Brinstar spike room)
+Function args for Power Bomb (red Brinstar spike room): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Power Bomb (red Brinstar spike room)', extracting canAccess logic
+Successfully extracted location logic for 'Power Bomb (red Brinstar spike room)'
+Processing location: Missile (red Brinstar spike room)
+Function args for Missile (red Brinstar spike room): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (red Brinstar spike room)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (red Brinstar spike room)'
+Processing location: Spazer
+Function args for Spazer: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Spazer', extracting canAccess logic
+Successfully extracted location logic for 'Spazer'
+Processing location: Energy Tank, Kraid
+Function args for Energy Tank, Kraid: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Kraid', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Kraid'
+Processing location: Varia Suit
+Function args for Varia Suit: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Varia Suit', extracting canAccess logic
+Successfully extracted location logic for 'Varia Suit'
+Processing location: Missile (Kraid)
+Function args for Missile (Kraid): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Kraid)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Kraid)'
+Processing location: Missile (Wrecked Ship middle)
+Function args for Missile (Wrecked Ship middle): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Wrecked Ship middle)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Wrecked Ship middle)'
+Processing location: Reserve Tank, Wrecked Ship
+Function args for Reserve Tank, Wrecked Ship: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Reserve Tank, Wrecked Ship', extracting canAccess logic
+Successfully extracted location logic for 'Reserve Tank, Wrecked Ship'
+Processing location: Missile (Gravity Suit)
+Function args for Missile (Gravity Suit): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Gravity Suit)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Gravity Suit)'
+Processing location: Missile (Wrecked Ship top)
+Function args for Missile (Wrecked Ship top): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Wrecked Ship top)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Wrecked Ship top)'
+Processing location: Energy Tank, Wrecked Ship
+Function args for Energy Tank, Wrecked Ship: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Wrecked Ship', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Wrecked Ship'
+Processing location: Super Missile (Wrecked Ship left)
+Function args for Super Missile (Wrecked Ship left): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Super Missile (Wrecked Ship left)', extracting canAccess logic
+Successfully extracted location logic for 'Super Missile (Wrecked Ship left)'
+Processing location: Right Super, Wrecked Ship
+Function args for Right Super, Wrecked Ship: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Right Super, Wrecked Ship', extracting canAccess logic
+Successfully extracted location logic for 'Right Super, Wrecked Ship'
+Processing location: Gravity Suit
+Function args for Gravity Suit: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Gravity Suit', extracting canAccess logic
+Successfully extracted location logic for 'Gravity Suit'
+Processing location: Missile (green Maridia shinespark)
+Function args for Missile (green Maridia shinespark): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (green Maridia shinespark)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (green Maridia shinespark)'
+Processing location: Super Missile (green Maridia)
+Function args for Super Missile (green Maridia): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Super Missile (green Maridia)', extracting canAccess logic
+Successfully extracted location logic for 'Super Missile (green Maridia)'
+Processing location: Energy Tank, Mama turtle
+Function args for Energy Tank, Mama turtle: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Mama turtle', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Mama turtle'
+Processing location: Missile (green Maridia tatori)
+Function args for Missile (green Maridia tatori): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (green Maridia tatori)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (green Maridia tatori)'
+Processing location: Super Missile (yellow Maridia)
+Function args for Super Missile (yellow Maridia): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Super Missile (yellow Maridia)', extracting canAccess logic
+Successfully extracted location logic for 'Super Missile (yellow Maridia)'
+Processing location: Missile (yellow Maridia super missile)
+Function args for Missile (yellow Maridia super missile): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (yellow Maridia super missile)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (yellow Maridia super missile)'
+Processing location: Missile (yellow Maridia false wall)
+Function args for Missile (yellow Maridia false wall): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (yellow Maridia false wall)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (yellow Maridia false wall)'
+Processing location: Plasma Beam
+Function args for Plasma Beam: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Plasma Beam', extracting canAccess logic
+Successfully extracted location logic for 'Plasma Beam'
+Processing location: Missile (left Maridia sand pit room)
+Function args for Missile (left Maridia sand pit room): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (left Maridia sand pit room)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (left Maridia sand pit room)'
+Processing location: Reserve Tank, Maridia
+Function args for Reserve Tank, Maridia: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Reserve Tank, Maridia', extracting canAccess logic
+Successfully extracted location logic for 'Reserve Tank, Maridia'
+Processing location: Missile (right Maridia sand pit room)
+Function args for Missile (right Maridia sand pit room): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (right Maridia sand pit room)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (right Maridia sand pit room)'
+Processing location: Power Bomb (right Maridia sand pit room)
+Function args for Power Bomb (right Maridia sand pit room): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Power Bomb (right Maridia sand pit room)', extracting canAccess logic
+Successfully extracted location logic for 'Power Bomb (right Maridia sand pit room)'
+Processing location: Missile (pink Maridia)
+Function args for Missile (pink Maridia): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (pink Maridia)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (pink Maridia)'
+Processing location: Super Missile (pink Maridia)
+Function args for Super Missile (pink Maridia): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Super Missile (pink Maridia)', extracting canAccess logic
+Successfully extracted location logic for 'Super Missile (pink Maridia)'
+Processing location: Spring Ball
+Function args for Spring Ball: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Spring Ball', extracting canAccess logic
+Successfully extracted location logic for 'Spring Ball'
+Processing location: Missile (Draygon)
+Function args for Missile (Draygon): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Draygon)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Draygon)'
+Processing location: Energy Tank, Botwoon
+Function args for Energy Tank, Botwoon: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Botwoon', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Botwoon'
+Processing location: Space Jump
+Function args for Space Jump: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Space Jump', extracting canAccess logic
+Successfully extracted location logic for 'Space Jump'
+Processing location: Missile (lava room)
+Function args for Missile (lava room): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (lava room)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (lava room)'
+Processing location: Ice Beam
+Function args for Ice Beam: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Ice Beam', extracting canAccess logic
+Successfully extracted location logic for 'Ice Beam'
+Processing location: Missile (below Ice Beam)
+Function args for Missile (below Ice Beam): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (below Ice Beam)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (below Ice Beam)'
+Processing location: Hi-Jump Boots
+Function args for Hi-Jump Boots: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Hi-Jump Boots', extracting canAccess logic
+Successfully extracted location logic for 'Hi-Jump Boots'
+Processing location: Missile (Hi-Jump Boots)
+Function args for Missile (Hi-Jump Boots): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Hi-Jump Boots)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Hi-Jump Boots)'
+Processing location: Energy Tank (Hi-Jump Boots)
+Function args for Energy Tank (Hi-Jump Boots): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank (Hi-Jump Boots)', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank (Hi-Jump Boots)'
+Processing location: Reserve Tank, Norfair
+Function args for Reserve Tank, Norfair: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Reserve Tank, Norfair', extracting canAccess logic
+Successfully extracted location logic for 'Reserve Tank, Norfair'
+Processing location: Missile (Norfair Reserve Tank)
+Function args for Missile (Norfair Reserve Tank): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Norfair Reserve Tank)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Norfair Reserve Tank)'
+Processing location: Missile (bubble Norfair green door)
+Function args for Missile (bubble Norfair green door): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (bubble Norfair green door)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (bubble Norfair green door)'
+Processing location: Missile (bubble Norfair)
+Function args for Missile (bubble Norfair): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (bubble Norfair)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (bubble Norfair)'
+Processing location: Missile (Speed Booster)
+Function args for Missile (Speed Booster): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Speed Booster)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Speed Booster)'
+Processing location: Speed Booster
+Function args for Speed Booster: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Speed Booster', extracting canAccess logic
+Successfully extracted location logic for 'Speed Booster'
+Processing location: Missile (Wave Beam)
+Function args for Missile (Wave Beam): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Wave Beam)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Wave Beam)'
+Processing location: Wave Beam
+Function args for Wave Beam: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Wave Beam', extracting canAccess logic
+Successfully extracted location logic for 'Wave Beam'
+Processing location: Energy Tank, Crocomire
+Function args for Energy Tank, Crocomire: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Crocomire', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Crocomire'
+Processing location: Missile (above Crocomire)
+Function args for Missile (above Crocomire): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (above Crocomire)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (above Crocomire)'
+Processing location: Power Bomb (Crocomire)
+Function args for Power Bomb (Crocomire): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Power Bomb (Crocomire)', extracting canAccess logic
+Successfully extracted location logic for 'Power Bomb (Crocomire)'
+Processing location: Missile (below Crocomire)
+Function args for Missile (below Crocomire): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (below Crocomire)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (below Crocomire)'
+Processing location: Missile (Grappling Beam)
+Function args for Missile (Grappling Beam): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Grappling Beam)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Grappling Beam)'
+Processing location: Grappling Beam
+Function args for Grappling Beam: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Grappling Beam', extracting canAccess logic
+Successfully extracted location logic for 'Grappling Beam'
+Processing location: Missile (Gold Torizo)
+Function args for Missile (Gold Torizo): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Gold Torizo)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Gold Torizo)'
+Processing location: Super Missile (Gold Torizo)
+Function args for Super Missile (Gold Torizo): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Super Missile (Gold Torizo)', extracting canAccess logic
+Successfully extracted location logic for 'Super Missile (Gold Torizo)'
+Processing location: Screw Attack
+Function args for Screw Attack: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Screw Attack', extracting canAccess logic
+Successfully extracted location logic for 'Screw Attack'
+Processing location: Missile (Mickey Mouse room)
+Function args for Missile (Mickey Mouse room): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (Mickey Mouse room)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (Mickey Mouse room)'
+Processing location: Missile (lower Norfair above fire flea room)
+Function args for Missile (lower Norfair above fire flea room): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (lower Norfair above fire flea room)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (lower Norfair above fire flea room)'
+Processing location: Power Bomb (lower Norfair above fire flea room)
+Function args for Power Bomb (lower Norfair above fire flea room): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Power Bomb (lower Norfair above fire flea room)', extracting canAccess logic
+Successfully extracted location logic for 'Power Bomb (lower Norfair above fire flea room)'
+Processing location: Power Bomb (Power Bombs of shame)
+Function args for Power Bomb (Power Bombs of shame): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Power Bomb (Power Bombs of shame)', extracting canAccess logic
+Successfully extracted location logic for 'Power Bomb (Power Bombs of shame)'
+Processing location: Missile (lower Norfair near Wave Beam)
+Function args for Missile (lower Norfair near Wave Beam): ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Missile (lower Norfair near Wave Beam)', extracting canAccess logic
+Successfully extracted location logic for 'Missile (lower Norfair near Wave Beam)'
+Processing location: Energy Tank, Ridley
+Function args for Energy Tank, Ridley: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Ridley', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Ridley'
+Processing location: Energy Tank, Firefleas
+Function args for Energy Tank, Firefleas: ('state', 'loc'), defaults: 1
+Found 'loc' object from defaults: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+loc_object attributes - canAccess: True, Available: True, type: <class 'worlds.smz3.TotalSMZ3.Location.Location'>
+Found TotalSMZ3 Location object for 'Energy Tank, Firefleas', extracting canAccess logic
+Successfully extracted location logic for 'Energy Tank, Firefleas'
+SMZ3 exporter initialized
+Successfully wrote rules to /tmp/tmpc45951ho/AP_14089154938208861744_rules.json
+Detected single game world (SMZ3), using 'smz3' preset folder.
+Preset content mismatch found in AP_14089154938208861744_rules.json. Update needed.
+Updating preset directory: /home/user/Archipelago-CC/exporter/../frontend/presets/smz3/AP_14089154938208861744
+Copied 5 files to preset directory /home/user/Archipelago-CC/exporter/../frontend/presets/smz3/AP_14089154938208861744
+Updated preset_files.json with 5 files for smz3/AP_14089154938208861744
+Creating final archive at /home/user/Archipelago-CC/output/AP_14089154938208861744.zip
+Done. Enjoy. Total Time: 1.7167693469999676
