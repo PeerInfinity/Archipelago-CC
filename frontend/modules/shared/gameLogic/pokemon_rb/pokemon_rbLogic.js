@@ -14,27 +14,6 @@
  * @returns {boolean} True if player has the item
  */
 export function has(snapshot, staticData, itemName) {
-  // Debug logging for key items - only log once
-  if (typeof console !== 'undefined' && itemName === 'HM03 Surf' && !window._hasDebugLogged) {
-    window._hasDebugLogged = true;
-    const inventoryItems = snapshot.inventory ? Object.entries(snapshot.inventory).filter(([k,v]) => v > 0).slice(0, 20) : [];
-    const eventsCount = snapshot.events ? snapshot.events.length : 0;
-    const flagsCount = snapshot.flags ? snapshot.flags.length : 0;
-    console.log(`[has] FULL DEBUG - Snapshot structure:`);
-    console.log(`  snapshotKeys: ${JSON.stringify(Object.keys(snapshot || {}))}`);
-    console.log(`  inventoryItemCount: ${snapshot.inventory ? Object.keys(snapshot.inventory).length : 0}`);
-    console.log(`  itemsWithCounts>0: ${inventoryItems.length}`);
-    console.log(`  hasHM in inventory: ${snapshot.inventory?.['HM03 Surf']}`);
-    console.log(`  hasBadge in inventory: ${snapshot.inventory?.['Soul Badge']}`);
-    console.log(`  eventsCount: ${eventsCount}`);
-    console.log(`  eventsHasHM: ${snapshot.events?.includes('HM03 Surf')}`);
-    console.log(`  eventsHasBadge: ${snapshot.events?.includes('Soul Badge')}`);
-    if (eventsCount > 0) {
-      console.log(`  eventsSample: ${JSON.stringify(snapshot.events.slice(0, 30))}`);
-    }
-    console.log(`  flagsCount: ${flagsCount}`);
-  }
-
   // Check flags (events, checked locations, etc.)
   if (snapshot.flags && snapshot.flags.includes(itemName)) {
     return true;
@@ -129,16 +108,12 @@ function getGameData(staticData, key) {
 export function can_learn_hm(snapshot, staticData, move) {
   const local_poke_data = getGameData(staticData, 'local_poke_data');
   if (!local_poke_data) {
-    if (typeof console !== 'undefined') {
-      console.log('[can_learn_hm] No local_poke_data found!');
-    }
     return false;
   }
 
   const moveIndex = ["Cut", "Fly", "Surf", "Strength", "Flash"].indexOf(move);
   if (moveIndex === -1) return false;
 
-  const pokemonThatCanLearn = [];
   for (const [pokemon, data] of Object.entries(local_poke_data)) {
     // Check for both base Pokemon name and "Static {pokemon}" prefix
     const hasPokemon = has(snapshot, staticData, pokemon) || has(snapshot, staticData, `Static ${pokemon}`);
@@ -147,18 +122,11 @@ export function can_learn_hm(snapshot, staticData, move) {
       const bitMask = 1 << (moveIndex + 2);
       const canLearn = (data.tms[6] & bitMask) !== 0;
       if (canLearn) {
-        pokemonThatCanLearn.push(pokemon);
-        if (typeof console !== 'undefined' && move === 'Surf') {
-          console.log(`[can_learn_hm] ${pokemon} can learn ${move}!`);
-        }
         return true;
       }
     }
   }
 
-  if (typeof console !== 'undefined' && move === 'Surf') {
-    console.log(`[can_learn_hm] No Pokemon can learn ${move}. Checked ${Object.keys(local_poke_data).length} Pokemon.`);
-  }
   return false;
 }
 
@@ -174,11 +142,6 @@ export function can_surf(snapshot, staticData) {
   const hasBadge = has(snapshot, staticData, "Soul Badge") ||
                    has(snapshot, staticData, extra_badges["Surf"]) ||
                    options.badges_needed_for_hm_moves === 0;
-
-  // Debug logging
-  if (typeof console !== 'undefined') {
-    console.log('[can_surf] Debug:', { hasHM, canLearn, hasBadge, options, extra_badges });
-  }
 
   return hasHM && canLearn && hasBadge;
 }
@@ -261,7 +224,7 @@ export function can_get_hidden_items(snapshot, staticData) {
 /**
  * Check if player has a certain number of key items
  */
-export function has_key_items(snapshot, staticData, count) {
+export function has_key_items(snapshot, staticData, requiredCount) {
   const keyItemsList = [
     "Bicycle", "Silph Scope", "Item Finder", "Super Rod", "Good Rod",
     "Old Rod", "Lift Key", "Card Key", "Town Map", "Coin Case", "S.S. Ticket",
@@ -284,7 +247,7 @@ export function has_key_items(snapshot, staticData, count) {
   const progressiveCardKeys = Math.min(count(snapshot, staticData, "Progressive Card Key"), 10);
   keyItemCount += progressiveCardKeys;
 
-  return keyItemCount >= count;
+  return keyItemCount >= requiredCount;
 }
 
 /**
