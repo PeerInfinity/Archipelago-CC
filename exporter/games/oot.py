@@ -5,6 +5,8 @@ from .generic import GenericGameExportHandler
 import ast
 import logging
 import re
+import json
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -16,25 +18,49 @@ class OOTGameExportHandler(GenericGameExportHandler):
         self.rule_string_map = {}  # Maps rule_target_name -> rule_string
         self.world = None
 
+    def _load_logic_helpers(self):
+        """Load subrule definitions from LogicHelpers.json."""
+        try:
+            # Find the OOT world directory
+            import worlds.oot
+            oot_dir = os.path.dirname(worlds.oot.__file__)
+            logic_helpers_path = os.path.join(oot_dir, 'data', 'LogicHelpers.json')
+
+            if not os.path.exists(logic_helpers_path):
+                logger.warning(f"OOT: LogicHelpers.json not found at {logic_helpers_path}")
+                return {}
+
+            with open(logic_helpers_path, 'r', encoding='utf-8') as f:
+                # Read the file, stripping out comments
+                content = []
+                for line in f:
+                    # Remove comments (anything after # on each line)
+                    line = line.split('#', 1)[0]
+                    if line.strip():
+                        content.append(line)
+                json_content = ''.join(content)
+
+            logic_helpers = json.loads(json_content)
+            logger.info(f"OOT: Loaded {len(logic_helpers)} subrule definitions from LogicHelpers.json")
+            return logic_helpers
+
+        except Exception as e:
+            logger.error(f"OOT: Failed to load LogicHelpers.json: {e}")
+            return {}
+
     def build_rule_string_map(self, world):
         """Build a mapping of location/entrance names to their rule strings."""
         self.world = world
         self.rule_string_map = {}
 
-        # Access the parser's delayed_rules to get AST nodes for subrules
-        # This allows us to capture rule strings without modifying world files
-        if hasattr(world, 'parser') and hasattr(world.parser, 'delayed_rules'):
-            for region_name, node, subrule_name in world.parser.delayed_rules:
-                try:
-                    # Unparse the AST node to get the rule string
-                    rule_string = ast.unparse(node)
-                    self.rule_string_map[subrule_name] = rule_string
-                    logger.debug(f"OOT: Captured subrule '{subrule_name}' from parser: {rule_string[:80]}")
-                except AttributeError:
-                    # Fallback for Python < 3.9
-                    rule_string = f"__ast_dump__:{ast.dump(node, False)}"
-                    self.rule_string_map[subrule_name] = rule_string
-                    logger.debug(f"OOT: Captured subrule '{subrule_name}' from parser (AST dump)")
+        # Load subrule definitions from LogicHelpers.json
+        # This avoids needing to modify files in the worlds directory
+        logic_helpers = self._load_logic_helpers()
+
+        # Add all the logic helper rules to our map
+        for subrule_name, rule_string in logic_helpers.items():
+            self.rule_string_map[subrule_name] = rule_string
+            logger.debug(f"OOT: Loaded subrule '{subrule_name}' from LogicHelpers: {rule_string[:80]}")
 
         # Also collect any rule_string attributes already set on locations/exits
         # (This preserves backward compatibility if rule_string is set elsewhere)
