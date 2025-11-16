@@ -293,6 +293,10 @@ export class StateManager {
    * Adds an item and notifies all registered callbacks
    */
   addItemToInventory(itemName, count = 1) {
+    // DEBUG: Log for items with asterisks
+    if (itemName && itemName.includes('*')) {
+      console.error(`[DEBUG stateManager.addItemToInventory] Called with "${itemName}", count=${count}`);
+    }
     InventoryModule.addItemToInventory(this, itemName, count);
   }
 

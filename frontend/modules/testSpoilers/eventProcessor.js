@@ -773,6 +773,11 @@ export class EventProcessor {
 
       this.logCallback('debug', `  [Player ${this.playerId}] Checking location: "${locationName}" (contains: ${itemName || 'no item'})`);
 
+      // DEBUG: Log for locations with Recov30
+      if (locationName.includes('Tomes') || (itemName && itemName.includes('Recov30'))) {
+        console.error(`[DEBUG eventProcessor] Checking location "${locationName}", item="${itemName}"`);
+      }
+
       // Verify accessibility before checking
       const currentSnapshot = await stateManager.getFullSnapshot();
       const snapshotInterface = createStateSnapshotInterface(currentSnapshot, stateManager.getStaticData());
