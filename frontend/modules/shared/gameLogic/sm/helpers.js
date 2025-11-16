@@ -37,9 +37,11 @@ export function evalSMBool(state, args, ruleEngine) {
         return true;
     }
 
-    // If it's a direct SMBool construction, evaluate it
-    if (smboolArg && smboolArg.type === 'function_call' &&
-        smboolArg.function && smboolArg.function.name === 'SMBool') {
+    // If it's a direct SMBool construction (either as helper or function_call), evaluate it
+    const isSMBool = (smboolArg.type === 'helper' && smboolArg.name === 'SMBool') ||
+                     (smboolArg.type === 'function_call' && smboolArg.function && smboolArg.function.name === 'SMBool');
+
+    if (smboolArg && isSMBool) {
         const args = smboolArg.args || [];
         if (args.length > 0) {
             // First arg is the boolean value
@@ -83,7 +85,26 @@ export function func(state, args, ruleEngine) {
     return { bool: true, difficulty: 0 };
 }
 
+/**
+ * SMBool constructor - creates a boolean with difficulty.
+ *
+ * @param {Object} state - The game state
+ * @param {Array} args - Arguments: [boolean_value, difficulty (optional)]
+ * @param {Object} ruleEngine - The rule engine instance
+ * @returns {boolean} The boolean value
+ */
+export function SMBool(state, args, ruleEngine) {
+    if (!args || args.length === 0) {
+        return false;
+    }
+
+    // First arg is the boolean value
+    const boolValue = ruleEngine.evaluateRule(args[0], state);
+    return Boolean(boolValue);
+}
+
 export default {
     evalSMBool,
-    func
+    func,
+    SMBool
 };
