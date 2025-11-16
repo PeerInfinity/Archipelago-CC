@@ -265,14 +265,11 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
                         'conditions': conditions
                     }
                 else:
-                    # N of M - use a helper
+                    # N of M - use count_true rule type
                     return {
-                        'type': 'helper',
-                        'name': 'count_true',
-                        'args': [
-                            {'type': 'constant', 'value': count_required},
-                            {'type': 'constant', 'value': conditions}
-                        ]
+                        'type': 'count_true',
+                        'count': count_required,
+                        'conditions': conditions
                     }
 
             # Unknown rule type - log and return a helper reference
