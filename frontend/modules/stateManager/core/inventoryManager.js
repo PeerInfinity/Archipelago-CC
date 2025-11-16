@@ -267,6 +267,11 @@ export function _addItemToInventory(sm, itemName, count = 1) {
 
   sm.inventory[itemName] = Math.min(currentCount + count, maxCount);
 
+  // DEBUG: Log for items with asterisks
+  if (itemName && itemName.includes('*')) {
+    console.error(`[DEBUG _addItemToInventory] Added "${itemName}": currentCount=${currentCount}, count=${count}, maxCount=${maxCount}, newCount=${sm.inventory[itemName]}`);
+  }
+
   // Handle progression mapping (e.g., REP items in Bomb Rush Cyberfunk)
   if (sm.progressionMapping) {
     for (const [virtualItemName, mapping] of Object.entries(sm.progressionMapping)) {
@@ -419,7 +424,13 @@ export function _removeItemFromInventory(sm, itemName, count = 1) {
  * @returns {boolean} True if item count > 0
  */
 export function hasItem(sm, itemName) {
-  return (sm.inventory[itemName] || 0) > 0;
+  const count = sm.inventory[itemName] || 0;
+  const result = count > 0;
+  // DEBUG: Log for items with asterisks
+  if (itemName && itemName.includes('*')) {
+    console.error(`[DEBUG hasItem] Checking "${itemName}": count=${count}, result=${result}, inventory keys=${Object.keys(sm.inventory).filter(k => k.includes('*')).join(', ')}`);
+  }
+  return result;
 }
 
 /**

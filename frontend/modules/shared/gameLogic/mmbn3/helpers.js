@@ -10,7 +10,14 @@
  * @returns {boolean} True if player has the item
  */
 export function has(snapshot, staticData, itemName) {
-    return !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
+    const result = !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
+    // DEBUG: Log for items with asterisks
+    if (itemName && itemName.includes('*')) {
+        const count = snapshot?.inventory?.[itemName] || 0;
+        const keys = snapshot?.inventory ? Object.keys(snapshot.inventory).filter(k => k.includes('*')) : [];
+        console.error(`[DEBUG mmbn3.has] Checking "${itemName}": count=${count}, result=${result}, inventory asterisk keys=[${keys.join(', ')}]`);
+    }
+    return result;
 }
 
 /**

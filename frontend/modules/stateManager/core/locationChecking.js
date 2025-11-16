@@ -113,11 +113,21 @@ export function checkLocation(sm, locationName, addItems = true) {
         sm._logDebug(`[StateManager Class] Checked location: ${locationName}`);
         locationWasActuallyChecked = true;
 
+        // DEBUG: Log all location checks
+        if (locationName.includes('Tomes')) {
+          console.error(`[DEBUG checkLocation] Checking location "${locationName}", item=${location.item?.name || 'no item'}`);
+        }
+
         // Grant item from location (if addItems is true)
         if (addItems && location && location.item && typeof location.item.name === 'string') {
           sm._logDebug(
             `[StateManager Class] Location ${locationName} contains item: ${location.item.name}`
           );
+
+          // DEBUG: Log for items with asterisks
+          if (location.item.name && location.item.name.includes('*')) {
+            console.error(`[DEBUG checkLocation] Location "${locationName}" has item "${location.item.name}"`);
+          }
 
           // Check if item is for a different player (multiworld)
           const itemPlayerId = location.item.player;

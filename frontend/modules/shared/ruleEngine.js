@@ -1242,6 +1242,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
           }
         } else if (typeof context.hasItem === 'function') {
           result = context.hasItem(itemName); // hasItem should return true/false/undefined
+          // DEBUG: Log item_check evaluation for items with special characters
+          if (itemName && itemName.includes('*')) {
+            console.error(`[DEBUG item_check] Checking item "${itemName}": hasItem returned ${result}, typeof rule.item = ${typeof rule.item}, rule.item = ${JSON.stringify(rule.item)}`);
+          }
         } else {
           log(
             'warn',
