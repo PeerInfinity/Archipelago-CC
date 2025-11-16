@@ -218,6 +218,9 @@ class LingoGameExportHandler(GenericGameExportHandler):
         if not rule:
             return rule
 
+        # First, replace all world.player_logic references with settings
+        rule = self._replace_world_references(rule)
+
         # Extract door information from entrance name
         door_room = None
         door_name = None
@@ -231,6 +234,63 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
         # Simplify the rule based on door information
         return self._simplify_entrance_rule(rule, door_room, door_name, entrance_name)
+
+    def _replace_world_references(self, obj: Any) -> Any:
+        """
+        Replace all references to world.player_logic with settings, and bare references
+        to PROGRESSIVE_ITEMS and PROGRESSIVE_DOORS_BY_ROOM with settings references.
+        """
+        if not isinstance(obj, dict):
+            return obj
+
+        obj_type = obj.get('type')
+
+        # Replace bare name references to PROGRESSIVE_ITEMS and PROGRESSIVE_DOORS_BY_ROOM
+        if obj_type == 'name':
+            name = obj.get('name')
+            if name == 'PROGRESSIVE_ITEMS':
+                return {
+                    'type': 'attribute',
+                    'object': {'type': 'name', 'name': 'settings'},
+                    'attr': 'PROGRESSIVE_ITEMS'
+                }
+            elif name == 'PROGRESSIVE_DOORS_BY_ROOM':
+                return {
+                    'type': 'attribute',
+                    'object': {'type': 'name', 'name': 'settings'},
+                    'attr': 'PROGRESSIVE_DOORS_BY_ROOM'
+                }
+
+        # Replace world.player_logic.X with settings.X
+        if obj_type == 'attribute':
+            inner_obj = obj.get('object', {})
+            attr = obj.get('attr')
+
+            # Check if this is world.player_logic
+            if (isinstance(inner_obj, dict) and
+                inner_obj.get('type') == 'attribute' and
+                inner_obj.get('attr') == 'player_logic'):
+
+                innermost = inner_obj.get('object', {})
+                if isinstance(innermost, dict) and innermost.get('type') == 'name' and innermost.get('name') == 'world':
+                    # This is world.player_logic.X, replace with settings.X
+                    return {
+                        'type': 'attribute',
+                        'object': {'type': 'name', 'name': 'settings'},
+                        'attr': attr
+                    }
+
+        # Recursively process nested structures
+        result = {}
+        for key, value in obj.items():
+            if isinstance(value, dict):
+                result[key] = self._replace_world_references(value)
+            elif isinstance(value, list):
+                result[key] = [self._replace_world_references(item) if isinstance(item, (dict, list)) else item for item in value]
+            else:
+                result[key] = value
+
+        return result
 
     def _simplify_entrance_rule(self, rule: Dict[str, Any], door_room: str, door_name: str, entrance_name: str) -> Dict[str, Any]:
         """
@@ -251,7 +311,10 @@ class LingoGameExportHandler(GenericGameExportHandler):
         if rule_type == 'conditional':
             test = rule.get('test', {})
 
-            # Check if this is testing "door is None"
+            # Check if this is testing "door is None" or "None is None"
+            is_door_none_test = False
+
+            # Pattern 1: door is None (before variable replacement)
             if (isinstance(test, dict) and
                 test.get('type') == 'compare' and
                 test.get('op') in ['is', '=='] and
@@ -261,8 +324,22 @@ class LingoGameExportHandler(GenericGameExportHandler):
                 isinstance(test.get('right'), dict) and
                 test.get('right', {}).get('type') == 'constant' and
                 test.get('right', {}).get('value') is None):
+                is_door_none_test = True
 
-                # This is "if door is None:"
+            # Pattern 2: None is None (after variable replacement when door_name is None)
+            if (isinstance(test, dict) and
+                test.get('type') == 'compare' and
+                test.get('op') in ['is', '=='] and
+                isinstance(test.get('left'), dict) and
+                test.get('left', {}).get('type') == 'constant' and
+                test.get('left', {}).get('value') is None and
+                isinstance(test.get('right'), dict) and
+                test.get('right', {}).get('type') == 'constant' and
+                test.get('right', {}).get('value') is None):
+                is_door_none_test = True
+
+            if is_door_none_test:
+                # This is "if door is None:" or "if None is None:"
                 if door_name is None:
                     # door is indeed None, take the if_true branch
                     logger.debug(f"Simplified '{entrance_name}': door is None, using if_true branch")
