@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-17T00:46:06.807387",
-    "last_updated": "2025-11-17T00:46:06.807394",
+    "last_updated": "2025-11-17T04:24:50.724597",
     "script_version": "1.0.0"
   },
   "results": {
@@ -338,59 +338,67 @@
       }
     },
     "Blasphemous.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
-      },
       "consecutive_passes_before_failure": 0,
+      "first_failure_reason": "Test failed at sphere 0.0",
       "first_failure_seed": 1,
-      "game_name": "blasphemous",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 39.98,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "blasphemous",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 38.62,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 3106930,
+            "size_mb": 2.96
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 8,
+            "pass_fail": "failed",
+            "processing_time_seconds": 62.04,
+            "return_code": 1,
+            "sphere_reached": 0.0,
+            "success": false,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_name": "Blasphemous.yaml",
+          "timestamp": "2025-11-17T04:14:52.980736",
+          "world_info": {
+            "exporter_path": "exporter/games/blasphemous.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
+            "game_name_from_yaml": "Blasphemous",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "blasphemous",
+            "world_directory": "blasphemous"
+          }
+        }
       },
-      "rules_file": {
-        "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 3106930,
-        "size_mb": 2.96
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 10,
+      "seeds_failed": 1,
       "seeds_passed": 0,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 117.55,
-        "return_code": 1,
-        "sphere_reached": 0.0,
-        "success": false,
-        "total_spheres": 13.1,
-        "warning_count": 0
-      },
+      "stop_on_failure": true,
       "summary": {
         "all_passed": false,
         "any_failed": true,
         "failure_rate": 1.0
       },
       "template_name": "Blasphemous.yaml",
-      "timestamp": "2025-11-17T00:12:37.767156",
-      "world_info": {
-        "exporter_path": "exporter/games/blasphemous.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
-        "game_name_from_yaml": "Blasphemous",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "blasphemous",
-        "world_directory": "blasphemous"
-      }
+      "timestamp": "2025-11-17T04:14:52.932508",
+      "total_seeds_tested": 1
     },
     "Bomb Rush Cyberfunk.yaml": {
       "analysis": {
@@ -1878,59 +1886,419 @@
       }
     },
     "Mario & Luigi Superstar Saga.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
+      "consecutive_passes_before_failure": 9,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
+      "individual_results": {
+        "10": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "mlss",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.8,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/mlss/AP_55941320597534372051/AP_55941320597534372051_rules.json",
+            "size_bytes": 365458,
+            "size_mb": 0.35
+          },
+          "seed": "10",
+          "seed_id": "AP_55941320597534372051",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 45.68,
+            "return_code": 0,
+            "sphere_reached": 7.7,
+            "success": true,
+            "total_spheres": 7.7,
+            "warning_count": 0
+          },
+          "template_name": "Mario & Luigi Superstar Saga.yaml",
+          "timestamp": "2025-11-17T04:23:58.490171",
+          "world_info": {
+            "exporter_path": "exporter/games/mlss.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
+            "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "mlss",
+            "world_directory": "mlss"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "mlss",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.67,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/mlss/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 365474,
+            "size_mb": 0.35
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 44.15,
+            "return_code": 0,
+            "sphere_reached": 10.1,
+            "success": true,
+            "total_spheres": 10.1,
+            "warning_count": 0
+          },
+          "template_name": "Mario & Luigi Superstar Saga.yaml",
+          "timestamp": "2025-11-17T04:17:09.359543",
+          "world_info": {
+            "exporter_path": "exporter/games/mlss.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
+            "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "mlss",
+            "world_directory": "mlss"
+          }
+        },
+        "3": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "mlss",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.68,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/mlss/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 365484,
+            "size_mb": 0.35
+          },
+          "seed": "3",
+          "seed_id": "AP_84719271504320872445",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 47.27,
+            "return_code": 0,
+            "sphere_reached": 6.9,
+            "success": true,
+            "total_spheres": 6.9,
+            "warning_count": 0
+          },
+          "template_name": "Mario & Luigi Superstar Saga.yaml",
+          "timestamp": "2025-11-17T04:17:59.687263",
+          "world_info": {
+            "exporter_path": "exporter/games/mlss.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
+            "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "mlss",
+            "world_directory": "mlss"
+          }
+        },
+        "4": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "mlss",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.42,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/mlss/AP_05594871498841892311/AP_05594871498841892311_rules.json",
+            "size_bytes": 365487,
+            "size_mb": 0.35
+          },
+          "seed": "4",
+          "seed_id": "AP_05594871498841892311",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 45.39,
+            "return_code": 0,
+            "sphere_reached": 8.2,
+            "success": true,
+            "total_spheres": 8.2,
+            "warning_count": 0
+          },
+          "template_name": "Mario & Luigi Superstar Saga.yaml",
+          "timestamp": "2025-11-17T04:18:53.110978",
+          "world_info": {
+            "exporter_path": "exporter/games/mlss.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
+            "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "mlss",
+            "world_directory": "mlss"
+          }
+        },
+        "5": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "mlss",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.97,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/mlss/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 365494,
+            "size_mb": 0.35
+          },
+          "seed": "5",
+          "seed_id": "AP_96945849220684217413",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 46.71,
+            "return_code": 0,
+            "sphere_reached": 12.1,
+            "success": true,
+            "total_spheres": 12.1,
+            "warning_count": 0
+          },
+          "template_name": "Mario & Luigi Superstar Saga.yaml",
+          "timestamp": "2025-11-17T04:19:44.440753",
+          "world_info": {
+            "exporter_path": "exporter/games/mlss.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
+            "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "mlss",
+            "world_directory": "mlss"
+          }
+        },
+        "6": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "mlss",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 6.33,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/mlss/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+            "size_bytes": 365503,
+            "size_mb": 0.35
+          },
+          "seed": "6",
+          "seed_id": "AP_00679259829289197625",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 43.64,
+            "return_code": 0,
+            "sphere_reached": 8.8,
+            "success": true,
+            "total_spheres": 8.8,
+            "warning_count": 0
+          },
+          "template_name": "Mario & Luigi Superstar Saga.yaml",
+          "timestamp": "2025-11-17T04:20:37.637209",
+          "world_info": {
+            "exporter_path": "exporter/games/mlss.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
+            "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "mlss",
+            "world_directory": "mlss"
+          }
+        },
+        "7": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "mlss",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.53,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/mlss/AP_35931773795037525048/AP_35931773795037525048_rules.json",
+            "size_bytes": 365477,
+            "size_mb": 0.35
+          },
+          "seed": "7",
+          "seed_id": "AP_35931773795037525048",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 42.42,
+            "return_code": 0,
+            "sphere_reached": 11.1,
+            "success": true,
+            "total_spheres": 11.1,
+            "warning_count": 0
+          },
+          "template_name": "Mario & Luigi Superstar Saga.yaml",
+          "timestamp": "2025-11-17T04:21:28.066415",
+          "world_info": {
+            "exporter_path": "exporter/games/mlss.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
+            "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "mlss",
+            "world_directory": "mlss"
+          }
+        },
+        "8": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "mlss",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.59,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/mlss/AP_20777137877808592492/AP_20777137877808592492_rules.json",
+            "size_bytes": 365492,
+            "size_mb": 0.35
+          },
+          "seed": "8",
+          "seed_id": "AP_20777137877808592492",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 44.55,
+            "return_code": 0,
+            "sphere_reached": 7.72,
+            "success": true,
+            "total_spheres": 7.72,
+            "warning_count": 0
+          },
+          "template_name": "Mario & Luigi Superstar Saga.yaml",
+          "timestamp": "2025-11-17T04:22:16.492708",
+          "world_info": {
+            "exporter_path": "exporter/games/mlss.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
+            "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "mlss",
+            "world_directory": "mlss"
+          }
+        },
+        "9": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "mlss",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.63,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/mlss/AP_48205312626925217390/AP_48205312626925217390_rules.json",
+            "size_bytes": 365486,
+            "size_mb": 0.35
+          },
+          "seed": "9",
+          "seed_id": "AP_48205312626925217390",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 45.26,
+            "return_code": 0,
+            "sphere_reached": 9.8,
+            "success": true,
+            "total_spheres": 9.8,
+            "warning_count": 0
+          },
+          "template_name": "Mario & Luigi Superstar Saga.yaml",
+          "timestamp": "2025-11-17T04:23:07.101140",
+          "world_info": {
+            "exporter_path": "exporter/games/mlss.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
+            "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "mlss",
+            "world_directory": "mlss"
+          }
+        }
       },
-      "consecutive_passes_before_failure": 1,
-      "first_failure_seed": 2,
-      "game_name": "mlss",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 3.36,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "rules_file": {
-        "path": "frontend/presets/mlss/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 365493,
-        "size_mb": 0.35
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "seed_range": "1-10",
-      "seeds_failed": 1,
+      "seed_range": "2-10",
+      "seeds_failed": 0,
       "seeds_passed": 9,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 0,
-        "pass_fail": "passed",
-        "processing_time_seconds": 35.14,
-        "return_code": 0,
-        "sphere_reached": 8.8,
-        "success": true,
-        "total_spheres": 8.8,
-        "warning_count": 0
-      },
+      "stop_on_failure": true,
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 0.1
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_name": "Mario & Luigi Superstar Saga.yaml",
-      "timestamp": "2025-11-17T00:27:26.928157",
-      "world_info": {
-        "exporter_path": "exporter/games/mlss.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
-        "game_name_from_yaml": "Mario & Luigi Superstar Saga",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "mlss",
-        "world_directory": "mlss"
-      }
+      "timestamp": "2025-11-17T04:17:09.324738",
+      "total_seeds_tested": 9
     },
     "MathProof2p2e4.yaml": {
       "analysis": {
