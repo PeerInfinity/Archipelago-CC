@@ -1,0 +1,904 @@
+name: Test All Templates (Sequential)
+
+on:
+  workflow_dispatch:
+    inputs:
+      spoiler_mode:
+        description: 'Spoiler test mode'
+        required: true
+        type: choice
+        options:
+          - 'seed-1'
+          - 'seeds-1-10'
+        default: 'seed-1'
+
+      include_multitemplate:
+        description: 'Include multitemplate tests'
+        type: boolean
+        default: false
+
+jobs:
+  # Minimal Spoiler Tests (10 parallel jobs)
+  test-minimal-spoiler:
+    name: Test Minimal Spoiler Split ${{ matrix.split_num }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        split_total: [10]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run minimal spoiler test (seed-1 mode)
+        if: inputs.spoiler_mode == 'seed-1'
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --seed 1 \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+            --no-backup \
+            -p
+
+      - name: Run minimal spoiler test (seeds-1-10 mode)
+        if: inputs.spoiler_mode == 'seeds-1-10'
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --seed ${{ matrix.split_num }} \
+            --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+            --no-backup \
+            -p
+
+      - name: Upload test results for split ${{ matrix.split_num }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-minimal-spoiler-split-${{ matrix.split_num }}
+          path: scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+  # Combine minimal spoiler results
+  combine-minimal-spoiler:
+    name: Combine Minimal Spoiler Results
+    runs-on: ubuntu-latest
+    needs: test-minimal-spoiler
+    if: always()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Combine test results
+        run: |
+          mkdir -p /tmp/merged-results/scripts/output/spoiler-minimal
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-minimal-spoiler-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/spoiler-minimal/test-results.json
+
+      - name: Create or switch to test-results-update branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin test-results-update; then
+            git checkout test-results-update
+            git pull origin test-results-update
+            git rm -rf .
+            git checkout origin/main -- .
+            if ! git diff --staged --quiet; then
+              git commit -m "Sync test-results-update with main"
+            fi
+          else
+            git checkout -b test-results-update origin/main
+          fi
+
+      - name: Copy results and generate documentation
+        run: |
+          mkdir -p scripts/output/spoiler-minimal
+          cp /tmp/merged-results/scripts/output/spoiler-minimal/test-results.json \
+             scripts/output/spoiler-minimal/test-results.json
+          python scripts/docs/generate-test-chart.py
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f scripts/output/spoiler-minimal/test-results.json
+          git add docs/json/developer/test-results/*.md || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update minimal spoiler test results (sequential workflow)
+
+            Generated by workflow run: ${{ github.run_id }}
+            Spoiler mode: ${{ inputs.spoiler_mode }}
+            "
+            git push origin test-results-update
+          fi
+
+  # Full Spoiler Tests (10 parallel jobs)
+  test-full-spoiler:
+    name: Test Full Spoiler Split ${{ matrix.split_num }}
+    runs-on: ubuntu-latest
+    needs: combine-minimal-spoiler
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        split_total: [10]
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py full-spoilers
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run full spoiler test (seed-1 mode)
+        if: inputs.spoiler_mode == 'seed-1'
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --seed 1 \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
+            --no-backup \
+            -p
+
+      - name: Run full spoiler test (seeds-1-10 mode)
+        if: inputs.spoiler_mode == 'seeds-1-10'
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --seed ${{ matrix.split_num }} \
+            --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
+            --no-backup \
+            -p
+
+      - name: Upload test results for split ${{ matrix.split_num }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-full-spoiler-split-${{ matrix.split_num }}
+          path: scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+  # Combine full spoiler results
+  combine-full-spoiler:
+    name: Combine Full Spoiler Results
+    runs-on: ubuntu-latest
+    needs: test-full-spoiler
+    if: always()
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Combine test results
+        run: |
+          mkdir -p /tmp/merged-results/scripts/output/spoiler-full
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-full-spoiler-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/spoiler-full/test-results.json
+
+      - name: Copy results and generate documentation
+        run: |
+          mkdir -p scripts/output/spoiler-full
+          cp /tmp/merged-results/scripts/output/spoiler-full/test-results.json \
+             scripts/output/spoiler-full/test-results.json
+          python scripts/docs/generate-test-chart.py
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f scripts/output/spoiler-full/test-results.json
+          git add docs/json/developer/test-results/*.md || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update full spoiler test results (sequential workflow)
+
+            Generated by workflow run: ${{ github.run_id }}
+            Spoiler mode: ${{ inputs.spoiler_mode }}
+            "
+            git push origin test-results-update
+          fi
+
+  # Multiplayer Tests (10 parallel jobs)
+  test-multiplayer:
+    name: Test Multiplayer Split ${{ matrix.split_num }}
+    runs-on: ubuntu-latest
+    needs: combine-full-spoiler
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        split_total: [10]
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run multiplayer test
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --multiplayer \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/multiplayer/test-results-split-${{ matrix.split_num }}.json \
+            --no-backup \
+            -p
+
+      - name: Upload test results for split ${{ matrix.split_num }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-multiplayer-split-${{ matrix.split_num }}
+          path: scripts/output/multiplayer/test-results-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+  # Combine multiplayer results
+  combine-multiplayer:
+    name: Combine Multiplayer Results
+    runs-on: ubuntu-latest
+    needs: test-multiplayer
+    if: always()
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Combine test results
+        run: |
+          mkdir -p /tmp/merged-results/scripts/output/multiplayer
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-multiplayer-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/multiplayer/test-results.json
+
+      - name: Copy results and generate documentation
+        run: |
+          mkdir -p scripts/output/multiplayer
+          cp /tmp/merged-results/scripts/output/multiplayer/test-results.json \
+             scripts/output/multiplayer/test-results.json
+          python scripts/docs/generate-test-chart.py
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f scripts/output/multiplayer/test-results.json
+          git add docs/json/developer/test-results/*.md || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update multiplayer test results (sequential workflow)
+
+            Generated by workflow run: ${{ github.run_id }}
+            "
+            git push origin test-results-update
+          fi
+
+  # Multiworld Tests (10 parallel jobs)
+  test-multiworld:
+    name: Test Multiworld Split ${{ matrix.split_num }}
+    runs-on: ubuntu-latest
+    needs: combine-multiplayer
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        split_total: [10]
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run multiworld test
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --multiworld \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/multiworld/test-results-split-${{ matrix.split_num }}.json \
+            --no-backup \
+            -p
+
+      - name: Upload test results for split ${{ matrix.split_num }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-multiworld-split-${{ matrix.split_num }}
+          path: scripts/output/multiworld/test-results-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+  # Combine multiworld results
+  combine-multiworld:
+    name: Combine Multiworld Results
+    runs-on: ubuntu-latest
+    needs: test-multiworld
+    if: always()
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Combine test results
+        run: |
+          mkdir -p /tmp/merged-results/scripts/output/multiworld
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-multiworld-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/multiworld/test-results.json
+
+      - name: Copy results and generate documentation
+        run: |
+          mkdir -p scripts/output/multiworld
+          cp /tmp/merged-results/scripts/output/multiworld/test-results.json \
+             scripts/output/multiworld/test-results.json
+          python scripts/docs/generate-test-chart.py
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f scripts/output/multiworld/test-results.json
+          git add docs/json/developer/test-results/*.md || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update multiworld test results (sequential workflow)
+
+            Generated by workflow run: ${{ github.run_id }}
+            "
+            git push origin test-results-update
+          fi
+
+  # Optional: Minimal Multitemplate Tests (10 parallel jobs)
+  test-minimal-multitemplate:
+    name: Test Minimal Multitemplate Split ${{ matrix.split_num }}
+    runs-on: ubuntu-latest
+    needs: combine-multiworld
+    if: inputs.include_multitemplate
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        split_total: [10]
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Generate multitemplate configurations
+        run: |
+          source .venv/bin/activate
+          python scripts/build/generate-multitemplate-configs.py
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run minimal multitemplate test
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --templates-dir Players/presets/multitemplate/alttp \
+            --multitemplate \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/multitemplate-minimal/test-results-split-${{ matrix.split_num }}.json \
+            --no-backup \
+            -p
+
+      - name: Upload test results for split ${{ matrix.split_num }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-minimal-multitemplate-split-${{ matrix.split_num }}
+          path: scripts/output/multitemplate-minimal/test-results-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+  # Combine minimal multitemplate results
+  combine-minimal-multitemplate:
+    name: Combine Minimal Multitemplate Results
+    runs-on: ubuntu-latest
+    needs: test-minimal-multitemplate
+    if: always() && inputs.include_multitemplate
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Combine test results
+        run: |
+          mkdir -p /tmp/merged-results/scripts/output/multitemplate-minimal
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-minimal-multitemplate-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/multitemplate-minimal/test-results.json
+
+      - name: Copy results and generate documentation
+        run: |
+          mkdir -p scripts/output/multitemplate-minimal
+          cp /tmp/merged-results/scripts/output/multitemplate-minimal/test-results.json \
+             scripts/output/multitemplate-minimal/test-results.json
+          python scripts/docs/generate-test-chart.py
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f scripts/output/multitemplate-minimal/test-results.json
+          git add docs/json/developer/test-results/*.md || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update minimal multitemplate test results (sequential workflow)
+
+            Generated by workflow run: ${{ github.run_id }}
+            "
+            git push origin test-results-update
+          fi
+
+  # Optional: Full Multitemplate Tests (10 parallel jobs)
+  test-full-multitemplate:
+    name: Test Full Multitemplate Split ${{ matrix.split_num }}
+    runs-on: ubuntu-latest
+    needs: combine-minimal-multitemplate
+    if: inputs.include_multitemplate
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        split_total: [10]
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Generate multitemplate configurations
+        run: |
+          source .venv/bin/activate
+          python scripts/build/generate-multitemplate-configs.py
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py full-spoilers
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run full multitemplate test
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --templates-dir Players/presets/multitemplate/alttp \
+            --multitemplate \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/multitemplate-full/test-results-split-${{ matrix.split_num }}.json \
+            --no-backup \
+            -p
+
+      - name: Upload test results for split ${{ matrix.split_num }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-full-multitemplate-split-${{ matrix.split_num }}
+          path: scripts/output/multitemplate-full/test-results-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+  # Combine full multitemplate results
+  combine-full-multitemplate:
+    name: Combine Full Multitemplate Results
+    runs-on: ubuntu-latest
+    needs: test-full-multitemplate
+    if: always() && inputs.include_multitemplate
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Combine test results
+        run: |
+          mkdir -p /tmp/merged-results/scripts/output/multitemplate-full
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-full-multitemplate-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/multitemplate-full/test-results.json
+
+      - name: Copy results and generate documentation
+        run: |
+          mkdir -p scripts/output/multitemplate-full
+          cp /tmp/merged-results/scripts/output/multitemplate-full/test-results.json \
+             scripts/output/multitemplate-full/test-results.json
+          python scripts/docs/generate-test-chart.py
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f scripts/output/multitemplate-full/test-results.json
+          git add docs/json/developer/test-results/*.md || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update full multitemplate test results (sequential workflow)
+
+            Generated by workflow run: ${{ github.run_id }}
+            "
+            git push origin test-results-update
+          fi

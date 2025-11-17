@@ -19,6 +19,9 @@ on:
           - multitemplate-minimal
           - multitemplate-full
 
+permissions:
+  contents: write  # Allow pushing commits and creating branches
+
 jobs:
   individual-test:
     name: Individual Test - ${{ github.event.inputs.test_type }}
