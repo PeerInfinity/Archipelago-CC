@@ -1056,6 +1056,54 @@ export const helperFunctions = {
   },
 
   /**
+   * Check if Scar fight is accessible.
+   * Based on worlds/kh2/Rules.py:1018-1027
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Scar fight
+   */
+  get_scar_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    if (fightLogic === 0) { // easy: Reflect, Thunder, Fire
+      return helperFunctions.kh2_has_all(['Reflect Element', 'Thunder Element', 'Fire Element'], snapshot);
+    } else if (fightLogic === 1) { // normal: Reflect, Fire
+      return helperFunctions.kh2_has_all(['Reflect Element', 'Fire Element'], snapshot);
+    } else { // hard: Reflect only
+      return snapshot?.inventory?.['Reflect Element'] > 0;
+    }
+  },
+
+  /**
+   * Check if Hostile Program fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_hostile_program_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Hostile Program fight
+   */
+  get_hostile_program_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const donaldLimit = ['Fantasia', 'Flare Force'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const summons = ['Chicken Little', 'Stitch', 'Genie', 'Peter Pan'];
+    const reflectElement = ['Reflect Element'];
+
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [donaldLimit, formList, summons, reflectElement],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 4; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 3; // normal
+    return categoriesAvailable >= 2; // hard
+  },
+
+  /**
    * Utility: Check if player has any item from a list of item lists.
    * Based on worlds/kh2/Rules.py:101-108
    *
