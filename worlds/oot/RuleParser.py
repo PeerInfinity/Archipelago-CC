@@ -382,6 +382,16 @@ class Rule_AST_Transformer(ast.NodeTransformer):
             event = OOTLocation(self.player, subrule_name, type='Event', parent=region, internal=True)
             event.show_in_spoiler = False
 
+            # Store the original AST as a string for the exporter
+            # This allows the exporter to recreate the rule since inspect.getsource()
+            # fails on dynamically generated lambdas
+            try:
+                event.rule_string = ast.unparse(node)
+            except Exception as e:
+                # If unparsing fails, try a simpler dump
+                logging.getLogger('').debug(f'Failed to unparse AST for {subrule_name}: {e}')
+                event.rule_string = ast.dump(node, False)
+
             self.current_spot = event
             # This could, in theory, create further subrules.
             access_rule = self.make_access_rule(self.visit(node))
