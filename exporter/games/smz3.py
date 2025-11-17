@@ -212,7 +212,11 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             arg_names = rule_func.__code__.co_varnames[:rule_func.__code__.co_argcount]
             defaults = rule_func.__defaults__ or ()
 
-            logger.info(f"Function args for {rule_target_name}: {arg_names}, defaults: {len(defaults)}")
+            logger.info(f"Function signature for {rule_target_name}:")
+            logger.info(f"  arg_names: {arg_names}")
+            logger.info(f"  num args: {len(arg_names)}")
+            logger.info(f"  defaults: {defaults if len(defaults) <= 5 else f'{len(defaults)} defaults'}")
+            logger.info(f"  num defaults: {len(defaults)}")
 
             # SMZ3 location rules have signature: lambda state, loc=loc: ...
             # So 'loc' should be the second parameter with a default value
@@ -234,21 +238,22 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         has_available = hasattr(loc_object, 'Available')
         logger.info(f"loc_object attributes - canAccess: {has_can_access}, Available: {has_available}, type: {type(loc_object)}")
 
-        if not has_can_access or not has_available:
+        if not has_available:
             logger.info(f"Not a TotalSMZ3 Location object for {rule_target_name}")
             return None
 
-        logger.info(f"Found TotalSMZ3 Location object for '{rule_target_name}', extracting canAccess logic")
+        logger.info(f"Found TotalSMZ3 Location object for '{rule_target_name}', extracting Available logic")
 
         # Now we have the TotalSMZ3 Location object!
-        # Extract and analyze its canAccess function
+        # Extract and analyze its Available function
         try:
-            can_access_func = loc_object.canAccess
+            # SMZ3 uses Available method, not canAccess
+            can_access_func = loc_object.Available
 
             # Import the analyzer here to avoid circular imports
             from exporter.analyzer import analyze_rule
 
-            # Analyze the canAccess function
+            # Analyze the Available function
             # This function has signature: lambda items: <requirements>
             # where items is a TotalSMZ3 Progression object
             analyzed_rule = analyze_rule(can_access_func)
@@ -257,7 +262,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 logger.info(f"Successfully extracted location logic for '{rule_target_name}'")
                 return analyzed_rule
             else:
-                logger.warning(f"Failed to analyze canAccess for '{rule_target_name}', falling back to default")
+                logger.warning(f"Failed to analyze Available for '{rule_target_name}', falling back to default")
                 return None
 
         except Exception as e:

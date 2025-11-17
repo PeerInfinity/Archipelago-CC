@@ -260,7 +260,11 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
         initial_collection_spheres: List[Set["Location"]] = []
         state = CollectionState(multiworld)
         sphere_candidates = set(prog_locations)
-        
+
+        # Initialize variables that are used in the finally block to avoid UnboundLocalError
+        restore_later: Dict["Location", "Item"] = {}
+        removed_precollected: List["Item"] = []
+
         logging.debug('Building up initial collection spheres for pruning.')
         while sphere_candidates:
             sphere = {location for location in sphere_candidates if state.can_reach(location)}
@@ -277,9 +281,8 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
                 else:
                     spoiler.unreachables = sphere_candidates
                     break
-        
+
         # Pruning phase
-        restore_later: Dict["Location", "Item"] = {}
         if not extend_sphere_log_to_all_locations:
             for num, sphere in reversed(tuple(enumerate(initial_collection_spheres))):
                 to_delete: Set["Location"] = set()
@@ -304,7 +307,6 @@ def create_playthrough_with_logging(spoiler: "Spoiler", create_paths: bool = Tru
         # NOTE: Pruning of precollected items is disabled to ensure the sphere log matches starting_items
         # in the exported rules.json. The original pruning logic would remove unnecessary precollected items,
         # but this causes mismatches in frontend testing where starting_items lists all precollected items.
-        removed_precollected: List["Item"] = []
         # for player_id in multiworld.player_ids:
         #     if player_id in multiworld.precollected_items:
         #         player_precollected = multiworld.precollected_items[player_id]
