@@ -1,0 +1,1190 @@
+﻿Archipelago Version 0.6.4  -  Seed: 7
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Mario & Luigi Superstar Saga
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+Coin Blocks:                     No
+Difficult Logic:                 No
+Skip Bowser's Castle:            No
+Start With Extra Pipes:          No
+Skip Minecart Minigame:          No
+Disable Surf Minigame:           No
+Remove Harhall's Pants:          No
+Item Block Visibility:           Disabled
+Chuckle Beans:                   All
+Goal:                            Vanilla
+Emblems Required:                50
+Emblems Available:               75
+Music Options:                   Default
+Randomize Sounds:                No
+Randomize Enemies:               Disabled
+Randomize Bosses:                Disabled
+Randomize Battle Backgrounds:    No
+Scale Enemy Stats:               No
+XP Multiplier:                   1
+Tattle HP:                       No
+Mario's Color:                   Red
+Luigi's Color:                   Green
+Mario's Pants Color:             Vanilla
+Luigi's Pants Color:             Vanilla
+
+
+Locations:
+
+Stardust Fields Room 1 Block 1: Chuckle Bean
+Stardust Fields Room 1 Block 2: Max Nuts
+Stardust Fields Room 2 Block: Hoo Bean
+Stardust Fields Room 3 Block: Counter Badge
+Stardust Fields Room 4 Block 1: Salvage Badge
+Stardust Fields Room 4 Block 2: Chuckle Blend
+Stardust Fields Room 4 Block 3: Hoo Bean
+Stardust Fields Room 5 Block: Ultra Syrup
+Hoohoo Village Hammer House Block: Chuckle Bean
+Hoohoo Mountain Below Summit Block 1: Green Goblet
+Hoohoo Mountain Below Summit Block 2: Super Nuts
+Hoohoo Mountain Below Summit Block 3: Beanstar Piece 4
+Hoohoo Mountain Past Hoohooros Block 1: Chuckle Bean
+Hoohoo Mountain Past Hoohooros Block 2: Sarge Badge
+Hoohoo Mountain Hoohooros Room Block 1: Chuckle Bean
+Hoohoo Mountain Hoohooros Room Block 2: Ultra Syrup
+Hoohoo Mountain Before Hoohooros Block: Chuckle Bean
+Hoohoo Mountain Fountain Room Block 1: Chuckle Bean
+Hoohoo Mountain Fountain Room Block 2: Ultra Syrup
+Hoohoo Mountain Room 1 Block 1: Golden Mushroom
+Hoohoo Mountain Room 1 Block 2: Chuckle Bean
+Hoohoo Mountain Room 1 Block 3: Chuckle Bean
+Hoohoo Mountain Base Room 1 Block: Syrup
+Hoohoo Village Eastside Block: Syrup
+Hoohoo Village Bridge Room Block 1: Mushroom
+Hoohoo Village Bridge Room Block 2: Syrup
+Hoohoo Village Bridge Room Block 3: Hoolumbian
+Hoohoo Mountain Base Bridge Room Block 1: Hoo Bean
+Hoohoo Mountain Base Bridge Room Block 2: Hoo Bean
+Hoohoo Mountain Base Bridge Room Block 3: Chuckle Bean
+Hoohoo Mountain Base Bridge Room Block 4: Casual Coral
+Hoohoo Mountain Base Bridge Room Digspot: Mushwin Pants
+Hoohoo Mountain Base Boostatue Room Block 1: Chuckle Bean
+Hoohoo Mountain Base Boostatue Room Block 2: Chuckle Bean
+Hoohoo Mountain Base Boostatue Room Digspot 1: Chuckle Bean
+Hoohoo Mountain Base Boostatue Room Digspot 2: Hammers
+Hoohoo Mountain Base Grassy Area Block 1: Super Mushroom
+Hoohoo Mountain Base Grassy Area Block 2: Beauty Badge
+Hoohoo Mountain Base Past Minecart Minigame Block 1: Peachy Jeans
+Hoohoo Mountain Base Past Minecart Minigame Block 2: Heart Slacks
+Cave Connecting Stardust Fields and Hoohoo Village Block 1: Chuckle Bean
+Cave Connecting Stardust Fields and Hoohoo Village Block 2: Syrup
+Hoohoo Village South Cave Block: Syrup
+Hoohoo Village North Cave Room 1 Block: Hoo Bean
+Hoohoo Village North Cave Room 2 Block: Hermetic Pants
+Beanbean Outskirts Surf Beach Block: Super Mushroom
+Woohoo Hooniversity Star Room Block 1: Chuckle Bean
+Woohoo Hooniversity Star Room Block 2: Mushroom
+Woohoo Hooniversity Star Room Block 3: Chuckle Bean
+Woohoo Hooniversity Sun Door Block 1: Hoo Bean
+Woohoo Hooniversity Sun Door Block 2: Chuckle Bean
+Woohoo Hooniversity West of Star Room 4 Block 1: Ultra Mushroom
+Woohoo Hooniversity West of Star Room 4 Block 2: Hammers
+Woohoo Hooniversity West of Star Room 4 Block 3: Chuckle Bean
+Hoohoo Mountain Fountain Room 2 Block: Refreshing Herb
+Hoohoo Mountain Past Hoohooros Connector Room Block: Purple Chuckola Fruit
+Outside Woohoo Hooniversity Block: Queen B. Jeans
+Shop Starting Flag 1: Mushroom
+Shop Starting Flag 2: Syrup
+Shop Starting Flag 3: 1-UP Mushroom
+Hoohoo Mountain Summit Digspot: Super Mushroom
+Hoohoo Mountain Below Summit Digspot: Mushroom
+Hoohoo Mountain Past Hoohooros Digspot: Chuckle Bean
+Hoohoo Mountain Hoohooros Room Digspot 1: Bean B. Badge
+Hoohoo Mountain Hoohooros Room Digspot 2: Mushroom
+Hoohoo Mountain Before Hoohooros Digspot: Hoo Bean
+Hoohoo Mountain Room 2 Digspot 1: Chuckle Bean
+Hoohoo Mountain Room 2 Digspot 2: Nuts
+Hoohoo Mountain Base Room 1 Digspot: Hoo Bean
+Hoohoo Village Eastside Digspot: Hoo Bean
+Hoohoo Village Super Hammer Cave Digspot: Great Force
+Hoohoo Village Super Hammer Cave Block: Chuckle Bean
+Hoohoo Village North Cave Room 2 Digspot: Ultra Mushroom
+Hoohoo Mountain Base Minecart Cave Digspot: Hoo Bean
+Beanbean Outskirts Farm Room Digspot 1: Hoo Bean
+Beanbean Outskirts Farm Room Digspot 2: Peasley's Rose
+Beanbean Outskirts Farm Room Digspot 3: Chuckle Bean
+Beanbean Outskirts NW Block: Mushroom
+Beanbean Outskirts NW Digspot: Scandal Jeans
+Beanbean Outskirts W Digspot 1: Hoo Bean
+Beanbean Outskirts W Digspot 2: Syrup
+Beanbean Outskirts W Digspot 3: Hoo Bean
+Beanbean Outskirts SW Digspot 1: Chuckle Bean
+Beanbean Outskirts SW Digspot 2: Chuckle Bean
+Beanbean Outskirts SW Digspot 3: Chuckle Bean
+Beanbean Outskirts N Room 1 Digspot: Mushroom
+Beanbean Outskirts N Room 2 Digspot: Chuckle Bean
+Beanbean Outskirts S Room 1 Digspot 1: Chuckle Bean
+Beanbean Outskirts S Room 1 Block: Hoo Bean
+Beanbean Outskirts S Room 1 Digspot 2: Chuckle Bean
+Beanbean Outskirts S Room 2 Block 1: Mushroom
+Beanbean Outskirts NE Digspot 1: Hoo Bean
+Beanbean Outskirts NE Digspot 2: Ultra Syrup
+Beanbean Outskirts E Digspot 1: Bros. Rock
+Beanbean Outskirts E Digspot 2: Chuckle Bean
+Beanbean Outskirts E Digspot 3: Hoo Bean
+Beanbean Outskirts SE Digspot 1: Hoo Bean
+Beanbean Outskirts SE Digspot 2: Chuckle Bean
+Beanbean Outskirts SE Digspot 3: Hoo Bean
+Beanbean Outskirts North Beach Digspot 1: Syrup
+Beanbean Outskirts North Beach Digspot 2: Chuckle Bean
+Beanbean Outskirts North Beach Digspot 3: Thunderhand
+Beanbean Outskirts South Beach Digspot: Mushroom
+Woohoo Hooniversity West of Star Room Digspot 1: Beanlet 5
+Woohoo Hooniversity West of Star Room Digspot 2: Syrup
+Woohoo Hooniversity West of Star Room 2 Digspot: Hoo Bean
+Woohoo Hooniversity West of Star Room 3 Digspot: Chuckle Bean
+Woohoo Hooniversity West of Star Room 4 Digspot 1: Teehee Blend
+Woohoo Hooniversity West of Star Room 4 Digspot 2: Bean Fruit 5
+Woohoo Hooniversity West of Star Room 5 Digspot: Chuckle Bean
+Woohoo Hooniversity Entrance to Mini Mario Room Digspot 1: Super Syrup
+Woohoo Hooniversity Entrance to Mini Mario Room Digspot 2: Refreshing Herb
+Woohoo Hooniversity Entrance to Mini Mario Room 2 Digspot: Hoo Bean
+Woohoo Hooniversity Mini Mario Puzzle Block: Mushroom
+Woohoo Hooniversity Mini Mario Puzzle Digspot: Ultra Nuts
+Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 1: Chuckle Bean
+Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 2: Chuckle Bean
+Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 3: Hoo Bean
+Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 4: Chuckle Bean
+Hoohoo Mountain Fountain Room 2 Digspot: Mushroom
+Hoohoo Mountain Past Hoohooros Connector Room Digspot 1: Chuckle Bean
+Hoohoo Mountain Past Hoohooros Connector Room Digspot 2: Ultra Syrup
+Beanbean Outskirts Secret Scroll 1: Chuckle Bean
+Beanbean Outskirts Secret Scroll 2: Hoo Bean
+Beanbean Outskirts Bean Fruit 1: Hammers
+Beanbean Outskirts Bean Fruit 2: Bean Fruit 6
+Beanbean Outskirts Bean Fruit 3: Game Boy Horror SP
+Beanbean Outskirts Bean Fruit 4: Hoo Bean
+Beanbean Outskirts Bean Fruit 5: Chuckle Bean
+Beanbean Outskirts Bean Fruit 6: Casual Slacks
+Beanbean Outskirts Bean Fruit 7: Ultra Mushroom
+Hoohoo Village Mole Behind Turtle: Nuts
+Beanbean Outskirts Thunderhand Mole: Hoo Bean
+Hoohoo Mountain Peasley's Rose: Greed Wallet
+Beanbean Outskirts Super Hammer Upgrade: Green Pearl Bean
+Beanbean Outskirts Ultra Hammer Upgrade: Hoo Bean
+Beanbean Outskirts NE Solo Mario Mole 1: Beanstone 6
+Beanbean Outskirts NE Solo Mario Mole 2: Chuckle Bean
+Hoohoo Village Hammers: Hoo Bean
+Beanbean Outskirts Solo Luigi Cave Mole: Mushroom
+Beanbean Outskirts Farm Room Mole Reward 1: Super Mushroom
+Beanbean Outskirts Farm Room Mole Reward 2: Chuckle Bean
+Beanbean Outskirts South of Hooniversity Guards Digspot 1: Chuckle Bean
+Beanbean Outskirts South of Hooniversity Guards Digspot 2: Chuckle Bean
+Beanbean Outskirts South of Hooniversity Guards Digspot 3: Ultra Mushroom
+Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 1: Chuckle Bean
+Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 2: Chuckle Bean
+Beanbean Outskirts Pipe 2 Room Digspot: Mushroom
+Beanbean Outskirts Pipe 4 Room Digspot: Green Pepper
+Beanbean Castle Town Mini Mario Block 1: Ultra Nuts
+Beanbean Castle Town Mini Mario Block 2: Chuckle Bean
+Beanbean Castle Town Mini Mario Block 3: Mushroom
+Beanbean Castle Town Mini Mario Block 4: Syrup
+Beanbean Castle Town Mini Mario Block 5: Syrup
+Chateau Room 1 Digspot: Super Syrup
+Chateau Popple Fight Room Block 1: Syrup
+Chateau Popple Fight Room Block 2: #1 Trousers
+Chateau Popple Fight Room Digspot: Chuckle Bean
+Chateau Barrel Room Digspot: Chuckle Bean
+Chateau Goblet Room Digspot: Hoo Bean
+Chucklehuck Woods Cave Room 1 Block 1: Chuckle Bean
+Chucklehuck Woods Cave Room 1 Block 2: Chuckle Bean
+Chucklehuck Woods Cave Room 2 Block: Mushroom
+Chucklehuck Woods Cave Room 3 Block: Azure Neon Egg
+Chucklehuck Woods Solo Luigi Cave Room 2 Block: Mushroom
+Chucklehuck Woods Solo Luigi Cave Room 3 Block 1: Max Syrup
+Chucklehuck Woods Solo Luigi Cave Room 3 Block 2: Mushroom
+Chucklehuck Woods Room 2 Block: Hoo Bean
+Chucklehuck Woods Room 2 Digspot: Chuckle Bean
+Chucklehuck Woods Pipe Room Block 1: Hoo Bean
+Chucklehuck Woods Pipe Room Block 2: Bonus Ring
+Chucklehuck Woods Pipe Room Digspot 1: Syrup
+Chucklehuck Woods Pipe Room Digspot 2: Mushroom
+Chucklehuck Woods Room 4 Block 1: Super Syrup
+Chucklehuck Woods Room 4 Block 2: Chuckle Bean
+Chucklehuck Woods Room 4 Block 3: Super Syrup
+Chucklehuck Woods Room 7 Block 1: Membership Card
+Chucklehuck Woods Room 7 Block 2: Hoo Bean
+Chucklehuck Woods Room 7 Digspot 1: Chuckoccino
+Chucklehuck Woods Room 7 Digspot 2: Chuckle Bean
+Chucklehuck Woods Room 8 Digspot: Super Syrup
+Chucklehuck Woods East of Chuckleroot Digspot: Chuckle Bean
+Chucklehuck Woods Northeast of Chuckleroot Digspot 1: Chuckle Bean
+Chucklehuck Woods Northeast of Chuckleroot Digspot 2: Hoo Bean
+Chucklehuck Woods Northeast of Chuckleroot Digspot 3: Mushroom
+Chucklehuck Woods Northeast of Chuckleroot Digspot 4: Beanlet 1
+Chucklehuck Woods White Fruit Room Digspot 1: Hoo Bean
+Chucklehuck Woods White Fruit Room Digspot 2: Hoo Bean
+Chucklehuck Woods White Fruit Room Digspot 3: Hoo Bean
+Chucklehuck Woods West of Chuckleroot Block: Red Neon Egg
+Chucklehuck Woods Southwest of Chuckleroot Block: Chuckle Bean
+Chucklehuck Woods Wiggler room Digspot 1: Mushroom
+Chucklehuck Woods Wiggler room Digspot 2: Ultra Mushroom
+Chucklehuck Woods Past Chuckleroot Block 1: Chuckle Bean
+Chucklehuck Woods Past Chuckleroot Block 2: Super Nuts
+Chucklehuck Woods Past Chuckleroot Block 3: Nuts
+Chucklehuck Woods Past Chuckleroot Block 4: Hoo Bean
+Chucklehuck Woods Past Chuckleroot Block 5: Beanstar Piece 3
+Chucklehuck Woods Past Chuckleroot Block 6: Chuckle Bean
+Chucklehuck Woods Koopa Room Block 1: Chuckle Bean
+Chucklehuck Woods Koopa Room Block 2: Refreshing Herb
+Chucklehuck Woods Koopa Room Digspot: Tank Badge
+Chucklehuck Woods Room 1 Digspot: Chuckle Bean
+Beanbean Outskirts Brooch Guards Room Digspot 1: Chuckle Bean
+Beanbean Outskirts Brooch Guards Room Digspot 2: Bean Fruit 2
+Beanbean Outskirts Chateau Entrance Digspot 1: Ohoracle Badge
+Beanbean Outskirts Chateau Entrance Digspot 2: B. Brand Jeans
+Chateau Green Goblet: Beanstone 4
+Chateau Red Goblet: Chuckle Bean
+Chucklehuck Woods Red Chuckola Fruit: Chuckle Bean
+Chucklehuck Woods White Chuckola Fruit: Mushluck Pants
+Chucklehuck Woods Purple Chuckola Fruit: Secret Scroll 1
+Beanbean Castle Town West Side House Block 1: Chuckle Bean
+Beanbean Castle Town West Side House Block 2: Chuckle Bean
+Beanbean Castle Town West Side House Block 3: Beanlet 4
+Beanbean Castle Town West Side House Block 4: Chuckle Bean
+Beanbean Castle Town East Side House Block 1: Chuckle Bean
+Beanbean Castle Town East Side House Block 2: Oh-Pah Badge
+Beanbean Castle Town East Side House Block 3: Hoo Bean
+Beanbean Castle Town East Side House Block 4: Max Nuts
+Beanbean Castle Peach's Extra Dress: Syrup
+Beanbean Castle Fake Beanstar: Chuckle Bean
+Beanbean Castle Town Beanlet 1: Refreshing Herb
+Beanbean Castle Town Beanlet 2: Chuckle Bean
+Beanbean Castle Town Beanlet 3: Hoo Bean
+Beanbean Castle Town Beanlet 4: Hoo Bean
+Beanbean Castle Town Beanlet 5: Chuckle Bean
+Beanbean Castle Town Beanstone 1: Chuckle Bean
+Beanbean Castle Town Beanstone 2: Bros. Badge
+Beanbean Castle Town Beanstone 3: Refreshing Herb
+Beanbean Castle Town Beanstone 4: Hoo Bean
+Beanbean Castle Town Beanstone 5: Chuckle Bean
+Beanbean Castle Town Beanstone 6: Chuckle Bean
+Beanbean Castle Town Beanstone 7: Chuckle Bean
+Beanbean Castle Town Beanstone 8: Chuckle Bean
+Beanbean Castle Town Beanstone 9: Nuts
+Beanbean Castle Town Beanstone 10: Chuckle Bean
+Coffee Shop Brew Reward 1: Chuckle Bean
+Coffee Shop Brew Reward 2: Chuckle Bean
+Coffee Shop Brew Reward 3: Beanstone 5
+Coffee Shop Brew Reward 4: Hoo Bean
+Coffee Shop Brew Reward 5: Chuckle Bean
+Coffee Shop Brew Reward 6: Mushroom
+Coffee Shop Brew Reward 7: Chuckle Bean
+Coffee Shop Woohoo Blend: Hoo Bean
+Coffee Shop Hoohoo Blend: Mushroom
+Coffee Shop Chuckle Blend: Chuckle Bean
+Coffee Shop Teehee Blend: Chuckle Bean
+Coffee Shop Hoolumbian: Beanlet 2
+Coffee Shop Chuckoccino: Mushroom
+Coffee Shop Teeheespresso: Blue Jeans
+Beanbean Castle Town Beanstone Reward: Chuckle Bean
+Beanbean Castle Town Beanlet Reward: Hoo Bean
+Badge Shop Starting Flag 1: Max Syrup
+Badge Shop Starting Flag 2: Super Syrup
+Pants Shop Starting Flag 1: Hoo Bean
+Pants Shop Starting Flag 2: Chuckle Bean
+Pants Shop Starting Flag 3: Mari-Lui Badge
+Shop Chuckolator Flag: Syrup
+Pants Shop Chuckolator Flag 1: Hoo Bean
+Pants Shop Chuckolator Flag 2: Chuckle Bean
+Pants Shop Chuckolator Flag 3: Mushroom
+Badge Shop Chuckolator Flag 1: Red Pepper
+Badge Shop Chuckolator Flag 2: Red Goblet
+Badge Shop Chuckolator Flag 3: Hoo Bean
+Shop Mom Piranha Flag 1: Beanstone 8
+Shop Mom Piranha Flag 2: Nuts
+Shop Mom Piranha Flag 3: Super Nuts
+Shop Mom Piranha Flag 4: Hoo Bean
+Pants Shop Mom Piranha Flag 1: Chuckle Bean
+Pants Shop Mom Piranha Flag 2: Ultra Mushroom
+Pants Shop Mom Piranha Flag 3: Hoo Bean
+Badge Shop Mom Piranha Flag 1: Chuckle Bean
+Badge Shop Mom Piranha Flag 2: Hoo Bean
+Badge Shop Mom Piranha Flag 3: General Badge
+Badge Shop Trunkle Flag 1: Chuckle Bean
+Badge Shop Trunkle Flag 2: Chuckle Bean
+Badge Shop Trunkle Flag 3: Chuckle Bean
+Pants Shop Trunkle Flag 1: Mushroom
+Pants Shop Trunkle Flag 2: Golden Mushroom
+Pants Shop Trunkle Flag 3: Hoo Bean
+Shop Trunkle Flag 1: Beanstar Piece 2
+Shop Trunkle Flag 2: Mushroom
+Badge Shop Beanstar Complete Flag 1: Ultra Syrup
+Badge Shop Beanstar Complete Flag 2: Grab Badge
+Badge Shop Beanstar Complete Flag 3: Beanstone 7
+Pants Shop Beanstar Complete Flag 1: Super Syrup
+Pants Shop Beanstar Complete Flag 2: Hoo Bean
+Pants Shop Beanstar Complete Flag 3: Hoo Bean
+Shop Beanstar Complete Flag 1: Brilliant Badge
+Shop Beanstar Complete Flag 2: Firebrand
+Shop Beanstar Complete Flag 3: Shroom Pants
+Badge Shop Birdo Flag 1: Hoo Bean
+Badge Shop Birdo Flag 2: Chuckle Bean
+Badge Shop Birdo Flag 3: Bean Fruit 4
+Pants Shop Birdo Flag 1: Chuckle Bean
+Pants Shop Birdo Flag 2: Hoo Bean
+Pants Shop Birdo Flag 3: Chuckle Bean
+Shop Birdo Flag: Chuckle Bean
+Oho Ocean North Whirlpool Block 1: Hoo Bean
+Oho Ocean North Whirlpool Block 2: Chuckle Bean
+Oho Ocean North Whirlpool Block 3: Purple Neon Egg
+Oho Ocean North Whirlpool Block 4: Chuckle Bean
+Oho Ocean North Whirlpool Digspot 1: Chuckle Bean
+Oho Ocean North Whirlpool Digspot 2: Chuckle Bean
+Oho Ocean Fire Puzzle Room Digspot: Mushroom
+Oho Ocean South Whirlpool Digspot 1: Iron Pants
+Oho Ocean South Whirlpool Digspot 2: Chuckle Bean
+Oho Ocean South Whirlpool Digspot 3: Chuckle Bean
+Oho Ocean South Whirlpool Digspot 4: Mush Badge
+Oho Ocean South Whirlpool Digspot 5: Chuckle Bean
+Oho Ocean South Whirlpool Digspot 6: Chuckle Bean
+Oho Ocean South Whirlpool Room 2 Digspot: Beanbean Brooch
+Joke's End Pipe Digspot: Max Mushroom
+Joke's End Staircase Digspot: Nuts
+Surf Minigame: Hoo Bean
+North Ocean Whirlpool Mole: Chuckle Bean
+Beanbean Outskirts Surf Beach Digspot 1: Chuckle Bean
+Beanbean Outskirts Surf Beach Digspot 2: Mushroom
+Beanbean Outskirts Surf Beach Digspot 3: Hoo Bean
+Woohoo Hooniversity South Of Star Room Block: Red Pepper
+Woohoo Hooniversity Barrel Puzzle Entrance Digspot 1: Chuckle Bean
+Woohoo Hooniversity Barrel Puzzle Entrance Block 1: Spiny Badge AA
+Woohoo Hooniversity Barrel Puzzle Entrance Block 2: Hoo Bean
+Woohoo Hooniversity Barrel Puzzle Entrance Block 3: White Chuckola Fruit
+Woohoo Hooniversity Barrel Puzzle Entrance Block 4: Chuckle Bean
+Woohoo Hooniversity Barrel Puzzle Entrance Digspot 2: Red Pearl Bean
+Woohoo Hooniversity Past Sun Door Block 1: Ultra Syrup
+Woohoo Hooniversity Past Sun Door Block 2: Miracle Badge
+Woohoo Hooniversity Past Sun Door Block 3: Mushroom
+Woohoo Hooniversity Past Cackletta Room 1 Block: Hoo Bean
+Woohoo Hooniversity Past Cackletta Room 2 Block 1: Chuckle Bean
+Woohoo Hooniversity Past Cackletta Room 2 Block 2: Super Syrup
+Woohoo Hooniversity Past Cackletta Room 2 Digspot: Mushroom
+Woohoo Hooniversity Basement Room 1 Digspot: Hard Pants
+Woohoo Hooniversity Basement Room 2 Digspot: Mushroom
+Woohoo Hooniversity Basement Room 3 Block: Hoo Bean
+Woohoo Hooniversity Basement Room 4 Block: Chuckle Bean
+Woohoo Hooniversity Popple Room Digspot 1: Wool Trousers
+Woohoo Hooniversity Popple Room Digspot 2: Mushroom
+Woohoo Hooniversity Solo Mario Barrel Area Block 1: Chuckle Bean
+Woohoo Hooniversity Solo Mario Barrel Area Block 2: Chuckle Bean
+Woohoo Hooniversity Solo Mario Barrel Area Block 3: Safety Slacks
+Gwarhar Lagoon Pipe Room Digspot: Mushroom
+Gwarhar Lagoon Massage Parlor Entrance Digspot: Mushroom
+Gwarhar Lagoon First Underwater Area Room 1 Block: Chuckle Bean
+Gwarhar Lagoon First Underwater Area Room 2 Block 1: Chuckle Bean
+Gwarhar Lagoon First Underwater Area Room 2 Block 2: Chuckle Bean
+Gwarhar Lagoon Red Pearl Bean: Chuckle Bean
+Gwarhar Lagoon Green Pearl Bean: 1-UP Mushroom
+Oho Ocean South Room 1 Block: Mushroom
+Oho Ocean South Room 2 Digspot: Hoo Bean
+Gwarhar Lagoon Past Hermie Digspot: Hoo Bean
+Gwarhar Lagoon East of Stone Bridge Block: Chuckle Bean
+Gwarhar Lagoon North of Spangle Room Digspot: Hoo Bean
+Gwarhar Lagoon West of Spangle Room Digspot: Heart Jeans
+Gwarhar Lagoon Second Underwater Area Room 4 Digspot: Chuckle Bean
+Gwarhar Lagoon Second Underwater Area Room 2 Digspot 1: Beanstone 9
+Gwarhar Lagoon Second Underwater Area Room 2 Digspot 2: Hoo Bean
+Gwarhar Lagoon Second Underwater Area Room 3 Block 1: Refreshing Herb
+Gwarhar Lagoon Second Underwater Area Room 3 Block 2: Chuckle Bean
+Gwarhar Lagoon Second Underwater Area Room 3 Block 3: Green Pepper
+Gwarhar Lagoon Second Underwater Area Room 1 Block: Ultra Mushroom
+Gwarhar Lagoon Entrance to West Underwater Area Digspot: Charity Badge
+Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 1: Mushroom
+Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 2: Soulful Bros.
+Gwarhar Lagoon Fire Dash Puzzle Room 2 Digspot: Hoo Bean
+Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 1: Bean Pants
+Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 2: Mushroom
+Gwarhar Lagoon Spangle Room Block: Chuckle Bean
+Gwarhar Lagoon Spangle Reward: Syrup
+Beanstar Piece Hermie: Hoo Bean
+Gwarhar Lagoon Spangle: Chuckle Bean
+Teehee Valley Room 1 Digspot 1: Mushroom
+Teehee Valley Room 1 Digspot 2: Castle Badge
+Teehee Valley Room 1 Digspot 3: Chuckle Bean
+Teehee Valley Room 2 Digspot 1: Chuckle Bean
+Teehee Valley Room 2 Digspot 2: 1-UP Super
+Teehee Valley Room 2 Digspot 3: Chuckle Bean
+Teehee Valley Past Ultra Hammer Rock Block 1: Beanstar Pants
+Teehee Valley Past Ultra Hammer Rock Block 2: Mush Badge A
+Teehee Valley Past Ultra Hammer Rock Digspot 1: Mushroom
+Teehee Valley Past Ultra Hammer Rock Digspot 3: Green Neon Egg
+Teehee Valley Before Trunkle Digspot: Mushroom
+S.S. Chuckola Storage Room Block 1: Syrup
+S.S. Chuckola Storage Room Block 2: Ultra Syrup
+S.S. Chuckola Membership Card: Hoo Bean
+Chucklehuck Woods Winkle Cave Block 1: Wonder Badge
+Chucklehuck Woods Winkle Cave Block 2: Teeheespresso
+Winkle Area Beanstar Room Block: Hoo Bean
+Winkle Area Digspot: Tropic Slacks
+Winkle Area Outside Colloseum Block: Super Mushroom
+Winkle Area Colloseum Digspot: Chuckle Bean
+Beanstar Piece Winkle Area: Spangle
+Winkle Area Winkle Card: Chuckle Bean
+Sewers Room 3 Block 1: Mushroom
+Sewers Room 3 Block 2: Hoo Bean
+Sewers Room 3 Block 3: Hoo Bean
+Sewers Room 5 Block 1: Excite Spring
+Sewers Room 5 Block 2: Chuckle Bean
+Sewers Prison Room Block 1: Syrup
+Sewers Prison Room Block 2: Chuckle Bean
+Sewers Prison Room Block 3: Ultra Mushroom
+Sewers Prison Room Block 4: Chuckle Bean
+Beanbean Castle Beanbean Brooch: Chuckle Bean
+Airport Entrance Digspot: Chuckle Bean
+Airport Lobby Digspot: Chuckle Bean
+Airport Westside Digspot 1: Ultra Nuts
+Airport Westside Digspot 2: Chuckle Bean
+Airport Westside Digspot 3: Chuckle Bean
+Airport Westside Digspot 4: Hoo Bean
+Airport Westside Digspot 5: Chuckle Bean
+Airport Center Digspot 1: Chuckle Bean
+Airport Center Digspot 2: Chuckle Bean
+Airport Center Digspot 3: Chuckle Bean
+Airport Center Digspot 4: Syrup
+Airport Center Digspot 5: Chuckle Bean
+Airport Eastside Digspot 1: Chuckle Bean
+Airport Eastside Digspot 2: Chuckle Bean
+Airport Eastside Digspot 3: Chuckle Bean
+Airport Eastside Digspot 4: Mush Badge AA
+Airport Eastside Digspot 5: Peach's Extra Dress
+Joke's End West of First Boiler Room Block 1: Mushroom
+Joke's End West of First Boiler Room Block 2: Ultra Nuts
+Joke's End First Boiler Room Digspot 1: Beanlet 3
+Joke's End First Boiler Room Digspot 2: Muscle Badge
+Joke's End Second Floor West Room Block 1: Hoo Bean
+Joke's End Second Floor West Room Block 2: Chuckle Bean
+Joke's End Second Floor West Room Block 3: Cobalt Necktie
+Joke's End Second Floor West Room Block 4: Mushroom
+Joke's End Mole Reward 1: Hoo Bean
+Joke's End Mole Reward 2: Chuckle Bean
+Joke's End Furnace Room 1 Block 1: Hoo Bean
+Joke's End Furnace Room 1 Block 2: Syrup
+Joke's End Furnace Room 1 Block 3: Chuckle Bean
+Joke's End Northeast of Boiler Room 1 Block: Hoo Bean
+Joke's End Northeast of Boiler Room 2 Block: Chuckle Bean
+Joke's End Northeast of Boiler Room 2 Digspot: Hoo Bean
+Joke's End Northeast of Boiler Room 3 Digspot: Chuckle Bean
+Joke's End Second Floor East Room Digspot: Chuckle Bean
+Joke's End Final Split up Room Digspot: Hoo Bean
+Joke's End South of Bridge Room Block: Syrup
+Joke's End Solo Luigi Room 1 Block: Chuckle Bean
+Joke's End Solo Luigi Room 1 Digspot: Beanstone 1
+Joke's End Solo Mario Final Room Block 1: Super Mushroom
+Joke's End Solo Mario Final Room Block 2: Bean Fruit 7
+Joke's End Solo Mario Final Room Block 3: Mushroom
+Joke's End Solo Luigi Room 2 Digspot: Hoo Bean
+Joke's End Solo Mario Room 1 Digspot: Hoo Bean
+Joke's End Solo Mario Room 2 Block 1: Fake Beanstar
+Joke's End Solo Mario Room 2 Block 2: Syrup
+Joke's End Solo Mario Room 2 Block 3: Plaid Trousers
+Joke's End Second Boiler Room Digspot 1: Chuckle Bean
+Joke's End Second Boiler Room Digspot 2: Power Badge
+Joke's End North of Second Boiler Room Block 1: Chuckle Bean
+Joke's End North of Second Boiler Room Block 2: Super Mushroom
+Joke's End Before Jojora Room Block 1: Super Nuts
+Joke's End Before Jojora Room Block 2: Shroom Bells
+Joke's End Before Jojora Room Digspot: Chuckle Bean
+Joke's End Jojora Room Digspot: Hoohoo Blend
+Teehee Valley Past Ultra Hammer Rock Digspot 2 (Post-Birdo): Bean Fruit 1
+Teehee Valley Before Birdo Digspot 1: Chuckle Bean
+Teehee Valley Before Birdo Digspot 2: Hoo Bean
+Teehee Valley Before Birdo Digspot 3: Mushroom
+Teehee Valley Before Birdo Digspot 4: Harhall's Pants
+Yoshi Theater Blue Yoshi: Chuckle Bean
+Yoshi Theater Red Yoshi: Hoo Bean
+Yoshi Theater Green Yoshi: Yellow Neon Egg
+Yoshi Theater Yellow Yoshi: Street Jeans
+Yoshi Theater Purple Yoshi: Syrup
+Yoshi Theater Orange Yoshi: Chuckle Bean
+Yoshi Theater Azure Yoshi: Chuckle Bean
+Beanstar Piece Yoshi Theater: Super Syrup
+Teehee Valley Trunkle Room Digspot: Hoo Bean
+Fungitown Embassy Room Block: Mushroom
+Fungitown Entrance Room Block: Super Mushroom
+Fungitown Badge Shop Starting Flag 1: Ultra Syrup
+Fungitown Badge Shop Starting Flag 2: Mushroom
+Fungitown Badge Shop Starting Flag 3: Chuckle Bean
+Fungitown Shop Starting Flag 1: Chuckle Bean
+Fungitown Shop Starting Flag 2: Bean Trousers
+Fungitown Shop Starting Flag 3: Pea Badge
+Fungitown Shop Starting Flag 4: Ultra Mushroom
+Fungitown Shop Starting Flag 5: Mushroom
+Fungitown Shop Starting Flag 6: Mushroom
+Fungitown Shop Starting Flag 7: Chuckle Bean
+Fungitown Shop Starting Flag 8: Super Mushroom
+Fungitown Pants Shop Starting Flag 1: Super Mushroom
+Fungitown Pants Shop Starting Flag 2: Chuckle Bean
+Fungitown Pants Shop Starting Flag 3: Hoo Bean
+Fungitown Badge Shop Beanstar Complete Flag 1: Golden Mushroom
+Fungitown Badge Shop Beanstar Complete Flag 2: Hoo Bean
+Fungitown Pants Shop Beanstar Complete Flag 1: Hoo Bean
+Fungitown Pants Shop Beanstar Complete Flag 2: Chuckle Bean
+Fungitown Shop Beanstar Complete Flag: Nuts
+Fungitown Shop Birdo Flag: Chuckle Bean
+Fungitown Pants Shop Birdo Flag 1: Mushroom
+Fungitown Pants Shop Birdo Flag 2: Beanstone 2
+Fungitown Badge Shop Birdo Flag 1: Ultra Mushroom
+Fungitown Badge Shop Birdo Flag 2: Chuckle Bean
+Beanbean Outskirts Before Harhall Digspot 1: Chuckle Bean
+Beanbean Outskirts Before Harhall Digspot 2: Chuckle Bean
+Beanstar Piece Harhall: Hoo Bean
+Beanbean Outskirts Boostatue Mole: Refreshing Herb
+Harhall's Pants: Chuckle Bean
+Beanbean Outskirts S Room 2 Digspot 1: Beanstone 3
+Beanbean Outskirts S Room 2 Digspot 2: Winkle Card
+Beanbean Outskirts S Room 2 Block 2: Red Chuckola Fruit
+Beanbean Outskirts S Room 2 Digspot 3: Chuckle Bean
+Oho Oasis West Digspot: Parasol Pants
+Oho Oasis Fire Palace Block: Hoo Bean
+Oho Ocean Spike Room Digspot 1: Chuckle Bean
+Oho Ocean Spike Room Digspot 2: Mushroom
+Oho Oasis Firebrand: Orange Neon Egg
+Oho Oasis Thunderhand: Chuckle Bean
+Hoohoo Mountain Base Past Ultra Hammer Rocks Block 1: Chuckle Bean
+Hoohoo Mountain Base Past Ultra Hammer Rocks Block 2: Nuts
+Hoohoo Mountain Base Past Ultra Hammer Rocks Block 3: Chuckle Bean
+Hoohoo Mountain Base Boostatue Room Digspot 3 (Right Side): Beanstar Piece 1
+Hoohoo Mountain Base Mole Near Teehee Valley: Mushroom
+Teehee Valley Entrance To Hoohoo Mountain Digspot: Chuckle Bean
+Teehee Valley Upper Maze Room 1 Block: Power Grip
+Teehee Valley Upper Maze Room 2 Digspot 1: Ultra Nuts
+Teehee Valley Upper Maze Room 2 Digspot 2: Beanstone 10
+Guffawha Ruins Block: Hoo Bean
+Hoohoo Mountain Base Guffawha Ruins Entrance Digspot: Hoo Bean
+Hoohoo Mountain Base Teehee Valley Entrance Digspot: Peasley Slacks
+Hoohoo Mountain Base Teehee Valley Entrance Block: Hoo Bean
+Cackletta's Soul: Victory
+Bowser's Castle Entrance Block 1: Chuckle Bean
+Bowser's Castle Entrance Block 2: Mushroom
+Bowser's Castle Entrance Digspot: Hoo Bean
+Bowser's Castle Iggy & Morton Hallway Block 1: Ultra Syrup
+Bowser's Castle Iggy & Morton Hallway Block 2: Chuckle Bean
+Bowser's Castle Iggy & Morton Hallway Digspot: Refreshing Herb
+Bowser's Castle Past Morton Block: Hoo Bean
+Bowser's Castle Morton Room 1 Digspot: Shroom Slacks
+Bowser's Castle Lemmy Room 1 Block: Chuckle Bean
+Bowser's Castle Lemmy Room 1 Digspot: Chuckle Bean
+Bowser's Castle Ludwig Room 1 Block: Woohoo Blend
+Bowser's Castle Lemmy Room Mole: Chuckle Bean
+Bowser's Castle Ludwig & Roy Hallway Block 1: Hoo Bean
+Bowser's Castle Ludwig & Roy Hallway Block 2: Mushroom
+Bowser's Castle Roy Corridor Block 1: Secret Scroll 2
+Bowser's Castle Roy Corridor Block 2: Blue Neon Egg
+Bowser's Castle Mini Mario Sidescroller Block 1: Chuckle Bean
+Bowser's Castle Mini Mario Sidescroller Block 2: Chuckle Bean
+Bowser's Castle Mini Mario Maze Block 1: Ultra Mushroom
+Bowser's Castle Mini Mario Maze Block 2: Syrup
+Bowser's Castle Before Wendy Fight Block 1: Bean Fruit 3
+Bowser's Castle Before Wendy Fight Block 2: Chuckle Bean
+Bowser's Castle Larry Room Block: Hoo Bean
+Bowser's Castle Wendy & Larry Hallway Digspot: Hoo Bean
+Bowser's Castle Before Fawful Fight Block 1: Chuckle Bean
+Bowser's Castle Before Fawful Fight Block 2: Refreshing Herb
+Bowser's Castle Great Door Block 1: High-End Badge
+Bowser's Castle Great Door Block 2: Syrup
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Beanbean Outskirts Surf Beach Block: Super Mushroom
+  Cave Connecting Stardust Fields and Hoohoo Village Block 1: Chuckle Bean
+  Cave Connecting Stardust Fields and Hoohoo Village Block 2: Syrup
+  Hoohoo Mountain Base Boostatue Room Block 1: Chuckle Bean
+  Hoohoo Mountain Base Bridge Room Block 1: Hoo Bean
+  Hoohoo Mountain Base Bridge Room Block 2: Hoo Bean
+  Hoohoo Mountain Base Bridge Room Block 3: Chuckle Bean
+  Hoohoo Mountain Base Bridge Room Block 4: Casual Coral
+  Hoohoo Mountain Base Grassy Area Block 1: Super Mushroom
+  Hoohoo Mountain Base Grassy Area Block 2: Beauty Badge
+  Hoohoo Mountain Base Past Minecart Minigame Block 1: Peachy Jeans
+  Hoohoo Mountain Base Past Minecart Minigame Block 2: Heart Slacks
+  Hoohoo Mountain Base Room 1 Block: Syrup
+  Hoohoo Mountain Before Hoohooros Block: Chuckle Bean
+  Hoohoo Mountain Below Summit Block 1: Green Goblet
+  Hoohoo Mountain Below Summit Block 2: Super Nuts
+  Hoohoo Mountain Below Summit Block 3: Beanstar Piece 4
+  Hoohoo Mountain Fountain Room 2 Block: Refreshing Herb
+  Hoohoo Mountain Fountain Room Block 1: Chuckle Bean
+  Hoohoo Mountain Fountain Room Block 2: Ultra Syrup
+  Hoohoo Mountain Hoohooros Room Block 1: Chuckle Bean
+  Hoohoo Mountain Hoohooros Room Block 2: Ultra Syrup
+  Hoohoo Mountain Past Hoohooros Block 1: Chuckle Bean
+  Hoohoo Mountain Past Hoohooros Block 2: Sarge Badge
+  Hoohoo Mountain Past Hoohooros Connector Room Block: Purple Chuckola Fruit
+  Hoohoo Mountain Peasley's Rose: Greed Wallet
+  Hoohoo Mountain Room 1 Block 1: Golden Mushroom
+  Hoohoo Mountain Room 1 Block 2: Chuckle Bean
+  Hoohoo Mountain Room 1 Block 3: Chuckle Bean
+  Hoohoo Village Bridge Room Block 1: Mushroom
+  Hoohoo Village Bridge Room Block 2: Syrup
+  Hoohoo Village Bridge Room Block 3: Hoolumbian
+  Hoohoo Village Eastside Block: Syrup
+  Hoohoo Village Hammers: Hoo Bean
+  Hoohoo Village North Cave Room 1 Block: Hoo Bean
+  Hoohoo Village North Cave Room 2 Block: Hermetic Pants
+  Hoohoo Village South Cave Block: Syrup
+  Outside Woohoo Hooniversity Block: Queen B. Jeans
+  Shop Starting Flag 1: Mushroom
+  Shop Starting Flag 2: Syrup
+  Shop Starting Flag 3: 1-UP Mushroom
+  Stardust Fields Room 1 Block 1: Chuckle Bean
+  Stardust Fields Room 1 Block 2: Max Nuts
+  Stardust Fields Room 2 Block: Hoo Bean
+  Stardust Fields Room 3 Block: Counter Badge
+  Stardust Fields Room 4 Block 1: Salvage Badge
+  Stardust Fields Room 4 Block 2: Chuckle Blend
+  Stardust Fields Room 4 Block 3: Hoo Bean
+  Stardust Fields Room 5 Block: Ultra Syrup
+  Woohoo Hooniversity Star Room Block 1: Chuckle Bean
+  Woohoo Hooniversity Star Room Block 2: Mushroom
+  Woohoo Hooniversity Star Room Block 3: Chuckle Bean
+  Woohoo Hooniversity Sun Door Block 1: Hoo Bean
+  Woohoo Hooniversity Sun Door Block 2: Chuckle Bean
+  Woohoo Hooniversity West of Star Room 4 Block 1: Ultra Mushroom
+  Woohoo Hooniversity West of Star Room 4 Block 2: Hammers
+  Woohoo Hooniversity West of Star Room 4 Block 3: Chuckle Bean
+}
+2: {
+  Beanbean Outskirts Bean Fruit 1: Hammers
+  Beanbean Outskirts Bean Fruit 2: Bean Fruit 6
+  Beanbean Outskirts Bean Fruit 3: Game Boy Horror SP
+  Beanbean Outskirts Bean Fruit 6: Casual Slacks
+  Beanbean Outskirts E Digspot 1: Bros. Rock
+  Beanbean Outskirts E Digspot 3: Hoo Bean
+  Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 1: Chuckle Bean
+  Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 2: Chuckle Bean
+  Beanbean Outskirts N Room 1 Digspot: Mushroom
+  Beanbean Outskirts N Room 2 Digspot: Chuckle Bean
+  Beanbean Outskirts NE Digspot 2: Ultra Syrup
+  Beanbean Outskirts NW Digspot: Scandal Jeans
+  Beanbean Outskirts North Beach Digspot 1: Syrup
+  Beanbean Outskirts North Beach Digspot 2: Chuckle Bean
+  Beanbean Outskirts Pipe 2 Room Digspot: Mushroom
+  Beanbean Outskirts Pipe 4 Room Digspot: Green Pepper
+  Beanbean Outskirts S Room 1 Digspot 1: Chuckle Bean
+  Beanbean Outskirts S Room 2 Block 1: Mushroom
+  Beanbean Outskirts SE Digspot 1: Hoo Bean
+  Beanbean Outskirts SE Digspot 2: Chuckle Bean
+  Beanbean Outskirts SE Digspot 3: Hoo Bean
+  Beanbean Outskirts SW Digspot 1: Chuckle Bean
+  Beanbean Outskirts SW Digspot 2: Chuckle Bean
+  Beanbean Outskirts SW Digspot 3: Chuckle Bean
+  Beanbean Outskirts Solo Luigi Cave Mole: Mushroom
+  Beanbean Outskirts South Beach Digspot: Mushroom
+  Beanbean Outskirts South of Hooniversity Guards Digspot 1: Chuckle Bean
+  Beanbean Outskirts South of Hooniversity Guards Digspot 2: Chuckle Bean
+  Beanbean Outskirts South of Hooniversity Guards Digspot 3: Ultra Mushroom
+  Beanbean Outskirts W Digspot 1: Hoo Bean
+  Beanbean Outskirts W Digspot 2: Syrup
+  Beanbean Outskirts W Digspot 3: Hoo Bean
+  Hoohoo Mountain Base Boostatue Room Digspot 1: Chuckle Bean
+  Hoohoo Mountain Base Bridge Room Digspot: Mushwin Pants
+  Hoohoo Mountain Base Minecart Cave Digspot: Hoo Bean
+  Hoohoo Mountain Base Room 1 Digspot: Hoo Bean
+  Hoohoo Mountain Before Hoohooros Digspot: Hoo Bean
+  Hoohoo Mountain Below Summit Digspot: Mushroom
+  Hoohoo Mountain Fountain Room 2 Digspot: Mushroom
+  Hoohoo Mountain Hoohooros Room Digspot 1: Bean B. Badge
+  Hoohoo Mountain Hoohooros Room Digspot 2: Mushroom
+  Hoohoo Mountain Past Hoohooros Connector Room Digspot 1: Chuckle Bean
+  Hoohoo Mountain Past Hoohooros Connector Room Digspot 2: Ultra Syrup
+  Hoohoo Mountain Past Hoohooros Digspot: Chuckle Bean
+  Hoohoo Mountain Room 2 Digspot 1: Chuckle Bean
+  Hoohoo Mountain Room 2 Digspot 2: Nuts
+  Hoohoo Mountain Summit Digspot: Super Mushroom
+  Hoohoo Village Eastside Digspot: Hoo Bean
+  Hoohoo Village Hammer House Block: Chuckle Bean
+  Hoohoo Village North Cave Room 2 Digspot: Ultra Mushroom
+  Woohoo Hooniversity Entrance to Mini Mario Room 2 Digspot: Hoo Bean
+  Woohoo Hooniversity Entrance to Mini Mario Room Digspot 1: Super Syrup
+  Woohoo Hooniversity Entrance to Mini Mario Room Digspot 2: Refreshing Herb
+  Woohoo Hooniversity Mini Mario Puzzle Digspot: Ultra Nuts
+  Woohoo Hooniversity West of Star Room 2 Digspot: Hoo Bean
+  Woohoo Hooniversity West of Star Room 3 Digspot: Chuckle Bean
+  Woohoo Hooniversity West of Star Room 4 Digspot 1: Teehee Blend
+  Woohoo Hooniversity West of Star Room 4 Digspot 2: Bean Fruit 5
+  Woohoo Hooniversity West of Star Room 5 Digspot: Chuckle Bean
+  Woohoo Hooniversity West of Star Room Digspot 1: Beanlet 5
+  Woohoo Hooniversity West of Star Room Digspot 2: Syrup
+}
+3: {
+  Beanbean Outskirts Bean Fruit 4: Hoo Bean
+  Beanbean Outskirts Bean Fruit 5: Chuckle Bean
+  Beanbean Outskirts Bean Fruit 7: Ultra Mushroom
+  Beanbean Outskirts NW Block: Mushroom
+  Beanbean Outskirts North Beach Digspot 3: Thunderhand
+  Hoohoo Mountain Base Boostatue Room Block 2: Chuckle Bean
+  Hoohoo Mountain Base Boostatue Room Digspot 2: Hammers
+  Hoohoo Village Super Hammer Cave Block: Chuckle Bean
+  Hoohoo Village Super Hammer Cave Digspot: Great Force
+  S.S. Chuckola Membership Card: Hoo Bean
+  S.S. Chuckola Storage Room Block 1: Syrup
+  S.S. Chuckola Storage Room Block 2: Ultra Syrup
+  Teehee Valley Before Trunkle Digspot: Mushroom
+  Teehee Valley Room 1 Digspot 1: Mushroom
+  Teehee Valley Room 1 Digspot 2: Castle Badge
+  Teehee Valley Room 1 Digspot 3: Chuckle Bean
+  Teehee Valley Room 2 Digspot 1: Chuckle Bean
+  Teehee Valley Room 2 Digspot 2: 1-UP Super
+  Teehee Valley Room 2 Digspot 3: Chuckle Bean
+}
+4: {
+  Airport Center Digspot 1: Chuckle Bean
+  Airport Center Digspot 2: Chuckle Bean
+  Airport Center Digspot 3: Chuckle Bean
+  Airport Center Digspot 4: Syrup
+  Airport Center Digspot 5: Chuckle Bean
+  Airport Eastside Digspot 1: Chuckle Bean
+  Airport Eastside Digspot 2: Chuckle Bean
+  Airport Eastside Digspot 3: Chuckle Bean
+  Airport Eastside Digspot 4: Mush Badge AA
+  Airport Eastside Digspot 5: Peach's Extra Dress
+  Airport Entrance Digspot: Chuckle Bean
+  Airport Lobby Digspot: Chuckle Bean
+  Airport Westside Digspot 1: Ultra Nuts
+  Airport Westside Digspot 2: Chuckle Bean
+  Airport Westside Digspot 3: Chuckle Bean
+  Airport Westside Digspot 4: Hoo Bean
+  Airport Westside Digspot 5: Chuckle Bean
+  Beanbean Outskirts E Digspot 2: Chuckle Bean
+  Beanbean Outskirts Farm Room Digspot 1: Hoo Bean
+  Beanbean Outskirts Farm Room Digspot 2: Peasley's Rose
+  Beanbean Outskirts Farm Room Digspot 3: Chuckle Bean
+  Beanbean Outskirts Farm Room Mole Reward 1: Super Mushroom
+  Beanbean Outskirts Farm Room Mole Reward 2: Chuckle Bean
+  Beanbean Outskirts NE Digspot 1: Hoo Bean
+  Beanbean Outskirts S Room 1 Block: Hoo Bean
+  Beanbean Outskirts S Room 1 Digspot 2: Chuckle Bean
+  Beanbean Outskirts Secret Scroll 1: Chuckle Bean
+  Beanbean Outskirts Secret Scroll 2: Hoo Bean
+  Beanbean Outskirts Super Hammer Upgrade: Green Pearl Bean
+  Beanbean Outskirts Thunderhand Mole: Hoo Bean
+  Guffawha Ruins Block: Hoo Bean
+  Hoohoo Mountain Base Boostatue Room Digspot 3 (Right Side): Beanstar Piece 1
+  Hoohoo Mountain Base Guffawha Ruins Entrance Digspot: Hoo Bean
+  Hoohoo Mountain Base Mole Near Teehee Valley: Mushroom
+  Hoohoo Mountain Base Past Ultra Hammer Rocks Block 1: Chuckle Bean
+  Hoohoo Mountain Base Past Ultra Hammer Rocks Block 2: Nuts
+  Hoohoo Mountain Base Past Ultra Hammer Rocks Block 3: Chuckle Bean
+  Hoohoo Mountain Base Teehee Valley Entrance Block: Hoo Bean
+  Hoohoo Mountain Base Teehee Valley Entrance Digspot: Peasley Slacks
+  Shop Chuckolator Flag: Syrup
+  Shop Mom Piranha Flag 1: Beanstone 8
+  Shop Mom Piranha Flag 2: Nuts
+  Shop Mom Piranha Flag 3: Super Nuts
+  Shop Mom Piranha Flag 4: Hoo Bean
+  Teehee Valley Entrance To Hoohoo Mountain Digspot: Chuckle Bean
+  Teehee Valley Past Ultra Hammer Rock Block 1: Beanstar Pants
+  Teehee Valley Past Ultra Hammer Rock Block 2: Mush Badge A
+  Teehee Valley Past Ultra Hammer Rock Digspot 1: Mushroom
+  Teehee Valley Past Ultra Hammer Rock Digspot 3: Green Neon Egg
+  Teehee Valley Upper Maze Room 1 Block: Power Grip
+  Teehee Valley Upper Maze Room 2 Digspot 1: Ultra Nuts
+  Teehee Valley Upper Maze Room 2 Digspot 2: Beanstone 10
+}
+5: {
+  Badge Shop Chuckolator Flag 1: Red Pepper
+  Badge Shop Chuckolator Flag 2: Red Goblet
+  Badge Shop Chuckolator Flag 3: Hoo Bean
+  Badge Shop Mom Piranha Flag 1: Chuckle Bean
+  Badge Shop Mom Piranha Flag 2: Hoo Bean
+  Badge Shop Mom Piranha Flag 3: General Badge
+  Badge Shop Starting Flag 1: Max Syrup
+  Badge Shop Starting Flag 2: Super Syrup
+  Beanbean Castle Beanbean Brooch: Chuckle Bean
+  Beanbean Outskirts Before Harhall Digspot 1: Chuckle Bean
+  Beanbean Outskirts Before Harhall Digspot 2: Chuckle Bean
+  Beanbean Outskirts S Room 2 Block 2: Red Chuckola Fruit
+  Beanbean Outskirts S Room 2 Digspot 1: Beanstone 3
+  Beanbean Outskirts S Room 2 Digspot 2: Winkle Card
+  Beanbean Outskirts S Room 2 Digspot 3: Chuckle Bean
+  Beanstar Piece Harhall: Hoo Bean
+  Harhall's Pants: Chuckle Bean
+  Pants Shop Chuckolator Flag 1: Hoo Bean
+  Pants Shop Chuckolator Flag 2: Chuckle Bean
+  Pants Shop Chuckolator Flag 3: Mushroom
+  Pants Shop Mom Piranha Flag 1: Chuckle Bean
+  Pants Shop Mom Piranha Flag 2: Ultra Mushroom
+  Pants Shop Mom Piranha Flag 3: Hoo Bean
+  Pants Shop Starting Flag 1: Hoo Bean
+  Pants Shop Starting Flag 2: Chuckle Bean
+  Pants Shop Starting Flag 3: Mari-Lui Badge
+  Sewers Prison Room Block 1: Syrup
+  Sewers Prison Room Block 2: Chuckle Bean
+  Sewers Prison Room Block 3: Ultra Mushroom
+  Sewers Prison Room Block 4: Chuckle Bean
+  Sewers Room 3 Block 1: Mushroom
+  Sewers Room 3 Block 2: Hoo Bean
+  Sewers Room 3 Block 3: Hoo Bean
+  Sewers Room 5 Block 1: Excite Spring
+  Sewers Room 5 Block 2: Chuckle Bean
+}
+6: {
+  Beanbean Castle Town Mini Mario Block 1: Ultra Nuts
+  Beanbean Castle Town Mini Mario Block 2: Chuckle Bean
+  Beanbean Castle Town Mini Mario Block 3: Mushroom
+  Beanbean Castle Town Mini Mario Block 4: Syrup
+  Beanbean Castle Town Mini Mario Block 5: Syrup
+  Beanbean Outskirts Boostatue Mole: Refreshing Herb
+  Beanbean Outskirts NE Solo Mario Mole 1: Beanstone 6
+  Beanbean Outskirts NE Solo Mario Mole 2: Chuckle Bean
+  Beanbean Outskirts Surf Beach Digspot 1: Chuckle Bean
+  Beanbean Outskirts Surf Beach Digspot 2: Mushroom
+  Beanbean Outskirts Surf Beach Digspot 3: Hoo Bean
+  Gwarhar Lagoon Massage Parlor Entrance Digspot: Mushroom
+  Gwarhar Lagoon Pipe Room Digspot: Mushroom
+  Joke's End Pipe Digspot: Max Mushroom
+  Joke's End Staircase Digspot: Nuts
+  North Ocean Whirlpool Mole: Chuckle Bean
+  Oho Oasis Fire Palace Block: Hoo Bean
+  Oho Oasis Firebrand: Orange Neon Egg
+  Oho Oasis Thunderhand: Chuckle Bean
+  Oho Oasis West Digspot: Parasol Pants
+  Oho Ocean Fire Puzzle Room Digspot: Mushroom
+  Oho Ocean North Whirlpool Block 1: Hoo Bean
+  Oho Ocean North Whirlpool Block 2: Chuckle Bean
+  Oho Ocean North Whirlpool Block 3: Purple Neon Egg
+  Oho Ocean North Whirlpool Block 4: Chuckle Bean
+  Oho Ocean North Whirlpool Digspot 1: Chuckle Bean
+  Oho Ocean North Whirlpool Digspot 2: Chuckle Bean
+  Oho Ocean South Room 1 Block: Mushroom
+  Oho Ocean South Room 2 Digspot: Hoo Bean
+  Oho Ocean South Whirlpool Digspot 1: Iron Pants
+  Oho Ocean South Whirlpool Digspot 2: Chuckle Bean
+  Oho Ocean South Whirlpool Digspot 3: Chuckle Bean
+  Oho Ocean South Whirlpool Digspot 4: Mush Badge
+  Oho Ocean South Whirlpool Digspot 5: Chuckle Bean
+  Oho Ocean South Whirlpool Digspot 6: Chuckle Bean
+  Oho Ocean South Whirlpool Room 2 Digspot: Beanbean Brooch
+  Oho Ocean Spike Room Digspot 1: Chuckle Bean
+  Oho Ocean Spike Room Digspot 2: Mushroom
+  Surf Minigame: Hoo Bean
+  Woohoo Hooniversity Barrel Puzzle Entrance Block 1: Spiny Badge AA
+  Woohoo Hooniversity Barrel Puzzle Entrance Block 2: Hoo Bean
+  Woohoo Hooniversity Barrel Puzzle Entrance Block 3: White Chuckola Fruit
+  Woohoo Hooniversity Barrel Puzzle Entrance Block 4: Chuckle Bean
+  Woohoo Hooniversity Barrel Puzzle Entrance Digspot 1: Chuckle Bean
+  Woohoo Hooniversity Barrel Puzzle Entrance Digspot 2: Red Pearl Bean
+  Woohoo Hooniversity Basement Room 1 Digspot: Hard Pants
+  Woohoo Hooniversity Basement Room 2 Digspot: Mushroom
+  Woohoo Hooniversity Basement Room 3 Block: Hoo Bean
+  Woohoo Hooniversity Basement Room 4 Block: Chuckle Bean
+  Woohoo Hooniversity Mini Mario Puzzle Block: Mushroom
+  Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 1: Chuckle Bean
+  Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 2: Chuckle Bean
+  Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 3: Hoo Bean
+  Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 4: Chuckle Bean
+  Woohoo Hooniversity Past Cackletta Room 1 Block: Hoo Bean
+  Woohoo Hooniversity Past Cackletta Room 2 Block 1: Chuckle Bean
+  Woohoo Hooniversity Past Cackletta Room 2 Block 2: Super Syrup
+  Woohoo Hooniversity Past Cackletta Room 2 Digspot: Mushroom
+  Woohoo Hooniversity Past Sun Door Block 1: Ultra Syrup
+  Woohoo Hooniversity Past Sun Door Block 2: Miracle Badge
+  Woohoo Hooniversity Past Sun Door Block 3: Mushroom
+  Woohoo Hooniversity Popple Room Digspot 1: Wool Trousers
+  Woohoo Hooniversity Popple Room Digspot 2: Mushroom
+  Woohoo Hooniversity Solo Mario Barrel Area Block 1: Chuckle Bean
+  Woohoo Hooniversity Solo Mario Barrel Area Block 2: Chuckle Bean
+  Woohoo Hooniversity Solo Mario Barrel Area Block 3: Safety Slacks
+  Woohoo Hooniversity South Of Star Room Block: Red Pepper
+}
+7: {
+  Badge Shop Trunkle Flag 1: Chuckle Bean
+  Badge Shop Trunkle Flag 2: Chuckle Bean
+  Badge Shop Trunkle Flag 3: Chuckle Bean
+  Beanbean Castle Town Beanlet 1: Refreshing Herb
+  Beanbean Castle Town Beanlet 2: Chuckle Bean
+  Beanbean Castle Town Beanlet 3: Hoo Bean
+  Beanbean Castle Town Beanlet 4: Hoo Bean
+  Beanbean Castle Town Beanlet 5: Chuckle Bean
+  Beanbean Castle Town Beanlet Reward: Hoo Bean
+  Beanbean Castle Town Beanstone 1: Chuckle Bean
+  Beanbean Castle Town Beanstone 10: Chuckle Bean
+  Beanbean Castle Town Beanstone 2: Bros. Badge
+  Beanbean Castle Town Beanstone 3: Refreshing Herb
+  Beanbean Castle Town Beanstone 4: Hoo Bean
+  Beanbean Castle Town Beanstone 5: Chuckle Bean
+  Beanbean Castle Town Beanstone 6: Chuckle Bean
+  Beanbean Castle Town Beanstone 7: Chuckle Bean
+  Beanbean Castle Town Beanstone 8: Chuckle Bean
+  Beanbean Castle Town Beanstone 9: Nuts
+  Beanbean Castle Town Beanstone Reward: Chuckle Bean
+  Beanbean Castle Town East Side House Block 1: Chuckle Bean
+  Beanbean Castle Town East Side House Block 2: Oh-Pah Badge
+  Beanbean Castle Town East Side House Block 3: Hoo Bean
+  Beanbean Castle Town East Side House Block 4: Max Nuts
+  Beanbean Castle Town West Side House Block 1: Chuckle Bean
+  Beanbean Castle Town West Side House Block 2: Chuckle Bean
+  Beanbean Castle Town West Side House Block 3: Beanlet 4
+  Beanbean Castle Town West Side House Block 4: Chuckle Bean
+  Beanbean Outskirts Brooch Guards Room Digspot 1: Chuckle Bean
+  Beanbean Outskirts Brooch Guards Room Digspot 2: Bean Fruit 2
+  Beanbean Outskirts Chateau Entrance Digspot 1: Ohoracle Badge
+  Beanbean Outskirts Chateau Entrance Digspot 2: B. Brand Jeans
+  Chateau Barrel Room Digspot: Chuckle Bean
+  Chateau Goblet Room Digspot: Hoo Bean
+  Chateau Green Goblet: Beanstone 4
+  Chateau Popple Fight Room Block 1: Syrup
+  Chateau Popple Fight Room Block 2: #1 Trousers
+  Chateau Popple Fight Room Digspot: Chuckle Bean
+  Chateau Red Goblet: Chuckle Bean
+  Chateau Room 1 Digspot: Super Syrup
+  Chucklehuck Woods Cave Room 1 Block 1: Chuckle Bean
+  Chucklehuck Woods Cave Room 1 Block 2: Chuckle Bean
+  Chucklehuck Woods Cave Room 2 Block: Mushroom
+  Chucklehuck Woods Cave Room 3 Block: Azure Neon Egg
+  Chucklehuck Woods East of Chuckleroot Digspot: Chuckle Bean
+  Chucklehuck Woods Koopa Room Block 1: Chuckle Bean
+  Chucklehuck Woods Koopa Room Block 2: Refreshing Herb
+  Chucklehuck Woods Koopa Room Digspot: Tank Badge
+  Chucklehuck Woods Northeast of Chuckleroot Digspot 1: Chuckle Bean
+  Chucklehuck Woods Northeast of Chuckleroot Digspot 2: Hoo Bean
+  Chucklehuck Woods Northeast of Chuckleroot Digspot 3: Mushroom
+  Chucklehuck Woods Northeast of Chuckleroot Digspot 4: Beanlet 1
+  Chucklehuck Woods Past Chuckleroot Block 1: Chuckle Bean
+  Chucklehuck Woods Past Chuckleroot Block 2: Super Nuts
+  Chucklehuck Woods Past Chuckleroot Block 3: Nuts
+  Chucklehuck Woods Past Chuckleroot Block 4: Hoo Bean
+  Chucklehuck Woods Past Chuckleroot Block 5: Beanstar Piece 3
+  Chucklehuck Woods Past Chuckleroot Block 6: Chuckle Bean
+  Chucklehuck Woods Pipe Room Block 1: Hoo Bean
+  Chucklehuck Woods Pipe Room Block 2: Bonus Ring
+  Chucklehuck Woods Pipe Room Digspot 1: Syrup
+  Chucklehuck Woods Pipe Room Digspot 2: Mushroom
+  Chucklehuck Woods Purple Chuckola Fruit: Secret Scroll 1
+  Chucklehuck Woods Red Chuckola Fruit: Chuckle Bean
+  Chucklehuck Woods Room 1 Digspot: Chuckle Bean
+  Chucklehuck Woods Room 2 Block: Hoo Bean
+  Chucklehuck Woods Room 2 Digspot: Chuckle Bean
+  Chucklehuck Woods Room 4 Block 1: Super Syrup
+  Chucklehuck Woods Room 4 Block 2: Chuckle Bean
+  Chucklehuck Woods Room 4 Block 3: Super Syrup
+  Chucklehuck Woods Room 7 Block 1: Membership Card
+  Chucklehuck Woods Room 7 Block 2: Hoo Bean
+  Chucklehuck Woods Room 7 Digspot 1: Chuckoccino
+  Chucklehuck Woods Room 7 Digspot 2: Chuckle Bean
+  Chucklehuck Woods Room 8 Digspot: Super Syrup
+  Chucklehuck Woods Solo Luigi Cave Room 2 Block: Mushroom
+  Chucklehuck Woods Solo Luigi Cave Room 3 Block 1: Max Syrup
+  Chucklehuck Woods Solo Luigi Cave Room 3 Block 2: Mushroom
+  Chucklehuck Woods Southwest of Chuckleroot Block: Chuckle Bean
+  Chucklehuck Woods West of Chuckleroot Block: Red Neon Egg
+  Chucklehuck Woods White Chuckola Fruit: Mushluck Pants
+  Chucklehuck Woods White Fruit Room Digspot 1: Hoo Bean
+  Chucklehuck Woods White Fruit Room Digspot 2: Hoo Bean
+  Chucklehuck Woods White Fruit Room Digspot 3: Hoo Bean
+  Chucklehuck Woods Wiggler room Digspot 1: Mushroom
+  Chucklehuck Woods Wiggler room Digspot 2: Ultra Mushroom
+  Coffee Shop Brew Reward 1: Chuckle Bean
+  Coffee Shop Brew Reward 2: Chuckle Bean
+  Coffee Shop Brew Reward 3: Beanstone 5
+  Coffee Shop Brew Reward 4: Hoo Bean
+  Coffee Shop Brew Reward 5: Chuckle Bean
+  Coffee Shop Brew Reward 6: Mushroom
+  Coffee Shop Brew Reward 7: Chuckle Bean
+  Coffee Shop Chuckle Blend: Chuckle Bean
+  Coffee Shop Chuckoccino: Mushroom
+  Coffee Shop Hoohoo Blend: Mushroom
+  Coffee Shop Hoolumbian: Beanlet 2
+  Coffee Shop Teehee Blend: Chuckle Bean
+  Coffee Shop Teeheespresso: Blue Jeans
+  Coffee Shop Woohoo Blend: Hoo Bean
+  Fungitown Badge Shop Starting Flag 1: Ultra Syrup
+  Fungitown Badge Shop Starting Flag 2: Mushroom
+  Fungitown Badge Shop Starting Flag 3: Chuckle Bean
+  Fungitown Embassy Room Block: Mushroom
+  Fungitown Entrance Room Block: Super Mushroom
+  Fungitown Pants Shop Starting Flag 1: Super Mushroom
+  Fungitown Pants Shop Starting Flag 2: Chuckle Bean
+  Fungitown Pants Shop Starting Flag 3: Hoo Bean
+  Fungitown Shop Starting Flag 1: Chuckle Bean
+  Fungitown Shop Starting Flag 2: Bean Trousers
+  Fungitown Shop Starting Flag 3: Pea Badge
+  Fungitown Shop Starting Flag 4: Ultra Mushroom
+  Fungitown Shop Starting Flag 5: Mushroom
+  Fungitown Shop Starting Flag 6: Mushroom
+  Fungitown Shop Starting Flag 7: Chuckle Bean
+  Fungitown Shop Starting Flag 8: Super Mushroom
+  Pants Shop Trunkle Flag 1: Mushroom
+  Pants Shop Trunkle Flag 2: Golden Mushroom
+  Pants Shop Trunkle Flag 3: Hoo Bean
+  Shop Trunkle Flag 1: Beanstar Piece 2
+  Shop Trunkle Flag 2: Mushroom
+  Teehee Valley Trunkle Room Digspot: Hoo Bean
+}
+8: {
+  Badge Shop Beanstar Complete Flag 1: Ultra Syrup
+  Badge Shop Beanstar Complete Flag 2: Grab Badge
+  Badge Shop Beanstar Complete Flag 3: Beanstone 7
+  Beanbean Castle Fake Beanstar: Chuckle Bean
+  Beanbean Castle Peach's Extra Dress: Syrup
+  Beanbean Outskirts Ultra Hammer Upgrade: Hoo Bean
+  Fungitown Badge Shop Beanstar Complete Flag 1: Golden Mushroom
+  Fungitown Badge Shop Beanstar Complete Flag 2: Hoo Bean
+  Fungitown Pants Shop Beanstar Complete Flag 1: Hoo Bean
+  Fungitown Pants Shop Beanstar Complete Flag 2: Chuckle Bean
+  Fungitown Shop Beanstar Complete Flag: Nuts
+  Pants Shop Beanstar Complete Flag 1: Super Syrup
+  Pants Shop Beanstar Complete Flag 2: Hoo Bean
+  Pants Shop Beanstar Complete Flag 3: Hoo Bean
+  Shop Beanstar Complete Flag 1: Brilliant Badge
+  Shop Beanstar Complete Flag 2: Firebrand
+  Shop Beanstar Complete Flag 3: Shroom Pants
+}
+9: {
+  Beanstar Piece Hermie: Hoo Bean
+  Beanstar Piece Winkle Area: Spangle
+  Chucklehuck Woods Winkle Cave Block 1: Wonder Badge
+  Chucklehuck Woods Winkle Cave Block 2: Teeheespresso
+  Gwarhar Lagoon East of Stone Bridge Block: Chuckle Bean
+  Gwarhar Lagoon Entrance to West Underwater Area Digspot: Charity Badge
+  Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 1: Mushroom
+  Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 2: Soulful Bros.
+  Gwarhar Lagoon Fire Dash Puzzle Room 2 Digspot: Hoo Bean
+  Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 1: Bean Pants
+  Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 2: Mushroom
+  Gwarhar Lagoon First Underwater Area Room 1 Block: Chuckle Bean
+  Gwarhar Lagoon First Underwater Area Room 2 Block 1: Chuckle Bean
+  Gwarhar Lagoon First Underwater Area Room 2 Block 2: Chuckle Bean
+  Gwarhar Lagoon Green Pearl Bean: 1-UP Mushroom
+  Gwarhar Lagoon North of Spangle Room Digspot: Hoo Bean
+  Gwarhar Lagoon Past Hermie Digspot: Hoo Bean
+  Gwarhar Lagoon Red Pearl Bean: Chuckle Bean
+  Gwarhar Lagoon Second Underwater Area Room 1 Block: Ultra Mushroom
+  Gwarhar Lagoon Second Underwater Area Room 2 Digspot 1: Beanstone 9
+  Gwarhar Lagoon Second Underwater Area Room 2 Digspot 2: Hoo Bean
+  Gwarhar Lagoon Second Underwater Area Room 3 Block 1: Refreshing Herb
+  Gwarhar Lagoon Second Underwater Area Room 3 Block 2: Chuckle Bean
+  Gwarhar Lagoon Second Underwater Area Room 3 Block 3: Green Pepper
+  Gwarhar Lagoon Second Underwater Area Room 4 Digspot: Chuckle Bean
+  Gwarhar Lagoon Spangle: Chuckle Bean
+  Gwarhar Lagoon Spangle Room Block: Chuckle Bean
+  Gwarhar Lagoon West of Spangle Room Digspot: Heart Jeans
+  Hoohoo Village Mole Behind Turtle: Nuts
+  Joke's End Before Jojora Room Block 1: Super Nuts
+  Joke's End Before Jojora Room Block 2: Shroom Bells
+  Joke's End Before Jojora Room Digspot: Chuckle Bean
+  Joke's End Final Split up Room Digspot: Hoo Bean
+  Joke's End First Boiler Room Digspot 1: Beanlet 3
+  Joke's End First Boiler Room Digspot 2: Muscle Badge
+  Joke's End Furnace Room 1 Block 1: Hoo Bean
+  Joke's End Furnace Room 1 Block 2: Syrup
+  Joke's End Furnace Room 1 Block 3: Chuckle Bean
+  Joke's End Jojora Room Digspot: Hoohoo Blend
+  Joke's End Mole Reward 1: Hoo Bean
+  Joke's End Mole Reward 2: Chuckle Bean
+  Joke's End North of Second Boiler Room Block 1: Chuckle Bean
+  Joke's End North of Second Boiler Room Block 2: Super Mushroom
+  Joke's End Northeast of Boiler Room 1 Block: Hoo Bean
+  Joke's End Northeast of Boiler Room 2 Block: Chuckle Bean
+  Joke's End Northeast of Boiler Room 2 Digspot: Hoo Bean
+  Joke's End Northeast of Boiler Room 3 Digspot: Chuckle Bean
+  Joke's End Second Boiler Room Digspot 1: Chuckle Bean
+  Joke's End Second Boiler Room Digspot 2: Power Badge
+  Joke's End Second Floor East Room Digspot: Chuckle Bean
+  Joke's End Second Floor West Room Block 1: Hoo Bean
+  Joke's End Second Floor West Room Block 2: Chuckle Bean
+  Joke's End Second Floor West Room Block 3: Cobalt Necktie
+  Joke's End Second Floor West Room Block 4: Mushroom
+  Joke's End Solo Luigi Room 1 Block: Chuckle Bean
+  Joke's End Solo Luigi Room 1 Digspot: Beanstone 1
+  Joke's End Solo Luigi Room 2 Digspot: Hoo Bean
+  Joke's End Solo Mario Final Room Block 1: Super Mushroom
+  Joke's End Solo Mario Final Room Block 2: Bean Fruit 7
+  Joke's End Solo Mario Final Room Block 3: Mushroom
+  Joke's End Solo Mario Room 1 Digspot: Hoo Bean
+  Joke's End Solo Mario Room 2 Block 1: Fake Beanstar
+  Joke's End Solo Mario Room 2 Block 2: Syrup
+  Joke's End Solo Mario Room 2 Block 3: Plaid Trousers
+  Joke's End South of Bridge Room Block: Syrup
+  Joke's End West of First Boiler Room Block 1: Mushroom
+  Joke's End West of First Boiler Room Block 2: Ultra Nuts
+  Winkle Area Beanstar Room Block: Hoo Bean
+  Winkle Area Colloseum Digspot: Chuckle Bean
+  Winkle Area Digspot: Tropic Slacks
+  Winkle Area Outside Colloseum Block: Super Mushroom
+  Winkle Area Winkle Card: Chuckle Bean
+}
+10: {
+  Badge Shop Birdo Flag 1: Hoo Bean
+  Badge Shop Birdo Flag 2: Chuckle Bean
+  Badge Shop Birdo Flag 3: Bean Fruit 4
+  Bowser's Castle Before Fawful Fight Block 1: Chuckle Bean
+  Bowser's Castle Before Fawful Fight Block 2: Refreshing Herb
+  Bowser's Castle Before Wendy Fight Block 1: Bean Fruit 3
+  Bowser's Castle Before Wendy Fight Block 2: Chuckle Bean
+  Bowser's Castle Entrance Block 1: Chuckle Bean
+  Bowser's Castle Entrance Block 2: Mushroom
+  Bowser's Castle Entrance Digspot: Hoo Bean
+  Bowser's Castle Great Door Block 1: High-End Badge
+  Bowser's Castle Great Door Block 2: Syrup
+  Bowser's Castle Iggy & Morton Hallway Block 1: Ultra Syrup
+  Bowser's Castle Iggy & Morton Hallway Block 2: Chuckle Bean
+  Bowser's Castle Iggy & Morton Hallway Digspot: Refreshing Herb
+  Bowser's Castle Larry Room Block: Hoo Bean
+  Bowser's Castle Lemmy Room 1 Block: Chuckle Bean
+  Bowser's Castle Lemmy Room 1 Digspot: Chuckle Bean
+  Bowser's Castle Lemmy Room Mole: Chuckle Bean
+  Bowser's Castle Ludwig & Roy Hallway Block 1: Hoo Bean
+  Bowser's Castle Ludwig & Roy Hallway Block 2: Mushroom
+  Bowser's Castle Ludwig Room 1 Block: Woohoo Blend
+  Bowser's Castle Mini Mario Maze Block 1: Ultra Mushroom
+  Bowser's Castle Mini Mario Maze Block 2: Syrup
+  Bowser's Castle Mini Mario Sidescroller Block 1: Chuckle Bean
+  Bowser's Castle Mini Mario Sidescroller Block 2: Chuckle Bean
+  Bowser's Castle Morton Room 1 Digspot: Shroom Slacks
+  Bowser's Castle Past Morton Block: Hoo Bean
+  Bowser's Castle Roy Corridor Block 1: Secret Scroll 2
+  Bowser's Castle Roy Corridor Block 2: Blue Neon Egg
+  Bowser's Castle Wendy & Larry Hallway Digspot: Hoo Bean
+  Cackletta's Soul: Victory
+  Fungitown Badge Shop Birdo Flag 1: Ultra Mushroom
+  Fungitown Badge Shop Birdo Flag 2: Chuckle Bean
+  Fungitown Pants Shop Birdo Flag 1: Mushroom
+  Fungitown Pants Shop Birdo Flag 2: Beanstone 2
+  Fungitown Shop Birdo Flag: Chuckle Bean
+  Gwarhar Lagoon Spangle Reward: Syrup
+  Pants Shop Birdo Flag 1: Chuckle Bean
+  Pants Shop Birdo Flag 2: Hoo Bean
+  Pants Shop Birdo Flag 3: Chuckle Bean
+  Shop Birdo Flag: Chuckle Bean
+  Teehee Valley Before Birdo Digspot 1: Chuckle Bean
+  Teehee Valley Before Birdo Digspot 2: Hoo Bean
+  Teehee Valley Before Birdo Digspot 3: Mushroom
+  Teehee Valley Before Birdo Digspot 4: Harhall's Pants
+  Teehee Valley Past Ultra Hammer Rock Digspot 2 (Post-Birdo): Bean Fruit 1
+}
+11: {
+  Yoshi Theater Azure Yoshi: Chuckle Bean
+  Yoshi Theater Blue Yoshi: Chuckle Bean
+  Yoshi Theater Green Yoshi: Yellow Neon Egg
+  Yoshi Theater Orange Yoshi: Chuckle Bean
+  Yoshi Theater Purple Yoshi: Syrup
+  Yoshi Theater Red Yoshi: Hoo Bean
+  Yoshi Theater Yellow Yoshi: Street Jeans
+}
+12: {
+  Beanstar Piece Yoshi Theater: Super Syrup
+}
