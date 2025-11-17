@@ -1104,6 +1104,85 @@ export const helperFunctions = {
   },
 
   /**
+   * Check if Transport fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_transport_fight_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Transport fight
+   */
+  get_transport_fight_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const transportTools = {
+      'Reflect Element': 3,
+      'Stitch': 1,
+      'Chicken Little': 1,
+      'Magnet Element': 2,
+      'Explosion': 1,
+      'Finishing Leap': 1,
+      'Thunder Element': 3,
+      'Fantasia': 1,
+      'Flare Force': 1,
+      'Genie': 1
+    };
+
+    if (fightLogic === 0) { // easy: All requirements met
+      return helperFunctions.kh2_dict_count(transportTools, snapshot);
+    } else { // normal/hard: Count items that meet their requirements
+      const metCount = helperFunctions.kh2_dict_one_count(transportTools, snapshot);
+      if (fightLogic === 1) return metCount >= 7; // normal
+      return metCount >= 5; // hard
+    }
+  },
+
+  /**
+   * Check if Transport movement requirements are met.
+   * Based on worlds/kh2/Rules.py:get_transport_movement_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player meets Transport movement requirements
+   */
+  get_transport_movement_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const magic = ['Fire Element', 'Blizzard Element', 'Thunder Element',
+                   'Reflect Element', 'Cure Element', 'Magnet Element'];
+
+    if (fightLogic === 0) { // easy: High Jump 3, Aerial Dodge 3, Glide 3
+      return helperFunctions.kh2_dict_count(
+        {'High Jump': 3, 'Aerial Dodge': 3, 'Glide': 3},
+        snapshot
+      );
+    } else if (fightLogic === 1) { // normal: High Jump 2, Aerial Dodge 2, Glide 3
+      return helperFunctions.kh2_dict_count(
+        {'High Jump': 2, 'Aerial Dodge': 2, 'Glide': 3},
+        snapshot
+      );
+    } else { // hard: Multiple option combinations
+      const option1 = helperFunctions.kh2_dict_count(
+        {'High Jump': 2, 'Aerial Dodge': 1, 'Glide': 2}, snapshot
+      ) && helperFunctions.kh2_has_any(snapshot, staticData, magic);
+
+      const option2 = helperFunctions.kh2_dict_count(
+        {'High Jump': 1, 'Aerial Dodge': 3, 'Glide': 2}, snapshot
+      ) && helperFunctions.kh2_has_any(snapshot, staticData, magic);
+
+      const option3 = helperFunctions.kh2_dict_count(
+        {'High Jump': 1, 'Aerial Dodge': 1, 'Glide': 3}, snapshot
+      );
+
+      const option4 = helperFunctions.kh2_has_all(snapshot, staticData, ['Master Form', 'Aerial Dodge']) &&
+                     helperFunctions.kh2_has_any(snapshot, staticData, magic);
+
+      return option1 || option2 || option3 || option4;
+    }
+  },
+
+  /**
    * Check if Old Pete fight is accessible.
    * Based on worlds/kh2/Rules.py:get_old_pete_rules
    * The fight is free with no requirements.
