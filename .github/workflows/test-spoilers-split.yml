@@ -4,14 +4,20 @@ on:
   # Allow manual triggering for testing
   workflow_dispatch:
     inputs:
-      spoiler_type:
-        description: 'Spoiler type to test'
+      test_type:
+        description: 'Test suite to run'
         required: true
-        default: 'minimal'
+        default: 'seeds-minimal'
         type: choice
         options:
-          - minimal
-          - full
+          - seeds-minimal
+          - seeds-full
+          - templates-minimal
+          - templates-full
+          - multiplayer
+          - multitemplate-minimal
+          - multitemplate-full
+          - multiworld
 
 permissions:
   contents: write  # Allow pushing commits and creating branches
@@ -22,6 +28,7 @@ jobs:
     name: Test Seed ${{ matrix.seed }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    if: startsWith(github.event.inputs.test_type, 'seeds-')
 
     strategy:
       fail-fast: false
@@ -60,7 +67,7 @@ jobs:
         run: |
           source .venv/bin/activate
           python Launcher.py --update_settings
-          if [[ "${{ github.event.inputs.spoiler_type }}" == "full" ]]; then
+          if [[ "${{ github.event.inputs.test_type }}" == "seeds-full" ]]; then
             python scripts/setup/update_host_settings.py full-spoilers
           else
             python scripts/setup/update_host_settings.py minimal-spoilers
@@ -82,9 +89,10 @@ jobs:
       - name: Run test for seed ${{ matrix.seed }}
         run: |
           source .venv/bin/activate
+          SPOILER_TYPE=$([[ "${{ github.event.inputs.test_type }}" == "seeds-full" ]] && echo "full" || echo "minimal")
           python scripts/test/test-all-templates.py \
             --seed ${{ matrix.seed }} \
-            --output-file scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-${{ matrix.seed }}.json \
+            --output-file scripts/output/spoiler-${SPOILER_TYPE}/test-results-seed-${{ matrix.seed }}.json \
             --no-backup \
             -p
 
@@ -93,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-seed-${{ matrix.seed }}
-          path: scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results-seed-${{ matrix.seed }}.json
+          path: scripts/output/spoiler-${{ github.event.inputs.test_type == 'seeds-full' && 'full' || 'minimal' }}/test-results-seed-${{ matrix.seed }}.json
           retention-days: 7
 
   # Combine results job - runs after all seed tests complete
@@ -132,8 +140,11 @@ jobs:
 
       - name: Combine test results
         run: |
+          # Determine spoiler type based on test type
+          SPOILER_TYPE=$([[ "${{ github.event.inputs.test_type }}" == "seeds-full" ]] && echo "full" || echo "minimal")
+
           # Create temporary directory for merged results
-          mkdir -p /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}
+          mkdir -p /tmp/merged-results/scripts/output/spoiler-${SPOILER_TYPE}
           mkdir -p /tmp/merged-results/docs/json/developer/test-results
 
           # Combine all per-seed test results into one file
@@ -141,11 +152,11 @@ jobs:
           # and contain the JSON files directly (not in a scripts/output subdirectory)
           python scripts/test/combine-test-results.py \
             --input-files artifacts/test-results-seed-*/test-results-seed-*.json \
-            --output-file /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+            --output-file /tmp/merged-results/scripts/output/spoiler-${SPOILER_TYPE}/test-results.json
 
           # List what was created
           echo "=== Combined Results ==="
-          ls -lh /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+          ls -lh /tmp/merged-results/scripts/output/spoiler-${SPOILER_TYPE}/test-results.json
 
       - name: Create or switch to test-results-update branch
         run: |
@@ -183,10 +194,13 @@ jobs:
 
       - name: Generate test charts and copy results
         run: |
+          # Determine spoiler type based on test type
+          SPOILER_TYPE=$([[ "${{ github.event.inputs.test_type }}" == "seeds-full" ]] && echo "full" || echo "minimal")
+
           # Copy combined results to repository location so generate-test-chart.py can find them
-          mkdir -p scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}
-          cp /tmp/merged-results/scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json \
-             scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+          mkdir -p scripts/output/spoiler-${SPOILER_TYPE}
+          cp /tmp/merged-results/scripts/output/spoiler-${SPOILER_TYPE}/test-results.json \
+             scripts/output/spoiler-${SPOILER_TYPE}/test-results.json
 
           # Generate test charts and documentation
           python scripts/docs/generate-test-chart.py
@@ -195,7 +209,7 @@ jobs:
           ls -lh docs/json/developer/test-results/
 
           echo "=== Files ready for commit ==="
-          ls -lh scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+          ls -lh scripts/output/spoiler-${SPOILER_TYPE}/test-results.json
           ls -lh docs/json/developer/test-results/*.md 2>/dev/null || echo "No markdown files"
 
       - name: Commit and push results
@@ -203,23 +217,27 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Determine spoiler type based on test type
+          SPOILER_TYPE=$([[ "${{ github.event.inputs.test_type }}" == "seeds-full" ]] && echo "full" || echo "minimal")
+
           # Add the specific files we want to commit
           # Use -f because scripts/output is in .gitignore (even though specific files are excepted)
-          git add -f scripts/output/spoiler-${{ github.event.inputs.spoiler_type }}/test-results.json
+          git add -f scripts/output/spoiler-${SPOILER_TYPE}/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
           # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update ${{ github.event.inputs.spoiler_type }} spoiler test results (split seeds 1-10)
+            git commit -m "Update ${SPOILER_TYPE} spoiler test results (split seeds 1-10)
 
             Generated by workflow run: ${{ github.run_id }}
             Triggered by: ${{ github.actor }}
 
             Test results from parallel seed testing:
             - Seeds: 1-10 (10 parallel jobs)
-            - Spoiler type: ${{ github.event.inputs.spoiler_type }}
+            - Spoiler type: ${SPOILER_TYPE}
+            - Test type: ${{ github.event.inputs.test_type }}
             - Includes generated test documentation
             "
 
@@ -234,6 +252,7 @@ jobs:
     name: Test Minimal Spoiler Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    if: github.event.inputs.test_type == 'templates-minimal'
 
     strategy:
       fail-fast: false
@@ -444,6 +463,7 @@ jobs:
     name: Test Full Spoiler Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    if: github.event.inputs.test_type == 'templates-full'
 
     strategy:
       fail-fast: false
@@ -654,6 +674,7 @@ jobs:
     name: Test Multiplayer Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    if: github.event.inputs.test_type == 'multiplayer'
 
     strategy:
       fail-fast: false
@@ -862,6 +883,7 @@ jobs:
     name: Test Minimal Multitemplate Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    if: github.event.inputs.test_type == 'multitemplate-minimal'
 
     strategy:
       fail-fast: false
@@ -1077,6 +1099,7 @@ jobs:
     name: Test Full Multitemplate Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    if: github.event.inputs.test_type == 'multitemplate-full'
 
     strategy:
       fail-fast: false
@@ -1293,6 +1316,7 @@ jobs:
     name: Test Multiworld Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    if: github.event.inputs.test_type == 'multiworld'
 
     strategy:
       fail-fast: false
