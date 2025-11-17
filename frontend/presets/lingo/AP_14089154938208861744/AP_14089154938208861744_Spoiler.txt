@@ -206,24 +206,502 @@ Playthrough:
 
 }
 1: {
+  Fours: Wanderlust
+  Hallway Room (1) - OUT: Iceland Trap
+  Hidden Room - DEAD END: :)
+  Hidden Room - OPEN: :)
+  Hub Room - OPEN: :)
+  Hub Room - TRACE: Atbash Trap
+  Outside The Bold - BEGIN: :)
+  Outside The Undeterred - ONE: Wanderlust
+  Outside The Wondrous - SHRINK: Wanderlust
+  Second Room - Good Luck: Wanderlust
+  Starting Room - HI: Slowness Trap
+  Starting Room - HIDDEN: The Feeling of Being Lost
   The Eyes They See - NEAR: Blue
+  The Seeker - Achievement: The Feeling of Being Lost
+  The Traveled - Achievement: :)
+  The Traveled - HELLO: Iceland Trap
+  Threes: Empty White Hallways
+  Twos: :)
+  Welcome Back Area - WELCOME BACK: Puzzle Skip
 }
 2: {
+  Elements Area - UNDISTRACTED: Slowness Trap
   Hallway Room - First Room: Purple
   Hallway Room - Fourth Room: Black
+  Hallway Room - Second Room: Wanderlust
+  Hallway Room - Third Room: Puzzle Skip
+  Outside The Undeterred - PEN: Green
+  The Undeterred - Achievement: Wanderlust
 }
 3: {
+  Directional Gallery - PARANOID: :)
+  Directional Gallery - TURN, LEARN: :)
+  Fives: The Feeling of Being Lost
+  Hedge Maze - DOWN: Empty White Hallways
+  Hedge Maze - Hide and Seek: Puzzle Skip
+  Hub Room - LOST: Puzzle Skip
+  Hub Room - ORDER: Empty White Hallways
+  Hub Room - RAT: Empty White Hallways
+  Outside The Agreeable - BLACK: Wanderlust
+  Outside The Agreeable - CLOSE: The Feeling of Being Lost
+  Outside The Agreeable - RIGHT: Puzzle Skip
+  Owl Hallway - STRAYS: Iceland Trap
+  Second Room - LEVEL 2: Wanderlust
+  Symmetry Room - LEAF, FEEL: The Feeling of Being Lost
+  Symmetry Room - NEAR, FAR: :)
+  Symmetry Room - WARTS, STRAW: Puzzle Skip
   The Agreeable - Achievement: Red
+  The Agreeable - BYE: Slowness Trap
+  The Fearless - Achievement: The Feeling of Being Lost
+  The Fearless - First Floor Puzzles: Wanderlust
+  The Fearless - Second Floor Puzzles: Wanderlust
+  The Observant - Achievement: Iceland Trap
+  The Observant - FOUR (1), FOUR (2): Wanderlust
+  The Observant - SIX: Empty White Hallways
+  The Perceptive - Achievement: Wanderlust
+  The Perceptive - GAZE: Iceland Trap
+  Welcome Back Area - CLOCKWISE: Empty White Hallways
 }
 4: {
+  Crossroads - DECAY: Atbash Trap
+  Dread Hallway - DREAD: Empty White Hallways
+  Hub Room - SLAUGHTER: Puzzle Skip
+  Knight Night Room - TRUSTED: Wanderlust
+  Outside The Agreeable - MASSACRED: :)
+  Outside The Bold - UNOPEN: The Feeling of Being Lost
+  Outside The Initiated - OXEN: Pilgrim Room - Sun Painting
   Outside The Initiated - UNCOVER: Orange
+  Rhyme Room (Cross) - Exit Puzzles: Puzzle Skip
+  Rhyme Room (Smiley) - Puzzles Toward Target: The Feeling of Being Lost
+  Rhyme Room (Target) - Puzzles Toward Cross: Slowness Trap
+  Rhyme Room - Circle/Looped Square Wall: Puzzle Skip
+  Rhyme Room - Circle/Smiley Wall: :)
+  Rhyme Room - Cross/Looped Square Wall: :)
+  Rhyme Room - Target/Looped Square Wall: The Feeling of Being Lost
+  The Artistic - Panda and Lattice: Puzzle Skip
+  The Bold - Achievement: Wanderlust
+  The Initiated - Achievement: Gray
+  The Tenacious - Achievement: :)
+  The Tenacious - Palindromes: The Feeling of Being Lost
+  The Tenacious - White Palindromes: Slowness Trap
 }
 5: {
+  Champion's Rest - YOU: Empty White Hallways
+  Color Barriers - BLUE and YELLOW: Puzzle Skip
+  Color Barriers - GREEN, ORANGE and PURPLE: :)
+  Color Barriers - RED and BLUE: The Feeling of Being Lost
+  Color Barriers - RED and YELLOW: Wanderlust
+  Color Hunt - BLUE: The Feeling of Being Lost
+  Color Hunt - EXIT: The Feeling of Being Lost
+  Color Hunt - GREEN: Slowness Trap
+  Color Hunt - ORANGE: Wanderlust
+  Color Hunt - PURPLE: Atbash Trap
+  Color Hunt - RED: Puzzle Skip
+  Color Hunt - YELLOW: Puzzle Skip
+  Courtyard - FIRST, SECOND, THIRD, FOURTH: The Feeling of Being Lost
+  Directional Gallery - 834283054: Iceland Trap
+  Directional Gallery - WADED + WEE: Empty White Hallways
+  Eights: Atbash Trap
+  Giant Sevens: The Feeling of Being Lost
+  Orange Tower Fifth Floor - DRAWL + RUNS: Empty White Hallways
+  Orange Tower Fifth Floor - SIZE (Small), SIZE (Big): Puzzle Skip
+  Orange Tower First Floor - DADS + ALE: Slowness Trap
+  Orange Tower First Floor - SECRET: Empty White Hallways
+  Orange Tower First Floor - Salt Pepper Door: Wanderlust
+  Orange Tower Fourth Floor - LEARNS + UNSEW: Slowness Trap
+  Orange Tower Third Floor - DEER + WREN: :)
+  Outside The Agreeable - Lookout Panels: The Feeling of Being Lost
+  Outside The Undeterred - ART + ART: Empty White Hallways
+  Outside The Wanderer - WANDERLUST: Yellow
+  Owl Hallway - READS + RUST: :)
+  Pilgrim Antechamber - PILGRIM: Puzzle Skip
+  Pilgrim Room - THIS: :)
+  Sevens: Empty White Hallways
+  Sixes: The Feeling of Being Lost
+  The Bearer - FARTHER: Wanderlust
+  The Bearer - MIDDLE: Puzzle Skip
+  The Bearer - SHORTCUT: The Feeling of Being Lost
+  The Colorful - Black: Puzzle Skip
+  The Colorful - Red: :)
+  The Colorful - White: Slowness Trap
   The End (Solved): Victory
+  The Incomparable - Achievement: The Feeling of Being Lost
+  The Optimistic - Achievement: Puzzle Skip
+  The Wanderer - Achievement: :)
+}
+6: {
+  Amen Name Area - AMEN, NAME: :)
+  Art Gallery - First Floor Puzzles: Puzzle Skip
+  Challenge Room - WELCOME: Iceland Trap
+  Crossroads - BEND HI: :)
+  Crossroads - LOST Pair: Iceland Trap
+  Crossroads - NOPE: Atbash Trap
+  Crossroads - THE EYES: Atbash Trap
+  Crossroads - TURN/RUNT: The Feeling of Being Lost
+  Crossroads - WE ROT: Atbash Trap
+  Crossroads - WORDS, SWORD: Empty White Hallways
+  Nines: Wanderlust
+  Orange Tower Fourth Floor - HOT CRUSTS: Wanderlust
+  Orange Tower Fourth Floor - IRK HORN: Wanderlust
+  Outside The Undeterred - ZERO: Wanderlust
+  Pilgrim Room - HOT CRUST: :)
+  Room Room - BASE: Wanderlust
+  The Artistic - Achievement: Puzzle Skip
+  The Artistic - Apple and Smiley: Wanderlust
+  The Artistic - Lattice and Apple: Empty White Hallways
+  The Artistic - Smiley and Panda: The Feeling of Being Lost
+  The Bearer - Achievement: Puzzle Skip
+  The Colorful - Blue: Brown
+  The Colorful - Green: Slowness Trap
+  The Colorful - Orange: Empty White Hallways
+  The Colorful - Purple: :)
+  The Colorful - Yellow: :)
+  The Discerning - Achievement: Iceland Trap
+  The Steady - Achievement: Wanderlust
+}
+7: {
+  Art Gallery - Fourth Floor Puzzles: Atbash Trap
+  Art Gallery - ORDER: Wanderlust
+  Art Gallery - Second Floor Puzzles: The Feeling of Being Lost
+  Art Gallery - Third Floor Puzzles: :)
+  Challenge Room - Achievement: Wanderlust
+  Outside The Undeterred - RAINY: Puzzle Skip
+  Outside The Wise - KITTEN, CAT: Atbash Trap
+  The Colorful - Achievement: Wanderlust
+  The Colorful - Brown: :)
+  The Colorful - Gray: Wanderlust
+  The Wise - Achievement: Iceland Trap
+  The Wondrous - Achievement: Puzzle Skip
 }
 
 Paths:
 
+Amen Name Area - AMEN, NAME
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Amen Name Area (through Lost Area - Exit)
+   =>   Amen Name Area
+Art Gallery - First Floor Puzzles
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Art Gallery
+   =>   Art Gallery -> Art Gallery to Art Gallery (First Floor)
+   =>   Art Gallery (First Floor)
+Art Gallery - Fourth Floor Puzzles
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Art Gallery
+   =>   Art Gallery -> Art Gallery to Art Gallery (Fourth Floor) (through Art Gallery - Fourth Floor)
+   =>   Art Gallery (Fourth Floor)
+Art Gallery - ORDER
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Art Gallery
+   =>   Art Gallery
+Art Gallery - Second Floor Puzzles
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Art Gallery
+   =>   Art Gallery -> Art Gallery to Art Gallery (Second Floor) (through Art Gallery - Second Floor)
+   =>   Art Gallery (Second Floor)
+Art Gallery - Third Floor Puzzles
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Art Gallery
+   =>   Art Gallery -> Art Gallery to Art Gallery (Third Floor) (through Art Gallery - Third Floor)
+   =>   Art Gallery (Third Floor)
+Challenge Room - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred -> Outside The Undeterred to Number Hunt (through Outside The Undeterred - Number Hunt)
+   =>   Number Hunt -> Number Hunt to Challenge Room (through Outside The Undeterred - Challenge Entrance)
+   =>   Challenge Room
+Challenge Room - WELCOME
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred -> Outside The Undeterred to Number Hunt (through Outside The Undeterred - Number Hunt)
+   =>   Number Hunt -> Number Hunt to Challenge Room (through Outside The Undeterred - Challenge Entrance)
+   =>   Challenge Room
+Champion's Rest - YOU
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Color Hunt (through Sunwarps - 5 Sunwarp)
+   =>   Color Hunt -> Color Hunt to Champion's Rest (through Outside The Initiated - Entrance)
+   =>   Champion's Rest
+Color Barriers - BLUE and YELLOW
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Outside The Initiated (through Knight Night (Final) - Exit)
+   =>   Outside The Initiated
+Color Barriers - GREEN, ORANGE and PURPLE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Outside The Initiated (through Knight Night (Final) - Exit)
+   =>   Outside The Initiated
+Color Barriers - RED and BLUE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Outside The Initiated (through Knight Night (Final) - Exit)
+   =>   Outside The Initiated
+Color Barriers - RED and YELLOW
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor
+Color Hunt - BLUE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Color Hunt (through Sunwarps - 5 Sunwarp)
+   =>   Color Hunt
+Color Hunt - EXIT
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Color Hunt (through Sunwarps - 5 Sunwarp)
+   =>   Color Hunt
+Color Hunt - GREEN
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Color Hunt (through Sunwarps - 5 Sunwarp)
+   =>   Color Hunt
+Color Hunt - ORANGE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Color Hunt (through Sunwarps - 5 Sunwarp)
+   =>   Color Hunt
+Color Hunt - PURPLE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Color Hunt (through Sunwarps - 5 Sunwarp)
+   =>   Color Hunt
+Color Hunt - RED
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Color Hunt (through Sunwarps - 5 Sunwarp)
+   =>   Color Hunt
+Color Hunt - YELLOW
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Color Hunt (through Sunwarps - 5 Sunwarp)
+   =>   Color Hunt
+Courtyard - FIRST, SECOND, THIRD, FOURTH
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Courtyard
+   =>   Courtyard -> Courtyard to First Second Third Fourth
+   =>   First Second Third Fourth
+Crossroads - BEND HI
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads
+Crossroads - DECAY
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads
+Crossroads - LOST Pair
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Lost Area (through Crossroads - Words Sword Door)
+   =>   Lost Area
+Crossroads - NOPE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads
+Crossroads - THE EYES
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads
+Crossroads - TURN/RUNT
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads
+Crossroads - WE ROT
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads
+Crossroads - WORDS, SWORD
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads
+Directional Gallery - 834283054
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Directional Gallery (through Sunwarps - 6 Sunwarp)
+   =>   Directional Gallery
+Directional Gallery - PARANOID
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Directional Gallery (through Sunwarps - 6 Sunwarp)
+   =>   Directional Gallery
+Directional Gallery - TURN, LEARN
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Directional Gallery (through Sunwarps - 6 Sunwarp)
+   =>   Directional Gallery
+Directional Gallery - WADED + WEE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Directional Gallery (through Sunwarps - 6 Sunwarp)
+   =>   Directional Gallery
+Dread Hallway - DREAD
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Dread Hallway (through Outside The Agreeable - Black Door)
+   =>   Dread Hallway
+Eights
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred -> Outside The Undeterred to Number Hunt (through Outside The Undeterred - Number Hunt)
+   =>   Number Hunt
+Elements Area - UNDISTRACTED
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Hallway Room (1)
+   =>   Hallway Room (1) -> Hallway Room (1) to Hallway Room (2) (through Hallway Room (1) - Exit)
+   =>   Hallway Room (2) -> Hallway Room (2) to Hallway Room (3) (through Hallway Room (2) - Exit)
+   =>   Hallway Room (3) -> Hallway Room (3) to Hallway Room (4) (through Hallway Room (3) - Exit)
+   =>   Hallway Room (4) -> Hallway Room (4) to Elements Area (through Hallway Room (4) - Exit)
+   =>   Elements Area
+Fives
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred -> Outside The Undeterred to Number Hunt (through Outside The Undeterred - Number Hunt)
+   =>   Number Hunt
+Fours
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred
+Giant Sevens
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Hedge Maze (through Hub Room - Shortcut to Hedge Maze)
+   =>   Hedge Maze -> Hedge Maze to The Incomparable (through Hedge Maze - Observant Entrance)
+   =>   The Incomparable
+Hallway Room (1) - OUT
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Hallway Room (1)
+   =>   Hallway Room (1)
 Hallway Room - First Room
         Menu -> Menu to Starting Room
    =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
@@ -243,6 +721,234 @@ Hallway Room - Fourth Room
    =>   Hallway Room (2) -> Hallway Room (2) to Hallway Room (3) (through Hallway Room (2) - Exit)
    =>   Hallway Room (3) -> Hallway Room (3) to Hallway Room (4) (through Hallway Room (3) - Exit)
    =>   Hallway Room (4)
+Hallway Room - Second Room
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Hallway Room (1)
+   =>   Hallway Room (1) -> Hallway Room (1) to Hallway Room (2) (through Hallway Room (1) - Exit)
+   =>   Hallway Room (2)
+Hallway Room - Third Room
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Hallway Room (1)
+   =>   Hallway Room (1) -> Hallway Room (1) to Hallway Room (2) (through Hallway Room (1) - Exit)
+   =>   Hallway Room (2) -> Hallway Room (2) to Hallway Room (3) (through Hallway Room (2) - Exit)
+   =>   Hallway Room (3)
+Hedge Maze - DOWN
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Hedge Maze (through Hub Room - Shortcut to Hedge Maze)
+   =>   Hedge Maze
+Hedge Maze - Hide and Seek
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Hedge Maze (through Hub Room - Shortcut to Hedge Maze)
+   =>   Hedge Maze
+Hidden Room - DEAD END
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room
+Hidden Room - OPEN
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room
+Hub Room - LOST
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room
+Hub Room - OPEN
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room
+Hub Room - ORDER
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room
+Hub Room - RAT
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room
+Hub Room - SLAUGHTER
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room
+Hub Room - TRACE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room
+Knight Night Room - TRUSTED
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night (Final) (through Knight Night (Outer Ring) - To End)
+   =>   Knight Night (Final)
+Nines
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred -> Outside The Undeterred to Number Hunt (through Outside The Undeterred - Number Hunt)
+   =>   Number Hunt
+Orange Tower Fifth Floor - DRAWL + RUNS
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Orange Tower Fifth Floor (through Orange Tower - Fifth Floor)
+   =>   Orange Tower Fifth Floor
+Orange Tower Fifth Floor - SIZE (Small), SIZE (Big)
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Orange Tower Fifth Floor (through Orange Tower - Fifth Floor)
+   =>   Orange Tower Fifth Floor
+Orange Tower First Floor - DADS + ALE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Rhyme Room (Smiley) (through Orange Tower Third Floor - Rhyme Room Entrance)
+   =>   Rhyme Room (Smiley) -> Rhyme Room (Smiley) to Rhyme Room (Target) (through Rhyme Room (Smiley) - Door to Target)
+   =>   Rhyme Room (Target) -> Rhyme Room (Target) to Rhyme Room (Cross) (through Rhyme Room (Target) - Door to Cross)
+   =>   Rhyme Room (Cross) -> Rhyme Room (Cross) to Outside The Wanderer (through Rhyme Room (Cross) - Exit)
+   =>   Outside The Wanderer -> Outside The Wanderer to Orange Tower First Floor (through Outside The Wanderer - Tower Entrance)
+   =>   Orange Tower First Floor
+Orange Tower First Floor - SECRET
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Rhyme Room (Smiley) (through Orange Tower Third Floor - Rhyme Room Entrance)
+   =>   Rhyme Room (Smiley) -> Rhyme Room (Smiley) to Rhyme Room (Target) (through Rhyme Room (Smiley) - Door to Target)
+   =>   Rhyme Room (Target) -> Rhyme Room (Target) to Rhyme Room (Cross) (through Rhyme Room (Target) - Door to Cross)
+   =>   Rhyme Room (Cross) -> Rhyme Room (Cross) to Outside The Wanderer (through Rhyme Room (Cross) - Exit)
+   =>   Outside The Wanderer -> Outside The Wanderer to Orange Tower First Floor (through Outside The Wanderer - Tower Entrance)
+   =>   Orange Tower First Floor
+Orange Tower First Floor - Salt Pepper Door
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Rhyme Room (Smiley) (through Orange Tower Third Floor - Rhyme Room Entrance)
+   =>   Rhyme Room (Smiley) -> Rhyme Room (Smiley) to Rhyme Room (Target) (through Rhyme Room (Smiley) - Door to Target)
+   =>   Rhyme Room (Target) -> Rhyme Room (Target) to Rhyme Room (Cross) (through Rhyme Room (Target) - Door to Cross)
+   =>   Rhyme Room (Cross) -> Rhyme Room (Cross) to Outside The Wanderer (through Rhyme Room (Cross) - Exit)
+   =>   Outside The Wanderer -> Outside The Wanderer to Orange Tower First Floor (through Outside The Wanderer - Tower Entrance)
+   =>   Orange Tower First Floor
+Orange Tower Fourth Floor - HOT CRUSTS
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor
+Orange Tower Fourth Floor - IRK HORN
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor
+Orange Tower Fourth Floor - LEARNS + UNSEW
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor
+Orange Tower Third Floor - DEER + WREN
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor
+Outside The Agreeable - BLACK
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable
+Outside The Agreeable - CLOSE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable
+Outside The Agreeable - Lookout Panels
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Compass Room
+   =>   Compass Room
+Outside The Agreeable - MASSACRED
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable
+Outside The Agreeable - RIGHT
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable
+Outside The Bold - BEGIN
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Color Hallways
+   =>   Color Hallways -> Color Hallways to Outside The Bold
+   =>   Outside The Bold
+Outside The Bold - UNOPEN
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Color Hallways
+   =>   Color Hallways -> Color Hallways to Outside The Bold
+   =>   Outside The Bold
+Outside The Initiated - OXEN
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Outside The Initiated (through Knight Night (Final) - Exit)
+   =>   Outside The Initiated
 Outside The Initiated - UNCOVER
         Menu -> Menu to Starting Room
    =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
@@ -250,6 +956,204 @@ Outside The Initiated - UNCOVER
    =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
    =>   Knight Night Exit -> Knight Night Exit to Outside The Initiated (through Knight Night (Final) - Exit)
    =>   Outside The Initiated
+Outside The Undeterred - ART + ART
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred
+Outside The Undeterred - ONE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred
+Outside The Undeterred - PEN
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred
+Outside The Undeterred - RAINY
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred
+Outside The Undeterred - ZERO
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred
+Outside The Wanderer - WANDERLUST
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Rhyme Room (Smiley) (through Orange Tower Third Floor - Rhyme Room Entrance)
+   =>   Rhyme Room (Smiley) -> Rhyme Room (Smiley) to Rhyme Room (Target) (through Rhyme Room (Smiley) - Door to Target)
+   =>   Rhyme Room (Target) -> Rhyme Room (Target) to Rhyme Room (Cross) (through Rhyme Room (Target) - Door to Cross)
+   =>   Rhyme Room (Cross) -> Rhyme Room (Cross) to Outside The Wanderer (through Rhyme Room (Cross) - Exit)
+   =>   Outside The Wanderer
+Outside The Wise - KITTEN, CAT
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Outside The Initiated (through Knight Night (Final) - Exit)
+   =>   Outside The Initiated -> Outside The Initiated to Outside The Wise
+   =>   Outside The Wise
+Outside The Wondrous - SHRINK
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Directional Gallery (through Sunwarps - 6 Sunwarp)
+   =>   Directional Gallery -> Directional Gallery to Wondrous Lobby
+   =>   Wondrous Lobby -> Wondrous Lobby to Outside The Wondrous
+   =>   Outside The Wondrous
+Owl Hallway - READS + RUST
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Owl Hallway
+   =>   Owl Hallway
+Owl Hallway - STRAYS
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Owl Hallway
+   =>   Owl Hallway
+Pilgrim Antechamber - PILGRIM
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Sun Painting
+   =>   Pilgrim Antechamber
+Pilgrim Room - HOT CRUST
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Sun Painting
+   =>   Pilgrim Antechamber
+Pilgrim Room - THIS
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Sun Painting
+   =>   Pilgrim Antechamber -> Pilgrim Antechamber to Pilgrim Room (through Pilgrim Antechamber - Exit)
+   =>   Pilgrim Room
+Rhyme Room (Cross) - Exit Puzzles
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Rhyme Room (Smiley) (through Orange Tower Third Floor - Rhyme Room Entrance)
+   =>   Rhyme Room (Smiley) -> Rhyme Room (Smiley) to Rhyme Room (Target) (through Rhyme Room (Smiley) - Door to Target)
+   =>   Rhyme Room (Target) -> Rhyme Room (Target) to Rhyme Room (Cross) (through Rhyme Room (Target) - Door to Cross)
+   =>   Rhyme Room (Cross)
+Rhyme Room (Smiley) - Puzzles Toward Target
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Rhyme Room (Smiley) (through Orange Tower Third Floor - Rhyme Room Entrance)
+   =>   Rhyme Room (Smiley)
+Rhyme Room (Target) - Puzzles Toward Cross
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Rhyme Room (Smiley) (through Orange Tower Third Floor - Rhyme Room Entrance)
+   =>   Rhyme Room (Smiley) -> Rhyme Room (Smiley) to Rhyme Room (Target) (through Rhyme Room (Smiley) - Door to Target)
+   =>   Rhyme Room (Target)
+Rhyme Room - Circle/Looped Square Wall
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Rhyme Room (Looped Square) (through Starting Room - Rhyme Room Entrance)
+   =>   Rhyme Room (Looped Square)
+Rhyme Room - Circle/Smiley Wall
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Rhyme Room (Circle) (through Hidden Room - Rhyme Room Entrance)
+   =>   Rhyme Room (Circle)
+Rhyme Room - Cross/Looped Square Wall
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Rhyme Room (Looped Square) (through Starting Room - Rhyme Room Entrance)
+   =>   Rhyme Room (Looped Square)
+Rhyme Room - Target/Looped Square Wall
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Rhyme Room (Looped Square) (through Starting Room - Rhyme Room Entrance)
+   =>   Rhyme Room (Looped Square)
+Room Room - BASE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Room Room
+   =>   Room Room
+Second Room - Good Luck
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room
+Second Room - LEVEL 2
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room
+Sevens
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred -> Outside The Undeterred to Number Hunt (through Outside The Undeterred - Number Hunt)
+   =>   Number Hunt
+Sixes
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred -> Outside The Undeterred to Number Hunt (through Outside The Undeterred - Number Hunt)
+   =>   Number Hunt
+Starting Room - HI
+        Menu -> Menu to Starting Room
+   =>   Starting Room
+Starting Room - HIDDEN
+        Menu -> Menu to Starting Room
+   =>   Starting Room
+Symmetry Room - LEAF, FEEL
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Near Far Area
+   =>   Near Far Area -> Near Far Area to Warts Straw Area (through Near Far Area - Door)
+   =>   Warts Straw Area -> Warts Straw Area to Leaf Feel Area (through Warts Straw Area - Door)
+   =>   Leaf Feel Area
+Symmetry Room - NEAR, FAR
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Near Far Area
+   =>   Near Far Area
+Symmetry Room - WARTS, STRAW
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Near Far Area
+   =>   Near Far Area -> Near Far Area to Warts Straw Area (through Near Far Area - Door)
+   =>   Warts Straw Area
 The Agreeable - Achievement
         Menu -> Menu to Starting Room
    =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
@@ -258,6 +1162,256 @@ The Agreeable - Achievement
    =>   Crossroads -> Crossroads to Outside The Agreeable
    =>   Outside The Agreeable -> Outside The Agreeable to The Agreeable (through Outside The Agreeable - Agreeable Entrance)
    =>   The Agreeable
+The Agreeable - BYE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to The Agreeable (through Outside The Agreeable - Agreeable Entrance)
+   =>   The Agreeable
+The Artistic - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley)
+The Artistic - Apple and Smiley
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Directional Gallery (through Sunwarps - 6 Sunwarp)
+   =>   Directional Gallery -> Directional Gallery to The Artistic (Apple)
+   =>   The Artistic (Apple)
+The Artistic - Lattice and Apple
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Directional Gallery (through Sunwarps - 6 Sunwarp)
+   =>   Directional Gallery -> Directional Gallery to The Artistic (Lattice)
+   =>   The Artistic (Lattice)
+The Artistic - Panda and Lattice
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Hallway Room (1)
+   =>   Hallway Room (1) -> Hallway Room (1) to The Artistic (Panda)
+   =>   The Artistic (Panda)
+The Artistic - Smiley and Panda
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley)
+The Bearer - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Roof (through Crossroads - Roof Access)
+   =>   Roof -> Roof to The Bearer
+   =>   The Bearer
+The Bearer - FARTHER
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Roof (through Crossroads - Roof Access)
+   =>   Roof -> Roof to The Bearer
+   =>   The Bearer
+The Bearer - MIDDLE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Roof (through Crossroads - Roof Access)
+   =>   Roof -> Roof to The Bearer
+   =>   The Bearer
+The Bearer - SHORTCUT
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Roof (through Crossroads - Roof Access)
+   =>   Roof -> Roof to Bearer Side Area
+   =>   Bearer Side Area
+The Bold - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Color Hallways
+   =>   Color Hallways -> Color Hallways to Outside The Bold
+   =>   Outside The Bold -> Outside The Bold to The Bold (through Outside The Bold - Bold Entrance)
+   =>   The Bold
+The Colorful - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Roof (through Crossroads - Roof Access)
+   =>   Roof -> Roof to The Colorful
+   =>   The Colorful
+The Colorful - Black
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Courtyard
+   =>   Courtyard -> Courtyard to The Colorful (White)
+   =>   The Colorful (White) -> The Colorful (White) to The Colorful (Black) (through The Colorful (White) - Progress Door)
+   =>   The Colorful (Black)
+The Colorful - Blue
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Courtyard
+   =>   Courtyard -> Courtyard to The Colorful (White)
+   =>   The Colorful (White) -> The Colorful (White) to The Colorful (Black) (through The Colorful (White) - Progress Door)
+   =>   The Colorful (Black) -> The Colorful (Black) to The Colorful (Red) (through The Colorful (Black) - Progress Door)
+   =>   The Colorful (Red) -> The Colorful (Red) to The Colorful (Yellow) (through The Colorful (Red) - Progress Door)
+   =>   The Colorful (Yellow) -> The Colorful (Yellow) to The Colorful (Blue) (through The Colorful (Yellow) - Progress Door)
+   =>   The Colorful (Blue)
+The Colorful - Brown
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Courtyard
+   =>   Courtyard -> Courtyard to The Colorful (White)
+   =>   The Colorful (White) -> The Colorful (White) to The Colorful (Black) (through The Colorful (White) - Progress Door)
+   =>   The Colorful (Black) -> The Colorful (Black) to The Colorful (Red) (through The Colorful (Black) - Progress Door)
+   =>   The Colorful (Red) -> The Colorful (Red) to The Colorful (Yellow) (through The Colorful (Red) - Progress Door)
+   =>   The Colorful (Yellow) -> The Colorful (Yellow) to The Colorful (Blue) (through The Colorful (Yellow) - Progress Door)
+   =>   The Colorful (Blue) -> The Colorful (Blue) to The Colorful (Purple) (through The Colorful (Blue) - Progress Door)
+   =>   The Colorful (Purple) -> The Colorful (Purple) to The Colorful (Orange) (through The Colorful (Purple) - Progress Door)
+   =>   The Colorful (Orange) -> The Colorful (Orange) to The Colorful (Green) (through The Colorful (Orange) - Progress Door)
+   =>   The Colorful (Green) -> The Colorful (Green) to The Colorful (Brown) (through The Colorful (Green) - Progress Door)
+   =>   The Colorful (Brown)
+The Colorful - Gray
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Courtyard
+   =>   Courtyard -> Courtyard to The Colorful (White)
+   =>   The Colorful (White) -> The Colorful (White) to The Colorful (Black) (through The Colorful (White) - Progress Door)
+   =>   The Colorful (Black) -> The Colorful (Black) to The Colorful (Red) (through The Colorful (Black) - Progress Door)
+   =>   The Colorful (Red) -> The Colorful (Red) to The Colorful (Yellow) (through The Colorful (Red) - Progress Door)
+   =>   The Colorful (Yellow) -> The Colorful (Yellow) to The Colorful (Blue) (through The Colorful (Yellow) - Progress Door)
+   =>   The Colorful (Blue) -> The Colorful (Blue) to The Colorful (Purple) (through The Colorful (Blue) - Progress Door)
+   =>   The Colorful (Purple) -> The Colorful (Purple) to The Colorful (Orange) (through The Colorful (Purple) - Progress Door)
+   =>   The Colorful (Orange) -> The Colorful (Orange) to The Colorful (Green) (through The Colorful (Orange) - Progress Door)
+   =>   The Colorful (Green) -> The Colorful (Green) to The Colorful (Brown) (through The Colorful (Green) - Progress Door)
+   =>   The Colorful (Brown) -> The Colorful (Brown) to The Colorful (Gray) (through The Colorful (Brown) - Progress Door)
+   =>   The Colorful (Gray)
+The Colorful - Green
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Courtyard
+   =>   Courtyard -> Courtyard to The Colorful (White)
+   =>   The Colorful (White) -> The Colorful (White) to The Colorful (Black) (through The Colorful (White) - Progress Door)
+   =>   The Colorful (Black) -> The Colorful (Black) to The Colorful (Red) (through The Colorful (Black) - Progress Door)
+   =>   The Colorful (Red) -> The Colorful (Red) to The Colorful (Yellow) (through The Colorful (Red) - Progress Door)
+   =>   The Colorful (Yellow) -> The Colorful (Yellow) to The Colorful (Blue) (through The Colorful (Yellow) - Progress Door)
+   =>   The Colorful (Blue) -> The Colorful (Blue) to The Colorful (Purple) (through The Colorful (Blue) - Progress Door)
+   =>   The Colorful (Purple) -> The Colorful (Purple) to The Colorful (Orange) (through The Colorful (Purple) - Progress Door)
+   =>   The Colorful (Orange) -> The Colorful (Orange) to The Colorful (Green) (through The Colorful (Orange) - Progress Door)
+   =>   The Colorful (Green)
+The Colorful - Orange
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Courtyard
+   =>   Courtyard -> Courtyard to The Colorful (White)
+   =>   The Colorful (White) -> The Colorful (White) to The Colorful (Black) (through The Colorful (White) - Progress Door)
+   =>   The Colorful (Black) -> The Colorful (Black) to The Colorful (Red) (through The Colorful (Black) - Progress Door)
+   =>   The Colorful (Red) -> The Colorful (Red) to The Colorful (Yellow) (through The Colorful (Red) - Progress Door)
+   =>   The Colorful (Yellow) -> The Colorful (Yellow) to The Colorful (Blue) (through The Colorful (Yellow) - Progress Door)
+   =>   The Colorful (Blue) -> The Colorful (Blue) to The Colorful (Purple) (through The Colorful (Blue) - Progress Door)
+   =>   The Colorful (Purple) -> The Colorful (Purple) to The Colorful (Orange) (through The Colorful (Purple) - Progress Door)
+   =>   The Colorful (Orange)
+The Colorful - Purple
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Courtyard
+   =>   Courtyard -> Courtyard to The Colorful (White)
+   =>   The Colorful (White) -> The Colorful (White) to The Colorful (Black) (through The Colorful (White) - Progress Door)
+   =>   The Colorful (Black) -> The Colorful (Black) to The Colorful (Red) (through The Colorful (Black) - Progress Door)
+   =>   The Colorful (Red) -> The Colorful (Red) to The Colorful (Yellow) (through The Colorful (Red) - Progress Door)
+   =>   The Colorful (Yellow) -> The Colorful (Yellow) to The Colorful (Blue) (through The Colorful (Yellow) - Progress Door)
+   =>   The Colorful (Blue) -> The Colorful (Blue) to The Colorful (Purple) (through The Colorful (Blue) - Progress Door)
+   =>   The Colorful (Purple)
+The Colorful - Red
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Courtyard
+   =>   Courtyard -> Courtyard to The Colorful (White)
+   =>   The Colorful (White) -> The Colorful (White) to The Colorful (Black) (through The Colorful (White) - Progress Door)
+   =>   The Colorful (Black) -> The Colorful (Black) to The Colorful (Red) (through The Colorful (Black) - Progress Door)
+   =>   The Colorful (Red)
+The Colorful - White
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Courtyard
+   =>   Courtyard -> Courtyard to The Colorful (White)
+   =>   The Colorful (White)
+The Colorful - Yellow
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Courtyard
+   =>   Courtyard -> Courtyard to The Colorful (White)
+   =>   The Colorful (White) -> The Colorful (White) to The Colorful (Black) (through The Colorful (White) - Progress Door)
+   =>   The Colorful (Black) -> The Colorful (Black) to The Colorful (Red) (through The Colorful (Black) - Progress Door)
+   =>   The Colorful (Red) -> The Colorful (Red) to The Colorful (Yellow) (through The Colorful (Red) - Progress Door)
+   =>   The Colorful (Yellow)
+The Discerning - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to The Discerning (through Crossroads - Discerning Entrance)
+   =>   The Discerning
 The End (Solved)
         Menu -> Menu to Starting Room
    =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
@@ -278,3 +1432,190 @@ The Eyes They See - NEAR
    =>   Outside The Agreeable -> Outside The Agreeable to Directional Gallery (through Sunwarps - 6 Sunwarp)
    =>   Directional Gallery -> Directional Gallery to The Eyes They See
    =>   The Eyes They See
+The Fearless - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to The Perceptive (through Hedge Maze - Painting Shortcut)
+   =>   The Perceptive -> The Perceptive to The Fearless (First Floor)
+   =>   The Fearless (First Floor) -> The Fearless (First Floor) to The Fearless (through The Fearless (Second Floor) - Third Floor)
+   =>   The Fearless
+The Fearless - First Floor Puzzles
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to The Perceptive (through Hedge Maze - Painting Shortcut)
+   =>   The Perceptive -> The Perceptive to The Fearless (First Floor)
+   =>   The Fearless (First Floor)
+The Fearless - Second Floor Puzzles
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to The Perceptive (through Hedge Maze - Painting Shortcut)
+   =>   The Perceptive -> The Perceptive to The Fearless (First Floor)
+   =>   The Fearless (First Floor) -> The Fearless (First Floor) to The Fearless (Second Floor) (through The Fearless (First Floor) - Second Floor)
+   =>   The Fearless (Second Floor)
+The Incomparable - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Hedge Maze (through Hub Room - Shortcut to Hedge Maze)
+   =>   Hedge Maze -> Hedge Maze to The Incomparable (through Hedge Maze - Observant Entrance)
+   =>   The Incomparable
+The Initiated - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Outside The Initiated (through Knight Night (Final) - Exit)
+   =>   Outside The Initiated -> Outside The Initiated to The Initiated (through Outside The Initiated - Initiated Entrance)
+   =>   The Initiated
+The Observant - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Hedge Maze (through Hub Room - Shortcut to Hedge Maze)
+   =>   Hedge Maze -> Hedge Maze to The Observant (through Hedge Maze - Observant Entrance)
+   =>   The Observant
+The Observant - FOUR (1), FOUR (2)
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Hedge Maze (through Hub Room - Shortcut to Hedge Maze)
+   =>   Hedge Maze -> Hedge Maze to The Observant (through Hedge Maze - Observant Entrance)
+   =>   The Observant
+The Observant - SIX
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Hedge Maze (through Hub Room - Shortcut to Hedge Maze)
+   =>   Hedge Maze -> Hedge Maze to The Observant (through Hedge Maze - Observant Entrance)
+   =>   The Observant
+The Optimistic - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Outside The Initiated (through Knight Night (Final) - Exit)
+   =>   Outside The Initiated -> Outside The Initiated to The Optimistic
+   =>   The Optimistic
+The Perceptive - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to The Perceptive (through Hedge Maze - Painting Shortcut)
+   =>   The Perceptive
+The Perceptive - GAZE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to The Perceptive (through Hedge Maze - Painting Shortcut)
+   =>   The Perceptive
+The Seeker - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to The Seeker (through Hidden Room - Seeker Entrance)
+   =>   The Seeker
+The Steady - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Color Hallways
+   =>   Color Hallways -> Color Hallways to Outside The Bold
+   =>   Outside The Bold -> Outside The Bold to The Steady (Rose) (through Outside The Bold - Steady Entrance)
+   =>   The Steady (Rose) -> The Steady (Rose) to The Steady (Carnation) (through The Steady (Rose) - Right Exit)
+   =>   The Steady (Carnation) -> The Steady (Carnation) to The Steady (Sunflower) (through The Steady (Carnation) - Right Exit)
+   =>   The Steady (Sunflower) -> The Steady (Sunflower) to The Steady (through The Steady (Sunflower) - Back Exit)
+   =>   The Steady
+The Tenacious - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to The Tenacious (through Hub Room - Tenacious Entrance)
+   =>   The Tenacious
+The Tenacious - Palindromes
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to The Tenacious (through Hub Room - Tenacious Entrance)
+   =>   The Tenacious
+The Tenacious - White Palindromes
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to The Tenacious (through Hub Room - Tenacious Entrance)
+   =>   The Tenacious
+The Traveled - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to The Traveled (through Hub Room - Traveled Entrance)
+   =>   The Traveled
+The Traveled - HELLO
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to The Traveled (through Hub Room - Traveled Entrance)
+   =>   The Traveled
+The Undeterred - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred -> Outside The Undeterred to The Undeterred (through Outside The Undeterred - Undeterred Entrance)
+   =>   The Undeterred
+The Wanderer - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Rhyme Room (Smiley) (through Orange Tower Third Floor - Rhyme Room Entrance)
+   =>   Rhyme Room (Smiley) -> Rhyme Room (Smiley) to Rhyme Room (Target) (through Rhyme Room (Smiley) - Door to Target)
+   =>   Rhyme Room (Target) -> Rhyme Room (Target) to Rhyme Room (Cross) (through Rhyme Room (Target) - Door to Cross)
+   =>   Rhyme Room (Cross) -> Rhyme Room (Cross) to Outside The Wanderer (through Rhyme Room (Cross) - Exit)
+   =>   Outside The Wanderer -> Outside The Wanderer to The Wanderer (through Outside The Wanderer - Wanderer Entrance)
+   =>   The Wanderer
+The Wise - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Outside The Initiated (through Knight Night (Final) - Exit)
+   =>   Outside The Initiated -> Outside The Initiated to Outside The Wise
+   =>   Outside The Wise -> Outside The Wise to The Wise (through Outside The Wise - Wise Entrance)
+   =>   The Wise
+The Wondrous - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Directional Gallery (through Sunwarps - 6 Sunwarp)
+   =>   Directional Gallery -> Directional Gallery to Wondrous Lobby
+   =>   Wondrous Lobby -> Wondrous Lobby to Outside The Wondrous
+   =>   Outside The Wondrous -> Outside The Wondrous to The Wondrous (Doorknob) (through Outside The Wondrous - Wondrous Entrance)
+   =>   The Wondrous (Doorknob) -> The Wondrous (Doorknob) to The Wondrous (Table)
+   =>   The Wondrous (Table) -> The Wondrous (Table) to The Wondrous
+   =>   The Wondrous
+Threes
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred
+Twos
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred
+Welcome Back Area - CLOCKWISE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Welcome Back Area
+   =>   Welcome Back Area
+Welcome Back Area - WELCOME BACK
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Welcome Back Area
+   =>   Welcome Back Area
