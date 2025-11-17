@@ -3,7 +3,7 @@
   "game_name": "Overcooked! 2",
   "game_directory": "overcooked2",
   "archipelago_version": "0.6.4",
-  "generation_seed": 1,
+  "generation_seed": 9,
   "player_names": {
     "1": "Player1"
   },
@@ -1203,7 +1203,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-5"
+                  "value": "Chinese 1-7"
                 },
                 {
                   "type": "constant",
@@ -1212,7 +1212,7 @@
               ]
             },
             "item": {
-              "name": "Progressive Dash",
+              "name": "Kevin-3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1227,7 +1227,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-5"
+                  "value": "Chinese 1-7"
                 },
                 {
                   "type": "constant",
@@ -1251,7 +1251,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-5"
+                  "value": "Chinese 1-7"
                 },
                 {
                   "type": "constant",
@@ -1275,7 +1275,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-5"
+                  "value": "Chinese 1-7"
                 },
                 {
                   "type": "constant",
@@ -1299,7 +1299,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-5"
+                  "value": "Chinese 1-7"
                 },
                 {
                   "type": "constant",
@@ -1338,7 +1338,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-6"
+                  "value": "Chinese 1-6"
                 },
                 {
                   "type": "constant",
@@ -1347,9 +1347,9 @@
               ]
             },
             "item": {
-              "name": "Coin Purse",
+              "name": "Order Lookahead",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1362,7 +1362,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-6"
+                  "value": "Chinese 1-6"
                 },
                 {
                   "type": "constant",
@@ -1386,7 +1386,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-6"
+                  "value": "Chinese 1-6"
                 },
                 {
                   "type": "constant",
@@ -1410,7 +1410,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-6"
+                  "value": "Chinese 1-6"
                 },
                 {
                   "type": "constant",
@@ -1434,7 +1434,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-6"
+                  "value": "Chinese 1-6"
                 },
                 {
                   "type": "constant",
@@ -1473,7 +1473,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-6"
+                  "value": "Story 4-3"
                 },
                 {
                   "type": "constant",
@@ -1482,7 +1482,7 @@
               ]
             },
             "item": {
-              "name": "Larger Tip Jar",
+              "name": "Progressive Dash",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1497,7 +1497,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-6"
+                  "value": "Story 4-3"
                 },
                 {
                   "type": "constant",
@@ -1521,7 +1521,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-6"
+                  "value": "Story 4-3"
                 },
                 {
                   "type": "constant",
@@ -1545,7 +1545,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-6"
+                  "value": "Story 4-3"
                 },
                 {
                   "type": "constant",
@@ -1569,7 +1569,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-6"
+                  "value": "Story 4-3"
                 },
                 {
                   "type": "constant",
@@ -1608,7 +1608,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-4"
+                  "value": "Story 5-5"
                 },
                 {
                   "type": "constant",
@@ -1617,9 +1617,9 @@
               ]
             },
             "item": {
-              "name": "Kevin-8",
+              "name": "Burn Leniency",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -1632,7 +1632,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-4"
+                  "value": "Story 5-5"
                 },
                 {
                   "type": "constant",
@@ -1656,7 +1656,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-4"
+                  "value": "Story 5-5"
                 },
                 {
                   "type": "constant",
@@ -1680,7 +1680,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-4"
+                  "value": "Story 5-5"
                 },
                 {
                   "type": "constant",
@@ -1704,7 +1704,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-4"
+                  "value": "Story 5-5"
                 },
                 {
                   "type": "constant",
@@ -1743,7 +1743,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-3"
+                  "value": "Story 6-4"
                 },
                 {
                   "type": "constant",
@@ -1752,7 +1752,7 @@
               ]
             },
             "item": {
-              "name": "Progressive Throw/Catch",
+              "name": "Spare Plate",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1767,7 +1767,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-3"
+                  "value": "Story 6-4"
                 },
                 {
                   "type": "constant",
@@ -1791,7 +1791,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-3"
+                  "value": "Story 6-4"
                 },
                 {
                   "type": "constant",
@@ -1815,7 +1815,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-3"
+                  "value": "Story 6-4"
                 },
                 {
                   "type": "constant",
@@ -1839,7 +1839,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-3"
+                  "value": "Story 6-4"
                 },
                 {
                   "type": "constant",
@@ -1878,7 +1878,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-4"
+                  "value": "Story 6-2"
                 },
                 {
                   "type": "constant",
@@ -1902,7 +1902,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-4"
+                  "value": "Story 6-2"
                 },
                 {
                   "type": "constant",
@@ -1926,7 +1926,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-4"
+                  "value": "Story 6-2"
                 },
                 {
                   "type": "constant",
@@ -1950,7 +1950,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-4"
+                  "value": "Story 6-2"
                 },
                 {
                   "type": "constant",
@@ -1974,7 +1974,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-4"
+                  "value": "Story 6-2"
                 },
                 {
                   "type": "constant",
@@ -2013,7 +2013,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-3"
+                  "value": "SOBO 1-4"
                 },
                 {
                   "type": "constant",
@@ -2022,7 +2022,7 @@
               ]
             },
             "item": {
-              "name": "Fire Extinguisher",
+              "name": "Purple Ramp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2037,7 +2037,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-3"
+                  "value": "SOBO 1-4"
                 },
                 {
                   "type": "constant",
@@ -2061,7 +2061,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-3"
+                  "value": "SOBO 1-4"
                 },
                 {
                   "type": "constant",
@@ -2085,7 +2085,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-3"
+                  "value": "SOBO 1-4"
                 },
                 {
                   "type": "constant",
@@ -2109,7 +2109,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-3"
+                  "value": "SOBO 1-4"
                 },
                 {
                   "type": "constant",
@@ -2148,7 +2148,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-6"
+                  "value": "Story 1-4"
                 },
                 {
                   "type": "constant",
@@ -2157,7 +2157,7 @@
               ]
             },
             "item": {
-              "name": "Emote Wheel",
+              "name": "Bonus Star",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2172,7 +2172,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-6"
+                  "value": "Story 1-4"
                 },
                 {
                   "type": "constant",
@@ -2196,7 +2196,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-6"
+                  "value": "Story 1-4"
                 },
                 {
                   "type": "constant",
@@ -2220,7 +2220,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-6"
+                  "value": "Story 1-4"
                 },
                 {
                   "type": "constant",
@@ -2244,7 +2244,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-6"
+                  "value": "Story 1-4"
                 },
                 {
                   "type": "constant",
@@ -2283,7 +2283,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Christmas 1-5"
+                  "value": "Story 3-5"
                 },
                 {
                   "type": "constant",
@@ -2292,7 +2292,7 @@
               ]
             },
             "item": {
-              "name": "Sharp Knife",
+              "name": "Kevin-7",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2307,7 +2307,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Christmas 1-5"
+                  "value": "Story 3-5"
                 },
                 {
                   "type": "constant",
@@ -2331,7 +2331,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Christmas 1-5"
+                  "value": "Story 3-5"
                 },
                 {
                   "type": "constant",
@@ -2355,7 +2355,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Christmas 1-5"
+                  "value": "Story 3-5"
                 },
                 {
                   "type": "constant",
@@ -2379,7 +2379,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Christmas 1-5"
+                  "value": "Story 3-5"
                 },
                 {
                   "type": "constant",
@@ -2418,7 +2418,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Moon 1-2"
+                  "value": "SOBO 1-5"
                 },
                 {
                   "type": "constant",
@@ -2427,9 +2427,9 @@
               ]
             },
             "item": {
-              "name": "Wok Wheels",
+              "name": "Faster Respawn Time",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2442,7 +2442,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Moon 1-2"
+                  "value": "SOBO 1-5"
                 },
                 {
                   "type": "constant",
@@ -2466,7 +2466,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Moon 1-2"
+                  "value": "SOBO 1-5"
                 },
                 {
                   "type": "constant",
@@ -2490,7 +2490,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Moon 1-2"
+                  "value": "SOBO 1-5"
                 },
                 {
                   "type": "constant",
@@ -2514,7 +2514,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Moon 1-2"
+                  "value": "SOBO 1-5"
                 },
                 {
                   "type": "constant",
@@ -2553,7 +2553,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-2"
+                  "value": "Story 2-1"
                 },
                 {
                   "type": "constant",
@@ -2562,9 +2562,9 @@
               ]
             },
             "item": {
-              "name": "Kevin-3",
+              "name": "Bonus Star",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2577,7 +2577,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-2"
+                  "value": "Story 2-1"
                 },
                 {
                   "type": "constant",
@@ -2601,7 +2601,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-2"
+                  "value": "Story 2-1"
                 },
                 {
                   "type": "constant",
@@ -2625,7 +2625,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-2"
+                  "value": "Story 2-1"
                 },
                 {
                   "type": "constant",
@@ -2649,7 +2649,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-2"
+                  "value": "Story 2-1"
                 },
                 {
                   "type": "constant",
@@ -2688,7 +2688,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-2"
+                  "value": "Story 2-3"
                 },
                 {
                   "type": "constant",
@@ -2697,7 +2697,7 @@
               ]
             },
             "item": {
-              "name": "Yellow Ramp",
+              "name": "Kevin-5",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2712,7 +2712,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-2"
+                  "value": "Story 2-3"
                 },
                 {
                   "type": "constant",
@@ -2736,7 +2736,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-2"
+                  "value": "Story 2-3"
                 },
                 {
                   "type": "constant",
@@ -2760,7 +2760,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-2"
+                  "value": "Story 2-3"
                 },
                 {
                   "type": "constant",
@@ -2784,7 +2784,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-2"
+                  "value": "Story 2-3"
                 },
                 {
                   "type": "constant",
@@ -2823,7 +2823,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-5"
+                  "value": "Spring 1-4"
                 },
                 {
                   "type": "constant",
@@ -2847,7 +2847,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-5"
+                  "value": "Spring 1-4"
                 },
                 {
                   "type": "constant",
@@ -2871,7 +2871,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-5"
+                  "value": "Spring 1-4"
                 },
                 {
                   "type": "constant",
@@ -2895,7 +2895,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-5"
+                  "value": "Spring 1-4"
                 },
                 {
                   "type": "constant",
@@ -2919,7 +2919,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 3-5"
+                  "value": "Spring 1-4"
                 },
                 {
                   "type": "constant",
@@ -2958,7 +2958,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-1"
+                  "value": "Spring 1-5"
                 },
                 {
                   "type": "constant",
@@ -2967,7 +2967,7 @@
               ]
             },
             "item": {
-              "name": "Progressive Throw/Catch",
+              "name": "Progressive Dash",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2982,7 +2982,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-1"
+                  "value": "Spring 1-5"
                 },
                 {
                   "type": "constant",
@@ -3006,7 +3006,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-1"
+                  "value": "Spring 1-5"
                 },
                 {
                   "type": "constant",
@@ -3030,7 +3030,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-1"
+                  "value": "Spring 1-5"
                 },
                 {
                   "type": "constant",
@@ -3054,7 +3054,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-1"
+                  "value": "Spring 1-5"
                 },
                 {
                   "type": "constant",
@@ -3093,7 +3093,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-3"
+                  "value": "Chinese 1-5"
                 },
                 {
                   "type": "constant",
@@ -3117,7 +3117,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-3"
+                  "value": "Chinese 1-5"
                 },
                 {
                   "type": "constant",
@@ -3141,7 +3141,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-3"
+                  "value": "Chinese 1-5"
                 },
                 {
                   "type": "constant",
@@ -3165,7 +3165,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-3"
+                  "value": "Chinese 1-5"
                 },
                 {
                   "type": "constant",
@@ -3189,7 +3189,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-3"
+                  "value": "Chinese 1-5"
                 },
                 {
                   "type": "constant",
@@ -3228,7 +3228,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-1"
+                  "value": "Story 4-6"
                 },
                 {
                   "type": "constant",
@@ -3237,9 +3237,9 @@
               ]
             },
             "item": {
-              "name": "Bonus Star",
+              "name": "Coin Purse",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3252,7 +3252,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-1"
+                  "value": "Story 4-6"
                 },
                 {
                   "type": "constant",
@@ -3276,7 +3276,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-1"
+                  "value": "Story 4-6"
                 },
                 {
                   "type": "constant",
@@ -3300,7 +3300,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-1"
+                  "value": "Story 4-6"
                 },
                 {
                   "type": "constant",
@@ -3324,7 +3324,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-1"
+                  "value": "Story 4-6"
                 },
                 {
                   "type": "constant",
@@ -3363,7 +3363,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-4"
+                  "value": "Story 5-6"
                 },
                 {
                   "type": "constant",
@@ -3372,7 +3372,7 @@
               ]
             },
             "item": {
-              "name": "Kevin-7",
+              "name": "Kevin-8",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3387,7 +3387,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-4"
+                  "value": "Story 5-6"
                 },
                 {
                   "type": "constant",
@@ -3411,7 +3411,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-4"
+                  "value": "Story 5-6"
                 },
                 {
                   "type": "constant",
@@ -3435,7 +3435,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-4"
+                  "value": "Story 5-6"
                 },
                 {
                   "type": "constant",
@@ -3459,7 +3459,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-4"
+                  "value": "Story 5-6"
                 },
                 {
                   "type": "constant",
@@ -3498,7 +3498,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-7"
+                  "value": "Story 4-2"
                 },
                 {
                   "type": "constant",
@@ -3507,7 +3507,7 @@
               ]
             },
             "item": {
-              "name": "Kevin-5",
+              "name": "Clean Dishes",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3522,7 +3522,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-7"
+                  "value": "Story 4-2"
                 },
                 {
                   "type": "constant",
@@ -3546,7 +3546,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-7"
+                  "value": "Story 4-2"
                 },
                 {
                   "type": "constant",
@@ -3570,7 +3570,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-7"
+                  "value": "Story 4-2"
                 },
                 {
                   "type": "constant",
@@ -3594,7 +3594,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-7"
+                  "value": "Story 4-2"
                 },
                 {
                   "type": "constant",
@@ -3633,7 +3633,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Moon 1-5"
+                  "value": "Chinese 1-4"
                 },
                 {
                   "type": "constant",
@@ -3642,7 +3642,7 @@
               ]
             },
             "item": {
-              "name": "Green Ramp",
+              "name": "Kevin-6",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3657,7 +3657,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Moon 1-5"
+                  "value": "Chinese 1-4"
                 },
                 {
                   "type": "constant",
@@ -3681,7 +3681,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Moon 1-5"
+                  "value": "Chinese 1-4"
                 },
                 {
                   "type": "constant",
@@ -3705,7 +3705,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Moon 1-5"
+                  "value": "Chinese 1-4"
                 },
                 {
                   "type": "constant",
@@ -3729,7 +3729,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Moon 1-5"
+                  "value": "Chinese 1-4"
                 },
                 {
                   "type": "constant",
@@ -3768,7 +3768,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "SOBO 1-5"
+                  "value": "Story 2-2"
                 },
                 {
                   "type": "constant",
@@ -3777,7 +3777,7 @@
               ]
             },
             "item": {
-              "name": "Kevin-1",
+              "name": "Blue Ramp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3792,7 +3792,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "SOBO 1-5"
+                  "value": "Story 2-2"
                 },
                 {
                   "type": "constant",
@@ -3816,7 +3816,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "SOBO 1-5"
+                  "value": "Story 2-2"
                 },
                 {
                   "type": "constant",
@@ -3840,7 +3840,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "SOBO 1-5"
+                  "value": "Story 2-2"
                 },
                 {
                   "type": "constant",
@@ -3864,7 +3864,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "SOBO 1-5"
+                  "value": "Story 2-2"
                 },
                 {
                   "type": "constant",
@@ -3903,7 +3903,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-4"
+                  "value": "Story K-6"
                 },
                 {
                   "type": "constant",
@@ -3912,7 +3912,7 @@
               ]
             },
             "item": {
-              "name": "Spare Plate",
+              "name": "Larger Tip Jar",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3927,7 +3927,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-4"
+                  "value": "Story K-6"
                 },
                 {
                   "type": "constant",
@@ -3951,7 +3951,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-4"
+                  "value": "Story K-6"
                 },
                 {
                   "type": "constant",
@@ -3975,7 +3975,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-4"
+                  "value": "Story K-6"
                 },
                 {
                   "type": "constant",
@@ -3999,7 +3999,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 6-4"
+                  "value": "Story K-6"
                 },
                 {
                   "type": "constant",
@@ -4038,7 +4038,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-7"
+                  "value": "Story 2-5"
                 },
                 {
                   "type": "constant",
@@ -4047,7 +4047,7 @@
               ]
             },
             "item": {
-              "name": "Order Lookahead",
+              "name": "Bonus Star",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4062,7 +4062,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-7"
+                  "value": "Story 2-5"
                 },
                 {
                   "type": "constant",
@@ -4086,7 +4086,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-7"
+                  "value": "Story 2-5"
                 },
                 {
                   "type": "constant",
@@ -4110,7 +4110,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-7"
+                  "value": "Story 2-5"
                 },
                 {
                   "type": "constant",
@@ -4134,7 +4134,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-7"
+                  "value": "Story 2-5"
                 },
                 {
                   "type": "constant",
@@ -4173,7 +4173,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-6"
+                  "value": "Story K-2"
                 },
                 {
                   "type": "constant",
@@ -4182,7 +4182,7 @@
               ]
             },
             "item": {
-              "name": "Purple Ramp",
+              "name": "Pink Ramp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4197,7 +4197,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-6"
+                  "value": "Story K-2"
                 },
                 {
                   "type": "constant",
@@ -4221,7 +4221,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-6"
+                  "value": "Story K-2"
                 },
                 {
                   "type": "constant",
@@ -4245,7 +4245,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-6"
+                  "value": "Story K-2"
                 },
                 {
                   "type": "constant",
@@ -4269,7 +4269,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-6"
+                  "value": "Story K-2"
                 },
                 {
                   "type": "constant",
@@ -4308,7 +4308,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-5"
+                  "value": "Winter H-2"
                 },
                 {
                   "type": "constant",
@@ -4317,7 +4317,7 @@
               ]
             },
             "item": {
-              "name": "Faster Respawn Time",
+              "name": "Bonus Star",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4332,7 +4332,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-5"
+                  "value": "Winter H-2"
                 },
                 {
                   "type": "constant",
@@ -4356,59 +4356,11 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-5"
+                  "value": "Winter H-2"
                 },
                 {
                   "type": "constant",
                   "value": 1
-                }
-              ]
-            },
-            "item": {
-              "name": "Star",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "4-6 (2-Star)",
-            "id": null,
-            "access_rule": {
-              "type": "helper",
-              "name": "has_requirements_for_level_star",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Story 5-5"
-                },
-                {
-                  "type": "constant",
-                  "value": 2
-                }
-              ]
-            },
-            "item": {
-              "name": "Star",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "4-6 (3-Star)",
-            "id": null,
-            "access_rule": {
-              "type": "helper",
-              "name": "has_requirements_for_level_star",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Story 5-5"
-                },
-                {
-                  "type": "constant",
-                  "value": 3
                 }
               ]
             },
@@ -4443,7 +4395,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-1"
+                  "value": "Story 3-2"
                 },
                 {
                   "type": "constant",
@@ -4452,9 +4404,9 @@
               ]
             },
             "item": {
-              "name": "Dark Green Ramp",
+              "name": "Guest Patience",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4467,7 +4419,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-1"
+                  "value": "Story 3-2"
                 },
                 {
                   "type": "constant",
@@ -4491,7 +4443,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-1"
+                  "value": "Story 3-2"
                 },
                 {
                   "type": "constant",
@@ -4515,7 +4467,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-1"
+                  "value": "Story 3-2"
                 },
                 {
                   "type": "constant",
@@ -4539,7 +4491,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-1"
+                  "value": "Story 3-2"
                 },
                 {
                   "type": "constant",
@@ -4578,7 +4530,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Christmas 1-3"
+                  "value": "Story 4-1"
                 },
                 {
                   "type": "constant",
@@ -4587,9 +4539,9 @@
               ]
             },
             "item": {
-              "name": "Control Stick Batteries",
+              "name": "Larger Tip Jar",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4602,7 +4554,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Christmas 1-3"
+                  "value": "Story 4-1"
                 },
                 {
                   "type": "constant",
@@ -4626,7 +4578,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Christmas 1-3"
+                  "value": "Story 4-1"
                 },
                 {
                   "type": "constant",
@@ -4650,7 +4602,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Christmas 1-3"
+                  "value": "Story 4-1"
                 },
                 {
                   "type": "constant",
@@ -4674,7 +4626,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Christmas 1-3"
+                  "value": "Story 4-1"
                 },
                 {
                   "type": "constant",
@@ -4713,7 +4665,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-8"
+                  "value": "Spring 1-3"
                 },
                 {
                   "type": "constant",
@@ -4722,7 +4674,7 @@
               ]
             },
             "item": {
-              "name": "Blue Ramp",
+              "name": "Calmer Unbread",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4737,7 +4689,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-8"
+                  "value": "Spring 1-3"
                 },
                 {
                   "type": "constant",
@@ -4761,7 +4713,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-8"
+                  "value": "Spring 1-3"
                 },
                 {
                   "type": "constant",
@@ -4785,7 +4737,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-8"
+                  "value": "Spring 1-3"
                 },
                 {
                   "type": "constant",
@@ -4809,7 +4761,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-8"
+                  "value": "Spring 1-3"
                 },
                 {
                   "type": "constant",
@@ -4848,7 +4800,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-5"
+                  "value": "Christmas 1-5"
                 },
                 {
                   "type": "constant",
@@ -4857,7 +4809,7 @@
               ]
             },
             "item": {
-              "name": "Bonus Star",
+              "name": "Order Lookahead",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4872,7 +4824,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-5"
+                  "value": "Christmas 1-5"
                 },
                 {
                   "type": "constant",
@@ -4896,7 +4848,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-5"
+                  "value": "Christmas 1-5"
                 },
                 {
                   "type": "constant",
@@ -4920,7 +4872,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-5"
+                  "value": "Christmas 1-5"
                 },
                 {
                   "type": "constant",
@@ -4944,7 +4896,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Chinese 1-5"
+                  "value": "Christmas 1-5"
                 },
                 {
                   "type": "constant",
@@ -4983,7 +4935,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-3"
+                  "value": "Story 3-4"
                 },
                 {
                   "type": "constant",
@@ -4992,9 +4944,9 @@
               ]
             },
             "item": {
-              "name": "Red Ramp",
+              "name": "Bonus Star",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5007,7 +4959,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-3"
+                  "value": "Story 3-4"
                 },
                 {
                   "type": "constant",
@@ -5031,7 +4983,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-3"
+                  "value": "Story 3-4"
                 },
                 {
                   "type": "constant",
@@ -5055,7 +5007,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-3"
+                  "value": "Story 3-4"
                 },
                 {
                   "type": "constant",
@@ -5079,7 +5031,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-3"
+                  "value": "Story 3-4"
                 },
                 {
                   "type": "constant",
@@ -5118,7 +5070,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-3"
+                  "value": "Story K-5"
                 },
                 {
                   "type": "constant",
@@ -5127,7 +5079,7 @@
               ]
             },
             "item": {
-              "name": "Calmer Unbread",
+              "name": "Red Ramp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5142,7 +5094,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-3"
+                  "value": "Story K-5"
                 },
                 {
                   "type": "constant",
@@ -5166,7 +5118,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-3"
+                  "value": "Story K-5"
                 },
                 {
                   "type": "constant",
@@ -5190,7 +5142,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-3"
+                  "value": "Story K-5"
                 },
                 {
                   "type": "constant",
@@ -5214,7 +5166,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-3"
+                  "value": "Story K-5"
                 },
                 {
                   "type": "constant",
@@ -5262,7 +5214,7 @@
               ]
             },
             "item": {
-              "name": "Kevin-2",
+              "name": "Kevin-1",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5388,7 +5340,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-3"
+                  "value": "Moon 1-5"
                 },
                 {
                   "type": "constant",
@@ -5397,9 +5349,9 @@
               ]
             },
             "item": {
-              "name": "Burn Leniency",
+              "name": "Control Stick Batteries",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5412,7 +5364,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-3"
+                  "value": "Moon 1-5"
                 },
                 {
                   "type": "constant",
@@ -5436,7 +5388,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-3"
+                  "value": "Moon 1-5"
                 },
                 {
                   "type": "constant",
@@ -5460,7 +5412,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-3"
+                  "value": "Moon 1-5"
                 },
                 {
                   "type": "constant",
@@ -5484,7 +5436,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 5-3"
+                  "value": "Moon 1-5"
                 },
                 {
                   "type": "constant",
@@ -5523,7 +5475,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Winter H-4"
+                  "value": "Story 5-1"
                 },
                 {
                   "type": "constant",
@@ -5532,9 +5484,9 @@
               ]
             },
             "item": {
-              "name": "Order Lookahead",
+              "name": "Kevin-2",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5547,7 +5499,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Winter H-4"
+                  "value": "Story 5-1"
                 },
                 {
                   "type": "constant",
@@ -5571,11 +5523,59 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Winter H-4"
+                  "value": "Story 5-1"
                 },
                 {
                   "type": "constant",
                   "value": 1
+                }
+              ]
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "6-3 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Story 5-1"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "6-3 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Story 5-1"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
                 }
               ]
             },
@@ -5610,7 +5610,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-3"
+                  "value": "Chinese 1-3"
                 },
                 {
                   "type": "constant",
@@ -5619,9 +5619,9 @@
               ]
             },
             "item": {
-              "name": "Guest Patience",
+              "name": "Dark Green Ramp",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5634,7 +5634,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-3"
+                  "value": "Chinese 1-3"
                 },
                 {
                   "type": "constant",
@@ -5658,7 +5658,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-3"
+                  "value": "Chinese 1-3"
                 },
                 {
                   "type": "constant",
@@ -5682,7 +5682,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-3"
+                  "value": "Chinese 1-3"
                 },
                 {
                   "type": "constant",
@@ -5706,7 +5706,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-3"
+                  "value": "Chinese 1-3"
                 },
                 {
                   "type": "constant",
@@ -5745,7 +5745,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-6"
+                  "value": "Story 4-4"
                 },
                 {
                   "type": "constant",
@@ -5754,7 +5754,7 @@
               ]
             },
             "item": {
-              "name": "Clean Dishes",
+              "name": "Sharp Knife",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5769,7 +5769,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-6"
+                  "value": "Story 4-4"
                 },
                 {
                   "type": "constant",
@@ -5793,7 +5793,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-6"
+                  "value": "Story 4-4"
                 },
                 {
                   "type": "constant",
@@ -5817,7 +5817,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-6"
+                  "value": "Story 4-4"
                 },
                 {
                   "type": "constant",
@@ -5841,7 +5841,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-6"
+                  "value": "Story 4-4"
                 },
                 {
                   "type": "constant",
@@ -5991,7 +5991,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-4"
+                  "value": "Christmas 1-3"
                 },
                 {
                   "type": "constant",
@@ -6000,7 +6000,7 @@
               ]
             },
             "item": {
-              "name": "Pink Ramp",
+              "name": "Wok Wheels",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6015,7 +6015,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-4"
+                  "value": "Christmas 1-3"
                 },
                 {
                   "type": "constant",
@@ -6039,7 +6039,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-4"
+                  "value": "Christmas 1-3"
                 },
                 {
                   "type": "constant",
@@ -6063,7 +6063,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-4"
+                  "value": "Christmas 1-3"
                 },
                 {
                   "type": "constant",
@@ -6087,7 +6087,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-4"
+                  "value": "Christmas 1-3"
                 },
                 {
                   "type": "constant",
@@ -6126,7 +6126,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-3"
+                  "value": "Story K-7"
                 },
                 {
                   "type": "constant",
@@ -6135,9 +6135,9 @@
               ]
             },
             "item": {
-              "name": "Kevin-6",
+              "name": "Progressive Throw/Catch",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6150,7 +6150,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-3"
+                  "value": "Story K-7"
                 },
                 {
                   "type": "constant",
@@ -6174,7 +6174,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-3"
+                  "value": "Story K-7"
                 },
                 {
                   "type": "constant",
@@ -6198,7 +6198,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-3"
+                  "value": "Story K-7"
                 },
                 {
                   "type": "constant",
@@ -6222,7 +6222,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-3"
+                  "value": "Story K-7"
                 },
                 {
                   "type": "constant",
@@ -6261,7 +6261,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-1"
+                  "value": "Story K-8"
                 },
                 {
                   "type": "constant",
@@ -6270,7 +6270,7 @@
               ]
             },
             "item": {
-              "name": "Larger Tip Jar",
+              "name": "Emote Wheel",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6285,7 +6285,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-1"
+                  "value": "Story K-8"
                 },
                 {
                   "type": "constant",
@@ -6309,7 +6309,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-1"
+                  "value": "Story K-8"
                 },
                 {
                   "type": "constant",
@@ -6333,7 +6333,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-1"
+                  "value": "Story K-8"
                 },
                 {
                   "type": "constant",
@@ -6357,7 +6357,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story K-1"
+                  "value": "Story K-8"
                 },
                 {
                   "type": "constant",
@@ -6396,7 +6396,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Winter H-2"
+                  "value": "Story K-1"
                 },
                 {
                   "type": "constant",
@@ -6405,9 +6405,9 @@
               ]
             },
             "item": {
-              "name": "Bonus Star",
+              "name": "Green Ramp",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6420,7 +6420,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Winter H-2"
+                  "value": "Story K-1"
                 },
                 {
                   "type": "constant",
@@ -6444,11 +6444,59 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Winter H-2"
+                  "value": "Story K-1"
                 },
                 {
                   "type": "constant",
                   "value": 1
+                }
+              ]
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Kevin-4 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Story K-1"
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                }
+              ]
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            }
+          },
+          {
+            "name": "Kevin-4 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "has_requirements_for_level_star",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Story K-1"
+                },
+                {
+                  "type": "constant",
+                  "value": 3
                 }
               ]
             },
@@ -6483,7 +6531,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-4"
+                  "value": "Moon 1-4"
                 },
                 {
                   "type": "constant",
@@ -6492,7 +6540,7 @@
               ]
             },
             "item": {
-              "name": "Kevin-4",
+              "name": "Yellow Ramp",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6507,7 +6555,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-4"
+                  "value": "Moon 1-4"
                 },
                 {
                   "type": "constant",
@@ -6531,7 +6579,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-4"
+                  "value": "Moon 1-4"
                 },
                 {
                   "type": "constant",
@@ -6555,7 +6603,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-4"
+                  "value": "Moon 1-4"
                 },
                 {
                   "type": "constant",
@@ -6579,7 +6627,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 1-4"
+                  "value": "Moon 1-4"
                 },
                 {
                   "type": "constant",
@@ -6618,7 +6666,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-5"
+                  "value": "Story 6-5"
                 },
                 {
                   "type": "constant",
@@ -6627,9 +6675,9 @@
               ]
             },
             "item": {
-              "name": "Bonus Star",
+              "name": "Fire Extinguisher",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6642,7 +6690,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-5"
+                  "value": "Story 6-5"
                 },
                 {
                   "type": "constant",
@@ -6666,7 +6714,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-5"
+                  "value": "Story 6-5"
                 },
                 {
                   "type": "constant",
@@ -6690,7 +6738,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-5"
+                  "value": "Story 6-5"
                 },
                 {
                   "type": "constant",
@@ -6714,7 +6762,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Spring 1-5"
+                  "value": "Story 6-5"
                 },
                 {
                   "type": "constant",
@@ -6753,7 +6801,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-5"
+                  "value": "Story 3-3"
                 },
                 {
                   "type": "constant",
@@ -6762,9 +6810,9 @@
               ]
             },
             "item": {
-              "name": "Progressive Dash",
+              "name": "Progressive Throw/Catch",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6777,7 +6825,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-5"
+                  "value": "Story 3-3"
                 },
                 {
                   "type": "constant",
@@ -6801,7 +6849,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-5"
+                  "value": "Story 3-3"
                 },
                 {
                   "type": "constant",
@@ -6825,7 +6873,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-5"
+                  "value": "Story 3-3"
                 },
                 {
                   "type": "constant",
@@ -6849,7 +6897,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 2-5"
+                  "value": "Story 3-3"
                 },
                 {
                   "type": "constant",
@@ -6888,7 +6936,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-2"
+                  "value": "Winter H-4"
                 },
                 {
                   "type": "constant",
@@ -6897,9 +6945,9 @@
               ]
             },
             "item": {
-              "name": "Bonus Star",
+              "name": "Kevin-4",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6912,7 +6960,7 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-2"
+                  "value": "Winter H-4"
                 },
                 {
                   "type": "constant",
@@ -6936,59 +6984,11 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": "Story 4-2"
+                  "value": "Winter H-4"
                 },
                 {
                   "type": "constant",
                   "value": 1
-                }
-              ]
-            },
-            "item": {
-              "name": "Star",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Kevin-8 (2-Star)",
-            "id": null,
-            "access_rule": {
-              "type": "helper",
-              "name": "has_requirements_for_level_star",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Story 4-2"
-                },
-                {
-                  "type": "constant",
-                  "value": 2
-                }
-              ]
-            },
-            "item": {
-              "name": "Star",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            }
-          },
-          {
-            "name": "Kevin-8 (3-Star)",
-            "id": null,
-            "access_rule": {
-              "type": "helper",
-              "name": "has_requirements_for_level_star",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Story 4-2"
-                },
-                {
-                  "type": "constant",
-                  "value": 3
                 }
               ]
             },

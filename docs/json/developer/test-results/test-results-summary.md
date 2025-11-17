@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-17 02:09:57
+**Generated:** 2025-11-17 04:25:31
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -13,7 +13,7 @@ This summary combines results from four types of tests:
 ### Individual Test Results
 
 - **Minimal Test:** 60/78 passed (76.9%)
-- **Full Test:** 56/78 passed (71.8%)
+- **Full Test:** 57/78 passed (73.1%)
 - **Multiplayer Test:** 33/78 passed (42.3%)
 - **Multiworld Test:** 0/78 passed (0.0%)
 
@@ -22,8 +22,8 @@ This summary combines results from four types of tests:
 - **Templates passing all 4 tests:** 0/79 (0.0%)
 - **Templates passing 3 tests:** 30/79 (38.0%)
 - **Templates passing 2 tests:** 28/79 (35.4%)
-- **Templates passing 1 test:** 3/79 (3.8%)
-- **Templates passing 0 tests:** 18/79 (22.8%)
+- **Templates passing 1 test:** 4/79 (5.1%)
+- **Templates passing 0 tests:** 17/79 (21.5%)
 
 ## Test Results
 
@@ -74,7 +74,7 @@ This summary combines results from four types of tests:
 | Noita | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Ocarina of Time | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Old School Runescape | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| Overcooked! 2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Overcooked! 2 | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Paint | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Pokemon Emerald | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Pokemon Red and Blue | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |

@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-17T00:46:06.807387",
-    "last_updated": "2025-11-17T00:46:06.807394",
+    "last_updated": "2025-11-17T04:25:32.071743",
     "script_version": "1.0.0"
   },
   "results": {
@@ -338,59 +338,67 @@
       }
     },
     "Blasphemous.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
-      },
       "consecutive_passes_before_failure": 0,
+      "first_failure_reason": "Test failed at sphere 0.0",
       "first_failure_seed": 1,
-      "game_name": "blasphemous",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 39.98,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "blasphemous",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 36.4,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 3106930,
+            "size_mb": 2.96
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 8,
+            "pass_fail": "failed",
+            "processing_time_seconds": 63.35,
+            "return_code": 1,
+            "sphere_reached": 0.0,
+            "success": false,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_name": "Blasphemous.yaml",
+          "timestamp": "2025-11-17T04:20:14.975920",
+          "world_info": {
+            "exporter_path": "exporter/games/blasphemous.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
+            "game_name_from_yaml": "Blasphemous",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "blasphemous",
+            "world_directory": "blasphemous"
+          }
+        }
       },
-      "rules_file": {
-        "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 3106930,
-        "size_mb": 2.96
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 10,
+      "seeds_failed": 1,
       "seeds_passed": 0,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 117.55,
-        "return_code": 1,
-        "sphere_reached": 0.0,
-        "success": false,
-        "total_spheres": 13.1,
-        "warning_count": 0
-      },
+      "stop_on_failure": true,
       "summary": {
         "all_passed": false,
         "any_failed": true,
         "failure_rate": 1.0
       },
       "template_name": "Blasphemous.yaml",
-      "timestamp": "2025-11-17T00:12:37.767156",
-      "world_info": {
-        "exporter_path": "exporter/games/blasphemous.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
-        "game_name_from_yaml": "Blasphemous",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "blasphemous",
-        "world_directory": "blasphemous"
-      }
+      "timestamp": "2025-11-17T04:20:14.958408",
+      "total_seeds_tested": 1
     },
     "Bomb Rush Cyberfunk.yaml": {
       "analysis": {
@@ -2428,59 +2436,463 @@
       }
     },
     "Overcooked! 2.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
+      "consecutive_passes_before_failure": 10,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "overcooked2",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.21,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/overcooked2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 256088,
+            "size_mb": 0.24
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 13.04,
+            "return_code": 0,
+            "sphere_reached": 18.3,
+            "success": true,
+            "total_spheres": 18.3,
+            "warning_count": 0
+          },
+          "template_name": "Overcooked! 2.yaml",
+          "timestamp": "2025-11-17T04:22:19.777935",
+          "world_info": {
+            "exporter_path": "exporter/games/overcooked2.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
+            "game_name_from_yaml": "Overcooked! 2",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "overcooked2",
+            "world_directory": "overcooked2"
+          }
+        },
+        "10": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "overcooked2",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.33,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/overcooked2/AP_55941320597534372051/AP_55941320597534372051_rules.json",
+            "size_bytes": 256067,
+            "size_mb": 0.24
+          },
+          "seed": "10",
+          "seed_id": "AP_55941320597534372051",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 13.42,
+            "return_code": 0,
+            "sphere_reached": 22.3,
+            "success": true,
+            "total_spheres": 22.3,
+            "warning_count": 0
+          },
+          "template_name": "Overcooked! 2.yaml",
+          "timestamp": "2025-11-17T04:25:12.536276",
+          "world_info": {
+            "exporter_path": "exporter/games/overcooked2.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
+            "game_name_from_yaml": "Overcooked! 2",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "overcooked2",
+            "world_directory": "overcooked2"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "overcooked2",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.0,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/overcooked2/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 256068,
+            "size_mb": 0.24
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 13.1,
+            "return_code": 0,
+            "sphere_reached": 14.8,
+            "success": true,
+            "total_spheres": 14.8,
+            "warning_count": 0
+          },
+          "template_name": "Overcooked! 2.yaml",
+          "timestamp": "2025-11-17T04:22:38.573252",
+          "world_info": {
+            "exporter_path": "exporter/games/overcooked2.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
+            "game_name_from_yaml": "Overcooked! 2",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "overcooked2",
+            "world_directory": "overcooked2"
+          }
+        },
+        "3": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "overcooked2",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.01,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/overcooked2/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 256061,
+            "size_mb": 0.24
+          },
+          "seed": "3",
+          "seed_id": "AP_84719271504320872445",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 13.11,
+            "return_code": 0,
+            "sphere_reached": 17.1,
+            "success": true,
+            "total_spheres": 17.1,
+            "warning_count": 0
+          },
+          "template_name": "Overcooked! 2.yaml",
+          "timestamp": "2025-11-17T04:22:57.167386",
+          "world_info": {
+            "exporter_path": "exporter/games/overcooked2.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
+            "game_name_from_yaml": "Overcooked! 2",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "overcooked2",
+            "world_directory": "overcooked2"
+          }
+        },
+        "4": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "overcooked2",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.13,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/overcooked2/AP_05594871498841892311/AP_05594871498841892311_rules.json",
+            "size_bytes": 256076,
+            "size_mb": 0.24
+          },
+          "seed": "4",
+          "seed_id": "AP_05594871498841892311",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 13.39,
+            "return_code": 0,
+            "sphere_reached": 20.6,
+            "success": true,
+            "total_spheres": 20.6,
+            "warning_count": 0
+          },
+          "template_name": "Overcooked! 2.yaml",
+          "timestamp": "2025-11-17T04:23:15.781998",
+          "world_info": {
+            "exporter_path": "exporter/games/overcooked2.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
+            "game_name_from_yaml": "Overcooked! 2",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "overcooked2",
+            "world_directory": "overcooked2"
+          }
+        },
+        "5": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "overcooked2",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.35,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/overcooked2/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 257344,
+            "size_mb": 0.25
+          },
+          "seed": "5",
+          "seed_id": "AP_96945849220684217413",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 14.33,
+            "return_code": 0,
+            "sphere_reached": 20.46,
+            "success": true,
+            "total_spheres": 20.46,
+            "warning_count": 0
+          },
+          "template_name": "Overcooked! 2.yaml",
+          "timestamp": "2025-11-17T04:23:34.786905",
+          "world_info": {
+            "exporter_path": "exporter/games/overcooked2.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
+            "game_name_from_yaml": "Overcooked! 2",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "overcooked2",
+            "world_directory": "overcooked2"
+          }
+        },
+        "6": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "overcooked2",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.15,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/overcooked2/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+            "size_bytes": 256076,
+            "size_mb": 0.24
+          },
+          "seed": "6",
+          "seed_id": "AP_00679259829289197625",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 13.24,
+            "return_code": 0,
+            "sphere_reached": 20.1,
+            "success": true,
+            "total_spheres": 20.1,
+            "warning_count": 0
+          },
+          "template_name": "Overcooked! 2.yaml",
+          "timestamp": "2025-11-17T04:23:55.000541",
+          "world_info": {
+            "exporter_path": "exporter/games/overcooked2.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
+            "game_name_from_yaml": "Overcooked! 2",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "overcooked2",
+            "world_directory": "overcooked2"
+          }
+        },
+        "7": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "overcooked2",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.21,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/overcooked2/AP_35931773795037525048/AP_35931773795037525048_rules.json",
+            "size_bytes": 256071,
+            "size_mb": 0.24
+          },
+          "seed": "7",
+          "seed_id": "AP_35931773795037525048",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 13.36,
+            "return_code": 0,
+            "sphere_reached": 21.46,
+            "success": true,
+            "total_spheres": 21.46,
+            "warning_count": 0
+          },
+          "template_name": "Overcooked! 2.yaml",
+          "timestamp": "2025-11-17T04:24:13.880271",
+          "world_info": {
+            "exporter_path": "exporter/games/overcooked2.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
+            "game_name_from_yaml": "Overcooked! 2",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "overcooked2",
+            "world_directory": "overcooked2"
+          }
+        },
+        "8": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "overcooked2",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.07,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/overcooked2/AP_20777137877808592492/AP_20777137877808592492_rules.json",
+            "size_bytes": 257317,
+            "size_mb": 0.25
+          },
+          "seed": "8",
+          "seed_id": "AP_20777137877808592492",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 14.36,
+            "return_code": 0,
+            "sphere_reached": 26.2,
+            "success": true,
+            "total_spheres": 26.2,
+            "warning_count": 0
+          },
+          "template_name": "Overcooked! 2.yaml",
+          "timestamp": "2025-11-17T04:24:32.962967",
+          "world_info": {
+            "exporter_path": "exporter/games/overcooked2.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
+            "game_name_from_yaml": "Overcooked! 2",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "overcooked2",
+            "world_directory": "overcooked2"
+          }
+        },
+        "9": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "overcooked2",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.4,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/overcooked2/AP_48205312626925217390/AP_48205312626925217390_rules.json",
+            "size_bytes": 256093,
+            "size_mb": 0.24
+          },
+          "seed": "9",
+          "seed_id": "AP_48205312626925217390",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 13.72,
+            "return_code": 0,
+            "sphere_reached": 19.13,
+            "success": true,
+            "total_spheres": 19.13,
+            "warning_count": 0
+          },
+          "template_name": "Overcooked! 2.yaml",
+          "timestamp": "2025-11-17T04:24:52.871772",
+          "world_info": {
+            "exporter_path": "exporter/games/overcooked2.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
+            "game_name_from_yaml": "Overcooked! 2",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "overcooked2",
+            "world_directory": "overcooked2"
+          }
+        }
       },
-      "consecutive_passes_before_failure": 0,
-      "first_failure_seed": 1,
-      "game_name": "overcooked2",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.68,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "rules_file": {
-        "path": "frontend/presets/overcooked2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 256088,
-        "size_mb": 0.24
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 10,
-      "seeds_passed": 0,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 14.9,
-        "return_code": 1,
-        "sphere_reached": 0.1,
-        "success": false,
-        "total_spheres": 18.3,
-        "warning_count": 0
-      },
+      "seeds_failed": 0,
+      "seeds_passed": 10,
+      "stop_on_failure": false,
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 1.0
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_name": "Overcooked! 2.yaml",
-      "timestamp": "2025-11-17T00:29:51.525736",
-      "world_info": {
-        "exporter_path": "exporter/games/overcooked2.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
-        "game_name_from_yaml": "Overcooked! 2",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "overcooked2",
-        "world_directory": "overcooked2"
-      }
+      "timestamp": "2025-11-17T04:22:19.717718",
+      "total_seeds_tested": 10
     },
     "Paint.yaml": {
       "analysis": {

@@ -14,13 +14,13 @@
  * @returns {boolean} True if player has enough stars
  */
 export function has_enough_stars(snapshot, staticData, requiredStars) {
-    if (!snapshot || !snapshot.items) {
+    if (!snapshot || !snapshot.inventory) {
         return false;
     }
 
     // Count both Star and Bonus Star items
-    const starCount = snapshot.items['Star'] || 0;
-    const bonusStarCount = snapshot.items['Bonus Star'] || 0;
+    const starCount = snapshot.inventory['Star'] || 0;
+    const bonusStarCount = snapshot.inventory['Bonus Star'] || 0;
     const totalStars = starCount + bonusStarCount;
 
     return totalStars >= requiredStars;
@@ -107,12 +107,12 @@ function checkStarRequirements(snapshot, requirements, stars) {
     // - empty object {} (no requirements)
     // - array of item names
     if (Array.isArray(exclusive) && exclusive.length > 0) {
-        // Double-check snapshot.items exists (defensive programming)
-        if (!snapshot || !snapshot.items) {
+        // Double-check snapshot.inventory exists (defensive programming)
+        if (!snapshot || !snapshot.inventory) {
             return false;
         }
         for (const itemName of exclusive) {
-            if (!snapshot.items[itemName]) {
+            if (!snapshot.inventory[itemName]) {
                 return false;
             }
         }
@@ -123,8 +123,8 @@ function checkStarRequirements(snapshot, requirements, stars) {
     // - empty object {} (no requirements)
     // - array of [itemName, weight] pairs
     if (Array.isArray(additive) && additive.length > 0) {
-        // Double-check snapshot.items exists (defensive programming)
-        if (!snapshot || !snapshot.items) {
+        // Double-check snapshot.inventory exists (defensive programming)
+        if (!snapshot || !snapshot.inventory) {
             return false;
         }
         let totalWeight = 0;
@@ -132,7 +132,7 @@ function checkStarRequirements(snapshot, requirements, stars) {
             if (Array.isArray(pair) && pair.length >= 2) {
                 const itemName = pair[0];
                 const weight = pair[1];
-                if (snapshot.items[itemName]) {
+                if (snapshot.inventory[itemName]) {
                     totalWeight += weight;
                 }
             }
@@ -167,7 +167,7 @@ export function meets_requirements(snapshot, staticData, level, requirements) {
     // Check exclusive requirements (must have ALL of these items)
     if (requirements.exclusive && requirements.exclusive.length > 0) {
         for (const itemName of requirements.exclusive) {
-            if (!snapshot.items[itemName]) {
+            if (!snapshot.inventory[itemName]) {
                 return false;
             }
         }
@@ -177,7 +177,7 @@ export function meets_requirements(snapshot, staticData, level, requirements) {
     if (requirements.additive && Object.keys(requirements.additive).length > 0) {
         let totalWeight = 0;
         for (const [itemName, weight] of Object.entries(requirements.additive)) {
-            if (snapshot.items[itemName]) {
+            if (snapshot.inventory[itemName]) {
                 totalWeight += weight;
             }
         }
