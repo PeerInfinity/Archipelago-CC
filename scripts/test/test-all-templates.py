@@ -270,6 +270,19 @@ def main():
         action='store_true',
         help='Disable automatic backup of existing results file'
     )
+    parser.add_argument(
+        '--every-nth',
+        type=int,
+        metavar='N',
+        help='Test every Nth template (for parallel job distribution). Use with --skip-first to distribute templates across parallel jobs.'
+    )
+    parser.add_argument(
+        '--skip-first',
+        type=int,
+        metavar='M',
+        default=0,
+        help='Skip the first M templates before applying --every-nth filter (default: 0). Used to offset parallel jobs.'
+    )
 
     args = parser.parse_args()
 
@@ -328,6 +341,18 @@ def main():
 
     if args.retest_include_untested and not args.retest:
         print("Error: --retest-include-untested can only be used with --retest")
+        sys.exit(1)
+
+    if args.every_nth and args.every_nth < 1:
+        print("Error: --every-nth must be at least 1")
+        sys.exit(1)
+
+    if args.skip_first < 0:
+        print("Error: --skip-first must be non-negative")
+        sys.exit(1)
+
+    if args.skip_first and not args.every_nth:
+        print("Error: --skip-first can only be used with --every-nth")
         sys.exit(1)
 
     # Determine project root early (needed for setup scripts)
@@ -670,7 +695,20 @@ def main():
         filter_description = f"skip list ({len(args.skip_list)} excluded)"
     
     yaml_files.sort()
-    
+
+    # Apply --every-nth and --skip-first filtering if specified
+    if args.every_nth:
+        # First skip the specified number of templates
+        if args.skip_first > 0:
+            if args.skip_first >= len(yaml_files):
+                print(f"Error: --skip-first {args.skip_first} is >= total templates ({len(yaml_files)})")
+                sys.exit(1)
+            yaml_files = yaml_files[args.skip_first:]
+
+        # Then select every Nth template
+        yaml_files = yaml_files[::args.every_nth]
+        print(f"Template filtering: every {args.every_nth} template(s), skipping first {args.skip_first}, resulted in {len(yaml_files)} template(s)")
+
     # Handle --start-from option
     if args.start_from:
         if args.start_from not in yaml_files:
