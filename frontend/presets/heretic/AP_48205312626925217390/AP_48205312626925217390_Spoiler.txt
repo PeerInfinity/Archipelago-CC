@@ -1,0 +1,1126 @@
+﻿Archipelago Version 0.6.4  -  Seed: 9
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Heretic
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              Ramparts of Perdition (E4M7) - Ethereal Crossbow 2, Ramparts of Perdition (E4M7) - Ring of Invincibility
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+Goal:                            Complete All Levels
+Difficulty:                      Medium
+Random Monsters:                 Shuffle
+Random Pickups:                  Shuffle
+Random Music:                    Vanilla
+Allow Death Logic:               No
+Pro Heretic:                     No
+Check Sanity:                    No
+Start With Map Scrolls:          No
+Reset Level on Death:            Yes
+Death Link:                      No
+Episode 1:                       Yes
+Episode 2:                       Yes
+Episode 3:                       Yes
+Episode 4:                       No
+Episode 5:                       No
+Split Bag of Holding:            No
+Bag of Holding Count:            1
+Max Ammo - Crystals:             100
+Max Ammo - Arrows:               50
+Max Ammo - Claw Orbs:            200
+Max Ammo - Runes:                200
+Max Ammo - Flame Orbs:           20
+Max Ammo - Spheres:              150
+Added Ammo - Crystals:           100
+Added Ammo - Arrows:             50
+Added Ammo - Claw Orbs:          200
+Added Ammo - Runes:              200
+Added Ammo - Flame Orbs:         20
+Added Ammo - Spheres:            150
+
+
+Starting Items:
+
+The Docks (E1M1)
+The Crater (E2M1)
+The Storehouse (E3M1)
+
+Locations:
+
+The Docks (E1M1) - Yellow key: Timebomb of the Ancients
+The Docks (E1M1) - Silver Shield: Quiver of Ethereal Arrows
+The Docks (E1M1) - Gauntlets of the Necromancer: The Chasm (E3M7) - Map Scroll
+The Docks (E1M1) - Ethereal Crossbow: Mystic Urn
+The Docks (E1M1) - Tome of Power: Torch
+The Docks (E1M1) - Exit: The Docks (E1M1) - Complete
+The Docks (E1M1) - Bag of Holding: Pile of Mace Spheres
+The Dungeons (E1M2) - Yellow key: Greater Runes
+The Dungeons (E1M2) - Silver Shield: Pile of Mace Spheres
+The Dungeons (E1M2) - Torch: The Gatehouse (E1M3) - Yellow key
+The Dungeons (E1M2) - Tome of Power: Torch
+The Dungeons (E1M2) - Ethereal Crossbow: Enchanted Shield
+The Dungeons (E1M2) - Exit: The Dungeons (E1M2) - Complete
+The Dungeons (E1M2) - Dragon Claw: Quartz Flask
+The Dungeons (E1M2) - Green key: Timebomb of the Ancients
+The Dungeons (E1M2) - Map Scroll: Morph Ovum
+The Dungeons (E1M2) - Shadowsphere: Tome of Power
+The Dungeons (E1M2) - Gauntlets of the Necromancer: Torch
+The Dungeons (E1M2) - Silver Shield 2: The Aquifer (E3M9)
+The Dungeons (E1M2) - Bag of Holding: Torch
+The Dungeons (E1M2) - Blue key: Quartz Flask
+The Gatehouse (E1M3) - Yellow key: The Lava Pits (E2M2) - Green key
+The Gatehouse (E1M3) - Dragon Claw: Timebomb of the Ancients
+The Gatehouse (E1M3) - Silver Shield: The Great Hall (E2M7) - Blue key
+The Gatehouse (E1M3) - Ethereal Crossbow: Quiver of Ethereal Arrows
+The Gatehouse (E1M3) - Torch: Torch
+The Gatehouse (E1M3) - Shadowsphere: The Confluence (E3M3) - Blue key
+The Gatehouse (E1M3) - Tome of Power 2: The Lava Pits (E2M2)
+The Gatehouse (E1M3) - Tome of Power 3: The Cesspool (E3M2)
+The Gatehouse (E1M3) - Green key: Inferno Orb
+The Gatehouse (E1M3) - Bag of Holding: Tome of Power
+The Gatehouse (E1M3) - Gauntlets of the Necromancer: Mystic Urn
+The Gatehouse (E1M3) - Ring of Invincibility: The River of Fire (E2M3) - Yellow key
+The Gatehouse (E1M3) - Morph Ovum: Timebomb of the Ancients
+The Gatehouse (E1M3) - Exit: The Gatehouse (E1M3) - Complete
+The Gatehouse (E1M3) - Tome of Power: Tome of Power
+The Guard Tower (E1M4) - Gauntlets of the Necromancer: Quartz Flask
+The Guard Tower (E1M4) - Dragon Claw: Crystal Geode
+The Guard Tower (E1M4) - Ethereal Crossbow: The Labyrinth (E2M6)
+The Guard Tower (E1M4) - Yellow key: Silver Shield
+The Guard Tower (E1M4) - Map Scroll: Greater Runes
+The Guard Tower (E1M4) - Tome of Power: Greater Runes
+The Guard Tower (E1M4) - Silver Shield: Pile of Mace Spheres
+The Guard Tower (E1M4) - Torch: Timebomb of the Ancients
+The Guard Tower (E1M4) - Tome of Power 3: Crystal Geode
+The Guard Tower (E1M4) - Shadowsphere: Tome of Power
+The Guard Tower (E1M4) - Green key: The Dungeons (E1M2) - Yellow key
+The Guard Tower (E1M4) - Tome of Power 2: Shadowsphere
+The Guard Tower (E1M4) - Exit: The Guard Tower (E1M4) - Complete
+The Citadel (E1M5) - Yellow key: The Cesspool (E3M2) - Yellow key
+The Citadel (E1M5) - Gauntlets of the Necromancer: The Great Hall (E2M7)
+The Citadel (E1M5) - Shadowsphere: Inferno Orb
+The Citadel (E1M5) - Torch: The Great Hall (E2M7) - Map Scroll
+The Citadel (E1M5) - Tome of Power 2: The Halls of Fear (E3M6)
+The Citadel (E1M5) - Silver Shield 2: The Lava Pits (E2M2) - Yellow key
+The Citadel (E1M5) - Exit: The Citadel (E1M5) - Complete
+The Citadel (E1M5) - Green key: Morph Ovum
+The Citadel (E1M5) - Ethereal Crossbow: Pile of Mace Spheres
+The Citadel (E1M5) - Blue key: The Labyrinth (E2M6) - Yellow key
+The Citadel (E1M5) - Dragon Claw: Energy Orb
+The Citadel (E1M5) - Ring of Invincibility: The Crypts (E1M7) - Blue key
+The Citadel (E1M5) - Bag of Holding: Tome of Power
+The Citadel (E1M5) - Tome of Power 3: Timebomb of the Ancients
+The Citadel (E1M5) - Morph Ovum: Inferno Orb
+The Citadel (E1M5) - Torch 2: Pile of Mace Spheres
+The Citadel (E1M5) - Tome of Power 4: Pile of Mace Spheres
+The Citadel (E1M5) - Tome of Power 5: The Guard Tower (E1M4)
+The Citadel (E1M5) - Tome of Power: Pile of Mace Spheres
+The Cathedral (E1M6) - Yellow key: Silver Shield
+The Cathedral (E1M6) - Gauntlets of the Necromancer: Inferno Orb
+The Cathedral (E1M6) - Tome of Power 3: Gauntlets of the Necromancer
+The Cathedral (E1M6) - Ethereal Crossbow: Quartz Flask
+The Cathedral (E1M6) - Dragon Claw: Hell's Maw (E1M8)
+The Cathedral (E1M6) - Tome of Power: Tome of Power
+The Cathedral (E1M6) - Shadowsphere: Timebomb of the Ancients
+The Cathedral (E1M6) - Green key: Greater Runes
+The Cathedral (E1M6) - Silver Shield: Quiver of Ethereal Arrows
+The Cathedral (E1M6) - Bag of Holding: Silver Shield
+The Cathedral (E1M6) - Ring of Invincibility: Timebomb of the Ancients
+The Cathedral (E1M6) - Torch: Greater Runes
+The Cathedral (E1M6) - Tome of Power 2: Torch
+The Cathedral (E1M6) - Morph Ovum: Timebomb of the Ancients
+The Cathedral (E1M6) - Map Scroll: Energy Orb
+The Cathedral (E1M6) - Ring of Invincibility 2: Timebomb of the Ancients
+The Cathedral (E1M6) - Silver Shield 2: The Catacombs (E2M5)
+The Cathedral (E1M6) - Bag of Holding 2: Morph Ovum
+The Cathedral (E1M6) - Exit: The Cathedral (E1M6) - Complete
+The Cathedral (E1M6) - Silver Shield 3: The Azure Fortress (E3M4)
+The Cathedral (E1M6) - Bag of Holding 3: Inferno Orb
+The Crypts (E1M7) - Yellow key: Quartz Flask
+The Crypts (E1M7) - Gauntlets of the Necromancer: Quartz Flask
+The Crypts (E1M7) - Bag of Holding: Tome of Power
+The Crypts (E1M7) - Torch 2: The Aquifer (E3M9) - Yellow key
+The Crypts (E1M7) - Map Scroll: Tome of Power
+The Crypts (E1M7) - Exit: The Crypts (E1M7) - Complete
+The Crypts (E1M7) - Ethereal Crossbow: The Aquifer (E3M9) - Green key
+The Crypts (E1M7) - Green key: The Azure Fortress (E3M4) - Yellow key
+The Crypts (E1M7) - Morph Ovum: Energy Orb
+The Crypts (E1M7) - Dragon Claw: Timebomb of the Ancients
+The Crypts (E1M7) - Tome of Power: Energy Orb
+The Crypts (E1M7) - Ring of Invincibility: The Citadel (E1M5) - Yellow key
+The Crypts (E1M7) - Tome of Power 2: Silver Shield
+The Crypts (E1M7) - Shadowsphere: The Catacombs (E2M5) - Yellow key
+The Crypts (E1M7) - Blue key: Silver Shield
+The Crypts (E1M7) - Silver Shield: Pile of Mace Spheres
+The Crypts (E1M7) - Torch: Crystal Geode
+The Crypts (E1M7) - Silver Shield 2: Timebomb of the Ancients
+Hell's Maw (E1M8) - Ethereal Crossbow: Timebomb of the Ancients
+Hell's Maw (E1M8) - Dragon Claw: Timebomb of the Ancients
+Hell's Maw (E1M8) - Tome of Power: Silver Shield
+Hell's Maw (E1M8) - Gauntlets of the Necromancer: Crystal Geode
+Hell's Maw (E1M8) - Tome of Power 2: The Cathedral (E1M6) - Green key
+Hell's Maw (E1M8) - Silver Shield: Greater Runes
+Hell's Maw (E1M8) - Shadowsphere: Timebomb of the Ancients
+Hell's Maw (E1M8) - Ring of Invincibility: Timebomb of the Ancients
+Hell's Maw (E1M8) - Bag of Holding: The Portals of Chaos (E2M8) - Map Scroll
+Hell's Maw (E1M8) - Bag of Holding 2: Quiver of Ethereal Arrows
+Hell's Maw (E1M8) - Ring of Invincibility 3: Inferno Orb
+Hell's Maw (E1M8) - Morph Ovum: The Catacombs (E2M5) - Blue key
+Hell's Maw (E1M8) - Exit: Hell's Maw (E1M8) - Complete
+The Graveyard (E1M9) - Yellow key: Timebomb of the Ancients
+The Graveyard (E1M9) - Bag of Holding: Enchanted Shield
+The Graveyard (E1M9) - Silver Shield: The Crater (E2M1) - Map Scroll
+The Graveyard (E1M9) - Tome of Power: Quiver of Ethereal Arrows
+The Graveyard (E1M9) - Morph Ovum: Tome of Power
+The Graveyard (E1M9) - Dragon Claw 2: The Ice Grotto (E2M4) - Blue key
+The Graveyard (E1M9) - Map Scroll: Tome of Power
+The Graveyard (E1M9) - Exit: The Graveyard (E1M9) - Complete
+The Graveyard (E1M9) - Green key: Enchanted Shield
+The Graveyard (E1M9) - Dragon Claw: Timebomb of the Ancients
+The Graveyard (E1M9) - Blue key: The Crypts (E1M7)
+The Graveyard (E1M9) - Ethereal Crossbow: D'Sparil's Keep (E3M8)
+The Graveyard (E1M9) - Shadowsphere: Silver Shield
+The Graveyard (E1M9) - Ring of Invincibility: Quartz Flask
+The Graveyard (E1M9) - Torch: Timebomb of the Ancients
+The Graveyard (E1M9) - Tome of Power 2: Enchanted Shield
+The Crater (E2M1) - Yellow key: Tome of Power
+The Crater (E2M1) - Ethereal Crossbow: Tome of Power
+The Crater (E2M1) - Tome of Power: The Gatehouse (E1M3)
+The Crater (E2M1) - Silver Shield: Tome of Power
+The Crater (E2M1) - Torch: The Ice Grotto (E2M4) - Yellow key
+The Crater (E2M1) - Green key: The Crypts (E1M7) - Green key
+The Crater (E2M1) - Dragon Claw: Pile of Mace Spheres
+The Crater (E2M1) - Bag of Holding: The Glacier (E2M9) - Green key
+The Crater (E2M1) - Shadowsphere: Energy Orb
+The Crater (E2M1) - Mystic Urn: Tome of Power
+The Crater (E2M1) - Exit: The Crater (E2M1) - Complete
+The Lava Pits (E2M2) - Yellow key: Dragon Claw
+The Lava Pits (E2M2) - Ethereal Crossbow: Crystal Geode
+The Lava Pits (E2M2) - Shadowsphere: Morph Ovum
+The Lava Pits (E2M2) - Tome of Power 2: Hellstaff
+The Lava Pits (E2M2) - Bag of Holding 2: The Dungeons (E1M2) - Map Scroll
+The Lava Pits (E2M2) - Ring of Invincibility: The Labyrinth (E2M6) - Blue key
+The Lava Pits (E2M2) - Dragon Claw: The Gatehouse (E1M3) - Map Scroll
+The Lava Pits (E2M2) - Hellstaff: Timebomb of the Ancients
+The Lava Pits (E2M2) - Tome of Power: Enchanted Shield
+The Lava Pits (E2M2) - Silver Shield: Quiver of Ethereal Arrows
+The Lava Pits (E2M2) - Gauntlets of the Necromancer: The Halls of Fear (E3M6) - Green key
+The Lava Pits (E2M2) - Map Scroll: Chaos Device
+The Lava Pits (E2M2) - Chaos Device: Inferno Orb
+The Lava Pits (E2M2) - Morph Ovum: Hell's Maw (E1M8) - Map Scroll
+The Lava Pits (E2M2) - Bag of Holding: Silver Shield
+The Lava Pits (E2M2) - Enchanted Shield: The Catacombs (E2M5) - Green key
+The Lava Pits (E2M2) - Mystic Urn: Energy Orb
+The Lava Pits (E2M2) - Exit: The Lava Pits (E2M2) - Complete
+The River of Fire (E2M3) - Yellow key: The Graveyard (E1M9) - Green key
+The River of Fire (E2M3) - Gauntlets of the Necromancer: Inferno Orb
+The River of Fire (E2M3) - Ethereal Crossbow: Morph Ovum
+The River of Fire (E2M3) - Dragon Claw: Timebomb of the Ancients
+The River of Fire (E2M3) - Tome of Power: The Cathedral (E1M6)
+The River of Fire (E2M3) - Ring of Invincibility: Chaos Device
+The River of Fire (E2M3) - Silver Shield: The Guard Tower (E1M4) - Map Scroll
+The River of Fire (E2M3) - Hellstaff: Crystal Geode
+The River of Fire (E2M3) - Enchanted Shield: Quartz Flask
+The River of Fire (E2M3) - Chaos Device: Timebomb of the Ancients
+The River of Fire (E2M3) - Exit: The River of Fire (E2M3) - Complete
+The River of Fire (E2M3) - Green key: Quartz Flask
+The River of Fire (E2M3) - Morph Ovum: Mystic Urn
+The River of Fire (E2M3) - Blue key: Energy Orb
+The River of Fire (E2M3) - Phoenix Rod: Ring of Invincibility
+The River of Fire (E2M3) - Tome of Power 2: Inferno Orb
+The River of Fire (E2M3) - Firemace: Crystal Geode
+The Ice Grotto (E2M4) - Yellow key: The Halls of Fear (E3M6) - Yellow key
+The Ice Grotto (E2M4) - Ethereal Crossbow: The Glacier (E2M9)
+The Ice Grotto (E2M4) - Bag of Holding: Timebomb of the Ancients
+The Ice Grotto (E2M4) - Silver Shield: Timebomb of the Ancients
+The Ice Grotto (E2M4) - Tome of Power 2: The Ice Grotto (E2M4) - Green key
+The Ice Grotto (E2M4) - Morph Ovum: Timebomb of the Ancients
+The Ice Grotto (E2M4) - Shadowsphere 2: Tome of Power
+The Ice Grotto (E2M4) - Hellstaff: Silver Shield
+The Ice Grotto (E2M4) - Exit: The Ice Grotto (E2M4) - Complete
+The Ice Grotto (E2M4) - Green key: Mystic Urn
+The Ice Grotto (E2M4) - Phoenix Rod: Torch
+The Ice Grotto (E2M4) - Tome of Power 3: The Glacier (E2M9) - Map Scroll
+The Ice Grotto (E2M4) - Blue key: Pile of Mace Spheres
+The Ice Grotto (E2M4) - Dragon Claw: Enchanted Shield
+The Ice Grotto (E2M4) - Torch: The Docks (E1M1) - Yellow key
+The Ice Grotto (E2M4) - Shadowsphere: Energy Orb
+The Ice Grotto (E2M4) - Chaos Device: Tome of Power
+The Ice Grotto (E2M4) - Tome of Power: Silver Shield
+The Ice Grotto (E2M4) - Bag of Holding 2: Crystal Geode
+The Ice Grotto (E2M4) - Map Scroll: Pile of Mace Spheres
+The Ice Grotto (E2M4) - Enchanted Shield: Firemace
+The Ice Grotto (E2M4) - Mystic Urn: Inferno Orb
+The Catacombs (E2M5) - Yellow key: Inferno Orb
+The Catacombs (E2M5) - Gauntlets of the Necromancer: Quartz Flask
+The Catacombs (E2M5) - Dragon Claw: Enchanted Shield
+The Catacombs (E2M5) - Bag of Holding: Quiver of Ethereal Arrows
+The Catacombs (E2M5) - Torch: The Citadel (E1M5)
+The Catacombs (E2M5) - Exit: The Catacombs (E2M5) - Complete
+The Catacombs (E2M5) - Hellstaff: The Dungeons (E1M2) - Green key
+The Catacombs (E2M5) - Ethereal Crossbow: Inferno Orb
+The Catacombs (E2M5) - Silver Shield: Inferno Orb
+The Catacombs (E2M5) - Shadowsphere: Tome of Power
+The Catacombs (E2M5) - Ring of Invincibility: Quartz Flask
+The Catacombs (E2M5) - Tome of Power: Greater Runes
+The Catacombs (E2M5) - Green key: The Ice Grotto (E2M4) - Map Scroll
+The Catacombs (E2M5) - Chaos Device: The Storehouse (E3M1) - Yellow key
+The Catacombs (E2M5) - Tome of Power 2: Silver Shield
+The Catacombs (E2M5) - Mystic Urn: Torch
+The Catacombs (E2M5) - Tome of Power 3: Energy Orb
+The Catacombs (E2M5) - Blue key: Energy Orb
+The Catacombs (E2M5) - Map Scroll: Tome of Power
+The Catacombs (E2M5) - Morph Ovum: Timebomb of the Ancients
+The Catacombs (E2M5) - Enchanted Shield: Crystal Geode
+The Labyrinth (E2M6) - Yellow key: The Halls of Fear (E3M6) - Map Scroll
+The Labyrinth (E2M6) - Gauntlets of the Necromancer: Silver Shield
+The Labyrinth (E2M6) - Ethereal Crossbow: The Labyrinth (E2M6) - Map Scroll
+The Labyrinth (E2M6) - Morph Ovum: Torch
+The Labyrinth (E2M6) - Firemace: Silver Shield
+The Labyrinth (E2M6) - Ring of Invincibility: Silver Shield
+The Labyrinth (E2M6) - Phoenix Rod 2: Tome of Power
+The Labyrinth (E2M6) - Firemace 4: Quiver of Ethereal Arrows
+The Labyrinth (E2M6) - Exit: The Labyrinth (E2M6) - Complete
+The Labyrinth (E2M6) - Green key: Pile of Mace Spheres
+The Labyrinth (E2M6) - Dragon Claw: Quartz Flask
+The Labyrinth (E2M6) - Bag of Holding: Pile of Mace Spheres
+The Labyrinth (E2M6) - Shadowsphere: Crystal Geode
+The Labyrinth (E2M6) - Chaos Device: Quartz Flask
+The Labyrinth (E2M6) - Firemace 3: Silver Shield
+The Labyrinth (E2M6) - Blue key: Tome of Power
+The Labyrinth (E2M6) - Hellstaff: Quartz Flask
+The Labyrinth (E2M6) - Phoenix Rod: The Crater (E2M1) - Yellow key
+The Labyrinth (E2M6) - Tome of Power: Timebomb of the Ancients
+The Labyrinth (E2M6) - Map Scroll: Shadowsphere
+The Labyrinth (E2M6) - Enchanted Shield: Greater Runes
+The Labyrinth (E2M6) - Tome of Power 2: Quartz Flask
+The Great Hall (E2M7) - Yellow key: Quiver of Ethereal Arrows
+The Great Hall (E2M7) - Morph Ovum: Pile of Mace Spheres
+The Great Hall (E2M7) - Shadowsphere: Phoenix Rod
+The Great Hall (E2M7) - Torch: Quartz Flask
+The Great Hall (E2M7) - Bag of Holding: Inferno Orb
+The Great Hall (E2M7) - Silver Shield: Quartz Flask
+The Great Hall (E2M7) - Enchanted Shield: The Labyrinth (E2M6) - Green key
+The Great Hall (E2M7) - Ethereal Crossbow: Quartz Flask
+The Great Hall (E2M7) - Gauntlets of the Necromancer: Quartz Flask
+The Great Hall (E2M7) - Phoenix Rod: Tome of Power
+The Great Hall (E2M7) - Tome of Power 2: Timebomb of the Ancients
+The Great Hall (E2M7) - Mystic Urn: Mystic Urn
+The Great Hall (E2M7) - Exit: The Great Hall (E2M7) - Complete
+The Great Hall (E2M7) - Green key: Greater Runes
+The Great Hall (E2M7) - Ring of Invincibility: The Citadel (E1M5) - Blue key
+The Great Hall (E2M7) - Tome of Power: Timebomb of the Ancients
+The Great Hall (E2M7) - Chaos Device: Crystal Geode
+The Great Hall (E2M7) - Map Scroll: Inferno Orb
+The Great Hall (E2M7) - Dragon Claw: Quartz Flask
+The Great Hall (E2M7) - Hellstaff: Quartz Flask
+The Great Hall (E2M7) - Blue key: Torch
+The Portals of Chaos (E2M8) - Ethereal Crossbow: Inferno Orb
+The Portals of Chaos (E2M8) - Dragon Claw: Silver Shield
+The Portals of Chaos (E2M8) - Gauntlets of the Necromancer: Pile of Mace Spheres
+The Portals of Chaos (E2M8) - Hellstaff: The Aquifer (E3M9) - Map Scroll
+The Portals of Chaos (E2M8) - Phoenix Rod: Silver Shield
+The Portals of Chaos (E2M8) - Tome of Power: Inferno Orb
+The Portals of Chaos (E2M8) - Silver Shield: Timebomb of the Ancients
+The Portals of Chaos (E2M8) - Enchanted Shield: The Ophidian Lair (E3M5) - Green key
+The Portals of Chaos (E2M8) - Chaos Device: Tome of Power
+The Portals of Chaos (E2M8) - Ring of Invincibility: The Dungeons (E1M2) - Blue key
+The Portals of Chaos (E2M8) - Morph Ovum: Torch
+The Portals of Chaos (E2M8) - Exit: The Portals of Chaos (E2M8) - Complete
+The Glacier (E2M9) - Yellow key: Tome of Power
+The Glacier (E2M9) - Ethereal Crossbow: Quartz Flask
+The Glacier (E2M9) - Bag of Holding: The Graveyard (E1M9)
+The Glacier (E2M9) - Tome of Power: Greater Runes
+The Glacier (E2M9) - Shadowsphere: Enchanted Shield
+The Glacier (E2M9) - Silver Shield: Inferno Orb
+The Glacier (E2M9) - Dragon Claw 2: Quartz Flask
+The Glacier (E2M9) - Morph Ovum: Tome of Power
+The Glacier (E2M9) - Firemace: Quiver of Ethereal Arrows
+The Glacier (E2M9) - Firemace 4: Tome of Power
+The Glacier (E2M9) - Mystic Urn: Morph Ovum
+The Glacier (E2M9) - Map Scroll: Timebomb of the Ancients
+The Glacier (E2M9) - Firemace 3: Silver Shield
+The Glacier (E2M9) - Exit: The Glacier (E2M9) - Complete
+The Glacier (E2M9) - Green key: Greater Runes
+The Glacier (E2M9) - Dragon Claw: Shadowsphere
+The Glacier (E2M9) - Chaos Device: The Ophidian Lair (E3M5) - Map Scroll
+The Glacier (E2M9) - Firemace 2: Tome of Power
+The Glacier (E2M9) - Blue key: Tome of Power
+The Glacier (E2M9) - Phoenix Rod: Energy Orb
+The Glacier (E2M9) - Hellstaff: Inferno Orb
+The Glacier (E2M9) - Ring of Invincibility: Quartz Flask
+The Glacier (E2M9) - Enchanted Shield: Pile of Mace Spheres
+The Glacier (E2M9) - Mystic Urn 2: Quartz Flask
+The Glacier (E2M9) - Torch: Pile of Mace Spheres
+The Storehouse (E3M1) - Yellow key: Silver Shield
+The Storehouse (E3M1) - Bag of Holding: Tome of Power
+The Storehouse (E3M1) - Shadowsphere: The Gatehouse (E1M3) - Green key
+The Storehouse (E3M1) - Silver Shield: The Ice Grotto (E2M4)
+The Storehouse (E3M1) - Chaos Device: The Great Hall (E2M7) - Green key
+The Storehouse (E3M1) - Dragon Claw: Ethereal Crossbow
+The Storehouse (E3M1) - Gauntlets of the Necromancer: Energy Orb
+The Storehouse (E3M1) - Green key: The Citadel (E1M5) - Map Scroll
+The Storehouse (E3M1) - Ring of Invincibility: Silver Shield
+The Storehouse (E3M1) - Map Scroll: Crystal Geode
+The Storehouse (E3M1) - Tome of Power: Tome of Power
+The Storehouse (E3M1) - Hellstaff: Timebomb of the Ancients
+The Storehouse (E3M1) - Exit: The Storehouse (E3M1) - Complete
+The Cesspool (E3M2) - Yellow key: The Confluence (E3M3)
+The Cesspool (E3M2) - Ethereal Crossbow: Tome of Power
+The Cesspool (E3M2) - Silver Shield 2: Crystal Geode
+The Cesspool (E3M2) - Morph Ovum: Quiver of Ethereal Arrows
+The Cesspool (E3M2) - Mystic Urn: The Portals of Chaos (E2M8)
+The Cesspool (E3M2) - Tome of Power: Tome of Power
+The Cesspool (E3M2) - Firemace 3: Quiver of Ethereal Arrows
+The Cesspool (E3M2) - Exit: The Cesspool (E3M2) - Complete
+The Cesspool (E3M2) - Green key: Quiver of Ethereal Arrows
+The Cesspool (E3M2) - Dragon Claw: Enchanted Shield
+The Cesspool (E3M2) - Hellstaff: Quiver of Ethereal Arrows
+The Cesspool (E3M2) - Bag of Holding: The Chasm (E3M7) - Blue key
+The Cesspool (E3M2) - Shadowsphere: The Cathedral (E1M6) - Map Scroll
+The Cesspool (E3M2) - Tome of Power 3: Tome of Power
+The Cesspool (E3M2) - Torch: Timebomb of the Ancients
+The Cesspool (E3M2) - Firemace 2: The Cesspool (E3M2) - Blue key
+The Cesspool (E3M2) - Firemace 5: Tome of Power
+The Cesspool (E3M2) - Ring of Invincibility: The Catacombs (E2M5) - Map Scroll
+The Cesspool (E3M2) - Gauntlets of the Necromancer: Greater Runes
+The Cesspool (E3M2) - Phoenix Rod: Inferno Orb
+The Cesspool (E3M2) - Morph Ovum 2: Tome of Power
+The Cesspool (E3M2) - Enchanted Shield: The Storehouse (E3M1) - Map Scroll
+The Cesspool (E3M2) - Map Scroll: The Crypts (E1M7) - Yellow key
+The Cesspool (E3M2) - Chaos Device: Quiver of Ethereal Arrows
+The Cesspool (E3M2) - Tome of Power 2: Quartz Flask
+The Cesspool (E3M2) - Bag of Holding 2: Timebomb of the Ancients
+The Confluence (E3M3) - Yellow key: Greater Runes
+The Confluence (E3M3) - Shadowsphere: The Azure Fortress (E3M4) - Green key
+The Confluence (E3M3) - Silver Shield: The Confluence (E3M3) - Green key
+The Confluence (E3M3) - Hellstaff: Morph Ovum
+The Confluence (E3M3) - Hellstaff 2: Crystal Geode
+The Confluence (E3M3) - Gauntlets of the Necromancer: The Lava Pits (E2M2) - Map Scroll
+The Confluence (E3M3) - Tome of Power 3: Torch
+The Confluence (E3M3) - Tome of Power 4: Greater Runes
+The Confluence (E3M3) - Mystic Urn 2: Tome of Power
+The Confluence (E3M3) - Map Scroll: Greater Runes
+The Confluence (E3M3) - Phoenix Rod: Crystal Geode
+The Confluence (E3M3) - Enchanted Shield: The River of Fire (E2M3)
+The Confluence (E3M3) - Firemace 4: The Graveyard (E1M9) - Blue key
+The Confluence (E3M3) - Firemace 5: The Glacier (E2M9) - Blue key
+The Confluence (E3M3) - Exit: The Confluence (E3M3) - Complete
+The Confluence (E3M3) - Green key: The Chasm (E3M7)
+The Confluence (E3M3) - Ethereal Crossbow: Inferno Orb
+The Confluence (E3M3) - Blue key: Enchanted Shield
+The Confluence (E3M3) - Dragon Claw: The Citadel (E1M5) - Green key
+The Confluence (E3M3) - Mystic Urn: Greater Runes
+The Confluence (E3M3) - Tome of Power 2: Energy Orb
+The Confluence (E3M3) - Tome of Power 5: The River of Fire (E2M3) - Blue key
+The Confluence (E3M3) - Bag of Holding: The Glacier (E2M9) - Yellow key
+The Confluence (E3M3) - Morph Ovum: Tome of Power
+The Confluence (E3M3) - Silver Shield 2: Energy Orb
+The Confluence (E3M3) - Chaos Device: Silver Shield
+The Confluence (E3M3) - Torch: The Graveyard (E1M9) - Map Scroll
+The Confluence (E3M3) - Firemace: Enchanted Shield
+The Azure Fortress (E3M4) - Yellow key: Quiver of Ethereal Arrows
+The Azure Fortress (E3M4) - Dragon Claw: Torch
+The Azure Fortress (E3M4) - Ring of Invincibility: Crystal Geode
+The Azure Fortress (E3M4) - Ethereal Crossbow: Tome of Power
+The Azure Fortress (E3M4) - Gauntlets of the Necromancer: Quartz Flask
+The Azure Fortress (E3M4) - Bag of Holding: Torch
+The Azure Fortress (E3M4) - Morph Ovum: Quartz Flask
+The Azure Fortress (E3M4) - Mystic Urn: Quartz Flask
+The Azure Fortress (E3M4) - Shadowsphere: Quiver of Ethereal Arrows
+The Azure Fortress (E3M4) - Silver Shield: The Cesspool (E3M2) - Green key
+The Azure Fortress (E3M4) - Torch: Enchanted Shield
+The Azure Fortress (E3M4) - Tome of Power 2: The Cesspool (E3M2) - Map Scroll
+The Azure Fortress (E3M4) - Tome of Power 3: Energy Orb
+The Azure Fortress (E3M4) - Green key: Quartz Flask
+The Azure Fortress (E3M4) - Hellstaff: Crystal Geode
+The Azure Fortress (E3M4) - Chaos Device: Tome of Power
+The Azure Fortress (E3M4) - Torch 3: Pile of Mace Spheres
+The Azure Fortress (E3M4) - Enchanted Shield 2: Ring of Invincibility
+The Azure Fortress (E3M4) - Morph Ovum 2: Energy Orb
+The Azure Fortress (E3M4) - Phoenix Rod: Tome of Power
+The Azure Fortress (E3M4) - Bag of Holding 2: Timebomb of the Ancients
+The Azure Fortress (E3M4) - Silver Shield 2: Tome of Power
+The Azure Fortress (E3M4) - Enchanted Shield: Pile of Mace Spheres
+The Azure Fortress (E3M4) - Map Scroll: Energy Orb
+The Azure Fortress (E3M4) - Tome of Power: The Dungeons (E1M2)
+The Azure Fortress (E3M4) - Torch 2: Timebomb of the Ancients
+The Azure Fortress (E3M4) - Mystic Urn 2: Silver Shield
+The Azure Fortress (E3M4) - Exit: The Azure Fortress (E3M4) - Complete
+The Ophidian Lair (E3M5) - Yellow key: The Graveyard (E1M9) - Yellow key
+The Ophidian Lair (E3M5) - Hellstaff: Timebomb of the Ancients
+The Ophidian Lair (E3M5) - Ethereal Crossbow: Greater Runes
+The Ophidian Lair (E3M5) - Ring of Invincibility: The Azure Fortress (E3M4) - Map Scroll
+The Ophidian Lair (E3M5) - Silver Shield: Quiver of Ethereal Arrows
+The Ophidian Lair (E3M5) - Enchanted Shield: Quartz Flask
+The Ophidian Lair (E3M5) - Torch: Quartz Flask
+The Ophidian Lair (E3M5) - Tome of Power 2: Mystic Urn
+The Ophidian Lair (E3M5) - Green key: Crystal Geode
+The Ophidian Lair (E3M5) - Dragon Claw: Silver Shield
+The Ophidian Lair (E3M5) - Gauntlets of the Necromancer: Timebomb of the Ancients
+The Ophidian Lair (E3M5) - Bag of Holding: Quartz Flask
+The Ophidian Lair (E3M5) - Morph Ovum: The Chasm (E3M7) - Yellow key
+The Ophidian Lair (E3M5) - Shadowsphere: Quiver of Ethereal Arrows
+The Ophidian Lair (E3M5) - Chaos Device: Quartz Flask
+The Ophidian Lair (E3M5) - Mystic Urn: Enchanted Shield
+The Ophidian Lair (E3M5) - Silver Shield 2: The Storehouse (E3M1) - Green key
+The Ophidian Lair (E3M5) - Map Scroll: Pile of Mace Spheres
+The Ophidian Lair (E3M5) - Exit: The Ophidian Lair (E3M5) - Complete
+The Halls of Fear (E3M6) - Yellow key: Crystal Geode
+The Halls of Fear (E3M6) - Ethereal Crossbow: Silver Shield
+The Halls of Fear (E3M6) - Dragon Claw: Timebomb of the Ancients
+The Halls of Fear (E3M6) - Tome of Power 3: The River of Fire (E2M3) - Green key
+The Halls of Fear (E3M6) - Hellstaff 2: Greater Runes
+The Halls of Fear (E3M6) - Firemace 4: Inferno Orb
+The Halls of Fear (E3M6) - Bag of Holding: Tome of Power
+The Halls of Fear (E3M6) - Bag of Holding 2: Quartz Flask
+The Halls of Fear (E3M6) - Map Scroll: Morph Ovum
+The Halls of Fear (E3M6) - Bag of Holding 3: Greater Runes
+The Halls of Fear (E3M6) - Firemace: Inferno Orb
+The Halls of Fear (E3M6) - Exit: The Halls of Fear (E3M6) - Complete
+The Halls of Fear (E3M6) - Green key: Timebomb of the Ancients
+The Halls of Fear (E3M6) - Gauntlets of the Necromancer: Timebomb of the Ancients
+The Halls of Fear (E3M6) - Morph Ovum: Chaos Device
+The Halls of Fear (E3M6) - Mystic Urn: The Halls of Fear (E3M6) - Blue key
+The Halls of Fear (E3M6) - Silver Shield: Tome of Power
+The Halls of Fear (E3M6) - Blue key: Silver Shield
+The Halls of Fear (E3M6) - Hellstaff: Tome of Power
+The Halls of Fear (E3M6) - Chaos Device: Enchanted Shield
+The Halls of Fear (E3M6) - Shadowsphere: Greater Runes
+The Halls of Fear (E3M6) - Tome of Power 2: Inferno Orb
+The Halls of Fear (E3M6) - Firemace 2: The Guard Tower (E1M4) - Yellow key
+The Halls of Fear (E3M6) - Phoenix Rod: Crystal Geode
+The Halls of Fear (E3M6) - Enchanted Shield: Timebomb of the Ancients
+The Halls of Fear (E3M6) - Tome of Power: Quiver of Ethereal Arrows
+The Chasm (E3M7) - Yellow key: The Ophidian Lair (E3M5)
+The Chasm (E3M7) - Ethereal Crossbow: Timebomb of the Ancients
+The Chasm (E3M7) - Dragon Claw: Pile of Mace Spheres
+The Chasm (E3M7) - Bag of Holding: Timebomb of the Ancients
+The Chasm (E3M7) - Silver Shield: The Cathedral (E1M6) - Yellow key
+The Chasm (E3M7) - Tome of Power: Pile of Mace Spheres
+The Chasm (E3M7) - Shadowsphere 2: Inferno Orb
+The Chasm (E3M7) - Bag of Holding 2: Quiver of Ethereal Arrows
+The Chasm (E3M7) - Exit: The Chasm (E3M7) - Complete
+The Chasm (E3M7) - Green key: Crystal Geode
+The Chasm (E3M7) - Hellstaff: Timebomb of the Ancients
+The Chasm (E3M7) - Morph Ovum: Bag of Holding
+The Chasm (E3M7) - Blue key: The Crypts (E1M7) - Map Scroll
+The Chasm (E3M7) - Gauntlets of the Necromancer: Enchanted Shield
+The Chasm (E3M7) - Phoenix Rod: The Great Hall (E2M7) - Yellow key
+The Chasm (E3M7) - Ring of Invincibility: Morph Ovum
+The Chasm (E3M7) - Mystic Urn: Tome of Power
+The Chasm (E3M7) - Enchanted Shield: Silver Shield
+The Chasm (E3M7) - Map Scroll: The Confluence (E3M3) - Yellow key
+The Chasm (E3M7) - Chaos Device: Tome of Power
+The Chasm (E3M7) - Tome of Power 2: The Confluence (E3M3) - Map Scroll
+The Chasm (E3M7) - Tome of Power 3: Timebomb of the Ancients
+The Chasm (E3M7) - Torch 2: Silver Shield
+D'Sparil's Keep (E3M8) - Phoenix Rod: Torch
+D'Sparil's Keep (E3M8) - Dragon Claw: Timebomb of the Ancients
+D'Sparil's Keep (E3M8) - Gauntlets of the Necromancer: Crystal Geode
+D'Sparil's Keep (E3M8) - Hellstaff: Energy Orb
+D'Sparil's Keep (E3M8) - Bag of Holding: D'Sparil's Keep (E3M8) - Map Scroll
+D'Sparil's Keep (E3M8) - Mystic Urn: The River of Fire (E2M3) - Map Scroll
+D'Sparil's Keep (E3M8) - Ring of Invincibility: The Docks (E1M1) - Map Scroll
+D'Sparil's Keep (E3M8) - Shadowsphere: The Aquifer (E3M9) - Blue key
+D'Sparil's Keep (E3M8) - Silver Shield: Tome of Power
+D'Sparil's Keep (E3M8) - Enchanted Shield: Silver Shield
+D'Sparil's Keep (E3M8) - Tome of Power: Tome of Power
+D'Sparil's Keep (E3M8) - Exit: D'Sparil's Keep (E3M8) - Complete
+The Aquifer (E3M9) - Ethereal Crossbow: The Chasm (E3M7) - Green key
+The Aquifer (E3M9) - Silver Shield: The Crater (E2M1) - Green key
+The Aquifer (E3M9) - Tome of Power: Tome of Power
+The Aquifer (E3M9) - Torch: Silver Shield
+The Aquifer (E3M9) - Exit: The Aquifer (E3M9) - Complete
+The Aquifer (E3M9) - Green key: Inferno Orb
+The Aquifer (E3M9) - Phoenix Rod: The Guard Tower (E1M4) - Green key
+The Aquifer (E3M9) - Ring of Invincibility: Energy Orb
+The Aquifer (E3M9) - Bag of Holding: Pile of Mace Spheres
+The Aquifer (E3M9) - Chaos Device: Crystal Geode
+The Aquifer (E3M9) - Blue key: Quiver of Ethereal Arrows
+The Aquifer (E3M9) - Dragon Claw: Silver Shield
+The Aquifer (E3M9) - Hellstaff: Crystal Geode
+The Aquifer (E3M9) - Gauntlets of the Necromancer: Crystal Geode
+The Aquifer (E3M9) - Mystic Urn: Quiver of Ethereal Arrows
+The Aquifer (E3M9) - Morph Ovum: Greater Runes
+The Aquifer (E3M9) - Enchanted Shield: Crystal Geode
+The Aquifer (E3M9) - Tome of Power 2: Ring of Invincibility
+The Aquifer (E3M9) - Shadowsphere: The Ophidian Lair (E3M5) - Yellow key
+The Aquifer (E3M9) - Firemace: Crystal Geode
+The Aquifer (E3M9) - Firemace 2: Timebomb of the Ancients
+The Aquifer (E3M9) - Firemace 3: Inferno Orb
+
+Playthrough:
+
+0: {
+  The Crater (E2M1)
+  The Docks (E1M1)
+  The Storehouse (E3M1)
+}
+1: {
+  The Crater (E2M1) - Ethereal Crossbow: Tome of Power
+  The Crater (E2M1) - Silver Shield: Tome of Power
+  The Crater (E2M1) - Tome of Power: The Gatehouse (E1M3)
+  The Crater (E2M1) - Torch: The Ice Grotto (E2M4) - Yellow key
+  The Crater (E2M1) - Yellow key: Tome of Power
+  The Docks (E1M1) - Silver Shield: Quiver of Ethereal Arrows
+  The Docks (E1M1) - Yellow key: Timebomb of the Ancients
+  The Storehouse (E3M1) - Bag of Holding: Tome of Power
+  The Storehouse (E3M1) - Chaos Device: The Great Hall (E2M7) - Green key
+  The Storehouse (E3M1) - Dragon Claw: Ethereal Crossbow
+  The Storehouse (E3M1) - Gauntlets of the Necromancer: Energy Orb
+  The Storehouse (E3M1) - Shadowsphere: The Gatehouse (E1M3) - Green key
+  The Storehouse (E3M1) - Silver Shield: The Ice Grotto (E2M4)
+  The Storehouse (E3M1) - Yellow key: Silver Shield
+}
+2: {
+  The Gatehouse (E1M3) - Dragon Claw: Timebomb of the Ancients
+  The Gatehouse (E1M3) - Ethereal Crossbow: Quiver of Ethereal Arrows
+  The Gatehouse (E1M3) - Exit: The Gatehouse (E1M3) - Complete
+  The Gatehouse (E1M3) - Shadowsphere: The Confluence (E3M3) - Blue key
+  The Gatehouse (E1M3) - Silver Shield: The Great Hall (E2M7) - Blue key
+  The Gatehouse (E1M3) - Tome of Power 2: The Lava Pits (E2M2)
+  The Gatehouse (E1M3) - Tome of Power 3: The Cesspool (E3M2)
+  The Gatehouse (E1M3) - Torch: Torch
+  The Gatehouse (E1M3) - Yellow key: The Lava Pits (E2M2) - Green key
+}
+3: {
+  The Lava Pits (E2M2) - Bag of Holding 2: The Dungeons (E1M2) - Map Scroll
+  The Lava Pits (E2M2) - Ethereal Crossbow: Crystal Geode
+  The Lava Pits (E2M2) - Shadowsphere: Morph Ovum
+  The Lava Pits (E2M2) - Tome of Power 2: Hellstaff
+  The Lava Pits (E2M2) - Yellow key: Dragon Claw
+}
+4: {
+  The Ice Grotto (E2M4) - Bag of Holding: Timebomb of the Ancients
+  The Ice Grotto (E2M4) - Ethereal Crossbow: The Glacier (E2M9)
+  The Ice Grotto (E2M4) - Green key: Mystic Urn
+  The Ice Grotto (E2M4) - Morph Ovum: Timebomb of the Ancients
+  The Ice Grotto (E2M4) - Phoenix Rod: Torch
+  The Ice Grotto (E2M4) - Shadowsphere 2: Tome of Power
+  The Ice Grotto (E2M4) - Silver Shield: Timebomb of the Ancients
+  The Ice Grotto (E2M4) - Tome of Power 2: The Ice Grotto (E2M4) - Green key
+  The Ice Grotto (E2M4) - Tome of Power 3: The Glacier (E2M9) - Map Scroll
+  The Ice Grotto (E2M4) - Yellow key: The Halls of Fear (E3M6) - Yellow key
+}
+5: {
+  The Ice Grotto (E2M4) - Bag of Holding 2: Crystal Geode
+  The Ice Grotto (E2M4) - Blue key: Pile of Mace Spheres
+  The Ice Grotto (E2M4) - Chaos Device: Tome of Power
+  The Ice Grotto (E2M4) - Dragon Claw: Enchanted Shield
+  The Ice Grotto (E2M4) - Enchanted Shield: Firemace
+  The Ice Grotto (E2M4) - Map Scroll: Pile of Mace Spheres
+  The Ice Grotto (E2M4) - Shadowsphere: Energy Orb
+  The Ice Grotto (E2M4) - Tome of Power: Silver Shield
+  The Ice Grotto (E2M4) - Torch: The Docks (E1M1) - Yellow key
+}
+6: {
+  The Cesspool (E3M2) - Ethereal Crossbow: Tome of Power
+  The Cesspool (E3M2) - Morph Ovum: Quiver of Ethereal Arrows
+  The Cesspool (E3M2) - Mystic Urn: The Portals of Chaos (E2M8)
+  The Cesspool (E3M2) - Silver Shield 2: Crystal Geode
+  The Cesspool (E3M2) - Tome of Power: Tome of Power
+  The Cesspool (E3M2) - Yellow key: The Confluence (E3M3)
+  The Docks (E1M1) - Bag of Holding: Pile of Mace Spheres
+  The Docks (E1M1) - Ethereal Crossbow: Mystic Urn
+  The Docks (E1M1) - Exit: The Docks (E1M1) - Complete
+  The Docks (E1M1) - Gauntlets of the Necromancer: The Chasm (E3M7) - Map Scroll
+  The Docks (E1M1) - Tome of Power: Torch
+}
+7: {
+  The Confluence (E3M3) - Shadowsphere: The Azure Fortress (E3M4) - Green key
+  The Confluence (E3M3) - Silver Shield: The Confluence (E3M3) - Green key
+  The Confluence (E3M3) - Yellow key: Greater Runes
+}
+8: {
+  The Confluence (E3M3) - Bag of Holding: The Glacier (E2M9) - Yellow key
+  The Confluence (E3M3) - Blue key: Enchanted Shield
+  The Confluence (E3M3) - Chaos Device: Silver Shield
+  The Confluence (E3M3) - Dragon Claw: The Citadel (E1M5) - Green key
+  The Confluence (E3M3) - Enchanted Shield: The River of Fire (E2M3)
+  The Confluence (E3M3) - Ethereal Crossbow: Inferno Orb
+  The Confluence (E3M3) - Exit: The Confluence (E3M3) - Complete
+  The Confluence (E3M3) - Firemace: Enchanted Shield
+  The Confluence (E3M3) - Firemace 4: The Graveyard (E1M9) - Blue key
+  The Confluence (E3M3) - Firemace 5: The Glacier (E2M9) - Blue key
+  The Confluence (E3M3) - Gauntlets of the Necromancer: The Lava Pits (E2M2) - Map Scroll
+  The Confluence (E3M3) - Green key: The Chasm (E3M7)
+  The Confluence (E3M3) - Hellstaff: Morph Ovum
+  The Confluence (E3M3) - Hellstaff 2: Crystal Geode
+  The Confluence (E3M3) - Map Scroll: Greater Runes
+  The Confluence (E3M3) - Morph Ovum: Tome of Power
+  The Confluence (E3M3) - Mystic Urn: Greater Runes
+  The Confluence (E3M3) - Mystic Urn 2: Tome of Power
+  The Confluence (E3M3) - Phoenix Rod: Crystal Geode
+  The Confluence (E3M3) - Silver Shield 2: Energy Orb
+  The Confluence (E3M3) - Tome of Power 2: Energy Orb
+  The Confluence (E3M3) - Tome of Power 3: Torch
+  The Confluence (E3M3) - Tome of Power 4: Greater Runes
+  The Confluence (E3M3) - Tome of Power 5: The River of Fire (E2M3) - Blue key
+  The Confluence (E3M3) - Torch: The Graveyard (E1M9) - Map Scroll
+}
+9: {
+  The River of Fire (E2M3) - Chaos Device: Timebomb of the Ancients
+  The River of Fire (E2M3) - Dragon Claw: Timebomb of the Ancients
+  The River of Fire (E2M3) - Enchanted Shield: Quartz Flask
+  The River of Fire (E2M3) - Ethereal Crossbow: Morph Ovum
+  The River of Fire (E2M3) - Exit: The River of Fire (E2M3) - Complete
+  The River of Fire (E2M3) - Gauntlets of the Necromancer: Inferno Orb
+  The River of Fire (E2M3) - Hellstaff: Crystal Geode
+  The River of Fire (E2M3) - Ring of Invincibility: Chaos Device
+  The River of Fire (E2M3) - Silver Shield: The Guard Tower (E1M4) - Map Scroll
+  The River of Fire (E2M3) - Tome of Power: The Cathedral (E1M6)
+  The River of Fire (E2M3) - Yellow key: The Graveyard (E1M9) - Green key
+}
+10: {
+  The Cathedral (E1M6) - Gauntlets of the Necromancer: Inferno Orb
+  The Cathedral (E1M6) - Tome of Power 3: Gauntlets of the Necromancer
+  The Cathedral (E1M6) - Yellow key: Silver Shield
+}
+11: {
+  The Chasm (E3M7) - Bag of Holding: Timebomb of the Ancients
+  The Chasm (E3M7) - Bag of Holding 2: Quiver of Ethereal Arrows
+  The Chasm (E3M7) - Dragon Claw: Pile of Mace Spheres
+  The Chasm (E3M7) - Ethereal Crossbow: Timebomb of the Ancients
+  The Chasm (E3M7) - Shadowsphere 2: Inferno Orb
+  The Chasm (E3M7) - Silver Shield: The Cathedral (E1M6) - Yellow key
+  The Chasm (E3M7) - Tome of Power: Pile of Mace Spheres
+  The Chasm (E3M7) - Yellow key: The Ophidian Lair (E3M5)
+  The Glacier (E2M9) - Bag of Holding: The Graveyard (E1M9)
+  The Glacier (E2M9) - Chaos Device: The Ophidian Lair (E3M5) - Map Scroll
+  The Glacier (E2M9) - Dragon Claw: Shadowsphere
+  The Glacier (E2M9) - Dragon Claw 2: Quartz Flask
+  The Glacier (E2M9) - Ethereal Crossbow: Quartz Flask
+  The Glacier (E2M9) - Exit: The Glacier (E2M9) - Complete
+  The Glacier (E2M9) - Firemace: Quiver of Ethereal Arrows
+  The Glacier (E2M9) - Firemace 2: Tome of Power
+  The Glacier (E2M9) - Firemace 3: Silver Shield
+  The Glacier (E2M9) - Firemace 4: Tome of Power
+  The Glacier (E2M9) - Green key: Greater Runes
+  The Glacier (E2M9) - Map Scroll: Timebomb of the Ancients
+  The Glacier (E2M9) - Morph Ovum: Tome of Power
+  The Glacier (E2M9) - Mystic Urn: Morph Ovum
+  The Glacier (E2M9) - Shadowsphere: Enchanted Shield
+  The Glacier (E2M9) - Silver Shield: Inferno Orb
+  The Glacier (E2M9) - Tome of Power: Greater Runes
+  The Glacier (E2M9) - Yellow key: Tome of Power
+}
+12: {
+  The Cathedral (E1M6) - Bag of Holding: Silver Shield
+  The Cathedral (E1M6) - Bag of Holding 3: Inferno Orb
+  The Cathedral (E1M6) - Dragon Claw: Hell's Maw (E1M8)
+  The Cathedral (E1M6) - Ethereal Crossbow: Quartz Flask
+  The Cathedral (E1M6) - Green key: Greater Runes
+  The Cathedral (E1M6) - Map Scroll: Energy Orb
+  The Cathedral (E1M6) - Morph Ovum: Timebomb of the Ancients
+  The Cathedral (E1M6) - Ring of Invincibility: Timebomb of the Ancients
+  The Cathedral (E1M6) - Ring of Invincibility 2: Timebomb of the Ancients
+  The Cathedral (E1M6) - Shadowsphere: Timebomb of the Ancients
+  The Cathedral (E1M6) - Silver Shield: Quiver of Ethereal Arrows
+  The Cathedral (E1M6) - Silver Shield 3: The Azure Fortress (E3M4)
+  The Cathedral (E1M6) - Tome of Power: Tome of Power
+  The Cathedral (E1M6) - Tome of Power 2: Torch
+  The Cathedral (E1M6) - Torch: Greater Runes
+  The Graveyard (E1M9) - Bag of Holding: Enchanted Shield
+  The Graveyard (E1M9) - Blue key: The Crypts (E1M7)
+  The Graveyard (E1M9) - Dragon Claw 2: The Ice Grotto (E2M4) - Blue key
+  The Graveyard (E1M9) - Ethereal Crossbow: D'Sparil's Keep (E3M8)
+  The Graveyard (E1M9) - Exit: The Graveyard (E1M9) - Complete
+  The Graveyard (E1M9) - Map Scroll: Tome of Power
+  The Graveyard (E1M9) - Morph Ovum: Tome of Power
+  The Graveyard (E1M9) - Ring of Invincibility: Quartz Flask
+  The Graveyard (E1M9) - Shadowsphere: Silver Shield
+  The Graveyard (E1M9) - Silver Shield: The Crater (E2M1) - Map Scroll
+  The Graveyard (E1M9) - Tome of Power: Quiver of Ethereal Arrows
+  The Graveyard (E1M9) - Tome of Power 2: Enchanted Shield
+  The Graveyard (E1M9) - Torch: Timebomb of the Ancients
+  The Graveyard (E1M9) - Yellow key: Timebomb of the Ancients
+  The Ophidian Lair (E3M5) - Enchanted Shield: Quartz Flask
+  The Ophidian Lair (E3M5) - Ethereal Crossbow: Greater Runes
+  The Ophidian Lair (E3M5) - Hellstaff: Timebomb of the Ancients
+  The Ophidian Lair (E3M5) - Ring of Invincibility: The Azure Fortress (E3M4) - Map Scroll
+  The Ophidian Lair (E3M5) - Silver Shield: Quiver of Ethereal Arrows
+  The Ophidian Lair (E3M5) - Tome of Power 2: Mystic Urn
+  The Ophidian Lair (E3M5) - Torch: Quartz Flask
+  The Ophidian Lair (E3M5) - Yellow key: The Graveyard (E1M9) - Yellow key
+}
+13: {
+  Hell's Maw (E1M8) - Bag of Holding: The Portals of Chaos (E2M8) - Map Scroll
+  Hell's Maw (E1M8) - Bag of Holding 2: Quiver of Ethereal Arrows
+  Hell's Maw (E1M8) - Dragon Claw: Timebomb of the Ancients
+  Hell's Maw (E1M8) - Ethereal Crossbow: Timebomb of the Ancients
+  Hell's Maw (E1M8) - Exit: Hell's Maw (E1M8) - Complete
+  Hell's Maw (E1M8) - Gauntlets of the Necromancer: Crystal Geode
+  Hell's Maw (E1M8) - Morph Ovum: The Catacombs (E2M5) - Blue key
+  Hell's Maw (E1M8) - Ring of Invincibility: Timebomb of the Ancients
+  Hell's Maw (E1M8) - Ring of Invincibility 3: Inferno Orb
+  Hell's Maw (E1M8) - Shadowsphere: Timebomb of the Ancients
+  Hell's Maw (E1M8) - Silver Shield: Greater Runes
+  Hell's Maw (E1M8) - Tome of Power: Silver Shield
+  Hell's Maw (E1M8) - Tome of Power 2: The Cathedral (E1M6) - Green key
+  The Azure Fortress (E3M4) - Bag of Holding: Torch
+  The Azure Fortress (E3M4) - Bag of Holding 2: Timebomb of the Ancients
+  The Azure Fortress (E3M4) - Dragon Claw: Torch
+  The Azure Fortress (E3M4) - Enchanted Shield: Pile of Mace Spheres
+  The Azure Fortress (E3M4) - Ethereal Crossbow: Tome of Power
+  The Azure Fortress (E3M4) - Exit: The Azure Fortress (E3M4) - Complete
+  The Azure Fortress (E3M4) - Gauntlets of the Necromancer: Quartz Flask
+  The Azure Fortress (E3M4) - Map Scroll: Energy Orb
+  The Azure Fortress (E3M4) - Morph Ovum: Quartz Flask
+  The Azure Fortress (E3M4) - Mystic Urn: Quartz Flask
+  The Azure Fortress (E3M4) - Mystic Urn 2: Silver Shield
+  The Azure Fortress (E3M4) - Phoenix Rod: Tome of Power
+  The Azure Fortress (E3M4) - Ring of Invincibility: Crystal Geode
+  The Azure Fortress (E3M4) - Shadowsphere: Quiver of Ethereal Arrows
+  The Azure Fortress (E3M4) - Silver Shield: The Cesspool (E3M2) - Green key
+  The Azure Fortress (E3M4) - Silver Shield 2: Tome of Power
+  The Azure Fortress (E3M4) - Tome of Power: The Dungeons (E1M2)
+  The Azure Fortress (E3M4) - Tome of Power 2: The Cesspool (E3M2) - Map Scroll
+  The Azure Fortress (E3M4) - Tome of Power 3: Energy Orb
+  The Azure Fortress (E3M4) - Torch: Enchanted Shield
+  The Azure Fortress (E3M4) - Torch 2: Timebomb of the Ancients
+  The Azure Fortress (E3M4) - Yellow key: Quiver of Ethereal Arrows
+  The Crypts (E1M7) - Gauntlets of the Necromancer: Quartz Flask
+  The Crypts (E1M7) - Yellow key: Quartz Flask
+  The Graveyard (E1M9) - Dragon Claw: Timebomb of the Ancients
+  The Graveyard (E1M9) - Green key: Enchanted Shield
+  The Ice Grotto (E2M4) - Exit: The Ice Grotto (E2M4) - Complete
+  The Ice Grotto (E2M4) - Hellstaff: Silver Shield
+  The Ice Grotto (E2M4) - Mystic Urn: Inferno Orb
+}
+14: {
+  The Cathedral (E1M6) - Bag of Holding 2: Morph Ovum
+  The Cathedral (E1M6) - Exit: The Cathedral (E1M6) - Complete
+  The Cathedral (E1M6) - Silver Shield 2: The Catacombs (E2M5)
+  The Dungeons (E1M2) - Ethereal Crossbow: Enchanted Shield
+  The Dungeons (E1M2) - Silver Shield: Pile of Mace Spheres
+  The Dungeons (E1M2) - Tome of Power: Torch
+  The Dungeons (E1M2) - Torch: The Gatehouse (E1M3) - Yellow key
+  The Dungeons (E1M2) - Yellow key: Greater Runes
+}
+15: {
+  The Catacombs (E2M5) - Bag of Holding: Quiver of Ethereal Arrows
+  The Catacombs (E2M5) - Dragon Claw: Enchanted Shield
+  The Catacombs (E2M5) - Gauntlets of the Necromancer: Quartz Flask
+  The Catacombs (E2M5) - Torch: The Citadel (E1M5)
+  The Catacombs (E2M5) - Yellow key: Inferno Orb
+  The Gatehouse (E1M3) - Bag of Holding: Tome of Power
+  The Gatehouse (E1M3) - Gauntlets of the Necromancer: Mystic Urn
+  The Gatehouse (E1M3) - Green key: Inferno Orb
+  The Gatehouse (E1M3) - Morph Ovum: Timebomb of the Ancients
+  The Gatehouse (E1M3) - Ring of Invincibility: The River of Fire (E2M3) - Yellow key
+  The Gatehouse (E1M3) - Tome of Power: Tome of Power
+}
+16: {
+  The Citadel (E1M5) - Gauntlets of the Necromancer: The Great Hall (E2M7)
+  The Citadel (E1M5) - Shadowsphere: Inferno Orb
+  The Citadel (E1M5) - Torch: The Great Hall (E2M7) - Map Scroll
+  The Citadel (E1M5) - Yellow key: The Cesspool (E3M2) - Yellow key
+  The River of Fire (E2M3) - Green key: Quartz Flask
+  The River of Fire (E2M3) - Morph Ovum: Mystic Urn
+}
+17: {
+  The Cesspool (E3M2) - Bag of Holding: The Chasm (E3M7) - Blue key
+  The Cesspool (E3M2) - Bag of Holding 2: Timebomb of the Ancients
+  The Cesspool (E3M2) - Chaos Device: Quiver of Ethereal Arrows
+  The Cesspool (E3M2) - Dragon Claw: Enchanted Shield
+  The Cesspool (E3M2) - Enchanted Shield: The Storehouse (E3M1) - Map Scroll
+  The Cesspool (E3M2) - Firemace 2: The Cesspool (E3M2) - Blue key
+  The Cesspool (E3M2) - Firemace 5: Tome of Power
+  The Cesspool (E3M2) - Gauntlets of the Necromancer: Greater Runes
+  The Cesspool (E3M2) - Green key: Quiver of Ethereal Arrows
+  The Cesspool (E3M2) - Hellstaff: Quiver of Ethereal Arrows
+  The Cesspool (E3M2) - Map Scroll: The Crypts (E1M7) - Yellow key
+  The Cesspool (E3M2) - Morph Ovum 2: Tome of Power
+  The Cesspool (E3M2) - Phoenix Rod: Inferno Orb
+  The Cesspool (E3M2) - Ring of Invincibility: The Catacombs (E2M5) - Map Scroll
+  The Cesspool (E3M2) - Shadowsphere: The Cathedral (E1M6) - Map Scroll
+  The Cesspool (E3M2) - Tome of Power 2: Quartz Flask
+  The Cesspool (E3M2) - Tome of Power 3: Tome of Power
+  The Cesspool (E3M2) - Torch: Timebomb of the Ancients
+  The Great Hall (E2M7) - Bag of Holding: Inferno Orb
+  The Great Hall (E2M7) - Blue key: Torch
+  The Great Hall (E2M7) - Enchanted Shield: The Labyrinth (E2M6) - Green key
+  The Great Hall (E2M7) - Ethereal Crossbow: Quartz Flask
+  The Great Hall (E2M7) - Gauntlets of the Necromancer: Quartz Flask
+  The Great Hall (E2M7) - Morph Ovum: Pile of Mace Spheres
+  The Great Hall (E2M7) - Phoenix Rod: Tome of Power
+  The Great Hall (E2M7) - Shadowsphere: Phoenix Rod
+  The Great Hall (E2M7) - Silver Shield: Quartz Flask
+  The Great Hall (E2M7) - Tome of Power 2: Timebomb of the Ancients
+  The Great Hall (E2M7) - Torch: Quartz Flask
+  The Great Hall (E2M7) - Yellow key: Quiver of Ethereal Arrows
+}
+18: {
+  D'Sparil's Keep (E3M8) - Bag of Holding: D'Sparil's Keep (E3M8) - Map Scroll
+  D'Sparil's Keep (E3M8) - Dragon Claw: Timebomb of the Ancients
+  D'Sparil's Keep (E3M8) - Enchanted Shield: Silver Shield
+  D'Sparil's Keep (E3M8) - Exit: D'Sparil's Keep (E3M8) - Complete
+  D'Sparil's Keep (E3M8) - Gauntlets of the Necromancer: Crystal Geode
+  D'Sparil's Keep (E3M8) - Hellstaff: Energy Orb
+  D'Sparil's Keep (E3M8) - Mystic Urn: The River of Fire (E2M3) - Map Scroll
+  D'Sparil's Keep (E3M8) - Phoenix Rod: Torch
+  D'Sparil's Keep (E3M8) - Ring of Invincibility: The Docks (E1M1) - Map Scroll
+  D'Sparil's Keep (E3M8) - Shadowsphere: The Aquifer (E3M9) - Blue key
+  D'Sparil's Keep (E3M8) - Silver Shield: Tome of Power
+  D'Sparil's Keep (E3M8) - Tome of Power: Tome of Power
+  The Cesspool (E3M2) - Exit: The Cesspool (E3M2) - Complete
+  The Cesspool (E3M2) - Firemace 3: Quiver of Ethereal Arrows
+  The Crypts (E1M7) - Dragon Claw: Timebomb of the Ancients
+  The Crypts (E1M7) - Ethereal Crossbow: The Aquifer (E3M9) - Green key
+  The Crypts (E1M7) - Green key: The Azure Fortress (E3M4) - Yellow key
+  The Crypts (E1M7) - Morph Ovum: Energy Orb
+  The Crypts (E1M7) - Ring of Invincibility: The Citadel (E1M5) - Yellow key
+  The Crypts (E1M7) - Shadowsphere: The Catacombs (E2M5) - Yellow key
+  The Crypts (E1M7) - Tome of Power: Energy Orb
+  The Crypts (E1M7) - Tome of Power 2: Silver Shield
+  The Portals of Chaos (E2M8) - Chaos Device: Tome of Power
+  The Portals of Chaos (E2M8) - Dragon Claw: Silver Shield
+  The Portals of Chaos (E2M8) - Enchanted Shield: The Ophidian Lair (E3M5) - Green key
+  The Portals of Chaos (E2M8) - Ethereal Crossbow: Inferno Orb
+  The Portals of Chaos (E2M8) - Exit: The Portals of Chaos (E2M8) - Complete
+  The Portals of Chaos (E2M8) - Gauntlets of the Necromancer: Pile of Mace Spheres
+  The Portals of Chaos (E2M8) - Hellstaff: The Aquifer (E3M9) - Map Scroll
+  The Portals of Chaos (E2M8) - Morph Ovum: Torch
+  The Portals of Chaos (E2M8) - Phoenix Rod: Silver Shield
+  The Portals of Chaos (E2M8) - Ring of Invincibility: The Dungeons (E1M2) - Blue key
+  The Portals of Chaos (E2M8) - Silver Shield: Timebomb of the Ancients
+  The Portals of Chaos (E2M8) - Tome of Power: Inferno Orb
+}
+19: {
+  The Azure Fortress (E3M4) - Chaos Device: Tome of Power
+  The Azure Fortress (E3M4) - Enchanted Shield 2: Ring of Invincibility
+  The Azure Fortress (E3M4) - Green key: Quartz Flask
+  The Azure Fortress (E3M4) - Hellstaff: Crystal Geode
+  The Azure Fortress (E3M4) - Morph Ovum 2: Energy Orb
+  The Azure Fortress (E3M4) - Torch 3: Pile of Mace Spheres
+  The Catacombs (E2M5) - Chaos Device: The Storehouse (E3M1) - Yellow key
+  The Catacombs (E2M5) - Ethereal Crossbow: Inferno Orb
+  The Catacombs (E2M5) - Green key: The Ice Grotto (E2M4) - Map Scroll
+  The Catacombs (E2M5) - Hellstaff: The Dungeons (E1M2) - Green key
+  The Catacombs (E2M5) - Mystic Urn: Torch
+  The Catacombs (E2M5) - Ring of Invincibility: Quartz Flask
+  The Catacombs (E2M5) - Shadowsphere: Tome of Power
+  The Catacombs (E2M5) - Silver Shield: Inferno Orb
+  The Catacombs (E2M5) - Tome of Power: Greater Runes
+  The Catacombs (E2M5) - Tome of Power 2: Silver Shield
+  The Catacombs (E2M5) - Tome of Power 3: Energy Orb
+  The Citadel (E1M5) - Bag of Holding: Tome of Power
+  The Citadel (E1M5) - Blue key: The Labyrinth (E2M6) - Yellow key
+  The Citadel (E1M5) - Dragon Claw: Energy Orb
+  The Citadel (E1M5) - Ethereal Crossbow: Pile of Mace Spheres
+  The Citadel (E1M5) - Green key: Morph Ovum
+  The Citadel (E1M5) - Morph Ovum: Inferno Orb
+  The Citadel (E1M5) - Ring of Invincibility: The Crypts (E1M7) - Blue key
+  The Citadel (E1M5) - Tome of Power: Pile of Mace Spheres
+  The Citadel (E1M5) - Tome of Power 3: Timebomb of the Ancients
+  The Citadel (E1M5) - Tome of Power 4: Pile of Mace Spheres
+  The Citadel (E1M5) - Tome of Power 5: The Guard Tower (E1M4)
+  The Citadel (E1M5) - Torch 2: Pile of Mace Spheres
+  The Ophidian Lair (E3M5) - Exit: The Ophidian Lair (E3M5) - Complete
+  The Ophidian Lair (E3M5) - Map Scroll: Pile of Mace Spheres
+  The Ophidian Lair (E3M5) - Mystic Urn: Enchanted Shield
+  The Ophidian Lair (E3M5) - Silver Shield 2: The Storehouse (E3M1) - Green key
+}
+20: {
+  The Crypts (E1M7) - Bag of Holding: Tome of Power
+  The Crypts (E1M7) - Exit: The Crypts (E1M7) - Complete
+  The Crypts (E1M7) - Map Scroll: Tome of Power
+  The Crypts (E1M7) - Torch 2: The Aquifer (E3M9) - Yellow key
+  The Dungeons (E1M2) - Bag of Holding: Torch
+  The Dungeons (E1M2) - Blue key: Quartz Flask
+  The Dungeons (E1M2) - Dragon Claw: Quartz Flask
+  The Dungeons (E1M2) - Exit: The Dungeons (E1M2) - Complete
+  The Dungeons (E1M2) - Gauntlets of the Necromancer: Torch
+  The Dungeons (E1M2) - Green key: Timebomb of the Ancients
+  The Dungeons (E1M2) - Map Scroll: Morph Ovum
+  The Dungeons (E1M2) - Shadowsphere: Tome of Power
+  The Dungeons (E1M2) - Silver Shield 2: The Aquifer (E3M9)
+  The Guard Tower (E1M4) - Dragon Claw: Crystal Geode
+  The Guard Tower (E1M4) - Ethereal Crossbow: The Labyrinth (E2M6)
+  The Guard Tower (E1M4) - Gauntlets of the Necromancer: Quartz Flask
+  The Guard Tower (E1M4) - Map Scroll: Greater Runes
+  The Guard Tower (E1M4) - Silver Shield: Pile of Mace Spheres
+  The Guard Tower (E1M4) - Tome of Power: Greater Runes
+  The Guard Tower (E1M4) - Tome of Power 3: Crystal Geode
+  The Guard Tower (E1M4) - Torch: Timebomb of the Ancients
+  The Guard Tower (E1M4) - Yellow key: Silver Shield
+  The Storehouse (E3M1) - Exit: The Storehouse (E3M1) - Complete
+  The Storehouse (E3M1) - Green key: The Citadel (E1M5) - Map Scroll
+  The Storehouse (E3M1) - Hellstaff: Timebomb of the Ancients
+  The Storehouse (E3M1) - Map Scroll: Crystal Geode
+  The Storehouse (E3M1) - Ring of Invincibility: Silver Shield
+  The Storehouse (E3M1) - Tome of Power: Tome of Power
+}
+21: {
+  The Aquifer (E3M9) - Bag of Holding: Pile of Mace Spheres
+  The Aquifer (E3M9) - Blue key: Quiver of Ethereal Arrows
+  The Aquifer (E3M9) - Chaos Device: Crystal Geode
+  The Aquifer (E3M9) - Dragon Claw: Silver Shield
+  The Aquifer (E3M9) - Enchanted Shield: Crystal Geode
+  The Aquifer (E3M9) - Ethereal Crossbow: The Chasm (E3M7) - Green key
+  The Aquifer (E3M9) - Exit: The Aquifer (E3M9) - Complete
+  The Aquifer (E3M9) - Firemace: Crystal Geode
+  The Aquifer (E3M9) - Firemace 2: Timebomb of the Ancients
+  The Aquifer (E3M9) - Firemace 3: Inferno Orb
+  The Aquifer (E3M9) - Gauntlets of the Necromancer: Crystal Geode
+  The Aquifer (E3M9) - Green key: Inferno Orb
+  The Aquifer (E3M9) - Hellstaff: Crystal Geode
+  The Aquifer (E3M9) - Morph Ovum: Greater Runes
+  The Aquifer (E3M9) - Mystic Urn: Quiver of Ethereal Arrows
+  The Aquifer (E3M9) - Phoenix Rod: The Guard Tower (E1M4) - Green key
+  The Aquifer (E3M9) - Ring of Invincibility: Energy Orb
+  The Aquifer (E3M9) - Shadowsphere: The Ophidian Lair (E3M5) - Yellow key
+  The Aquifer (E3M9) - Silver Shield: The Crater (E2M1) - Green key
+  The Aquifer (E3M9) - Tome of Power: Tome of Power
+  The Aquifer (E3M9) - Tome of Power 2: Ring of Invincibility
+  The Aquifer (E3M9) - Torch: Silver Shield
+  The Labyrinth (E2M6) - Bag of Holding: Pile of Mace Spheres
+  The Labyrinth (E2M6) - Blue key: Tome of Power
+  The Labyrinth (E2M6) - Chaos Device: Quartz Flask
+  The Labyrinth (E2M6) - Dragon Claw: Quartz Flask
+  The Labyrinth (E2M6) - Enchanted Shield: Greater Runes
+  The Labyrinth (E2M6) - Ethereal Crossbow: The Labyrinth (E2M6) - Map Scroll
+  The Labyrinth (E2M6) - Firemace: Silver Shield
+  The Labyrinth (E2M6) - Firemace 3: Silver Shield
+  The Labyrinth (E2M6) - Gauntlets of the Necromancer: Silver Shield
+  The Labyrinth (E2M6) - Green key: Pile of Mace Spheres
+  The Labyrinth (E2M6) - Hellstaff: Quartz Flask
+  The Labyrinth (E2M6) - Map Scroll: Shadowsphere
+  The Labyrinth (E2M6) - Morph Ovum: Torch
+  The Labyrinth (E2M6) - Phoenix Rod: The Crater (E2M1) - Yellow key
+  The Labyrinth (E2M6) - Shadowsphere: Crystal Geode
+  The Labyrinth (E2M6) - Tome of Power: Timebomb of the Ancients
+  The Labyrinth (E2M6) - Tome of Power 2: Quartz Flask
+  The Labyrinth (E2M6) - Yellow key: The Halls of Fear (E3M6) - Map Scroll
+}
+22: {
+  The Crater (E2M1) - Bag of Holding: The Glacier (E2M9) - Green key
+  The Crater (E2M1) - Dragon Claw: Pile of Mace Spheres
+  The Crater (E2M1) - Exit: The Crater (E2M1) - Complete
+  The Crater (E2M1) - Green key: The Crypts (E1M7) - Green key
+  The Crater (E2M1) - Mystic Urn: Tome of Power
+  The Crater (E2M1) - Shadowsphere: Energy Orb
+  The Ophidian Lair (E3M5) - Bag of Holding: Quartz Flask
+  The Ophidian Lair (E3M5) - Chaos Device: Quartz Flask
+  The Ophidian Lair (E3M5) - Dragon Claw: Silver Shield
+  The Ophidian Lair (E3M5) - Gauntlets of the Necromancer: Timebomb of the Ancients
+  The Ophidian Lair (E3M5) - Green key: Crystal Geode
+  The Ophidian Lair (E3M5) - Morph Ovum: The Chasm (E3M7) - Yellow key
+  The Ophidian Lair (E3M5) - Shadowsphere: Quiver of Ethereal Arrows
+}
+23: {
+  The Chasm (E3M7) - Blue key: The Crypts (E1M7) - Map Scroll
+  The Chasm (E3M7) - Chaos Device: Tome of Power
+  The Chasm (E3M7) - Enchanted Shield: Silver Shield
+  The Chasm (E3M7) - Exit: The Chasm (E3M7) - Complete
+  The Chasm (E3M7) - Gauntlets of the Necromancer: Enchanted Shield
+  The Chasm (E3M7) - Green key: Crystal Geode
+  The Chasm (E3M7) - Hellstaff: Timebomb of the Ancients
+  The Chasm (E3M7) - Map Scroll: The Confluence (E3M3) - Yellow key
+  The Chasm (E3M7) - Morph Ovum: Bag of Holding
+  The Chasm (E3M7) - Mystic Urn: Tome of Power
+  The Chasm (E3M7) - Phoenix Rod: The Great Hall (E2M7) - Yellow key
+  The Chasm (E3M7) - Ring of Invincibility: Morph Ovum
+  The Chasm (E3M7) - Tome of Power 2: The Confluence (E3M3) - Map Scroll
+  The Chasm (E3M7) - Tome of Power 3: Timebomb of the Ancients
+  The Chasm (E3M7) - Torch 2: Silver Shield
+  The Crypts (E1M7) - Blue key: Silver Shield
+  The Crypts (E1M7) - Silver Shield: Pile of Mace Spheres
+  The Crypts (E1M7) - Silver Shield 2: Timebomb of the Ancients
+  The Crypts (E1M7) - Torch: Crystal Geode
+  The Glacier (E2M9) - Blue key: Tome of Power
+  The Glacier (E2M9) - Enchanted Shield: Pile of Mace Spheres
+  The Glacier (E2M9) - Hellstaff: Inferno Orb
+  The Glacier (E2M9) - Mystic Urn 2: Quartz Flask
+  The Glacier (E2M9) - Phoenix Rod: Energy Orb
+  The Glacier (E2M9) - Ring of Invincibility: Quartz Flask
+  The Glacier (E2M9) - Torch: Pile of Mace Spheres
+}
+24: {
+  The Great Hall (E2M7) - Chaos Device: Crystal Geode
+  The Great Hall (E2M7) - Dragon Claw: Quartz Flask
+  The Great Hall (E2M7) - Exit: The Great Hall (E2M7) - Complete
+  The Great Hall (E2M7) - Green key: Greater Runes
+  The Great Hall (E2M7) - Hellstaff: Quartz Flask
+  The Great Hall (E2M7) - Map Scroll: Inferno Orb
+  The Great Hall (E2M7) - Mystic Urn: Mystic Urn
+  The Great Hall (E2M7) - Ring of Invincibility: The Citadel (E1M5) - Blue key
+  The Great Hall (E2M7) - Tome of Power: Timebomb of the Ancients
+}
+25: {
+  The Citadel (E1M5) - Exit: The Citadel (E1M5) - Complete
+  The Citadel (E1M5) - Silver Shield 2: The Lava Pits (E2M2) - Yellow key
+  The Citadel (E1M5) - Tome of Power 2: The Halls of Fear (E3M6)
+}
+26: {
+  The Halls of Fear (E3M6) - Dragon Claw: Timebomb of the Ancients
+  The Halls of Fear (E3M6) - Ethereal Crossbow: Silver Shield
+  The Halls of Fear (E3M6) - Firemace 4: Inferno Orb
+  The Halls of Fear (E3M6) - Gauntlets of the Necromancer: Timebomb of the Ancients
+  The Halls of Fear (E3M6) - Green key: Timebomb of the Ancients
+  The Halls of Fear (E3M6) - Hellstaff 2: Greater Runes
+  The Halls of Fear (E3M6) - Morph Ovum: Chaos Device
+  The Halls of Fear (E3M6) - Mystic Urn: The Halls of Fear (E3M6) - Blue key
+  The Halls of Fear (E3M6) - Silver Shield: Tome of Power
+  The Halls of Fear (E3M6) - Tome of Power 3: The River of Fire (E2M3) - Green key
+  The Halls of Fear (E3M6) - Yellow key: Crystal Geode
+  The Lava Pits (E2M2) - Bag of Holding: Silver Shield
+  The Lava Pits (E2M2) - Chaos Device: Inferno Orb
+  The Lava Pits (E2M2) - Dragon Claw: The Gatehouse (E1M3) - Map Scroll
+  The Lava Pits (E2M2) - Enchanted Shield: The Catacombs (E2M5) - Green key
+  The Lava Pits (E2M2) - Exit: The Lava Pits (E2M2) - Complete
+  The Lava Pits (E2M2) - Gauntlets of the Necromancer: The Halls of Fear (E3M6) - Green key
+  The Lava Pits (E2M2) - Hellstaff: Timebomb of the Ancients
+  The Lava Pits (E2M2) - Map Scroll: Chaos Device
+  The Lava Pits (E2M2) - Morph Ovum: Hell's Maw (E1M8) - Map Scroll
+  The Lava Pits (E2M2) - Mystic Urn: Energy Orb
+  The Lava Pits (E2M2) - Ring of Invincibility: The Labyrinth (E2M6) - Blue key
+  The Lava Pits (E2M2) - Silver Shield: Quiver of Ethereal Arrows
+  The Lava Pits (E2M2) - Tome of Power: Enchanted Shield
+}
+27: {
+  The Catacombs (E2M5) - Blue key: Energy Orb
+  The Catacombs (E2M5) - Enchanted Shield: Crystal Geode
+  The Catacombs (E2M5) - Exit: The Catacombs (E2M5) - Complete
+  The Catacombs (E2M5) - Map Scroll: Tome of Power
+  The Catacombs (E2M5) - Morph Ovum: Timebomb of the Ancients
+  The Halls of Fear (E3M6) - Bag of Holding: Tome of Power
+  The Halls of Fear (E3M6) - Bag of Holding 2: Quartz Flask
+  The Halls of Fear (E3M6) - Bag of Holding 3: Greater Runes
+  The Halls of Fear (E3M6) - Blue key: Silver Shield
+  The Halls of Fear (E3M6) - Chaos Device: Enchanted Shield
+  The Halls of Fear (E3M6) - Enchanted Shield: Timebomb of the Ancients
+  The Halls of Fear (E3M6) - Exit: The Halls of Fear (E3M6) - Complete
+  The Halls of Fear (E3M6) - Firemace: Inferno Orb
+  The Halls of Fear (E3M6) - Firemace 2: The Guard Tower (E1M4) - Yellow key
+  The Halls of Fear (E3M6) - Hellstaff: Tome of Power
+  The Halls of Fear (E3M6) - Map Scroll: Morph Ovum
+  The Halls of Fear (E3M6) - Phoenix Rod: Crystal Geode
+  The Halls of Fear (E3M6) - Shadowsphere: Greater Runes
+  The Halls of Fear (E3M6) - Tome of Power: Quiver of Ethereal Arrows
+  The Halls of Fear (E3M6) - Tome of Power 2: Inferno Orb
+  The Labyrinth (E2M6) - Exit: The Labyrinth (E2M6) - Complete
+  The Labyrinth (E2M6) - Firemace 4: Quiver of Ethereal Arrows
+  The Labyrinth (E2M6) - Phoenix Rod 2: Tome of Power
+  The Labyrinth (E2M6) - Ring of Invincibility: Silver Shield
+  The River of Fire (E2M3) - Blue key: Energy Orb
+  The River of Fire (E2M3) - Firemace: Crystal Geode
+  The River of Fire (E2M3) - Phoenix Rod: Ring of Invincibility
+  The River of Fire (E2M3) - Tome of Power 2: Inferno Orb
+}
+28: {
+  The Guard Tower (E1M4) - Exit: The Guard Tower (E1M4) - Complete
+  The Guard Tower (E1M4) - Green key: The Dungeons (E1M2) - Yellow key
+  The Guard Tower (E1M4) - Shadowsphere: Tome of Power
+  The Guard Tower (E1M4) - Tome of Power 2: Shadowsphere
+}
