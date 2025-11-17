@@ -917,6 +917,22 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      },
+      "AP_00679259829289197625": {
+        "seed": 6,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DOOM 1993"
+          }
+        ],
+        "files": [
+          "AP_00679259829289197625.archipelago",
+          "AP_00679259829289197625_Spoiler.txt",
+          "AP_00679259829289197625_rules.json",
+          "AP_00679259829289197625_spheres_log.jsonl"
+        ]
       }
     },
     "test_result": {

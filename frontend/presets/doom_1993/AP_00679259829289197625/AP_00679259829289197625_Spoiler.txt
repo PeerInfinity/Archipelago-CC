@@ -1,0 +1,801 @@
+﻿Archipelago Version 0.6.4  -  Seed: 6
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            DOOM 1993
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              Command Control (E1M4) - Mega Armor, Command Control (E1M4) - Supercharge, Containment Area (E2M2) - Plasma gun, Containment Area (E2M2) - Supercharge, House of Pain (E3M4) - Chaingun, House of Pain (E3M4) - Invulnerability, Mt. Erebus (E3M6) - Chainsaw, Pandemonium (E3M3) - Mega Armor, Unholy Cathedral (E3M5) - BFG9000
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+Goal:                            Complete All Levels
+Difficulty:                      Medium
+Random Monsters:                 Shuffle
+Random Pickups:                  Shuffle
+Random Music:                    Vanilla
+Flip Levels:                     Vanilla
+Allow Death Logic:               No
+Pro Doom:                        No
+Start With Computer Area Maps:   No
+Death Link:                      No
+Reset Level on Death:            Yes
+Episode 1:                       Yes
+Episode 2:                       Yes
+Episode 3:                       Yes
+Episode 4:                       No
+Split Backpack:                  No
+Backpack Count:                  1
+Max Ammo - Bullets:              200
+Max Ammo - Shells:               50
+Max Ammo - Rockets:              50
+Max Ammo - Energy Cells:         300
+Added Ammo - Bullets:            200
+Added Ammo - Shells:             50
+Added Ammo - Rockets:            50
+Added Ammo - Energy Cells:       300
+
+
+Starting Items:
+
+Hangar (E1M1)
+Deimos Anomaly (E2M1)
+Hell Keep (E3M1)
+
+Locations:
+
+Hangar (E1M1) - Mega Armor: BFG9000
+Hangar (E1M1) - Armor: Armor
+Hangar (E1M1) - Shotgun: Supercharge
+Hangar (E1M1) - Exit: Hangar (E1M1) - Complete
+Nuclear Plant (E1M2) - Shotgun: Berserk
+Nuclear Plant (E1M2) - Armor: Computer Station (E1M7)
+Nuclear Plant (E1M2) - Supercharge: Box of rockets
+Nuclear Plant (E1M2) - Chaingun: Limbo (E3M7) - Computer area map
+Nuclear Plant (E1M2) - Red keycard: Armor
+Nuclear Plant (E1M2) - Armor 2: Spawning Vats (E2M7) - Red keycard
+Nuclear Plant (E1M2) - Backpack: Box of bullets
+Nuclear Plant (E1M2) - Chainsaw: Invulnerability
+Nuclear Plant (E1M2) - Mega Armor: Pandemonium (E3M3) - Computer area map
+Nuclear Plant (E1M2) - Armor 3: Military Base (E1M9) - Red keycard
+Nuclear Plant (E1M2) - Backpack 2: Armor
+Nuclear Plant (E1M2) - Exit: Nuclear Plant (E1M2) - Complete
+Toxin Refinery (E1M3) - Armor: Containment Area (E2M2) - Blue keycard
+Toxin Refinery (E1M3) - Supercharge: Partial invisibility
+Toxin Refinery (E1M3) - Yellow keycard: Berserk
+Toxin Refinery (E1M3) - Blue keycard: Partial invisibility
+Toxin Refinery (E1M3) - Shotgun 2: Supercharge
+Toxin Refinery (E1M3) - Armor 2: Partial invisibility
+Toxin Refinery (E1M3) - Rocket launcher: Toxin Refinery (E1M3) - Yellow keycard
+Toxin Refinery (E1M3) - Chaingun: Armor
+Toxin Refinery (E1M3) - Backpack: Chainsaw
+Toxin Refinery (E1M3) - Chainsaw: Slough of Despair (E3M2) - Blue skull key
+Toxin Refinery (E1M3) - Armor 3: Supercharge
+Toxin Refinery (E1M3) - Exit: Toxin Refinery (E1M3) - Complete
+Toxin Refinery (E1M3) - Supercharge 2: Medikit
+Toxin Refinery (E1M3) - Partial invisibility: Computer Station (E1M7) - Yellow keycard
+Toxin Refinery (E1M3) - Mega Armor: Box of bullets
+Toxin Refinery (E1M3) - Shotgun: Energy cell pack
+Command Control (E1M4) - Chaingun: Armor
+Command Control (E1M4) - Blue keycard: Warrens (E3M9) - Red skull key
+Command Control (E1M4) - Supercharge: Partial invisibility
+Command Control (E1M4) - Rocket launcher: Supercharge
+Command Control (E1M4) - Mega Armor: Box of bullets
+Command Control (E1M4) - Shotgun: Toxin Refinery (E1M3) - Computer area map
+Command Control (E1M4) - Armor: Invulnerability
+Command Control (E1M4) - Yellow keycard: Supercharge
+Command Control (E1M4) - Exit: Command Control (E1M4) - Complete
+Command Control (E1M4) - Backpack: Armor
+Phobos Lab (E1M5) - Yellow keycard: Supercharge
+Phobos Lab (E1M5) - Mega Armor: Box of shotgun shells
+Phobos Lab (E1M5) - Rocket launcher: Phobos Lab (E1M5) - Computer area map
+Phobos Lab (E1M5) - Shotgun: Box of rockets
+Phobos Lab (E1M5) - Shotgun 2: Box of rockets
+Phobos Lab (E1M5) - Shotgun 3: Armor
+Phobos Lab (E1M5) - Armor: Limbo (E3M7) - Red skull key
+Phobos Lab (E1M5) - Chainsaw: Mega Armor
+Phobos Lab (E1M5) - Supercharge: Armor
+Phobos Lab (E1M5) - Mega Armor 2: Supercharge
+Phobos Lab (E1M5) - Partial invisibility: Armor
+Phobos Lab (E1M5) - Exit: Phobos Lab (E1M5) - Complete
+Phobos Lab (E1M5) - Blue keycard: Box of bullets
+Phobos Lab (E1M5) - Chaingun: Halls of the Damned (E2M6) - Blue skull key
+Phobos Lab (E1M5) - Backpack: Armor
+Phobos Lab (E1M5) - Computer area map: Medikit
+Phobos Lab (E1M5) - Armor 2: Deimos Lab (E2M4) - Yellow keycard
+Central Processing (E1M6) - Red keycard: Berserk
+Central Processing (E1M6) - Partial invisibility: Box of bullets
+Central Processing (E1M6) - Chaingun: Armor
+Central Processing (E1M6) - Backpack: Mt. Erebus (E3M6)
+Central Processing (E1M6) - Rocket launcher: Backpack
+Central Processing (E1M6) - Shotgun: Supercharge
+Central Processing (E1M6) - Armor: Box of bullets
+Central Processing (E1M6) - Armor 4: Hangar (E1M1) - Computer area map
+Central Processing (E1M6) - Supercharge: Medikit
+Central Processing (E1M6) - Blue keycard: Box of bullets
+Central Processing (E1M6) - Mega Armor: Command Control (E1M4) - Yellow keycard
+Central Processing (E1M6) - Partial invisibility 2: Command Control (E1M4) - Blue keycard
+Central Processing (E1M6) - Yellow keycard: Medikit
+Central Processing (E1M6) - Backpack 2: Supercharge
+Central Processing (E1M6) - Computer area map: Box of shotgun shells
+Central Processing (E1M6) - Armor 2: Box of rockets
+Central Processing (E1M6) - Armor 3: Phobos Lab (E1M5) - Blue keycard
+Central Processing (E1M6) - Exit: Central Processing (E1M6) - Complete
+Central Processing (E1M6) - Supercharge 2: Command Control (E1M4) - Computer area map
+Central Processing (E1M6) - Backpack 3: Phobos Lab (E1M5) - Yellow keycard
+Computer Station (E1M7) - Yellow keycard: Mt. Erebus (E3M6) - Blue skull key
+Computer Station (E1M7) - Armor: Armor
+Computer Station (E1M7) - Shotgun: Box of bullets
+Computer Station (E1M7) - Exit: Computer Station (E1M7) - Complete
+Computer Station (E1M7) - Blue keycard: Mega Armor
+Computer Station (E1M7) - Chaingun: Deimos Lab (E2M4)
+Computer Station (E1M7) - Computer area map: Spawning Vats (E2M7) - Computer area map
+Computer Station (E1M7) - Supercharge: Computer Station (E1M7) - Red keycard
+Computer Station (E1M7) - Red keycard: Mega Armor
+Computer Station (E1M7) - Chainsaw: Command Center (E2M5) - Computer area map
+Computer Station (E1M7) - Rocket launcher: Armor
+Computer Station (E1M7) - Armor 2: Armor
+Computer Station (E1M7) - Mega Armor: Supercharge
+Computer Station (E1M7) - Backpack: Supercharge
+Computer Station (E1M7) - Partial invisibility: Containment Area (E2M2) - Yellow keycard
+Computer Station (E1M7) - Shotgun 2: Box of bullets
+Phobos Anomaly (E1M8) - Supercharge: Supercharge
+Phobos Anomaly (E1M8) - Shotgun: Military Base (E1M9) - Computer area map
+Phobos Anomaly (E1M8) - Shotgun 2: Mega Armor
+Phobos Anomaly (E1M8) - Armor: Partial invisibility
+Phobos Anomaly (E1M8) - Chaingun: Deimos Lab (E2M4) - Computer area map
+Phobos Anomaly (E1M8) - Partial invisibility: Invulnerability
+Phobos Anomaly (E1M8) - Computer area map: Box of shotgun shells
+Phobos Anomaly (E1M8) - Exit: Phobos Anomaly (E1M8) - Complete
+Military Base (E1M9) - Yellow keycard: Box of shotgun shells
+Military Base (E1M9) - Chaingun: Armor
+Military Base (E1M9) - Armor: Limbo (E3M7) - Blue skull key
+Military Base (E1M9) - Rocket launcher: Mega Armor
+Military Base (E1M9) - Backpack: Supercharge
+Military Base (E1M9) - Shotgun: Supercharge
+Military Base (E1M9) - Chainsaw: Medikit
+Military Base (E1M9) - Exit: Military Base (E1M9) - Complete
+Military Base (E1M9) - Blue keycard: Partial invisibility
+Military Base (E1M9) - Red keycard: Armor
+Deimos Anomaly (E2M1) - Plasma gun: Unholy Cathedral (E3M5) - Yellow skull key
+Deimos Anomaly (E2M1) - Blue keycard: Halls of the Damned (E2M6) - Computer area map
+Deimos Anomaly (E2M1) - Shotgun: Command Control (E1M4)
+Deimos Anomaly (E2M1) - Armor: Partial invisibility
+Deimos Anomaly (E2M1) - Red keycard: Chaingun
+Deimos Anomaly (E2M1) - Shotgun 2: Tower of Babel (E2M8)
+Deimos Anomaly (E2M1) - Exit: Deimos Anomaly (E2M1) - Complete
+Deimos Anomaly (E2M1) - Computer area map: Box of rockets
+Deimos Anomaly (E2M1) - Mega Armor: Halls of the Damned (E2M6) - Red skull key
+Containment Area (E2M2) - Armor: Box of bullets
+Containment Area (E2M2) - Armor 2: Unholy Cathedral (E3M5) - Blue skull key
+Containment Area (E2M2) - Backpack: Toxin Refinery (E1M3) - Blue keycard
+Containment Area (E2M2) - Supercharge: Mega Armor
+Containment Area (E2M2) - Chainsaw: Armor
+Containment Area (E2M2) - Armor 3: Pandemonium (E3M3) - Blue skull key
+Containment Area (E2M2) - Computer area map: Invulnerability
+Containment Area (E2M2) - Mega Armor: Armor
+Containment Area (E2M2) - Plasma gun: Mega Armor
+Containment Area (E2M2) - Blue keycard: Fortress of Mystery (E2M9) - Blue skull key
+Containment Area (E2M2) - Yellow keycard: Armor
+Containment Area (E2M2) - Shotgun: Box of rockets
+Containment Area (E2M2) - Shotgun 2: Supercharge
+Containment Area (E2M2) - Armor 4: Medikit
+Containment Area (E2M2) - Berserk: Box of rockets
+Containment Area (E2M2) - Red keycard: Command Center (E2M5)
+Containment Area (E2M2) - Chaingun: Computer Station (E1M7) - Computer area map
+Containment Area (E2M2) - Rocket launcher: Armor
+Containment Area (E2M2) - Backpack 2: Phobos Anomaly (E1M8)
+Containment Area (E2M2) - Exit: Containment Area (E2M2) - Complete
+Refinery (E2M3) - Plasma gun: Armor
+Refinery (E2M3) - Backpack: Military Base (E1M9) - Blue keycard
+Refinery (E2M3) - Mega Armor: Box of shotgun shells
+Refinery (E2M3) - Armor: Hell Keep (E3M1) - Computer area map
+Refinery (E2M3) - Blue keycard: Armor
+Refinery (E2M3) - Partial invisibility 2: Box of rockets
+Refinery (E2M3) - Shotgun: Energy cell pack
+Refinery (E2M3) - Berserk: Fortress of Mystery (E2M9)
+Refinery (E2M3) - Chaingun: Berserk
+Refinery (E2M3) - Partial invisibility: Slough of Despair (E3M2)
+Refinery (E2M3) - Supercharge: Supercharge
+Refinery (E2M3) - Exit: Refinery (E2M3) - Complete
+Deimos Lab (E2M4) - Armor: Partial invisibility
+Deimos Lab (E2M4) - Partial invisibility: Armor
+Deimos Lab (E2M4) - Computer area map: Box of rockets
+Deimos Lab (E2M4) - Armor 2: Energy cell pack
+Deimos Lab (E2M4) - Blue keycard: Fortress of Mystery (E2M9) - Yellow skull key
+Deimos Lab (E2M4) - Backpack: Energy cell pack
+Deimos Lab (E2M4) - Berserk: Box of rockets
+Deimos Lab (E2M4) - Partial invisibility 2: Energy cell pack
+Deimos Lab (E2M4) - Armor 3: Box of bullets
+Deimos Lab (E2M4) - Chaingun: Armor
+Deimos Lab (E2M4) - Supercharge 2: Energy cell pack
+Deimos Lab (E2M4) - Yellow keycard: Medikit
+Deimos Lab (E2M4) - Supercharge: Mega Armor
+Deimos Lab (E2M4) - Mega Armor: Berserk
+Deimos Lab (E2M4) - Plasma gun: Mega Armor
+Deimos Lab (E2M4) - Exit: Deimos Lab (E2M4) - Complete
+Deimos Lab (E2M4) - Shotgun: Medikit
+Command Center (E2M5) - Backpack: Armor
+Command Center (E2M5) - Mega Armor: Energy cell pack
+Command Center (E2M5) - Berserk: Spawning Vats (E2M7) - Blue keycard
+Command Center (E2M5) - Chaingun: Berserk
+Command Center (E2M5) - Chainsaw: Supercharge
+Command Center (E2M5) - Plasma gun: Box of rockets
+Command Center (E2M5) - Computer area map: Partial invisibility
+Command Center (E2M5) - Armor: Energy cell pack
+Command Center (E2M5) - Armor 2: Mega Armor
+Command Center (E2M5) - Partial invisibility: Partial invisibility
+Command Center (E2M5) - Exit: Command Center (E2M5) - Complete
+Halls of the Damned (E2M6) - Berserk: Armor
+Halls of the Damned (E2M6) - Blue skull key: Mega Armor
+Halls of the Damned (E2M6) - Backpack: Mega Armor
+Halls of the Damned (E2M6) - Mega Armor: Box of bullets
+Halls of the Damned (E2M6) - Armor: Refinery (E2M3) - Blue keycard
+Halls of the Damned (E2M6) - Partial invisibility: Warrens (E3M9) - Blue skull key
+Halls of the Damned (E2M6) - Chaingun: Energy cell pack
+Halls of the Damned (E2M6) - Plasma gun: Box of shotgun shells
+Halls of the Damned (E2M6) - Red skull key: Mt. Erebus (E3M6) - Computer area map
+Halls of the Damned (E2M6) - Shotgun: Refinery (E2M3) - Computer area map
+Halls of the Damned (E2M6) - Rocket launcher: Central Processing (E1M6) - Red keycard
+Halls of the Damned (E2M6) - Chainsaw: Deimos Anomaly (E2M1) - Blue keycard
+Halls of the Damned (E2M6) - Partial invisibility 3: Mega Armor
+Halls of the Damned (E2M6) - Computer area map: Armor
+Halls of the Damned (E2M6) - Supercharge: Partial invisibility
+Halls of the Damned (E2M6) - Exit: Halls of the Damned (E2M6) - Complete
+Halls of the Damned (E2M6) - Yellow skull key: Box of bullets
+Halls of the Damned (E2M6) - Partial invisibility 2: Armor
+Spawning Vats (E2M7) - Rocket launcher: Energy cell pack
+Spawning Vats (E2M7) - Partial invisibility: Phobos Lab (E1M5)
+Spawning Vats (E2M7) - Mega Armor: Partial invisibility
+Spawning Vats (E2M7) - Armor: Armor
+Spawning Vats (E2M7) - Blue keycard: Slough of Despair (E3M2) - Computer area map
+Spawning Vats (E2M7) - Invulnerability: Box of shotgun shells
+Spawning Vats (E2M7) - Berserk: Box of rockets
+Spawning Vats (E2M7) - Chainsaw: Partial invisibility
+Spawning Vats (E2M7) - Invulnerability 2: Partial invisibility
+Spawning Vats (E2M7) - Computer area map: Armor
+Spawning Vats (E2M7) - Plasma gun: Energy cell pack
+Spawning Vats (E2M7) - Backpack: Supercharge
+Spawning Vats (E2M7) - Chaingun: Armor
+Spawning Vats (E2M7) - Yellow keycard: Partial invisibility
+Spawning Vats (E2M7) - Red keycard: Supercharge
+Spawning Vats (E2M7) - Exit: Spawning Vats (E2M7) - Complete
+Spawning Vats (E2M7) - Supercharge: Invulnerability
+Tower of Babel (E2M8) - Rocket launcher: Armor
+Tower of Babel (E2M8) - Supercharge: Medikit
+Tower of Babel (E2M8) - Supercharge 2: Mega Armor
+Tower of Babel (E2M8) - Exit: Tower of Babel (E2M8) - Complete
+Tower of Babel (E2M8) - Mega Armor: Shotgun
+Fortress of Mystery (E2M9) - Supercharge: Spawning Vats (E2M7) - Yellow keycard
+Fortress of Mystery (E2M9) - Blue skull key: Mega Armor
+Fortress of Mystery (E2M9) - Backpack: Warrens (E3M9)
+Fortress of Mystery (E2M9) - Chaingun: Medikit
+Fortress of Mystery (E2M9) - Plasma gun: House of Pain (E3M4)
+Fortress of Mystery (E2M9) - Rocket launcher: Military Base (E1M9)
+Fortress of Mystery (E2M9) - Shotgun: Armor
+Fortress of Mystery (E2M9) - Chainsaw: Medikit
+Fortress of Mystery (E2M9) - Computer area map: Invulnerability
+Fortress of Mystery (E2M9) - Mega Armor: Computer Station (E1M7) - Blue keycard
+Fortress of Mystery (E2M9) - Red skull key: Limbo (E3M7)
+Fortress of Mystery (E2M9) - Yellow skull key: Box of rockets
+Fortress of Mystery (E2M9) - Exit: Fortress of Mystery (E2M9) - Complete
+Hell Keep (E3M1) - Shotgun: Refinery (E2M3)
+Hell Keep (E3M1) - Rocket launcher: Box of shotgun shells
+Hell Keep (E3M1) - Exit: Hell Keep (E3M1) - Complete
+Slough of Despair (E3M2) - Chaingun: Energy cell pack
+Slough of Despair (E3M2) - Berserk: Supercharge
+Slough of Despair (E3M2) - Mega Armor: Invulnerability
+Slough of Despair (E3M2) - Armor: Berserk
+Slough of Despair (E3M2) - Rocket launcher: Warrens (E3M9) - Computer area map
+Slough of Despair (E3M2) - Plasma gun: Limbo (E3M7) - Yellow skull key
+Slough of Despair (E3M2) - Computer area map: Partial invisibility
+Slough of Despair (E3M2) - Blue skull key: Energy cell pack
+Slough of Despair (E3M2) - Supercharge: Mega Armor
+Slough of Despair (E3M2) - Exit: Slough of Despair (E3M2) - Complete
+Pandemonium (E3M3) - Berserk: Mega Armor
+Pandemonium (E3M3) - Chaingun: Mega Armor
+Pandemonium (E3M3) - BFG9000: Armor
+Pandemonium (E3M3) - Supercharge: Plasma gun
+Pandemonium (E3M3) - Invulnerability: Supercharge
+Pandemonium (E3M3) - Blue skull key: Box of rockets
+Pandemonium (E3M3) - Mega Armor: Box of shotgun shells
+Pandemonium (E3M3) - Shotgun: Supercharge
+Pandemonium (E3M3) - Armor: Box of shotgun shells
+Pandemonium (E3M3) - Backpack: Tower of Babel (E2M8) - Computer area map
+Pandemonium (E3M3) - Computer area map: Armor
+Pandemonium (E3M3) - Mega Armor 2: Supercharge
+Pandemonium (E3M3) - Shotgun 2: Box of rockets
+Pandemonium (E3M3) - Rocket launcher: Energy cell pack
+Pandemonium (E3M3) - Exit: Pandemonium (E3M3) - Complete
+House of Pain (E3M4) - Shotgun: Unholy Cathedral (E3M5) - Computer area map
+House of Pain (E3M4) - Berserk: Central Processing (E1M6)
+House of Pain (E3M4) - Mega Armor: Containment Area (E2M2)
+House of Pain (E3M4) - Chaingun: Medikit
+House of Pain (E3M4) - Invulnerability: Supercharge
+House of Pain (E3M4) - Blue skull key: Halls of the Damned (E2M6) - Yellow skull key
+House of Pain (E3M4) - Armor: Partial invisibility
+House of Pain (E3M4) - Armor 2: Deimos Anomaly (E2M1) - Computer area map
+House of Pain (E3M4) - Rocket launcher: Nuclear Plant (E1M2) - Red keycard
+House of Pain (E3M4) - Yellow skull key: Medikit
+House of Pain (E3M4) - Invulnerability 2: Partial invisibility
+House of Pain (E3M4) - Partial invisibility: Armor
+House of Pain (E3M4) - BFG9000: Dis (E3M8) - Computer area map
+House of Pain (E3M4) - Supercharge: Toxin Refinery (E1M3)
+House of Pain (E3M4) - Armor 3: Nuclear Plant (E1M2)
+House of Pain (E3M4) - Backpack: Box of rockets
+House of Pain (E3M4) - Mega Armor 2: Fortress of Mystery (E2M9) - Computer area map
+House of Pain (E3M4) - Exit: House of Pain (E3M4) - Complete
+House of Pain (E3M4) - Red skull key: House of Pain (E3M4) - Red skull key
+Unholy Cathedral (E3M5) - Blue skull key: Energy cell pack
+Unholy Cathedral (E3M5) - Chaingun: Berserk
+Unholy Cathedral (E3M5) - Plasma gun: Halls of the Damned (E2M6)
+Unholy Cathedral (E3M5) - Supercharge: Deimos Lab (E2M4) - Blue keycard
+Unholy Cathedral (E3M5) - Yellow skull key: Invulnerability
+Unholy Cathedral (E3M5) - Invulnerability: Invulnerability
+Unholy Cathedral (E3M5) - Berserk: Box of rockets
+Unholy Cathedral (E3M5) - Partial invisibility: Berserk
+Unholy Cathedral (E3M5) - Shotgun 2: Phobos Anomaly (E1M8) - Computer area map
+Unholy Cathedral (E3M5) - Rocket launcher: Central Processing (E1M6) - Yellow keycard
+Unholy Cathedral (E3M5) - BFG9000: Supercharge
+Unholy Cathedral (E3M5) - Exit: Unholy Cathedral (E3M5) - Complete
+Unholy Cathedral (E3M5) - Chainsaw: Energy cell pack
+Unholy Cathedral (E3M5) - Supercharge 2: Mega Armor
+Unholy Cathedral (E3M5) - Shotgun: Fortress of Mystery (E2M9) - Red skull key
+Mt. Erebus (E3M6) - Mega Armor: Armor
+Mt. Erebus (E3M6) - Armor: Box of bullets
+Mt. Erebus (E3M6) - Backpack: Military Base (E1M9) - Yellow keycard
+Mt. Erebus (E3M6) - Invulnerability: Deimos Anomaly (E2M1) - Red keycard
+Mt. Erebus (E3M6) - Chaingun: Central Processing (E1M6) - Computer area map
+Mt. Erebus (E3M6) - Shotgun: Box of rockets
+Mt. Erebus (E3M6) - Rocket launcher: Berserk
+Mt. Erebus (E3M6) - Plasma gun: Invulnerability
+Mt. Erebus (E3M6) - Armor 2: Energy cell pack
+Mt. Erebus (E3M6) - Berserk: Medikit
+Mt. Erebus (E3M6) - Invulnerability 2: Unholy Cathedral (E3M5)
+Mt. Erebus (E3M6) - Supercharge: Armor
+Mt. Erebus (E3M6) - Blue skull key: Medikit
+Mt. Erebus (E3M6) - Blue skull key 2: Box of shotgun shells
+Mt. Erebus (E3M6) - Computer area map: Mega Armor
+Mt. Erebus (E3M6) - Chainsaw: Supercharge
+Mt. Erebus (E3M6) - Supercharge 2: Energy cell pack
+Mt. Erebus (E3M6) - Exit: Mt. Erebus (E3M6) - Complete
+Limbo (E3M7) - Blue skull key: Mega Armor
+Limbo (E3M7) - Supercharge: Supercharge
+Limbo (E3M7) - Rocket launcher: Box of shotgun shells
+Limbo (E3M7) - Backpack: Mega Armor
+Limbo (E3M7) - Armor 2: Dis (E3M8)
+Limbo (E3M7) - Mega Armor: Mega Armor
+Limbo (E3M7) - Red skull key: Energy cell pack
+Limbo (E3M7) - BFG9000: Pandemonium (E3M3)
+Limbo (E3M7) - Yellow skull key: Berserk
+Limbo (E3M7) - Exit: Limbo (E3M7) - Complete
+Limbo (E3M7) - Plasma gun: Energy cell pack
+Limbo (E3M7) - Armor: House of Pain (E3M4) - Yellow skull key
+Dis (E3M8) - Rocket launcher: Mega Armor
+Dis (E3M8) - Plasma gun: Medikit
+Dis (E3M8) - Mega Armor: Armor
+Dis (E3M8) - Exit: Dis (E3M8) - Complete
+Warrens (E3M9) - Shotgun: Rocket launcher
+Warrens (E3M9) - Exit: Warrens (E3M9) - Complete
+Warrens (E3M9) - Rocket launcher: Central Processing (E1M6) - Blue keycard
+Warrens (E3M9) - Rocket launcher 2: Supercharge
+Warrens (E3M9) - Supercharge: House of Pain (E3M4) - Computer area map
+Warrens (E3M9) - Blue skull key: Box of shotgun shells
+Warrens (E3M9) - Berserk: Box of rockets
+Warrens (E3M9) - Invulnerability: Energy cell pack
+Warrens (E3M9) - Partial invisibility: Mega Armor
+Warrens (E3M9) - Chaingun: Containment Area (E2M2) - Computer area map
+Warrens (E3M9) - Plasma gun: Berserk
+Warrens (E3M9) - Invulnerability 2: House of Pain (E3M4) - Blue skull key
+Warrens (E3M9) - Armor: Armor
+Warrens (E3M9) - Chainsaw: Spawning Vats (E2M7)
+Warrens (E3M9) - BFG9000: Containment Area (E2M2) - Red keycard
+Warrens (E3M9) - Red skull key: Nuclear Plant (E1M2) - Computer area map
+Warrens (E3M9) - Supercharge 2: Armor
+
+Playthrough:
+
+0: {
+  Deimos Anomaly (E2M1)
+  Hangar (E1M1)
+  Hell Keep (E3M1)
+}
+1: {
+  Deimos Anomaly (E2M1) - Armor: Partial invisibility
+  Deimos Anomaly (E2M1) - Blue keycard: Halls of the Damned (E2M6) - Computer area map
+  Deimos Anomaly (E2M1) - Plasma gun: Unholy Cathedral (E3M5) - Yellow skull key
+  Deimos Anomaly (E2M1) - Red keycard: Chaingun
+  Deimos Anomaly (E2M1) - Shotgun: Command Control (E1M4)
+  Deimos Anomaly (E2M1) - Shotgun 2: Tower of Babel (E2M8)
+  Hangar (E1M1) - Armor: Armor
+  Hangar (E1M1) - Exit: Hangar (E1M1) - Complete
+  Hangar (E1M1) - Mega Armor: BFG9000
+  Hangar (E1M1) - Shotgun: Supercharge
+  Hell Keep (E3M1) - Shotgun: Refinery (E2M3)
+}
+2: {
+  Command Control (E1M4) - Backpack: Armor
+  Hell Keep (E3M1) - Exit: Hell Keep (E3M1) - Complete
+  Hell Keep (E3M1) - Rocket launcher: Box of shotgun shells
+  Tower of Babel (E2M8) - Mega Armor: Shotgun
+}
+3: {
+  Command Control (E1M4) - Blue keycard: Warrens (E3M9) - Red skull key
+  Command Control (E1M4) - Chaingun: Armor
+  Command Control (E1M4) - Mega Armor: Box of bullets
+  Command Control (E1M4) - Rocket launcher: Supercharge
+  Command Control (E1M4) - Shotgun: Toxin Refinery (E1M3) - Computer area map
+  Command Control (E1M4) - Supercharge: Partial invisibility
+  Refinery (E2M3) - Armor: Hell Keep (E3M1) - Computer area map
+  Refinery (E2M3) - Backpack: Military Base (E1M9) - Blue keycard
+  Refinery (E2M3) - Berserk: Fortress of Mystery (E2M9)
+  Refinery (E2M3) - Blue keycard: Armor
+  Refinery (E2M3) - Chaingun: Berserk
+  Refinery (E2M3) - Mega Armor: Box of shotgun shells
+  Refinery (E2M3) - Partial invisibility 2: Box of rockets
+  Refinery (E2M3) - Plasma gun: Armor
+  Refinery (E2M3) - Shotgun: Energy cell pack
+  Tower of Babel (E2M8) - Exit: Tower of Babel (E2M8) - Complete
+  Tower of Babel (E2M8) - Rocket launcher: Armor
+  Tower of Babel (E2M8) - Supercharge: Medikit
+  Tower of Babel (E2M8) - Supercharge 2: Mega Armor
+}
+4: {
+  Fortress of Mystery (E2M9) - Backpack: Warrens (E3M9)
+  Fortress of Mystery (E2M9) - Blue skull key: Mega Armor
+  Fortress of Mystery (E2M9) - Chaingun: Medikit
+  Fortress of Mystery (E2M9) - Chainsaw: Medikit
+  Fortress of Mystery (E2M9) - Computer area map: Invulnerability
+  Fortress of Mystery (E2M9) - Mega Armor: Computer Station (E1M7) - Blue keycard
+  Fortress of Mystery (E2M9) - Plasma gun: House of Pain (E3M4)
+  Fortress of Mystery (E2M9) - Rocket launcher: Military Base (E1M9)
+  Fortress of Mystery (E2M9) - Shotgun: Armor
+  Fortress of Mystery (E2M9) - Supercharge: Spawning Vats (E2M7) - Yellow keycard
+}
+5: {
+  House of Pain (E3M4) - Armor: Partial invisibility
+  House of Pain (E3M4) - Armor 2: Deimos Anomaly (E2M1) - Computer area map
+  House of Pain (E3M4) - Berserk: Central Processing (E1M6)
+  House of Pain (E3M4) - Blue skull key: Halls of the Damned (E2M6) - Yellow skull key
+  House of Pain (E3M4) - Chaingun: Medikit
+  House of Pain (E3M4) - Invulnerability: Supercharge
+  House of Pain (E3M4) - Mega Armor: Containment Area (E2M2)
+  House of Pain (E3M4) - Rocket launcher: Nuclear Plant (E1M2) - Red keycard
+  House of Pain (E3M4) - Shotgun: Unholy Cathedral (E3M5) - Computer area map
+  Military Base (E1M9) - Armor: Limbo (E3M7) - Blue skull key
+  Military Base (E1M9) - Backpack: Supercharge
+  Military Base (E1M9) - Chaingun: Armor
+  Military Base (E1M9) - Chainsaw: Medikit
+  Military Base (E1M9) - Exit: Military Base (E1M9) - Complete
+  Military Base (E1M9) - Rocket launcher: Mega Armor
+  Military Base (E1M9) - Shotgun: Supercharge
+  Military Base (E1M9) - Yellow keycard: Box of shotgun shells
+}
+6: {
+  Containment Area (E2M2) - Armor: Box of bullets
+  Containment Area (E2M2) - Armor 2: Unholy Cathedral (E3M5) - Blue skull key
+  Containment Area (E2M2) - Armor 3: Pandemonium (E3M3) - Blue skull key
+  Containment Area (E2M2) - Armor 4: Medikit
+  Containment Area (E2M2) - Backpack: Toxin Refinery (E1M3) - Blue keycard
+  Containment Area (E2M2) - Berserk: Box of rockets
+  Containment Area (E2M2) - Blue keycard: Fortress of Mystery (E2M9) - Blue skull key
+  Containment Area (E2M2) - Chainsaw: Armor
+  Containment Area (E2M2) - Computer area map: Invulnerability
+  Containment Area (E2M2) - Mega Armor: Armor
+  Containment Area (E2M2) - Plasma gun: Mega Armor
+  Containment Area (E2M2) - Shotgun: Box of rockets
+  Containment Area (E2M2) - Shotgun 2: Supercharge
+  Containment Area (E2M2) - Supercharge: Mega Armor
+  Containment Area (E2M2) - Yellow keycard: Armor
+}
+7: {
+  Fortress of Mystery (E2M9) - Red skull key: Limbo (E3M7)
+}
+8: {
+  Limbo (E3M7) - Armor 2: Dis (E3M8)
+  Limbo (E3M7) - BFG9000: Pandemonium (E3M3)
+  Limbo (E3M7) - Backpack: Mega Armor
+  Limbo (E3M7) - Blue skull key: Mega Armor
+  Limbo (E3M7) - Mega Armor: Mega Armor
+  Limbo (E3M7) - Red skull key: Energy cell pack
+  Limbo (E3M7) - Rocket launcher: Box of shotgun shells
+  Limbo (E3M7) - Supercharge: Supercharge
+}
+9: {
+  Dis (E3M8) - Exit: Dis (E3M8) - Complete
+  Dis (E3M8) - Mega Armor: Armor
+  Dis (E3M8) - Plasma gun: Medikit
+  Dis (E3M8) - Rocket launcher: Mega Armor
+  Pandemonium (E3M3) - Armor: Box of shotgun shells
+  Pandemonium (E3M3) - BFG9000: Armor
+  Pandemonium (E3M3) - Backpack: Tower of Babel (E2M8) - Computer area map
+  Pandemonium (E3M3) - Berserk: Mega Armor
+  Pandemonium (E3M3) - Blue skull key: Box of rockets
+  Pandemonium (E3M3) - Chaingun: Mega Armor
+  Pandemonium (E3M3) - Computer area map: Armor
+  Pandemonium (E3M3) - Exit: Pandemonium (E3M3) - Complete
+  Pandemonium (E3M3) - Invulnerability: Supercharge
+  Pandemonium (E3M3) - Mega Armor: Box of shotgun shells
+  Pandemonium (E3M3) - Mega Armor 2: Supercharge
+  Pandemonium (E3M3) - Rocket launcher: Energy cell pack
+  Pandemonium (E3M3) - Shotgun: Supercharge
+  Pandemonium (E3M3) - Shotgun 2: Box of rockets
+  Pandemonium (E3M3) - Supercharge: Plasma gun
+}
+10: {
+  Warrens (E3M9) - Shotgun: Rocket launcher
+}
+11: {
+  Central Processing (E1M6) - Armor: Box of bullets
+  Central Processing (E1M6) - Armor 4: Hangar (E1M1) - Computer area map
+  Central Processing (E1M6) - Backpack: Mt. Erebus (E3M6)
+  Central Processing (E1M6) - Chaingun: Armor
+  Central Processing (E1M6) - Partial invisibility: Box of bullets
+  Central Processing (E1M6) - Red keycard: Berserk
+  Central Processing (E1M6) - Rocket launcher: Backpack
+  Central Processing (E1M6) - Shotgun: Supercharge
+}
+12: {
+  Mt. Erebus (E3M6) - Armor: Box of bullets
+  Mt. Erebus (E3M6) - Armor 2: Energy cell pack
+  Mt. Erebus (E3M6) - Backpack: Military Base (E1M9) - Yellow keycard
+  Mt. Erebus (E3M6) - Berserk: Medikit
+  Mt. Erebus (E3M6) - Blue skull key: Medikit
+  Mt. Erebus (E3M6) - Blue skull key 2: Box of shotgun shells
+  Mt. Erebus (E3M6) - Chaingun: Central Processing (E1M6) - Computer area map
+  Mt. Erebus (E3M6) - Chainsaw: Supercharge
+  Mt. Erebus (E3M6) - Computer area map: Mega Armor
+  Mt. Erebus (E3M6) - Invulnerability: Deimos Anomaly (E2M1) - Red keycard
+  Mt. Erebus (E3M6) - Invulnerability 2: Unholy Cathedral (E3M5)
+  Mt. Erebus (E3M6) - Mega Armor: Armor
+  Mt. Erebus (E3M6) - Plasma gun: Invulnerability
+  Mt. Erebus (E3M6) - Rocket launcher: Berserk
+  Mt. Erebus (E3M6) - Shotgun: Box of rockets
+  Mt. Erebus (E3M6) - Supercharge: Armor
+  Mt. Erebus (E3M6) - Supercharge 2: Energy cell pack
+}
+13: {
+  Deimos Anomaly (E2M1) - Computer area map: Box of rockets
+  Deimos Anomaly (E2M1) - Mega Armor: Halls of the Damned (E2M6) - Red skull key
+  Military Base (E1M9) - Red keycard: Armor
+  Unholy Cathedral (E3M5) - BFG9000: Supercharge
+  Unholy Cathedral (E3M5) - Berserk: Box of rockets
+  Unholy Cathedral (E3M5) - Blue skull key: Energy cell pack
+  Unholy Cathedral (E3M5) - Chaingun: Berserk
+  Unholy Cathedral (E3M5) - Chainsaw: Energy cell pack
+  Unholy Cathedral (E3M5) - Exit: Unholy Cathedral (E3M5) - Complete
+  Unholy Cathedral (E3M5) - Invulnerability: Invulnerability
+  Unholy Cathedral (E3M5) - Partial invisibility: Berserk
+  Unholy Cathedral (E3M5) - Plasma gun: Halls of the Damned (E2M6)
+  Unholy Cathedral (E3M5) - Rocket launcher: Central Processing (E1M6) - Yellow keycard
+  Unholy Cathedral (E3M5) - Shotgun: Fortress of Mystery (E2M9) - Red skull key
+  Unholy Cathedral (E3M5) - Shotgun 2: Phobos Anomaly (E1M8) - Computer area map
+  Unholy Cathedral (E3M5) - Supercharge: Deimos Lab (E2M4) - Blue keycard
+  Unholy Cathedral (E3M5) - Supercharge 2: Mega Armor
+  Unholy Cathedral (E3M5) - Yellow skull key: Invulnerability
+}
+14: {
+  Central Processing (E1M6) - Armor 3: Phobos Lab (E1M5) - Blue keycard
+  Central Processing (E1M6) - Exit: Central Processing (E1M6) - Complete
+  Fortress of Mystery (E2M9) - Yellow skull key: Box of rockets
+  Halls of the Damned (E2M6) - Armor: Refinery (E2M3) - Blue keycard
+  Halls of the Damned (E2M6) - Backpack: Mega Armor
+  Halls of the Damned (E2M6) - Berserk: Armor
+  Halls of the Damned (E2M6) - Blue skull key: Mega Armor
+  Halls of the Damned (E2M6) - Chaingun: Energy cell pack
+  Halls of the Damned (E2M6) - Chainsaw: Deimos Anomaly (E2M1) - Blue keycard
+  Halls of the Damned (E2M6) - Computer area map: Armor
+  Halls of the Damned (E2M6) - Mega Armor: Box of bullets
+  Halls of the Damned (E2M6) - Partial invisibility: Warrens (E3M9) - Blue skull key
+  Halls of the Damned (E2M6) - Partial invisibility 2: Armor
+  Halls of the Damned (E2M6) - Partial invisibility 3: Mega Armor
+  Halls of the Damned (E2M6) - Plasma gun: Box of shotgun shells
+  Halls of the Damned (E2M6) - Red skull key: Mt. Erebus (E3M6) - Computer area map
+  Halls of the Damned (E2M6) - Rocket launcher: Central Processing (E1M6) - Red keycard
+  Halls of the Damned (E2M6) - Shotgun: Refinery (E2M3) - Computer area map
+  Halls of the Damned (E2M6) - Supercharge: Partial invisibility
+  Halls of the Damned (E2M6) - Yellow skull key: Box of bullets
+}
+15: {
+  Central Processing (E1M6) - Blue keycard: Box of bullets
+  Central Processing (E1M6) - Mega Armor: Command Control (E1M4) - Yellow keycard
+  Central Processing (E1M6) - Partial invisibility 2: Command Control (E1M4) - Blue keycard
+  Central Processing (E1M6) - Supercharge: Medikit
+  Deimos Anomaly (E2M1) - Exit: Deimos Anomaly (E2M1) - Complete
+  Refinery (E2M3) - Exit: Refinery (E2M3) - Complete
+  Refinery (E2M3) - Partial invisibility: Slough of Despair (E3M2)
+  Refinery (E2M3) - Supercharge: Supercharge
+  Warrens (E3M9) - Armor: Armor
+  Warrens (E3M9) - BFG9000: Containment Area (E2M2) - Red keycard
+  Warrens (E3M9) - Berserk: Box of rockets
+  Warrens (E3M9) - Blue skull key: Box of shotgun shells
+  Warrens (E3M9) - Chaingun: Containment Area (E2M2) - Computer area map
+  Warrens (E3M9) - Chainsaw: Spawning Vats (E2M7)
+  Warrens (E3M9) - Exit: Warrens (E3M9) - Complete
+  Warrens (E3M9) - Invulnerability: Energy cell pack
+  Warrens (E3M9) - Invulnerability 2: House of Pain (E3M4) - Blue skull key
+  Warrens (E3M9) - Partial invisibility: Mega Armor
+  Warrens (E3M9) - Plasma gun: Berserk
+  Warrens (E3M9) - Red skull key: Nuclear Plant (E1M2) - Computer area map
+  Warrens (E3M9) - Rocket launcher: Central Processing (E1M6) - Blue keycard
+  Warrens (E3M9) - Rocket launcher 2: Supercharge
+  Warrens (E3M9) - Supercharge: House of Pain (E3M4) - Computer area map
+  Warrens (E3M9) - Supercharge 2: Armor
+}
+16: {
+  Central Processing (E1M6) - Armor 2: Box of rockets
+  Central Processing (E1M6) - Backpack 2: Supercharge
+  Central Processing (E1M6) - Backpack 3: Phobos Lab (E1M5) - Yellow keycard
+  Central Processing (E1M6) - Computer area map: Box of shotgun shells
+  Central Processing (E1M6) - Supercharge 2: Command Control (E1M4) - Computer area map
+  Central Processing (E1M6) - Yellow keycard: Medikit
+  Command Control (E1M4) - Armor: Invulnerability
+  Command Control (E1M4) - Exit: Command Control (E1M4) - Complete
+  Command Control (E1M4) - Yellow keycard: Supercharge
+  Containment Area (E2M2) - Exit: Containment Area (E2M2) - Complete
+  House of Pain (E3M4) - Armor 3: Nuclear Plant (E1M2)
+  House of Pain (E3M4) - BFG9000: Dis (E3M8) - Computer area map
+  House of Pain (E3M4) - Invulnerability 2: Partial invisibility
+  House of Pain (E3M4) - Partial invisibility: Armor
+  House of Pain (E3M4) - Supercharge: Toxin Refinery (E1M3)
+  House of Pain (E3M4) - Yellow skull key: Medikit
+  Slough of Despair (E3M2) - Armor: Berserk
+  Slough of Despair (E3M2) - Berserk: Supercharge
+  Slough of Despair (E3M2) - Blue skull key: Energy cell pack
+  Slough of Despair (E3M2) - Chaingun: Energy cell pack
+  Slough of Despair (E3M2) - Computer area map: Partial invisibility
+  Slough of Despair (E3M2) - Mega Armor: Invulnerability
+  Slough of Despair (E3M2) - Plasma gun: Limbo (E3M7) - Yellow skull key
+  Slough of Despair (E3M2) - Rocket launcher: Warrens (E3M9) - Computer area map
+  Slough of Despair (E3M2) - Supercharge: Mega Armor
+  Spawning Vats (E2M7) - Armor: Armor
+  Spawning Vats (E2M7) - Berserk: Box of rockets
+  Spawning Vats (E2M7) - Blue keycard: Slough of Despair (E3M2) - Computer area map
+  Spawning Vats (E2M7) - Chainsaw: Partial invisibility
+  Spawning Vats (E2M7) - Computer area map: Armor
+  Spawning Vats (E2M7) - Invulnerability: Box of shotgun shells
+  Spawning Vats (E2M7) - Invulnerability 2: Partial invisibility
+  Spawning Vats (E2M7) - Mega Armor: Partial invisibility
+  Spawning Vats (E2M7) - Partial invisibility: Phobos Lab (E1M5)
+  Spawning Vats (E2M7) - Plasma gun: Energy cell pack
+  Spawning Vats (E2M7) - Red keycard: Supercharge
+  Spawning Vats (E2M7) - Rocket launcher: Energy cell pack
+}
+17: {
+  Nuclear Plant (E1M2) - Armor: Computer Station (E1M7)
+  Nuclear Plant (E1M2) - Armor 2: Spawning Vats (E2M7) - Red keycard
+  Nuclear Plant (E1M2) - Armor 3: Military Base (E1M9) - Red keycard
+  Nuclear Plant (E1M2) - Backpack: Box of bullets
+  Nuclear Plant (E1M2) - Backpack 2: Armor
+  Nuclear Plant (E1M2) - Chaingun: Limbo (E3M7) - Computer area map
+  Nuclear Plant (E1M2) - Chainsaw: Invulnerability
+  Nuclear Plant (E1M2) - Exit: Nuclear Plant (E1M2) - Complete
+  Nuclear Plant (E1M2) - Mega Armor: Pandemonium (E3M3) - Computer area map
+  Nuclear Plant (E1M2) - Red keycard: Armor
+  Nuclear Plant (E1M2) - Shotgun: Berserk
+  Nuclear Plant (E1M2) - Supercharge: Box of rockets
+  Phobos Lab (E1M5) - Armor: Limbo (E3M7) - Red skull key
+  Phobos Lab (E1M5) - Armor 2: Deimos Lab (E2M4) - Yellow keycard
+  Phobos Lab (E1M5) - Backpack: Armor
+  Phobos Lab (E1M5) - Blue keycard: Box of bullets
+  Phobos Lab (E1M5) - Chaingun: Halls of the Damned (E2M6) - Blue skull key
+  Phobos Lab (E1M5) - Chainsaw: Mega Armor
+  Phobos Lab (E1M5) - Computer area map: Medikit
+  Phobos Lab (E1M5) - Exit: Phobos Lab (E1M5) - Complete
+  Phobos Lab (E1M5) - Mega Armor: Box of shotgun shells
+  Phobos Lab (E1M5) - Mega Armor 2: Supercharge
+  Phobos Lab (E1M5) - Partial invisibility: Armor
+  Phobos Lab (E1M5) - Rocket launcher: Phobos Lab (E1M5) - Computer area map
+  Phobos Lab (E1M5) - Shotgun: Box of rockets
+  Phobos Lab (E1M5) - Shotgun 2: Box of rockets
+  Phobos Lab (E1M5) - Shotgun 3: Armor
+  Phobos Lab (E1M5) - Supercharge: Armor
+  Phobos Lab (E1M5) - Yellow keycard: Supercharge
+  Toxin Refinery (E1M3) - Armor: Containment Area (E2M2) - Blue keycard
+  Toxin Refinery (E1M3) - Armor 2: Partial invisibility
+  Toxin Refinery (E1M3) - Armor 3: Supercharge
+  Toxin Refinery (E1M3) - Backpack: Chainsaw
+  Toxin Refinery (E1M3) - Blue keycard: Partial invisibility
+  Toxin Refinery (E1M3) - Chaingun: Armor
+  Toxin Refinery (E1M3) - Chainsaw: Slough of Despair (E3M2) - Blue skull key
+  Toxin Refinery (E1M3) - Exit: Toxin Refinery (E1M3) - Complete
+  Toxin Refinery (E1M3) - Rocket launcher: Toxin Refinery (E1M3) - Yellow keycard
+  Toxin Refinery (E1M3) - Shotgun: Energy cell pack
+  Toxin Refinery (E1M3) - Shotgun 2: Supercharge
+  Toxin Refinery (E1M3) - Supercharge: Partial invisibility
+  Toxin Refinery (E1M3) - Yellow keycard: Berserk
+}
+18: {
+  Computer Station (E1M7) - Armor: Armor
+  Computer Station (E1M7) - Shotgun 2: Box of bullets
+  Computer Station (E1M7) - Yellow keycard: Mt. Erebus (E3M6) - Blue skull key
+  Containment Area (E2M2) - Red keycard: Command Center (E2M5)
+  Halls of the Damned (E2M6) - Exit: Halls of the Damned (E2M6) - Complete
+  Limbo (E3M7) - Armor: House of Pain (E3M4) - Yellow skull key
+  Limbo (E3M7) - Exit: Limbo (E3M7) - Complete
+  Limbo (E3M7) - Plasma gun: Energy cell pack
+  Limbo (E3M7) - Yellow skull key: Berserk
+  Military Base (E1M9) - Blue keycard: Partial invisibility
+  Slough of Despair (E3M2) - Exit: Slough of Despair (E3M2) - Complete
+  Spawning Vats (E2M7) - Exit: Spawning Vats (E2M7) - Complete
+  Toxin Refinery (E1M3) - Mega Armor: Box of bullets
+  Toxin Refinery (E1M3) - Partial invisibility: Computer Station (E1M7) - Yellow keycard
+  Toxin Refinery (E1M3) - Supercharge 2: Medikit
+}
+19: {
+  Command Center (E2M5) - Armor: Energy cell pack
+  Command Center (E2M5) - Armor 2: Mega Armor
+  Command Center (E2M5) - Backpack: Armor
+  Command Center (E2M5) - Berserk: Spawning Vats (E2M7) - Blue keycard
+  Command Center (E2M5) - Chaingun: Berserk
+  Command Center (E2M5) - Chainsaw: Supercharge
+  Command Center (E2M5) - Computer area map: Partial invisibility
+  Command Center (E2M5) - Exit: Command Center (E2M5) - Complete
+  Command Center (E2M5) - Mega Armor: Energy cell pack
+  Command Center (E2M5) - Partial invisibility: Partial invisibility
+  Command Center (E2M5) - Plasma gun: Box of rockets
+  Computer Station (E1M7) - Armor 2: Armor
+  Computer Station (E1M7) - Backpack: Supercharge
+  Computer Station (E1M7) - Chaingun: Deimos Lab (E2M4)
+  Computer Station (E1M7) - Chainsaw: Command Center (E2M5) - Computer area map
+  Computer Station (E1M7) - Computer area map: Spawning Vats (E2M7) - Computer area map
+  Computer Station (E1M7) - Exit: Computer Station (E1M7) - Complete
+  Computer Station (E1M7) - Mega Armor: Supercharge
+  Computer Station (E1M7) - Red keycard: Mega Armor
+  Computer Station (E1M7) - Rocket launcher: Armor
+  Computer Station (E1M7) - Shotgun: Box of bullets
+  Computer Station (E1M7) - Supercharge: Computer Station (E1M7) - Red keycard
+  House of Pain (E3M4) - Red skull key: House of Pain (E3M4) - Red skull key
+  Mt. Erebus (E3M6) - Exit: Mt. Erebus (E3M6) - Complete
+}
+20: {
+  Computer Station (E1M7) - Blue keycard: Mega Armor
+  Computer Station (E1M7) - Partial invisibility: Containment Area (E2M2) - Yellow keycard
+  Deimos Lab (E2M4) - Armor: Partial invisibility
+  Deimos Lab (E2M4) - Armor 2: Energy cell pack
+  Deimos Lab (E2M4) - Armor 3: Box of bullets
+  Deimos Lab (E2M4) - Backpack: Energy cell pack
+  Deimos Lab (E2M4) - Berserk: Box of rockets
+  Deimos Lab (E2M4) - Blue keycard: Fortress of Mystery (E2M9) - Yellow skull key
+  Deimos Lab (E2M4) - Chaingun: Armor
+  Deimos Lab (E2M4) - Computer area map: Box of rockets
+  Deimos Lab (E2M4) - Exit: Deimos Lab (E2M4) - Complete
+  Deimos Lab (E2M4) - Mega Armor: Berserk
+  Deimos Lab (E2M4) - Partial invisibility: Armor
+  Deimos Lab (E2M4) - Partial invisibility 2: Energy cell pack
+  Deimos Lab (E2M4) - Plasma gun: Mega Armor
+  Deimos Lab (E2M4) - Shotgun: Medikit
+  Deimos Lab (E2M4) - Supercharge: Mega Armor
+  Deimos Lab (E2M4) - Supercharge 2: Energy cell pack
+  Deimos Lab (E2M4) - Yellow keycard: Medikit
+  House of Pain (E3M4) - Backpack: Box of rockets
+  House of Pain (E3M4) - Exit: House of Pain (E3M4) - Complete
+  House of Pain (E3M4) - Mega Armor 2: Fortress of Mystery (E2M9) - Computer area map
+  Spawning Vats (E2M7) - Backpack: Supercharge
+  Spawning Vats (E2M7) - Chaingun: Armor
+  Spawning Vats (E2M7) - Supercharge: Invulnerability
+  Spawning Vats (E2M7) - Yellow keycard: Partial invisibility
+}
+21: {
+  Containment Area (E2M2) - Backpack 2: Phobos Anomaly (E1M8)
+  Containment Area (E2M2) - Chaingun: Computer Station (E1M7) - Computer area map
+  Containment Area (E2M2) - Rocket launcher: Armor
+  Fortress of Mystery (E2M9) - Exit: Fortress of Mystery (E2M9) - Complete
+}
+22: {
+  Phobos Anomaly (E1M8) - Armor: Partial invisibility
+  Phobos Anomaly (E1M8) - Chaingun: Deimos Lab (E2M4) - Computer area map
+  Phobos Anomaly (E1M8) - Computer area map: Box of shotgun shells
+  Phobos Anomaly (E1M8) - Exit: Phobos Anomaly (E1M8) - Complete
+  Phobos Anomaly (E1M8) - Partial invisibility: Invulnerability
+  Phobos Anomaly (E1M8) - Shotgun: Military Base (E1M9) - Computer area map
+  Phobos Anomaly (E1M8) - Shotgun 2: Mega Armor
+  Phobos Anomaly (E1M8) - Supercharge: Supercharge
+}
