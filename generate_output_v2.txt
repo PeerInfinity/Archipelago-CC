@@ -1,0 +1,760 @@
+Archipelago (0.6.4) logging initialized on Linux-4.4.0-x86_64-with-glibc2.39 process 14236 running Python 3.11.14
+Weights: /home/user/Archipelago-CC/Players/Templates/Super Metroid.yaml >> Default Super Metroid Template
+Generating for 1 player, 14089154938208861744 Seed 1 with plando: connections, texts, bosses
+[SM MODULE] Loading Super Metroid exporter handler
+Archipelago Version 0.6.4  -  Seed: 1
+
+Found 82 World Types:
+ Adventure                               : Items:   15 | Locations:    24
+ A Hat in Time                           : Items:   58 | Locations:   455
+ A Link to the Past                      : Items:  146 | Locations:   286
+ Aquaria                                 : Items:  134 | Locations:   218
+ ChocolateChipCookies                    : Items:   15 | Locations:    15
+ Blasphemous                             : Items:  204 | Locations:   306
+ Bomb Rush Cyberfunk                     : Items:  165 | Locations:   247
+ Bumper Stickers                         : Items:   12 | Locations:   100
+ Celeste 64                              : Items:   24 | Locations:    56
+ ChecksFinder                            : Items:    3 | Locations:    25
+ Civilization VI                         : Items:  167 | Locations:   278
+ WebDevJourney                           : Items:   51 | Locations:    61
+ Castlevania 64                          : Items:   36 | Locations:   352
+ Castlevania - Circle of the Moon        : Items:   31 | Locations:   125
+ Dark Souls III                          : Items: 1204 | Locations:  1506
+ Donkey Kong Country 3                   : Items:    8 | Locations:   230
+ DLCQuest                                : Items:   51 | Locations: 18913
+ DOOM 1993                               : Items:  195 | Locations:   474
+ DOOM II                                 : Items:  178 | Locations:   479
+ Factorio                                : Items:  233 | Locations:  6993
+ Faxanadu                                : Items:   30 | Locations:   110
+ Final Fantasy                           : Items:  194 | Locations:   255
+ Final Fantasy Mystic Quest              : Items:   67 | Locations:   266
+ Heretic                                 : Items:  269 | Locations:  1014
+ Hollow Knight                           : Items:  249 | Locations:   740
+ Hylics 2                                : Items:   70 | Locations:   166
+ Inscryption                             : Items:   42 | Locations:   100
+ Jak and Daxter: The Precursor Legacy    : Items:   75 | Locations:  4239
+ Kirby's Dream Land 3                    : Items:   24 | Locations:   876
+ Kingdom Hearts                          : Items:  361 | Locations:   520
+ Kingdom Hearts 2                        : Items:  293 | Locations:   724
+ Links Awakening DX                      : Items:  118 | Locations:   255
+ Landstalker - The Treasures of King Nole: Items:   62 | Locations:   292
+ Lingo                                   : Items:  276 | Locations:   872
+ Lufia II Ancient Cave                   : Items:  415 | Locations:   123
+ Super Mario Land 2                      : Items: 2727 | Locations:  2659
+ MathProof2p2e4                          : Items:   10 | Locations:    10
+ Meritous                                : Items:   23 | Locations:   104
+ The Messenger                           : Items:   64 | Locations:   136
+ Metamath                                : Items:  108 | Locations:   100
+ Mario & Luigi Superstar Saga            : Items:  146 | Locations:   600
+ Mega Man 2                              : Items:   23 | Locations:    71
+ MegaMan Battle Network 3                : Items:  224 | Locations:   263
+ Muse Dash                               : Items:  672 | Locations:  1314
+ Noita                                   : Items:   32 | Locations:   672
+ Ocarina of Time                         : Items:  143 | Locations:  1623
+ Old School Runescape                    : Items:   86 | Locations:   169
+ Overcooked! 2                           : Items:   45 | Locations:    43
+ Paint                                   : Items:   27 | Locations:   380
+ Pokemon Emerald                         : Items:  291 | Locations:  1338
+ Pokemon Red and Blue                    : Items:  207 | Locations:   709
+ Raft                                    : Items:  325 | Locations:   154
+ Risk of Rain 2                          : Items:   51 | Locations:   954
+ Sonic Adventure 2 Battle                : Items:  182 | Locations:  2555
+ Saving Princess                         : Items:   20 | Locations:    36
+ Starcraft 2                             : Items:  595 | Locations:   663
+ shapez                                  : Items:   67 | Locations:  3543
+ Shivers                                 : Items:   76 | Locations:   117
+ A Short Hike                            : Items:   37 | Locations:   131
+ Super Metroid                           : Items:   24 | Locations:   101
+ Super Mario 64                          : Items:   29 | Locations:   164
+ Super Mario World                       : Items:   29 | Locations:   765
+ SMZ3                                    : Items:  151 | Locations:   316
+ Secret of Evermore                      : Items:  165 | Locations:   913
+ Stardew Valley                          : Items:  964 | Locations:  3291
+ Subnautica                              : Items:  104 | Locations:   181
+ Terraria                                : Items:  188 | Locations:   159
+ Timespinner                             : Items:  198 | Locations:   215
+ The Legend of Zelda                     : Items:   33 | Locations:   155
+ TUNIC                                   : Items:  157 | Locations:  6835
+ The Wind Waker                          : Items:  152 | Locations:   313
+ Undertale                               : Items:   85 | Locations:   122
+ VVVVVV                                  : Items:   20 | Locations:    20
+ Wargroove                               : Items:   31 | Locations:    38
+ The Witness                             : Items:  267 | Locations:  1004
+ Yacht Dice                              : Items:   47 | Locations:  1000
+ Yoshi's Island                          : Items:   69 | Locations:   235
+ Yu-Gi-Oh! 2006                          : Items:  172 | Locations:   165
+ Zillion                                 : Items:   12 | Locations:  1555
+
+Creating MultiWorld.
+Creating Items.
+Calculating Access Rules.
+Running Item Plando.
+Running Pre Main Fill.
+Filling the multiworld with 100 items.
+Progression balancing skipped.
+Beginning output...
+Generating output files (3/3).
+Calculating playthrough.
+Attempting to open spoiler log file for sphere data at: /tmp/tmpg2d7b4ek/AP_14089154938208861744_spheres_log.jsonl
+Spoiler sphere log will be written to: /tmp/tmpg2d7b4ek/AP_14089154938208861744_spheres_log.jsonl
+[SM] SMGameExportHandler initialized for Super Metroid
+Closed spoiler log file: /tmp/tmpg2d7b4ek/AP_14089154938208861744_spheres_log.jsonl
+[SM expand_rule #1] Called with rule type: helper
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM expand_rule #2] Called with rule type: helper
+[SM expand_rule #3] Called with rule type: constant
+[SM expand_rule #4] Called with rule type: attribute
+[SM expand_rule #5] Called with rule type: helper
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef87046b7e0> (id=139605500671968) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef87046b9c0> (id=139605500672448) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef87046bce0> (id=139605500673248) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef87046bec0> (id=139605500673728) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704300e0> (id=139605500428512) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704302c0> (id=139605500428992) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704304a0> (id=139605500429472) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870430680> (id=139605500429952) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870430860> (id=139605500430432) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870430a40> (id=139605500430912) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870430c20> (id=139605500431392) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870430e00> (id=139605500431872) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870469580> (id=139605500663168) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870431120> (id=139605500432672) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870431300> (id=139605500433152) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704314e0> (id=139605500433632) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704316c0> (id=139605500434112) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704318a0> (id=139605500434592) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870431bc0> (id=139605500435392) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870431ee0> (id=139605500436192) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704320c0> (id=139605500436672) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704322a0> (id=139605500437152) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704325c0> (id=139605500437952) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704327a0> (id=139605500438432) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870432980> (id=139605500438912) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870432ca0> (id=139605500439712) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870432fc0> (id=139605500440512) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704331a0> (id=139605500440992) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870433380> (id=139605500441472) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870433560> (id=139605500441952) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870433740> (id=139605500442432) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870433920> (id=139605500442912) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870433b00> (id=139605500443392) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef870433e20> (id=139605500444192) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bc040> (id=139605501001792) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bc360> (id=139605501002592) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bc540> (id=139605501003072) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bc720> (id=139605501003552) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bca40> (id=139605501004352) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bcc20> (id=139605501004832) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bce00> (id=139605501005312) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bcfe0> (id=139605501005792) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bd1c0> (id=139605501006272) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bd3a0> (id=139605501006752) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bd580> (id=139605501007232) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bd8a0> (id=139605501008032) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bda80> (id=139605501008512) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bdc60> (id=139605501008992) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bde40> (id=139605501009472) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704be020> (id=139605501009952) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704be200> (id=139605501010432) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704be3e0> (id=139605501010912) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704be5c0> (id=139605501011392) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704be7a0> (id=139605501011872) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704be980> (id=139605501012352) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704beca0> (id=139605501013152) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704befc0> (id=139605501013952) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bf1a0> (id=139605501014432) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bf380> (id=139605501014912) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bf560> (id=139605501015392) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bf740> (id=139605501015872) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bf920> (id=139605501016352) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bfb00> (id=139605501016832) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bfce0> (id=139605501017312) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704bfec0> (id=139605501017792) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c00e0> (id=139605501018336) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c02c0> (id=139605501018816) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c04a0> (id=139605501019296) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c0680> (id=139605501019776) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c0860> (id=139605501020256) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c0a40> (id=139605501020736) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c0c20> (id=139605501021216) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c0e00> (id=139605501021696) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c0fe0> (id=139605501022176) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c11c0> (id=139605501022656) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c13a0> (id=139605501023136) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c1580> (id=139605501023616) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c18a0> (id=139605501024416) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c1a80> (id=139605501024896) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c1c60> (id=139605501025376) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c1e40> (id=139605501025856) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c2160> (id=139605501026656) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c2340> (id=139605501027136) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c2520> (id=139605501027616) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c2700> (id=139605501028096) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c2a20> (id=139605501028896) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c2c00> (id=139605501029376) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c2f20> (id=139605501030176) seen 11 times, stopping recursion.
+[SM] Preserving evalSMBool helper (not simplifying)
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c3240> (id=139605501030976) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c3420> (id=139605501031456) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c3600> (id=139605501031936) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c37e0> (id=139605501032416) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c39c0> (id=139605501032896) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c3ba0> (id=139605501033376) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c3d80> (id=139605501033856) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704c3f60> (id=139605501034336) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704ec180> (id=139605501198720) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704ec360> (id=139605501199200) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704ec540> (id=139605501199680) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704ec720> (id=139605501200160) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704ec900> (id=139605501200640) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704ecae0> (id=139605501201120) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704eccc0> (id=139605501201600) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704ecea0> (id=139605501202080) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704ed080> (id=139605501202560) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704ed260> (id=139605501203040) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704ed440> (id=139605501203520) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704ed620> (id=139605501204000) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+analyze_rule: Function <function SMWorld.set_rules.<locals>.add_accessFrom_rule.<locals>.<lambda> at 0x7ef8704ed800> (id=139605501204480) seen 11 times, stopping recursion.
+SM: Found accessFrom comprehension pattern, simplifying to constant True
+[SM] Simplifying accessFrom pattern to constant True
+[SM] Preserving evalSMBool helper (not simplifying)
+[SM] SMGameExportHandler initialized for Super Metroid
+Successfully wrote rules to /tmp/tmpg2d7b4ek/AP_14089154938208861744_rules.json
+Detected single game world (Super Metroid), using 'sm' preset folder.
+Preset content mismatch found in AP_14089154938208861744_rules.json. Update needed.
+Updating preset directory: /home/user/Archipelago-CC/exporter/../frontend/presets/sm/AP_14089154938208861744
+Copied 5 files to preset directory /home/user/Archipelago-CC/exporter/../frontend/presets/sm/AP_14089154938208861744
+Updated preset_files.json with 5 files for sm/AP_14089154938208861744
+Creating final archive at /home/user/Archipelago-CC/output/AP_14089154938208861744.zip
+Done. Enjoy. Total Time: 11.100892676999933
