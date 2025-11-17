@@ -1104,6 +1104,70 @@ export const helperFunctions = {
   },
 
   /**
+   * Check if Old Pete fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_old_pete_rules
+   * The fight is free with no requirements.
+   *
+   * @returns {boolean} Always returns true
+   */
+  get_old_pete_rules() {
+    return true;
+  },
+
+  /**
+   * Check if Future Pete fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_future_pete_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Future Pete fight
+   */
+  get_future_pete_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [defensiveTool, gapCloser, formList],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 3; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 2; // normal
+    return categoriesAvailable >= 1; // hard
+  },
+
+  /**
+   * Check if Experiment fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_experiment_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Experiment fight
+   */
+  get_experiment_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+    const summons = ['Chicken Little', 'Stitch', 'Genie', 'Peter Pan'];
+
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [formList, defensiveTool, partyLimit, summons],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 4; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 3; // normal
+    return categoriesAvailable >= 2; // hard
+  },
+
+  /**
    * Check if Groundshaker fight is accessible.
    * Based on worlds/kh2/Rules.py:get_groundshaker_rules
    *
