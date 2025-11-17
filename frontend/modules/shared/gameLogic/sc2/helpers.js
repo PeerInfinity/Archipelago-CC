@@ -709,8 +709,23 @@ export default {
     two_kerrigan_actives,
 
     marine_medic_upgrade: (snapshot, staticData) => {
-        // Check if player has Marine+Medic synergy
-        return has(snapshot, 'Marine') && has(snapshot, 'Medic');
+        // Check if player has upgrades that benefit Marine+Medic synergy
+        // This includes having upgrades for both Marines and Medics
+        const marineUpgrades = [
+            'Progressive Stimpack (Marine)',
+            'Combat Shield (Marine)',
+            'Magrail Munitions (Marine)',
+            'Optimized Logistics (Marine)'
+        ];
+        const medicUpgrades = [
+            'Advanced Medic Facilities',
+            'Stabilizer Medpacks (Medic)',
+            'Restoration (Medic)',
+            'Optical Flare (Medic)',
+            'Adaptive Medpacks (Medic)'
+        ];
+
+        return has_any(snapshot, marineUpgrades) && has_any(snapshot, medicUpgrades);
     },
     can_nuke: () => false,
 
@@ -745,7 +760,15 @@ export default {
     enemy_intelligence_third_stage_requirement: () => false,
     enemy_intelligence_cliff_garrison: () => false,
     enemy_intelligence_garrisonable_unit: () => false,
-    the_escape_first_stage_requirement: () => false,
+    the_escape_first_stage_requirement: (snapshot, staticData) => {
+        // First stage of The Escape requires basic Nova equipment
+        // Check for any Nova suit module
+        return has_any(snapshot, [
+            'Armored Suit Module (Nova Suit Module)',
+            'Energy Suit Module (Nova Suit Module)',
+            'Progressive Stealth Suit Module (Nova Suit Module)'
+        ]);
+    },
     the_escape_requirement: () => false,
     the_escape_stuff_granted: () => false,
     /**
@@ -804,7 +827,10 @@ export default {
                 && protoss_competent_anti_air(snapshot, staticData)
                 && protoss_static_defense(snapshot, staticData));
     },
-    templars_return_requirement: () => false,
+    templars_return_requirement: (snapshot, staticData) => {
+        // Templar's Return requires fleet units similar to Templar's Charge
+        return protoss_fleet(snapshot, staticData);
+    },
     templars_charge_requirement: (snapshot, staticData) => {
         // Templar's Charge requires fleet units (air superiority)
         return protoss_fleet(snapshot, staticData);

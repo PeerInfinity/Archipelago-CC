@@ -5070,12 +5070,9 @@
                       "value": false
                     },
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "terran_basic_anti_air"
+                      "type": "helper",
+                      "name": "terran_basic_anti_air",
+                      "args": []
                     }
                   ]
                 }
@@ -5211,12 +5208,9 @@
                       "value": false
                     },
                     {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "self"
-                      },
-                      "attr": "terran_basic_anti_air"
+                      "type": "helper",
+                      "name": "terran_basic_anti_air",
+                      "args": []
                     }
                   ]
                 }
