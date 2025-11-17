@@ -1119,13 +1119,21 @@ export const helperFunctions = {
     const summonsCount = helperFunctions.kh2_list_count_sum(summons, snapshot);
     const reflectCount = snapshot?.inventory?.['Reflect Element'] || 0;
 
+    // Check basic requirements based on fight logic
+    let basicRequirements = false;
     if (fightLogic === 0) { // easy: 4 summons + Reflera (2)
-      return summonsCount >= 4 && reflectCount >= 2;
+      basicRequirements = summonsCount >= 4 && reflectCount >= 2;
     } else if (fightLogic === 1) { // normal: 3 summons + Reflera (2)
-      return summonsCount >= 3 && reflectCount >= 2;
+      basicRequirements = summonsCount >= 3 && reflectCount >= 2;
     } else { // hard: 2 summons + Reflera (2)
-      return summonsCount >= 2 && reflectCount >= 2;
+      basicRequirements = summonsCount >= 2 && reflectCount >= 2;
     }
+
+    // Also requires Hades Event OR Hades Cup Trophy
+    const hasHadesAccess = (snapshot?.inventory?.['Hades Event'] > 0) ||
+                          (snapshot?.inventory?.['Hades Cup Trophy'] > 0);
+
+    return basicRequirements && hasHadesAccess;
   },
 
   /**
