@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-17T00:46:06.807387",
-    "last_updated": "2025-11-17T00:46:06.807394",
+    "last_updated": "2025-11-17T04:42:13.936224",
     "script_version": "1.0.0"
   },
   "results": {
@@ -338,59 +338,67 @@
       }
     },
     "Blasphemous.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
-      },
       "consecutive_passes_before_failure": 0,
+      "first_failure_reason": "Test failed at sphere 0.0",
       "first_failure_seed": 1,
-      "game_name": "blasphemous",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 39.98,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "blasphemous",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 39.67,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 3106930,
+            "size_mb": 2.96
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 8,
+            "pass_fail": "failed",
+            "processing_time_seconds": 65.26,
+            "return_code": 1,
+            "sphere_reached": 0.0,
+            "success": false,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_name": "Blasphemous.yaml",
+          "timestamp": "2025-11-17T04:40:28.549388",
+          "world_info": {
+            "exporter_path": "exporter/games/blasphemous.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
+            "game_name_from_yaml": "Blasphemous",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "blasphemous",
+            "world_directory": "blasphemous"
+          }
+        }
       },
-      "rules_file": {
-        "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 3106930,
-        "size_mb": 2.96
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "seed_range": "1-10",
-      "seeds_failed": 10,
+      "seed_range": "1",
+      "seeds_failed": 1,
       "seeds_passed": 0,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 117.55,
-        "return_code": 1,
-        "sphere_reached": 0.0,
-        "success": false,
-        "total_spheres": 13.1,
-        "warning_count": 0
-      },
+      "stop_on_failure": true,
       "summary": {
         "all_passed": false,
         "any_failed": true,
         "failure_rate": 1.0
       },
       "template_name": "Blasphemous.yaml",
-      "timestamp": "2025-11-17T00:12:37.767156",
-      "world_info": {
-        "exporter_path": "exporter/games/blasphemous.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
-        "game_name_from_yaml": "Blasphemous",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "blasphemous",
-        "world_directory": "blasphemous"
-      }
+      "timestamp": "2025-11-17T04:40:28.517991",
+      "total_seeds_tested": 1
     },
     "Bomb Rush Cyberfunk.yaml": {
       "analysis": {
@@ -943,59 +951,463 @@
       }
     },
     "DOOM II.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
+      "consecutive_passes_before_failure": 2,
+      "first_failure_reason": "Test failed at sphere 11.5",
+      "first_failure_seed": 3,
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "doom_ii",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.45,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/doom_ii/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 374263,
+            "size_mb": 0.36
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 25.59,
+            "return_code": 0,
+            "sphere_reached": 21.4,
+            "success": true,
+            "total_spheres": 21.4,
+            "warning_count": 0
+          },
+          "template_name": "DOOM II.yaml",
+          "timestamp": "2025-11-17T04:30:51.256348",
+          "world_info": {
+            "exporter_path": "exporter/games/doom_ii.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "DOOM II",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "doom_ii",
+            "world_directory": "doom_ii"
+          }
+        },
+        "10": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "doom_ii",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.55,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/doom_ii/AP_55941320597534372051/AP_55941320597534372051_rules.json",
+            "size_bytes": 374361,
+            "size_mb": 0.36
+          },
+          "seed": "10",
+          "seed_id": "AP_55941320597534372051",
+          "spoiler_test": {
+            "error_count": 9,
+            "pass_fail": "failed",
+            "processing_time_seconds": 74.58,
+            "return_code": 1,
+            "sphere_reached": 13.1,
+            "success": false,
+            "total_spheres": 19.4,
+            "warning_count": 0
+          },
+          "template_name": "DOOM II.yaml",
+          "timestamp": "2025-11-17T04:37:59.091401",
+          "world_info": {
+            "exporter_path": "exporter/games/doom_ii.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "DOOM II",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "doom_ii",
+            "world_directory": "doom_ii"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "doom_ii",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.63,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/doom_ii/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 374198,
+            "size_mb": 0.36
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 24.17,
+            "return_code": 0,
+            "sphere_reached": 18.1,
+            "success": true,
+            "total_spheres": 18.1,
+            "warning_count": 0
+          },
+          "template_name": "DOOM II.yaml",
+          "timestamp": "2025-11-17T04:31:22.817774",
+          "world_info": {
+            "exporter_path": "exporter/games/doom_ii.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "DOOM II",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "doom_ii",
+            "world_directory": "doom_ii"
+          }
+        },
+        "3": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "doom_ii",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.46,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/doom_ii/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 374255,
+            "size_mb": 0.36
+          },
+          "seed": "3",
+          "seed_id": "AP_84719271504320872445",
+          "spoiler_test": {
+            "error_count": 9,
+            "pass_fail": "failed",
+            "processing_time_seconds": 74.49,
+            "return_code": 1,
+            "sphere_reached": 11.5,
+            "success": false,
+            "total_spheres": 19.2,
+            "warning_count": 0
+          },
+          "template_name": "DOOM II.yaml",
+          "timestamp": "2025-11-17T04:31:53.122699",
+          "world_info": {
+            "exporter_path": "exporter/games/doom_ii.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "DOOM II",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "doom_ii",
+            "world_directory": "doom_ii"
+          }
+        },
+        "4": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "doom_ii",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.45,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/doom_ii/AP_05594871498841892311/AP_05594871498841892311_rules.json",
+            "size_bytes": 374177,
+            "size_mb": 0.36
+          },
+          "seed": "4",
+          "seed_id": "AP_05594871498841892311",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 25.4,
+            "return_code": 0,
+            "sphere_reached": 18.2,
+            "success": true,
+            "total_spheres": 18.2,
+            "warning_count": 0
+          },
+          "template_name": "DOOM II.yaml",
+          "timestamp": "2025-11-17T04:33:13.599989",
+          "world_info": {
+            "exporter_path": "exporter/games/doom_ii.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "DOOM II",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "doom_ii",
+            "world_directory": "doom_ii"
+          }
+        },
+        "5": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "doom_ii",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.49,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/doom_ii/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 374203,
+            "size_mb": 0.36
+          },
+          "seed": "5",
+          "seed_id": "AP_96945849220684217413",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 24.29,
+            "return_code": 0,
+            "sphere_reached": 16.24,
+            "success": true,
+            "total_spheres": 16.24,
+            "warning_count": 0
+          },
+          "template_name": "DOOM II.yaml",
+          "timestamp": "2025-11-17T04:33:44.962297",
+          "world_info": {
+            "exporter_path": "exporter/games/doom_ii.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "DOOM II",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "doom_ii",
+            "world_directory": "doom_ii"
+          }
+        },
+        "6": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "doom_ii",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.46,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/doom_ii/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+            "size_bytes": 374299,
+            "size_mb": 0.36
+          },
+          "seed": "6",
+          "seed_id": "AP_00679259829289197625",
+          "spoiler_test": {
+            "error_count": 9,
+            "pass_fail": "failed",
+            "processing_time_seconds": 74.56,
+            "return_code": 1,
+            "sphere_reached": 10.17,
+            "success": false,
+            "total_spheres": 15.6,
+            "warning_count": 0
+          },
+          "template_name": "DOOM II.yaml",
+          "timestamp": "2025-11-17T04:34:15.241793",
+          "world_info": {
+            "exporter_path": "exporter/games/doom_ii.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "DOOM II",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "doom_ii",
+            "world_directory": "doom_ii"
+          }
+        },
+        "7": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "doom_ii",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.51,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/doom_ii/AP_35931773795037525048/AP_35931773795037525048_rules.json",
+            "size_bytes": 374231,
+            "size_mb": 0.36
+          },
+          "seed": "7",
+          "seed_id": "AP_35931773795037525048",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 25.34,
+            "return_code": 0,
+            "sphere_reached": 19.2,
+            "success": true,
+            "total_spheres": 19.2,
+            "warning_count": 0
+          },
+          "template_name": "DOOM II.yaml",
+          "timestamp": "2025-11-17T04:35:35.802660",
+          "world_info": {
+            "exporter_path": "exporter/games/doom_ii.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "DOOM II",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "doom_ii",
+            "world_directory": "doom_ii"
+          }
+        },
+        "8": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "doom_ii",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.55,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/doom_ii/AP_20777137877808592492/AP_20777137877808592492_rules.json",
+            "size_bytes": 374222,
+            "size_mb": 0.36
+          },
+          "seed": "8",
+          "seed_id": "AP_20777137877808592492",
+          "spoiler_test": {
+            "error_count": 9,
+            "pass_fail": "failed",
+            "processing_time_seconds": 74.34,
+            "return_code": 1,
+            "sphere_reached": 12.15,
+            "success": false,
+            "total_spheres": 19.2,
+            "warning_count": 0
+          },
+          "template_name": "DOOM II.yaml",
+          "timestamp": "2025-11-17T04:36:07.181894",
+          "world_info": {
+            "exporter_path": "exporter/games/doom_ii.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "DOOM II",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "doom_ii",
+            "world_directory": "doom_ii"
+          }
+        },
+        "9": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "doom_ii",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.54,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/doom_ii/AP_48205312626925217390/AP_48205312626925217390_rules.json",
+            "size_bytes": 374093,
+            "size_mb": 0.36
+          },
+          "seed": "9",
+          "seed_id": "AP_48205312626925217390",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 25.41,
+            "return_code": 0,
+            "sphere_reached": 19.3,
+            "success": true,
+            "total_spheres": 19.3,
+            "warning_count": 0
+          },
+          "template_name": "DOOM II.yaml",
+          "timestamp": "2025-11-17T04:37:27.594179",
+          "world_info": {
+            "exporter_path": "exporter/games/doom_ii.py",
+            "game_logic_path": null,
+            "game_name_from_yaml": "DOOM II",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": false,
+            "normalized_name": "doom_ii",
+            "world_directory": "doom_ii"
+          }
+        }
       },
-      "consecutive_passes_before_failure": 8,
-      "first_failure_seed": 9,
-      "game_name": "doom_ii",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.91,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "rules_file": {
-        "path": "frontend/presets/doom_ii/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 374263,
-        "size_mb": 0.36
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 1,
-      "seeds_passed": 9,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 0,
-        "pass_fail": "passed",
-        "processing_time_seconds": 16.32,
-        "return_code": 0,
-        "sphere_reached": 21.4,
-        "success": true,
-        "total_spheres": 21.4,
-        "warning_count": 0
-      },
+      "seeds_failed": 4,
+      "seeds_passed": 6,
+      "stop_on_failure": false,
       "summary": {
         "all_passed": false,
         "any_failed": true,
-        "failure_rate": 0.1
+        "failure_rate": 0.4
       },
       "template_name": "DOOM II.yaml",
-      "timestamp": "2025-11-17T00:17:37.744086",
-      "world_info": {
-        "exporter_path": "exporter/games/doom_ii.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "DOOM II",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "doom_ii",
-        "world_directory": "doom_ii"
-      }
+      "timestamp": "2025-11-17T04:30:51.193029",
+      "total_seeds_tested": 10
     },
     "Dark Souls III.yaml": {
       "analysis": {
