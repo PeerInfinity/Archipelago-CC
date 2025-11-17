@@ -248,6 +248,12 @@ export async function timerSendTest(testController) {
 
     testController.reportCondition('Timer completed all checks', true);
 
+    // Wait for final ping and recalculation to complete
+    // The timer does a final ping after stopping to catch event locations
+    // This can take up to ~1 second (500ms for pingWorker + 500ms for propagation)
+    testController.log('Waiting for final recalculation to complete...');
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
     // Verify that locations were actually checked
     const finalSnapshot = stateManager.getSnapshot();
 

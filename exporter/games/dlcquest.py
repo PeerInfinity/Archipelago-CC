@@ -96,6 +96,8 @@ class DLCQuestGameExportHandler(BaseGameExportHandler):
                             self.coin_items[player_id] = {}
                         
                         # Individual coin bundle items like "4 coins"
+                        # NOTE: Do NOT mark as events - these should be manually collected
+                        # Setting event=False prevents auto-collection
                         self.coin_items[player_id][item_name] = {
                             'name': item_name,
                             'id': None,
@@ -103,7 +105,7 @@ class DLCQuestGameExportHandler(BaseGameExportHandler):
                             'advancement': True,  # Important for prog_items
                             'useful': False,
                             'trap': False,
-                            'event': False,
+                            'event': False,  # NOT an event - must be manually collected
                             'type': 'coins',
                             'max_count': 1
                         }
@@ -117,11 +119,12 @@ class DLCQuestGameExportHandler(BaseGameExportHandler):
                 if player_id not in data['items']:
                     data['items'][player_id] = {}
                 
-                # Add each coin item
+                # Add/override each coin item
+                # Note: We override here to ensure event=False for coin items
+                # (base exporter may have set event=True for items with code=None)
                 for item_name, item_data in coin_items.items():
-                    if item_name not in data['items'][player_id]:
-                        data['items'][player_id][item_name] = item_data
-                        logger.info(f"Added coin item '{item_name}' to items dictionary for player {player_id}")
+                    data['items'][player_id][item_name] = item_data
+                    logger.info(f"Set coin item '{item_name}' in items dictionary for player {player_id} (event=False)")
         
         return data
                     
