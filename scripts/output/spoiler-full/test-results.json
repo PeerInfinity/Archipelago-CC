@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-17T00:46:06.807387",
-    "last_updated": "2025-11-17T00:46:06.807394",
+    "last_updated": "2025-11-17T04:28:00.641919",
     "script_version": "1.0.0"
   },
   "results": {
@@ -338,59 +338,67 @@
       }
     },
     "Blasphemous.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
-      },
       "consecutive_passes_before_failure": 0,
+      "first_failure_reason": "Test failed at sphere 0.0",
       "first_failure_seed": 1,
-      "game_name": "blasphemous",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 39.98,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "blasphemous",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 38.04,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 3106930,
+            "size_mb": 2.96
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 8,
+            "pass_fail": "failed",
+            "processing_time_seconds": 59.96,
+            "return_code": 1,
+            "sphere_reached": 0.0,
+            "success": false,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_name": "Blasphemous.yaml",
+          "timestamp": "2025-11-17T04:14:15.289891",
+          "world_info": {
+            "exporter_path": "exporter/games/blasphemous.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
+            "game_name_from_yaml": "Blasphemous",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "blasphemous",
+            "world_directory": "blasphemous"
+          }
+        }
       },
-      "rules_file": {
-        "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 3106930,
-        "size_mb": 2.96
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 10,
+      "seeds_failed": 1,
       "seeds_passed": 0,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 117.55,
-        "return_code": 1,
-        "sphere_reached": 0.0,
-        "success": false,
-        "total_spheres": 13.1,
-        "warning_count": 0
-      },
+      "stop_on_failure": true,
       "summary": {
         "all_passed": false,
         "any_failed": true,
         "failure_rate": 1.0
       },
       "template_name": "Blasphemous.yaml",
-      "timestamp": "2025-11-17T00:12:37.767156",
-      "world_info": {
-        "exporter_path": "exporter/games/blasphemous.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
-        "game_name_from_yaml": "Blasphemous",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "blasphemous",
-        "world_directory": "blasphemous"
-      }
+      "timestamp": "2025-11-17T04:14:15.229918",
+      "total_seeds_tested": 1
     },
     "Bomb Rush Cyberfunk.yaml": {
       "analysis": {
@@ -1548,59 +1556,463 @@
       }
     },
     "Kingdom Hearts.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
+      "consecutive_passes_before_failure": 1,
+      "first_failure_reason": "Test failed at sphere 8.43",
+      "first_failure_seed": 2,
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "kh1",
+          "generation": {
+            "error_count": 157,
+            "error_type": null,
+            "processing_time_seconds": 8.38,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/kh1/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 566094,
+            "size_mb": 0.54
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 31.09,
+            "return_code": 0,
+            "sphere_reached": 18.6,
+            "success": true,
+            "total_spheres": 18.6,
+            "warning_count": 0
+          },
+          "template_name": "Kingdom Hearts.yaml",
+          "timestamp": "2025-11-17T04:19:34.835998",
+          "world_info": {
+            "exporter_path": "exporter/games/kh1.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
+            "game_name_from_yaml": "Kingdom Hearts",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "kh1",
+            "world_directory": "kh1"
+          }
+        },
+        "10": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "kh1",
+          "generation": {
+            "error_count": 157,
+            "error_type": null,
+            "processing_time_seconds": 8.7,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/kh1/AP_55941320597534372051/AP_55941320597534372051_rules.json",
+            "size_bytes": 566082,
+            "size_mb": 0.54
+          },
+          "seed": "10",
+          "seed_id": "AP_55941320597534372051",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 32.2,
+            "return_code": 0,
+            "sphere_reached": 12.3,
+            "success": true,
+            "total_spheres": 12.3,
+            "warning_count": 0
+          },
+          "template_name": "Kingdom Hearts.yaml",
+          "timestamp": "2025-11-17T04:27:18.930117",
+          "world_info": {
+            "exporter_path": "exporter/games/kh1.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
+            "game_name_from_yaml": "Kingdom Hearts",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "kh1",
+            "world_directory": "kh1"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "kh1",
+          "generation": {
+            "error_count": 157,
+            "error_type": null,
+            "processing_time_seconds": 8.42,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/kh1/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 566081,
+            "size_mb": 0.54
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 9,
+            "pass_fail": "failed",
+            "processing_time_seconds": 75.08,
+            "return_code": 1,
+            "sphere_reached": 8.43,
+            "success": false,
+            "total_spheres": 19.3,
+            "warning_count": 0
+          },
+          "template_name": "Kingdom Hearts.yaml",
+          "timestamp": "2025-11-17T04:20:14.807003",
+          "world_info": {
+            "exporter_path": "exporter/games/kh1.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
+            "game_name_from_yaml": "Kingdom Hearts",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "kh1",
+            "world_directory": "kh1"
+          }
+        },
+        "3": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "kh1",
+          "generation": {
+            "error_count": 157,
+            "error_type": null,
+            "processing_time_seconds": 8.39,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/kh1/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 566063,
+            "size_mb": 0.54
+          },
+          "seed": "3",
+          "seed_id": "AP_84719271504320872445",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 33.42,
+            "return_code": 0,
+            "sphere_reached": 14.1,
+            "success": true,
+            "total_spheres": 14.1,
+            "warning_count": 0
+          },
+          "template_name": "Kingdom Hearts.yaml",
+          "timestamp": "2025-11-17T04:21:38.842990",
+          "world_info": {
+            "exporter_path": "exporter/games/kh1.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
+            "game_name_from_yaml": "Kingdom Hearts",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "kh1",
+            "world_directory": "kh1"
+          }
+        },
+        "4": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "kh1",
+          "generation": {
+            "error_count": 157,
+            "error_type": null,
+            "processing_time_seconds": 8.94,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/kh1/AP_05594871498841892311/AP_05594871498841892311_rules.json",
+            "size_bytes": 566065,
+            "size_mb": 0.54
+          },
+          "seed": "4",
+          "seed_id": "AP_05594871498841892311",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 32.23,
+            "return_code": 0,
+            "sphere_reached": 15.1,
+            "success": true,
+            "total_spheres": 15.1,
+            "warning_count": 0
+          },
+          "template_name": "Kingdom Hearts.yaml",
+          "timestamp": "2025-11-17T04:22:21.175081",
+          "world_info": {
+            "exporter_path": "exporter/games/kh1.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
+            "game_name_from_yaml": "Kingdom Hearts",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "kh1",
+            "world_directory": "kh1"
+          }
+        },
+        "5": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "kh1",
+          "generation": {
+            "error_count": 157,
+            "error_type": null,
+            "processing_time_seconds": 8.56,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/kh1/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 566049,
+            "size_mb": 0.54
+          },
+          "seed": "5",
+          "seed_id": "AP_96945849220684217413",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 33.41,
+            "return_code": 0,
+            "sphere_reached": 21.4,
+            "success": true,
+            "total_spheres": 21.4,
+            "warning_count": 0
+          },
+          "template_name": "Kingdom Hearts.yaml",
+          "timestamp": "2025-11-17T04:23:02.888785",
+          "world_info": {
+            "exporter_path": "exporter/games/kh1.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
+            "game_name_from_yaml": "Kingdom Hearts",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "kh1",
+            "world_directory": "kh1"
+          }
+        },
+        "6": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "kh1",
+          "generation": {
+            "error_count": 157,
+            "error_type": null,
+            "processing_time_seconds": 9.34,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/kh1/AP_00679259829289197625/AP_00679259829289197625_rules.json",
+            "size_bytes": 566094,
+            "size_mb": 0.54
+          },
+          "seed": "6",
+          "seed_id": "AP_00679259829289197625",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 33.7,
+            "return_code": 0,
+            "sphere_reached": 15.1,
+            "success": true,
+            "total_spheres": 15.1,
+            "warning_count": 0
+          },
+          "template_name": "Kingdom Hearts.yaml",
+          "timestamp": "2025-11-17T04:23:45.397428",
+          "world_info": {
+            "exporter_path": "exporter/games/kh1.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
+            "game_name_from_yaml": "Kingdom Hearts",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "kh1",
+            "world_directory": "kh1"
+          }
+        },
+        "7": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "kh1",
+          "generation": {
+            "error_count": 157,
+            "error_type": null,
+            "processing_time_seconds": 8.64,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/kh1/AP_35931773795037525048/AP_35931773795037525048_rules.json",
+            "size_bytes": 566082,
+            "size_mb": 0.54
+          },
+          "seed": "7",
+          "seed_id": "AP_35931773795037525048",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 33.59,
+            "return_code": 0,
+            "sphere_reached": 15.1,
+            "success": true,
+            "total_spheres": 15.1,
+            "warning_count": 0
+          },
+          "template_name": "Kingdom Hearts.yaml",
+          "timestamp": "2025-11-17T04:24:28.963739",
+          "world_info": {
+            "exporter_path": "exporter/games/kh1.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
+            "game_name_from_yaml": "Kingdom Hearts",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "kh1",
+            "world_directory": "kh1"
+          }
+        },
+        "8": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "kh1",
+          "generation": {
+            "error_count": 157,
+            "error_type": null,
+            "processing_time_seconds": 9.1,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/kh1/AP_20777137877808592492/AP_20777137877808592492_rules.json",
+            "size_bytes": 566093,
+            "size_mb": 0.54
+          },
+          "seed": "8",
+          "seed_id": "AP_20777137877808592492",
+          "spoiler_test": {
+            "error_count": 9,
+            "pass_fail": "failed",
+            "processing_time_seconds": 75.36,
+            "return_code": 1,
+            "sphere_reached": 5.17,
+            "success": false,
+            "total_spheres": 16.1,
+            "warning_count": 0
+          },
+          "template_name": "Kingdom Hearts.yaml",
+          "timestamp": "2025-11-17T04:25:11.690557",
+          "world_info": {
+            "exporter_path": "exporter/games/kh1.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
+            "game_name_from_yaml": "Kingdom Hearts",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "kh1",
+            "world_directory": "kh1"
+          }
+        },
+        "9": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "kh1",
+          "generation": {
+            "error_count": 157,
+            "error_type": null,
+            "processing_time_seconds": 8.53,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/kh1/AP_48205312626925217390/AP_48205312626925217390_rules.json",
+            "size_bytes": 566080,
+            "size_mb": 0.54
+          },
+          "seed": "9",
+          "seed_id": "AP_48205312626925217390",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 33.23,
+            "return_code": 0,
+            "sphere_reached": 20.2,
+            "success": true,
+            "total_spheres": 20.2,
+            "warning_count": 0
+          },
+          "template_name": "Kingdom Hearts.yaml",
+          "timestamp": "2025-11-17T04:26:36.658563",
+          "world_info": {
+            "exporter_path": "exporter/games/kh1.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
+            "game_name_from_yaml": "Kingdom Hearts",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "kh1",
+            "world_directory": "kh1"
+          }
+        }
       },
-      "consecutive_passes_before_failure": 2,
-      "first_failure_seed": 3,
-      "game_name": "kh1",
-      "generation": {
-        "error_count": 157,
-        "error_type": null,
-        "processing_time_seconds": 6.29,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "rules_file": {
-        "path": "frontend/presets/kh1/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 566094,
-        "size_mb": 0.54
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
       "seeds_failed": 2,
       "seeds_passed": 8,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 0,
-        "pass_fail": "passed",
-        "processing_time_seconds": 23.31,
-        "return_code": 0,
-        "sphere_reached": 18.6,
-        "success": true,
-        "total_spheres": 18.6,
-        "warning_count": 0
-      },
+      "stop_on_failure": true,
       "summary": {
         "all_passed": false,
         "any_failed": true,
         "failure_rate": 0.2
       },
       "template_name": "Kingdom Hearts.yaml",
-      "timestamp": "2025-11-17T00:23:09.198704",
-      "world_info": {
-        "exporter_path": "exporter/games/kh1.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
-        "game_name_from_yaml": "Kingdom Hearts",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "kh1",
-        "world_directory": "kh1"
-      }
+      "timestamp": "2025-11-17T04:19:34.779761",
+      "total_seeds_tested": 10
     },
     "Kirby's Dream Land 3.yaml": {
       "analysis": {
