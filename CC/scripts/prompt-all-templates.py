@@ -19,9 +19,17 @@ from lib.test_utils import read_host_yaml_config, load_template_exclude_list
 from lib.test_results import is_test_passing, load_existing_results
 
 
-def get_test_results_path(project_root):
-    """Determine the correct test results path based on host.yaml configuration."""
-    # Read host.yaml to check extend_sphere_log_to_all_locations setting
+def get_test_results_path(project_root, use_full_spoilers=False, use_minimal_spoilers=False):
+    """Determine the correct test results path based on host.yaml configuration or command-line flags."""
+    # If --full-spoilers is set, always use the full spoilers path
+    if use_full_spoilers:
+        return Path(project_root) / 'scripts/output/spoiler-full/test-results.json'
+
+    # If --minimal-spoilers is set, always use the minimal spoilers path
+    if use_minimal_spoilers:
+        return Path(project_root) / 'scripts/output/spoiler-minimal/test-results.json'
+
+    # Otherwise, read host.yaml to check extend_sphere_log_to_all_locations setting
     host_config = read_host_yaml_config(project_root)
     extend_sphere_log = host_config.get('general_options', {}).get('extend_sphere_log_to_all_locations', True)
 
@@ -32,9 +40,9 @@ def get_test_results_path(project_root):
         return Path(project_root) / 'scripts/output/spoiler-minimal/test-results.json'
 
 
-def load_test_results(project_root):
+def load_test_results(project_root, use_full_spoilers=False, use_minimal_spoilers=False):
     """Load the template test results JSON file."""
-    results_file = get_test_results_path(project_root)
+    results_file = get_test_results_path(project_root, use_full_spoilers, use_minimal_spoilers)
     if not results_file.exists():
         return {}
 
@@ -135,7 +143,7 @@ def get_template_files(template_dir, skip_list=None):
     return [f.name for f in template_files]
 
 
-def run_prompt_for_game(game_name, use_text_mode=False, use_prompt_mode=False, seed=1, quiet_mode=False, use_cloud_docs=False):
+def run_prompt_for_game(game_name, use_text_mode=False, use_prompt_mode=False, seed=1, quiet_mode=False, use_cloud_docs=False, use_full_spoilers=False):
     """Run the prompt script for a specific game."""
     if not quiet_mode:
         print(f"Running prompt script for game: {game_name}")
@@ -147,6 +155,8 @@ def run_prompt_for_game(game_name, use_text_mode=False, use_prompt_mode=False, s
             cmd.append('--prompt')
         if use_cloud_docs:
             cmd.append('--CC')
+        if use_full_spoilers:
+            cmd.append('--full-spoilers')
 
         result = subprocess.run(cmd, check=False)
         return result.returncode == 0
@@ -156,12 +166,14 @@ def run_prompt_for_game(game_name, use_text_mode=False, use_prompt_mode=False, s
         return False
 
 
-def get_prompt_for_game(game_name, seed=1, use_cloud_docs=False):
+def get_prompt_for_game(game_name, seed=1, use_cloud_docs=False, use_full_spoilers=False):
     """Get the prompt text for a specific game without running it."""
     try:
         cmd = ['python', 'CC/scripts/prompt.py', game_name, '--seed', str(seed), '--prompt']
         if use_cloud_docs:
             cmd.append('--CC')
+        if use_full_spoilers:
+            cmd.append('--full-spoilers')
         result = subprocess.run(cmd, capture_output=True, text=True, check=False)
         if result.returncode == 0:
             return result.stdout
@@ -202,8 +214,17 @@ def main():
                        help='Write all prompts to prompts.txt instead of running them')
     parser.add_argument('--CC', action='store_true',
                        help='Use cloud-specific documentation when generating prompts')
+    parser.add_argument('--full-spoilers', action='store_true',
+                       help='Pass --full-spoilers to prompt.py to include full spoilers mode instructions')
+    parser.add_argument('--minimal-spoilers', action='store_true',
+                       help='Read test results from scripts/output/spoiler-minimal/test-results.json')
 
     args = parser.parse_args()
+
+    # Validate mutually exclusive options
+    if args.full_spoilers and args.minimal_spoilers:
+        print("Error: --full-spoilers and --minimal-spoilers are mutually exclusive")
+        sys.exit(1)
 
     # Determine project root
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -253,14 +274,14 @@ def main():
             print(f"{'='*60}")
 
         # Load current test results
-        test_results = load_test_results(project_root)
+        test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers)
 
         # Check if we need to run the test
         if template_file not in test_results:
             if not quiet_mode:
                 print("No test results found, running initial test...")
             run_template_test(template_file, args.seed)
-            test_results = load_test_results(project_root)
+            test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers)
 
         # Check if test is passing
         if is_test_passing(template_file, test_results):
@@ -292,6 +313,8 @@ def main():
                         cmd = ['python', 'CC/scripts/prompt.py', game_name, '--seed', str(seed_to_use), '-p']
                         if args.CC:
                             cmd.append('--CC')
+                        if args.full_spoilers:
+                            cmd.append('--full-spoilers')
                         result = subprocess.run(cmd, capture_output=True, text=True, check=False)
                         if result.returncode == 0:
                             collected_prompts.append(result.stdout)
@@ -303,7 +326,7 @@ def main():
                             print(f"Error getting prompt for {game_name}: {e}", file=sys.stderr)
                 else:
                     # Run prompt script
-                    run_prompt_for_game(game_name, args.text, args.prompt, seed_to_use, quiet_mode, args.CC)
+                    run_prompt_for_game(game_name, args.text, args.prompt, seed_to_use, quiet_mode, args.CC, args.full_spoilers)
 
                     # Exit immediately if -t or -p was specified (regardless of --loud)
                     if args.text or args.prompt:

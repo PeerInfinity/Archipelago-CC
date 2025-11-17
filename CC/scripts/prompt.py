@@ -53,7 +53,7 @@ def get_game_info(game_name, world_mapping):
     sys.exit(1)
 
 
-def build_prompt(game_name, game_info, seed=1, use_cloud_docs=False):
+def build_prompt(game_name, game_info, seed=1, use_cloud_docs=False, use_full_spoilers=False):
     """Build the Claude prompt with appropriate messages."""
     world_dir = game_info['world_directory']
 
@@ -88,6 +88,21 @@ Then, please read {debugging_doc}."""
         debugging_doc = "CC/game-debugging.md"
         setup_instruction = f"Please read {debugging_doc}."
 
+    # Build full-spoilers mode instructions if requested
+    full_spoilers_instructions = ""
+    if use_full_spoilers:
+        full_spoilers_instructions = f"""
+IMPORTANT: You must run all tests in FULL SPOILERS MODE.
+
+Before running any tests, configure the host settings for full spoilers:
+python scripts/setup/update_host_settings.py full-spoilers
+
+Alternatively, you can use the --full-spoilers parameter when running test-all-templates.py:
+python scripts/test/test-all-templates.py --full-spoilers --include-list "{template_name}" --seed {seed} -p
+
+Full spoilers mode sets extend_sphere_log_to_all_locations to true in host.yaml, which provides more detailed sphere information in the test results.
+"""
+
     # Build the full prompt
     prompt = f"""{setup_instruction}
 
@@ -102,6 +117,7 @@ The command to run the spoiler test is
 npm test --mode=test-spoilers --game={world_dir} --seed={seed}
 
 These commands need to be run from the project root directory.
+{full_spoilers_instructions}
 
 {exporter_message}
 
@@ -217,6 +233,7 @@ def main():
     parser.add_argument('-p', '--prompt', action='store_true', help='Output just the prompt contents')
     parser.add_argument('-s', '--seed', type=int, default=1, help='Seed number to use for generation (default: 1)')
     parser.add_argument('--CC', action='store_true', help='Use cloud-specific documentation (CC/cloud-setup.md and CC/game-debugging-CC.md)')
+    parser.add_argument('--full-spoilers', action='store_true', help='Include instructions for running tests in full spoilers mode')
 
     args = parser.parse_args()
 
@@ -234,7 +251,7 @@ def main():
     setup_game_logs(world_dir)
 
     # Build prompt using the actual game name (important for template path)
-    prompt = build_prompt(actual_game_name, game_info, args.seed, args.CC)
+    prompt = build_prompt(actual_game_name, game_info, args.seed, args.CC, args.full_spoilers)
 
     if args.prompt:
         # Output just the prompt contents
