@@ -1,0 +1,1807 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:55] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: yugioh06
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=yugioh06&seed=1
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:58] "GET /frontend/?mode=test-spoilers&game=yugioh06&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:58] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:58] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:58] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:58] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:58] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:58] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modes.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/presets/yugioh06/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/yugioh06/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [04:16:59.280] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/hylics2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/messenger/messengerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/oot/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/raft/raftLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/cv64/cv64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/dark_souls_3/darkSouls3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/paint/paintLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/soe/soeLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/shapez/shapezLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/shivers/shiversLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/smz3/smz3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/sc2/sc2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/sm/smLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/stardew_valley/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/terraria/terrariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/tww/twwLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/wargroove/wargrooveLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/yoshisisland/yoshisislandLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/osrs/osrsLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/tloz/tlozLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/jakanddaxter/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/marioland2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/cv64/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/overcooked2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/paint/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/shapez/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/shivers/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/sc2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/subnautica/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/terraria/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/tloz/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [04:16:59.780] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [04:16:59.782] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:16:59] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [04:16:59.801] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [04:16:59.802] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [04:16:59.802] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [04:16:59.803] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/yugioh06/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/yugioh06/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/yugioh06/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [04:16:59.819] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/presets/yugioh06/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [17/Nov/2025 04:17:00] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.386] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.426] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.455] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.483] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.529] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.547] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.565] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.600] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.624] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.648] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.668] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.692] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.738] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.766] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.787] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.812] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.832] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.852] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.874] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.899] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.923] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.948] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:02.976] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.000] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.031] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.048] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.065] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.086] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.118] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.149] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.171] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.192] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.214] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.238] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.260] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.286] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.310] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.344] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.397] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.418] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.441] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.464] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.488] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.519] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.554] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.576] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.624] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.650] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.672] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.693] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.718] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.739] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.768] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.788] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.810] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.840] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.875] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.916] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.937] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.956] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:03.981] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.005] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.026] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.049] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.072] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.094] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.121] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.148] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.172] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.200] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.235] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.267] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.294] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.321] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.346] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.371] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.400] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.430] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.462] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.491] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.520] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.550] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.577] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.618] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.644] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.676] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.707] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.734] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.761] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.790] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.819] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.849] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.886] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.921] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.958] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:04.999] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.047] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.085] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.127] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.194] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.224] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.258] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.305] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.338] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.366] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.391] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.422] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.451] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.475] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.501] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.526] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.559] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.588] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.619] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.651] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.688] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.718] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.750] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.778] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.809] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.838] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.867] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.893] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.924] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.966] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:05.994] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.028] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.061] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.090] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.132] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.158] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.184] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.214] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.251] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.291] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.325] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.365] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.402] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.440] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.481] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.519] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.558] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.592] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.636] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.674] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.720] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.777] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.808] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.840] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.875] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.910] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.943] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:06.982] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.011] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.045] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.077] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.110] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.152] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.182] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.213] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.248] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.283] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.314] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.343] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.377] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.409] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.452] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.483] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.517] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.548] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.586] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.622] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.657] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.691] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.726] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.763] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.800] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.843] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.884] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.920] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:07.959] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.004] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.045] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.088] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.136] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.182] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.227] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.275] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.331] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.413] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.454] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.487] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.524] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.561] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.598] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.634] [WARN] [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (warning): [04:17:08.666] [WARN] [stateManagerProxy] [StateManagerProxy] Ping timed out - received response for unknown queryId: 197 This means the worker response is arriving late and the snapshot may be stale!
+BROWSER LOG (error): [04:18:08.674] [ERROR] [testSpoilerUI] Error during StateManager interaction or comparison for sphere 2.70: Timeout waiting for ping response (queryId: 197) Error: Timeout waiting for ping response (queryId: 197)
+    at http://localhost:8000/frontend/modules/stateManager/stateManagerProxy.js:1529:11
+BROWSER LOG (error): [04:18:08.679] [ERROR] [testSpoilerUI] Test failed at step 197: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [04:18:08.682] [ERROR] [testSpoilerUI] Mismatch for event 197 (Sphere 2.70): Comparison for state_update at step 197 Failed
+BROWSER LOG (warning): [04:18:08.686] [WARN] [testSpoilerUI] Test run halted due to "Stop on first error" being enabled.
+BROWSER LOG (error): [04:18:08.690] [ERROR] [testSpoilerUI] Spoiler test completed with 1 mismatch(es). See logs above for details.
+BROWSER LOG (warning): [ruleEngine] [evaluateRule] Unknown rule type: capability {rule: Object}
+BROWSER LOG (error): [04:18:09.371] [ERROR] [TestRunner/test_spoiler_full_run] [spoilers-full-run-1763353020625] Spoiler test failed. Mismatches found in log:
+BROWSER LOG (error): [04:18:09.372] [ERROR] [TestRunner/test_spoiler_full_run]   - Mismatch for event 197 (Sphere 2.70): Comparison for state_update at step 197 Failed
+BROWSER LOG (error): [04:18:09.372] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:18:08 AM] Error during StateManager interaction or comparison for sphere 2.70: Timeout waiting for ping response (queryId: 197)
+BROWSER LOG (error): [04:18:09.372] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:18:08 AM] Test failed at step 197: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [04:18:09.372] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:18:08 AM] Mismatch for event 197 (Sphere 2.70): Comparison for state_update at step 197 Failed
+BROWSER LOG (error): [04:18:09.372] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:18:08 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Full in-app test results: {
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 0,
+    "failedCount": 1
+  },
+  "testDetails": [
+    {
+      "id": "test_spoiler_full_run",
+      "name": "Test Spoilers Panel - Full Run",
+      "status": "failed",
+      "category": "Test Spoilers Panel",
+      "startTime": "2025-11-17T04:17:00.624Z",
+      "endTime": "2025-11-17T04:18:09.380Z",
+      "durationMs": 68756,
+      "conditions": [
+        {
+          "description": "Test started",
+          "status": "passed",
+          "timestamp": "2025-11-17T04:17:00.626Z"
+        },
+        {
+          "description": "Test Spoilers panel found in DOM",
+          "status": "passed",
+          "timestamp": "2025-11-17T04:17:01.137Z"
+        },
+        {
+          "description": "\"Load Suggested Log\" button found and enabled",
+          "status": "passed",
+          "timestamp": "2025-11-17T04:17:01.387Z"
+        },
+        {
+          "description": "\"Run Full Test\" button appeared",
+          "status": "passed",
+          "timestamp": "2025-11-17T04:17:02.143Z"
+        },
+        {
+          "description": "Full spoiler test completed",
+          "status": "passed",
+          "timestamp": "2025-11-17T04:18:09.368Z"
+        },
+        {
+          "description": "Spoiler test passed all checks",
+          "status": "failed",
+          "timestamp": "2025-11-17T04:18:09.371Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[spoilers-full-run-1763353020625] Starting testSpoilersPanelFullRun...",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:00.626Z"
+        },
+        {
+          "message": "Condition: \"Test started\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:00.626Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Activating testSpoilersPanel panel...",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:00.626Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel initialization\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:00.635Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel initialization\".",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:00.886Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel DOM element\" (timeout: 5000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:00.886Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel DOM element\".",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:01.136Z"
+        },
+        {
+          "message": "Condition: \"Test Spoilers panel found in DOM\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:01.137Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Load Suggested Log\" button to be available\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:01.137Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Load Suggested Log\" button to be available\".",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:01.387Z"
+        },
+        {
+          "message": "Condition: \"\"Load Suggested Log\" button found and enabled\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:01.387Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Clicking \"Load Suggested Log\" button...",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:01.388Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Spoiler log loading completion\" (timeout: 15000ms, interval: 500ms)...",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:01.390Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Spoiler log loading completion\".",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:01.892Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Run Full Test\" button to appear\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:01.892Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Run Full Test\" button to appear\".",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:02.142Z"
+        },
+        {
+          "message": "Condition: \"\"Run Full Test\" button appeared\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:02.143Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Clicking \"Run Full Test\" button...",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:02.143Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test to start processing\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:02.146Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test to start processing\".",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:02.367Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Waiting for full spoiler test to complete...",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:02.367Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test completion with detailed results\" (timeout: 300000ms, interval: 1000ms)...",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:02.367Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:03.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:04.367Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:05.379Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:06.383Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:07.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:08.372Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:09.367Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:10.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:11.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:12.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:13.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:14.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:15.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:16.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:17.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:18.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:19.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:20.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:21.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:22.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:23.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:24.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:25.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:26.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:27.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:28.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:29.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:30.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:31.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:32.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:33.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:34.369Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:35.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:36.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:37.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:38.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:39.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:40.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:41.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:42.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:43.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:44.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:45.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:46.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:47.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:48.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:49.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:50.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:51.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:52.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:53.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:54.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:55.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:56.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:57.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:58.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:17:59.367Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:00.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:01.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:02.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:03.367Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:04.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:05.367Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:06.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:07.369Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:08.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Polling: buttonReady=true, hasDetailedResults=true, processedEvents=196/979",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:09.368Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":979,\"processedEvents\":196,\"errorCount\":1,\"sphereCount\":197,\"testLogPath\":\"presets/yugioh06/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:09.368Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test completion with detailed results\".",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:09.368Z"
+        },
+        {
+          "message": "Condition: \"Full spoiler test completed\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:09.368Z"
+        },
+        {
+          "message": "Condition: \"Spoiler test passed all checks\" - FAILED",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:09.371Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Spoiler test failed. Mismatches found in log:",
+          "type": "error",
+          "timestamp": "2025-11-17T04:18:09.371Z"
+        },
+        {
+          "message": "  - Mismatch for event 197 (Sphere 2.70): Comparison for state_update at step 197 Failed",
+          "type": "error",
+          "timestamp": "2025-11-17T04:18:09.372Z"
+        },
+        {
+          "message": "  - [4:18:08 AM] Error during StateManager interaction or comparison for sphere 2.70: Timeout waiting for ping response (queryId: 197)",
+          "type": "error",
+          "timestamp": "2025-11-17T04:18:09.372Z"
+        },
+        {
+          "message": "  - [4:18:08 AM] Test failed at step 197: Comparison failed for event type 'state_update'.",
+          "type": "error",
+          "timestamp": "2025-11-17T04:18:09.372Z"
+        },
+        {
+          "message": "  - [4:18:08 AM] Mismatch for event 197 (Sphere 2.70): Comparison for state_update at step 197 Failed",
+          "type": "error",
+          "timestamp": "2025-11-17T04:18:09.372Z"
+        },
+        {
+          "message": "  - [4:18:08 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.",
+          "type": "error",
+          "timestamp": "2025-11-17T04:18:09.372Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Spoiler test results stored in window.__spoilerTestResults__",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:09.372Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] Spoiler test results stored in localStorage",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:09.379Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763353020625] testSpoilersPanelFullRun finished. Overall Result: false.",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:09.379Z"
+        },
+        {
+          "message": "Test completion signal: FAILED",
+          "type": "info",
+          "timestamp": "2025-11-17T04:18:09.379Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-17T04:18:09.379Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-17T04:18:09.380Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-17T04:18:09.380Z"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2025-11-17T04:18:09.481Z"
+}
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2025-11-17T04-18-09.json
+  ✘  1 tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results (1.2m)
+
+
+  1) tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m0[39m
+    Received: [31m1[39m
+
+      141 |
+      142 |     // The test system should complete successfully regardless of whether tests run
+    > 143 |     expect(results.summary.failedCount).toBe(0);
+          |                                         ^
+      144 |     
+      145 |     // If tests actually ran, they should pass
+      146 |     if (results.summary.totalRun > 0) {
+        at /home/user/Archipelago-CC/tests/e2e/app.spec.js:143:41
+
+    Error Context: test-results/app-Application-End-to-End-a086e-app-tests-and-check-results/error-context.md
+
+  1 failed
+    tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results ─
