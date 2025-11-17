@@ -229,9 +229,9 @@ jobs:
             echo "View the branch at: ${{ github.server_url }}/${{ github.repository }}/tree/test-results-update"
           fi
 
-  # Parallel test jobs for spoilers (split by templates) - one for each template subset
-  test-spoiler-split-templates:
-    name: Test ${{ matrix.spoiler_type }} Spoiler Split ${{ matrix.split_num }}
+  # Parallel test jobs for minimal spoilers (split by templates) - one for each template subset
+  test-minimal-spoiler-split-templates:
+    name: Test Minimal Spoiler Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
 
@@ -240,7 +240,6 @@ jobs:
       matrix:
         split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         split_total: [10]
-        spoiler_type: ['minimal', 'full']
 
     steps:
       - name: Checkout repository
@@ -274,11 +273,7 @@ jobs:
         run: |
           source .venv/bin/activate
           python Launcher.py --update_settings
-          if [[ "${{ matrix.spoiler_type }}" == "full" ]]; then
-            python scripts/setup/update_host_settings.py full-spoilers
-          else
-            python scripts/setup/update_host_settings.py minimal-spoilers
-          fi
+          python scripts/setup/update_host_settings.py minimal-spoilers
 
       - name: Install Node.js dependencies
         run: npm install
@@ -293,14 +288,14 @@ jobs:
           python -m http.server 8000 &
           sleep 2
 
-      - name: Run spoiler test for split ${{ matrix.split_num }}
+      - name: Run minimal spoiler test for split ${{ matrix.split_num }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --seed 1 \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/spoiler-${{ matrix.spoiler_type }}/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
             -p
 
@@ -308,21 +303,16 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-spoiler-${{ matrix.spoiler_type }}-templates-split-${{ matrix.split_num }}
-          path: scripts/output/spoiler-${{ matrix.spoiler_type }}/test-results-split-${{ matrix.split_num }}.json
+          name: test-results-spoiler-minimal-templates-split-${{ matrix.split_num }}
+          path: scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
-  # Combine spoiler results job - runs after all split tests complete
-  combine-spoiler-templates-results:
-    name: Combine ${{ matrix.spoiler_type }} Spoiler Test Results (Templates Split)
+  # Combine minimal spoiler results job - runs after all split tests complete
+  combine-minimal-spoiler-templates-results:
+    name: Combine Minimal Spoiler Test Results (Templates Split)
     runs-on: ubuntu-latest
-    needs: test-spoiler-split-templates
+    needs: test-minimal-spoiler-split-templates
     if: always()
-
-    strategy:
-      fail-fast: false
-      matrix:
-        spoiler_type: ['minimal', 'full']
 
     steps:
       - name: Checkout repository
@@ -354,17 +344,17 @@ jobs:
       - name: Combine test results
         run: |
           # Create temporary directory for merged results
-          mkdir -p /tmp/merged-results/scripts/output/spoiler-${{ matrix.spoiler_type }}
+          mkdir -p /tmp/merged-results/scripts/output/spoiler-minimal
           mkdir -p /tmp/merged-results/docs/json/developer/test-results
 
           # Combine all per-split test results into one file
           python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-spoiler-${{ matrix.spoiler_type }}-templates-split-*/test-results-split-*.json \
-            --output-file /tmp/merged-results/scripts/output/spoiler-${{ matrix.spoiler_type }}/test-results.json
+            --input-files artifacts/test-results-spoiler-minimal-templates-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/spoiler-minimal/test-results.json
 
           # List what was created
           echo "=== Combined Results ==="
-          ls -lh /tmp/merged-results/scripts/output/spoiler-${{ matrix.spoiler_type }}/test-results.json
+          ls -lh /tmp/merged-results/scripts/output/spoiler-minimal/test-results.json
 
       - name: Create or switch to test-results-update branch
         run: |
@@ -403,9 +393,9 @@ jobs:
       - name: Generate test charts and copy results
         run: |
           # Copy combined results to repository location so generate-test-chart.py can find them
-          mkdir -p scripts/output/spoiler-${{ matrix.spoiler_type }}
-          cp /tmp/merged-results/scripts/output/spoiler-${{ matrix.spoiler_type }}/test-results.json \
-             scripts/output/spoiler-${{ matrix.spoiler_type }}/test-results.json
+          mkdir -p scripts/output/spoiler-minimal
+          cp /tmp/merged-results/scripts/output/spoiler-minimal/test-results.json \
+             scripts/output/spoiler-minimal/test-results.json
 
           # Generate test charts and documentation
           python scripts/docs/generate-test-chart.py
@@ -414,7 +404,7 @@ jobs:
           ls -lh docs/json/developer/test-results/
 
           echo "=== Files ready for commit ==="
-          ls -lh scripts/output/spoiler-${{ matrix.spoiler_type }}/test-results.json
+          ls -lh scripts/output/spoiler-minimal/test-results.json
           ls -lh docs/json/developer/test-results/*.md 2>/dev/null || echo "No markdown files"
 
       - name: Commit and push results
@@ -424,14 +414,14 @@ jobs:
 
           # Add the specific files we want to commit
           # Use -f because scripts/output is in .gitignore (even though specific files are excepted)
-          git add -f scripts/output/spoiler-${{ matrix.spoiler_type }}/test-results.json
+          git add -f scripts/output/spoiler-minimal/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
           # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update ${{ matrix.spoiler_type }} spoiler test results (split by templates, seed 1)
+            git commit -m "Update minimal spoiler test results (split by templates, seed 1)
 
             Generated by workflow run: ${{ github.run_id }}
             Triggered by: ${{ github.actor }}
@@ -439,7 +429,217 @@ jobs:
             Test results from parallel template testing:
             - Templates split across 10 parallel jobs
             - Seed: 1 only
-            - Spoiler type: ${{ matrix.spoiler_type }}
+            - Spoiler type: minimal
+            - Includes generated test documentation
+            "
+
+            git push origin test-results-update
+
+            echo "✅ Test results committed to test-results-update branch"
+            echo "View the branch at: ${{ github.server_url }}/${{ github.repository }}/tree/test-results-update"
+          fi
+
+  # Parallel test jobs for full spoilers (split by templates) - one for each template subset
+  test-full-spoiler-split-templates:
+    name: Test Full Spoiler Split ${{ matrix.split_num }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        split_total: [10]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py full-spoilers
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run full spoiler test for split ${{ matrix.split_num }}
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --seed 1 \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
+            --no-backup \
+            -p
+
+      - name: Upload test results for split ${{ matrix.split_num }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-spoiler-full-templates-split-${{ matrix.split_num }}
+          path: scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+  # Combine full spoiler results job - runs after all split tests complete
+  combine-full-spoiler-templates-results:
+    name: Combine Full Spoiler Test Results (Templates Split)
+    runs-on: ubuntu-latest
+    needs: test-full-spoiler-split-templates
+    if: always()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: List downloaded artifacts
+        run: |
+          echo "=== Downloaded Artifacts ==="
+          find artifacts -type f -name "*.json" | sort
+
+      - name: Combine test results
+        run: |
+          # Create temporary directory for merged results
+          mkdir -p /tmp/merged-results/scripts/output/spoiler-full
+          mkdir -p /tmp/merged-results/docs/json/developer/test-results
+
+          # Combine all per-split test results into one file
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-spoiler-full-templates-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/spoiler-full/test-results.json
+
+          # List what was created
+          echo "=== Combined Results ==="
+          ls -lh /tmp/merged-results/scripts/output/spoiler-full/test-results.json
+
+      - name: Create or switch to test-results-update branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Fetch all branches
+          git fetch origin
+
+          # Check if branch exists remotely
+          if git ls-remote --exit-code --heads origin test-results-update; then
+            echo "Branch test-results-update exists, syncing with main"
+            git checkout test-results-update
+            git pull origin test-results-update
+
+            # Make test-results-update's content match main exactly while preserving history
+            echo "Syncing test-results-update to match main exactly..."
+
+            # Remove all tracked files
+            git rm -rf .
+
+            # Restore all files from main
+            git checkout origin/main -- .
+
+            # Commit the sync if there are changes
+            if ! git diff --staged --quiet; then
+              git commit -m "Sync test-results-update with main before updating test results"
+            else
+              echo "Already in sync with main"
+            fi
+          else
+            echo "Creating new branch test-results-update from main"
+            git checkout -b test-results-update origin/main
+          fi
+
+      - name: Generate test charts and copy results
+        run: |
+          # Copy combined results to repository location so generate-test-chart.py can find them
+          mkdir -p scripts/output/spoiler-full
+          cp /tmp/merged-results/scripts/output/spoiler-full/test-results.json \
+             scripts/output/spoiler-full/test-results.json
+
+          # Generate test charts and documentation
+          python scripts/docs/generate-test-chart.py
+
+          echo "=== Generated Documentation ==="
+          ls -lh docs/json/developer/test-results/
+
+          echo "=== Files ready for commit ==="
+          ls -lh scripts/output/spoiler-full/test-results.json
+          ls -lh docs/json/developer/test-results/*.md 2>/dev/null || echo "No markdown files"
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Add the specific files we want to commit
+          # Use -f because scripts/output is in .gitignore (even though specific files are excepted)
+          git add -f scripts/output/spoiler-full/test-results.json
+          git add docs/json/developer/test-results/*.md || true
+
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update full spoiler test results (split by templates, seed 1)
+
+            Generated by workflow run: ${{ github.run_id }}
+            Triggered by: ${{ github.actor }}
+
+            Test results from parallel template testing:
+            - Templates split across 10 parallel jobs
+            - Seed: 1 only
+            - Spoiler type: full
             - Includes generated test documentation
             "
 
@@ -657,9 +857,9 @@ jobs:
             echo "View the branch at: ${{ github.server_url }}/${{ github.repository }}/tree/test-results-update"
           fi
 
-  # Parallel test jobs for multitemplate - one for each template subset
-  test-multitemplate-split:
-    name: Test Multitemplate ${{ matrix.spoiler_type }} Split ${{ matrix.split_num }}
+  # Parallel test jobs for minimal multitemplate - one for each template subset
+  test-minimal-multitemplate-split:
+    name: Test Minimal Multitemplate Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
 
@@ -668,7 +868,6 @@ jobs:
       matrix:
         split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         split_total: [10]
-        spoiler_type: ['minimal', 'full']
 
     steps:
       - name: Checkout repository
@@ -707,11 +906,7 @@ jobs:
         run: |
           source .venv/bin/activate
           python Launcher.py --update_settings
-          if [[ "${{ matrix.spoiler_type }}" == "full" ]]; then
-            python scripts/setup/update_host_settings.py full-spoilers
-          else
-            python scripts/setup/update_host_settings.py minimal-spoilers
-          fi
+          python scripts/setup/update_host_settings.py minimal-spoilers
 
       - name: Install Node.js dependencies
         run: npm install
@@ -726,7 +921,7 @@ jobs:
           python -m http.server 8000 &
           sleep 2
 
-      - name: Run multitemplate test for split ${{ matrix.split_num }}
+      - name: Run minimal multitemplate test for split ${{ matrix.split_num }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -734,7 +929,7 @@ jobs:
             --multitemplate \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/multitemplate-${{ matrix.spoiler_type }}/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/multitemplate-minimal/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
             -p
 
@@ -742,21 +937,16 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-multitemplate-${{ matrix.spoiler_type }}-split-${{ matrix.split_num }}
-          path: scripts/output/multitemplate-${{ matrix.spoiler_type }}/test-results-split-${{ matrix.split_num }}.json
+          name: test-results-multitemplate-minimal-split-${{ matrix.split_num }}
+          path: scripts/output/multitemplate-minimal/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
-  # Combine multitemplate results job - runs after all split tests complete
-  combine-multitemplate-results:
-    name: Combine Multitemplate ${{ matrix.spoiler_type }} Test Results
+  # Combine minimal multitemplate results job - runs after all split tests complete
+  combine-minimal-multitemplate-results:
+    name: Combine Minimal Multitemplate Test Results
     runs-on: ubuntu-latest
-    needs: test-multitemplate-split
+    needs: test-minimal-multitemplate-split
     if: always()
-
-    strategy:
-      fail-fast: false
-      matrix:
-        spoiler_type: ['minimal', 'full']
 
     steps:
       - name: Checkout repository
@@ -788,17 +978,17 @@ jobs:
       - name: Combine test results
         run: |
           # Create temporary directory for merged results
-          mkdir -p /tmp/merged-results/scripts/output/multitemplate-${{ matrix.spoiler_type }}
+          mkdir -p /tmp/merged-results/scripts/output/multitemplate-minimal
           mkdir -p /tmp/merged-results/docs/json/developer/test-results
 
           # Combine all per-split test results into one file
           python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-multitemplate-${{ matrix.spoiler_type }}-split-*/test-results-split-*.json \
-            --output-file /tmp/merged-results/scripts/output/multitemplate-${{ matrix.spoiler_type }}/test-results.json
+            --input-files artifacts/test-results-multitemplate-minimal-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/multitemplate-minimal/test-results.json
 
           # List what was created
           echo "=== Combined Results ==="
-          ls -lh /tmp/merged-results/scripts/output/multitemplate-${{ matrix.spoiler_type }}/test-results.json
+          ls -lh /tmp/merged-results/scripts/output/multitemplate-minimal/test-results.json
 
       - name: Create or switch to test-results-update branch
         run: |
@@ -837,9 +1027,9 @@ jobs:
       - name: Generate test charts and copy results
         run: |
           # Copy combined results to repository location so generate-test-chart.py can find them
-          mkdir -p scripts/output/multitemplate-${{ matrix.spoiler_type }}
-          cp /tmp/merged-results/scripts/output/multitemplate-${{ matrix.spoiler_type }}/test-results.json \
-             scripts/output/multitemplate-${{ matrix.spoiler_type }}/test-results.json
+          mkdir -p scripts/output/multitemplate-minimal
+          cp /tmp/merged-results/scripts/output/multitemplate-minimal/test-results.json \
+             scripts/output/multitemplate-minimal/test-results.json
 
           # Generate test charts and documentation
           python scripts/docs/generate-test-chart.py
@@ -848,7 +1038,7 @@ jobs:
           ls -lh docs/json/developer/test-results/
 
           echo "=== Files ready for commit ==="
-          ls -lh scripts/output/multitemplate-${{ matrix.spoiler_type }}/test-results.json
+          ls -lh scripts/output/multitemplate-minimal/test-results.json
           ls -lh docs/json/developer/test-results/*.md 2>/dev/null || echo "No markdown files"
 
       - name: Commit and push results
@@ -858,21 +1048,236 @@ jobs:
 
           # Add the specific files we want to commit
           # Use -f because scripts/output is in .gitignore (even though specific files are excepted)
-          git add -f scripts/output/multitemplate-${{ matrix.spoiler_type }}/test-results.json
+          git add -f scripts/output/multitemplate-minimal/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
           # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update multitemplate ${{ matrix.spoiler_type }} test results (split by templates)
+            git commit -m "Update multitemplate minimal test results (split by templates)
 
             Generated by workflow run: ${{ github.run_id }}
             Triggered by: ${{ github.actor }}
 
             Test results from parallel template testing:
             - Templates split across 10 parallel jobs
-            - Spoiler type: ${{ matrix.spoiler_type }}
+            - Spoiler type: minimal
+            - Includes generated test documentation
+            "
+
+            git push origin test-results-update
+
+            echo "✅ Test results committed to test-results-update branch"
+            echo "View the branch at: ${{ github.server_url }}/${{ github.repository }}/tree/test-results-update"
+          fi
+
+  # Parallel test jobs for full multitemplate - one for each template subset
+  test-full-multitemplate-split:
+    name: Test Full Multitemplate Split ${{ matrix.split_num }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        split_total: [10]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python ModuleUpdate.py --yes
+
+      - name: Generate template files
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Generate multitemplate configurations
+        run: |
+          source .venv/bin/activate
+          python scripts/build/generate-multitemplate-configs.py
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py full-spoilers
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: |
+          source .venv/bin/activate
+          npx playwright install chromium
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      - name: Run full multitemplate test for split ${{ matrix.split_num }}
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --templates-dir Players/presets/multitemplate/alttp \
+            --multitemplate \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/multitemplate-full/test-results-split-${{ matrix.split_num }}.json \
+            --no-backup \
+            -p
+
+      - name: Upload test results for split ${{ matrix.split_num }}
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-multitemplate-full-split-${{ matrix.split_num }}
+          path: scripts/output/multitemplate-full/test-results-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+  # Combine full multitemplate results job - runs after all split tests complete
+  combine-full-multitemplate-results:
+    name: Combine Full Multitemplate Test Results
+    runs-on: ubuntu-latest
+    needs: test-full-multitemplate-split
+    if: always()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: List downloaded artifacts
+        run: |
+          echo "=== Downloaded Artifacts ==="
+          find artifacts -type f -name "*.json" | sort
+
+      - name: Combine test results
+        run: |
+          # Create temporary directory for merged results
+          mkdir -p /tmp/merged-results/scripts/output/multitemplate-full
+          mkdir -p /tmp/merged-results/docs/json/developer/test-results
+
+          # Combine all per-split test results into one file
+          python scripts/test/combine-test-results.py \
+            --input-files artifacts/test-results-multitemplate-full-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/multitemplate-full/test-results.json
+
+          # List what was created
+          echo "=== Combined Results ==="
+          ls -lh /tmp/merged-results/scripts/output/multitemplate-full/test-results.json
+
+      - name: Create or switch to test-results-update branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Fetch all branches
+          git fetch origin
+
+          # Check if branch exists remotely
+          if git ls-remote --exit-code --heads origin test-results-update; then
+            echo "Branch test-results-update exists, syncing with main"
+            git checkout test-results-update
+            git pull origin test-results-update
+
+            # Make test-results-update's content match main exactly while preserving history
+            echo "Syncing test-results-update to match main exactly..."
+
+            # Remove all tracked files
+            git rm -rf .
+
+            # Restore all files from main
+            git checkout origin/main -- .
+
+            # Commit the sync if there are changes
+            if ! git diff --staged --quiet; then
+              git commit -m "Sync test-results-update with main before updating test results"
+            else
+              echo "Already in sync with main"
+            fi
+          else
+            echo "Creating new branch test-results-update from main"
+            git checkout -b test-results-update origin/main
+          fi
+
+      - name: Generate test charts and copy results
+        run: |
+          # Copy combined results to repository location so generate-test-chart.py can find them
+          mkdir -p scripts/output/multitemplate-full
+          cp /tmp/merged-results/scripts/output/multitemplate-full/test-results.json \
+             scripts/output/multitemplate-full/test-results.json
+
+          # Generate test charts and documentation
+          python scripts/docs/generate-test-chart.py
+
+          echo "=== Generated Documentation ==="
+          ls -lh docs/json/developer/test-results/
+
+          echo "=== Files ready for commit ==="
+          ls -lh scripts/output/multitemplate-full/test-results.json
+          ls -lh docs/json/developer/test-results/*.md 2>/dev/null || echo "No markdown files"
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Add the specific files we want to commit
+          # Use -f because scripts/output is in .gitignore (even though specific files are excepted)
+          git add -f scripts/output/multitemplate-full/test-results.json
+          git add docs/json/developer/test-results/*.md || true
+
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update multitemplate full test results (split by templates)
+
+            Generated by workflow run: ${{ github.run_id }}
+            Triggered by: ${{ github.actor }}
+
+            Test results from parallel template testing:
+            - Templates split across 10 parallel jobs
+            - Spoiler type: full
             - Includes generated test documentation
             "
 
