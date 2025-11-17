@@ -329,6 +329,11 @@ export function _addItemToInventory(sm, itemName, count = 1) {
       }
     }
   }
+
+  // Call game-specific hook for item addition (e.g., Stardew Valley progression tracking)
+  if (sm.logicModule && typeof sm.logicModule.afterItemAdded === 'function') {
+    sm.logicModule.afterItemAdded(sm, itemName, count);
+  }
 }
 
 /**
@@ -408,6 +413,11 @@ export function _removeItemFromInventory(sm, itemName, count = 1) {
         break; // Only apply first matching rule
       }
     }
+  }
+
+  // Call game-specific hook for item removal (e.g., Stardew Valley progression tracking)
+  if (sm.logicModule && typeof sm.logicModule.afterItemRemoved === 'function') {
+    sm.logicModule.afterItemRemoved(sm, itemName, count);
   }
 }
 

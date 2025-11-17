@@ -76,11 +76,25 @@ export function loadFromJSON(stateManager, jsonData, selectedPlayerId) {
   // Create inventory instance
   sm.inventory = createInventoryInstance(sm, sm.settings.game);
 
+  // Load game-specific data from game_info (e.g., total_progression_items for Stardew Valley)
+  const playerGameInfo = sm.gameInfo?.[selectedPlayerId];
+  if (playerGameInfo?.total_progression_items) {
+    sm.totalProgressionItems = playerGameInfo.total_progression_items;
+    sm._logDebug(`[Initialization] Loaded totalProgressionItems: ${sm.totalProgressionItems}`);
+  }
+
   // Load shops if applicable
   loadShops(sm, jsonData, selectedPlayerId);
 
   // Process starting items
   processStartingItems(sm, jsonData, selectedPlayerId);
+
+  // Initialize game-specific virtual items AFTER starting items are processed
+  // (e.g., Stardew Valley progression tracking needs to count starting advancement items)
+  if (sm.logicModule && typeof sm.logicModule.initializeVirtualItems === 'function') {
+    sm.logicModule.initializeVirtualItems(sm);
+    sm._logDebug('[Initialization] Initialized game-specific virtual items');
+  }
 
   // Compute initial reachability
   sm.buildIndirectConnections();
