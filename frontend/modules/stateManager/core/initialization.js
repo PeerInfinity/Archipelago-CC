@@ -281,8 +281,13 @@ function loadLocations(sm, selectedPlayerId) {
 
         // Track event locations
         // Event locations are those with event=true in their item
-        if (locationDataItem.item && locationDataItem.item.event === true) {
-          sm.eventLocations.set(descriptiveName, locationObject);
+        // Look up the full item data from sm.itemData to get the event flag
+        // Note: Must explicitly check === true to exclude items with event=false
+        if (locationDataItem.item && locationDataItem.item.name) {
+          const fullItemData = sm.itemData[locationDataItem.item.name];
+          if (fullItemData && fullItemData.event === true) {
+            sm.eventLocations.set(descriptiveName, locationObject);
+          }
         }
 
         // Store location ID mapping
