@@ -694,7 +694,10 @@ export default {
     zerg_basic_anti_air,
     zerg_competent_comp,
     zerg_competent_defense: () => false,
-    zerg_pass_vents: () => false,
+    zerg_pass_vents: (snapshot, staticData) => {
+        // Small zerg units that can fit through vents
+        return has_any(snapshot, ['Zergling', 'Baneling', 'Infested Terran']);
+    },
 
     spread_creep,
     morph_brood_lord,
@@ -705,7 +708,10 @@ export default {
     kerrigan_levels,
     two_kerrigan_actives,
 
-    marine_medic_upgrade: () => false,
+    marine_medic_upgrade: (snapshot, staticData) => {
+        // Check if player has Marine+Medic synergy
+        return has(snapshot, 'Marine') && has(snapshot, 'Medic');
+    },
     can_nuke: () => false,
 
     nova_any_weapon: () => false,
@@ -799,7 +805,10 @@ export default {
                 && protoss_static_defense(snapshot, staticData));
     },
     templars_return_requirement: () => false,
-    templars_charge_requirement: () => false,
+    templars_charge_requirement: (snapshot, staticData) => {
+        // Templar's Charge requires fleet units (air superiority)
+        return protoss_fleet(snapshot, staticData);
+    },
     the_infinite_cycle_requirement: (snapshot, staticData) => {
         const playerId = staticData?.player || '1';
         const settings = staticData?.settings?.[playerId] || {};
