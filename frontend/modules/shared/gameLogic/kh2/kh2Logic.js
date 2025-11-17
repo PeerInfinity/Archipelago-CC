@@ -1104,6 +1104,92 @@ export const helperFunctions = {
   },
 
   /**
+   * Check if Groundshaker fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_groundshaker_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Groundshaker fight
+   */
+  get_groundshaker_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const airComboCount = snapshot?.inventory?.['Air Combo Plus'] || 0;
+    const hasBerserkCharge = snapshot?.inventory?.['Berserk Charge'] > 0;
+    const hasCure = snapshot?.inventory?.['Cure Element'] > 0;
+    const hasReflect = snapshot?.inventory?.['Reflect Element'] > 0;
+
+    if (fightLogic === 0) { // easy: Air Combo Plus (2) AND Berserk Charge AND Cure AND Reflect
+      return airComboCount >= 2 &&
+        helperFunctions.kh2_has_all(snapshot, staticData, ['Berserk Charge', 'Cure Element', 'Reflect Element']);
+    } else if (fightLogic === 1) { // normal: Berserk Charge AND Reflect AND Cure
+      return helperFunctions.kh2_has_all(snapshot, staticData, ['Berserk Charge', 'Reflect Element', 'Cure Element']);
+    } else { // hard: (Berserk Charge OR Air Combo Plus (2)) AND Reflect
+      return (hasBerserkCharge || airComboCount >= 2) && hasReflect;
+    }
+  },
+
+  /**
+   * Check if Xaldin fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_xaldin_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Xaldin fight
+   */
+  get_xaldin_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const aerialMove = ['Aerial Dive', 'Aerial Spiral', 'Horizontal Slash', 'Aerial Sweep', 'Aerial Finish'];
+    const hasGuard = snapshot?.inventory?.['Guard'] > 0;
+    const aerialMoveCount = helperFunctions.kh2_list_count_sum(aerialMove, snapshot);
+
+    if (fightLogic === 0) { // easy: Guard AND (Valor/Master/Final) AND 2+ aerial moves
+      const forms = ['Valor Form', 'Master Form', 'Final Form'];
+      const hasGuardAndForms = helperFunctions.kh2_list_any_sum(
+        [['Guard'], forms],
+        snapshot
+      ) >= 2;
+      return hasGuardAndForms && aerialMoveCount >= 2;
+    } else if (fightLogic === 1) { // normal: Guard AND 1+ aerial move
+      const hasAerialMove = helperFunctions.kh2_list_any_sum([aerialMove], snapshot) >= 1;
+      return hasGuard && hasAerialMove;
+    } else { // hard: Guard only
+      return hasGuard;
+    }
+  },
+
+  /**
+   * Check if MCP (Master Control Program) fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_mcp_rules
+   * Same requirements as Hostile Program
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access MCP fight
+   */
+  get_mcp_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const donaldLimit = ['Fantasia', 'Flare Force'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const summons = ['Chicken Little', 'Stitch', 'Genie', 'Peter Pan'];
+    const reflectElement = ['Reflect Element'];
+
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [donaldLimit, formList, summons, reflectElement],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 4; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 3; // normal
+    return categoriesAvailable >= 2; // hard
+  },
+
+  /**
    * Check if Titan Cup is accessible.
    * Based on worlds/kh2/Rules.py:get_titan_cup_rules
    *
