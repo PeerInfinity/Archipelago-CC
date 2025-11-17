@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-11-17T00:46:06.807387",
-    "last_updated": "2025-11-17T00:46:06.807394",
+    "last_updated": "2025-11-17T04:19:18.625977",
     "script_version": "1.0.0"
   },
   "results": {
@@ -338,59 +338,67 @@
       }
     },
     "Blasphemous.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
-      },
       "consecutive_passes_before_failure": 0,
+      "first_failure_reason": "Test failed at sphere 0.0",
       "first_failure_seed": 1,
-      "game_name": "blasphemous",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 39.98,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "blasphemous",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 40.09,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 3106930,
+            "size_mb": 2.96
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 8,
+            "pass_fail": "failed",
+            "processing_time_seconds": 66.45,
+            "return_code": 1,
+            "sphere_reached": 0.0,
+            "success": false,
+            "total_spheres": 13.1,
+            "warning_count": 0
+          },
+          "template_name": "Blasphemous.yaml",
+          "timestamp": "2025-11-17T04:15:43.206608",
+          "world_info": {
+            "exporter_path": "exporter/games/blasphemous.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
+            "game_name_from_yaml": "Blasphemous",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "blasphemous",
+            "world_directory": "blasphemous"
+          }
+        }
       },
-      "rules_file": {
-        "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 3106930,
-        "size_mb": 2.96
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 10,
+      "seeds_failed": 1,
       "seeds_passed": 0,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 117.55,
-        "return_code": 1,
-        "sphere_reached": 0.0,
-        "success": false,
-        "total_spheres": 13.1,
-        "warning_count": 0
-      },
+      "stop_on_failure": true,
       "summary": {
         "all_passed": false,
         "any_failed": true,
         "failure_rate": 1.0
       },
       "template_name": "Blasphemous.yaml",
-      "timestamp": "2025-11-17T00:12:37.767156",
-      "world_info": {
-        "exporter_path": "exporter/games/blasphemous.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
-        "game_name_from_yaml": "Blasphemous",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "blasphemous",
-        "world_directory": "blasphemous"
-      }
+      "timestamp": "2025-11-17T04:15:43.158471",
+      "total_seeds_tested": 1
     },
     "Bomb Rush Cyberfunk.yaml": {
       "analysis": {
@@ -1603,59 +1611,67 @@
       }
     },
     "Kirby's Dream Land 3.yaml": {
-      "analysis": {
-        "error_count": 0,
-        "success": true,
-        "warning_count": 0
-      },
       "consecutive_passes_before_failure": 0,
+      "first_failure_reason": "Test failed at sphere 5.42",
       "first_failure_seed": 1,
-      "game_name": "kdl3",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 3.77,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
+      "individual_results": {
+        "1": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name": "kdl3",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.75,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/kdl3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+            "size_bytes": 533115,
+            "size_mb": 0.51
+          },
+          "seed": "1",
+          "seed_id": "AP_14089154938208861744",
+          "spoiler_test": {
+            "error_count": 9,
+            "pass_fail": "failed",
+            "processing_time_seconds": 75.59,
+            "return_code": 1,
+            "sphere_reached": 5.42,
+            "success": false,
+            "total_spheres": 11.3,
+            "warning_count": 0
+          },
+          "template_name": "Kirby's Dream Land 3.yaml",
+          "timestamp": "2025-11-17T04:17:56.489675",
+          "world_info": {
+            "exporter_path": "exporter/games/kdl3.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
+            "game_name_from_yaml": "Kirby's Dream Land 3",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "normalized_name": "kdl3",
+            "world_directory": "kdl3"
+          }
+        }
       },
-      "rules_file": {
-        "path": "frontend/presets/kdl3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 533115,
-        "size_mb": 0.51
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "seed_range": "1-10",
-      "seeds_failed": 3,
-      "seeds_passed": 7,
-      "seeds_tested": 10,
-      "spoiler_test": {
-        "error_count": 9,
-        "pass_fail": "failed",
-        "processing_time_seconds": 98.98,
-        "return_code": 0,
-        "sphere_reached": 5.92,
-        "success": true,
-        "total_spheres": 11.3,
-        "warning_count": 0
-      },
+      "seed_range": "1",
+      "seeds_failed": 1,
+      "seeds_passed": 0,
+      "stop_on_failure": true,
       "summary": {
         "all_passed": false,
         "any_failed": true,
-        "failure_rate": 0.3
+        "failure_rate": 1.0
       },
       "template_name": "Kirby's Dream Land 3.yaml",
-      "timestamp": "2025-11-17T00:23:39.146358",
-      "world_info": {
-        "exporter_path": "exporter/games/kdl3.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
-        "game_name_from_yaml": "Kirby's Dream Land 3",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "kdl3",
-        "world_directory": "kdl3"
-      }
+      "timestamp": "2025-11-17T04:17:56.440451",
+      "total_seeds_tested": 1
     },
     "Landstalker - The Treasures of King Nole.yaml": {
       "analysis": {
