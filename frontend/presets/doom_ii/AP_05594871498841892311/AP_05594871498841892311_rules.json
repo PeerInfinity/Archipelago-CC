@@ -3,7 +3,7 @@
   "game_name": "DOOM II",
   "game_directory": "doom_ii",
   "archipelago_version": "0.6.4",
-  "generation_seed": 1,
+  "generation_seed": 4,
   "player_names": {
     "1": "Player1"
   },
@@ -1503,7 +1503,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1517,7 +1517,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1531,7 +1531,7 @@
               "value": true
             },
             "item": {
-              "name": "Refueling Base (MAP10)",
+              "name": "The Waste Tunnels (MAP05)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1545,9 +1545,9 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "The Crusher (MAP06) - Blue keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1592,9 +1592,9 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Industrial Zone (MAP15)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1606,7 +1606,7 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1620,7 +1620,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1694,9 +1694,9 @@
               "value": true
             },
             "item": {
-              "name": "Nirvana (MAP21) - Computer area map",
+              "name": "The Focus (MAP04) - Blue keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -1727,7 +1727,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "The Living End (MAP29) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1741,7 +1741,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1755,7 +1755,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1769,7 +1769,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1783,9 +1783,9 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Tenements (MAP17) - Red keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1797,9 +1797,9 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Dead Simple (MAP07)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1811,7 +1811,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Nirvana (MAP21) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1825,9 +1825,9 @@
               "value": true
             },
             "item": {
-              "name": "Chaingun",
+              "name": "Medikit",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -1874,7 +1874,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1888,9 +1888,9 @@
               "value": true
             },
             "item": {
-              "name": "The Focus (MAP04) - Red keycard",
+              "name": "Supercharge",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -1967,9 +1967,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "The Waste Tunnels (MAP05) - Yellow keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -1981,7 +1981,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2010,7 +2010,7 @@
               "value": true
             },
             "item": {
-              "name": "The Waste Tunnels (MAP05) - Yellow keycard",
+              "name": "The Factory (MAP12) - Blue keycard",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2088,7 +2088,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2155,9 +2155,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "The Abandoned Mines (MAP26)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2169,7 +2169,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2197,9 +2197,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Circle of Death (MAP11) - Blue keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2211,9 +2211,9 @@
               "value": true
             },
             "item": {
-              "name": "Berserk",
+              "name": "BFG9000",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2225,9 +2225,9 @@
               "value": true
             },
             "item": {
-              "name": "The Factory (MAP12) - Blue keycard",
+              "name": "Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2239,7 +2239,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2284,7 +2284,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2346,7 +2346,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2418,9 +2418,9 @@
               "value": true
             },
             "item": {
-              "name": "The Inmost Dens (MAP14) - Computer area map",
+              "name": "Monster Condo (MAP27)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2432,7 +2432,7 @@
               "value": true
             },
             "item": {
-              "name": "Tricks and Traps (MAP08) - Red skull key",
+              "name": "Chaingun",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2478,9 +2478,9 @@
               "value": true
             },
             "item": {
-              "name": "The Inmost Dens (MAP14) - Red skull key",
+              "name": "Energy cell pack",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2492,7 +2492,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2506,7 +2506,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2520,7 +2520,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Megasphere",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2534,7 +2534,7 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2548,9 +2548,9 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "The Chasm (MAP24)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2562,9 +2562,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Chainsaw",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -2607,7 +2607,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2621,9 +2621,9 @@
               "value": true
             },
             "item": {
-              "name": "Industrial Zone (MAP15) - Blue keycard",
+              "name": "Energy cell pack",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2635,7 +2635,7 @@
               "value": true
             },
             "item": {
-              "name": "The Focus (MAP04) - Computer area map",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2649,7 +2649,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Refueling Base (MAP10) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2663,9 +2663,9 @@
               "value": true
             },
             "item": {
-              "name": "Circle of Death (MAP11) - Blue keycard",
+              "name": "Energy cell pack",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -2677,7 +2677,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2763,7 +2763,7 @@
               "value": true
             },
             "item": {
-              "name": "Tricks and Traps (MAP08) - Computer area map",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2792,7 +2792,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2806,7 +2806,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2820,7 +2820,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2834,7 +2834,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2848,7 +2848,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2862,9 +2862,9 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Industrial Zone (MAP15) - Red keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2876,7 +2876,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2890,9 +2890,9 @@
               "value": true
             },
             "item": {
-              "name": "Invulnerability",
+              "name": "The Inmost Dens (MAP14) - Red skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -2904,7 +2904,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3006,7 +3006,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3020,7 +3020,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3065,7 +3065,7 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3079,9 +3079,9 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "The Focus (MAP04) - Yellow keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3093,9 +3093,9 @@
               "value": true
             },
             "item": {
-              "name": "The Waste Tunnels (MAP05) - Red keycard",
+              "name": "Energy cell pack",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3107,7 +3107,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3121,7 +3121,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "The Pit (MAP09) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3135,9 +3135,9 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Underhalls (MAP02) - Blue keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3149,7 +3149,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3163,9 +3163,9 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "The Spirit World (MAP28) - Yellow skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3177,7 +3177,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3191,9 +3191,9 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "The Focus (MAP04)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3205,7 +3205,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3219,9 +3219,9 @@
               "value": true
             },
             "item": {
-              "name": "The Crusher (MAP06) - Red keycard",
+              "name": "Box of rockets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3233,7 +3233,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3247,7 +3247,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3261,7 +3261,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3275,7 +3275,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3289,7 +3289,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3303,7 +3303,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3317,9 +3317,9 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "The Inmost Dens (MAP14) - Blue skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3331,7 +3331,7 @@
               "value": true
             },
             "item": {
-              "name": "The Catacombs (MAP22) - Computer area map",
+              "name": "Invulnerability",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3345,7 +3345,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Invulnerability",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3374,9 +3374,9 @@
               "value": true
             },
             "item": {
-              "name": "The Inmost Dens (MAP14) - Blue skull key",
+              "name": "Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -3388,9 +3388,9 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "The Factory (MAP12) - Yellow keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -3470,9 +3470,9 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "The Crusher (MAP06)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3484,7 +3484,7 @@
               "value": true
             },
             "item": {
-              "name": "Invulnerability",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3498,7 +3498,7 @@
               "value": true
             },
             "item": {
-              "name": "Icon of Sin (MAP30) - Computer area map",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3512,7 +3512,7 @@
               "value": true
             },
             "item": {
-              "name": "Invulnerability",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3526,7 +3526,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3540,7 +3540,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3554,9 +3554,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "The Crusher (MAP06) - Red keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3568,9 +3568,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "The Citadel (MAP19) - Red skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -3588,7 +3588,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3602,7 +3602,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3616,9 +3616,9 @@
               "value": true
             },
             "item": {
-              "name": "Entryway (MAP01) - Computer area map",
+              "name": "Downtown (MAP13)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3630,7 +3630,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3644,7 +3644,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Megasphere",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3658,7 +3658,7 @@
               "value": true
             },
             "item": {
-              "name": "Berserk",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3779,7 +3779,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3820,7 +3820,7 @@
               "value": true
             },
             "item": {
-              "name": "Berserk",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3834,7 +3834,7 @@
               "value": true
             },
             "item": {
-              "name": "The Factory (MAP12) - Computer area map",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3848,7 +3848,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Megasphere",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3862,7 +3862,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3890,7 +3890,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Downtown (MAP13) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3904,9 +3904,9 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "The Citadel (MAP19)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3918,7 +3918,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3932,7 +3932,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3946,7 +3946,7 @@
               "value": true
             },
             "item": {
-              "name": "Bloodfalls (MAP25) - Computer area map",
+              "name": "The Factory (MAP12) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3960,9 +3960,9 @@
               "value": true
             },
             "item": {
-              "name": "Monster Condo (MAP27) - Computer area map",
+              "name": "Tricks and Traps (MAP08) - Red skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -3974,7 +3974,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3988,9 +3988,9 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Tricks and Traps (MAP08)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4002,7 +4002,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4030,7 +4030,7 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4044,9 +4044,9 @@
               "value": true
             },
             "item": {
-              "name": "The Citadel (MAP19)",
+              "name": "Circle of Death (MAP11) - Computer area map",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4058,9 +4058,9 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Plasma gun",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4072,7 +4072,7 @@
               "value": true
             },
             "item": {
-              "name": "Berserk",
+              "name": "Invulnerability",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4215,9 +4215,9 @@
               "value": true
             },
             "item": {
-              "name": "Icon of Sin (MAP30)",
+              "name": "Mega Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -4260,9 +4260,9 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "The Spirit World (MAP28)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4274,7 +4274,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4288,9 +4288,9 @@
               "value": true
             },
             "item": {
-              "name": "The Waste Tunnels (MAP05)",
+              "name": "Berserk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4302,7 +4302,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Megasphere",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4316,7 +4316,7 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4330,7 +4330,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "The Gantlet (MAP03) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4358,9 +4358,9 @@
               "value": true
             },
             "item": {
-              "name": "The Focus (MAP04) - Yellow keycard",
+              "name": "The Spirit World (MAP28) - Computer area map",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -4387,9 +4387,9 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Downtown (MAP13) - Yellow keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -4424,7 +4424,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4438,9 +4438,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "The Spirit World (MAP28) - Red skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -4481,7 +4481,7 @@
               "value": true
             },
             "item": {
-              "name": "The Abandoned Mines (MAP26)",
+              "name": "The Catacombs (MAP22) - Blue skull key",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4495,7 +4495,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "The Citadel (MAP19) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4562,7 +4562,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4576,9 +4576,9 @@
               "value": true
             },
             "item": {
-              "name": "Shotgun",
+              "name": "Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4590,7 +4590,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4604,7 +4604,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4618,7 +4618,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4632,9 +4632,9 @@
               "value": true
             },
             "item": {
-              "name": "Megasphere",
+              "name": "The Citadel (MAP19) - Blue skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -4661,7 +4661,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4675,7 +4675,7 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4689,9 +4689,9 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Tricks and Traps (MAP08) - Yellow skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -4755,9 +4755,9 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Nirvana (MAP21) - Red skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4769,7 +4769,7 @@
               "value": true
             },
             "item": {
-              "name": "Circle of Death (MAP11) - Red keycard",
+              "name": "Super Shotgun",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4783,7 +4783,7 @@
               "value": true
             },
             "item": {
-              "name": "Gotcha! (MAP20) - Computer area map",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4863,7 +4863,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4877,9 +4877,9 @@
               "value": true
             },
             "item": {
-              "name": "The Waste Tunnels (MAP05) - Computer area map",
+              "name": "Suburbs (MAP16)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -4891,9 +4891,9 @@
               "value": true
             },
             "item": {
-              "name": "Chainsaw",
+              "name": "Invulnerability",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -4948,7 +4948,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4962,9 +4962,9 @@
               "value": true
             },
             "item": {
-              "name": "The Spirit World (MAP28)",
+              "name": "Box of rockets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -4990,9 +4990,9 @@
               "value": true
             },
             "item": {
-              "name": "The Spirit World (MAP28) - Computer area map",
+              "name": "Gotcha! (MAP20)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5004,7 +5004,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5018,7 +5018,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5032,7 +5032,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5060,7 +5060,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5074,9 +5074,9 @@
               "value": true
             },
             "item": {
-              "name": "Industrial Zone (MAP15) - Yellow keycard",
+              "name": "Box of bullets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5088,7 +5088,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5102,7 +5102,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5116,9 +5116,9 @@
               "value": true
             },
             "item": {
-              "name": "The Citadel (MAP19) - Blue skull key",
+              "name": "Medikit",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5130,7 +5130,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5144,9 +5144,9 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "The Waste Tunnels (MAP05) - Red keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -5173,7 +5173,7 @@
               "value": true
             },
             "item": {
-              "name": "Nirvana (MAP21) - Yellow skull key",
+              "name": "Refueling Base (MAP10) - Blue keycard",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5187,7 +5187,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5201,9 +5201,9 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "The Abandoned Mines (MAP26) - Yellow keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -5230,7 +5230,7 @@
               "value": true
             },
             "item": {
-              "name": "Underhalls (MAP02) - Blue keycard",
+              "name": "Industrial Zone (MAP15) - Blue keycard",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5273,9 +5273,9 @@
               "value": true
             },
             "item": {
-              "name": "The Pit (MAP09)",
+              "name": "Box of bullets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5287,7 +5287,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5320,7 +5320,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5334,9 +5334,9 @@
               "value": true
             },
             "item": {
-              "name": "Refueling Base (MAP10) - Yellow keycard",
+              "name": "Box of rockets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5348,9 +5348,9 @@
               "value": true
             },
             "item": {
-              "name": "Refueling Base (MAP10) - Blue keycard",
+              "name": "Mega Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5362,7 +5362,7 @@
               "value": true
             },
             "item": {
-              "name": "Berserk",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5376,7 +5376,7 @@
               "value": true
             },
             "item": {
-              "name": "Bloodfalls (MAP25) - Blue skull key",
+              "name": "Bloodfalls (MAP25)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5390,7 +5390,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5404,9 +5404,9 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Barrels o' Fun (MAP23)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5418,7 +5418,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5548,7 +5548,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5562,7 +5562,7 @@
               "value": true
             },
             "item": {
-              "name": "The Living End (MAP29) - Computer area map",
+              "name": "Tenements (MAP17) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5607,7 +5607,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Invulnerability",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5635,9 +5635,9 @@
               "value": true
             },
             "item": {
-              "name": "The Crusher (MAP06)",
+              "name": "Supercharge",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5649,9 +5649,9 @@
               "value": true
             },
             "item": {
-              "name": "Downtown (MAP13)",
+              "name": "Underhalls (MAP02) - Computer area map",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5663,9 +5663,9 @@
               "value": true
             },
             "item": {
-              "name": "Suburbs (MAP16) - Red skull key",
+              "name": "Box of bullets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5677,7 +5677,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5691,9 +5691,9 @@
               "value": true
             },
             "item": {
-              "name": "Downtown (MAP13) - Blue keycard",
+              "name": "Medikit",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5705,7 +5705,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5719,9 +5719,9 @@
               "value": true
             },
             "item": {
-              "name": "Backpack",
+              "name": "Monster Condo (MAP27) - Red skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5733,9 +5733,9 @@
               "value": true
             },
             "item": {
-              "name": "Downtown (MAP13) - Red keycard",
+              "name": "Box of shotgun shells",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5747,7 +5747,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5761,9 +5761,9 @@
               "value": true
             },
             "item": {
-              "name": "Megasphere",
+              "name": "The Gantlet (MAP03) - Red keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5775,7 +5775,7 @@
               "value": true
             },
             "item": {
-              "name": "Tenements (MAP17) - Red keycard",
+              "name": "The Catacombs (MAP22) - Red skull key",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5789,9 +5789,9 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Nirvana (MAP21) - Yellow skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -5863,7 +5863,7 @@
               "value": true
             },
             "item": {
-              "name": "Suburbs (MAP16) - Computer area map",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5877,9 +5877,9 @@
               "value": true
             },
             "item": {
-              "name": "Downtown (MAP13) - Yellow keycard",
+              "name": "Box of shotgun shells",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5891,9 +5891,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Bloodfalls (MAP25) - Blue skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           }
@@ -5920,9 +5920,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Circle of Death (MAP11)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -5934,9 +5934,9 @@
               "value": true
             },
             "item": {
-              "name": "The Courtyard (MAP18) - Blue skull key",
+              "name": "The Focus (MAP04) - Computer area map",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5948,9 +5948,9 @@
               "value": true
             },
             "item": {
-              "name": "The Spirit World (MAP28) - Yellow skull key",
+              "name": "Box of shotgun shells",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -5962,7 +5962,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Berserk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5976,7 +5976,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6035,7 +6035,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6049,7 +6049,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6077,7 +6077,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6091,9 +6091,9 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Refueling Base (MAP10)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6105,9 +6105,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "The Citadel (MAP19) - Yellow skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6133,7 +6133,7 @@
               "value": true
             },
             "item": {
-              "name": "Berserk",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6147,9 +6147,9 @@
               "value": true
             },
             "item": {
-              "name": "The Pit (MAP09) - Yellow keycard",
+              "name": "Mega Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6161,9 +6161,9 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Monster Condo (MAP27) - Blue skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6175,9 +6175,9 @@
               "value": true
             },
             "item": {
-              "name": "The Catacombs (MAP22) - Blue skull key",
+              "name": "Box of rockets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -6204,9 +6204,9 @@
               "value": true
             },
             "item": {
-              "name": "The Factory (MAP12) - Yellow keycard",
+              "name": "The Crusher (MAP06) - Computer area map",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6218,7 +6218,7 @@
               "value": true
             },
             "item": {
-              "name": "Megasphere",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6232,7 +6232,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6246,7 +6246,7 @@
               "value": true
             },
             "item": {
-              "name": "Invulnerability",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6260,9 +6260,9 @@
               "value": true
             },
             "item": {
-              "name": "Underhalls (MAP02) - Red keycard",
+              "name": "Partial invisibility",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -6344,7 +6344,7 @@
               "value": true
             },
             "item": {
-              "name": "The Chasm (MAP24) - Red keycard",
+              "name": "Monster Condo (MAP27) - Yellow skull key",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6358,9 +6358,9 @@
               "value": true
             },
             "item": {
-              "name": "Nirvana (MAP21) - Red skull key",
+              "name": "Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -6387,7 +6387,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6401,9 +6401,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "The Pit (MAP09) - Yellow keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6415,7 +6415,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Berserk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6429,7 +6429,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6443,9 +6443,9 @@
               "value": true
             },
             "item": {
-              "name": "Underhalls (MAP02)",
+              "name": "Box of rockets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -6480,7 +6480,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Invulnerability",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6494,7 +6494,7 @@
               "value": true
             },
             "item": {
-              "name": "Berserk",
+              "name": "Megasphere",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6508,7 +6508,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Gotcha! (MAP20) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6522,7 +6522,7 @@
               "value": true
             },
             "item": {
-              "name": "Berserk",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6589,9 +6589,9 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Downtown (MAP13) - Blue keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6603,7 +6603,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6617,7 +6617,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6631,7 +6631,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6645,7 +6645,7 @@
               "value": true
             },
             "item": {
-              "name": "The Courtyard (MAP18) - Computer area map",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6704,7 +6704,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6718,7 +6718,7 @@
               "value": true
             },
             "item": {
-              "name": "Invulnerability",
+              "name": "Berserk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6732,9 +6732,9 @@
               "value": true
             },
             "item": {
-              "name": "The Citadel (MAP19) - Yellow skull key",
+              "name": "Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6746,7 +6746,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6760,7 +6760,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6774,9 +6774,9 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "The Courtyard (MAP18) - Yellow skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6788,7 +6788,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6802,9 +6802,9 @@
               "value": true
             },
             "item": {
-              "name": "Tricks and Traps (MAP08) - Yellow skull key",
+              "name": "Box of rockets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -6816,7 +6816,7 @@
               "value": true
             },
             "item": {
-              "name": "Invulnerability",
+              "name": "The Abandoned Mines (MAP26) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6830,9 +6830,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Icon of Sin (MAP30)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6844,9 +6844,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Nirvana (MAP21) - Blue skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6858,7 +6858,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6886,9 +6886,9 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "The Chasm (MAP24) - Blue keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6900,9 +6900,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "The Gantlet (MAP03) - Blue keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -6914,7 +6914,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6980,7 +6980,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7053,7 +7053,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Berserk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7081,9 +7081,9 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "The Living End (MAP29)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -7095,7 +7095,7 @@
               "value": true
             },
             "item": {
-              "name": "Invulnerability",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7109,7 +7109,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7123,9 +7123,9 @@
               "value": true
             },
             "item": {
-              "name": "The Citadel (MAP19) - Red skull key",
+              "name": "Box of rockets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -7137,7 +7137,7 @@
               "value": true
             },
             "item": {
-              "name": "The Crusher (MAP06) - Computer area map",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7151,9 +7151,9 @@
               "value": true
             },
             "item": {
-              "name": "Plasma gun",
+              "name": "Box of shotgun shells",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -7165,7 +7165,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7179,7 +7179,7 @@
               "value": true
             },
             "item": {
-              "name": "Invulnerability",
+              "name": "Monster Condo (MAP27) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7193,7 +7193,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7207,9 +7207,9 @@
               "value": true
             },
             "item": {
-              "name": "The Pit (MAP09) - Computer area map",
+              "name": "The Pit (MAP09) - Blue keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -7221,7 +7221,7 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Suburbs (MAP16) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7235,7 +7235,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Entryway (MAP01) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7314,7 +7314,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7328,7 +7328,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7342,7 +7342,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7356,9 +7356,9 @@
               "value": true
             },
             "item": {
-              "name": "Circle of Death (MAP11)",
+              "name": "Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -7370,7 +7370,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7384,7 +7384,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Berserk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7398,7 +7398,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Berserk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7412,9 +7412,9 @@
               "value": true
             },
             "item": {
-              "name": "The Waste Tunnels (MAP05) - Blue keycard",
+              "name": "Energy cell pack",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -7426,7 +7426,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7440,9 +7440,9 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Underhalls (MAP02) - Red keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -7468,9 +7468,9 @@
               "value": true
             },
             "item": {
-              "name": "The Courtyard (MAP18) - Yellow skull key",
+              "name": "Mega Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -7482,9 +7482,9 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Industrial Zone (MAP15) - Yellow keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -7496,7 +7496,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7590,9 +7590,9 @@
               "value": true
             },
             "item": {
-              "name": "The Gantlet (MAP03)",
+              "name": "Box of rockets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -7604,9 +7604,9 @@
               "value": true
             },
             "item": {
-              "name": "Circle of Death (MAP11) - Computer area map",
+              "name": "The Courtyard (MAP18)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -7618,7 +7618,7 @@
               "value": true
             },
             "item": {
-              "name": "Berserk",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7632,7 +7632,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7690,7 +7690,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "The Catacombs (MAP22) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7718,9 +7718,9 @@
               "value": true
             },
             "item": {
-              "name": "The Abandoned Mines (MAP26) - Yellow keycard",
+              "name": "Invulnerability",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -7801,7 +7801,7 @@
               "value": true
             },
             "item": {
-              "name": "BFG9000",
+              "name": "Shotgun",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7872,9 +7872,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Suburbs (MAP16) - Red skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -7886,7 +7886,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7900,7 +7900,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -7929,7 +7929,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Industrial Zone (MAP15) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8050,9 +8050,9 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Tenements (MAP17)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8064,7 +8064,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8078,9 +8078,9 @@
               "value": true
             },
             "item": {
-              "name": "Tricks and Traps (MAP08)",
+              "name": "Box of bullets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8092,7 +8092,7 @@
               "value": true
             },
             "item": {
-              "name": "Berserk",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8125,7 +8125,7 @@
               "value": true
             },
             "item": {
-              "name": "The Citadel (MAP19) - Computer area map",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8139,7 +8139,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8153,7 +8153,7 @@
               "value": true
             },
             "item": {
-              "name": "Megasphere",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8167,7 +8167,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8181,9 +8181,9 @@
               "value": true
             },
             "item": {
-              "name": "The Pit (MAP09) - Blue keycard",
+              "name": "Box of bullets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8195,7 +8195,7 @@
               "value": true
             },
             "item": {
-              "name": "Barrels o' Fun (MAP23) - Computer area map",
+              "name": "Berserk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8209,7 +8209,7 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8223,9 +8223,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Tenements (MAP17) - Blue keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8237,7 +8237,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8251,7 +8251,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8265,7 +8265,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8331,7 +8331,7 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "The Courtyard (MAP18) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8345,7 +8345,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8359,7 +8359,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8373,9 +8373,9 @@
               "value": true
             },
             "item": {
-              "name": "Barrels o' Fun (MAP23)",
+              "name": "Box of shotgun shells",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8387,9 +8387,9 @@
               "value": true
             },
             "item": {
-              "name": "The Inmost Dens (MAP14)",
+              "name": "Invulnerability",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8401,7 +8401,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8415,7 +8415,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Backpack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8497,9 +8497,9 @@
               "value": true
             },
             "item": {
-              "name": "Monster Condo (MAP27) - Red skull key",
+              "name": "Medikit",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8511,7 +8511,7 @@
               "value": true
             },
             "item": {
-              "name": "Megasphere",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8525,7 +8525,7 @@
               "value": true
             },
             "item": {
-              "name": "The Abandoned Mines (MAP26) - Computer area map",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8539,9 +8539,9 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "The Abandoned Mines (MAP26) - Red keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8553,9 +8553,9 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "The Waste Tunnels (MAP05) - Blue keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8567,7 +8567,7 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8581,9 +8581,9 @@
               "value": true
             },
             "item": {
-              "name": "Suburbs (MAP16) - Blue skull key",
+              "name": "Supercharge",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -8670,7 +8670,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8684,7 +8684,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8698,7 +8698,7 @@
               "value": true
             },
             "item": {
-              "name": "Gotcha! (MAP20)",
+              "name": "The Gantlet (MAP03)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8712,7 +8712,7 @@
               "value": true
             },
             "item": {
-              "name": "Nirvana (MAP21) - Blue skull key",
+              "name": "The Courtyard (MAP18) - Blue skull key",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -8726,7 +8726,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8740,7 +8740,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8754,9 +8754,9 @@
               "value": true
             },
             "item": {
-              "name": "The Chasm (MAP24) - Blue keycard",
+              "name": "Supercharge",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8768,7 +8768,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Dead Simple (MAP07) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8801,7 +8801,7 @@
               "value": true
             },
             "item": {
-              "name": "The Chasm (MAP24) - Computer area map",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8815,7 +8815,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "The Chasm (MAP24) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8883,7 +8883,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8940,9 +8940,9 @@
               "value": true
             },
             "item": {
-              "name": "The Spirit World (MAP28) - Red skull key",
+              "name": "Invulnerability",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -8954,7 +8954,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8968,9 +8968,9 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "The Focus (MAP04) - Red keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -8982,7 +8982,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Berserk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -8996,9 +8996,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of bullets",
+              "name": "Downtown (MAP13) - Red keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9010,7 +9010,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9024,7 +9024,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9038,7 +9038,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Berserk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9071,9 +9071,9 @@
               "value": true
             },
             "item": {
-              "name": "The Abandoned Mines (MAP26) - Red keycard",
+              "name": "Medikit",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -9133,7 +9133,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9147,9 +9147,9 @@
               "value": true
             },
             "item": {
-              "name": "The Catacombs (MAP22)",
+              "name": "Partial invisibility",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9161,7 +9161,7 @@
               "value": true
             },
             "item": {
-              "name": "Berserk",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9218,9 +9218,9 @@
               "value": true
             },
             "item": {
-              "name": "Refueling Base (MAP10) - Computer area map",
+              "name": "The Catacombs (MAP22)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9232,7 +9232,7 @@
               "value": true
             },
             "item": {
-              "name": "Invulnerability",
+              "name": "Barrels o' Fun (MAP23) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9246,9 +9246,9 @@
               "value": true
             },
             "item": {
-              "name": "Barrels o' Fun (MAP23) - Yellow skull key",
+              "name": "Bloodfalls (MAP25) - Computer area map",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9260,9 +9260,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "The Crusher (MAP06) - Yellow keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9274,7 +9274,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9288,7 +9288,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Megasphere",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9302,7 +9302,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9316,9 +9316,9 @@
               "value": true
             },
             "item": {
-              "name": "Tenements (MAP17) - Computer area map",
+              "name": "Tenements (MAP17) - Yellow skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9330,9 +9330,9 @@
               "value": true
             },
             "item": {
-              "name": "The Catacombs (MAP22) - Red skull key",
+              "name": "Megasphere",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9344,7 +9344,7 @@
               "value": true
             },
             "item": {
-              "name": "Industrial Zone (MAP15)",
+              "name": "Circle of Death (MAP11) - Red keycard",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9358,9 +9358,9 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Barrels o' Fun (MAP23) - Yellow skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9372,7 +9372,7 @@
               "value": true
             },
             "item": {
-              "name": "Invulnerability",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9386,7 +9386,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9400,7 +9400,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9428,7 +9428,7 @@
               "value": true
             },
             "item": {
-              "name": "Dead Simple (MAP07) - Computer area map",
+              "name": "Tricks and Traps (MAP08) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9442,7 +9442,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9456,7 +9456,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9485,7 +9485,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9499,7 +9499,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9528,9 +9528,9 @@
               "value": true
             },
             "item": {
-              "name": "The Gantlet (MAP03) - Red keycard",
+              "name": "Box of bullets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9542,7 +9542,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9556,7 +9556,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9570,9 +9570,9 @@
               "value": true
             },
             "item": {
-              "name": "The Abandoned Mines (MAP26) - Blue keycard",
+              "name": "Mega Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9584,7 +9584,7 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9598,9 +9598,9 @@
               "value": true
             },
             "item": {
-              "name": "The Gantlet (MAP03) - Blue keycard",
+              "name": "Mega Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9612,9 +9612,9 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Refueling Base (MAP10) - Yellow keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9626,7 +9626,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9640,9 +9640,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Underhalls (MAP02)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9654,9 +9654,9 @@
               "value": true
             },
             "item": {
-              "name": "The Courtyard (MAP18)",
+              "name": "Box of bullets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -9732,7 +9732,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9746,9 +9746,9 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "The Chasm (MAP24) - Red keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9760,9 +9760,9 @@
               "value": true
             },
             "item": {
-              "name": "The Chasm (MAP24)",
+              "name": "Energy cell pack",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9774,7 +9774,7 @@
               "value": true
             },
             "item": {
-              "name": "Tenements (MAP17)",
+              "name": "The Inmost Dens (MAP14)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -9788,9 +9788,9 @@
               "value": true
             },
             "item": {
-              "name": "Dead Simple (MAP07)",
+              "name": "Box of bullets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9802,7 +9802,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9816,7 +9816,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9830,9 +9830,9 @@
               "value": true
             },
             "item": {
-              "name": "The Living End (MAP29)",
+              "name": "Medikit",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -9844,7 +9844,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "The Inmost Dens (MAP14) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9858,9 +9858,9 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Suburbs (MAP16) - Blue skull key",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9872,7 +9872,7 @@
               "value": true
             },
             "item": {
-              "name": "Megasphere",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9886,7 +9886,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9900,7 +9900,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Medikit",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9914,7 +9914,7 @@
               "value": true
             },
             "item": {
-              "name": "Underhalls (MAP02) - Computer area map",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9928,7 +9928,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9942,9 +9942,9 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "The Abandoned Mines (MAP26) - Blue keycard",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             }
           },
@@ -9956,7 +9956,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9970,7 +9970,7 @@
               "value": true
             },
             "item": {
-              "name": "Medikit",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9984,7 +9984,7 @@
               "value": true
             },
             "item": {
-              "name": "Downtown (MAP13) - Computer area map",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -9998,9 +9998,9 @@
               "value": true
             },
             "item": {
-              "name": "Tenements (MAP17) - Blue keycard",
+              "name": "Box of bullets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -10012,9 +10012,9 @@
               "value": true
             },
             "item": {
-              "name": "The Crusher (MAP06) - Blue keycard",
+              "name": "Supercharge",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -10045,7 +10045,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10098,9 +10098,9 @@
               "value": true
             },
             "item": {
-              "name": "Bloodfalls (MAP25)",
+              "name": "Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -10112,7 +10112,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "The Waste Tunnels (MAP05) - Computer area map",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10126,7 +10126,7 @@
               "value": true
             },
             "item": {
-              "name": "Partial invisibility",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10140,7 +10140,7 @@
               "value": true
             },
             "item": {
-              "name": "Industrial Zone (MAP15) - Computer area map",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10154,9 +10154,9 @@
               "value": true
             },
             "item": {
-              "name": "The Crusher (MAP06) - Yellow keycard",
+              "name": "Box of bullets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -10168,7 +10168,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Mega Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10182,7 +10182,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Box of bullets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10210,9 +10210,9 @@
               "value": true
             },
             "item": {
-              "name": "Monster Condo (MAP27) - Blue skull key",
+              "name": "Icon of Sin (MAP30) - Computer area map",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -10224,7 +10224,7 @@
               "value": true
             },
             "item": {
-              "name": "Energy cell pack",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10267,7 +10267,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Partial invisibility",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10281,7 +10281,7 @@
               "value": true
             },
             "item": {
-              "name": "Megasphere",
+              "name": "Armor",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10295,7 +10295,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10309,7 +10309,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10323,7 +10323,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of rockets",
+              "name": "Box of shotgun shells",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10337,9 +10337,9 @@
               "value": true
             },
             "item": {
-              "name": "Tenements (MAP17) - Yellow skull key",
+              "name": "Box of shotgun shells",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -10351,9 +10351,9 @@
               "value": true
             },
             "item": {
-              "name": "The Focus (MAP04) - Blue keycard",
+              "name": "Box of bullets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -10365,7 +10365,7 @@
               "value": true
             },
             "item": {
-              "name": "The Gantlet (MAP03) - Computer area map",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10379,9 +10379,9 @@
               "value": true
             },
             "item": {
-              "name": "Monster Condo (MAP27)",
+              "name": "Box of bullets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -10471,7 +10471,7 @@
               "value": true
             },
             "item": {
-              "name": "Mega Armor",
+              "name": "Berserk",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10485,9 +10485,9 @@
               "value": true
             },
             "item": {
-              "name": "Suburbs (MAP16)",
+              "name": "Box of shotgun shells",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -10499,9 +10499,9 @@
               "value": true
             },
             "item": {
-              "name": "The Focus (MAP04)",
+              "name": "Invulnerability",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -10513,9 +10513,9 @@
               "value": true
             },
             "item": {
-              "name": "Super Shotgun",
+              "name": "Armor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           },
@@ -10527,7 +10527,7 @@
               "value": true
             },
             "item": {
-              "name": "Industrial Zone (MAP15) - Red keycard",
+              "name": "The Pit (MAP09)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10541,7 +10541,7 @@
               "value": true
             },
             "item": {
-              "name": "Armor",
+              "name": "Supercharge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10555,7 +10555,7 @@
               "value": true
             },
             "item": {
-              "name": "Box of shotgun shells",
+              "name": "Energy cell pack",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10569,7 +10569,7 @@
               "value": true
             },
             "item": {
-              "name": "Supercharge",
+              "name": "Box of rockets",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -10583,9 +10583,9 @@
               "value": true
             },
             "item": {
-              "name": "Monster Condo (MAP27) - Yellow skull key",
+              "name": "Box of rockets",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             }
           }
@@ -10823,7 +10823,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 64
+        "max_count": 66
       },
       "Box of bullets": {
         "name": "Box of bullets",
@@ -10837,7 +10837,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 56
+        "max_count": 72
       },
       "Box of rockets": {
         "name": "Box of rockets",
@@ -10851,7 +10851,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 58
+        "max_count": 84
       },
       "Box of shotgun shells": {
         "name": "Box of shotgun shells",
@@ -10865,7 +10865,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 74
+        "max_count": 60
       },
       "Energy cell pack": {
         "name": "Energy cell pack",
@@ -10879,7 +10879,7 @@
         "trap": false,
         "event": false,
         "type": null,
-        "max_count": 80
+        "max_count": 50
       },
       "Underhalls (MAP02) - Red keycard": {
         "name": "Underhalls (MAP02) - Red keycard",
@@ -13084,9 +13084,9 @@
       "Bloodfalls (MAP25) - Blue skull key": 2,
       "Bloodfalls (MAP25) - Complete": 1,
       "Bloodfalls (MAP25) - Computer area map": 2,
-      "Box of bullets": 56,
-      "Box of rockets": 58,
-      "Box of shotgun shells": 74,
+      "Box of bullets": 72,
+      "Box of rockets": 84,
+      "Box of shotgun shells": 60,
       "Chaingun": 2,
       "Chainsaw": 2,
       "Circle of Death (MAP11)": 2,
@@ -13103,7 +13103,7 @@
       "Downtown (MAP13) - Computer area map": 2,
       "Downtown (MAP13) - Red keycard": 2,
       "Downtown (MAP13) - Yellow keycard": 2,
-      "Energy cell pack": 80,
+      "Energy cell pack": 50,
       "Entryway (MAP01)": 1,
       "Entryway (MAP01) - Complete": 1,
       "Entryway (MAP01) - Computer area map": 2,
@@ -13120,7 +13120,7 @@
       "Industrial Zone (MAP15) - Red keycard": 2,
       "Industrial Zone (MAP15) - Yellow keycard": 2,
       "Invulnerability": 20,
-      "Medikit": 64,
+      "Medikit": 66,
       "Mega Armor": 46,
       "Megasphere": 14,
       "Monster Condo (MAP27)": 2,

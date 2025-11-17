@@ -4,11 +4,11 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-17 02:09:57
+**Generated:** 2025-11-17 04:42:14
 
 **Source Data Created:** 2025-11-17T00:46:06.807387
 
-**Source Data Last Updated:** 2025-11-17T00:46:06.807394
+**Source Data Last Updated:** 2025-11-17T04:42:13.936224
 
 ## Summary
 
@@ -26,7 +26,7 @@
 | Adventure | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | ArchipIDLE | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Blasphemous | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Blasphemous | ❌ Failed seed 1 | 0 | 0 | 13.1 | 🔴 0.0% | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
@@ -37,7 +37,7 @@
 | Civilization VI | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | DLCQuest | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | DOOM 1993 | ❌ Failed seed 6 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
-| DOOM II | ❌ Failed seed 9 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| DOOM II | ❌ Failed seed 3 | 0 | 11.5 | 19.2 | 🟡 59.9% | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Factorio | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |

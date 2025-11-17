@@ -1,0 +1,1006 @@
+﻿Archipelago Version 0.6.4  -  Seed: 8
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            DOOM II
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              Entryway (MAP01) - Armor
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+Difficulty:                      Medium
+Random Monsters:                 Random Balanced
+Random Pickups:                  Shuffle
+Random Music:                    Vanilla
+Flip Levels:                     Vanilla
+Allow Death Logic:               No
+Pro Doom:                        No
+Start With Computer Area Maps:   No
+Death Link:                      No
+Reset Level on Death:            Yes
+Episode 1:                       Yes
+Episode 2:                       Yes
+Episode 3:                       Yes
+Secret Levels:                   No
+Split Backpack:                  No
+Backpack Count:                  1
+Max Ammo - Bullets:              200
+Max Ammo - Shells:               50
+Max Ammo - Rockets:              50
+Max Ammo - Energy Cells:         300
+Added Ammo - Bullets:            200
+Added Ammo - Shells:             50
+Added Ammo - Rockets:            50
+Added Ammo - Energy Cells:       300
+
+
+Starting Items:
+
+Entryway (MAP01)
+The Factory (MAP12)
+Nirvana (MAP21)
+
+Locations:
+
+Entryway (MAP01) - Armor: Box of shotgun shells
+Entryway (MAP01) - Shotgun: Box of bullets
+Entryway (MAP01) - Rocket launcher: Partial invisibility
+Entryway (MAP01) - Chainsaw: Plasma gun
+Entryway (MAP01) - Exit: Entryway (MAP01) - Complete
+Underhalls (MAP02) - Red keycard: Supercharge
+Underhalls (MAP02) - Mega Armor: Supercharge
+Underhalls (MAP02) - Super Shotgun: Box of shotgun shells
+Underhalls (MAP02) - Exit: Underhalls (MAP02) - Complete
+Underhalls (MAP02) - Blue keycard: Box of bullets
+The Gantlet (MAP03) - Mega Armor: Armor
+The Gantlet (MAP03) - Shotgun: The Waste Tunnels (MAP05) - Blue keycard
+The Gantlet (MAP03) - Blue keycard: The Crusher (MAP06) - Blue keycard
+The Gantlet (MAP03) - Rocket launcher: Shotgun
+The Gantlet (MAP03) - Partial invisibility: Monster Condo (MAP27) - Blue skull key
+The Gantlet (MAP03) - Supercharge: Box of bullets
+The Gantlet (MAP03) - Mega Armor 2: Energy cell pack
+The Gantlet (MAP03) - Chaingun: Energy cell pack
+The Gantlet (MAP03) - Red keycard: Energy cell pack
+The Gantlet (MAP03) - Backpack: Mega Armor
+The Gantlet (MAP03) - Exit: The Gantlet (MAP03) - Complete
+The Focus (MAP04) - Super Shotgun: The Crusher (MAP06)
+The Focus (MAP04) - Blue keycard: The Inmost Dens (MAP14) - Computer area map
+The Focus (MAP04) - Red keycard: Megasphere
+The Focus (MAP04) - Exit: The Focus (MAP04) - Complete
+The Focus (MAP04) - Yellow keycard: Box of bullets
+The Waste Tunnels (MAP05) - Rocket launcher: Box of rockets
+The Waste Tunnels (MAP05) - Plasma gun: Box of bullets
+The Waste Tunnels (MAP05) - Red keycard: Refueling Base (MAP10)
+The Waste Tunnels (MAP05) - Supercharge: Box of bullets
+The Waste Tunnels (MAP05) - Mega Armor: Mega Armor
+The Waste Tunnels (MAP05) - Armor: Box of bullets
+The Waste Tunnels (MAP05) - Supercharge 2: Box of rockets
+The Waste Tunnels (MAP05) - Berserk: Medikit
+The Waste Tunnels (MAP05) - Yellow keycard: The Focus (MAP04)
+The Waste Tunnels (MAP05) - Exit: The Waste Tunnels (MAP05) - Complete
+The Waste Tunnels (MAP05) - Blue keycard: Supercharge
+The Waste Tunnels (MAP05) - Super Shotgun: Box of shotgun shells
+The Waste Tunnels (MAP05) - Shotgun: Box of bullets
+The Crusher (MAP06) - Blue keycard: Medikit
+The Crusher (MAP06) - Supercharge: Box of shotgun shells
+The Crusher (MAP06) - Plasma gun: Box of shotgun shells
+The Crusher (MAP06) - Blue keycard 2: The Citadel (MAP19)
+The Crusher (MAP06) - Blue keycard 3: Armor
+The Crusher (MAP06) - Megasphere: Mega Armor
+The Crusher (MAP06) - Armor: Megasphere
+The Crusher (MAP06) - Red keycard: The Inmost Dens (MAP14) - Red skull key
+The Crusher (MAP06) - Super Shotgun: The Factory (MAP12) - Yellow keycard
+The Crusher (MAP06) - Mega Armor: Icon of Sin (MAP30) - Computer area map
+The Crusher (MAP06) - Rocket launcher: Box of shotgun shells
+The Crusher (MAP06) - Backpack: Chaingun
+The Crusher (MAP06) - Megasphere 2: Monster Condo (MAP27) - Computer area map
+The Crusher (MAP06) - Exit: The Crusher (MAP06) - Complete
+The Crusher (MAP06) - Yellow keycard: Entryway (MAP01) - Computer area map
+Dead Simple (MAP07) - Megasphere: The Crusher (MAP06) - Yellow keycard
+Dead Simple (MAP07) - Rocket launcher: Box of shotgun shells
+Dead Simple (MAP07) - Partial invisibility: Medikit
+Dead Simple (MAP07) - Chaingun: Medikit
+Dead Simple (MAP07) - Plasma gun: Box of bullets
+Dead Simple (MAP07) - Berserk: Supercharge
+Dead Simple (MAP07) - Partial invisibility 2: Box of bullets
+Dead Simple (MAP07) - Partial invisibility 3: Box of shotgun shells
+Dead Simple (MAP07) - Partial invisibility 4: Box of shotgun shells
+Dead Simple (MAP07) - Exit: Dead Simple (MAP07) - Complete
+Dead Simple (MAP07) - Super Shotgun: Berserk
+Dead Simple (MAP07) - Backpack: Partial invisibility
+Tricks and Traps (MAP08) - Plasma gun: Box of rockets
+Tricks and Traps (MAP08) - Rocket launcher: The Abandoned Mines (MAP26) - Blue keycard
+Tricks and Traps (MAP08) - Armor: Mega Armor
+Tricks and Traps (MAP08) - Chaingun: Supercharge
+Tricks and Traps (MAP08) - Shotgun: The Gantlet (MAP03) - Computer area map
+Tricks and Traps (MAP08) - Supercharge: Box of shotgun shells
+Tricks and Traps (MAP08) - Invulnerability: Armor
+Tricks and Traps (MAP08) - Invulnerability 2: Tenements (MAP17) - Yellow skull key
+Tricks and Traps (MAP08) - Yellow skull key: Medikit
+Tricks and Traps (MAP08) - Backpack: Box of rockets
+Tricks and Traps (MAP08) - Backpack 2: Energy cell pack
+Tricks and Traps (MAP08) - Invulnerability 3: Box of shotgun shells
+Tricks and Traps (MAP08) - Invulnerability 4: Box of shotgun shells
+Tricks and Traps (MAP08) - BFG9000: Partial invisibility
+Tricks and Traps (MAP08) - Supercharge 2: Invulnerability
+Tricks and Traps (MAP08) - Backpack 3: Box of bullets
+Tricks and Traps (MAP08) - Backpack 4: The Courtyard (MAP18)
+Tricks and Traps (MAP08) - Chainsaw: Box of shotgun shells
+Tricks and Traps (MAP08) - Armor 2: Mega Armor
+Tricks and Traps (MAP08) - Backpack 5: The Abandoned Mines (MAP26) - Red keycard
+Tricks and Traps (MAP08) - Partial invisibility: The Pit (MAP09) - Blue keycard
+Tricks and Traps (MAP08) - Red skull key: Box of bullets
+Tricks and Traps (MAP08) - Invulnerability 5: Suburbs (MAP16) - Blue skull key
+Tricks and Traps (MAP08) - Exit: Tricks and Traps (MAP08) - Complete
+The Pit (MAP09) - Berserk: Box of shotgun shells
+The Pit (MAP09) - Shotgun: Supercharge
+The Pit (MAP09) - Supercharge: Supercharge
+The Pit (MAP09) - Berserk 2: The Citadel (MAP19) - Computer area map
+The Pit (MAP09) - Rocket launcher: Supercharge
+The Pit (MAP09) - BFG9000: Tricks and Traps (MAP08) - Yellow skull key
+The Pit (MAP09) - Blue keycard: Invulnerability
+The Pit (MAP09) - Armor: Box of shotgun shells
+The Pit (MAP09) - Yellow keycard: Berserk
+The Pit (MAP09) - Backpack: The Chasm (MAP24) - Blue keycard
+The Pit (MAP09) - Computer area map: Medikit
+The Pit (MAP09) - Supercharge 2: Armor
+The Pit (MAP09) - Mega Armor 2: Circle of Death (MAP11) - Red keycard
+The Pit (MAP09) - Berserk 3: Energy cell pack
+The Pit (MAP09) - Exit: The Pit (MAP09) - Complete
+The Pit (MAP09) - Mega Armor: Armor
+Refueling Base (MAP10) - BFG9000: Box of bullets
+Refueling Base (MAP10) - Supercharge: Mega Armor
+Refueling Base (MAP10) - Plasma gun: Partial invisibility
+Refueling Base (MAP10) - Blue keycard: Supercharge
+Refueling Base (MAP10) - Chaingun: Bloodfalls (MAP25) - Blue skull key
+Refueling Base (MAP10) - Armor: Box of bullets
+Refueling Base (MAP10) - Rocket launcher: Industrial Zone (MAP15)
+Refueling Base (MAP10) - Supercharge 2: Box of bullets
+Refueling Base (MAP10) - Backpack: Box of shotgun shells
+Refueling Base (MAP10) - Berserk: Supercharge
+Refueling Base (MAP10) - Mega Armor: Box of bullets
+Refueling Base (MAP10) - Invulnerability: Supercharge
+Refueling Base (MAP10) - Invulnerability 2: Armor
+Refueling Base (MAP10) - Armor 2: Supercharge
+Refueling Base (MAP10) - Berserk 2: Industrial Zone (MAP15) - Yellow keycard
+Refueling Base (MAP10) - Partial invisibility: Armor
+Refueling Base (MAP10) - Chainsaw: Medikit
+Refueling Base (MAP10) - Yellow keycard: Armor
+Refueling Base (MAP10) - Megasphere: Tenements (MAP17)
+Refueling Base (MAP10) - Exit: Refueling Base (MAP10) - Complete
+Refueling Base (MAP10) - Shotgun: Partial invisibility
+Circle of Death (MAP11) - Red keycard: Armor
+Circle of Death (MAP11) - Chaingun: Box of rockets
+Circle of Death (MAP11) - Supercharge: Medikit
+Circle of Death (MAP11) - Plasma gun: The Abandoned Mines (MAP26) - Yellow keycard
+Circle of Death (MAP11) - Blue keycard: Box of rockets
+Circle of Death (MAP11) - Armor: Energy cell pack
+Circle of Death (MAP11) - Shotgun: Supercharge
+Circle of Death (MAP11) - Partial invisibility: Energy cell pack
+Circle of Death (MAP11) - Mega Armor: Box of rockets
+Circle of Death (MAP11) - Invulnerability: Mega Armor
+Circle of Death (MAP11) - Rocket launcher: Box of shotgun shells
+Circle of Death (MAP11) - Backpack: The Catacombs (MAP22) - Blue skull key
+Circle of Death (MAP11) - Supercharge 2: Suburbs (MAP16) - Computer area map
+Circle of Death (MAP11) - BFG9000: Armor
+Circle of Death (MAP11) - Exit: Circle of Death (MAP11) - Complete
+The Factory (MAP12) - Supercharge: The Catacombs (MAP22) - Red skull key
+The Factory (MAP12) - Blue keycard: Energy cell pack
+The Factory (MAP12) - Supercharge 2: Supercharge
+The Factory (MAP12) - Berserk 2: Energy cell pack
+The Factory (MAP12) - Yellow keycard: Armor
+The Factory (MAP12) - Super Shotgun: Medikit
+The Factory (MAP12) - Armor: The Focus (MAP04) - Computer area map
+The Factory (MAP12) - Backpack: Medikit
+The Factory (MAP12) - BFG9000: Monster Condo (MAP27) - Yellow skull key
+The Factory (MAP12) - Exit: The Factory (MAP12) - Complete
+The Factory (MAP12) - Shotgun: The Gantlet (MAP03)
+The Factory (MAP12) - Armor 2: Mega Armor
+The Factory (MAP12) - Partial invisibility: Box of bullets
+The Factory (MAP12) - Berserk: Box of shotgun shells
+The Factory (MAP12) - Chaingun: The Waste Tunnels (MAP05)
+The Factory (MAP12) - Berserk 3: Box of bullets
+Downtown (MAP13) - Rocket launcher: Medikit
+Downtown (MAP13) - Shotgun: Mega Armor
+Downtown (MAP13) - Supercharge: Barrels o' Fun (MAP23) - Yellow skull key
+Downtown (MAP13) - Berserk: Chainsaw
+Downtown (MAP13) - Mega Armor: Energy cell pack
+Downtown (MAP13) - Chaingun: Tricks and Traps (MAP08) - Red skull key
+Downtown (MAP13) - Blue keycard: The Spirit World (MAP28) - Red skull key
+Downtown (MAP13) - Plasma gun: Box of rockets
+Downtown (MAP13) - Partial invisibility: Armor
+Downtown (MAP13) - Backpack: Supercharge
+Downtown (MAP13) - BFG9000: Box of bullets
+Downtown (MAP13) - Invulnerability 2: Energy cell pack
+Downtown (MAP13) - Partial invisibility 2: Medikit
+Downtown (MAP13) - Partial invisibility 3: Berserk
+Downtown (MAP13) - Computer area map: Energy cell pack
+Downtown (MAP13) - Chainsaw: Medikit
+Downtown (MAP13) - Invulnerability: Invulnerability
+Downtown (MAP13) - Red keycard: Box of rockets
+Downtown (MAP13) - Berserk 3: Medikit
+Downtown (MAP13) - Exit: Downtown (MAP13) - Complete
+Downtown (MAP13) - Yellow keycard: Nirvana (MAP21) - Blue skull key
+Downtown (MAP13) - Berserk 2: The Living End (MAP29) - Computer area map
+The Inmost Dens (MAP14) - Shotgun: Supercharge
+The Inmost Dens (MAP14) - Supercharge: Armor
+The Inmost Dens (MAP14) - Mega Armor: Medikit
+The Inmost Dens (MAP14) - Berserk: Mega Armor
+The Inmost Dens (MAP14) - Chaingun: The Spirit World (MAP28)
+The Inmost Dens (MAP14) - Plasma gun: Medikit
+The Inmost Dens (MAP14) - Red skull key: Medikit
+The Inmost Dens (MAP14) - Rocket launcher: Armor
+The Inmost Dens (MAP14) - Exit: The Inmost Dens (MAP14) - Complete
+The Inmost Dens (MAP14) - Blue skull key: Armor
+The Inmost Dens (MAP14) - Partial invisibility: Medikit
+Industrial Zone (MAP15) - Berserk: Box of bullets
+Industrial Zone (MAP15) - Rocket launcher: Medikit
+Industrial Zone (MAP15) - Shotgun: The Crusher (MAP06) - Red keycard
+Industrial Zone (MAP15) - Partial invisibility: Berserk
+Industrial Zone (MAP15) - Backpack: Box of bullets
+Industrial Zone (MAP15) - BFG9000: Box of rockets
+Industrial Zone (MAP15) - Supercharge: Gotcha! (MAP20)
+Industrial Zone (MAP15) - Mega Armor: The Abandoned Mines (MAP26) - Computer area map
+Industrial Zone (MAP15) - Armor: Box of rockets
+Industrial Zone (MAP15) - Yellow keycard: Medikit
+Industrial Zone (MAP15) - Chaingun: Megasphere
+Industrial Zone (MAP15) - Invulnerability: Box of rockets
+Industrial Zone (MAP15) - Red keycard: Mega Armor
+Industrial Zone (MAP15) - Mega Armor 2: The Pit (MAP09) - Yellow keycard
+Industrial Zone (MAP15) - Exit: Industrial Zone (MAP15) - Complete
+Industrial Zone (MAP15) - Chainsaw: Partial invisibility
+Industrial Zone (MAP15) - Megasphere: Armor
+Industrial Zone (MAP15) - Berserk 2: Partial invisibility
+Industrial Zone (MAP15) - Plasma gun: Rocket launcher
+Industrial Zone (MAP15) - Partial invisibility 2: Box of shotgun shells
+Industrial Zone (MAP15) - Computer area map: Energy cell pack
+Industrial Zone (MAP15) - Backpack 2: Suburbs (MAP16)
+Industrial Zone (MAP15) - Blue keycard: The Abandoned Mines (MAP26)
+Suburbs (MAP16) - Megasphere: Megasphere
+Suburbs (MAP16) - Super Shotgun: Box of bullets
+Suburbs (MAP16) - Chaingun: Box of rockets
+Suburbs (MAP16) - Backpack: Underhalls (MAP02) - Computer area map
+Suburbs (MAP16) - Rocket launcher: The Gantlet (MAP03) - Blue keycard
+Suburbs (MAP16) - Berserk: Box of shotgun shells
+Suburbs (MAP16) - BFG9000: Berserk
+Suburbs (MAP16) - Shotgun: Invulnerability
+Suburbs (MAP16) - Supercharge: The Pit (MAP09)
+Suburbs (MAP16) - Blue skull key: Partial invisibility
+Suburbs (MAP16) - Invulnerability: Box of rockets
+Suburbs (MAP16) - Partial invisibility: Armor
+Suburbs (MAP16) - Plasma gun: Barrels o' Fun (MAP23)
+Suburbs (MAP16) - Plasma gun 2: Supercharge
+Suburbs (MAP16) - Plasma gun 3: Armor
+Suburbs (MAP16) - Plasma gun 4: Partial invisibility
+Suburbs (MAP16) - Red skull key: Partial invisibility
+Suburbs (MAP16) - Exit: Suburbs (MAP16) - Complete
+Tenements (MAP17) - Shotgun: Medikit
+Tenements (MAP17) - Red keycard: Berserk
+Tenements (MAP17) - Supercharge 2: Underhalls (MAP02) - Red keycard
+Tenements (MAP17) - Yellow skull key: Supercharge
+Tenements (MAP17) - Rocket launcher: Armor
+Tenements (MAP17) - Partial invisibility: Berserk
+Tenements (MAP17) - Backpack: Industrial Zone (MAP15) - Red keycard
+Tenements (MAP17) - Supercharge: The Focus (MAP04) - Blue keycard
+Tenements (MAP17) - BFG9000: Berserk
+Tenements (MAP17) - Plasma gun: Box of bullets
+Tenements (MAP17) - Megasphere: Downtown (MAP13) - Computer area map
+Tenements (MAP17) - Exit: Tenements (MAP17) - Complete
+Tenements (MAP17) - Armor: Box of shotgun shells
+Tenements (MAP17) - Blue keycard: Box of rockets
+Tenements (MAP17) - Chaingun: Partial invisibility
+Tenements (MAP17) - Mega Armor: Energy cell pack
+Tenements (MAP17) - Armor 2: The Focus (MAP04) - Red keycard
+Tenements (MAP17) - Berserk: Circle of Death (MAP11)
+The Courtyard (MAP18) - Shotgun: Box of bullets
+The Courtyard (MAP18) - Plasma gun: The Inmost Dens (MAP14) - Blue skull key
+The Courtyard (MAP18) - Armor: Megasphere
+The Courtyard (MAP18) - Berserk: Box of rockets
+The Courtyard (MAP18) - Chaingun: Nirvana (MAP21) - Yellow skull key
+The Courtyard (MAP18) - Rocket launcher: Armor
+The Courtyard (MAP18) - Partial invisibility: Partial invisibility
+The Courtyard (MAP18) - Partial invisibility 2: Underhalls (MAP02) - Blue keycard
+The Courtyard (MAP18) - Backpack: Supercharge
+The Courtyard (MAP18) - Supercharge: Monster Condo (MAP27)
+The Courtyard (MAP18) - Invulnerability: Partial invisibility
+The Courtyard (MAP18) - Invulnerability 2: Armor
+The Courtyard (MAP18) - Yellow skull key: Mega Armor
+The Courtyard (MAP18) - BFG9000: Tricks and Traps (MAP08) - Computer area map
+The Courtyard (MAP18) - Computer area map: The Chasm (MAP24) - Red keycard
+The Courtyard (MAP18) - Super Shotgun: Circle of Death (MAP11) - Computer area map
+The Courtyard (MAP18) - Exit: The Courtyard (MAP18) - Complete
+The Courtyard (MAP18) - Blue skull key: Supercharge
+The Citadel (MAP19) - Armor: Berserk
+The Citadel (MAP19) - Chaingun: Invulnerability
+The Citadel (MAP19) - Berserk: Energy cell pack
+The Citadel (MAP19) - Mega Armor: The Gantlet (MAP03) - Red keycard
+The Citadel (MAP19) - Supercharge: Medikit
+The Citadel (MAP19) - Armor 2: Medikit
+The Citadel (MAP19) - Backpack: Armor
+The Citadel (MAP19) - Invulnerability: Medikit
+The Citadel (MAP19) - Blue skull key: Partial invisibility
+The Citadel (MAP19) - Partial invisibility: The Pit (MAP09) - Computer area map
+The Citadel (MAP19) - Red skull key: Box of shotgun shells
+The Citadel (MAP19) - Yellow skull key: Box of shotgun shells
+The Citadel (MAP19) - Computer area map: Box of shotgun shells
+The Citadel (MAP19) - Rocket launcher: Armor
+The Citadel (MAP19) - Super Shotgun: Invulnerability
+The Citadel (MAP19) - Exit: The Citadel (MAP19) - Complete
+Gotcha! (MAP20) - Mega Armor: Box of rockets
+Gotcha! (MAP20) - Rocket launcher: Medikit
+Gotcha! (MAP20) - Supercharge: Medikit
+Gotcha! (MAP20) - Armor: The Catacombs (MAP22)
+Gotcha! (MAP20) - Megasphere: The Chasm (MAP24)
+Gotcha! (MAP20) - Armor 2: Box of shotgun shells
+Gotcha! (MAP20) - Super Shotgun: Invulnerability
+Gotcha! (MAP20) - Plasma gun: Mega Armor
+Gotcha! (MAP20) - Mega Armor 2: Icon of Sin (MAP30)
+Gotcha! (MAP20) - Berserk: Box of rockets
+Gotcha! (MAP20) - Supercharge 2: Box of shotgun shells
+Gotcha! (MAP20) - Supercharge 3: Tenements (MAP17) - Computer area map
+Gotcha! (MAP20) - BFG9000: Partial invisibility
+Gotcha! (MAP20) - Supercharge 4: Bloodfalls (MAP25)
+Gotcha! (MAP20) - Exit: Gotcha! (MAP20) - Complete
+Nirvana (MAP21) - Rocket launcher: Box of bullets
+Nirvana (MAP21) - Yellow skull key: Berserk
+Nirvana (MAP21) - Backpack: Super Shotgun
+Nirvana (MAP21) - Megasphere: Armor
+Nirvana (MAP21) - Invulnerability: The Crusher (MAP06) - Computer area map
+Nirvana (MAP21) - Blue skull key: Nirvana (MAP21) - Computer area map
+Nirvana (MAP21) - Red skull key: The Living End (MAP29)
+Nirvana (MAP21) - Exit: Nirvana (MAP21) - Complete
+Nirvana (MAP21) - Super Shotgun: Medikit
+The Catacombs (MAP22) - Rocket launcher: Box of shotgun shells
+The Catacombs (MAP22) - Blue skull key: Partial invisibility
+The Catacombs (MAP22) - Berserk: Armor
+The Catacombs (MAP22) - Red skull key: Supercharge
+The Catacombs (MAP22) - Exit: The Catacombs (MAP22) - Complete
+The Catacombs (MAP22) - Shotgun: Energy cell pack
+The Catacombs (MAP22) - Plasma gun: Armor
+The Catacombs (MAP22) - Supercharge: Energy cell pack
+The Catacombs (MAP22) - Armor: BFG9000
+Barrels o' Fun (MAP23) - Shotgun: Box of bullets
+Barrels o' Fun (MAP23) - Berserk: Box of bullets
+Barrels o' Fun (MAP23) - Backpack: Energy cell pack
+Barrels o' Fun (MAP23) - Computer area map: The Spirit World (MAP28) - Yellow skull key
+Barrels o' Fun (MAP23) - Armor: Downtown (MAP13)
+Barrels o' Fun (MAP23) - Rocket launcher: Medikit
+Barrels o' Fun (MAP23) - Megasphere: The Citadel (MAP19) - Yellow skull key
+Barrels o' Fun (MAP23) - Supercharge: Invulnerability
+Barrels o' Fun (MAP23) - Backpack 2: Box of shotgun shells
+Barrels o' Fun (MAP23) - Yellow skull key: Energy cell pack
+Barrels o' Fun (MAP23) - BFG9000: Tenements (MAP17) - Blue keycard
+Barrels o' Fun (MAP23) - Exit: Barrels o' Fun (MAP23) - Complete
+The Chasm (MAP24) - Shotgun: Box of rockets
+The Chasm (MAP24) - Rocket launcher: Supercharge
+The Chasm (MAP24) - Blue keycard: Monster Condo (MAP27) - Red skull key
+The Chasm (MAP24) - Berserk: Invulnerability
+The Chasm (MAP24) - BFG9000: Mega Armor
+The Chasm (MAP24) - Super Shotgun: Supercharge
+The Chasm (MAP24) - Megasphere 2: Downtown (MAP13) - Yellow keycard
+The Chasm (MAP24) - Exit: The Chasm (MAP24) - Complete
+The Chasm (MAP24) - Plasma gun: Armor
+The Chasm (MAP24) - Invulnerability: Nirvana (MAP21) - Red skull key
+The Chasm (MAP24) - Backpack: Medikit
+The Chasm (MAP24) - Berserk 2: Armor
+The Chasm (MAP24) - Armor: The Courtyard (MAP18) - Blue skull key
+The Chasm (MAP24) - Red keycard: Box of rockets
+The Chasm (MAP24) - Megasphere: Energy cell pack
+Bloodfalls (MAP25) - Megasphere: Medikit
+Bloodfalls (MAP25) - Mega Armor: Underhalls (MAP02)
+Bloodfalls (MAP25) - Armor: Mega Armor
+Bloodfalls (MAP25) - Blue skull key: The Waste Tunnels (MAP05) - Computer area map
+Bloodfalls (MAP25) - Chaingun: Megasphere
+Bloodfalls (MAP25) - Plasma gun: Refueling Base (MAP10) - Computer area map
+Bloodfalls (MAP25) - BFG9000 2: Mega Armor
+Bloodfalls (MAP25) - Rocket launcher: Armor
+Bloodfalls (MAP25) - Partial invisibility: Energy cell pack
+Bloodfalls (MAP25) - BFG9000: The Waste Tunnels (MAP05) - Red keycard
+Bloodfalls (MAP25) - Exit: Bloodfalls (MAP25) - Complete
+Bloodfalls (MAP25) - Super Shotgun: Armor
+The Abandoned Mines (MAP26) - Super Shotgun: Box of bullets
+The Abandoned Mines (MAP26) - Rocket launcher: Tricks and Traps (MAP08)
+The Abandoned Mines (MAP26) - Plasma gun: The Factory (MAP12) - Blue keycard
+The Abandoned Mines (MAP26) - Chaingun: Box of bullets
+The Abandoned Mines (MAP26) - Partial invisibility: The Citadel (MAP19) - Blue skull key
+The Abandoned Mines (MAP26) - Armor: Energy cell pack
+The Abandoned Mines (MAP26) - Red keycard: Box of bullets
+The Abandoned Mines (MAP26) - Backpack: Box of rockets
+The Abandoned Mines (MAP26) - Yellow keycard: Mega Armor
+The Abandoned Mines (MAP26) - Exit: The Abandoned Mines (MAP26) - Complete
+The Abandoned Mines (MAP26) - Blue keycard: Box of rockets
+The Abandoned Mines (MAP26) - Mega Armor: Mega Armor
+The Abandoned Mines (MAP26) - Supercharge: The Spirit World (MAP28) - Computer area map
+Monster Condo (MAP27) - Rocket launcher: Box of shotgun shells
+Monster Condo (MAP27) - Partial invisibility: Box of shotgun shells
+Monster Condo (MAP27) - Plasma gun: Box of rockets
+Monster Condo (MAP27) - Invulnerability: Medikit
+Monster Condo (MAP27) - Armor: Industrial Zone (MAP15) - Computer area map
+Monster Condo (MAP27) - Backpack: Box of shotgun shells
+Monster Condo (MAP27) - Invulnerability 2: Medikit
+Monster Condo (MAP27) - Partial invisibility 2: Armor
+Monster Condo (MAP27) - Supercharge: Barrels o' Fun (MAP23) - Computer area map
+Monster Condo (MAP27) - Armor 2: Megasphere
+Monster Condo (MAP27) - Chaingun: Mega Armor
+Monster Condo (MAP27) - BFG9000: Mega Armor
+Monster Condo (MAP27) - Backpack 2: The Factory (MAP12) - Computer area map
+Monster Condo (MAP27) - Backpack 3: Box of bullets
+Monster Condo (MAP27) - Backpack 4: Mega Armor
+Monster Condo (MAP27) - Yellow skull key: Dead Simple (MAP07)
+Monster Condo (MAP27) - Chainsaw: The Catacombs (MAP22) - Computer area map
+Monster Condo (MAP27) - Super Shotgun: Energy cell pack
+Monster Condo (MAP27) - Red skull key: Box of rockets
+Monster Condo (MAP27) - Supercharge 2: Armor
+Monster Condo (MAP27) - Blue skull key: Partial invisibility
+Monster Condo (MAP27) - Supercharge 3: The Focus (MAP04) - Yellow keycard
+Monster Condo (MAP27) - Computer area map: Box of rockets
+Monster Condo (MAP27) - Berserk: Supercharge
+Monster Condo (MAP27) - Supercharge 4: Supercharge
+Monster Condo (MAP27) - Supercharge 5: Box of shotgun shells
+Monster Condo (MAP27) - Computer area map 2: Armor
+Monster Condo (MAP27) - Berserk 2: Energy cell pack
+Monster Condo (MAP27) - Partial invisibility 3: Energy cell pack
+Monster Condo (MAP27) - Invulnerability 3: Box of shotgun shells
+Monster Condo (MAP27) - Exit: Monster Condo (MAP27) - Complete
+The Spirit World (MAP28) - Armor: Armor
+The Spirit World (MAP28) - Chainsaw: Box of bullets
+The Spirit World (MAP28) - Invulnerability: Box of shotgun shells
+The Spirit World (MAP28) - Yellow skull key: The Chasm (MAP24) - Computer area map
+The Spirit World (MAP28) - Supercharge: Armor
+The Spirit World (MAP28) - Chaingun: Energy cell pack
+The Spirit World (MAP28) - Rocket launcher: Box of shotgun shells
+The Spirit World (MAP28) - Backpack: Dead Simple (MAP07) - Computer area map
+The Spirit World (MAP28) - Backpack 2: Mega Armor
+The Spirit World (MAP28) - Backpack 3: Box of shotgun shells
+The Spirit World (MAP28) - Backpack 4: Energy cell pack
+The Spirit World (MAP28) - Berserk: Energy cell pack
+The Spirit World (MAP28) - Plasma gun: Box of shotgun shells
+The Spirit World (MAP28) - Invulnerability 2: Armor
+The Spirit World (MAP28) - Invulnerability 3: Energy cell pack
+The Spirit World (MAP28) - BFG9000: Berserk
+The Spirit World (MAP28) - Megasphere: Armor
+The Spirit World (MAP28) - Megasphere 2: Tenements (MAP17) - Red keycard
+The Spirit World (MAP28) - Invulnerability 4: Industrial Zone (MAP15) - Blue keycard
+The Spirit World (MAP28) - Invulnerability 5: Box of bullets
+The Spirit World (MAP28) - Super Shotgun: Bloodfalls (MAP25) - Computer area map
+The Spirit World (MAP28) - Red skull key: The Courtyard (MAP18) - Yellow skull key
+The Spirit World (MAP28) - Exit: The Spirit World (MAP28) - Complete
+The Living End (MAP29) - Chaingun: Backpack
+The Living End (MAP29) - Plasma gun: The Inmost Dens (MAP14)
+The Living End (MAP29) - Backpack: Downtown (MAP13) - Blue keycard
+The Living End (MAP29) - Super Shotgun: Circle of Death (MAP11) - Blue keycard
+The Living End (MAP29) - Mega Armor: Supercharge
+The Living End (MAP29) - Armor: Downtown (MAP13) - Red keycard
+The Living End (MAP29) - Backpack 2: Box of rockets
+The Living End (MAP29) - Supercharge: The Courtyard (MAP18) - Computer area map
+The Living End (MAP29) - Berserk: Medikit
+The Living End (MAP29) - Berserk 2: Invulnerability
+The Living End (MAP29) - Exit: The Living End (MAP29) - Complete
+Icon of Sin (MAP30) - Supercharge: Box of bullets
+Icon of Sin (MAP30) - Supercharge 2: Box of bullets
+Icon of Sin (MAP30) - Supercharge 3: Suburbs (MAP16) - Red skull key
+Icon of Sin (MAP30) - Invulnerability: Gotcha! (MAP20) - Computer area map
+Icon of Sin (MAP30) - Invulnerability 2: Refueling Base (MAP10) - Yellow keycard
+Icon of Sin (MAP30) - Invulnerability 3: Medikit
+Icon of Sin (MAP30) - Invulnerability 4: Armor
+Icon of Sin (MAP30) - Megasphere 2: Energy cell pack
+Icon of Sin (MAP30) - Berserk: Medikit
+Icon of Sin (MAP30) - Exit: Icon of Sin (MAP30) - Complete
+Icon of Sin (MAP30) - BFG9000: Medikit
+Icon of Sin (MAP30) - Chaingun: The Citadel (MAP19) - Red skull key
+Icon of Sin (MAP30) - Chainsaw: Refueling Base (MAP10) - Blue keycard
+Icon of Sin (MAP30) - Plasma gun: Armor
+Icon of Sin (MAP30) - Rocket launcher: The Waste Tunnels (MAP05) - Yellow keycard
+Icon of Sin (MAP30) - Shotgun: Partial invisibility
+Icon of Sin (MAP30) - Super Shotgun: Mega Armor
+Icon of Sin (MAP30) - Backpack: Box of bullets
+Icon of Sin (MAP30) - Megasphere: Box of shotgun shells
+
+Playthrough:
+
+0: {
+  Entryway (MAP01)
+  Nirvana (MAP21)
+  The Factory (MAP12)
+}
+1: {
+  Entryway (MAP01) - Armor: Box of shotgun shells
+  Entryway (MAP01) - Chainsaw: Plasma gun
+  Entryway (MAP01) - Exit: Entryway (MAP01) - Complete
+  Entryway (MAP01) - Rocket launcher: Partial invisibility
+  Entryway (MAP01) - Shotgun: Box of bullets
+  Nirvana (MAP21) - Super Shotgun: Medikit
+  The Factory (MAP12) - Armor 2: Mega Armor
+  The Factory (MAP12) - Partial invisibility: Box of bullets
+  The Factory (MAP12) - Shotgun: The Gantlet (MAP03)
+}
+2: {
+  Nirvana (MAP21) - Backpack: Super Shotgun
+  Nirvana (MAP21) - Megasphere: Armor
+  Nirvana (MAP21) - Rocket launcher: Box of bullets
+  Nirvana (MAP21) - Yellow skull key: Berserk
+  The Factory (MAP12) - Berserk: Box of shotgun shells
+  The Factory (MAP12) - Berserk 3: Box of bullets
+  The Factory (MAP12) - Chaingun: The Waste Tunnels (MAP05)
+}
+3: {
+  The Gantlet (MAP03) - Blue keycard: The Crusher (MAP06) - Blue keycard
+  The Gantlet (MAP03) - Chaingun: Energy cell pack
+  The Gantlet (MAP03) - Mega Armor: Armor
+  The Gantlet (MAP03) - Mega Armor 2: Energy cell pack
+  The Gantlet (MAP03) - Partial invisibility: Monster Condo (MAP27) - Blue skull key
+  The Gantlet (MAP03) - Rocket launcher: Shotgun
+  The Gantlet (MAP03) - Shotgun: The Waste Tunnels (MAP05) - Blue keycard
+  The Gantlet (MAP03) - Supercharge: Box of bullets
+  The Waste Tunnels (MAP05) - Shotgun: Box of bullets
+  The Waste Tunnels (MAP05) - Super Shotgun: Box of shotgun shells
+}
+4: {
+  The Waste Tunnels (MAP05) - Armor: Box of bullets
+  The Waste Tunnels (MAP05) - Berserk: Medikit
+  The Waste Tunnels (MAP05) - Mega Armor: Mega Armor
+  The Waste Tunnels (MAP05) - Plasma gun: Box of bullets
+  The Waste Tunnels (MAP05) - Red keycard: Refueling Base (MAP10)
+  The Waste Tunnels (MAP05) - Rocket launcher: Box of rockets
+  The Waste Tunnels (MAP05) - Supercharge: Box of bullets
+  The Waste Tunnels (MAP05) - Supercharge 2: Box of rockets
+  The Waste Tunnels (MAP05) - Yellow keycard: The Focus (MAP04)
+}
+5: {
+  Refueling Base (MAP10) - Shotgun: Partial invisibility
+  The Focus (MAP04) - Blue keycard: The Inmost Dens (MAP14) - Computer area map
+  The Focus (MAP04) - Super Shotgun: The Crusher (MAP06)
+}
+6: {
+  The Crusher (MAP06) - Armor: Megasphere
+  The Crusher (MAP06) - Backpack: Chaingun
+  The Crusher (MAP06) - Blue keycard: Medikit
+  The Crusher (MAP06) - Blue keycard 2: The Citadel (MAP19)
+  The Crusher (MAP06) - Blue keycard 3: Armor
+  The Crusher (MAP06) - Mega Armor: Icon of Sin (MAP30) - Computer area map
+  The Crusher (MAP06) - Megasphere: Mega Armor
+  The Crusher (MAP06) - Megasphere 2: Monster Condo (MAP27) - Computer area map
+  The Crusher (MAP06) - Plasma gun: Box of shotgun shells
+  The Crusher (MAP06) - Red keycard: The Inmost Dens (MAP14) - Red skull key
+  The Crusher (MAP06) - Rocket launcher: Box of shotgun shells
+  The Crusher (MAP06) - Super Shotgun: The Factory (MAP12) - Yellow keycard
+  The Crusher (MAP06) - Supercharge: Box of shotgun shells
+}
+7: {
+  Refueling Base (MAP10) - Armor: Box of bullets
+  Refueling Base (MAP10) - Armor 2: Supercharge
+  Refueling Base (MAP10) - BFG9000: Box of bullets
+  Refueling Base (MAP10) - Backpack: Box of shotgun shells
+  Refueling Base (MAP10) - Berserk: Supercharge
+  Refueling Base (MAP10) - Berserk 2: Industrial Zone (MAP15) - Yellow keycard
+  Refueling Base (MAP10) - Blue keycard: Supercharge
+  Refueling Base (MAP10) - Chaingun: Bloodfalls (MAP25) - Blue skull key
+  Refueling Base (MAP10) - Chainsaw: Medikit
+  Refueling Base (MAP10) - Invulnerability: Supercharge
+  Refueling Base (MAP10) - Invulnerability 2: Armor
+  Refueling Base (MAP10) - Mega Armor: Box of bullets
+  Refueling Base (MAP10) - Megasphere: Tenements (MAP17)
+  Refueling Base (MAP10) - Partial invisibility: Armor
+  Refueling Base (MAP10) - Plasma gun: Partial invisibility
+  Refueling Base (MAP10) - Rocket launcher: Industrial Zone (MAP15)
+  Refueling Base (MAP10) - Supercharge: Mega Armor
+  Refueling Base (MAP10) - Supercharge 2: Box of bullets
+  Refueling Base (MAP10) - Yellow keycard: Armor
+  The Citadel (MAP19) - Armor: Berserk
+  The Citadel (MAP19) - Armor 2: Medikit
+  The Citadel (MAP19) - Backpack: Armor
+  The Citadel (MAP19) - Berserk: Energy cell pack
+  The Citadel (MAP19) - Blue skull key: Partial invisibility
+  The Citadel (MAP19) - Chaingun: Invulnerability
+  The Citadel (MAP19) - Computer area map: Box of shotgun shells
+  The Citadel (MAP19) - Invulnerability: Medikit
+  The Citadel (MAP19) - Mega Armor: The Gantlet (MAP03) - Red keycard
+  The Citadel (MAP19) - Partial invisibility: The Pit (MAP09) - Computer area map
+  The Citadel (MAP19) - Red skull key: Box of shotgun shells
+  The Citadel (MAP19) - Rocket launcher: Armor
+  The Citadel (MAP19) - Super Shotgun: Invulnerability
+  The Citadel (MAP19) - Supercharge: Medikit
+  The Citadel (MAP19) - Yellow skull key: Box of shotgun shells
+  The Factory (MAP12) - Berserk 2: Energy cell pack
+  The Factory (MAP12) - Blue keycard: Energy cell pack
+  The Factory (MAP12) - Exit: The Factory (MAP12) - Complete
+  The Factory (MAP12) - Super Shotgun: Medikit
+  The Factory (MAP12) - Supercharge: The Catacombs (MAP22) - Red skull key
+  The Factory (MAP12) - Supercharge 2: Supercharge
+  The Factory (MAP12) - Yellow keycard: Armor
+}
+8: {
+  Industrial Zone (MAP15) - Armor: Box of rockets
+  Industrial Zone (MAP15) - BFG9000: Box of rockets
+  Industrial Zone (MAP15) - Backpack: Box of bullets
+  Industrial Zone (MAP15) - Backpack 2: Suburbs (MAP16)
+  Industrial Zone (MAP15) - Berserk: Box of bullets
+  Industrial Zone (MAP15) - Berserk 2: Partial invisibility
+  Industrial Zone (MAP15) - Blue keycard: The Abandoned Mines (MAP26)
+  Industrial Zone (MAP15) - Chaingun: Megasphere
+  Industrial Zone (MAP15) - Chainsaw: Partial invisibility
+  Industrial Zone (MAP15) - Computer area map: Energy cell pack
+  Industrial Zone (MAP15) - Invulnerability: Box of rockets
+  Industrial Zone (MAP15) - Mega Armor: The Abandoned Mines (MAP26) - Computer area map
+  Industrial Zone (MAP15) - Mega Armor 2: The Pit (MAP09) - Yellow keycard
+  Industrial Zone (MAP15) - Megasphere: Armor
+  Industrial Zone (MAP15) - Partial invisibility: Berserk
+  Industrial Zone (MAP15) - Partial invisibility 2: Box of shotgun shells
+  Industrial Zone (MAP15) - Plasma gun: Rocket launcher
+  Industrial Zone (MAP15) - Red keycard: Mega Armor
+  Industrial Zone (MAP15) - Rocket launcher: Medikit
+  Industrial Zone (MAP15) - Shotgun: The Crusher (MAP06) - Red keycard
+  Industrial Zone (MAP15) - Supercharge: Gotcha! (MAP20)
+  Industrial Zone (MAP15) - Yellow keycard: Medikit
+  Tenements (MAP17) - Red keycard: Berserk
+  Tenements (MAP17) - Shotgun: Medikit
+}
+9: {
+  Gotcha! (MAP20) - Armor: The Catacombs (MAP22)
+  Gotcha! (MAP20) - Armor 2: Box of shotgun shells
+  Gotcha! (MAP20) - BFG9000: Partial invisibility
+  Gotcha! (MAP20) - Berserk: Box of rockets
+  Gotcha! (MAP20) - Exit: Gotcha! (MAP20) - Complete
+  Gotcha! (MAP20) - Mega Armor: Box of rockets
+  Gotcha! (MAP20) - Mega Armor 2: Icon of Sin (MAP30)
+  Gotcha! (MAP20) - Megasphere: The Chasm (MAP24)
+  Gotcha! (MAP20) - Plasma gun: Mega Armor
+  Gotcha! (MAP20) - Rocket launcher: Medikit
+  Gotcha! (MAP20) - Super Shotgun: Invulnerability
+  Gotcha! (MAP20) - Supercharge: Medikit
+  Gotcha! (MAP20) - Supercharge 2: Box of shotgun shells
+  Gotcha! (MAP20) - Supercharge 3: Tenements (MAP17) - Computer area map
+  Gotcha! (MAP20) - Supercharge 4: Bloodfalls (MAP25)
+  Suburbs (MAP16) - BFG9000: Berserk
+  Suburbs (MAP16) - Backpack: Underhalls (MAP02) - Computer area map
+  Suburbs (MAP16) - Berserk: Box of shotgun shells
+  Suburbs (MAP16) - Blue skull key: Partial invisibility
+  Suburbs (MAP16) - Chaingun: Box of rockets
+  Suburbs (MAP16) - Invulnerability: Box of rockets
+  Suburbs (MAP16) - Megasphere: Megasphere
+  Suburbs (MAP16) - Partial invisibility: Armor
+  Suburbs (MAP16) - Rocket launcher: The Gantlet (MAP03) - Blue keycard
+  Suburbs (MAP16) - Shotgun: Invulnerability
+  Suburbs (MAP16) - Super Shotgun: Box of bullets
+  Suburbs (MAP16) - Supercharge: The Pit (MAP09)
+  The Crusher (MAP06) - Yellow keycard: Entryway (MAP01) - Computer area map
+}
+10: {
+  Bloodfalls (MAP25) - Armor: Mega Armor
+  Bloodfalls (MAP25) - BFG9000: The Waste Tunnels (MAP05) - Red keycard
+  Bloodfalls (MAP25) - BFG9000 2: Mega Armor
+  Bloodfalls (MAP25) - Blue skull key: The Waste Tunnels (MAP05) - Computer area map
+  Bloodfalls (MAP25) - Chaingun: Megasphere
+  Bloodfalls (MAP25) - Exit: Bloodfalls (MAP25) - Complete
+  Bloodfalls (MAP25) - Mega Armor: Underhalls (MAP02)
+  Bloodfalls (MAP25) - Megasphere: Medikit
+  Bloodfalls (MAP25) - Partial invisibility: Energy cell pack
+  Bloodfalls (MAP25) - Plasma gun: Refueling Base (MAP10) - Computer area map
+  Bloodfalls (MAP25) - Rocket launcher: Armor
+  Bloodfalls (MAP25) - Super Shotgun: Armor
+  Icon of Sin (MAP30) - BFG9000: Medikit
+  Icon of Sin (MAP30) - Backpack: Box of bullets
+  Icon of Sin (MAP30) - Chaingun: The Citadel (MAP19) - Red skull key
+  Icon of Sin (MAP30) - Chainsaw: Refueling Base (MAP10) - Blue keycard
+  Icon of Sin (MAP30) - Megasphere: Box of shotgun shells
+  Icon of Sin (MAP30) - Plasma gun: Armor
+  Icon of Sin (MAP30) - Rocket launcher: The Waste Tunnels (MAP05) - Yellow keycard
+  Icon of Sin (MAP30) - Shotgun: Partial invisibility
+  Icon of Sin (MAP30) - Super Shotgun: Mega Armor
+  The Catacombs (MAP22) - Armor: BFG9000
+  The Catacombs (MAP22) - Berserk: Armor
+  The Catacombs (MAP22) - Blue skull key: Partial invisibility
+  The Catacombs (MAP22) - Exit: The Catacombs (MAP22) - Complete
+  The Catacombs (MAP22) - Plasma gun: Armor
+  The Catacombs (MAP22) - Rocket launcher: Box of shotgun shells
+  The Catacombs (MAP22) - Shotgun: Energy cell pack
+  The Catacombs (MAP22) - Supercharge: Energy cell pack
+  The Gantlet (MAP03) - Backpack: Mega Armor
+  The Gantlet (MAP03) - Exit: The Gantlet (MAP03) - Complete
+  The Gantlet (MAP03) - Red keycard: Energy cell pack
+  The Pit (MAP09) - Armor: Box of shotgun shells
+  The Pit (MAP09) - BFG9000: Tricks and Traps (MAP08) - Yellow skull key
+  The Pit (MAP09) - Berserk: Box of shotgun shells
+  The Pit (MAP09) - Berserk 2: The Citadel (MAP19) - Computer area map
+  The Pit (MAP09) - Blue keycard: Invulnerability
+  The Pit (MAP09) - Exit: The Pit (MAP09) - Complete
+  The Pit (MAP09) - Mega Armor: Armor
+  The Pit (MAP09) - Rocket launcher: Supercharge
+  The Pit (MAP09) - Shotgun: Supercharge
+  The Pit (MAP09) - Supercharge: Supercharge
+}
+11: {
+  Icon of Sin (MAP30) - Berserk: Medikit
+  Icon of Sin (MAP30) - Exit: Icon of Sin (MAP30) - Complete
+  Icon of Sin (MAP30) - Invulnerability: Gotcha! (MAP20) - Computer area map
+  Icon of Sin (MAP30) - Invulnerability 2: Refueling Base (MAP10) - Yellow keycard
+  Icon of Sin (MAP30) - Invulnerability 3: Medikit
+  Icon of Sin (MAP30) - Invulnerability 4: Armor
+  Icon of Sin (MAP30) - Megasphere 2: Energy cell pack
+  Icon of Sin (MAP30) - Supercharge: Box of bullets
+  Icon of Sin (MAP30) - Supercharge 2: Box of bullets
+  Icon of Sin (MAP30) - Supercharge 3: Suburbs (MAP16) - Red skull key
+  The Abandoned Mines (MAP26) - Armor: Energy cell pack
+  The Abandoned Mines (MAP26) - Backpack: Box of rockets
+  The Abandoned Mines (MAP26) - Chaingun: Box of bullets
+  The Abandoned Mines (MAP26) - Partial invisibility: The Citadel (MAP19) - Blue skull key
+  The Abandoned Mines (MAP26) - Plasma gun: The Factory (MAP12) - Blue keycard
+  The Abandoned Mines (MAP26) - Red keycard: Box of bullets
+  The Abandoned Mines (MAP26) - Rocket launcher: Tricks and Traps (MAP08)
+  The Abandoned Mines (MAP26) - Super Shotgun: Box of bullets
+  The Chasm (MAP24) - BFG9000: Mega Armor
+  The Chasm (MAP24) - Berserk: Invulnerability
+  The Chasm (MAP24) - Blue keycard: Monster Condo (MAP27) - Red skull key
+  The Chasm (MAP24) - Megasphere 2: Downtown (MAP13) - Yellow keycard
+  The Chasm (MAP24) - Rocket launcher: Supercharge
+  The Chasm (MAP24) - Shotgun: Box of rockets
+  The Chasm (MAP24) - Super Shotgun: Supercharge
+  The Waste Tunnels (MAP05) - Blue keycard: Supercharge
+  The Waste Tunnels (MAP05) - Exit: The Waste Tunnels (MAP05) - Complete
+  Underhalls (MAP02) - Mega Armor: Supercharge
+  Underhalls (MAP02) - Red keycard: Supercharge
+  Underhalls (MAP02) - Super Shotgun: Box of shotgun shells
+}
+12: {
+  Refueling Base (MAP10) - Exit: Refueling Base (MAP10) - Complete
+  Suburbs (MAP16) - Exit: Suburbs (MAP16) - Complete
+  The Citadel (MAP19) - Exit: The Citadel (MAP19) - Complete
+  The Factory (MAP12) - Armor: The Focus (MAP04) - Computer area map
+  The Factory (MAP12) - BFG9000: Monster Condo (MAP27) - Yellow skull key
+  The Factory (MAP12) - Backpack: Medikit
+  Tricks and Traps (MAP08) - Armor: Mega Armor
+  Tricks and Traps (MAP08) - Armor 2: Mega Armor
+  Tricks and Traps (MAP08) - BFG9000: Partial invisibility
+  Tricks and Traps (MAP08) - Backpack: Box of rockets
+  Tricks and Traps (MAP08) - Backpack 2: Energy cell pack
+  Tricks and Traps (MAP08) - Backpack 3: Box of bullets
+  Tricks and Traps (MAP08) - Backpack 4: The Courtyard (MAP18)
+  Tricks and Traps (MAP08) - Backpack 5: The Abandoned Mines (MAP26) - Red keycard
+  Tricks and Traps (MAP08) - Chaingun: Supercharge
+  Tricks and Traps (MAP08) - Chainsaw: Box of shotgun shells
+  Tricks and Traps (MAP08) - Invulnerability: Armor
+  Tricks and Traps (MAP08) - Invulnerability 2: Tenements (MAP17) - Yellow skull key
+  Tricks and Traps (MAP08) - Invulnerability 3: Box of shotgun shells
+  Tricks and Traps (MAP08) - Invulnerability 4: Box of shotgun shells
+  Tricks and Traps (MAP08) - Invulnerability 5: Suburbs (MAP16) - Blue skull key
+  Tricks and Traps (MAP08) - Partial invisibility: The Pit (MAP09) - Blue keycard
+  Tricks and Traps (MAP08) - Plasma gun: Box of rockets
+  Tricks and Traps (MAP08) - Red skull key: Box of bullets
+  Tricks and Traps (MAP08) - Rocket launcher: The Abandoned Mines (MAP26) - Blue keycard
+  Tricks and Traps (MAP08) - Shotgun: The Gantlet (MAP03) - Computer area map
+  Tricks and Traps (MAP08) - Supercharge: Box of shotgun shells
+  Tricks and Traps (MAP08) - Supercharge 2: Invulnerability
+  Tricks and Traps (MAP08) - Yellow skull key: Medikit
+}
+13: {
+  Suburbs (MAP16) - Plasma gun: Barrels o' Fun (MAP23)
+  Suburbs (MAP16) - Plasma gun 2: Supercharge
+  Suburbs (MAP16) - Plasma gun 3: Armor
+  Suburbs (MAP16) - Plasma gun 4: Partial invisibility
+  Suburbs (MAP16) - Red skull key: Partial invisibility
+  The Abandoned Mines (MAP26) - Blue keycard: Box of rockets
+  The Abandoned Mines (MAP26) - Mega Armor: Mega Armor
+  The Abandoned Mines (MAP26) - Supercharge: The Spirit World (MAP28) - Computer area map
+  The Abandoned Mines (MAP26) - Yellow keycard: Mega Armor
+  The Courtyard (MAP18) - Armor: Megasphere
+  The Courtyard (MAP18) - BFG9000: Tricks and Traps (MAP08) - Computer area map
+  The Courtyard (MAP18) - Backpack: Supercharge
+  The Courtyard (MAP18) - Berserk: Box of rockets
+  The Courtyard (MAP18) - Chaingun: Nirvana (MAP21) - Yellow skull key
+  The Courtyard (MAP18) - Computer area map: The Chasm (MAP24) - Red keycard
+  The Courtyard (MAP18) - Invulnerability: Partial invisibility
+  The Courtyard (MAP18) - Invulnerability 2: Armor
+  The Courtyard (MAP18) - Partial invisibility: Partial invisibility
+  The Courtyard (MAP18) - Partial invisibility 2: Underhalls (MAP02) - Blue keycard
+  The Courtyard (MAP18) - Plasma gun: The Inmost Dens (MAP14) - Blue skull key
+  The Courtyard (MAP18) - Rocket launcher: Armor
+  The Courtyard (MAP18) - Shotgun: Box of bullets
+  The Courtyard (MAP18) - Super Shotgun: Circle of Death (MAP11) - Computer area map
+  The Courtyard (MAP18) - Supercharge: Monster Condo (MAP27)
+  The Courtyard (MAP18) - Yellow skull key: Mega Armor
+  The Pit (MAP09) - Backpack: The Chasm (MAP24) - Blue keycard
+  The Pit (MAP09) - Berserk 3: Energy cell pack
+  The Pit (MAP09) - Computer area map: Medikit
+  The Pit (MAP09) - Mega Armor 2: Circle of Death (MAP11) - Red keycard
+  The Pit (MAP09) - Supercharge 2: Armor
+  The Pit (MAP09) - Yellow keycard: Berserk
+}
+14: {
+  Barrels o' Fun (MAP23) - Armor: Downtown (MAP13)
+  Barrels o' Fun (MAP23) - BFG9000: Tenements (MAP17) - Blue keycard
+  Barrels o' Fun (MAP23) - Backpack: Energy cell pack
+  Barrels o' Fun (MAP23) - Backpack 2: Box of shotgun shells
+  Barrels o' Fun (MAP23) - Berserk: Box of bullets
+  Barrels o' Fun (MAP23) - Computer area map: The Spirit World (MAP28) - Yellow skull key
+  Barrels o' Fun (MAP23) - Megasphere: The Citadel (MAP19) - Yellow skull key
+  Barrels o' Fun (MAP23) - Rocket launcher: Medikit
+  Barrels o' Fun (MAP23) - Shotgun: Box of bullets
+  Barrels o' Fun (MAP23) - Supercharge: Invulnerability
+  Barrels o' Fun (MAP23) - Yellow skull key: Energy cell pack
+  Monster Condo (MAP27) - Armor: Industrial Zone (MAP15) - Computer area map
+  Monster Condo (MAP27) - Armor 2: Megasphere
+  Monster Condo (MAP27) - BFG9000: Mega Armor
+  Monster Condo (MAP27) - Backpack: Box of shotgun shells
+  Monster Condo (MAP27) - Backpack 2: The Factory (MAP12) - Computer area map
+  Monster Condo (MAP27) - Backpack 3: Box of bullets
+  Monster Condo (MAP27) - Backpack 4: Mega Armor
+  Monster Condo (MAP27) - Berserk: Supercharge
+  Monster Condo (MAP27) - Berserk 2: Energy cell pack
+  Monster Condo (MAP27) - Blue skull key: Partial invisibility
+  Monster Condo (MAP27) - Chaingun: Mega Armor
+  Monster Condo (MAP27) - Chainsaw: The Catacombs (MAP22) - Computer area map
+  Monster Condo (MAP27) - Computer area map: Box of rockets
+  Monster Condo (MAP27) - Computer area map 2: Armor
+  Monster Condo (MAP27) - Exit: Monster Condo (MAP27) - Complete
+  Monster Condo (MAP27) - Invulnerability: Medikit
+  Monster Condo (MAP27) - Invulnerability 2: Medikit
+  Monster Condo (MAP27) - Invulnerability 3: Box of shotgun shells
+  Monster Condo (MAP27) - Partial invisibility: Box of shotgun shells
+  Monster Condo (MAP27) - Partial invisibility 2: Armor
+  Monster Condo (MAP27) - Partial invisibility 3: Energy cell pack
+  Monster Condo (MAP27) - Plasma gun: Box of rockets
+  Monster Condo (MAP27) - Red skull key: Box of rockets
+  Monster Condo (MAP27) - Rocket launcher: Box of shotgun shells
+  Monster Condo (MAP27) - Super Shotgun: Energy cell pack
+  Monster Condo (MAP27) - Supercharge: Barrels o' Fun (MAP23) - Computer area map
+  Monster Condo (MAP27) - Supercharge 2: Armor
+  Monster Condo (MAP27) - Supercharge 3: The Focus (MAP04) - Yellow keycard
+  Monster Condo (MAP27) - Supercharge 4: Supercharge
+  Monster Condo (MAP27) - Supercharge 5: Box of shotgun shells
+  Monster Condo (MAP27) - Yellow skull key: Dead Simple (MAP07)
+  Nirvana (MAP21) - Blue skull key: Nirvana (MAP21) - Computer area map
+  Nirvana (MAP21) - Invulnerability: The Crusher (MAP06) - Computer area map
+  Nirvana (MAP21) - Red skull key: The Living End (MAP29)
+  The Chasm (MAP24) - Armor: The Courtyard (MAP18) - Blue skull key
+  The Chasm (MAP24) - Backpack: Medikit
+  The Chasm (MAP24) - Berserk 2: Armor
+  The Chasm (MAP24) - Exit: The Chasm (MAP24) - Complete
+  The Chasm (MAP24) - Invulnerability: Nirvana (MAP21) - Red skull key
+  The Chasm (MAP24) - Megasphere: Energy cell pack
+  The Chasm (MAP24) - Plasma gun: Armor
+  The Chasm (MAP24) - Red keycard: Box of rockets
+}
+15: {
+  Dead Simple (MAP07) - Backpack: Partial invisibility
+  Dead Simple (MAP07) - Berserk: Supercharge
+  Dead Simple (MAP07) - Chaingun: Medikit
+  Dead Simple (MAP07) - Exit: Dead Simple (MAP07) - Complete
+  Dead Simple (MAP07) - Megasphere: The Crusher (MAP06) - Yellow keycard
+  Dead Simple (MAP07) - Partial invisibility: Medikit
+  Dead Simple (MAP07) - Partial invisibility 2: Box of bullets
+  Dead Simple (MAP07) - Partial invisibility 3: Box of shotgun shells
+  Dead Simple (MAP07) - Partial invisibility 4: Box of shotgun shells
+  Dead Simple (MAP07) - Plasma gun: Box of bullets
+  Dead Simple (MAP07) - Rocket launcher: Box of shotgun shells
+  Dead Simple (MAP07) - Super Shotgun: Berserk
+  Downtown (MAP13) - BFG9000: Box of bullets
+  Downtown (MAP13) - Backpack: Supercharge
+  Downtown (MAP13) - Berserk: Chainsaw
+  Downtown (MAP13) - Berserk 3: Medikit
+  Downtown (MAP13) - Blue keycard: The Spirit World (MAP28) - Red skull key
+  Downtown (MAP13) - Chaingun: Tricks and Traps (MAP08) - Red skull key
+  Downtown (MAP13) - Computer area map: Energy cell pack
+  Downtown (MAP13) - Exit: Downtown (MAP13) - Complete
+  Downtown (MAP13) - Invulnerability 2: Energy cell pack
+  Downtown (MAP13) - Mega Armor: Energy cell pack
+  Downtown (MAP13) - Partial invisibility: Armor
+  Downtown (MAP13) - Partial invisibility 2: Medikit
+  Downtown (MAP13) - Partial invisibility 3: Berserk
+  Downtown (MAP13) - Plasma gun: Box of rockets
+  Downtown (MAP13) - Rocket launcher: Medikit
+  Downtown (MAP13) - Shotgun: Mega Armor
+  Downtown (MAP13) - Supercharge: Barrels o' Fun (MAP23) - Yellow skull key
+  The Courtyard (MAP18) - Exit: The Courtyard (MAP18) - Complete
+  The Living End (MAP29) - Armor: Downtown (MAP13) - Red keycard
+  The Living End (MAP29) - Backpack: Downtown (MAP13) - Blue keycard
+  The Living End (MAP29) - Backpack 2: Box of rockets
+  The Living End (MAP29) - Berserk: Medikit
+  The Living End (MAP29) - Berserk 2: Invulnerability
+  The Living End (MAP29) - Chaingun: Backpack
+  The Living End (MAP29) - Exit: The Living End (MAP29) - Complete
+  The Living End (MAP29) - Mega Armor: Supercharge
+  The Living End (MAP29) - Plasma gun: The Inmost Dens (MAP14)
+  The Living End (MAP29) - Super Shotgun: Circle of Death (MAP11) - Blue keycard
+  The Living End (MAP29) - Supercharge: The Courtyard (MAP18) - Computer area map
+}
+16: {
+  Barrels o' Fun (MAP23) - Exit: Barrels o' Fun (MAP23) - Complete
+  Downtown (MAP13) - Berserk 2: The Living End (MAP29) - Computer area map
+  Downtown (MAP13) - Chainsaw: Medikit
+  Downtown (MAP13) - Invulnerability: Invulnerability
+  Downtown (MAP13) - Red keycard: Box of rockets
+  Downtown (MAP13) - Yellow keycard: Nirvana (MAP21) - Blue skull key
+  The Crusher (MAP06) - Exit: The Crusher (MAP06) - Complete
+  The Inmost Dens (MAP14) - Berserk: Mega Armor
+  The Inmost Dens (MAP14) - Blue skull key: Armor
+  The Inmost Dens (MAP14) - Chaingun: The Spirit World (MAP28)
+  The Inmost Dens (MAP14) - Exit: The Inmost Dens (MAP14) - Complete
+  The Inmost Dens (MAP14) - Mega Armor: Medikit
+  The Inmost Dens (MAP14) - Partial invisibility: Medikit
+  The Inmost Dens (MAP14) - Plasma gun: Medikit
+  The Inmost Dens (MAP14) - Red skull key: Medikit
+  The Inmost Dens (MAP14) - Rocket launcher: Armor
+  The Inmost Dens (MAP14) - Shotgun: Supercharge
+  The Inmost Dens (MAP14) - Supercharge: Armor
+  Tricks and Traps (MAP08) - Exit: Tricks and Traps (MAP08) - Complete
+}
+17: {
+  Nirvana (MAP21) - Exit: Nirvana (MAP21) - Complete
+  The Spirit World (MAP28) - Armor: Armor
+  The Spirit World (MAP28) - BFG9000: Berserk
+  The Spirit World (MAP28) - Backpack: Dead Simple (MAP07) - Computer area map
+  The Spirit World (MAP28) - Backpack 2: Mega Armor
+  The Spirit World (MAP28) - Backpack 3: Box of shotgun shells
+  The Spirit World (MAP28) - Backpack 4: Energy cell pack
+  The Spirit World (MAP28) - Berserk: Energy cell pack
+  The Spirit World (MAP28) - Chaingun: Energy cell pack
+  The Spirit World (MAP28) - Chainsaw: Box of bullets
+  The Spirit World (MAP28) - Exit: The Spirit World (MAP28) - Complete
+  The Spirit World (MAP28) - Invulnerability: Box of shotgun shells
+  The Spirit World (MAP28) - Invulnerability 2: Armor
+  The Spirit World (MAP28) - Invulnerability 3: Energy cell pack
+  The Spirit World (MAP28) - Invulnerability 4: Industrial Zone (MAP15) - Blue keycard
+  The Spirit World (MAP28) - Invulnerability 5: Box of bullets
+  The Spirit World (MAP28) - Megasphere: Armor
+  The Spirit World (MAP28) - Megasphere 2: Tenements (MAP17) - Red keycard
+  The Spirit World (MAP28) - Plasma gun: Box of shotgun shells
+  The Spirit World (MAP28) - Red skull key: The Courtyard (MAP18) - Yellow skull key
+  The Spirit World (MAP28) - Rocket launcher: Box of shotgun shells
+  The Spirit World (MAP28) - Super Shotgun: Bloodfalls (MAP25) - Computer area map
+  The Spirit World (MAP28) - Supercharge: Armor
+  The Spirit World (MAP28) - Yellow skull key: The Chasm (MAP24) - Computer area map
+}
+18: {
+  Industrial Zone (MAP15) - Exit: Industrial Zone (MAP15) - Complete
+  Tenements (MAP17) - Armor: Box of shotgun shells
+  Tenements (MAP17) - Armor 2: The Focus (MAP04) - Red keycard
+  Tenements (MAP17) - BFG9000: Berserk
+  Tenements (MAP17) - Backpack: Industrial Zone (MAP15) - Red keycard
+  Tenements (MAP17) - Berserk: Circle of Death (MAP11)
+  Tenements (MAP17) - Blue keycard: Box of rockets
+  Tenements (MAP17) - Chaingun: Partial invisibility
+  Tenements (MAP17) - Exit: Tenements (MAP17) - Complete
+  Tenements (MAP17) - Mega Armor: Energy cell pack
+  Tenements (MAP17) - Megasphere: Downtown (MAP13) - Computer area map
+  Tenements (MAP17) - Partial invisibility: Berserk
+  Tenements (MAP17) - Plasma gun: Box of bullets
+  Tenements (MAP17) - Rocket launcher: Armor
+  Tenements (MAP17) - Supercharge: The Focus (MAP04) - Blue keycard
+  Tenements (MAP17) - Supercharge 2: Underhalls (MAP02) - Red keycard
+  Tenements (MAP17) - Yellow skull key: Supercharge
+  The Courtyard (MAP18) - Blue skull key: Supercharge
+}
+19: {
+  Circle of Death (MAP11) - Armor: Energy cell pack
+  Circle of Death (MAP11) - BFG9000: Armor
+  Circle of Death (MAP11) - Backpack: The Catacombs (MAP22) - Blue skull key
+  Circle of Death (MAP11) - Blue keycard: Box of rockets
+  Circle of Death (MAP11) - Chaingun: Box of rockets
+  Circle of Death (MAP11) - Exit: Circle of Death (MAP11) - Complete
+  Circle of Death (MAP11) - Invulnerability: Mega Armor
+  Circle of Death (MAP11) - Mega Armor: Box of rockets
+  Circle of Death (MAP11) - Partial invisibility: Energy cell pack
+  Circle of Death (MAP11) - Plasma gun: The Abandoned Mines (MAP26) - Yellow keycard
+  Circle of Death (MAP11) - Red keycard: Armor
+  Circle of Death (MAP11) - Rocket launcher: Box of shotgun shells
+  Circle of Death (MAP11) - Shotgun: Supercharge
+  Circle of Death (MAP11) - Supercharge: Medikit
+  Circle of Death (MAP11) - Supercharge 2: Suburbs (MAP16) - Computer area map
+  The Focus (MAP04) - Exit: The Focus (MAP04) - Complete
+  The Focus (MAP04) - Red keycard: Megasphere
+  The Focus (MAP04) - Yellow keycard: Box of bullets
+  Underhalls (MAP02) - Blue keycard: Box of bullets
+  Underhalls (MAP02) - Exit: Underhalls (MAP02) - Complete
+}
+20: {
+  The Abandoned Mines (MAP26) - Exit: The Abandoned Mines (MAP26) - Complete
+  The Catacombs (MAP22) - Red skull key: Supercharge
+}
