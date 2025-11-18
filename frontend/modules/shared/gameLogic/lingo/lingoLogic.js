@@ -46,10 +46,16 @@ export function lingo_can_use_entrance(snapshot, staticData, room, door) {
     return hasItem;
   }
 
-  // Door doesn't have an associated item, so it must be accessible through
-  // other means (e.g., solving panels, access requirements).
-  // For doors without items, we assume they're always accessible.
-  // TODO: Implement proper access requirements checking for doors without items
+  // Door doesn't have an associated item, check if it has access requirements
+  const settings = staticData?.settings?.[playerId];
+  const doorReqs = settings?.door_reqs?.[effectiveRoom]?.[doorName];
+
+  if (doorReqs) {
+    // This door has access requirements - check them
+    return _lingo_can_satisfy_requirements(snapshot, staticData, doorReqs);
+  }
+
+  // No item and no requirements - door is always accessible
   return true;
 }
 

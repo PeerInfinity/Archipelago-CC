@@ -1,30 +1,25 @@
 """Zillion game-specific export handler."""
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Set
 from .generic import GenericGameExportHandler
 import logging
-import json
-import os
 
 logger = logging.getLogger(__name__)
 
-# Import zilliandomizer lookup tables for character abilities
+# Import zilliandomizer components
 try:
-    from zilliandomizer.options import char_to_gun, char_to_jump
+    from zilliandomizer.logic_components.locations import Req
+    from zilliandomizer.logic_components.items import items as zz_items
 except ImportError:
-    logger.error("Failed to import zilliandomizer.options. Is zilliandomizer installed?")
-    char_to_gun = {}
-    char_to_jump = {}
+    logger.error("Failed to import zilliandomizer. Is zilliandomizer installed?")
+    Req = None
+    zz_items = []
 
 class ZillionGameExportHandler(GenericGameExportHandler):
     """Export handler for Zillion.
 
     Zillion uses the zilliandomizer library for its logic system.
-    Requirements are character-dependent and based on:
-    - Gun power (from Zillion items and character rescues)
-    - Jump power (from Opa-Opa items via leveling and character rescues)
-    - Red ID Cards
-    - Floppy Disks
+    This exporter queries the zilliandomizer directly to determine actual accessibility.
     """
     GAME_NAME = 'Zillion'
 
@@ -32,204 +27,238 @@ class ZillionGameExportHandler(GenericGameExportHandler):
         super().__init__()
         # Zillion doesn't use helper functions - logic is in zilliandomizer library
         self.known_helpers = set()
-        # Cache world options
-        self.start_char = None
-        self.gun_levels = None
-        self.jump_levels = None
-        self.opas_per_level = None
+        # Cache zilliandomizer data
+        self.zz_randomizer = None
+        self.id_to_zz_item = None
+        self.item_name_to_zz_item = {}
+        # Cache accessibility results
+        self.accessibility_cache = {}
 
     def expand_helper(self, helper_name: str):
         """Zillion does not use helper functions."""
-        # Log if we encounter any helpers (shouldn't happen)
         if helper_name:
             logger.warning(f"Unexpected helper in Zillion: {helper_name}")
         return None
 
-    def _load_world_options(self, world):
-        """Load Zillion world options for requirement calculations."""
-        if self.start_char is None:
-            # Get options from world
-            options = world.options
+    def _init_zilliandomizer(self, world):
+        """Initialize zilliandomizer data from the world object."""
+        if self.zz_randomizer is not None:
+            return  # Already initialized
 
-            # Start character (JJ, Apple, or Champ)
-            self.start_char = options.start_char.get_char() if hasattr(options.start_char, 'get_char') else 'JJ'
+        # Get the zilliandomizer randomizer from the world
+        if not hasattr(world, 'zz_system'):
+            logger.error("World doesn't have zz_system attribute")
+            return
 
-            # Gun levels setting (vanilla, balanced, low, restrictive) - lowercase for lookup
-            self.gun_levels = (options.gun_levels.current_option_name if hasattr(options, 'gun_levels') else 'balanced').lower()
+        self.zz_randomizer = world.zz_system.randomizer
+        if not self.zz_randomizer:
+            logger.error("World's zz_system doesn't have randomizer")
+            return
 
-            # Jump levels setting (vanilla, balanced, low, restrictive) - lowercase for lookup
-            self.jump_levels = (options.jump_levels.current_option_name if hasattr(options, 'jump_levels') else 'balanced').lower()
+        # Get item mapping
+        if hasattr(world, 'id_to_zz_item'):
+            self.id_to_zz_item = world.id_to_zz_item
 
-            # Opa-Opas needed per level (default 2)
-            self.opas_per_level = options.opas_per_level.value if hasattr(options, 'opas_per_level') else 2
+        # Build item name to zz_item mapping
+        # The zilliandomizer items list: 0=empty, 1=main, 2=gun, 3=opa, 4=red, 5=floppy, 6=scope, 7=JJ, 8=Apple, 9=Champ, 10=bread, 11=card
+        item_name_map = {
+            'Zillion': zz_items[2],       # gun
+            'Opa-Opa': zz_items[3],       # opa
+            'Red ID Card': zz_items[4],   # red
+            'Floppy Disk': zz_items[5],   # floppy
+            'Scope': zz_items[6],         # scope
+            'JJ': zz_items[7],            # JJ
+            'Apple': zz_items[8],         # Apple
+            'Champ': zz_items[9],         # Champ
+            'Bread': zz_items[10],        # bread
+            'ID Card': zz_items[11],      # card
+        }
+        self.item_name_to_zz_item = item_name_map
 
-            logger.info(f"Zillion world options: start_char={self.start_char}, gun_levels={self.gun_levels}, "
-                       f"jump_levels={self.jump_levels}, opas_per_level={self.opas_per_level}")
+        # Sync item placements from Archipelago to zilliandomizer
+        # This is crucial for correct accessibility calculation
+        self._sync_item_placements(world)
 
-    def _get_gun_requirement(self, req_gun: int) -> Optional[Dict[str, Any]]:
+        logger.info(f"Initialized zilliandomizer: {len(self.zz_randomizer.locations)} locations")
+
+    def _sync_item_placements(self, world):
+        """Sync item placements from Archipelago locations to zilliandomizer."""
+        if not self.zz_randomizer:
+            return
+
+        # Import zilliandomizer empty item
+        try:
+            from zilliandomizer.logic_components.items import items as zz_items
+            zz_empty = zz_items[0]
+        except ImportError:
+            logger.error("Failed to import zilliandomizer items")
+            return
+
+        # Sync each location's item to the zilliandomizer
+        if hasattr(world, 'my_locations'):
+            for z_loc in world.my_locations:
+                zz_name = z_loc.zz_loc.name
+                # Get the zz_item for this location's placed item
+                from worlds.zillion.item import ZillionItem
+                zz_item = z_loc.item.zz_item \
+                    if isinstance(z_loc.item, ZillionItem) and z_loc.item.player == world.player \
+                    else zz_empty
+                # Set it in the randomizer
+                self.zz_randomizer.locations[zz_name].item = zz_item
+
+    def _get_accessible_locations(self, items: List) -> Set:
         """
-        Calculate the gun requirement based on character and settings.
+        Get the set of accessible zilliandomizer locations given a list of items.
 
-        The req_gun value represents the minimum number of Zillion items needed.
-        gun=N means: need N Zillion items (giving gun_prog[N] power for the starting character).
+        Args:
+            items: List of zilliandomizer items
 
-        Returns None if accessible from start, otherwise returns rule for Zillion items/rescues.
+        Returns:
+            Set of accessible zilliandomizer location objects
         """
-        if req_gun == 0:
-            return None  # No gun requirement
+        if not self.zz_randomizer:
+            return set()
 
-        # Get gun progression table for starting character
-        gun_prog = char_to_gun.get(self.start_char, {}).get(self.gun_levels, [1])
+        # Convert items to ability using zilliandomizer's logic
+        ability = self.zz_randomizer.make_ability(items)
 
-        # The requirement gun=N means we need the gun power from gun_prog[N]
-        # To get gun_prog[N], we need N Zillion items
-        # So the requirement is simply: need >= N Zillion items
-        zillion_condition = {
-            'type': 'item_check',
-            'item': 'Zillion',
-            'count': {'type': 'constant', 'value': req_gun}
+        # Get accessible locations
+        accessible_locs = self.zz_randomizer.get_locations(ability)
+
+        return frozenset(accessible_locs)
+
+    def _find_minimal_requirements(self, zz_loc, world) -> Optional[Dict[str, Any]]:
+        """
+        Find the minimal item requirements for accessing a location by querying zilliandomizer.
+
+        This tests different item combinations to determine which items grant access.
+        """
+        # Check if accessible with no items
+        accessible_with_nothing = self._get_accessible_locations([])
+        if zz_loc in accessible_with_nothing:
+            return {'type': 'constant', 'value': True}
+
+        # List of progression items to test
+        # We'll test each item type and various counts
+        progression_items = {
+            'Zillion': (1, 7),      # Test counts 1-7
+            'Opa-Opa': (1, 8),      # Test counts 1-8
+            'Red ID Card': (1, 5),   # Test counts 1-5
+            'Floppy Disk': (1, 5),   # Test counts 1-5
+            'Apple': (1, 1),         # Just 1
+            'Champ': (1, 1),         # Just 1
         }
 
-        # Check if rescue items can provide alternative paths
-        # A rescue gives the rescued character's starting power
-        rescue_alternatives = []
-        for rescue_char in ['Apple', 'Champ']:
-            if rescue_char != self.start_char:
-                rescue_prog = char_to_gun.get(rescue_char, {}).get(self.gun_levels, [1])
-                # Check if this rescue's starting power is enough
-                # We need gun_prog[req_gun] power, so check if rescue_prog[0] >= gun_prog[req_gun]
-                required_power = gun_prog[req_gun] if req_gun < len(gun_prog) else 999
-                if rescue_prog[0] >= required_power:
-                    # This rescue gives enough power immediately
-                    rescue_alternatives.append({
+        # Find which single items grant access
+        single_item_grants_access = []
+        for item_name, (min_count, max_count) in progression_items.items():
+            zz_item = self.item_name_to_zz_item.get(item_name)
+            if not zz_item:
+                continue
+
+            # Binary search for minimum count needed
+            needed_count = None
+            for count in range(min_count, max_count + 1):
+                items = [zz_item] * count
+                accessible = self._get_accessible_locations(items)
+                if zz_loc in accessible:
+                    needed_count = count
+                    break
+
+            if needed_count is not None:
+                if needed_count == 1 and item_name in ['Apple', 'Champ']:
+                    # Rescue items don't need count
+                    single_item_grants_access.append({
                         'type': 'item_check',
-                        'item': rescue_char
+                        'item': item_name
+                    })
+                else:
+                    single_item_grants_access.append({
+                        'type': 'item_check',
+                        'item': item_name,
+                        'count': {'type': 'constant', 'value': needed_count}
                     })
 
-        if rescue_alternatives:
-            # OR: (Zillion count) OR (rescue item)
+        # If multiple single items can grant access, it's an OR
+        if len(single_item_grants_access) > 1:
             return {
                 'type': 'or',
-                'conditions': [zillion_condition] + rescue_alternatives
+                'conditions': single_item_grants_access
             }
-        else:
-            return zillion_condition
+        elif len(single_item_grants_access) == 1:
+            return single_item_grants_access[0]
 
-    def _get_jump_requirement(self, req_jump: int) -> Optional[Dict[str, Any]]:
-        """
-        Calculate the jump requirement based on character and settings.
+        # If no single item grants access, we might need combinations
+        # For now, try common combinations: Zillion + Opa-Opa
+        zillion_item = self.item_name_to_zz_item.get('Zillion')
+        opa_item = self.item_name_to_zz_item.get('Opa-Opa')
 
-        The req_jump value represents the minimum jump level needed.
-        jump=N means: need jump level N (achieved with N * opas_per_level Opa-Opas).
+        if zillion_item and opa_item:
+            # Try different combinations
+            for zillion_count in range(1, 8):
+                for opa_count in range(1, 9):
+                    items = [zillion_item] * zillion_count + [opa_item] * opa_count
+                    accessible = self._get_accessible_locations(items)
+                    if zz_loc in accessible:
+                        # Found a combination that works
+                        # Build AND rule
+                        conditions = []
+                        if zillion_count > 0:
+                            conditions.append({
+                                'type': 'item_check',
+                                'item': 'Zillion',
+                                'count': {'type': 'constant', 'value': zillion_count}
+                            })
+                        if opa_count > 0:
+                            conditions.append({
+                                'type': 'item_check',
+                                'item': 'Opa-Opa',
+                                'count': {'type': 'constant', 'value': opa_count}
+                            })
 
-        Returns None if accessible from start, otherwise returns rule for Opa-Opa items/rescues.
-        """
-        if req_jump == 0:
-            return None  # No jump requirement
+                        if len(conditions) == 1:
+                            return conditions[0]
+                        else:
+                            return {
+                                'type': 'and',
+                                'conditions': conditions
+                            }
 
-        # Get jump progression table for starting character
-        jump_prog = char_to_jump.get(self.start_char, {}).get(self.jump_levels, [1])
-
-        # The requirement jump=N means we need the jump power from jump_prog[N]
-        # To get jump_prog[N], we need N levels, which requires N * opas_per_level Opa-Opas
-        min_opas = req_jump * self.opas_per_level
-
-        # Build Opa-Opa condition
-        opa_condition = {
-            'type': 'item_check',
-            'item': 'Opa-Opa',
-            'count': {'type': 'constant', 'value': min_opas}
-        }
-
-        # Check if rescue items can provide alternative paths
-        # A rescue gives the rescued character's starting power
-        rescue_alternatives = []
-        for rescue_char in ['Apple', 'Champ']:
-            if rescue_char != self.start_char:
-                rescue_prog = char_to_jump.get(rescue_char, {}).get(self.jump_levels, [1])
-                # Check if this rescue's starting power is enough
-                # We need jump_prog[req_jump] power, so check if rescue_prog[0] >= jump_prog[req_jump]
-                required_power = jump_prog[req_jump] if req_jump < len(jump_prog) else 999
-                if rescue_prog[0] >= required_power:
-                    rescue_alternatives.append({
-                        'type': 'item_check',
-                        'item': rescue_char
-                    })
-
-        if rescue_alternatives:
-            return {
-                'type': 'or',
-                'conditions': [opa_condition] + rescue_alternatives
-            }
-        else:
-            return opa_condition
+        # If we still can't find requirements, log a warning and return True
+        # This shouldn't happen in a properly configured world
+        logger.warning(f"Could not determine requirements for location: {zz_loc.name}")
+        return {'type': 'constant', 'value': True}
 
     def get_custom_location_access_rule(self, location, world) -> Optional[Dict[str, Any]]:
         """
-        Determine access rule by analyzing the Zillion location's requirements.
+        Determine access rule by querying the zilliandomizer logic directly.
 
-        Zillion uses character-dependent power systems where gun and jump levels
-        are achieved through collecting items (Zillion, Opa-Opa) or rescuing characters.
+        This method uses the zilliandomizer's get_locations() function to determine
+        which items are actually required to access each location.
         """
         # Check if this is a Zillion location with zilliandomizer data
         if not hasattr(location, 'zz_loc'):
             return None
 
-        # Load world options (cached after first call)
-        self._load_world_options(world)
+        # Initialize zilliandomizer if needed
+        self._init_zilliandomizer(world)
+        if not self.zz_randomizer:
+            logger.error("Failed to initialize zilliandomizer, falling back to basic export")
+            return None
 
         zz_loc = location.zz_loc
-        req = zz_loc.req
-
-        # Debug logging for problematic locations
         loc_name = location.name if hasattr(location, 'name') else 'unknown'
-        # Log all locations that have gun=0 AND jump=0 (should be accessible from start)
-        if req.gun == 0 and req.jump == 0 and req.red == 0 and req.floppy == 0:
-            logger.info(f"DEBUG zero-req location: {loc_name}: ALL req fields = {vars(req)}")
 
-        conditions = []
+        # Check cache first
+        cache_key = zz_loc.name
+        if cache_key in self.accessibility_cache:
+            return self.accessibility_cache[cache_key]
 
-        # Gun requirement (character-dependent)
-        gun_req = self._get_gun_requirement(req.gun)
-        if gun_req:
-            conditions.append(gun_req)
+        # Find minimal requirements by querying zilliandomizer
+        logger.debug(f"Analyzing location: {loc_name}")
+        rule = self._find_minimal_requirements(zz_loc, world)
 
-        # Jump requirement (character-dependent)
-        jump_req = self._get_jump_requirement(req.jump)
-        if jump_req:
-            conditions.append(jump_req)
+        # Cache the result
+        self.accessibility_cache[cache_key] = rule
 
-        # Red ID Card requirement (direct count)
-        red_count = getattr(req, 'red', 0)
-        if red_count > 0:
-            conditions.append({
-                'type': 'item_check',
-                'item': 'Red ID Card',
-                'count': {'type': 'constant', 'value': red_count}
-            })
-
-        # Floppy Disk requirement (direct count)
-        floppy_count = getattr(req, 'floppy', 0)
-        if floppy_count > 0:
-            conditions.append({
-                'type': 'item_check',
-                'item': 'Floppy Disk',
-                'count': {'type': 'constant', 'value': floppy_count}
-            })
-
-        # TODO: Handle door, skill, hp, char, and union requirements if needed
-        # For now, these are uncommon in typical seeds
-
-        # If no requirements, location is always accessible
-        if not conditions:
-            return {'type': 'constant', 'value': True}
-
-        # If only one requirement, return it directly
-        if len(conditions) == 1:
-            return conditions[0]
-
-        # Multiple requirements means AND
-        return {
-            'type': 'and',
-            'conditions': conditions
-        }
+        return rule

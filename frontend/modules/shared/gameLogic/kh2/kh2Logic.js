@@ -706,8 +706,8 @@ export const helperFunctions = {
       return helperFunctions.kh2_dict_count({'Quick Run': 2, 'Aerial Dodge': 1}, snapshot) ||
         helperFunctions.form_list_unlock(snapshot, staticData, 'Wisdom Form', 3, true);
     } else { // hard: (quick run 1, aerial dodge 1) or (wisdom form and aerial dodge 1)
-      return helperFunctions.kh2_has_all(['Aerial Dodge', 'Quick Run'], snapshot) ||
-        helperFunctions.kh2_has_all(['Aerial Dodge', 'Wisdom Form'], snapshot);
+      return helperFunctions.kh2_has_all(snapshot, staticData, ['Aerial Dodge', 'Quick Run']) ||
+        helperFunctions.kh2_has_all(snapshot, staticData, ['Aerial Dodge', 'Wisdom Form']);
     }
   },
 
@@ -743,7 +743,7 @@ export const helperFunctions = {
         (toolCount >= 2 && helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 1, true));
     } else { // hard: reflect + (stitch or chicken little) + final form
       return (snapshot?.inventory?.['Reflect Element'] > 0) &&
-        helperFunctions.kh2_has_any(['Stitch', 'Chicken Little'], snapshot) &&
+        helperFunctions.kh2_has_any(snapshot, staticData, ['Stitch', 'Chicken Little']) &&
         helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 1, true);
     }
   },
@@ -771,18 +771,18 @@ export const helperFunctions = {
     let voidCrossPass = false;
     if (fightLogic === 0) { // easy: aerial dodge 3, master form, fire
       voidCrossPass = (snapshot?.inventory?.['Aerial Dodge'] >= 3) &&
-        helperFunctions.kh2_has_all(['Master Form', 'Fire Element'], snapshot);
+        helperFunctions.kh2_has_all(snapshot, staticData, ['Master Form', 'Fire Element']);
     } else if (fightLogic === 1) { // normal: aerial dodge 2, master form, fire
       voidCrossPass = (snapshot?.inventory?.['Aerial Dodge'] >= 2) &&
-        helperFunctions.kh2_has_all(['Master Form', 'Fire Element'], snapshot);
+        helperFunctions.kh2_has_all(snapshot, staticData, ['Master Form', 'Fire Element']);
     } else { // hard: multiple options
       voidCrossPass = helperFunctions.kh2_dict_count({'Quick Run': 3, 'Aerial Dodge': 1}, snapshot) ||
         (helperFunctions.kh2_dict_count({'Quick Run': 2, 'Aerial Dodge': 2}, snapshot) &&
-          helperFunctions.kh2_has_any(magic, snapshot)) ||
+          helperFunctions.kh2_has_any(snapshot, staticData, magic)) ||
         ((snapshot?.inventory?.['Final Form'] > 0) &&
-          (helperFunctions.kh2_has_any(magic, snapshot) || (snapshot?.inventory?.['Combo Master'] > 0))) ||
+          (helperFunctions.kh2_has_any(snapshot, staticData, magic) || (snapshot?.inventory?.['Combo Master'] > 0))) ||
         ((snapshot?.inventory?.['Master Form'] > 0) &&
-          helperFunctions.kh2_has_any(['Reflect Element', 'Fire Element', 'Combo Master'], snapshot));
+          helperFunctions.kh2_has_any(snapshot, staticData, ['Reflect Element', 'Fire Element', 'Combo Master']));
     }
 
     // Wall rise rules
@@ -816,9 +816,9 @@ export const helperFunctions = {
       return helperFunctions.kh2_dict_count({'Quick Run': 2, 'Aerial Dodge': 2}, snapshot) ||
         helperFunctions.form_list_unlock(snapshot, staticData, 'Master Form', 3, true);
     } else { // hard: multiple options
-      return (helperFunctions.kh2_has_all(['Glide', 'Aerial Dodge'], snapshot) &&
-        helperFunctions.kh2_has_any(magic, snapshot)) ||
-        ((snapshot?.inventory?.['Master Form'] > 0) && helperFunctions.kh2_has_any(magic, snapshot)) ||
+      return (helperFunctions.kh2_has_all(snapshot, staticData, ['Glide', 'Aerial Dodge']) &&
+        helperFunctions.kh2_has_any(snapshot, staticData, magic)) ||
+        ((snapshot?.inventory?.['Master Form'] > 0) && helperFunctions.kh2_has_any(snapshot, staticData, magic)) ||
         ((snapshot?.inventory?.['Glide'] > 0) && (snapshot?.inventory?.['Aerial Dodge'] >= 2));
     }
   },
@@ -842,7 +842,7 @@ export const helperFunctions = {
       return helperFunctions.kh2_list_any_sum([defensiveTool, blackMagic], snapshot) >= 2;
     }
     // hard: defensive tool only
-    return helperFunctions.kh2_has_any(defensiveTool, snapshot);
+    return helperFunctions.kh2_has_any(snapshot, staticData, defensiveTool);
   },
 
   /**
@@ -953,7 +953,7 @@ export const helperFunctions = {
       );
       return categoriesAvailable >= 2;
     } else { // hard: defensive tool or limit form
-      return helperFunctions.kh2_has_any(['Reflect Element', 'Guard', 'Limit Form'], snapshot);
+      return helperFunctions.kh2_has_any(snapshot, staticData, ['Reflect Element', 'Guard', 'Limit Form']);
     }
   },
 
@@ -1056,6 +1056,329 @@ export const helperFunctions = {
   },
 
   /**
+   * Check if Scar fight is accessible.
+   * Based on worlds/kh2/Rules.py:1018-1027
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Scar fight
+   */
+  get_scar_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    if (fightLogic === 0) { // easy: Reflect, Thunder, Fire
+      return helperFunctions.kh2_has_all(snapshot, staticData, ['Reflect Element', 'Thunder Element', 'Fire Element']);
+    } else if (fightLogic === 1) { // normal: Reflect, Fire
+      return helperFunctions.kh2_has_all(snapshot, staticData, ['Reflect Element', 'Fire Element']);
+    } else { // hard: Reflect only
+      return snapshot?.inventory?.['Reflect Element'] > 0;
+    }
+  },
+
+  /**
+   * Check if Hostile Program fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_hostile_program_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Hostile Program fight
+   */
+  get_hostile_program_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const donaldLimit = ['Fantasia', 'Flare Force'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const summons = ['Chicken Little', 'Stitch', 'Genie', 'Peter Pan'];
+    const reflectElement = ['Reflect Element'];
+
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [donaldLimit, formList, summons, reflectElement],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 4; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 3; // normal
+    return categoriesAvailable >= 2; // hard
+  },
+
+  /**
+   * Check if Transport fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_transport_fight_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Transport fight
+   */
+  get_transport_fight_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const transportTools = {
+      'Reflect Element': 3,
+      'Stitch': 1,
+      'Chicken Little': 1,
+      'Magnet Element': 2,
+      'Explosion': 1,
+      'Finishing Leap': 1,
+      'Thunder Element': 3,
+      'Fantasia': 1,
+      'Flare Force': 1,
+      'Genie': 1
+    };
+
+    if (fightLogic === 0) { // easy: All requirements met
+      return helperFunctions.kh2_dict_count(transportTools, snapshot);
+    } else { // normal/hard: Count items that meet their requirements
+      const metCount = helperFunctions.kh2_dict_one_count(transportTools, snapshot);
+      if (fightLogic === 1) return metCount >= 7; // normal
+      return metCount >= 5; // hard
+    }
+  },
+
+  /**
+   * Check if Transport movement requirements are met.
+   * Based on worlds/kh2/Rules.py:get_transport_movement_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player meets Transport movement requirements
+   */
+  get_transport_movement_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const magic = ['Fire Element', 'Blizzard Element', 'Thunder Element',
+                   'Reflect Element', 'Cure Element', 'Magnet Element'];
+
+    if (fightLogic === 0) { // easy: High Jump 3, Aerial Dodge 3, Glide 3
+      return helperFunctions.kh2_dict_count(
+        {'High Jump': 3, 'Aerial Dodge': 3, 'Glide': 3},
+        snapshot
+      );
+    } else if (fightLogic === 1) { // normal: High Jump 2, Aerial Dodge 2, Glide 3
+      return helperFunctions.kh2_dict_count(
+        {'High Jump': 2, 'Aerial Dodge': 2, 'Glide': 3},
+        snapshot
+      );
+    } else { // hard: Multiple option combinations
+      const option1 = helperFunctions.kh2_dict_count(
+        {'High Jump': 2, 'Aerial Dodge': 1, 'Glide': 2}, snapshot
+      ) && helperFunctions.kh2_has_any(snapshot, staticData, magic);
+
+      const option2 = helperFunctions.kh2_dict_count(
+        {'High Jump': 1, 'Aerial Dodge': 3, 'Glide': 2}, snapshot
+      ) && helperFunctions.kh2_has_any(snapshot, staticData, magic);
+
+      const option3 = helperFunctions.kh2_dict_count(
+        {'High Jump': 1, 'Aerial Dodge': 1, 'Glide': 3}, snapshot
+      );
+
+      const option4 = helperFunctions.kh2_has_all(snapshot, staticData, ['Master Form', 'Aerial Dodge']) &&
+                     helperFunctions.kh2_has_any(snapshot, staticData, magic);
+
+      return option1 || option2 || option3 || option4;
+    }
+  },
+
+  /**
+   * Check if Old Pete fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_old_pete_rules
+   * The fight is free with no requirements.
+   *
+   * @returns {boolean} Always returns true
+   */
+  get_old_pete_rules() {
+    return true;
+  },
+
+  /**
+   * Check if Future Pete fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_future_pete_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Future Pete fight
+   */
+  get_future_pete_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [defensiveTool, gapCloser, formList],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 3; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 2; // normal
+    return categoriesAvailable >= 1; // hard
+  },
+
+  /**
+   * Check if Experiment fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_experiment_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Experiment fight
+   */
+  get_experiment_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+    const summons = ['Chicken Little', 'Stitch', 'Genie', 'Peter Pan'];
+
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [formList, defensiveTool, partyLimit, summons],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 4; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 3; // normal
+    return categoriesAvailable >= 2; // hard
+  },
+
+  /**
+   * Check if Groundshaker fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_groundshaker_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Groundshaker fight
+   */
+  get_groundshaker_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const airComboCount = snapshot?.inventory?.['Air Combo Plus'] || 0;
+    const hasBerserkCharge = snapshot?.inventory?.['Berserk Charge'] > 0;
+    const hasCure = snapshot?.inventory?.['Cure Element'] > 0;
+    const hasReflect = snapshot?.inventory?.['Reflect Element'] > 0;
+
+    if (fightLogic === 0) { // easy: Air Combo Plus (2) AND Berserk Charge AND Cure AND Reflect
+      return airComboCount >= 2 &&
+        helperFunctions.kh2_has_all(snapshot, staticData, ['Berserk Charge', 'Cure Element', 'Reflect Element']);
+    } else if (fightLogic === 1) { // normal: Berserk Charge AND Reflect AND Cure
+      return helperFunctions.kh2_has_all(snapshot, staticData, ['Berserk Charge', 'Reflect Element', 'Cure Element']);
+    } else { // hard: (Berserk Charge OR Air Combo Plus (2)) AND Reflect
+      return (hasBerserkCharge || airComboCount >= 2) && hasReflect;
+    }
+  },
+
+  /**
+   * Check if Xaldin fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_xaldin_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Xaldin fight
+   */
+  get_xaldin_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const aerialMove = ['Aerial Dive', 'Aerial Spiral', 'Horizontal Slash', 'Aerial Sweep', 'Aerial Finish'];
+    const hasGuard = snapshot?.inventory?.['Guard'] > 0;
+    const aerialMoveCount = helperFunctions.kh2_list_count_sum(aerialMove, snapshot);
+
+    if (fightLogic === 0) { // easy: Guard AND (Valor/Master/Final) AND 2+ aerial moves
+      const forms = ['Valor Form', 'Master Form', 'Final Form'];
+      const hasGuardAndForms = helperFunctions.kh2_list_any_sum(
+        [['Guard'], forms],
+        snapshot
+      ) >= 2;
+      return hasGuardAndForms && aerialMoveCount >= 2;
+    } else if (fightLogic === 1) { // normal: Guard AND 1+ aerial move
+      const hasAerialMove = helperFunctions.kh2_list_any_sum([aerialMove], snapshot) >= 1;
+      return hasGuard && hasAerialMove;
+    } else { // hard: Guard only
+      return hasGuard;
+    }
+  },
+
+  /**
+   * Check if MCP (Master Control Program) fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_mcp_rules
+   * Same requirements as Hostile Program
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access MCP fight
+   */
+  get_mcp_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const donaldLimit = ['Fantasia', 'Flare Force'];
+    const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+    const summons = ['Chicken Little', 'Stitch', 'Genie', 'Peter Pan'];
+    const reflectElement = ['Reflect Element'];
+
+    const categoriesAvailable = helperFunctions.kh2_list_any_sum(
+      [donaldLimit, formList, summons, reflectElement],
+      snapshot
+    );
+
+    if (fightLogic === 0) return categoriesAvailable >= 4; // easy
+    if (fightLogic === 1) return categoriesAvailable >= 3; // normal
+    return categoriesAvailable >= 2; // hard
+  },
+
+  /**
+   * Check if Titan Cup is accessible.
+   * Based on worlds/kh2/Rules.py:get_titan_cup_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Titan Cup
+   */
+  get_titan_cup_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const summons = ['Chicken Little', 'Stitch', 'Genie', 'Peter Pan'];
+    const summonsCount = helperFunctions.kh2_list_count_sum(summons, snapshot);
+    const reflectCount = snapshot?.inventory?.['Reflect Element'] || 0;
+
+    // Check basic requirements based on fight logic
+    let basicRequirements = false;
+    if (fightLogic === 0) { // easy: 4 summons + Reflera (2)
+      basicRequirements = summonsCount >= 4 && reflectCount >= 2;
+    } else if (fightLogic === 1) { // normal: 3 summons + Reflera (2)
+      basicRequirements = summonsCount >= 3 && reflectCount >= 2;
+    } else { // hard: 2 summons + Reflera (2)
+      basicRequirements = summonsCount >= 2 && reflectCount >= 2;
+    }
+
+    // Also requires Hades Event OR Hades Cup Trophy
+    const hasHadesAccess = (snapshot?.inventory?.['Hades Event'] > 0) ||
+                          (snapshot?.inventory?.['Hades Cup Trophy'] > 0);
+
+    return basicRequirements && hasHadesAccess;
+  },
+
+  /**
+   * Utility: Sum up the count of all items in a list.
+   * Based on worlds/kh2/Rules.py:93-100
+   *
+   * @param {Array<string>} itemList - Array of item names
+   * @param {Object} snapshot - Game state snapshot
+   * @returns {number} Total count of all items in the list
+   */
+  kh2_list_count_sum(itemList, snapshot) {
+    return itemList.reduce((sum, itemName) =>
+      sum + (snapshot?.inventory?.[itemName] || 0), 0);
+  },
+
+  /**
    * Utility: Check if player has any item from a list of item lists.
    * Based on worlds/kh2/Rules.py:101-108
    *
@@ -1112,11 +1435,12 @@ export const helperFunctions = {
    * Utility: Check if player has all items from a list.
    * Based on worlds/kh2/Rules.py:151-153
    *
-   * @param {Array<string>} items - Array of item names
    * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @param {Array<string>} items - Array of item names
    * @returns {boolean} True if player has at least one of all items
    */
-  kh2_has_all(items, snapshot) {
+  kh2_has_all(snapshot, staticData, items) {
     return items.every(item => snapshot?.inventory?.[item] > 0);
   },
 
@@ -1124,11 +1448,12 @@ export const helperFunctions = {
    * Utility: Check if player has any item from a list.
    * Based on worlds/kh2/Rules.py:155-156
    *
-   * @param {Array<string>} items - Array of item names
    * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @param {Array<string>} items - Array of item names
    * @returns {boolean} True if player has at least one item
    */
-  kh2_has_any(items, snapshot) {
+  kh2_has_any(snapshot, staticData, items) {
     return items.some(item => snapshot?.inventory?.[item] > 0);
   }
 };

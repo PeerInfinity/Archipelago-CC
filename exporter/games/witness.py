@@ -161,6 +161,11 @@ class WitnessGameExportHandler(GenericGameExportHandler):
     def postprocess_rule(self, rule: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
         """
         Post-process location access rules to simplify region reachability patterns.
+
+        TEMPORARY WORKAROUND: Simplifying all region checks to true for now.
+        TODO: Properly convert region.can_reach patterns to can_reach rules with
+        the correct region name. This requires analyzer-level changes to track
+        which region object a bound method is attached to.
         """
         return self._simplify_region_reachability_pattern(rule)
 

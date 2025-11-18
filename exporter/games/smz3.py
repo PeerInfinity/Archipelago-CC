@@ -19,6 +19,8 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
     def __init__(self):
         super().__init__()
         logger.info("SMZ3 exporter initialized")
+        with open('/tmp/smz3_debug.log', 'a') as f:
+            f.write("SMZ3 exporter __init__ called\n")
 
     def _handle_medallion_entrance(self, region_object, entrance_name: str) -> Optional[Dict[str, Any]]:
         """
@@ -191,19 +193,28 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
         Returns None to fall back to standard analysis, or a dict with the analyzed rule.
         """
+        # Debug output to see if this is being called
+        with open('/tmp/smz3_debug.log', 'a') as f:
+            f.write(f"[SMZ3] override_rule_analysis called for: {rule_target_name}\n")
+        print(f"[SMZ3] override_rule_analysis called for: {rule_target_name}", flush=True)
+
         # Only handle rules with a target name
         if not rule_target_name:
+            print(f"[SMZ3] No rule_target_name, returning None")
             return None
 
         # Skip item rules
         if "Item Rule" in str(rule_target_name):
+            print(f"[SMZ3] Skipping item rule")
             return None
 
         # Handle entrance rules (contain "->")
         if "->" in str(rule_target_name):
+            print(f"[SMZ3] Handling entrance rule")
             return self._handle_entrance_rule(rule_func, rule_target_name)
 
         logger.info(f"Processing location: {rule_target_name}")
+        print(f"[SMZ3] Processing location: {rule_target_name}")
 
         # Try to extract the 'loc' object from default arguments (SMZ3 uses lambda state, loc=loc: ...)
         loc_object = None
@@ -212,7 +223,9 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             arg_names = rule_func.__code__.co_varnames[:rule_func.__code__.co_argcount]
             defaults = rule_func.__defaults__ or ()
 
-            logger.info(f"Function args for {rule_target_name}: {arg_names}, defaults: {len(defaults)}")
+            print(f"[SMZ3] Function has __code__ and __defaults__")
+            print(f"[SMZ3]   arg_names: {arg_names}")
+            print(f"[SMZ3]   num defaults: {len(defaults)}")
 
             # SMZ3 location rules have signature: lambda state, loc=loc: ...
             # So 'loc' should be the second parameter with a default value
@@ -221,12 +234,13 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 # Defaults are aligned to the end of the parameter list
                 # If we have 2 params and 1 default, the default is for the last param
                 defaults_offset = len(arg_names) - len(defaults)
+                print(f"[SMZ3]   loc_index: {loc_index}, defaults_offset: {defaults_offset}")
                 if loc_index >= defaults_offset:
                     loc_object = defaults[loc_index - defaults_offset]
-                    logger.info(f"Found 'loc' object from defaults: {type(loc_object)}")
+                    print(f"[SMZ3]   Found 'loc' object: {type(loc_object)}")
 
         if not loc_object:
-            logger.info(f"No 'loc' object found in defaults for {rule_target_name}")
+            print(f"[SMZ3] No 'loc' object found, returning None")
             return None
 
         # Check if this looks like a TotalSMZ3 Location object
@@ -234,21 +248,22 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         has_available = hasattr(loc_object, 'Available')
         logger.info(f"loc_object attributes - canAccess: {has_can_access}, Available: {has_available}, type: {type(loc_object)}")
 
-        if not has_can_access or not has_available:
+        if not has_available:
             logger.info(f"Not a TotalSMZ3 Location object for {rule_target_name}")
             return None
 
-        logger.info(f"Found TotalSMZ3 Location object for '{rule_target_name}', extracting canAccess logic")
+        logger.info(f"Found TotalSMZ3 Location object for '{rule_target_name}', extracting Available logic")
 
         # Now we have the TotalSMZ3 Location object!
-        # Extract and analyze its canAccess function
+        # Extract and analyze its Available function
         try:
-            can_access_func = loc_object.canAccess
+            # SMZ3 uses Available method, not canAccess
+            can_access_func = loc_object.Available
 
             # Import the analyzer here to avoid circular imports
             from exporter.analyzer import analyze_rule
 
-            # Analyze the canAccess function
+            # Analyze the Available function
             # This function has signature: lambda items: <requirements>
             # where items is a TotalSMZ3 Progression object
             analyzed_rule = analyze_rule(can_access_func)
@@ -257,7 +272,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 logger.info(f"Successfully extracted location logic for '{rule_target_name}'")
                 return analyzed_rule
             else:
-                logger.warning(f"Failed to analyze canAccess for '{rule_target_name}', falling back to default")
+                logger.warning(f"Failed to analyze Available for '{rule_target_name}', falling back to default")
                 return None
 
         except Exception as e:

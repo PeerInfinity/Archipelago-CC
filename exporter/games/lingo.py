@@ -218,12 +218,15 @@ class LingoGameExportHandler(GenericGameExportHandler):
         if not rule:
             return rule
 
-        # First, replace all world.player_logic references with settings
-        rule = self._replace_world_references(rule)
-
         # Extract door information from entrance name
         door_room = None
         door_name = None
+        target_region = None
+
+        # Extract target region from entrance name (format: "Source to Target" or "Source to Target (through ...)")
+        to_match = re.search(r'to ([^(]+)', entrance_name)
+        if to_match:
+            target_region = to_match.group(1).strip()
 
         # Pattern: "... (through Room Name - Door Name)"
         through_match = re.search(r'\(through ([^-]+) - ([^)]+)\)', entrance_name)
@@ -231,6 +234,36 @@ class LingoGameExportHandler(GenericGameExportHandler):
             door_room = through_match.group(1).strip()
             door_name = through_match.group(2).strip()
             logger.debug(f"Entrance '{entrance_name}' uses door '{door_name}' in room '{door_room}'")
+
+        # Check if the rule is broken (returns strings instead of booleans)
+        # This happens when the analyzer fails to properly analyze lingo_can_use_entrance
+        is_broken_rule = self._is_broken_entrance_rule(rule)
+
+        if is_broken_rule and door_name is not None:
+            # Replace with a proper helper call
+            logger.debug(f"Replacing broken entrance rule for '{entrance_name}' with helper call")
+            return {
+                'type': 'helper',
+                'name': 'lingo_can_use_entrance',
+                'args': [
+                    {'type': 'constant', 'value': target_region},
+                    {
+                        'type': 'tuple',
+                        'elements': [
+                            {'type': 'constant', 'value': door_room},
+                            {'type': 'constant', 'value': door_name}
+                        ]
+                    }
+                ]
+            }
+        elif is_broken_rule and door_name is None:
+            # No door, should just return true
+            logger.debug(f"Replacing broken entrance rule for '{entrance_name}' with constant true")
+            return {'type': 'constant', 'value': True}
+
+        # For non-broken rules (like Menu exits), keep them as-is or do normal processing
+        # First, replace all world.player_logic references with settings
+        rule = self._replace_world_references(rule)
 
         # Simplify the rule based on door information
         return self._simplify_entrance_rule(rule, door_room, door_name, entrance_name)
@@ -363,6 +396,36 @@ class LingoGameExportHandler(GenericGameExportHandler):
                 result[key] = value
 
         return result
+
+    def _is_broken_entrance_rule(self, rule: Dict[str, Any]) -> bool:
+        """
+        Check if an entrance rule is broken (returns strings instead of booleans).
+
+        Broken rules have patterns like:
+        - Conditional with constant string values in if_true/if_false branches
+        - Testing string constants against null
+
+        This method recursively checks nested conditionals.
+        """
+        if not isinstance(rule, dict):
+            return False
+
+        rule_type = rule.get('type')
+
+        # Check if this node is a constant string (broken return value)
+        if rule_type == 'constant' and isinstance(rule.get('value'), str):
+            return True
+
+        # Check for the broken pattern: conditional that returns constant strings
+        if rule_type == 'conditional':
+            if_true = rule.get('if_true', {})
+            if_false = rule.get('if_false', {})
+
+            # Recursively check both branches
+            if self._is_broken_entrance_rule(if_true) or self._is_broken_entrance_rule(if_false):
+                return True
+
+        return False
 
     def _replace_door_variable(self, rule: Dict[str, Any], door_room: str, door_name: str) -> Dict[str, Any]:
         """

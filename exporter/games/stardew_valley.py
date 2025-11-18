@@ -88,6 +88,31 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
 
         return item_data
 
+    def get_game_info(self, world) -> Dict[str, Any]:
+        """Override to add Stardew Valley-specific game info.
+
+        Adds total_progression_items count which is needed for computing
+        "Received Progression Percent" in the frontend.
+        """
+        # Get base game info
+        game_info = super().get_game_info(world)
+
+        # Add total progression items count
+        # This is used to calculate "Received Progression Percent"
+        if hasattr(world, 'total_progression_items'):
+            game_info['total_progression_items'] = world.total_progression_items
+            logger.debug(f"Added total_progression_items: {world.total_progression_items}")
+        else:
+            # Fallback: count progression items in the itempool
+            total_prog = 0
+            for item in world.multiworld.itempool:
+                if item.player == world.player and item.advancement:
+                    total_prog += 1
+            game_info['total_progression_items'] = total_prog
+            logger.debug(f"Calculated total_progression_items from itempool: {total_prog}")
+
+        return game_info
+
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Override rule analysis to handle Stardew Valley's custom StardewRule objects.
 

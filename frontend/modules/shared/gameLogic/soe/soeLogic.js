@@ -82,9 +82,10 @@ function countProgress(snapshot, staticData, progressId, visitedRules = new Set(
         }
 
         // If requirements are met, add the provides to our count
+        // Only add positive counts - matches Python logic in worlds/soe/logic.py:70
         if (requirementsMet) {
           for (const provide of rule.provides) {
-            if (provide.progress_id === progressId) {
+            if (provide.progress_id === progressId && provide.count > 0) {
               count += provide.count;
             }
           }

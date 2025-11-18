@@ -125,6 +125,7 @@
  * - locations_checked: Checks total locations checked
  * - total_items_count: Checks total items collected
  * - can_reach: Checks region reachability
+ * - capability: Checks if player has a specific capability (calls can_* helper)
  * - and/or/not: Boolean logic operators
  * - compare: Comparison operators (>, <, ==, !=, in, etc.)
  * - attribute: Property access on objects
@@ -597,6 +598,23 @@ export const evaluateRule = (rule, context, depth = 0) => {
       case 'constant': {
         // Keep constant for backward compatibility
         result = rule.value;
+        break;
+      }
+
+      case 'tuple': {
+        // Handle tuple types (used for door arguments in Lingo and similar games)
+        // Evaluate each element and return as an array
+        if (!rule.elements || !Array.isArray(rule.elements)) {
+          result = [];
+          break;
+        }
+        const elements = rule.elements.map((elem) => evaluateRule(elem, context, depth + 1));
+        // If any element is undefined, the tuple is undefined
+        if (elements.some((elem) => elem === undefined)) {
+          result = undefined;
+        } else {
+          result = elements;
+        }
         break;
       }
 
@@ -1740,6 +1758,32 @@ export const evaluateRule = (rule, context, depth = 0) => {
           // No access rule means the entrance is accessible if the region is reachable
           result = true;
         }
+        break;
+      }
+
+      case 'capability': {
+        // Handle capability rules - inferred rules that check if player has a certain capability
+        // The capability name (e.g., "gain_lp_every_turn") corresponds to a helper function
+        // with "can_" prefix (e.g., "can_gain_lp_every_turn")
+        const capabilityName = rule.capability;
+        if (!capabilityName) {
+          log('warn', '[evaluateRule] Capability rule missing capability name', { rule });
+          result = undefined;
+          break;
+        }
+
+        // Convert capability name to helper function name
+        // e.g., "gain_lp_every_turn" -> "can_gain_lp_every_turn"
+        const helperName = `can_${capabilityName}`;
+
+        if (!isValidContext || typeof context.executeHelper !== 'function') {
+          log('warn', `[evaluateRule] Cannot execute capability helper '${helperName}' - invalid context`);
+          result = undefined;
+          break;
+        }
+
+        // Execute the helper function (capabilities typically don't have arguments)
+        result = context.executeHelper(helperName);
         break;
       }
 
