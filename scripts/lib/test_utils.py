@@ -225,14 +225,14 @@ def get_world_info(template_file: str, templates_dir: str, world_mapping: Dict[s
     if game_name and game_name in world_mapping:
         world_info = world_mapping[game_name].copy()
         world_info['game_name_from_yaml'] = game_name
-        world_info['normalized_name'] = normalize_game_name(template_file)
+        world_info['game_name_from_filename'] = normalize_game_name(template_file)
         return world_info
     else:
         # Fallback to normalized name
-        normalized_name = normalize_game_name(template_file)
+        game_name_from_filename = normalize_game_name(template_file)
         return {
             'game_name_from_yaml': game_name,
-            'normalized_name': normalized_name,
+            'game_name_from_filename': game_name_from_filename,
             'world_directory': None,
             'has_custom_exporter': False,
             'has_custom_game_logic': False,

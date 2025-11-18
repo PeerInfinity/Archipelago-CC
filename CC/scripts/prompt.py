@@ -60,8 +60,8 @@ def build_prompt(game_name, game_info, seed=1, use_cloud_docs=False, use_full_sp
     # Compute seed ID from seed number
     seed_id = get_seed_id(seed)
 
-    # Ensure game name has .yaml extension for template path
-    template_name = game_name if game_name.endswith('.yaml') else f"{game_name}.yaml"
+    # Ensure game name has .yaml extension for template filename
+    template_filename = game_name if game_name.endswith('.yaml') else f"{game_name}.yaml"
 
     # Build exporter message
     if game_info['has_custom_exporter']:
@@ -98,7 +98,7 @@ Before running any tests, configure the host settings for full spoilers:
 python scripts/setup/update_host_settings.py full-spoilers
 
 Alternatively, you can use the --full-spoilers parameter when running test-all-templates.py:
-python scripts/test/test-all-templates.py --full-spoilers --include-list "{template_name}" --seed {seed} -p
+python scripts/test/test-all-templates.py --full-spoilers --include-list "{template_filename}" --seed {seed} -p
 
 Full spoilers mode sets extend_sphere_log_to_all_locations to true in host.yaml, which provides more detailed sphere information in the test results.
 """
@@ -110,7 +110,7 @@ The next game we want to work on is {game_name}.
 
 The command to generate the rules.json file is
 
-python Generate.py --weights_file_path "Templates/{template_name}" --multi 1 --seed {seed} > generate_output.txt
+python Generate.py --weights_file_path "Templates/{template_filename}" --multi 1 --seed {seed} > generate_output.txt
 
 The command to run the spoiler test is
 
@@ -154,7 +154,7 @@ Please make as much progress as you can without supervision."""
 
 # Removed:
 
-# python scripts/test/test-all-templates.py --include-list "{template_name}" --seed {seed} -p
+# python scripts/test/test-all-templates.py --include-list "{template_filename}" --seed {seed} -p
 
 # - Important: Every time you add a new issue to remaining-exporter-issues.md, immediately run the command
 # - python CC/scripts/delegate.py

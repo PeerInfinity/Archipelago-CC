@@ -54,8 +54,8 @@ def log_memory_usage(template_name: str, stage: str):
 
 def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False) -> Dict:
     """Test a single template file and return results."""
-    template_name = os.path.basename(template_file)
-    game_name = normalize_game_name(template_name)
+    template_filename = os.path.basename(template_file)
+    game_name_from_filename = normalize_game_name(template_filename)
 
     # Compute seed ID directly from seed number
     try:
@@ -67,12 +67,13 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
     # Get world info using the provided world mapping
     world_info = get_world_info(template_file, templates_dir, world_mapping)
 
-    print(f"\n=== Testing {template_name} ===")
-    log_memory_usage(template_name, "start")
+    print(f"\n=== Testing {template_filename} ===")
+    log_memory_usage(template_filename, "start")
 
     result = {
-        'template_name': template_name,
-        'game_name': game_name,
+        'template_filename': template_filename,
+        'game_name_from_yaml': world_info.get('game_name_from_yaml'),
+        'game_name_from_filename': game_name_from_filename,
         'seed': seed,
         'seed_id': seed_id,
         'timestamp': datetime.now().isoformat(),
@@ -144,8 +145,8 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
     # Step 1: Run Generate.py (skip if test_only mode)
     if not test_only:
         if dry_run:
-            print(f"[DRY RUN] Would run Generate.py for {template_name}...")
-            template_file = template_name if template_name.endswith(('.yaml', '.yml')) else f"{template_name}.yaml"
+            print(f"[DRY RUN] Would run Generate.py for {template_filename}...")
+            template_file = template_filename if template_filename.endswith(('.yaml', '.yml')) else f"{template_filename}.yaml"
             template_path = os.path.join(templates_dir, template_file)
             generate_cmd = [
                 "python", "Generate.py",
@@ -158,9 +159,9 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
             result['dry_run'] = True
             return result
 
-        print(f"Running Generate.py for {template_name}...")
+        print(f"Running Generate.py for {template_filename}...")
         # Ensure template name has .yaml extension for the file path
-        template_file = template_name if template_name.endswith(('.yaml', '.yml')) else f"{template_name}.yaml"
+        template_file = template_filename if template_filename.endswith(('.yaml', '.yml')) else f"{template_filename}.yaml"
         # Use the provided templates_dir, which is relative to Players/ directory
         template_path = os.path.join(templates_dir, template_file)
         generate_cmd = [
@@ -209,25 +210,25 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
         if gen_return_code != 0:
             print(f"Generation failed with return code {gen_return_code}")
-            log_memory_usage(template_name, "after generation (failed)")
+            log_memory_usage(template_filename, "after generation (failed)")
             return result
 
-        log_memory_usage(template_name, "after generation")
+        log_memory_usage(template_filename, "after generation")
     else:
-        print(f"Skipping generation for {template_name} (test-only mode)")
+        print(f"Skipping generation for {template_filename} (test-only mode)")
         # In test-only mode, don't overwrite error counts - keep the defaults initialized above
         # This preserves any existing generation error data from previous runs
         result['generation']['note'] = 'Skipped in test-only mode'
 
     # Return early if export_only mode
     if export_only:
-        print(f"Export completed for {template_name} (export-only mode)")
+        print(f"Export completed for {template_filename} (export-only mode)")
         return result
 
     # Check if rules file exists (files are actually in frontend/presets/)
     # Use world_directory from world_info if available (for multitemplate mode),
-    # otherwise fall back to game_name
-    preset_dir = world_info.get('world_directory', game_name) if world_info else game_name
+    # otherwise fall back to game_name_from_filename
+    preset_dir = world_info.get('world_directory', game_name_from_filename) if world_info else game_name_from_filename
     rules_path = f"./presets/{preset_dir}/{seed_id}/{seed_id}_rules.json"
     full_rules_path = os.path.join(project_root, 'frontend', rules_path.lstrip('./'))
     if not os.path.exists(full_rules_path):
@@ -374,7 +375,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         result['spoiler_test']['success'] = spoiler_return_code == 0
         result['spoiler_test']['processing_time_seconds'] = spoiler_processing_time
 
-        log_memory_usage(template_name, "after spoiler test")
+        log_memory_usage(template_filename, "after spoiler test")
 
         # Step 3: Run test analysis
         print("Running test analysis...")
@@ -444,12 +445,12 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         }
 
     if multiplayer:
-        print(f"Completed {template_name}: Generation={'[PASS]' if result['generation']['success'] else '[FAIL]'}, "
+        print(f"Completed {template_filename}: Generation={'[PASS]' if result['generation']['success'] else '[FAIL]'}, "
               f"Test={'[PASS]' if result['multiplayer_test']['success'] else '[FAIL]'}, "
               f"Gen Errors={result['generation']['error_count']}, "
               f"Locations Checked={result['multiplayer_test']['locations_checked']}/{result['multiplayer_test']['total_locations']}")
     else:
-        print(f"Completed {template_name}: Generation={'[PASS]' if result['generation']['success'] else '[FAIL]'}, "
+        print(f"Completed {template_filename}: Generation={'[PASS]' if result['generation']['success'] else '[FAIL]'}, "
               f"Test={'[PASS]' if result['spoiler_test']['pass_fail'] == 'passed' else '[FAIL]'}, "
               f"Gen Errors={result['generation']['error_count']}, "
               f"Sphere Reached={result['spoiler_test']['sphere_reached']}, "
@@ -460,13 +461,13 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
 def test_template_seed_range(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed_list: List[int], export_only: bool = False, test_only: bool = False, stop_on_failure: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False) -> Dict:
     """Test a template file with multiple seeds and return aggregated results."""
-    template_name = os.path.basename(template_file)
+    template_filename = os.path.basename(template_file)
 
-    print(f"\n=== Testing {template_name} with {len(seed_list)} seeds ===")
+    print(f"\n=== Testing {template_filename} with {len(seed_list)} seeds ===")
 
     # Initialize seed range result
     seed_range_result = {
-        'template_name': template_name,
+        'template_filename': template_filename,
         'seed_range': f"{seed_list[0]}-{seed_list[-1]}" if len(seed_list) > 1 else str(seed_list[0]),
         'total_seeds_tested': 0,
         'seeds_passed': 0,
@@ -588,7 +589,7 @@ def test_template_seed_range(template_file: str, templates_dir: str, project_roo
         seed_range_result['consecutive_passes_before_failure'] = seed_range_result['seeds_passed']
 
     # Print summary
-    print(f"\n=== Seed Range Summary for {template_name} ===")
+    print(f"\n=== Seed Range Summary for {template_filename} ===")
     print(f"Seeds tested: {total_tested}")
     print(f"Passed: {seed_range_result['seeds_passed']}")
     print(f"Failed: {seed_range_result['seeds_failed']}")
@@ -642,8 +643,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     Returns:
         Dictionary with test results
     """
-    template_name = os.path.basename(template_file)
-    game_name = normalize_game_name(template_name)
+    template_filename = os.path.basename(template_file)
+    game_name_from_filename = normalize_game_name(template_filename)
 
     # Compute seed ID
     try:
@@ -655,11 +656,12 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     # Get world info
     world_info = get_world_info(template_file, templates_dir, world_mapping)
 
-    print(f"\n=== Testing {template_name} (Multiworld Mode) ===")
+    print(f"\n=== Testing {template_filename} (Multiworld Mode) ===")
 
     result = {
-        'template_name': template_name,
-        'game_name': game_name,
+        'template_filename': template_filename,
+        'game_name_from_yaml': world_info.get('game_name_from_yaml'),
+        'game_name_from_filename': game_name_from_filename,
         'seed': seed,
         'seed_id': seed_id,
         'timestamp': datetime.now().isoformat(),
@@ -683,7 +685,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     }
 
     # Check prerequisites - the template must have passed all three other test types
-    print(f"Checking prerequisites for {template_name}...")
+    print(f"Checking prerequisites for {template_filename}...")
 
     # Load the three test results files
     spoiler_minimal_file = os.path.join(project_root, 'scripts/output/spoiler-minimal/test-results.json')
@@ -698,8 +700,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     if os.path.exists(spoiler_minimal_file):
         with open(spoiler_minimal_file, 'r') as f:
             spoiler_minimal_results = json.load(f)
-            if template_name in spoiler_minimal_results.get('results', {}):
-                template_result = spoiler_minimal_results['results'][template_name]
+            if template_filename in spoiler_minimal_results.get('results', {}):
+                template_result = spoiler_minimal_results['results'][template_filename]
                 if isinstance(template_result, dict):
                     # Check if this is seed range data (same logic as postprocessing script)
                     if 'seed_range' in template_result:
@@ -722,8 +724,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     if os.path.exists(spoiler_full_file):
         with open(spoiler_full_file, 'r') as f:
             spoiler_full_results = json.load(f)
-            if template_name in spoiler_full_results.get('results', {}):
-                template_result = spoiler_full_results['results'][template_name]
+            if template_filename in spoiler_full_results.get('results', {}):
+                template_result = spoiler_full_results['results'][template_filename]
                 if isinstance(template_result, dict):
                     # Check if this is seed range data (same logic as postprocessing script)
                     if 'seed_range' in template_result:
@@ -746,8 +748,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     if os.path.exists(multiplayer_file):
         with open(multiplayer_file, 'r') as f:
             multiplayer_results = json.load(f)
-            if template_name in multiplayer_results.get('results', {}):
-                template_result = multiplayer_results['results'][template_name]
+            if template_filename in multiplayer_results.get('results', {}):
+                template_result = multiplayer_results['results'][template_filename]
                 if isinstance(template_result, dict):
                     multiplayer_test = template_result.get('multiplayer_test', {})
                     generation = template_result.get('generation', {})
@@ -769,7 +771,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     print(f"  Multiplayer: {'PASS' if multiplayer_passed else 'FAIL'}")
 
     if require_prerequisites and not result['prerequisite_check']['all_prerequisites_passed']:
-        print(f"Skipping {template_name} - not all prerequisites passed")
+        print(f"Skipping {template_filename} - not all prerequisites passed")
         result['multiworld_test']['success'] = False
         result['multiworld_test']['skip_reason'] = 'Prerequisites not met'
         return result
@@ -815,14 +817,14 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
                         print(f"  Warning: Could not remove {old_template}: {e}")
 
         if dry_run:
-            print(f"[DRY RUN] Would copy {template_name} to multiworld directory...")
+            print(f"[DRY RUN] Would copy {template_filename} to multiworld directory...")
             print(f"[DRY RUN] Skipping actual file operations and tests")
             result['multiworld_test']['dry_run'] = True
             return result
         else:
-            print(f"Copying {template_name} to multiworld directory...")
-            source_path = os.path.join(templates_dir, template_name)
-            dest_path = os.path.join(multiworld_dir, template_name)
+            print(f"Copying {template_filename} to multiworld directory...")
+            source_path = os.path.join(templates_dir, template_filename)
+            dest_path = os.path.join(multiworld_dir, template_filename)
 
             try:
                 shutil.copy2(source_path, dest_path)
@@ -835,7 +837,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
 
         # Return early if export_only mode
         if export_only:
-            print(f"Template copied for {template_name} (export-only mode)")
+            print(f"Template copied for {template_filename} (export-only mode)")
             return result
     else:
         print(f"Skipping template copy (--multiworld-keep-templates mode)")
@@ -882,12 +884,12 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
             # Delete the template from multiworld directory since it failed
             try:
                 os.remove(dest_path)
-                print(f"  Removed {template_name} from multiworld directory due to generation failure")
+                print(f"  Removed {template_filename} from multiworld directory due to generation failure")
             except Exception as e:
                 print(f"  Error removing template: {e}")
             return result
     else:
-        print(f"Skipping generation for {template_name} (test-only mode)")
+        print(f"Skipping generation for {template_filename} (test-only mode)")
 
     # Step 2: Run spoiler tests for each player
     # Determine which players to test based on test_all_players flag
@@ -1005,20 +1007,20 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
 
     # If any player failed, delete the template from multiworld directory (unless keep_templates)
     if not all_players_passed:
-        print(f"\n  Multiworld test FAILED for {template_name}")
+        print(f"\n  Multiworld test FAILED for {template_filename}")
         if not keep_templates:
-            print(f"  Removing {template_name} from multiworld directory...")
+            print(f"  Removing {template_filename} from multiworld directory...")
             try:
                 os.remove(dest_path)
                 print(f"  Removed successfully")
             except Exception as e:
                 print(f"  Error removing template: {e}")
     else:
-        print(f"\n  Multiworld test PASSED for {template_name}")
+        print(f"\n  Multiworld test PASSED for {template_filename}")
         if not keep_templates:
-            print(f"  Keeping {template_name} in multiworld directory for future tests")
+            print(f"  Keeping {template_filename} in multiworld directory for future tests")
 
-    print(f"\nCompleted {template_name}: Multiworld Test={'[PASS]' if result['multiworld_test']['success'] else '[FAIL]'}, "
+    print(f"\nCompleted {template_filename}: Multiworld Test={'[PASS]' if result['multiworld_test']['success'] else '[FAIL]'}, "
           f"Players Passed={result['multiworld_test']['players_passed']}/{result['multiworld_test']['total_players_tested']}")
 
     return result
