@@ -256,6 +256,11 @@ def main():
         help='When used with --retest, only retest templates that failed on the specific seed being tested (requires --seed to be set)'
     )
     parser.add_argument(
+        '--retest-from-file',
+        type=str,
+        help='When used with --retest, specify the file to load previous test results from (defaults to auto-detect based on mode)'
+    )
+    parser.add_argument(
         '--include-error-details',
         action='store_true',
         help='Include first_error_line and first_warning_line fields in test results (disabled by default)'
@@ -548,7 +553,13 @@ def main():
     # Handle --retest mode: load existing results and filter to only failed tests
     if args.retest:
         # Determine the correct results file path based on mode
-        if args.multiworld:
+        if args.retest_from_file:
+            # Use explicitly specified file
+            retest_results_file = args.retest_from_file
+            # Make it absolute if it's relative
+            if not os.path.isabs(retest_results_file):
+                retest_results_file = os.path.join(project_root, retest_results_file)
+        elif args.multiworld:
             retest_results_file = os.path.join(project_root, 'scripts/output/multiworld/test-results.json')
         elif args.multiplayer:
             retest_results_file = os.path.join(project_root, 'scripts/output/multiplayer/test-results.json')
