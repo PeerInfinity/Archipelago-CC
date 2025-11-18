@@ -232,6 +232,8 @@ import { civ6StateModule } from './civ_6/civ6Logic.js';
 import { helperFunctions as cvcotmHelperFunctions } from './cvcotm/cvcotmLogic.js';
 import * as dlcquestLogic from './dlcquest/dlcquestLogic.js';
 import { dlcquestStateModule } from './dlcquest/dlcquestLogic.js';
+import * as factorioLogic from './factorio/factorioLogic.js';
+import { factorioStateModule } from './factorio/factorioLogic.js';
 import * as hkLogic from './hk/hkLogic.js';
 import { hkStateModule } from './hk/hkLogic.js';
 import * as hylics2Logic from './hylics2/hylics2Logic.js';
@@ -367,6 +369,12 @@ const GAME_REGISTRY = {
     helperFunctions: dlcquestLogic.helperFunctions,
     worldClasses: ['DLCqworld'],
     aliases: ['DLCQuest', 'DLC Quest']
+  },
+  'Factorio': {
+    logicModule: factorioLogic.factorioStateModule,
+    helperFunctions: factorioLogic.helperFunctions,
+    worldClasses: ['FactorioWorld'],
+    aliases: ['Factorio']
   },
   'Hollow Knight': {
     logicModule: hkLogic.hkStateModule,
