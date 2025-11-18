@@ -17,6 +17,14 @@ on:
         type: boolean
         default: false
 
+      delete_existing_results:
+        description: 'Delete existing test-results.json files before testing'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write  # Allow pushing commits and creating branches
+
 jobs:
   # Minimal Spoiler Tests (10 parallel jobs)
   test-minimal-spoiler:
@@ -157,6 +165,26 @@ jobs:
             fi
           else
             git checkout -b test-results-update origin/main
+          fi
+
+      - name: Delete existing test results
+        if: inputs.delete_existing_results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Delete all test-results.json files
+          git rm -f scripts/output/spoiler-minimal/test-results.json || true
+          git rm -f scripts/output/spoiler-full/test-results.json || true
+          git rm -f scripts/output/multiplayer/test-results.json || true
+          git rm -f scripts/output/multiworld/test-results.json || true
+          git rm -f scripts/output/multitemplate-minimal/test-results.json || true
+          git rm -f scripts/output/multitemplate-full/test-results.json || true
+
+          # Commit if there are changes
+          if ! git diff --staged --quiet; then
+            git commit -m "Delete existing test results before new test run"
+            git push origin test-results-update
           fi
 
       - name: Copy results and generate documentation
