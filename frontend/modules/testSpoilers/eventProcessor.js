@@ -200,11 +200,40 @@ export class EventProcessor {
         }
 
         try {
+          this.logCallback('info', `🚀 DEBUG: Processing sphere ${context.sphere_number}`);
           // Only clear event items for sphere 0
           if (context.sphere_number === 0) {
             await stateManager.clearEventItems();
             if (this.verboseMode) {
               this.logCallback('debug', 'Event items cleared for sphere 0.');
+            }
+
+            // At sphere 0, we need to ensure starting items are in the inventory
+            // Starting items appear in resolved_items but NOT in base_items (since no locations have been checked yet)
+            this.logCallback('info', `🔍 Sphere 0 - inventoryDetails: ${JSON.stringify(sphereData.inventoryDetails)}`);
+            const resolved_items_from_log = sphereData.inventoryDetails?.resolved_items || {};
+            this.logCallback('info', `🔍 Sphere 0 - resolved_items: ${JSON.stringify(resolved_items_from_log)}`);
+            this.logCallback('info', `🔍 Sphere 0 - resolved_items keys count: ${Object.keys(resolved_items_from_log).length}`);
+
+            if (Object.keys(resolved_items_from_log).length > 0) {
+              this.logCallback('info', `🎯 Ensuring starting items are in inventory: ${Object.keys(resolved_items_from_log).join(', ')}`);
+
+              // Use batch mode to add all starting items efficiently
+              await stateManager.beginBatchUpdate();
+              for (const [itemName, count] of Object.entries(resolved_items_from_log)) {
+                // Add starting items to inventory
+                this.logCallback('debug', `Adding starting item: ${itemName} x${count}`);
+                for (let i = 0; i < count; i++) {
+                  await stateManager.addItemToInventory(itemName);
+                }
+              }
+              await stateManager.commitBatchUpdate();
+
+              // Wait for state to settle after adding starting items
+              await stateManager.pingWorker('starting_items_added', 10000);
+              this.logCallback('info', `✅ Starting items added successfully`);
+            } else {
+              this.logCallback('warn', `No starting items found in resolved_items at sphere 0`);
             }
           } else {
             if (this.verboseMode) {
