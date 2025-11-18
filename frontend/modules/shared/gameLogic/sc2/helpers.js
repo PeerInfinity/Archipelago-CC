@@ -654,7 +654,11 @@ export default {
         );
     },
     terran_base_trasher: () => false,
-    terran_can_rescue: () => false,
+    terran_can_rescue: (snapshot, staticData) => {
+        // Can rescue requires ground units that can reach and defend the rescue targets
+        // Any terran common unit should suffice
+        return terran_common_unit(snapshot, staticData);
+    },
     terran_cliffjumper: () => false,
     terran_able_to_snipe_defiler: () => false,
     terran_respond_to_colony_infestations: (snapshot, staticData) => {
