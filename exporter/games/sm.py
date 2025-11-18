@@ -63,20 +63,17 @@ class SMGameExportHandler(GenericGameExportHandler):
         return False
 
     def _try_simplify_evalSMBool(self, args: list) -> Optional[Dict[str, Any]]:
-        """Simplify ALL evalSMBool calls to constant True.
+        """Try to simplify evalSMBool calls if possible.
 
         Super Metroid uses VARIA logic system (sm.wor, sm.canFly, etc.) which
-        is complex and can't be fully replicated in the frontend. Since the
-        Python backend has already done all the SMBoolManager evaluation and
-        encoded it in the sphere log, we can trust the sphere log to enforce
-        correct progression rather than trying to replicate VARIA logic.
+        is complex. We'll try to export the actual logic so the frontend can
+        evaluate it properly.
 
-        All evalSMBool calls are simplified to constant True.
+        For now, we DON'T simplify - we let the actual rule structure pass through.
         """
-        # Simplify ALL evalSMBool calls to True
-        # The sphere log will enforce the correct progression
-        logger.debug("SM: Simplifying evalSMBool call to constant True")
-        return {'type': 'constant', 'value': True}
+        # Don't simplify - return None to indicate no simplification
+        logger.debug("SM: NOT simplifying evalSMBool call - preserving actual logic")
+        return None
 
     _expand_call_count = 0
 
@@ -133,10 +130,12 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         # Handle helper nodes with name='evalSMBool' (analyzer converts self.evalSMBool to helper)
         if rule_type == 'helper' and rule.get('name') == 'evalSMBool':
-            # Simplify ALL evalSMBool calls to constant True
-            # No need to expand args since we're not using them
-            print("[SM] Simplifying evalSMBool helper to constant True")
-            return self._try_simplify_evalSMBool([])
+            # Don't simplify - preserve the evalSMBool helper call
+            # but expand its arguments
+            print("[SM] Preserving evalSMBool helper (not simplifying)")
+            if 'args' in rule:
+                rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
+            return rule
 
         # Transform function_call nodes where function is an attribute access on 'self'
         # (This is kept for compatibility but may not be needed if analyzer converts to helper)
@@ -146,11 +145,12 @@ class SMGameExportHandler(GenericGameExportHandler):
                 obj = function.get('object', {})
                 attr = function.get('attr')
 
-                # Transform self.evalSMBool(...) into simplified constant
+                # Transform self.evalSMBool(...) into helper call
                 if obj.get('type') == 'name' and obj.get('name') == 'self' and attr == 'evalSMBool':
-                    # Simplify ALL evalSMBool calls to constant True
-                    print("[SM] Simplifying evalSMBool function_call to constant True")
-                    return self._try_simplify_evalSMBool([])
+                    # Convert to helper call and expand arguments
+                    print("[SM] Converting evalSMBool function_call to helper (not simplifying)")
+                    expanded_args = [self.expand_rule(arg) for arg in rule.get('args', [])]
+                    return {'type': 'helper', 'name': 'evalSMBool', 'args': expanded_args}
 
         # Recursively process nested structures
         if rule_type == 'and' or rule_type == 'or':
