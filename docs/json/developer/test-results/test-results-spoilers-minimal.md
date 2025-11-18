@@ -4,18 +4,18 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-18 22:26:22
+**Generated:** 2025-11-18 23:40:46
 
-**Source Data Created:** 2025-11-18T22:26:07.873912
+**Source Data Created:** 2025-11-18T23:40:31.173841
 
-**Source Data Last Updated:** 2025-11-18T22:26:07.873928
+**Source Data Last Updated:** 2025-11-18T23:40:31.173846
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 64 (82.1%)
-- **Failed:** 14 (17.9%)
-- **Intermittent Failures:** 0
+- **Passed:** 66 (84.6%)
+- **Failed:** 12 (15.4%)
+- **Intermittent Failures:** 5
 
 ## Test Results
 
@@ -50,15 +50,15 @@
 | Jak and Daxter: The Precursor Legacy | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed seeds 1-10 | 157 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 10.9 | 15.1 | 🟡 72.2% | ✅ | ✅ |
-| Kirby's Dream Land 3 | ❌ Failed seed 7 | 0 | 11.1 | 11.1 | 🟡 100.0% | ✅ | ✅ |
+| Kirby's Dream Land 3 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 49 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Lingo | ❌ Failed seed 1 | 155 | 0 | 5.1 | 🔴 0.0% | ✅ | ✅ |
-| Links Awakening DX | ✅ Passed seeds 1-10 | 526 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
+| Links Awakening DX | ✅ Passed seeds 1-10 | 538 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed seeds 1-10 | 0 | 4.11 | 4.11 | 🟢 Complete | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ✅ Passed seeds 1-10 | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ⚫ | ⚫ |
 | Mega Man 2 | ✅ Passed seeds 1-10 | 2 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| MegaMan Battle Network 3 | ❌ Failed seed 5 | 0 | 6.1 | 6.1 | 🟡 100.0% | ✅ | ✅ |
+| MegaMan Battle Network 3 | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Meritous | ✅ Passed seeds 1-10 | 0 | 7.2 | 7.2 | 🟢 Complete | ⚫ | ⚫ |
 | Metamath | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
 | Muse Dash | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ⚫ | ⚫ |
@@ -96,9 +96,37 @@
 | WebDevJourney | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ⚫ | ⚫ |
 | Yacht Dice | ✅ Passed seeds 1-10 | 0 | 21.1 | 21.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed seeds 1-10 | 0 | 12.4 | 12.4 | 🟢 Complete | ✅ | ✅ |
-| Yu-Gi-Oh! 2006 | ❌ Failed seed 2 | 0 | 21.23 | 21.23 | 🟡 100.0% | ✅ | ✅ |
+| Yu-Gi-Oh! 2006 | ❌ Failed seed 1 | 0 | 21.23 | 21.23 | 🟡 100.0% | ✅ | ✅ |
 | Zillion | ❌ Failed seed 1 | 0 | 0.1 | 4.1 | 🟠 2.4% | ✅ | ⚫ |
 | shapez | ✅ Passed seeds 1-10 | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| Pokemon Emerald | N/A | 2025-11-18 23:33 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:37 | Previously failed, now passing |
+| Pokemon Emerald | N/A | 2025-11-18 23:33 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:37 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:32 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:32 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:34 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:34 | Previously failed, now passing |
+| MegaMan Battle Network 3 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:35 | Previously failed, now passing |
+| MegaMan Battle Network 3 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:35 | Previously failed, now passing |
+| Pokemon Red and Blue | N/A | 2025-11-18 23:30 | Previously failed, now passing |
+| Pokemon Red and Blue | N/A | 2025-11-18 23:30 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
+| Kirby's Dream Land 3 | N/A | 2025-11-18 23:28 | Previously failed, now passing |
+| MegaMan Battle Network 3 | N/A | 2025-11-18 23:29 | Previously failed, now passing |
+| Kirby's Dream Land 3 | N/A | 2025-11-18 23:28 | Previously failed, now passing |
+| MegaMan Battle Network 3 | N/A | 2025-11-18 23:29 | Previously failed, now passing |
+
 
 ## Notes
 
