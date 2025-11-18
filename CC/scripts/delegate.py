@@ -56,12 +56,12 @@ def get_game_info(game_name, world_mapping):
 def build_prompt(game_name, game_info, seed=1):
     """Build the Claude prompt with appropriate messages."""
     world_dir = game_info['world_directory']
-    
+
     # Compute seed ID from seed number
     seed_id = get_seed_id(seed)
-    
-    # Ensure game name has .yaml extension for template path
-    template_name = game_name if game_name.endswith('.yaml') else f"{game_name}.yaml"
+
+    # Ensure game name has .yaml extension for template filename
+    template_filename = game_name if game_name.endswith('.yaml') else f"{game_name}.yaml"
     
     # Build exporter message
     if game_info['has_custom_exporter']:
@@ -77,7 +77,7 @@ The next game we want to work on is {game_name}.
 
 The command to generate the rules.json file is
 
-python Generate.py --weights_file_path "Templates/{template_name}" --multi 1 --seed {seed} > generate_output.txt
+python Generate.py --weights_file_path "Templates/{template_filename}" --multi 1 --seed {seed} > generate_output.txt
 
 {exporter_message}
 

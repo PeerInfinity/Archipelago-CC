@@ -451,6 +451,204 @@ function createEvaluationContext(snapshot, staticData) {
         return context.hasItem('Bomb_Bag');
       }
     },
+
+    // Fire source helpers
+    has_fire_source: () => {
+      // can_use(Dins_Fire) or can_use(Fire_Arrows)
+      const canUseDinsFire = context.hasItem('Dins_Fire') && context.hasItem('Magic_Meter');
+      const canUseFireArrows = context.is_adult() && context.hasItem('Fire_Arrows') && context.hasItem('Bow');
+      return canUseDinsFire || canUseFireArrows;
+    },
+    has_fire_source_with_torch: () => {
+      // has_fire_source or (is_child and Sticks)
+      if (context.has_fire_source()) return true;
+      if (!context.is_child()) return false;
+      return context.hasItem('Sticks') || context.hasItem('Buy_Deku_Stick_1') || context.hasItem('Deku_Stick_Drop');
+    },
+
+    // Combat helpers
+    can_use_projectile: () => {
+      // has_explosives or (is_adult and (Bow or Hookshot)) or (is_child and (Slingshot or Boomerang))
+      if (context.has_explosives()) return true;
+      if (context.is_adult()) {
+        return context.hasItem('Bow') || context.hasItem('Progressive_Hookshot');
+      }
+      if (context.is_child()) {
+        return context.hasItem('Slingshot') || context.hasItem('Boomerang');
+      }
+      return false;
+    },
+    can_jumpslash: () => {
+      // is_adult or Sticks or Kokiri_Sword
+      if (context.is_adult()) return true;
+      return context.hasItem('Sticks') || context.hasItem('Buy_Deku_Stick_1') || context.hasItem('Deku_Stick_Drop') ||
+             context.hasItem('Kokiri_Sword');
+    },
+    can_take_damage: () => {
+      // damage_multiplier != 'ohko' or Fairy or can_use(Nayrus_Love)
+      const damageMultiplier = settings?.damage_multiplier || 'normal';
+      if (damageMultiplier !== 'ohko') return true;
+      if (context.hasItem('Fairy') || context.hasItem('Buy_Fairys_Spirit')) return true;
+      return context.hasItem('Nayrus_Love') && context.hasItem('Magic_Meter');
+    },
+    can_break_heated_crate: () => {
+      // deadly_bonks != 'ohko' or (Fairy and (can_use(Goron_Tunic) or damage_multiplier != 'ohko')) or can_use(Nayrus_Love) or can_blast_or_smash
+      const deadlyBonks = settings?.deadly_bonks || 'none';
+      if (deadlyBonks !== 'ohko') return true;
+
+      const hasFairy = context.hasItem('Fairy') || context.hasItem('Buy_Fairys_Spirit');
+      const canUseGoronTunic = context.hasItem('Goron_Tunic') || context.hasItem('Buy_Goron_Tunic');
+      const damageMultiplier = settings?.damage_multiplier || 'normal';
+      if (hasFairy && (canUseGoronTunic || damageMultiplier !== 'ohko')) return true;
+
+      const canUseNayrusLove = context.hasItem('Nayrus_Love') && context.hasItem('Magic_Meter');
+      if (canUseNayrusLove) return true;
+
+      return context.can_blast_or_smash();
+    },
+    can_break_upper_beehive_child: () => {
+      // Simplified - child can break upper beehive with slingshot or boomerang
+      if (!context.is_child()) return false;
+      return context.hasItem('Slingshot') || context.hasItem('Boomerang');
+    },
+
+    // Dungeon shortcuts
+    king_dodongo_shortcuts: () => {
+      // region_has_shortcuts('King Dodongo Boss Room')
+      // This would need access to region shortcuts, for now check if dungeon shortcuts is enabled
+      const dungeonShortcuts = settings?.dungeon_shortcuts || [];
+      return Array.isArray(dungeonShortcuts) && dungeonShortcuts.includes('Dodongos Cavern');
+    },
+    spirit_temple_shortcuts: () => {
+      // 'Spirit Temple' in dungeon_shortcuts
+      const dungeonShortcuts = settings?.dungeon_shortcuts || [];
+      return Array.isArray(dungeonShortcuts) && dungeonShortcuts.includes('Spirit Temple');
+    },
+
+    // Time of day helpers
+    had_night_start: () => {
+      // Check if started at night - for now, simplified
+      const startingTime = settings?.starting_time_of_day || 'day';
+      return startingTime === 'night' || startingTime === 'dampe';
+    },
+
+    // Logic trick helpers - all follow same pattern: check if trick is in logic_tricks setting
+    logic_gerudo_kitchen: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Gerudo Kitchen');
+    },
+    logic_child_dampe_race_poh: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Child Dampe Race PoH');
+    },
+    logic_dmt_bombable: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('DMT Bombable');
+    },
+    logic_goron_city_leftmost: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Goron City Leftmost');
+    },
+    logic_castle_storms_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Castle Storms GS');
+    },
+    logic_deku_basement_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Deku Basement GS');
+    },
+    logic_deku_b1_webs_with_bow: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Deku B1 Webs with Bow');
+    },
+    logic_deku_b1_skip: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Deku B1 Skip');
+    },
+    logic_dc_scarecrow_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('DC Scarecrow GS');
+    },
+    logic_dc_scrub_room: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('DC Scrub Room');
+    },
+    logic_forest_first_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Forest First GS');
+    },
+    logic_forest_outdoor_east_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Forest Outdoor East GS');
+    },
+    logic_fire_scarecrow: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Fire Scarecrow');
+    },
+    logic_water_central_gs_fw: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Water Central GS FW');
+    },
+    logic_water_central_gs_irons: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Water Central GS Irons');
+    },
+    logic_water_falling_platform_gs_boomerang: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Water Falling Platform GS Boomerang');
+    },
+    logic_water_falling_platform_gs_hookshot: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Water Falling Platform GS Hookshot');
+    },
+    logic_water_river_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Water River GS');
+    },
+    logic_shadow_bongo: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Shadow Bongo Bongo');
+    },
+    logic_shadow_umbrella: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Shadow Umbrella');
+    },
+    logic_shadow_umbrella_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Shadow Umbrella GS');
+    },
+    logic_spirit_lobby_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Spirit Lobby GS');
+    },
+    logic_spirit_map_chest: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Spirit Map Chest');
+    },
+    logic_spirit_sun_chest: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Spirit Sun Chest');
+    },
+    logic_ice_block_gs: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Ice Block GS');
+    },
+    logic_lens_castle: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Lens of Truth Castle');
+    },
+    logic_lens_spirit: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Lens of Truth Spirit');
+    },
+    logic_fewer_tunic_requirements: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Fewer Tunic Requirements');
+    },
+    logic_child_rolling_with_strength: () => {
+      const tricks = settings?.logic_tricks || [];
+      return Array.isArray(tricks) && tricks.includes('Child Rolling with Strength');
+    },
   };
 
   return context;
@@ -546,6 +744,35 @@ function evaluateRuleString(ruleString, context) {
       requiredCount = context.settings[countStr] || 0;
     }
     return context.countItem(itemName) >= requiredCount;
+  }
+
+  // Handle item aliases from LogicHelpers.json
+  // These aliases need to be expanded before checking inventory
+  const itemAliases = {
+    'Hookshot': 'Progressive_Hookshot',
+    'Longshot': '(Progressive_Hookshot, 2)',
+    'Silver_Gauntlets': '(Progressive_Strength_Upgrade, 2)',
+    'Golden_Gauntlets': '(Progressive_Strength_Upgrade, 3)',
+    'Scarecrow': 'Progressive_Hookshot and can_play(Scarecrow_Song)',
+    'Distant_Scarecrow': '(Progressive_Hookshot, 2) and can_play(Scarecrow_Song)',
+    'Goron_Tunic': "'Goron Tunic' or Buy_Goron_Tunic",
+    'Zora_Tunic': "'Zora Tunic' or Buy_Zora_Tunic",
+    'Bombs': 'Bomb_Bag',
+    'Deku_Shield': 'Buy_Deku_Shield or Deku_Shield_Drop',
+    'Hylian_Shield': 'Buy_Hylian_Shield',
+    'Nuts': 'Buy_Deku_Nut_5 or Buy_Deku_Nut_10 or Deku_Nut_Drop',
+    'Sticks': 'Buy_Deku_Stick_1 or Deku_Stick_Drop',
+    'Bugs': "'Bugs' or Buy_Bottle_Bug",
+    'Blue_Fire': "'Blue Fire' or Buy_Blue_Fire",
+    'Fish': "'Fish' or Buy_Fish",
+    'Fairy': "'Fairy' or Buy_Fairys_Spirit",
+    'Big_Poe': "'Big Poe'",
+  };
+
+  // Check if this is an aliased item
+  if (itemAliases[ruleString]) {
+    // Recursively evaluate the alias definition
+    return evaluateRuleString(itemAliases[ruleString], context);
   }
 
   // Handle simple item names (with underscores)

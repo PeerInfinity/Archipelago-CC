@@ -232,6 +232,8 @@ import { civ6StateModule } from './civ_6/civ6Logic.js';
 import { helperFunctions as cvcotmHelperFunctions } from './cvcotm/cvcotmLogic.js';
 import * as dlcquestLogic from './dlcquest/dlcquestLogic.js';
 import { dlcquestStateModule } from './dlcquest/dlcquestLogic.js';
+import * as factorioLogic from './factorio/factorioLogic.js';
+import { factorioStateModule } from './factorio/factorioLogic.js';
 import * as hkLogic from './hk/hkLogic.js';
 import { hkStateModule } from './hk/hkLogic.js';
 import * as hylics2Logic from './hylics2/hylics2Logic.js';
@@ -280,7 +282,7 @@ import * as shiversLogic from './shivers/shiversLogic.js';
 import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
 import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
-import { helperFunctions as smHelperFunctions } from './sm/smLogic.js';
+import { helperFunctions as smHelperFunctions, smStateModule } from './sm/smLogic.js';
 import * as stardewValleyLogic from './stardew_valley/stardewValleyLogic.js';
 import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js';
 import * as terrariaLogic from './terraria/terrariaLogic.js';
@@ -291,6 +293,7 @@ import { helperFunctions as yoshisislandHelperFunctions } from './yoshisisland/y
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
 import { helperFunctions as osrsHelperFunctions } from './osrs/osrsLogic.js';
 import * as tlozLogic from './tloz/tlozLogic.js';
+import * as witnessLogic from './witness/witnessLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -367,6 +370,12 @@ const GAME_REGISTRY = {
     helperFunctions: dlcquestLogic.helperFunctions,
     worldClasses: ['DLCqworld'],
     aliases: ['DLCQuest', 'DLC Quest']
+  },
+  'Factorio': {
+    logicModule: factorioLogic.factorioStateModule,
+    helperFunctions: factorioLogic.helperFunctions,
+    worldClasses: ['FactorioWorld'],
+    aliases: ['Factorio']
   },
   'Hollow Knight': {
     logicModule: hkLogic.hkStateModule,
@@ -563,7 +572,7 @@ const GAME_REGISTRY = {
     aliases: ['Subnautica']
   },
   'Super Metroid': {
-    logicModule: genericLogic.genericStateModule, // Using generic state module
+    logicModule: smStateModule, // Using SM-specific state module with smbm support
     helperFunctions: smHelperFunctions,
     worldClasses: ['SMWorld'],
     aliases: ['Super Metroid', 'SM']
@@ -598,6 +607,12 @@ const GAME_REGISTRY = {
     stateMethods: wargrooveLogic.stateMethods,
     worldClasses: ['WargrooveWorld'],
     aliases: ['Wargroove', 'wargroove']
+  },
+  'The Witness': {
+    logicModule: genericLogic.genericStateModule,  // Using generic for now
+    helperFunctions: witnessLogic.helperFunctions,
+    worldClasses: ['WitnessWorld'],
+    aliases: ['The Witness', 'Witness']
   },
   "Yoshi's Island": {
     logicModule: genericLogic.genericStateModule,

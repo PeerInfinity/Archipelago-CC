@@ -65,27 +65,27 @@ def run_template_test(template_file, seed=1):
         return False
 
 
-def extract_game_name_from_template(template_path):
+def extract_game_name_from_yaml(template_path):
     """Extract the game name from a template YAML file."""
     try:
         with open(template_path, 'r', encoding='utf-8') as f:
             data = yaml.safe_load(f)
-        
+
         # Look for 'game' field directly in the YAML
         if 'game' in data:
             return data['game']
-        
+
         # Look for the game name in player data structure
         for key, value in data.items():
             if isinstance(value, dict) and 'game' in value:
                 return value['game']
-        
+
         # Fallback: try to infer from filename (remove .yaml extension if present)
-        template_name = template_path.stem
-        if template_name.endswith('.yaml'):
-            template_name = template_name[:-5]
-        return template_name.replace(' Template', '')
-        
+        template_filename_stem = template_path.stem
+        if template_filename_stem.endswith('.yaml'):
+            template_filename_stem = template_filename_stem[:-5]
+        return template_filename_stem.replace(' Template', '')
+
     except Exception as e:
         print(f"Error reading template {template_path}: {e}", file=sys.stderr)
         return None
@@ -291,14 +291,14 @@ def main():
             if not quiet_mode:
                 print(f"❌ {template_file} is failing, processing...")
 
-            # Extract game name from template
-            game_name = extract_game_name_from_template(template_path)
-            if not game_name:
+            # Extract game name from template YAML
+            game_name_from_yaml = extract_game_name_from_yaml(template_path)
+            if not game_name_from_yaml:
                 if not quiet_mode:
                     print(f"Could not extract game name from {template_file}, skipping...")
             else:
                 if not quiet_mode:
-                    print(f"Game name: {game_name}")
+                    print(f"Game name: {game_name_from_yaml}")
 
                 # Check if seed 1 passes but another seed fails
                 failing_seed = get_first_failing_seed(template_file, test_results)
@@ -310,7 +310,7 @@ def main():
                 # Handle --promptfile mode
                 if args.promptfile:
                     try:
-                        cmd = ['python', 'CC/scripts/prompt.py', game_name, '--seed', str(seed_to_use), '-p']
+                        cmd = ['python', 'CC/scripts/prompt.py', game_name_from_yaml, '--seed', str(seed_to_use), '-p']
                         if args.CC:
                             cmd.append('--CC')
                         if args.full_spoilers:
@@ -320,13 +320,13 @@ def main():
                             collected_prompts.append(result.stdout)
                         else:
                             if not quiet_mode:
-                                print(f"Error getting prompt for {game_name}: {result.stderr}", file=sys.stderr)
+                                print(f"Error getting prompt for {game_name_from_yaml}: {result.stderr}", file=sys.stderr)
                     except Exception as e:
                         if not quiet_mode:
-                            print(f"Error getting prompt for {game_name}: {e}", file=sys.stderr)
+                            print(f"Error getting prompt for {game_name_from_yaml}: {e}", file=sys.stderr)
                 else:
                     # Run prompt script
-                    run_prompt_for_game(game_name, args.text, args.prompt, seed_to_use, quiet_mode, args.CC, args.full_spoilers)
+                    run_prompt_for_game(game_name_from_yaml, args.text, args.prompt, seed_to_use, quiet_mode, args.CC, args.full_spoilers)
 
                     # Exit immediately if -t or -p was specified (regardless of --loud)
                     if args.text or args.prompt:

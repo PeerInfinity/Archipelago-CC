@@ -1093,7 +1093,7 @@ def main():
             print(f"Error processing {yaml_file}: {e}")
             # Create minimal error result
             error_result = {
-                'template_name': yaml_file,
+                'template_filename': yaml_file,
                 'timestamp': datetime.now().isoformat(),
                 'error': str(e)
             }
@@ -1146,24 +1146,24 @@ def main():
         
         print(f"Seed Range Testing Results ({len(seed_list)} seeds per template):")
         
-        for template_name, result in results['results'].items():
+        for template_filename, result in results['results'].items():
             if 'seed_range' in result:
                 seeds_passed = result.get('seeds_passed', 0)
                 seeds_failed = result.get('seeds_failed', 0)
                 consecutive_passes = result.get('consecutive_passes_before_failure', 0)
                 first_failure_seed = result.get('first_failure_seed')
-                
+
                 total_consecutive_passes += consecutive_passes
-                
+
                 if seeds_failed == 0:
                     templates_with_all_seeds_passed += 1
-                    print(f"  ✅ {template_name}: All {seeds_passed} seeds passed")
+                    print(f"  ✅ {template_filename}: All {seeds_passed} seeds passed")
                 else:
                     templates_with_some_failures += 1
                     if first_failure_seed:
-                        print(f"  ❌ {template_name}: {consecutive_passes} consecutive passes, first failure at seed {first_failure_seed}")
+                        print(f"  ❌ {template_filename}: {consecutive_passes} consecutive passes, first failure at seed {first_failure_seed}")
                     else:
-                        print(f"  ❌ {template_name}: {seeds_passed} passed, {seeds_failed} failed")
+                        print(f"  ❌ {template_filename}: {seeds_passed} passed, {seeds_failed} failed")
         
         print(f"\nOverall Seed Range Summary:")
         print(f"  Templates with all seeds passing: {templates_with_all_seeds_passed}")

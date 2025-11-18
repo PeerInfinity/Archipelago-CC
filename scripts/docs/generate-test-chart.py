@@ -39,7 +39,7 @@ def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, 
     if 'results' not in results:
         return chart_data
 
-    for template_name, template_data in results['results'].items():
+    for template_filename, template_data in results['results'].items():
         # Check if this is seed range data
         if 'seed_range' in template_data:
             # Handle seed range results
@@ -69,7 +69,7 @@ def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, 
             sphere_reached = first_result.get('spoiler_test', {}).get('sphere_reached', 0)
             max_spheres = first_result.get('spoiler_test', {}).get('total_spheres', 0)
             world_info = first_result.get('world_info', {})
-            game_name = world_info.get('game_name_from_yaml') or template_name.replace('.yaml', '')
+            game_name = world_info.get('game_name_from_yaml') or template_filename.replace('.yaml', '')
             has_custom_exporter = world_info.get('has_custom_exporter', False)
             has_custom_game_logic = world_info.get('has_custom_game_logic', False)
         else:
@@ -78,7 +78,7 @@ def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, 
             game_name = world_info.get('game_name_from_yaml')
 
             if not game_name:
-                game_name = template_name.replace('.yaml', '').replace('_', ' ').title()
+                game_name = template_filename.replace('.yaml', '').replace('_', ' ').title()
 
             original_pass_fail = template_data.get('spoiler_test', {}).get('pass_fail', 'unknown')
             gen_error_count = template_data.get('generation', {}).get('error_count', 0)
@@ -114,16 +114,16 @@ def extract_multiplayer_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
 
     results_data = results['results']
     if isinstance(results_data, dict):
-        # New dict-based format - iterate over template names and data
-        for template_name, template_data in results_data.items():
+        # New dict-based format - iterate over template filenames and data
+        for template_filename, template_data in results_data.items():
             # Extract world info
             world_info = template_data.get('world_info', {})
 
             # Use game_name_from_yaml if available (matches spoiler test behavior)
             game_name = world_info.get('game_name_from_yaml')
             if not game_name:
-                # Fallback to game_name field or template name
-                game_name = template_data.get('game_name', template_name.replace('.yaml', ''))
+                # Fallback to game_name_from_yaml field or template filename
+                game_name = template_data.get('game_name_from_yaml', template_filename.replace('.yaml', ''))
 
             has_custom_exporter = world_info.get('has_custom_exporter', False)
             has_custom_game_logic = world_info.get('has_custom_game_logic', False)
@@ -154,7 +154,7 @@ def extract_multiplayer_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
         # Old list-based format
         results_list = results_data
         for template_data in results_list:
-            game_name = template_data.get('game_name', template_data.get('template_name', 'Unknown').replace('.yaml', ''))
+            game_name = template_data.get('game_name_from_yaml', template_data.get('template_filename', 'Unknown').replace('.yaml', ''))
             world_info = template_data.get('world_info', {})
             has_custom_exporter = world_info.get('has_custom_exporter', False)
             has_custom_game_logic = world_info.get('has_custom_game_logic', False)
@@ -350,9 +350,9 @@ def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Tuple[str, st
     if 'results' not in results:
         return chart_data
 
-    for template_name, template_data in results['results'].items():
+    for template_filename, template_data in results['results'].items():
         world_info = template_data.get('world_info', {})
-        game_name = world_info.get('game_name_from_yaml') or template_name.replace('.yaml', '')
+        game_name = world_info.get('game_name_from_yaml') or template_filename.replace('.yaml', '')
         has_custom_exporter = world_info.get('has_custom_exporter', False)
         has_custom_game_logic = world_info.get('has_custom_game_logic', False)
 

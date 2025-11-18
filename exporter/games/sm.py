@@ -130,9 +130,19 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         # Handle helper nodes with name='evalSMBool' (analyzer converts self.evalSMBool to helper)
         if rule_type == 'helper' and rule.get('name') == 'evalSMBool':
-            # Don't simplify - preserve the evalSMBool helper call
-            # but expand its arguments
-            print("[SM] Preserving evalSMBool helper (not simplifying)")
+            # Check if this is evalSMBool(SMBool(true), ...) pattern
+            args = rule.get('args', [])
+            if len(args) >= 1:
+                first_arg = args[0]
+                # Check if first arg is SMBool(true)
+                if self._check_smbool_true_pattern(first_arg):
+                    # SMBool(True) with default difficulty 0 always passes evalSMBool
+                    # regardless of maxDiff, so simplify to constant True
+                    print("[SM] Simplifying evalSMBool(SMBool(True), ...) to constant True")
+                    return {'type': 'constant', 'value': True}
+
+            # Otherwise preserve the evalSMBool helper call but expand its arguments
+            print("[SM] Preserving evalSMBool helper (will need state.smbm)")
             if 'args' in rule:
                 rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
             return rule
@@ -148,8 +158,12 @@ class SMGameExportHandler(GenericGameExportHandler):
                 # Transform self.evalSMBool(...) into helper call
                 if obj.get('type') == 'name' and obj.get('name') == 'self' and attr == 'evalSMBool':
                     # Convert to helper call and expand arguments
-                    print("[SM] Converting evalSMBool function_call to helper (not simplifying)")
+                    print("[SM] Converting evalSMBool function_call to helper")
                     expanded_args = [self.expand_rule(arg) for arg in rule.get('args', [])]
+                    # Check if this is SMBool(true) pattern
+                    if len(expanded_args) >= 1 and self._check_smbool_true_pattern(expanded_args[0]):
+                        print("[SM] Simplifying evalSMBool(SMBool(True), ...) function_call to constant True")
+                        return {'type': 'constant', 'value': True}
                     return {'type': 'helper', 'name': 'evalSMBool', 'args': expanded_args}
 
         # Recursively process nested structures
