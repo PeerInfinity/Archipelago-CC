@@ -639,7 +639,20 @@ export default {
     // These will return false for now and can be implemented as needed
     terran_defense_rating,
     terran_mobile_detector: () => false,
-    terran_beats_protoss_deathball: () => false,
+    terran_beats_protoss_deathball: (snapshot, staticData) => {
+        // Terran composition that can beat Protoss deathball
+        // Requires strong anti-armor units and detection
+        const advancedTactics = isAdvancedTactics(staticData);
+
+        return (
+            has_any(snapshot, ['Battlecruiser', 'Banshee', 'Viking'])
+            && terran_competent_anti_air(snapshot, staticData)
+        ) || (
+            advancedTactics
+            && has(snapshot, 'Siege Tank')
+            && terran_competent_comp(snapshot, staticData)
+        );
+    },
     terran_base_trasher: () => false,
     terran_can_rescue: () => false,
     terran_cliffjumper: () => false,
@@ -756,7 +769,10 @@ export default {
         return has(snapshot, 'Beat Cutthroat');
     },
     trouble_in_paradise_requirement: () => false,
-    sudden_strike_requirement: () => false,
+    sudden_strike_requirement: (snapshot, staticData) => {
+        // Sudden Strike requires completing The Escape mission
+        return has(snapshot, 'Beat The Escape');
+    },
     sudden_strike_can_reach_objectives: () => false,
     enemy_intelligence_first_stage_requirement: () => false,
     enemy_intelligence_second_stage_requirement: () => false,
@@ -849,7 +865,10 @@ export default {
     enemy_shadow_door_unlocks_tool: () => false,
     enemy_shadow_tripwires_tool: () => false,
     enemy_shadow_domination: () => false,
-    salvation_requirement: () => false,
+    salvation_requirement: (snapshot, staticData) => {
+        // Salvation requires completing The Host mission
+        return has(snapshot, 'Beat The Host');
+    },
     steps_of_the_rite_requirement: (snapshot, staticData) => {
         return protoss_competent_comp(snapshot, staticData)
             || (protoss_common_unit(snapshot, staticData)
@@ -888,7 +907,10 @@ export default {
         );
     },
     supreme_requirement: () => false,
-    the_host_requirement: () => false,
+    the_host_requirement: (snapshot, staticData) => {
+        // The Host requires completing Templar's Return mission
+        return has(snapshot, "Beat Templar's Return");
+    },
     into_the_void_requirement: () => false,
     essence_of_eternity_requirement: () => false,
     amons_fall_requirement: () => false,
