@@ -280,7 +280,7 @@ import * as shiversLogic from './shivers/shiversLogic.js';
 import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
 import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
-import { helperFunctions as smHelperFunctions } from './sm/smLogic.js';
+import { helperFunctions as smHelperFunctions, smStateModule } from './sm/smLogic.js';
 import * as stardewValleyLogic from './stardew_valley/stardewValleyLogic.js';
 import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js';
 import * as terrariaLogic from './terraria/terrariaLogic.js';
@@ -563,7 +563,7 @@ const GAME_REGISTRY = {
     aliases: ['Subnautica']
   },
   'Super Metroid': {
-    logicModule: genericLogic.genericStateModule, // Using generic state module
+    logicModule: smStateModule, // Using SM-specific state module with smbm support
     helperFunctions: smHelperFunctions,
     worldClasses: ['SMWorld'],
     aliases: ['Super Metroid', 'SM']

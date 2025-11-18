@@ -131,3 +131,50 @@ export const helperFunctions = {
   func,
   rule
 };
+
+/**
+ * SM-specific state module
+ * Initializes state with smbm object that contains maxDiff
+ */
+export const smStateModule = {
+  /**
+   * Initializes a new Super Metroid game state with smbm support
+   */
+  initializeState() {
+    return {
+      flags: [],
+      events: [],
+      // Initialize smbm for each player
+      // The index is the player ID (1-based)
+      smbm: {
+        // Default maxDiff for player 1
+        // This represents the maximum difficulty the player is willing to accept
+        // Higher values mean more difficult tricks are allowed
+        1: {
+          maxDiff: 999 // Allow all difficulties (trusting Python backend calculations)
+        }
+      }
+    };
+  },
+
+  /**
+   * Loads settings into the game state
+   */
+  loadSettings(gameState, settings) {
+    return { ...gameState };
+  },
+
+  /**
+   * Adds an item to inventory (called when a location is collected)
+   */
+  addItem(gameState, itemName) {
+    return gameState; // Generic handling by StateManager
+  },
+
+  /**
+   * Removes an item from inventory
+   */
+  removeItem(gameState, itemName) {
+    return gameState; // Generic handling by StateManager
+  }
+};
