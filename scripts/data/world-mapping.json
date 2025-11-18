@@ -498,9 +498,9 @@
   },
   "The Witness": {
     "exporter_path": "exporter/games/witness.py",
-    "game_logic_path": null,
+    "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "witness"
   },
   "Timespinner": {

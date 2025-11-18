@@ -119,6 +119,14 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
     combined_results = {}
     _process_template_results(template_results, combined_results)
 
+    # Merge intermittent_tracking metadata from all input files
+    merged_intermittent_failures = []
+    for result_data in all_results:
+        metadata = result_data.get('metadata', {})
+        tracking = metadata.get('intermittent_tracking', {})
+        failures = tracking.get('failures', [])
+        merged_intermittent_failures.extend(failures)
+
     # Create combined output structure
     combined = {
         'metadata': {
@@ -130,6 +138,13 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
         },
         'results': combined_results
     }
+
+    # Add intermittent tracking if we have any failures
+    if merged_intermittent_failures:
+        combined['metadata']['intermittent_tracking'] = {
+            'failures': merged_intermittent_failures,
+            'last_updated': datetime.now().isoformat()
+        }
 
     return combined
 
@@ -174,6 +189,14 @@ def combine_multitemplate_results(all_results: List[Dict[str, Any]]) -> Dict[str
         _process_template_results(template_results, combined_game_results)
         combined_results[game_name] = combined_game_results
 
+    # Merge intermittent_tracking metadata from all input files
+    merged_intermittent_failures = []
+    for result_data in all_results:
+        metadata = result_data.get('metadata', {})
+        tracking = metadata.get('intermittent_tracking', {})
+        failures = tracking.get('failures', [])
+        merged_intermittent_failures.extend(failures)
+
     # Create combined output structure
     combined = {
         'metadata': {
@@ -185,6 +208,13 @@ def combine_multitemplate_results(all_results: List[Dict[str, Any]]) -> Dict[str
         },
         'results': combined_results
     }
+
+    # Add intermittent tracking if we have any failures
+    if merged_intermittent_failures:
+        combined['metadata']['intermittent_tracking'] = {
+            'failures': merged_intermittent_failures,
+            'last_updated': datetime.now().isoformat()
+        }
 
     return combined
 

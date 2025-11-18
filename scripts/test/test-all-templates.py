@@ -251,6 +251,11 @@ def main():
         help='When used with --retest, also include templates that have never been tested before'
     )
     parser.add_argument(
+        '--retest-seed-specific',
+        action='store_true',
+        help='When used with --retest, only retest templates that failed on the specific seed being tested (requires --seed to be set)'
+    )
+    parser.add_argument(
         '--include-error-details',
         action='store_true',
         help='Include first_error_line and first_warning_line fields in test results (disabled by default)'
@@ -323,10 +328,6 @@ def main():
         print("Error: --retest and --include-list are mutually exclusive")
         sys.exit(1)
 
-    if args.retest and args.start_from:
-        print("Error: --retest and --start-from are mutually exclusive")
-        sys.exit(1)
-
     if args.retest_continue and not args.retest:
         print("Error: --retest-continue can only be used with --retest")
         sys.exit(1)
@@ -341,6 +342,14 @@ def main():
 
     if args.retest_include_untested and not args.retest:
         print("Error: --retest-include-untested can only be used with --retest")
+        sys.exit(1)
+
+    if args.retest_seed_specific and not args.retest:
+        print("Error: --retest-seed-specific can only be used with --retest")
+        sys.exit(1)
+
+    if args.retest_seed_specific and args.seed_range:
+        print("Error: --retest-seed-specific cannot be used with --seed-range (it requires a single --seed)")
         sys.exit(1)
 
     if args.every_nth and args.every_nth < 1:
@@ -533,6 +542,9 @@ def main():
     # Initialize retest_seed_info (used in test loop)
     retest_seed_info = {}
 
+    # Initialize intermittent failures tracking (for --retest mode)
+    intermittent_failures = []
+
     # Handle --retest mode: load existing results and filter to only failed tests
     if args.retest:
         # Determine the correct results file path based on mode
@@ -562,7 +574,22 @@ def main():
             sys.exit(1)
 
         # Get list of failed templates and their failing seed info
-        failed_templates = get_failed_templates(existing_results['results'], args.multiplayer)
+        # If --retest-seed-specific is used, only get templates that failed on the specific seed
+        specific_seed = None
+        if args.retest_seed_specific:
+            try:
+                # Get the seed from the seed list (should be a single seed)
+                if len(seed_list) == 1:
+                    specific_seed = seed_list[0]
+                    print(f"Retest mode: Only retesting templates that failed on seed {specific_seed}")
+                else:
+                    print("Error: --retest-seed-specific requires a single seed (use --seed N, not --seed-range)")
+                    sys.exit(1)
+            except (ValueError, IndexError):
+                print("Error: --retest-seed-specific requires a valid seed number")
+                sys.exit(1)
+
+        failed_templates = get_failed_templates(existing_results['results'], args.multiplayer, specific_seed)
 
         # If --retest-continue is specified, also include templates that haven't been tested up to that threshold
         templates_to_test = set(failed_templates)
@@ -1048,21 +1075,60 @@ def main():
                 # Normal mode - store by template filename
                 results['results'][yaml_file] = template_result
 
+            # In retest mode, check if this test is now passing and record intermittent failures
+            if args.retest:
+                test_passed = is_test_passing(yaml_file, results['results'], args.multiplayer)
+
+                # Check if this was previously failing and is now passing (intermittent failure)
+                was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiplayer)
+
+                if test_passed and was_failing:
+                    # Record intermittent failure with detailed information
+                    seed_info = retest_seed_info.get(yaml_file, {})
+                    failing_seed = seed_info.get('failing_seed')
+
+                    intermittent_entry = {
+                        'template': yaml_file,
+                        'seed': failing_seed,
+                        'timestamp': datetime.now().isoformat(),
+                        'previously_failed': True,
+                        'now_passing': True
+                    }
+                    intermittent_failures.append(intermittent_entry)
+                    print(f"✅ {yaml_file} is now passing (was previously failing)! Recording intermittent failure. Continuing to next failed test...")
+
             # Save results after each template (incremental updates)
             # Merge with existing results and save
             templates_tested_so_far = list(results['results'].keys())
             incremental_merged = merge_results(existing_results, results, templates_tested_so_far, update_metadata)
+
+            # Save intermittent failures incrementally in retest mode
+            if args.retest and intermittent_failures:
+                # Add intermittent tracking to the merged results
+                if 'intermittent_tracking' not in incremental_merged['metadata']:
+                    incremental_merged['metadata']['intermittent_tracking'] = {
+                        'failures': [],
+                        'last_updated': datetime.now().isoformat()
+                    }
+
+                # Update with current intermittent failures
+                incremental_merged['metadata']['intermittent_tracking']['failures'] = intermittent_failures.copy()
+                incremental_merged['metadata']['intermittent_tracking']['last_updated'] = datetime.now().isoformat()
+
             save_results(incremental_merged, results_file)
 
             # Run post-processing after each test if requested (do this BEFORE checking retest status)
             if args.post_process:
                 run_post_processing_scripts(project_root, results_file, args.multiplayer, args.multiworld, args.multitemplate)
 
-            # In retest mode, check if this test is now passing and stop if it still fails
+            # In retest mode, check if we should stop
             if args.retest:
                 test_passed = is_test_passing(yaml_file, results['results'], args.multiplayer)
+
                 if test_passed:
-                    print(f"✅ {yaml_file} is now passing! Continuing to next failed test...")
+                    was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiplayer)
+                    if not was_failing:
+                        print(f"✅ {yaml_file} is now passing! Continuing to next failed test...")
                 else:
                     if args.retest_continue_after_failure:
                         print(f"❌ {yaml_file} still failing. Continuing to next failed test (--retest-continue-after-failure mode)...")
@@ -1116,6 +1182,26 @@ def main():
     # This is important for --retest mode where yaml_files only contains failed templates
     templates_actually_tested = list(results['results'].keys())
     merged_results = merge_results(existing_results, results, templates_actually_tested, update_metadata)
+
+    # Handle intermittent failures tracking in metadata
+    if args.retest and intermittent_failures:
+        # In retest mode with intermittent failures found, append to existing list
+        if 'intermittent_tracking' not in merged_results['metadata']:
+            merged_results['metadata']['intermittent_tracking'] = {
+                'failures': [],
+                'last_updated': datetime.now().isoformat()
+            }
+
+        # Append new intermittent failures to existing list
+        merged_results['metadata']['intermittent_tracking']['failures'].extend(intermittent_failures)
+        merged_results['metadata']['intermittent_tracking']['last_updated'] = datetime.now().isoformat()
+
+        print(f"\nRecorded {len(intermittent_failures)} intermittent failure(s) in metadata")
+    elif not args.retest and not args.include_list:
+        # In normal (non-retest) full run mode, clear intermittent failures
+        if 'intermittent_tracking' in merged_results['metadata']:
+            del merged_results['metadata']['intermittent_tracking']
+            print("\nCleared intermittent failures tracking (full test run)")
 
     # Save merged results to main file
     save_results(merged_results, results_file)

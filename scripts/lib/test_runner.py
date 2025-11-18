@@ -19,12 +19,6 @@ from datetime import datetime
 from typing import Dict, List
 from .seed_utils import get_seed_id as compute_seed_id
 
-try:
-    import psutil
-    PSUTIL_AVAILABLE = True
-except ImportError:
-    PSUTIL_AVAILABLE = False
-
 # Import from the utility modules
 from .test_utils import (
     normalize_game_name,
@@ -36,20 +30,6 @@ from .test_utils import (
     parse_multiplayer_test_results,
     parse_playwright_analysis
 )
-
-
-def log_memory_usage(template_name: str, stage: str):
-    """Log current memory usage if psutil is available."""
-    if not PSUTIL_AVAILABLE:
-        return
-
-    try:
-        process = psutil.Process()
-        mem_info = process.memory_info()
-        mem_mb = mem_info.rss / (1024 * 1024)
-        print(f"  [Memory] {template_name} - {stage}: {mem_mb:.1f} MB RSS")
-    except Exception as e:
-        print(f"  [Memory] Warning: Could not get memory info: {e}")
 
 
 def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False) -> Dict:
@@ -68,7 +48,6 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
     world_info = get_world_info(template_file, templates_dir, world_mapping)
 
     print(f"\n=== Testing {template_filename} ===")
-    log_memory_usage(template_filename, "start")
 
     result = {
         'template_filename': template_filename,
@@ -210,10 +189,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
 
         if gen_return_code != 0:
             print(f"Generation failed with return code {gen_return_code}")
-            log_memory_usage(template_filename, "after generation (failed)")
             return result
-
-        log_memory_usage(template_filename, "after generation")
     else:
         print(f"Skipping generation for {template_filename} (test-only mode)")
         # In test-only mode, don't overwrite error counts - keep the defaults initialized above
@@ -374,8 +350,6 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         result['spoiler_test']['return_code'] = spoiler_return_code
         result['spoiler_test']['success'] = spoiler_return_code == 0
         result['spoiler_test']['processing_time_seconds'] = spoiler_processing_time
-
-        log_memory_usage(template_filename, "after spoiler test")
 
         # Step 3: Run test analysis
         print("Running test analysis...")
