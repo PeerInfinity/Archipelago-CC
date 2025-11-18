@@ -1,30 +1,33 @@
 # Remaining Exporter Issues
 
-## Issue 1: Region Connectivity at Sphere 0 (CRITICAL)
+## Issue 1: VARIA Logic Function Calls Not Evaluating Correctly (CRITICAL)
 
 **Status**: Active
-**Test Run**: 2025-11-18T04:45:01
+**Test Run**: 2025-11-18T04:57:04
 
-**Problem**: Multiple regions are not reachable in Sphere 0 that should be accessible according to the sphere log.
+**Problem**: Location access rules containing VARIA logic function calls (sm.wor, sm.canFly, sm.haveItem, etc.) are not evaluating correctly, leading to incorrect accessibility.
 
-**Regions Not Reachable**:
-- Blue Brinstar Elevator Bottom
-- Energy Tank, Brinstar Ceiling
-- Missile (blue Brinstar behind missile)
-- Missile (blue Brinstar bottom)
-- Missile (blue Brinstar middle)
-- Missile (blue Brinstar top)
-- Morphing Ball
-- Power Bomb (blue Brinstar)
+**Symptoms** (Sphere 0):
+- Locations in LOG but NOT in STATE:
+  - Energy Tank, Brinstar Ceiling
 
-**Locations Not Accessible**:
-- Energy Tank, Brinstar Ceiling
-- Morphing Ball
+- Locations in STATE but NOT in LOG:
+  - Energy Tank, Terminator
+  - Missile (Crateria gauntlet right)
+  - Missile (Crateria gauntlet left)
+  - Power Bomb (blue Brinstar)
 
-**Root Cause**: Unknown - needs investigation of region exit rules
+**Root Cause**: Access rules contain function_call nodes referencing VARIA randomizer logic functions (sm.wor, sm.canFly, sm.haveItem, etc.) from Python that don't exist in JavaScript.
 
-**Next Steps**:
-1. Check region connectivity in rules.json
-2. Verify exit rules for regions leading to Blue Brinstar areas
-3. Check if Menu region has correct initial connections
+**Attempted Fixes**:
+1. ✅ Simplified evalSMBool(SMBool(true), ...) patterns (80 cases)
+2. ✅ Added state.smbm initialization with maxDiff
+3. ❌ Still failing - VARIA logic functions need JS implementations
+
+**Recommended Solution**: Implement VARIA logic stubs in JavaScript
+- Create sm/variaLogic.js with function implementations
+- Start with commonly used functions (wor, wand, haveItem, canFly, etc.)
+- Use Python VARIA randomizer source as reference
+
+**Time Estimate**: 4-8 hours
 
