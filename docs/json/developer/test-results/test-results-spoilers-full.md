@@ -4,30 +4,30 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-18 02:10:28
+**Generated:** 2025-11-18 04:23:03
 
-**Source Data Created:** 2025-11-18T01:49:22.256452
+**Source Data Created:** 2025-11-18T04:23:03.704320
 
-**Source Data Last Updated:** 2025-11-18T01:49:22.256459
+**Source Data Last Updated:** 2025-11-18T04:23:03.704327
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 54 (69.2%)
-- **Failed:** 24 (30.8%)
+- **Passed:** 55 (70.5%)
+- **Failed:** 23 (29.5%)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Custom Exporter | Custom GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|-----------------|------------------|
 | A Hat in Time | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| A Link to the Past | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| A Link to the Past | ❌ Failed seed 4 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | ArchipIDLE | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Blasphemous | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
-| Bomb Rush Cyberfunk | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
+| Bomb Rush Cyberfunk | ❌ Failed seed 5 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Castlevania 64 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
@@ -37,24 +37,24 @@
 | Civilization VI | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | DLCQuest | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | DOOM 1993 | ❌ Failed seed 3 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
-| DOOM II | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
-| Dark Souls III | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| DOOM II | ❌ Failed seed 4 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Dark Souls III | ❌ Failed seed 4 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Factorio | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Faxanadu | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Final Fantasy Mystic Quest | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Heretic | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
+| Final Fantasy Mystic Quest | ❌ Failed seed 4 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Heretic | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Hylics 2 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Jak and Daxter The Precursor Legacy | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Kingdom Hearts | ❌ Failed seed 8 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Kingdom Hearts | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
-| Kirby's Dream Land 3 | ❌ Failed seed 6 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Kirby's Dream Land 3 | ❌ Failed seed 4 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Lingo | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Links Awakening DX | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Lufia II Ancient Cave | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Mario & Luigi Superstar Saga | ❌ Failed seed 5 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Mario & Luigi Superstar Saga | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | MathProof2p2e4 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Mega Man 2 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | MegaMan Battle Network 3 | ❌ Failed seed 5 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
@@ -64,15 +64,15 @@
 | Noita | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Ocarina of Time | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Old School Runescape | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Overcooked! 2 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Overcooked! 2 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Paint | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Pokemon Emerald | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
-| Pokemon Red and Blue | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Pokemon Emerald | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
+| Pokemon Red and Blue | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Raft | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
-| Secret of Evermore | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Secret of Evermore | ❌ Failed seed 2 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 0 | 0 | 🟢 Complete | ⚫ | ⚫ |
 | Starcraft 2 | ❌ Failed seed 1 | 0 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
