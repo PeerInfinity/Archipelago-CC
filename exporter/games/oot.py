@@ -10,6 +10,64 @@ import os
 
 logger = logging.getLogger(__name__)
 
+# Monkey-patch the OOT RuleParser to capture AST nodes for subrule events
+# This is done at module import time, before any worlds are generated
+def _patch_oot_rule_parser():
+    """
+    Patch the OOT RuleParser.create_delayed_rules() method to store unparsed AST
+    as rule_string on event locations. This allows the exporter to access the
+    original rule strings without modifying files in the worlds directory.
+    """
+    try:
+        from worlds.oot.RuleParser import Rule_AST_Transformer
+
+        original_create_delayed_rules = Rule_AST_Transformer.create_delayed_rules
+
+        def patched_create_delayed_rules(self):
+            """Patched version that stores unparsed AST on event locations."""
+            from worlds.oot.Location import OOTLocation
+            from worlds.oot.Rules import set_rule
+
+            for region_name, node, subrule_name in self.delayed_rules:
+                region = self.world.multiworld.get_region(region_name, self.player)
+                event = OOTLocation(self.player, subrule_name, type='Event', parent=region, internal=True)
+                event.show_in_spoiler = False
+
+                # Store the unparsed AST as a rule_string for the exporter
+                # This allows the exporter to access the original rule even though the lambda is dynamically compiled
+                try:
+                    event.rule_string = ast.unparse(node)
+                except Exception as e:
+                    logging.getLogger('').warning(f'Failed to unparse AST for {subrule_name}: {e}')
+                    event.rule_string = None
+
+                self.current_spot = event
+                # This could, in theory, create further subrules.
+                access_rule = self.make_access_rule(self.visit(node))
+                if access_rule is self.rule_cache.get('NameConstant(False)'):
+                    event.access_rule = None
+                    event.never = True
+                    logging.getLogger('').debug('Dropping unreachable delayed event: %s', event.name)
+                else:
+                    if access_rule is self.rule_cache.get('NameConstant(True)'):
+                        event.always = True
+                    set_rule(event, access_rule)
+                    region.locations.append(event)
+
+            self.delayed_rules.clear()
+
+        # Apply the patch
+        Rule_AST_Transformer.create_delayed_rules = patched_create_delayed_rules
+        logger.info("OOT: Successfully patched RuleParser.create_delayed_rules to capture AST nodes")
+
+    except ImportError as e:
+        logger.debug(f"OOT: Could not patch RuleParser (worlds.oot not available): {e}")
+    except Exception as e:
+        logger.warning(f"OOT: Failed to patch RuleParser: {e}")
+
+# Apply the patch when this module is imported
+_patch_oot_rule_parser()
+
 class OOTGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Ocarina of Time'
 
@@ -62,12 +120,13 @@ class OOTGameExportHandler(GenericGameExportHandler):
             self.rule_string_map[subrule_name] = rule_string
             logger.debug(f"OOT: Loaded subrule '{subrule_name}' from LogicHelpers: {rule_string[:80]}")
 
-        # Also collect any rule_string attributes already set on locations/exits
-        # (This preserves backward compatibility if rule_string is set elsewhere)
+        # Collect rule_string attributes from all locations and exits
+        # Regular locations and exits have rule_string set from JSON data
+        # Event locations from subrules have rule_string set by our monkey-patch
         for region in world.get_regions():
             for location in region.locations:
                 if hasattr(location, 'rule_string') and location.rule_string:
-                    # Don't overwrite if we already got it from parser
+                    # Don't overwrite if we already got it from LogicHelpers
                     if location.name not in self.rule_string_map:
                         self.rule_string_map[location.name] = location.rule_string
                         logger.debug(f"OOT: Captured location '{location.name}' rule_string attribute")
@@ -75,7 +134,7 @@ class OOTGameExportHandler(GenericGameExportHandler):
             # Collect rule strings from all exits/entrances
             for exit in region.exits:
                 if hasattr(exit, 'rule_string') and exit.rule_string:
-                    # Don't overwrite if we already got it from parser
+                    # Don't overwrite if we already got it from LogicHelpers
                     if exit.name not in self.rule_string_map:
                         self.rule_string_map[exit.name] = exit.rule_string
                         logger.debug(f"OOT: Captured exit '{exit.name}' rule_string attribute")
