@@ -4,7 +4,13 @@
 
 ### 1. "Sun Painting" entrance exported with incorrect constant true rule
 
-**Status:** Identified, working on fix
+**Status:** Partially fixed, needs more investigation
+
+**Progress:**
+- Modified exporter.py to pass connected_region to postprocess_entrance_rule
+- Modified lingo.py to use connected_region for simple entrance names
+- However, the method is still being called twice (once with connected_region=None)
+- Need to investigate why both calls originate from line 595 (process_regions)
 
 **Description:**
 The "Sun Painting" entrance from "Starting Room" to "Pilgrim Antechamber" is being exported with `access_rule: {type: "constant", value: true}` instead of a proper helper call. This makes Pilgrim Antechamber accessible at Sphere 0 when it should only be accessible at Sphere 3.1 after collecting the "Pilgrim Room - Sun Painting" item.
