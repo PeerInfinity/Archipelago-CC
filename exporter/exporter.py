@@ -1035,7 +1035,18 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                                 # Post-process the entrance rule if the game handler supports it
                                 if expanded_rule and game_handler and hasattr(game_handler, 'postprocess_entrance_rule'):
-                                    expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name)
+                                    # Check if the handler supports the new signature with connected_region
+                                    import inspect
+                                    sig = inspect.signature(game_handler.postprocess_entrance_rule)
+                                    params = list(sig.parameters.keys())
+
+                                    if 'connected_region' in params:
+                                        # Use new signature with connected_region
+                                        connected_region_name = getattr(entrance.connected_region, 'name', None) if hasattr(entrance, 'connected_region') else None
+                                        expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name, connected_region_name)
+                                    else:
+                                        # Use old signature
+                                        expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, entrance_name)
                                 # Also call general postprocess_rule if available
                                 elif expanded_rule and game_handler and hasattr(game_handler, 'postprocess_rule'):
                                     expanded_rule = game_handler.postprocess_rule(expanded_rule)

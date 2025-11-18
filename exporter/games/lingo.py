@@ -203,7 +203,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
         return settings
 
-    def postprocess_entrance_rule(self, rule: Dict[str, Any], entrance_name: str) -> Dict[str, Any]:
+    def postprocess_entrance_rule(self, rule: Dict[str, Any], entrance_name: str, connected_region: str = None) -> Dict[str, Any]:
         """
         Postprocess entrance access rules to resolve variable references.
 
@@ -214,6 +214,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
         Entrance name patterns:
         - "Region A to Region B" - no door
         - "Region A to Region B (through Region C - Door Name)" - has door
+        - "Simple Name" (e.g., "Sun Painting") - the name is the door name, room inferred from connected_region
         """
         if not rule:
             return rule
@@ -227,6 +228,9 @@ class LingoGameExportHandler(GenericGameExportHandler):
         to_match = re.search(r'to ([^(]+)', entrance_name)
         if to_match:
             target_region = to_match.group(1).strip()
+        elif connected_region:
+            # If no "to" pattern, use the connected_region parameter
+            target_region = connected_region
 
         # Pattern: "... (through Room Name - Door Name)"
         through_match = re.search(r'\(through ([^-]+) - ([^)]+)\)', entrance_name)
@@ -235,9 +239,27 @@ class LingoGameExportHandler(GenericGameExportHandler):
             door_name = through_match.group(2).strip()
             logger.debug(f"Entrance '{entrance_name}' uses door '{door_name}' in room '{door_room}'")
 
+        # Handle special case: Simple entrance names (e.g., "Sun Painting", "Pilgrimage Part 1")
+        # These are typically paintings or special doors that don't follow the standard naming pattern
+        # For these, the entrance name itself is the door name, and the door room is the connected_region
+        if not to_match and not through_match and connected_region:
+            # The entrance name itself is the door name
+            # The door room is the connected region (target region)
+            door_name = entrance_name
+            door_room = connected_region
+            logger.debug(f"Entrance '{entrance_name}' is a simple door/painting, using connected_region '{connected_region}' as door room")
+
         # Check if the rule is broken (returns strings instead of booleans)
         # This happens when the analyzer fails to properly analyze lingo_can_use_entrance
         is_broken_rule = self._is_broken_entrance_rule(rule)
+
+        # Temporary logging
+        if entrance_name == "Sun Painting":
+            import traceback
+            logger.info(f"DEBUG Sun Painting: door_name={door_name}, door_room={door_room}, target_region={target_region}, connected_region={connected_region}")
+            logger.info(f"DEBUG Sun Painting: is_broken_rule={is_broken_rule}")
+            logger.info(f"DEBUG Sun Painting: rule={rule}")
+            logger.info(f"DEBUG Sun Painting: Called from: {traceback.extract_stack()[-3]}")
 
         if is_broken_rule and door_name is not None:
             # Replace with a proper helper call

@@ -30,32 +30,30 @@ export function lingo_can_use_entrance(snapshot, staticData, room, door) {
   const effectiveRoom = door[0] !== null ? door[0] : room;
   const doorName = door[1];
 
-  // Build the door item name: "Room - Door"
-  const doorItemName = `${effectiveRoom} - ${doorName}`;
-
   // Get player ID from snapshot (usually 1 for single-player)
   const playerId = snapshot?.playerId || '1';
+  const settings = staticData?.settings?.[playerId];
 
-  // Check if this door has an associated item in the game's item list
-  const items = staticData?.items?.[playerId];
-  const doorItemExists = items && (doorItemName in items);
+  // First, check if this door has access requirements
+  const doorReqs = settings?.door_reqs?.[effectiveRoom]?.[doorName];
 
-  if (doorItemExists) {
+  if (doorReqs) {
+    // This door has access requirements - check them first
+    if (!_lingo_can_satisfy_requirements(snapshot, staticData, doorReqs)) {
+      return false;
+    }
+  }
+
+  // Then, check if this door requires an item (listed in item_by_door)
+  const itemByDoor = settings?.item_by_door?.[effectiveRoom];
+  if (itemByDoor && doorName in itemByDoor) {
     // This door requires an item - check if player has it
+    const doorItemName = itemByDoor[doorName];
     const hasItem = !!(snapshot?.inventory && snapshot.inventory[doorItemName] > 0);
     return hasItem;
   }
 
-  // Door doesn't have an associated item, check if it has access requirements
-  const settings = staticData?.settings?.[playerId];
-  const doorReqs = settings?.door_reqs?.[effectiveRoom]?.[doorName];
-
-  if (doorReqs) {
-    // This door has access requirements - check them
-    return _lingo_can_satisfy_requirements(snapshot, staticData, doorReqs);
-  }
-
-  // No item and no requirements - door is always accessible
+  // Door has no requirements or item requirement - it's accessible
   return true;
 }
 
@@ -183,36 +181,30 @@ export function _lingo_can_satisfy_requirements(snapshot, staticData, access) {
  * @returns {boolean} True if the door can be opened
  */
 function _lingo_can_open_door(snapshot, staticData, room, door) {
-  // Build the door item name: "Room - Door"
-  const doorItemName = `${room} - ${door}`;
-
   const playerId = snapshot?.playerId || '1';
-  const items = staticData?.items?.[playerId];
-  const doorItemExists = items && (doorItemName in items);
+  const settings = staticData?.settings?.[playerId];
 
-  if (doorItemExists) {
+  // First, check if this door has access requirements
+  const doorReqs = settings?.door_reqs?.[room]?.[door];
+
+  if (doorReqs) {
+    // This door has access requirements - check them first
+    if (!_lingo_can_satisfy_requirements(snapshot, staticData, doorReqs)) {
+      return false;
+    }
+  }
+
+  // Then, check if this door requires an item (listed in item_by_door)
+  const itemByDoor = settings?.item_by_door?.[room];
+  if (itemByDoor && door in itemByDoor) {
     // This door requires an item - check if player has it
+    const doorItemName = itemByDoor[door];
     const inventory = snapshot?.inventory || {};
     const hasItem = !!(inventory[doorItemName] && inventory[doorItemName] > 0);
-
-    // Check if it's a progressive item
-    const itemData = items[doorItemName];
-    if (itemData?.groups && itemData.groups.includes('Progressive')) {
-      // For progressive items, we may need to check a specific count
-      // This would require looking up the progression requirement
-      // For now, just check if we have at least 1
-      return hasItem;
-    }
-
     return hasItem;
   }
 
-  // Door doesn't have an associated item, so it must be accessible through
-  // other means (e.g., access requirements).
-  // For doors without items, we need to check door_reqs from player_logic
-  // This data would need to be exported in settings or elsewhere
-  // For now, assume accessible
-  // TODO: Export and check door_reqs data
+  // Door has no requirements or item requirement - it's accessible
   return true;
 }
 
