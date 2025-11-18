@@ -22,6 +22,16 @@ on:
         type: boolean
         default: false
 
+      enable_retest:
+        description: 'Enable retesting of failed tests'
+        type: boolean
+        default: false
+
+      retest_iterations:
+        description: 'Number of times to retest failed tests'
+        type: number
+        default: 1
+
 permissions:
   contents: write  # Allow pushing commits and creating branches
 
@@ -97,6 +107,24 @@ jobs:
             --no-backup \
             -p
 
+      - name: Retest minimal spoiler failures (seed-1 mode)
+        if: inputs.spoiler_mode == 'seed-1' && inputs.enable_retest
+        run: |
+          source .venv/bin/activate
+          for i in $(seq 1 ${{ inputs.retest_iterations }}); do
+            echo "Retest iteration $i of ${{ inputs.retest_iterations }}"
+            python scripts/test/test-all-templates.py \
+              --retest \
+              --retest-seed-specific \
+              --retest-continue-after-failure \
+              --seed 1 \
+              --every-nth ${{ matrix.split_total }} \
+              --skip-first $((${{ matrix.split_num }} - 1)) \
+              --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+              --no-backup \
+              -p
+          done
+
       - name: Run minimal spoiler test (seeds-1-10 mode)
         if: inputs.spoiler_mode == 'seeds-1-10'
         run: |
@@ -106,6 +134,22 @@ jobs:
             --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
             --no-backup \
             -p
+
+      - name: Retest minimal spoiler failures (seeds-1-10 mode)
+        if: inputs.spoiler_mode == 'seeds-1-10' && inputs.enable_retest
+        run: |
+          source .venv/bin/activate
+          for i in $(seq 1 ${{ inputs.retest_iterations }}); do
+            echo "Retest iteration $i of ${{ inputs.retest_iterations }}"
+            python scripts/test/test-all-templates.py \
+              --retest \
+              --retest-seed-specific \
+              --retest-continue-after-failure \
+              --seed ${{ matrix.split_num }} \
+              --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+              --no-backup \
+              -p
+          done
 
       - name: Upload test results for split ${{ matrix.split_num }}
         if: always()

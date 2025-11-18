@@ -251,6 +251,11 @@ def main():
         help='When used with --retest, also include templates that have never been tested before'
     )
     parser.add_argument(
+        '--retest-seed-specific',
+        action='store_true',
+        help='When used with --retest, only retest templates that failed on the specific seed being tested (requires --seed to be set)'
+    )
+    parser.add_argument(
         '--include-error-details',
         action='store_true',
         help='Include first_error_line and first_warning_line fields in test results (disabled by default)'
@@ -337,6 +342,14 @@ def main():
 
     if args.retest_include_untested and not args.retest:
         print("Error: --retest-include-untested can only be used with --retest")
+        sys.exit(1)
+
+    if args.retest_seed_specific and not args.retest:
+        print("Error: --retest-seed-specific can only be used with --retest")
+        sys.exit(1)
+
+    if args.retest_seed_specific and args.seed_range:
+        print("Error: --retest-seed-specific cannot be used with --seed-range (it requires a single --seed)")
         sys.exit(1)
 
     if args.every_nth and args.every_nth < 1:
@@ -561,7 +574,22 @@ def main():
             sys.exit(1)
 
         # Get list of failed templates and their failing seed info
-        failed_templates = get_failed_templates(existing_results['results'], args.multiplayer)
+        # If --retest-seed-specific is used, only get templates that failed on the specific seed
+        specific_seed = None
+        if args.retest_seed_specific:
+            try:
+                # Get the seed from the seed list (should be a single seed)
+                if len(seed_list) == 1:
+                    specific_seed = seed_list[0]
+                    print(f"Retest mode: Only retesting templates that failed on seed {specific_seed}")
+                else:
+                    print("Error: --retest-seed-specific requires a single seed (use --seed N, not --seed-range)")
+                    sys.exit(1)
+            except (ValueError, IndexError):
+                print("Error: --retest-seed-specific requires a valid seed number")
+                sys.exit(1)
+
+        failed_templates = get_failed_templates(existing_results['results'], args.multiplayer, specific_seed)
 
         # If --retest-continue is specified, also include templates that haven't been tested up to that threshold
         templates_to_test = set(failed_templates)

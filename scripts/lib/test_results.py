@@ -55,13 +55,69 @@ def is_test_passing(template_file: str, test_results: Dict, multiplayer: bool = 
         return spoiler_test.get('pass_fail') == 'passed'
 
 
-def get_failed_templates(test_results: Dict, multiplayer: bool = False) -> List[str]:
+def is_seed_failing(template_file: str, test_results: Dict, seed: int, multiplayer: bool = False) -> bool:
+    """
+    Check if a specific seed is failing for a template.
+
+    Args:
+        template_file: Name of the template file
+        test_results: The results dictionary loaded from test-results.json
+        seed: The seed number to check
+        multiplayer: If True, check multiplayer test results; otherwise check spoiler test results
+
+    Returns:
+        True if the specific seed is failing, False otherwise
+    """
+    if template_file not in test_results:
+        return False
+
+    result = test_results[template_file]
+
+    if not isinstance(result, dict):
+        return False
+
+    # Check if this has individual_results for different seeds
+    individual_results = result.get('individual_results', {})
+    if individual_results and str(seed) in individual_results:
+        seed_result = individual_results[str(seed)]
+        # Check the specific seed's result
+        if multiplayer:
+            return not seed_result.get('multiplayer_test', {}).get('success', False)
+        else:
+            return seed_result.get('spoiler_test', {}).get('pass_fail') != 'passed'
+
+    # Check if this is a seed range result with first_failure_seed
+    first_failure_seed = result.get('first_failure_seed')
+    if first_failure_seed is not None:
+        # Template failed at a specific seed - check if it's this one
+        return seed == first_failure_seed
+
+    # Check if this is a single seed result and matches our seed
+    result_seed = result.get('seed')
+    if result_seed is not None:
+        try:
+            result_seed_num = int(result_seed)
+            if result_seed_num == seed:
+                # This is the same seed, check if it's failing
+                if multiplayer:
+                    return not result.get('multiplayer_test', {}).get('success', False)
+                else:
+                    return result.get('spoiler_test', {}).get('pass_fail') != 'passed'
+        except (ValueError, TypeError):
+            pass
+
+    # Can't determine seed-specific failure
+    return False
+
+
+def get_failed_templates(test_results: Dict, multiplayer: bool = False, specific_seed: int = None) -> List[str]:
     """
     Get a list of template files that have failing tests, sorted alphabetically.
 
     Args:
         test_results: The results dictionary loaded from test-results.json
         multiplayer: If True, check multiplayer test results; otherwise check spoiler test results
+        specific_seed: If provided, only return templates that failed on this specific seed
 
     Returns:
         List of template file names that are failing
@@ -69,8 +125,14 @@ def get_failed_templates(test_results: Dict, multiplayer: bool = False) -> List[
     failed_templates = []
 
     for template_file, result in test_results.items():
-        if not is_test_passing(template_file, test_results, multiplayer):
-            failed_templates.append(template_file)
+        if specific_seed is not None:
+            # Check if this specific seed is failing
+            if is_seed_failing(template_file, test_results, specific_seed, multiplayer):
+                failed_templates.append(template_file)
+        else:
+            # Check if any test is failing
+            if not is_test_passing(template_file, test_results, multiplayer):
+                failed_templates.append(template_file)
 
     return sorted(failed_templates)
 
