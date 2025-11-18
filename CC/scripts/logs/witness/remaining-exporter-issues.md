@@ -2,7 +2,7 @@
 
 ## Issue 1: Laser Activation Locations Have Incorrect Access Rules
 
-**Status:** Not Fixed
+**Status:** Partially Fixed - Requires Helper Functions
 **Priority:** High
 **Sphere:** 0
 
@@ -65,8 +65,28 @@ The laser activation locations should either:
 - `exporter/analyzer.py` - Analyzes lambda functions
 - `exporter/games/witness.py` - Witness-specific export handling
 
-**Next Steps:**
-1. Investigate why the analyzer is converting these dependencies to constant true
-2. Check if the Python lambda functions are being created correctly
-3. Determine if a Witness-specific helper or custom export handler is needed
-4. Implement a fix that properly exports entity completion checks
+**Progress Update:**
+
+The region simplification in postprocess_rule has been disabled (committed in ef194cee). The laser activation locations now export with `{'type': 'conditional', ...}` patterns (region.can_reach checks) instead of constant true.
+
+However, the frontend cannot fully evaluate these patterns because:
+1. The pattern references "self" (the region object in Python)
+2. The analyzer exports "self" as a string without capturing which region it refers to
+3. The frontend has no way to know which region "self" means
+
+**Attempted Solutions:**
+1. ✗ Disable simplification entirely - exports conditional pattern but frontend can't evaluate it
+2. ✗ Convert pattern to can_reach helper - can't extract region name from bound method
+3. ✗ Add region context to postprocess_rule - would require significant exporter changes
+
+**Remaining Options:**
+1. Create helper functions file for The Witness that manually maps laser activations to regions
+2. Modify the Witness world code (player_logic.py) to not use region.can_reach lambdas
+3. Enhance analyzer to track bound method context and inject region names into exports
+4. Implement frontend support for evaluating the self-referential conditional pattern
+
+**Next Steps - Helper Functions Approach:**
+1. Move this to remaining-helper-issues.md
+2. Create `frontend/public/helpers/witness.js` with region reachability helpers
+3. Map each laser activation to its required region
+4. Modify exporter to detect laser activations and convert to helper calls
