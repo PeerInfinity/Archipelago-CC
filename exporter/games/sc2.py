@@ -65,25 +65,62 @@ class SC2GameExportHandler(GenericGameExportHandler):
         #   "object": {"type": "name", "name": "logic"},
         #   "attr": "attribute_name"
         # }
-        # These are SC2Logic instance attributes that map to world settings
+        # These could be either:
+        # 1. SC2Logic helper methods accessed without parentheses (should become helper calls)
+        # 2. SC2Logic instance attributes that map to world settings (should become self.attribute)
         if rule.get('type') == 'attribute':
             obj = rule.get('object', {})
             if obj.get('type') == 'name' and obj.get('name') == 'logic':
-                # This is a logic.attribute_name access - convert to self.attribute_name
-                # The rule engine knows how to resolve self.attribute from settings
                 attr_name = rule.get('attr')
 
-                logger.debug(f"[SC2] Converting logic.{attr_name} to self.{attr_name} (settings access)")
-
-                # Convert to self attribute access which the rule engine resolves from settings
-                converted_rule = {
-                    'type': 'attribute',
-                    'object': {'type': 'name', 'name': 'self'},
-                    'attr': attr_name
+                # List of known helper method names that might be accessed without parentheses
+                # These should be converted to helper calls, not self attributes
+                known_helpers = {
+                    'terran_common_unit', 'terran_early_tech', 'terran_air', 'terran_air_anti_air',
+                    'terran_competent_ground_to_air', 'terran_competent_anti_air', 'terran_bio_heal',
+                    'terran_basic_anti_air', 'terran_defense_rating', 'terran_competent_comp',
+                    'terran_mobile_detector', 'terran_beats_protoss_deathball', 'terran_base_trasher',
+                    'terran_can_rescue', 'terran_cliffjumper', 'terran_able_to_snipe_defiler',
+                    'terran_respond_to_colony_infestations', 'terran_survives_rip_field',
+                    'terran_sustainable_mech_heal',
+                    'protoss_common_unit', 'protoss_basic_anti_air', 'protoss_competent_anti_air',
+                    'protoss_basic_splash', 'protoss_anti_armor_anti_air', 'protoss_anti_light_anti_air',
+                    'protoss_can_attack_behind_chasm', 'protoss_has_blink', 'protoss_heal',
+                    'protoss_stalker_upgrade', 'protoss_static_defense', 'protoss_fleet',
+                    'protoss_competent_comp', 'protoss_hybrid_counter',
+                    'zerg_common_unit', 'zerg_competent_anti_air', 'zerg_basic_anti_air',
+                    'zerg_competent_comp', 'zerg_competent_defense', 'zerg_pass_vents',
+                    'spread_creep', 'morph_brood_lord', 'morph_impaler_or_lurker', 'morph_viper',
+                    'basic_kerrigan', 'kerrigan_levels', 'two_kerrigan_actives',
+                    'marine_medic_upgrade', 'can_nuke'
                 }
 
-                # Continue expanding
-                return super().expand_rule(converted_rule)
+                if attr_name in known_helpers:
+                    # This is a helper method accessed without parentheses
+                    # Convert to a helper call
+                    logger.debug(f"[SC2] Converting logic.{attr_name} to helper call (method accessed as attribute)")
+
+                    converted_rule = {
+                        'type': 'helper',
+                        'name': attr_name,
+                        'args': []
+                    }
+
+                    # Continue expanding the converted rule
+                    return super().expand_rule(converted_rule)
+                else:
+                    # This is a settings attribute - convert to self.attribute_name
+                    # The rule engine knows how to resolve self.attribute from settings
+                    logger.debug(f"[SC2] Converting logic.{attr_name} to self.{attr_name} (settings access)")
+
+                    converted_rule = {
+                        'type': 'attribute',
+                        'object': {'type': 'name', 'name': 'self'},
+                        'attr': attr_name
+                    }
+
+                    # Continue expanding
+                    return super().expand_rule(converted_rule)
 
         # Handle compare operations - recursively process left and right operands
         if rule.get('type') == 'compare':
