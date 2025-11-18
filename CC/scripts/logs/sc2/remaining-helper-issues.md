@@ -1,26 +1,19 @@
 # Remaining Helper Issues for Starcraft 2
 
-## Issue 1: engine_of_destruction_requirement not implemented
+**Current Test Status**: Progressing through Sphere 16.3+
 
-**Status**: In Progress
-**Severity**: High - Test fails at Sphere 16.1
-**Test Failure**:
-- Sphere 16.1 fails with 9 locations not accessible:
-  - Beat Engine of Destruction
-  - Engine of Destruction: Loki
-  - Engine of Destruction: North Devourer
-  - Engine of Destruction: Northeast Base
-  - Engine of Destruction: Northwest Base
-  - Engine of Destruction: Southeast Base
-  - Engine of Destruction: Southeast Devourer
-  - Engine of Destruction: Victory
-  - Engine of Destruction: West Base
+Many mission requirement helpers have been implemented. The test is now progressing significantly further than initial run (was failing at 15.22, now passing 16.3+).
 
-**Root Cause**:
-The `engine_of_destruction_requirement` helper function is stubbed out and always returns `false`.
+## Remaining Stub Helpers
 
-**Expected Behavior**:
-Need to analyze sphere log to determine what items make these locations accessible.
+The following helpers are still stubbed and may need implementation as testing progresses:
+- `welcome_to_the_jungle_requirement`
+- `night_terrors_requirement`
+- `trouble_in_paradise_requirement`
+- `enemy_intelligence_*` helpers (first/second/third stage, cliff garrison, garrisonable unit)
+- `the_escape_stuff_granted`
+- Various Nova helpers (nova_any_weapon, nova_ranged_weapon, nova_splash, nova_full_stealth, etc.)
+- Enemy Shadow helpers (various stages and objectives)
+- Various late-game mission helpers (dark_skies, supreme, into_the_void, essence_of_eternity, etc.)
 
-**Fix Required**:
-Implement `engine_of_destruction_requirement` in `frontend/modules/shared/gameLogic/sc2/helpers.js`.
+**Note**: These will be implemented as needed when the test encounters them.
