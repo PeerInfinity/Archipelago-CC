@@ -751,7 +751,10 @@ export default {
     },
     welcome_to_the_jungle_requirement: () => false,
     night_terrors_requirement: () => false,
-    engine_of_destruction_requirement: () => false,
+    engine_of_destruction_requirement: (snapshot, staticData) => {
+        // Engine of Destruction requires completing Cutthroat mission
+        return has(snapshot, 'Beat Cutthroat');
+    },
     trouble_in_paradise_requirement: () => false,
     sudden_strike_requirement: () => false,
     sudden_strike_can_reach_objectives: () => false,
@@ -761,15 +764,41 @@ export default {
     enemy_intelligence_cliff_garrison: () => false,
     enemy_intelligence_garrisonable_unit: () => false,
     the_escape_first_stage_requirement: (snapshot, staticData) => {
-        // First stage of The Escape requires basic Nova equipment
-        // Check for any Nova suit module
+        // First stage of The Escape requires basic Nova suit module (not Jump Suit)
+        // Check for Armored, Energy, or Progressive Stealth suit modules
         return has_any(snapshot, [
             'Armored Suit Module (Nova Suit Module)',
             'Energy Suit Module (Nova Suit Module)',
             'Progressive Stealth Suit Module (Nova Suit Module)'
         ]);
     },
-    the_escape_requirement: () => false,
+    the_escape_requirement: (snapshot, staticData) => {
+        // The Escape mission requires a Nova suit module AND at least 2 Nova weapons
+        // First stage requirement (suit module - not Jump Suit)
+        const hasSuitModule = has_any(snapshot, [
+            'Armored Suit Module (Nova Suit Module)',
+            'Energy Suit Module (Nova Suit Module)',
+            'Progressive Stealth Suit Module (Nova Suit Module)'
+        ]);
+
+        // Count Nova weapons (need at least 2)
+        const novaWeapons = [
+            'Blazefire Gunblade (Nova Weapon)',
+            'C20A Canister Rifle (Nova Weapon)',
+            'Hellfire Shotgun (Nova Weapon)',
+            'Monomolecular Blade (Nova Weapon)',
+            'Plasma Rifle (Nova Weapon)'
+        ];
+
+        let weaponCount = 0;
+        for (const weapon of novaWeapons) {
+            if (has(snapshot, weapon)) {
+                weaponCount++;
+            }
+        }
+
+        return hasSuitModule && weaponCount >= 2;
+    },
     the_escape_stuff_granted: () => false,
     /**
      * Brothers in Arms mission requirement
