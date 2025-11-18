@@ -255,15 +255,24 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         logger.info(f"Found TotalSMZ3 Location object for '{rule_target_name}', extracting Available logic")
 
         # Now we have the TotalSMZ3 Location object!
-        # Extract and analyze its Available function
+        # The Available method is: return self.Region.CanEnter(items) and self.canAccess(items)
+        # We want to extract just the canAccess function, not the full Available method
+        # because the region accessibility is handled separately
         try:
-            # SMZ3 uses Available method, not canAccess
-            can_access_func = loc_object.Available
-
             # Import the analyzer here to avoid circular imports
             from exporter.analyzer import analyze_rule
 
-            # Analyze the Available function
+            # Extract the canAccess lambda from the location object
+            # This contains the location-specific access requirements
+            can_access_func = loc_object.canAccess
+
+            logger.info(f"Analyzing canAccess function for '{rule_target_name}'")
+
+            # Store the region name in the rule target so postprocess_rule can use it
+            # to inline region-specific methods like CanBeatBoss
+            self._current_location_region = loc_object.Region.Name if hasattr(loc_object, 'Region') else None
+
+            # Analyze the canAccess function
             # This function has signature: lambda items: <requirements>
             # where items is a TotalSMZ3 Progression object
             analyzed_rule = analyze_rule(can_access_func)
@@ -272,12 +281,15 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 logger.info(f"Successfully extracted location logic for '{rule_target_name}'")
                 return analyzed_rule
             else:
-                logger.warning(f"Failed to analyze Available for '{rule_target_name}', falling back to default")
+                logger.warning(f"Failed to analyze canAccess for '{rule_target_name}', falling back to default")
                 return None
 
         except Exception as e:
             logger.error(f"Error analyzing TotalSMZ3 location logic for '{rule_target_name}': {e}")
+            logger.exception(e)  # Log full traceback
             return None
+        finally:
+            self._current_location_region = None
 
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -404,6 +416,64 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                 # Handle items.MethodName() - convert to helper call
                 if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'items':
                     logger.debug(f"Converting items.{method_name}() to helper call")
+                    return {
+                        'type': 'helper',
+                        'name': f'smz3_{method_name}',
+                        'args': [self.postprocess_rule(arg) for arg in filtered_args]
+                    }
+
+                # Handle self.CanBeatBoss() - inline region-specific logic
+                # Different dungeons have different boss requirements
+                if (isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self' and
+                    method_name == 'CanBeatBoss'):
+                    region_name = getattr(self, '_current_location_region', None)
+                    logger.debug(f"Inlining self.CanBeatBoss() for region: {region_name}")
+
+                    # Tower of Hera: Sword OR Hammer
+                    if region_name == "Tower of Hera":
+                        return {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'item_check', 'item': 'ProgressiveSword'},
+                                {'type': 'item_check', 'item': 'Hammer'}
+                            ]
+                        }
+
+                    # Turtle Rock: Firerod AND Icerod
+                    elif region_name == "Turtle Rock":
+                        return {
+                            'type': 'and',
+                            'conditions': [
+                                {'type': 'item_check', 'item': 'Firerod'},
+                                {'type': 'item_check', 'item': 'Icerod'}
+                            ]
+                        }
+
+                    # Thieves' Town: Sword OR Hammer OR Somaria OR Byrna
+                    elif region_name == "Thieves' Town":
+                        return {
+                            'type': 'or',
+                            'conditions': [
+                                {'type': 'item_check', 'item': 'ProgressiveSword'},
+                                {'type': 'item_check', 'item': 'Hammer'},
+                                {'type': 'item_check', 'item': 'Somaria'},
+                                {'type': 'item_check', 'item': 'Byrna'}
+                            ]
+                        }
+
+                    # Desert Palace or any other: use generic helper
+                    # Sword OR Hammer OR Bow OR Firerod OR Icerod OR Byrna OR Somaria
+                    else:
+                        return {
+                            'type': 'helper',
+                            'name': 'smz3_CanBeatBoss',
+                            'args': []
+                        }
+
+                # Handle other self.MethodName() calls
+                if (isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'self'):
+                    logger.debug(f"Found self.{method_name}() call - converting to helper")
+                    # Convert to helper call with smz3_ prefix
                     return {
                         'type': 'helper',
                         'name': f'smz3_{method_name}',
