@@ -1709,6 +1709,68 @@ export const helperFunctions = {
   },
 
   /**
+   * Check if Pain and Panic Cup is accessible.
+   * Based on worlds/kh2/Rules.py:get_pain_and_panic_cup_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Pain and Panic Cup
+   */
+  get_pain_and_panic_cup_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const partyLimit = ['Donald Fantasia', 'Donald Flare Force', 'Teamwork', 'Tornado Fusion'];
+    const partyLimitCount = helperFunctions.kh2_list_count_sum(partyLimit, snapshot);
+    const hasReflect = (snapshot?.inventory?.['Reflect Element'] || 0) > 0;
+
+    let basicRequirements = false;
+    if (fightLogic === 0) { // easy: 2 party limits + Reflect
+      basicRequirements = partyLimitCount >= 2 && hasReflect;
+    } else if (fightLogic === 1) { // normal: 1 party limit + Reflect
+      basicRequirements = partyLimitCount >= 1 && hasReflect;
+    } else { // hard: just Reflect
+      basicRequirements = hasReflect;
+    }
+
+    // Also requires Future Pete Event OR Hades Cup Trophy
+    const hasFuturePete = (snapshot?.inventory?.['Future Pete Event'] || 0) > 0;
+    const hasHadesCup = (snapshot?.inventory?.['Hades Cup Trophy'] || 0) > 0;
+
+    return basicRequirements && (hasFuturePete || hasHadesCup);
+  },
+
+  /**
+   * Check if Goddess of Fate Cup is accessible.
+   * Based on worlds/kh2/Rules.py:get_goddess_of_fate_cup_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Goddess of Fate Cup
+   */
+  get_goddess_of_fate_cup_rules(snapshot, staticData) {
+    // Requires all three cup events
+    const hasP_and_P = (snapshot?.inventory?.['Pain and Panic Cup Event'] || 0) > 0;
+    const hasCerberus = (snapshot?.inventory?.['Cerberus Cup Event'] || 0) > 0;
+    const hasTitan = (snapshot?.inventory?.['Titan Cup Event'] || 0) > 0;
+
+    return hasP_and_P && hasCerberus && hasTitan;
+  },
+
+  /**
+   * Check if Hades Cup is accessible.
+   * Based on worlds/kh2/Rules.py:get_hades_cup_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Hades Cup
+   */
+  get_hades_cup_rules(snapshot, staticData) {
+    // Requires Goddess of Fate Cup Event
+    return (snapshot?.inventory?.['Goddess of Fate Cup Event'] || 0) > 0;
+  },
+
+  /**
    * Utility: Sum up the count of all items in a list.
    * Based on worlds/kh2/Rules.py:93-100
    *
