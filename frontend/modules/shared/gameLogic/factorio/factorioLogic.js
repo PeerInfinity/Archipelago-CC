@@ -44,14 +44,47 @@ export const factorioStateModule = {
 export const helperFunctions = {
   /**
    * Check if the player has an item (including technologies)
+   * Handles progressive item resolution for Factorio
    * @param {Object} snapshot - Game state snapshot
    * @param {Object} staticData - Static game data
    * @param {string} itemName - Name of the item/technology to check
    * @returns {boolean} True if player has the item
    */
   has(snapshot, staticData, itemName) {
-    // Check inventory for the item (works for both items and technologies)
-    return !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
+    if (!snapshot?.inventory) {
+      return false;
+    }
+
+    // Direct check: does the inventory have this exact item?
+    if (snapshot.inventory[itemName] > 0) {
+      return true;
+    }
+
+    // Progressive item resolution: Check if this item is a resolved form of a progressive item
+    // For Factorio, technologies like "logistic-science-pack" can be obtained through "progressive-science-pack"
+    const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
+    const progressionMapping = staticData?.progression_mapping?.[playerSlot];
+
+    if (progressionMapping) {
+      // Check each progressive item in the mapping
+      for (const [progressiveItemName, mapping] of Object.entries(progressionMapping)) {
+        if (!mapping.items || !Array.isArray(mapping.items)) {
+          continue;
+        }
+
+        // Check if the requested item is one of the resolved forms
+        const matchingLevel = mapping.items.find(levelData => levelData.name === itemName);
+        if (matchingLevel) {
+          // Found it! Now check if the player has enough of the progressive item
+          const progressiveCount = snapshot.inventory[progressiveItemName] || 0;
+          if (progressiveCount >= matchingLevel.level) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
   },
 
   /**
