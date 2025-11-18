@@ -639,9 +639,26 @@ export default {
     // These will return false for now and can be implemented as needed
     terran_defense_rating,
     terran_mobile_detector: () => false,
-    terran_beats_protoss_deathball: () => false,
+    terran_beats_protoss_deathball: (snapshot, staticData) => {
+        // Terran composition that can beat Protoss deathball
+        // Requires strong anti-armor units and detection
+        const advancedTactics = isAdvancedTactics(staticData);
+
+        return (
+            has_any(snapshot, ['Battlecruiser', 'Banshee', 'Viking'])
+            && terran_competent_anti_air(snapshot, staticData)
+        ) || (
+            advancedTactics
+            && has(snapshot, 'Siege Tank')
+            && terran_competent_comp(snapshot, staticData)
+        );
+    },
     terran_base_trasher: () => false,
-    terran_can_rescue: () => false,
+    terran_can_rescue: (snapshot, staticData) => {
+        // Can rescue requires ground units that can reach and defend the rescue targets
+        // Any terran common unit should suffice
+        return terran_common_unit(snapshot, staticData);
+    },
     terran_cliffjumper: () => false,
     terran_able_to_snipe_defiler: () => false,
     terran_respond_to_colony_infestations: (snapshot, staticData) => {
@@ -751,9 +768,15 @@ export default {
     },
     welcome_to_the_jungle_requirement: () => false,
     night_terrors_requirement: () => false,
-    engine_of_destruction_requirement: () => false,
+    engine_of_destruction_requirement: (snapshot, staticData) => {
+        // Engine of Destruction requires completing Cutthroat mission
+        return has(snapshot, 'Beat Cutthroat');
+    },
     trouble_in_paradise_requirement: () => false,
-    sudden_strike_requirement: () => false,
+    sudden_strike_requirement: (snapshot, staticData) => {
+        // Sudden Strike requires completing The Escape mission
+        return has(snapshot, 'Beat The Escape');
+    },
     sudden_strike_can_reach_objectives: () => false,
     enemy_intelligence_first_stage_requirement: () => false,
     enemy_intelligence_second_stage_requirement: () => false,
@@ -761,15 +784,41 @@ export default {
     enemy_intelligence_cliff_garrison: () => false,
     enemy_intelligence_garrisonable_unit: () => false,
     the_escape_first_stage_requirement: (snapshot, staticData) => {
-        // First stage of The Escape requires basic Nova equipment
-        // Check for any Nova suit module
+        // First stage of The Escape requires basic Nova suit module (not Jump Suit)
+        // Check for Armored, Energy, or Progressive Stealth suit modules
         return has_any(snapshot, [
             'Armored Suit Module (Nova Suit Module)',
             'Energy Suit Module (Nova Suit Module)',
             'Progressive Stealth Suit Module (Nova Suit Module)'
         ]);
     },
-    the_escape_requirement: () => false,
+    the_escape_requirement: (snapshot, staticData) => {
+        // The Escape mission requires a Nova suit module AND at least 2 Nova weapons
+        // First stage requirement (suit module - not Jump Suit)
+        const hasSuitModule = has_any(snapshot, [
+            'Armored Suit Module (Nova Suit Module)',
+            'Energy Suit Module (Nova Suit Module)',
+            'Progressive Stealth Suit Module (Nova Suit Module)'
+        ]);
+
+        // Count Nova weapons (need at least 2)
+        const novaWeapons = [
+            'Blazefire Gunblade (Nova Weapon)',
+            'C20A Canister Rifle (Nova Weapon)',
+            'Hellfire Shotgun (Nova Weapon)',
+            'Monomolecular Blade (Nova Weapon)',
+            'Plasma Rifle (Nova Weapon)'
+        ];
+
+        let weaponCount = 0;
+        for (const weapon of novaWeapons) {
+            if (has(snapshot, weapon)) {
+                weaponCount++;
+            }
+        }
+
+        return hasSuitModule && weaponCount >= 2;
+    },
     the_escape_stuff_granted: () => false,
     /**
      * Brothers in Arms mission requirement
@@ -820,7 +869,10 @@ export default {
     enemy_shadow_door_unlocks_tool: () => false,
     enemy_shadow_tripwires_tool: () => false,
     enemy_shadow_domination: () => false,
-    salvation_requirement: () => false,
+    salvation_requirement: (snapshot, staticData) => {
+        // Salvation requires completing The Host mission
+        return has(snapshot, 'Beat The Host');
+    },
     steps_of_the_rite_requirement: (snapshot, staticData) => {
         return protoss_competent_comp(snapshot, staticData)
             || (protoss_common_unit(snapshot, staticData)
@@ -859,7 +911,10 @@ export default {
         );
     },
     supreme_requirement: () => false,
-    the_host_requirement: () => false,
+    the_host_requirement: (snapshot, staticData) => {
+        // The Host requires completing Templar's Return mission
+        return has(snapshot, "Beat Templar's Return");
+    },
     into_the_void_requirement: () => false,
     essence_of_eternity_requirement: () => false,
     amons_fall_requirement: () => false,
