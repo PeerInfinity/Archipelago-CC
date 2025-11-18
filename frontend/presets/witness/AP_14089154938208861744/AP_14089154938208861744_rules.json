@@ -601,12 +601,11 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Keep 2nd Pressure Plate>",
-                        "<bound method Region.can_reach of Keep 4th Pressure Plate>",
+                        "<bound method Region.can_reach of Keep 4th Maze>",
                         "<bound method Region.can_reach of Keep>",
                         "<bound method Region.can_reach of Keep Tower>",
-                        "<bound method Region.can_reach of Keep 3rd Pressure Plate>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eb39daea840>"
+                        "<bound method Region.can_reach of Keep 2nd Maze>",
+                        "<bound method Region.can_reach of Keep 3rd Maze>"
                       ]
                     }
                   }
@@ -627,11 +626,12 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
+                        "<bound method Region.can_reach of Keep 4th Pressure Plate>",
+                        "<bound method Region.can_reach of Keep 2nd Pressure Plate>",
                         "<bound method Region.can_reach of Keep>",
-                        "<bound method Region.can_reach of Keep 3rd Maze>",
-                        "<bound method Region.can_reach of Keep 4th Maze>",
                         "<bound method Region.can_reach of Keep Tower>",
-                        "<bound method Region.can_reach of Keep 2nd Maze>"
+                        "<bound method Region.can_reach of Keep 3rd Pressure Plate>",
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed29771ee80>"
                       ]
                     }
                   }
@@ -764,50 +764,14 @@
             "name": "Town Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
+              "type": "helper",
+              "name": "can_reach_region",
+              "args": [
+                {
                   "type": "constant",
-                  "value": 1
+                  "value": "Town Tower Top"
                 }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": {
-                "type": "compare",
-                "left": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "op": "in",
-                "right": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "reachable_regions"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                }
-              }
+              ]
             },
             "item": {
               "name": "+1 Laser",
@@ -889,50 +853,14 @@
             "name": "Bunker Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
+              "type": "helper",
+              "name": "can_reach_region",
+              "args": [
+                {
                   "type": "constant",
-                  "value": 1
+                  "value": "Bunker Laser Platform"
                 }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": {
-                "type": "compare",
-                "left": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "op": "in",
-                "right": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "reachable_regions"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                }
-              }
+              ]
             },
             "item": {
               "name": "+1 Laser",
@@ -945,50 +873,14 @@
             "name": "Swamp Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
+              "type": "helper",
+              "name": "can_reach_region",
+              "args": [
+                {
                   "type": "constant",
-                  "value": 1
+                  "value": "Swamp Laser Area"
                 }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": {
-                "type": "compare",
-                "left": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "op": "in",
-                "right": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "reachable_regions"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                }
-              }
+              ]
             },
             "item": {
               "name": "+1 Laser",
@@ -1001,50 +893,14 @@
             "name": "Treehouse Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "subscript",
-                "value": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "state"
-                  },
-                  "attr": "stale"
-                },
-                "index": {
+              "type": "helper",
+              "name": "can_reach_region",
+              "args": [
+                {
                   "type": "constant",
-                  "value": 1
+                  "value": "Treehouse Laser Room"
                 }
-              },
-              "if_true": {
-                "type": "state_method",
-                "method": "update_reachable_regions",
-                "args": []
-              },
-              "if_false": {
-                "type": "compare",
-                "left": {
-                  "type": "name",
-                  "name": "self"
-                },
-                "op": "in",
-                "right": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "reachable_regions"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                }
-              }
+              ]
             },
             "item": {
               "name": "+1 Laser",
@@ -2492,7 +2348,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Quarry Stoneworks Upper Floor>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eb39dcbd120>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed297619760>"
                       ]
                     }
                   }
@@ -5625,7 +5481,7 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eb39dcbed40>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed29761b380>"
                       ]
                     }
                   }
@@ -5646,7 +5502,7 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eb39dcbede0>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed29761b420>"
                       ]
                     }
                   }
@@ -6246,28 +6102,8 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Bunker Cyan Room>"
-                      ]
-                    }
-                  }
-                },
-                {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "helper",
-                    "name": "condition",
-                    "args": []
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "condition"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "<bound method Region.can_reach of Bunker Laser Platform>"
+                        "<bound method Region.can_reach of Bunker Elevator>",
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed29761b920>"
                       ]
                     }
                   }
@@ -6309,8 +6145,28 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Bunker Elevator>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eb39dcbf2e0>"
+                        "<bound method Region.can_reach of Bunker Laser Platform>"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "all_of",
+                  "element_rule": {
+                    "type": "helper",
+                    "name": "condition",
+                    "args": []
+                  },
+                  "iterator_info": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "condition"
+                    },
+                    "iterator": {
+                      "type": "constant",
+                      "value": [
+                        "<bound method Region.can_reach of Bunker Cyan Room>"
                       ]
                     }
                   }
@@ -6346,28 +6202,8 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Bunker Cyan Room>"
-                      ]
-                    }
-                  }
-                },
-                {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "helper",
-                    "name": "condition",
-                    "args": []
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "condition"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "<bound method Region.can_reach of Bunker Laser Platform>"
+                        "<bound method Region.can_reach of Bunker Elevator>",
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed29761ba60>"
                       ]
                     }
                   }
@@ -6409,8 +6245,28 @@
                     "iterator": {
                       "type": "constant",
                       "value": [
-                        "<bound method Region.can_reach of Bunker Elevator>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eb39dcbf420>"
+                        "<bound method Region.can_reach of Bunker Laser Platform>"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "all_of",
+                  "element_rule": {
+                    "type": "helper",
+                    "name": "condition",
+                    "args": []
+                  },
+                  "iterator_info": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "condition"
+                    },
+                    "iterator": {
+                      "type": "constant",
+                      "value": [
+                        "<bound method Region.can_reach of Bunker Cyan Room>"
                       ]
                     }
                   }
@@ -8695,7 +8551,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Far>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eb39dae9800>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed29771de40>"
                       ]
                     }
                   }
@@ -8717,7 +8573,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Near>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eb39dae98a0>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed29771dee0>"
                       ]
                     }
                   }
@@ -8908,7 +8764,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Far>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eb39dae9d00>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed29771e340>"
                       ]
                     }
                   }
@@ -8930,7 +8786,7 @@
                       "type": "constant",
                       "value": [
                         "<bound method Region.can_reach of Mountain Floor 2 Light Bridge Room Near>",
-                        "<function convert_requirement_option.<locals>.<lambda> at 0x7eb39dae9da0>"
+                        "<function convert_requirement_option.<locals>.<lambda> at 0x7ed29771e3e0>"
                       ]
                     }
                   }
