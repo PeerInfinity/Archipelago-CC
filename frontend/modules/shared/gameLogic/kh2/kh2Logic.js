@@ -450,7 +450,7 @@ export const helperFunctions = {
 
     const defensiveTool = ['Reflect Element', 'Guard'];
     const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
-    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+    const partyLimit = ['Donald Fantasia', 'Donald Flare Force', 'Teamwork', 'Tornado Fusion'];
 
     let categoriesAvailable = 0;
     if (defensiveTool.some(tool => snapshot?.inventory?.[tool] > 0)) categoriesAvailable++;
@@ -538,7 +538,7 @@ export const helperFunctions = {
     const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
     const defensiveTool = ['Reflect Element', 'Guard'];
     const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
-    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+    const partyLimit = ['Donald Fantasia', 'Donald Flare Force', 'Teamwork', 'Tornado Fusion'];
 
     let categoriesAvailable = 0;
     if (formList.some(form => snapshot?.inventory?.[form] > 0)) categoriesAvailable++;
@@ -566,7 +566,7 @@ export const helperFunctions = {
     const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
     const defensiveTool = ['Reflect Element', 'Guard'];
     const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
-    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+    const partyLimit = ['Donald Fantasia', 'Donald Flare Force', 'Teamwork', 'Tornado Fusion'];
 
     let categoriesAvailable = 0;
     if (formList.some(form => snapshot?.inventory?.[form] > 0)) categoriesAvailable++;
@@ -668,7 +668,7 @@ export const helperFunctions = {
 
     const defensiveTool = ['Reflect Element', 'Guard'];
     const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
-    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+    const partyLimit = ['Donald Fantasia', 'Donald Flare Force', 'Teamwork', 'Tornado Fusion'];
 
     // Count categories using kh2_list_any_sum
     const categoriesAvailable = helperFunctions.kh2_list_any_sum(
@@ -1010,7 +1010,7 @@ export const helperFunctions = {
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
     const defensiveTool = ['Reflect Element', 'Guard'];
-    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+    const partyLimit = ['Donald Fantasia', 'Donald Flare Force', 'Teamwork', 'Tornado Fusion'];
     const aerialMove = ['Aerial Dive', 'Aerial Spiral', 'Horizontal Slash', 'Aerial Sweep', 'Aerial Finish'];
     const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
 
@@ -1088,7 +1088,7 @@ export const helperFunctions = {
     const settings = staticData?.settings || {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
-    const donaldLimit = ['Fantasia', 'Flare Force'];
+    const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
     const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
     const summons = ['Chicken Little', 'Stitch', 'Genie', 'Peter Pan'];
     const reflectElement = ['Reflect Element'];
@@ -1123,8 +1123,8 @@ export const helperFunctions = {
       'Explosion': 1,
       'Finishing Leap': 1,
       'Thunder Element': 3,
-      'Fantasia': 1,
-      'Flare Force': 1,
+      'Donald Fantasia': 1,
+      'Donald Flare Force': 1,
       'Genie': 1
     };
 
@@ -1233,7 +1233,7 @@ export const helperFunctions = {
 
     const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
     const defensiveTool = ['Reflect Element', 'Guard'];
-    const partyLimit = ['Fantasia', 'Flare Force', 'Teamwork', 'Tornado Fusion'];
+    const partyLimit = ['Donald Fantasia', 'Donald Flare Force', 'Teamwork', 'Tornado Fusion'];
     const summons = ['Chicken Little', 'Stitch', 'Genie', 'Peter Pan'];
 
     const categoriesAvailable = helperFunctions.kh2_list_any_sum(
@@ -1317,7 +1317,7 @@ export const helperFunctions = {
     const settings = staticData?.settings || {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
-    const donaldLimit = ['Fantasia', 'Flare Force'];
+    const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
     const formList = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
     const summons = ['Chicken Little', 'Stitch', 'Genie', 'Peter Pan'];
     const reflectElement = ['Reflect Element'];
@@ -1363,6 +1363,349 @@ export const helperFunctions = {
                           (snapshot?.inventory?.['Hades Cup Trophy'] > 0);
 
     return basicRequirements && hasHadesAccess;
+  },
+
+  /**
+   * Check if Genie Jafar fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_genie_jafar_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Genie Jafar fight
+   */
+  get_genie_jafar_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+
+    if (fightLogic === 0) { // easy: defensive tool + black magic + ground finisher + Finishing Plus (4 categories)
+      return helperFunctions.kh2_list_any_sum([defensiveTool, blackMagic, groundFinisher, ['Finishing Plus']], snapshot) >= 4;
+    } else if (fightLogic === 1) { // normal: defensive tool + ground finisher + Finishing Plus (3 categories)
+      return helperFunctions.kh2_list_any_sum([defensiveTool, groundFinisher, ['Finishing Plus']], snapshot) >= 3;
+    } else { // hard: defensive tool + Finishing Plus (2 categories)
+      return helperFunctions.kh2_list_any_sum([defensiveTool, ['Finishing Plus']], snapshot) >= 2;
+    }
+  },
+
+  /**
+   * Check if Roxas fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_roxas_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Roxas fight
+   */
+  get_roxas_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const easyRoxasTools = {
+      'Aerial Dodge': 1,
+      'Glide': 1,
+      'Limit Form': 1,
+      'Thunder Element': 1,
+      'Reflect Element': 2,
+      'Guard Break': 1,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Finishing Plus': 1,
+      'Blizzard Element': 1
+    };
+
+    const normalRoxasTools = {
+      'Thunder Element': 1,
+      'Reflect Element': 2,
+      'Guard Break': 1,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Finishing Plus': 1,
+      'Blizzard Element': 1
+    };
+
+    if (fightLogic === 0) { // easy
+      return helperFunctions.kh2_dict_count(easyRoxasTools, snapshot);
+    } else if (fightLogic === 1) { // normal
+      return helperFunctions.kh2_dict_count(normalRoxasTools, snapshot);
+    } else { // hard
+      return (snapshot?.inventory?.['Guard'] || 0) > 0;
+    }
+  },
+
+  /**
+   * Check if Xigbar fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_xigbar_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Xigbar fight
+   */
+  get_xigbar_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const easyXigbarTools = {
+      'Horizontal Slash': 1,
+      'Fire Element': 2,
+      'Finishing Plus': 1,
+      'Glide': 2,
+      'Aerial Dodge': 2,
+      'Quick Run': 2,
+      'Reflect Element': 1,
+      'Guard': 1
+    };
+
+    const normalXigbarTools = {
+      'Fire Element': 2,
+      'Finishing Plus': 1,
+      'Glide': 2,
+      'Aerial Dodge': 2,
+      'Quick Run': 2,
+      'Reflect Element': 1,
+      'Guard': 1
+    };
+
+    if (fightLogic === 0) { // easy: tools + Final Form level 1 + (Light & Darkness OR Final Form)
+      const hasTools = helperFunctions.kh2_dict_count(easyXigbarTools, snapshot);
+      const finalFormLevel = helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 1);
+      const hasLightOrFinal = (snapshot?.inventory?.['Light & Darkness'] || 0) > 0 ||
+                             (snapshot?.inventory?.['Final Form'] || 0) > 0;
+      return hasTools && finalFormLevel && hasLightOrFinal;
+    } else if (fightLogic === 1) { // normal: tools + Final Form level 1
+      const hasTools = helperFunctions.kh2_dict_count(normalXigbarTools, snapshot);
+      const finalFormLevel = helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 1);
+      return hasTools && finalFormLevel;
+    } else { // hard: Guard + Quick Run + Finishing Plus
+      return helperFunctions.kh2_has_all(snapshot, staticData, ['Guard', 'Quick Run', 'Finishing Plus']);
+    }
+  },
+
+  /**
+   * Check if Luxord fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_luxord_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Luxord fight
+   */
+  get_luxord_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const easyLuxordTools = {
+      'Aerial Dodge': 1,
+      'Glide': 1,
+      'Quick Run': 2,
+      'Guard': 1,
+      'Reflect Element': 2,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Limit Form': 1
+    };
+
+    const normalLuxordTools = {
+      'Aerial Dodge': 1,
+      'Glide': 1,
+      'Quick Run': 2,
+      'Guard': 1,
+      'Reflect Element': 2
+    };
+
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+
+    if (fightLogic === 0) { // easy: tools + any ground finisher
+      const hasTools = helperFunctions.kh2_dict_count(easyLuxordTools, snapshot);
+      const hasGroundFinisher = helperFunctions.kh2_has_any(snapshot, staticData, groundFinisher);
+      return hasTools && hasGroundFinisher;
+    } else if (fightLogic === 1) { // normal: tools + (gap closer OR ground finisher) >= 2
+      const hasTools = helperFunctions.kh2_dict_count(normalLuxordTools, snapshot);
+      const count = helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher], snapshot);
+      return hasTools && count >= 2;
+    } else { // hard: Guard + Quick Run
+      return helperFunctions.kh2_has_all(snapshot, staticData, ['Guard', 'Quick Run']);
+    }
+  },
+
+  /**
+   * Check if Saix fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_saix_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Saix fight
+   */
+  get_saix_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const easySaixTools = {
+      'Aerial Dodge': 1,
+      'Glide': 1,
+      'Quick Run': 2,
+      'Guard': 1,
+      'Reflect Element': 2,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Limit Form': 1
+    };
+
+    const normalSaixTools = {
+      'Aerial Dodge': 1,
+      'Glide': 1,
+      'Quick Run': 2,
+      'Guard': 1,
+      'Reflect Element': 2
+    };
+
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+
+    if (fightLogic === 0) { // easy: tools + any ground finisher
+      const hasTools = helperFunctions.kh2_dict_count(easySaixTools, snapshot);
+      const hasGroundFinisher = helperFunctions.kh2_has_any(snapshot, staticData, groundFinisher);
+      return hasTools && hasGroundFinisher;
+    } else if (fightLogic === 1) { // normal: tools + (gap closer OR ground finisher) >= 2
+      const hasTools = helperFunctions.kh2_dict_count(normalSaixTools, snapshot);
+      const count = helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher], snapshot);
+      return hasTools && count >= 2;
+    } else { // hard: Guard
+      return (snapshot?.inventory?.['Guard'] || 0) > 0;
+    }
+  },
+
+  /**
+   * Check if Data Lexaeus fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_data_lexaeus_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Data Lexaeus fight
+   */
+  get_data_lexaeus_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const easyDataLexTools = {
+      'Guard': 1,
+      'Fire Element': 3,
+      'Reflect Element': 2,
+      'Slide Dash': 1,
+      'Flash Step': 1
+    };
+
+    const normalDataLexTools = {
+      'Guard': 1,
+      'Fire Element': 3,
+      'Reflect Element': 1
+    };
+
+    const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+
+    if (fightLogic === 0) { // easy: tools + Final Form 5+ + donald limit
+      const hasTools = helperFunctions.kh2_dict_count(easyDataLexTools, snapshot);
+      const finalFormLevel = helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5);
+      const hasDonaldLimit = helperFunctions.kh2_list_any_sum([donaldLimit], snapshot) >= 1;
+      return hasTools && finalFormLevel && hasDonaldLimit;
+    } else if (fightLogic === 1) { // normal: tools + Final Form 3+ + (donald limit OR gap closer) >= 2
+      const hasTools = helperFunctions.kh2_dict_count(normalDataLexTools, snapshot);
+      const finalFormLevel = helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 3);
+      const count = helperFunctions.kh2_list_any_sum([donaldLimit, gapCloser], snapshot);
+      return hasTools && finalFormLevel && count >= 2;
+    } else { // hard: (defensive tool OR gap closer) >= 2
+      return helperFunctions.kh2_list_any_sum([defensiveTool, gapCloser], snapshot) >= 2;
+    }
+  },
+
+  /**
+   * Check if Data Marluxia fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_data_marluxia_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Data Marluxia fight
+   */
+  get_data_marluxia_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const easyDataMarluxiaTools = {
+      'Guard': 1,
+      'Fire Element': 3,
+      'Reflect Element': 2,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Aerial Recovery': 1
+    };
+
+    const normalDataMarluxiaTools = {
+      'Guard': 1,
+      'Fire Element': 3,
+      'Reflect Element': 1,
+      'Aerial Recovery': 1
+    };
+
+    const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+
+    if (fightLogic === 0) { // easy: tools + Final Form 5+ + donald limit
+      const hasTools = helperFunctions.kh2_dict_count(easyDataMarluxiaTools, snapshot);
+      const finalFormLevel = helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5);
+      const hasDonaldLimit = helperFunctions.kh2_list_any_sum([donaldLimit], snapshot) >= 1;
+      return hasTools && finalFormLevel && hasDonaldLimit;
+    } else if (fightLogic === 1) { // normal: tools + Final Form 3+ + (donald limit OR gap closer) >= 2
+      const hasTools = helperFunctions.kh2_dict_count(normalDataMarluxiaTools, snapshot);
+      const finalFormLevel = helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 3);
+      const count = helperFunctions.kh2_list_any_sum([donaldLimit, gapCloser], snapshot);
+      return hasTools && finalFormLevel && count >= 2;
+    } else { // hard: (defensive tool OR gap closer OR Aerial Recovery) >= 3
+      return helperFunctions.kh2_list_any_sum([defensiveTool, gapCloser, ['Aerial Recovery']], snapshot) >= 3;
+    }
+  },
+
+  /**
+   * Check if Cerberus Cup is accessible.
+   * Based on worlds/kh2/Rules.py:get_cerberus_cup_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Cerberus Cup
+   */
+  get_cerberus_cup_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const forms = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form'];
+
+    let hasFormLevel = false;
+    if (fightLogic === 0) { // easy: any form level 5
+      hasFormLevel = forms.some(form =>
+        helperFunctions.form_list_unlock(snapshot, staticData, form, 5, true)
+      );
+    } else if (fightLogic === 1) { // normal: any form level 4
+      hasFormLevel = forms.some(form =>
+        helperFunctions.form_list_unlock(snapshot, staticData, form, 4, true)
+      );
+    } // hard: no form requirement
+
+    const hasReflect = (snapshot?.inventory?.['Reflect Element'] || 0) > 0;
+
+    // Also requires (Scar Event + Oogie Boogie Event + Twin Lords Event) OR Hades Cup Trophy
+    const hasEvents = (snapshot?.inventory?.['Scar Event'] || 0) > 0 &&
+                     (snapshot?.inventory?.['Oogie Boogie Event'] || 0) > 0 &&
+                     (snapshot?.inventory?.['Twin Lords Event'] || 0) > 0;
+    const hasHadesCup = (snapshot?.inventory?.['Hades Cup Trophy'] || 0) > 0;
+
+    if (fightLogic === 2) { // hard: just Reflect + events/hades cup
+      return hasReflect && (hasEvents || hasHadesCup);
+    } else {
+      return hasFormLevel && hasReflect && (hasEvents || hasHadesCup);
+    }
   },
 
   /**

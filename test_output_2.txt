@@ -1,0 +1,775 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:40] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: kh2
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=kh2&seed=1
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/?mode=test-spoilers&game=kh2&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modes.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [04:49:42.945] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:42] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/hylics2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/messenger/messengerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/oot/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/raft/raftLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/cv64/cv64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/dark_souls_3/darkSouls3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/paint/paintLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/soe/soeLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/shapez/shapezLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/shivers/shiversLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/smz3/smz3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/sc2/sc2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/sm/smLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/stardew_valley/stardewValleyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/terraria/terrariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/tww/twwLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/wargroove/wargrooveLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/yoshisisland/yoshisislandLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/osrs/osrsLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/tloz/tlozLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/jakanddaxter/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/marioland2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/cv64/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/overcooked2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/paint/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/shapez/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/shivers/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/sc2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/subnautica/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/stardew_valley/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/terraria/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/tloz/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.js HTTP/1.1" 200 -
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [04:49:43.495] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [04:49:43.497] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [04:49:43.514] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [04:49:43.514] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [04:49:43.515] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [04:49:43.516] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [04:49:43.527] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [18/Nov/2025 04:49:43] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+BROWSER LOG (error): [04:49:50.935] [ERROR] [testSpoilerUI] STATE MISMATCH found for: {"type":"state_update","sphere_number":"9.24","player_id":"1"}
+BROWSER LOG (error): [04:49:50.937] [ERROR] [testSpoilerUI:ComparisonEngine] STATE MISMATCH found for: {"type":"state_update","sphere_number":"9.24","player_id":"1"}
+BROWSER LOG (error): [04:49:50.941] [ERROR] [testSpoilerUI]  > Locations accessible in LOG but NOT in STATE (or checked): (AG2) Genie Jafar, (AG2) Wishing Lamp, (TWTNW2) Castle That Never Was Map, (TWTNW2) Luxord Bonus: Sora Slot 1, (TWTNW2) Luxord Bonus: Sora Slot 2, (TWTNW2) Luxord Secret Ansem Report 9, (TWTNW2) Memory's Skyscaper AP Boost, (TWTNW2) Memory's Skyscaper Mythril Crystal, (TWTNW2) Memory's Skyscaper Mythril Stone, (TWTNW2) Naught's Skyway Mythril Crystal, (TWTNW2) Naught's Skyway Mythril Gem, (TWTNW2) Naught's Skyway Orichalcum, (TWTNW2) Nothing's Call Mythril Gem, (TWTNW2) Nothing's Call Orichalcum, (TWTNW2) Oblivion, (TWTNW2) Roxas Bonus: Sora Slot 1, (TWTNW2) Roxas Bonus: Sora Slot 2, (TWTNW2) Roxas Secret Ansem Report 8, (TWTNW2) Saix Bonus: Sora Slot 1, (TWTNW2) Saix Secret Ansem Report 12, (TWTNW2) The Brink of Despair Dark City Map, (TWTNW2) The Brink of Despair Orichalcum+, (TWTNW2) Twilight's View Cosmic Belt, (TWTNW2) Two Become One, (TWTNW2) Xigbar Bonus: Sora Slot 1, (TWTNW2) Xigbar Secret Ansem Report 3, Genie Jafar Event Location, Luxord Event Location, Roxas Event Location, Saix Event Location, Xigbar Event Location
+BROWSER LOG (error): [04:49:50.942] [ERROR] [testSpoilerUI:ComparisonEngine]  > Locations accessible in LOG but NOT in STATE (or checked): (AG2) Genie Jafar, (AG2) Wishing Lamp, (TWTNW2) Castle That Never Was Map, (TWTNW2) Luxord Bonus: Sora Slot 1, (TWTNW2) Luxord Bonus: Sora Slot 2, (TWTNW2) Luxord Secret Ansem Report 9, (TWTNW2) Memory's Skyscaper AP Boost, (TWTNW2) Memory's Skyscaper Mythril Crystal, (TWTNW2) Memory's Skyscaper Mythril Stone, (TWTNW2) Naught's Skyway Mythril Crystal, (TWTNW2) Naught's Skyway Mythril Gem, (TWTNW2) Naught's Skyway Orichalcum, (TWTNW2) Nothing's Call Mythril Gem, (TWTNW2) Nothing's Call Orichalcum, (TWTNW2) Oblivion, (TWTNW2) Roxas Bonus: Sora Slot 1, (TWTNW2) Roxas Bonus: Sora Slot 2, (TWTNW2) Roxas Secret Ansem Report 8, (TWTNW2) Saix Bonus: Sora Slot 1, (TWTNW2) Saix Secret Ansem Report 12, (TWTNW2) The Brink of Despair Dark City Map, (TWTNW2) The Brink of Despair Orichalcum+, (TWTNW2) Twilight's View Cosmic Belt, (TWTNW2) Two Become One, (TWTNW2) Xigbar Bonus: Sora Slot 1, (TWTNW2) Xigbar Secret Ansem Report 3, Genie Jafar Event Location, Luxord Event Location, Roxas Event Location, Saix Event Location, Xigbar Event Location
+BROWSER LOG (error): [MISMATCH DETAIL] Missing from state (31): [(AG2) Genie Jafar, (AG2) Wishing Lamp, (TWTNW2) Castle That Never Was Map, (TWTNW2) Luxord Bonus: Sora Slot 1, (TWTNW2) Luxord Bonus: Sora Slot 2, (TWTNW2) Luxord Secret Ansem Report 9, (TWTNW2) Memory's Skyscaper AP Boost, (TWTNW2) Memory's Skyscaper Mythril Crystal, (TWTNW2) Memory's Skyscaper Mythril Stone, (TWTNW2) Naught's Skyway Mythril Crystal, (TWTNW2) Naught's Skyway Mythril Gem, (TWTNW2) Naught's Skyway Orichalcum, (TWTNW2) Nothing's Call Mythril Gem, (TWTNW2) Nothing's Call Orichalcum, (TWTNW2) Oblivion, (TWTNW2) Roxas Bonus: Sora Slot 1, (TWTNW2) Roxas Bonus: Sora Slot 2, (TWTNW2) Roxas Secret Ansem Report 8, (TWTNW2) Saix Bonus: Sora Slot 1, (TWTNW2) Saix Secret Ansem Report 12, (TWTNW2) The Brink of Despair Dark City Map, (TWTNW2) The Brink of Despair Orichalcum+, (TWTNW2) Twilight's View Cosmic Belt, (TWTNW2) Two Become One, (TWTNW2) Xigbar Bonus: Sora Slot 1, (TWTNW2) Xigbar Secret Ansem Report 3, Genie Jafar Event Location, Luxord Event Location, Roxas Event Location, Saix Event Location, Xigbar Event Location]
+BROWSER LOG (error): [04:49:51.005] [ERROR] [testSpoilerUI]     ISSUE: Region Genie Jafar is not reachable
+BROWSER LOG (error): [04:49:51.052] [ERROR] [testSpoilerUI]     ISSUE: Region Genie Jafar is not reachable
+BROWSER LOG (error): [04:49:51.107] [ERROR] [testSpoilerUI]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:51.168] [ERROR] [testSpoilerUI]     ISSUE: Region Luxord is not reachable
+BROWSER LOG (error): [04:49:51.233] [ERROR] [testSpoilerUI]     ISSUE: Region Luxord is not reachable
+BROWSER LOG (error): [04:49:51.308] [ERROR] [testSpoilerUI]     ISSUE: Region Luxord is not reachable
+BROWSER LOG (error): [04:49:51.383] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:51.475] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:51.565] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:51.663] [ERROR] [testSpoilerUI]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:51.773] [ERROR] [testSpoilerUI]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:51.845] [ERROR] [testSpoilerUI]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:51.874] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:51.902] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:51.933] [ERROR] [testSpoilerUI]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:51.964] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:51.996] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.033] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.070] [ERROR] [testSpoilerUI]     ISSUE: Region Saix is not reachable
+BROWSER LOG (error): [04:49:52.108] [ERROR] [testSpoilerUI]     ISSUE: Region Saix is not reachable
+BROWSER LOG (error): [04:49:52.144] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.184] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.223] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.261] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.299] [ERROR] [testSpoilerUI]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:52.336] [ERROR] [testSpoilerUI]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:52.373] [ERROR] [testSpoilerUI]     ISSUE: Region Genie Jafar is not reachable
+BROWSER LOG (error): [04:49:52.410] [ERROR] [testSpoilerUI]     ISSUE: Region Luxord is not reachable
+BROWSER LOG (error): [04:49:52.449] [ERROR] [testSpoilerUI]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.489] [ERROR] [testSpoilerUI]     ISSUE: Region Saix is not reachable
+BROWSER LOG (error): [04:49:52.528] [ERROR] [testSpoilerUI]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:52.534] [ERROR] [testSpoilerUI] REGION MISMATCH found for: {"type":"state_update","sphere_number":"9.24","player_id":"1"}
+BROWSER LOG (error): [04:49:52.535] [ERROR] [testSpoilerUI:ComparisonEngine] REGION MISMATCH found for: {"type":"state_update","sphere_number":"9.24","player_id":"1"}
+BROWSER LOG (error): [04:49:52.539] [ERROR] [testSpoilerUI]  > Regions accessible in LOG but NOT in STATE: Genie Jafar, Luxord, Roxas, Saix, Xigbar
+BROWSER LOG (error): [04:49:52.539] [ERROR] [testSpoilerUI:ComparisonEngine]  > Regions accessible in LOG but NOT in STATE: Genie Jafar, Luxord, Roxas, Saix, Xigbar
+BROWSER LOG (error): [REGION MISMATCH DETAIL] Missing from state (5): [Genie Jafar, Luxord, Roxas, Saix, Xigbar]
+BROWSER LOG (error): [04:49:52.585] [ERROR] [testSpoilerUI]             Helper function "get_genie_jafar_rules" NOT FOUND in snapshotInterface
+BROWSER LOG (warning): [04:49:52.643] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Luxord
+BROWSER LOG (error): [04:49:52.698] [ERROR] [testSpoilerUI]               Helper function "get_roxas_rules" NOT FOUND in snapshotInterface
+BROWSER LOG (warning): [04:49:52.745] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Saix
+BROWSER LOG (warning): [04:49:52.780] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to Xigbar
+BROWSER LOG (error): [04:49:52.805] [ERROR] [testSpoilerUI] Test failed at step 153: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [04:49:52.809] [ERROR] [testSpoilerUI] Mismatch for event 153 (Sphere 9.24): Comparison for state_update at step 153 Failed
+BROWSER LOG (warning): [04:49:52.812] [WARN] [testSpoilerUI] Test run halted due to "Stop on first error" being enabled.
+BROWSER LOG (error): [04:49:52.815] [ERROR] [testSpoilerUI] Spoiler test completed with 1 mismatch(es). See logs above for details.
+BROWSER LOG (error): [04:49:52.849] [ERROR] [TestRunner/test_spoiler_full_run] [spoilers-full-run-1763441383824] Spoiler test failed. Mismatches found in log:
+BROWSER LOG (error): [04:49:52.850] [ERROR] [TestRunner/test_spoiler_full_run]   - Mismatch for event 153 (Sphere 9.24): Comparison for state_update at step 153 Failed
+BROWSER LOG (error): [04:49:52.850] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:50 AM] STATE MISMATCH found for: {"type":"state_update","sphere_number":"9.24","player_id":"1"}
+BROWSER LOG (error): [04:49:52.850] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:50 AM] > Locations accessible in LOG but NOT in STATE (or checked): (AG2) Genie Jafar, (AG2) Wishing Lamp, (TWTNW2) Castle That Never Was Map, (TWTNW2) Luxord Bonus: Sora Slot 1, (TWTNW2) Luxord Bonus: Sora Slot 2, (TWTNW2) Luxord Secret Ansem Report 9, (TWTNW2) Memory&#039;s Skyscaper AP Boost, (TWTNW2) Memory&#039;s Skyscaper Mythril Crystal, (TWTNW2) Memory&#039;s Skyscaper Mythril Stone, (TWTNW2) Naught&#039;s Skyway Mythril Crystal, (TWTNW2) Naught&#039;s Skyway Mythril Gem, (TWTNW2) Naught&#039;s Skyway Orichalcum, (TWTNW2) Nothing&#039;s Call Mythril Gem, (TWTNW2) Nothing&#039;s Call Orichalcum, (TWTNW2) Oblivion, (TWTNW2) Roxas Bonus: Sora Slot 1, (TWTNW2) Roxas Bonus: Sora Slot 2, (TWTNW2) Roxas Secret Ansem Report 8, (TWTNW2) Saix Bonus: Sora Slot 1, (TWTNW2) Saix Secret Ansem Report 12, (TWTNW2) The Brink of Despair Dark City Map, (TWTNW2) The Brink of Despair Orichalcum+, (TWTNW2) Twilight&#039;s View Cosmic Belt, (TWTNW2) Two Become One, (TWTNW2) Xigbar Bonus: Sora Slot 1, (TWTNW2) Xigbar Secret Ansem Report 3, Genie Jafar Event Location, Luxord Event Location, Roxas Event Location, Saix Event Location, Xigbar Event Location
+BROWSER LOG (error): [04:49:52.851] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Genie Jafar is not reachable
+BROWSER LOG (error): [04:49:52.851] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Genie Jafar is not reachable
+BROWSER LOG (error): [04:49:52.851] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:52.851] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Luxord is not reachable
+BROWSER LOG (error): [04:49:52.851] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Luxord is not reachable
+BROWSER LOG (error): [04:49:52.851] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Luxord is not reachable
+BROWSER LOG (error): [04:49:52.852] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.852] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.852] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.852] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:52.852] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:52.852] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:52.852] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.853] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.853] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:52.853] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.853] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:51 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.853] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.853] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Saix is not reachable
+BROWSER LOG (error): [04:49:52.853] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Saix is not reachable
+BROWSER LOG (error): [04:49:52.854] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.854] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.854] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.854] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.854] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:52.854] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:52.854] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Genie Jafar is not reachable
+BROWSER LOG (error): [04:49:52.854] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Luxord is not reachable
+BROWSER LOG (error): [04:49:52.854] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Roxas is not reachable
+BROWSER LOG (error): [04:49:52.854] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Saix is not reachable
+BROWSER LOG (error): [04:49:52.855] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]     ISSUE: Region Xigbar is not reachable
+BROWSER LOG (error): [04:49:52.855] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM] REGION MISMATCH found for: {"type":"state_update","sphere_number":"9.24","player_id":"1"}
+BROWSER LOG (error): [04:49:52.855] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM] > Regions accessible in LOG but NOT in STATE: Genie Jafar, Luxord, Roxas, Saix, Xigbar
+BROWSER LOG (error): [04:49:52.855] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]             Helper function "get_genie_jafar_rules" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:49:52.855] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM]               Helper function "get_roxas_rules" NOT FOUND in snapshotInterface
+BROWSER LOG (error): [04:49:52.855] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM] Test failed at step 153: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [04:49:52.855] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM] Mismatch for event 153 (Sphere 9.24): Comparison for state_update at step 153 Failed
+BROWSER LOG (error): [04:49:52.855] [ERROR] [TestRunner/test_spoiler_full_run]   - [4:49:52 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Full in-app test results: {
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 0,
+    "failedCount": 1
+  },
+  "testDetails": [
+    {
+      "id": "test_spoiler_full_run",
+      "name": "Test Spoilers Panel - Full Run",
+      "status": "failed",
+      "category": "Test Spoilers Panel",
+      "startTime": "2025-11-18T04:49:43.823Z",
+      "endTime": "2025-11-18T04:49:52.865Z",
+      "durationMs": 9042,
+      "conditions": [
+        {
+          "description": "Test started",
+          "status": "passed",
+          "timestamp": "2025-11-18T04:49:43.824Z"
+        },
+        {
+          "description": "Test Spoilers panel found in DOM",
+          "status": "passed",
+          "timestamp": "2025-11-18T04:49:44.327Z"
+        },
+        {
+          "description": "\"Load Suggested Log\" button found and enabled",
+          "status": "passed",
+          "timestamp": "2025-11-18T04:49:44.578Z"
+        },
+        {
+          "description": "\"Run Full Test\" button appeared",
+          "status": "passed",
+          "timestamp": "2025-11-18T04:49:45.333Z"
+        },
+        {
+          "description": "Full spoiler test completed",
+          "status": "passed",
+          "timestamp": "2025-11-18T04:49:52.845Z"
+        },
+        {
+          "description": "Spoiler test passed all checks",
+          "status": "failed",
+          "timestamp": "2025-11-18T04:49:52.849Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[spoilers-full-run-1763441383824] Starting testSpoilersPanelFullRun...",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:43.824Z"
+        },
+        {
+          "message": "Condition: \"Test started\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:43.824Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Activating testSpoilersPanel panel...",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:43.824Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel initialization\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:43.824Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel initialization\".",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:44.075Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel DOM element\" (timeout: 5000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:44.075Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel DOM element\".",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:44.327Z"
+        },
+        {
+          "message": "Condition: \"Test Spoilers panel found in DOM\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:44.327Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Load Suggested Log\" button to be available\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:44.327Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Load Suggested Log\" button to be available\".",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:44.578Z"
+        },
+        {
+          "message": "Condition: \"\"Load Suggested Log\" button found and enabled\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:44.578Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Clicking \"Load Suggested Log\" button...",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:44.578Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Spoiler log loading completion\" (timeout: 15000ms, interval: 500ms)...",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:44.580Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Spoiler log loading completion\".",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:45.081Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Run Full Test\" button to appear\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:45.081Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Run Full Test\" button to appear\".",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:45.333Z"
+        },
+        {
+          "message": "Condition: \"\"Run Full Test\" button appeared\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:45.333Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Clicking \"Run Full Test\" button...",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:45.333Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test to start processing\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:45.336Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test to start processing\".",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:45.436Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Waiting for full spoiler test to complete...",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:45.436Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test completion with detailed results\" (timeout: 300000ms, interval: 1000ms)...",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:45.436Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:46.437Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:47.441Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:48.437Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:49.436Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Polling: buttonReady=true, hasDetailedResults=false, processedEvents=0/0",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:50.436Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Polling: buttonReady=true, hasDetailedResults=true, processedEvents=152/267",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:52.844Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":267,\"processedEvents\":152,\"errorCount\":1,\"sphereCount\":153,\"testLogPath\":\"presets/kh2/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:52.844Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test completion with detailed results\".",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:52.844Z"
+        },
+        {
+          "message": "Condition: \"Full spoiler test completed\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:52.845Z"
+        },
+        {
+          "message": "Condition: \"Spoiler test passed all checks\" - FAILED",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:52.849Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Spoiler test failed. Mismatches found in log:",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.849Z"
+        },
+        {
+          "message": "  - Mismatch for event 153 (Sphere 9.24): Comparison for state_update at step 153 Failed",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.850Z"
+        },
+        {
+          "message": "  - [4:49:50 AM] STATE MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":\"9.24\",\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.850Z"
+        },
+        {
+          "message": "  - [4:49:50 AM] > Locations accessible in LOG but NOT in STATE (or checked): (AG2) Genie Jafar, (AG2) Wishing Lamp, (TWTNW2) Castle That Never Was Map, (TWTNW2) Luxord Bonus: Sora Slot 1, (TWTNW2) Luxord Bonus: Sora Slot 2, (TWTNW2) Luxord Secret Ansem Report 9, (TWTNW2) Memory&#039;s Skyscaper AP Boost, (TWTNW2) Memory&#039;s Skyscaper Mythril Crystal, (TWTNW2) Memory&#039;s Skyscaper Mythril Stone, (TWTNW2) Naught&#039;s Skyway Mythril Crystal, (TWTNW2) Naught&#039;s Skyway Mythril Gem, (TWTNW2) Naught&#039;s Skyway Orichalcum, (TWTNW2) Nothing&#039;s Call Mythril Gem, (TWTNW2) Nothing&#039;s Call Orichalcum, (TWTNW2) Oblivion, (TWTNW2) Roxas Bonus: Sora Slot 1, (TWTNW2) Roxas Bonus: Sora Slot 2, (TWTNW2) Roxas Secret Ansem Report 8, (TWTNW2) Saix Bonus: Sora Slot 1, (TWTNW2) Saix Secret Ansem Report 12, (TWTNW2) The Brink of Despair Dark City Map, (TWTNW2) The Brink of Despair Orichalcum+, (TWTNW2) Twilight&#039;s View Cosmic Belt, (TWTNW2) Two Become One, (TWTNW2) Xigbar Bonus: Sora Slot 1, (TWTNW2) Xigbar Secret Ansem Report 3, Genie Jafar Event Location, Luxord Event Location, Roxas Event Location, Saix Event Location, Xigbar Event Location",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.850Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Genie Jafar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.851Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Genie Jafar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.851Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Xigbar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.851Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Luxord is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.851Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Luxord is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.851Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Luxord is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.851Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.852Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.852Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.852Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Xigbar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.852Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Xigbar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.852Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Xigbar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.852Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.852Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.853Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Xigbar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.853Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.853Z"
+        },
+        {
+          "message": "  - [4:49:51 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.853Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.853Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Saix is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.853Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Saix is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.853Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.854Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.854Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.854Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.854Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Xigbar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.854Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Xigbar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.854Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Genie Jafar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.854Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Luxord is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.854Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Roxas is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.854Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Saix is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.854Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]     ISSUE: Region Xigbar is not reachable",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.855Z"
+        },
+        {
+          "message": "  - [4:49:52 AM] REGION MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":\"9.24\",\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.855Z"
+        },
+        {
+          "message": "  - [4:49:52 AM] > Regions accessible in LOG but NOT in STATE: Genie Jafar, Luxord, Roxas, Saix, Xigbar",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.855Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]             Helper function \"get_genie_jafar_rules\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.855Z"
+        },
+        {
+          "message": "  - [4:49:52 AM]               Helper function \"get_roxas_rules\" NOT FOUND in snapshotInterface",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.855Z"
+        },
+        {
+          "message": "  - [4:49:52 AM] Test failed at step 153: Comparison failed for event type 'state_update'.",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.855Z"
+        },
+        {
+          "message": "  - [4:49:52 AM] Mismatch for event 153 (Sphere 9.24): Comparison for state_update at step 153 Failed",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.855Z"
+        },
+        {
+          "message": "  - [4:49:52 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.",
+          "type": "error",
+          "timestamp": "2025-11-18T04:49:52.855Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Spoiler test results stored in window.__spoilerTestResults__",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:52.856Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] Spoiler test results stored in localStorage",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:52.864Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763441383824] testSpoilersPanelFullRun finished. Overall Result: false.",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:52.864Z"
+        },
+        {
+          "message": "Test completion signal: FAILED",
+          "type": "info",
+          "timestamp": "2025-11-18T04:49:52.864Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-18T04:49:52.864Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-18T04:49:52.865Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-18T04:49:52.865Z"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2025-11-18T04:49:52.966Z"
+}
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2025-11-18T04-49-53.json
+  ✘  1 tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results (11.0s)
+
+
+  1) tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m0[39m
+    Received: [31m1[39m
+
+      141 |
+      142 |     // The test system should complete successfully regardless of whether tests run
+    > 143 |     expect(results.summary.failedCount).toBe(0);
+          |                                         ^
+      144 |     
+      145 |     // If tests actually ran, they should pass
+      146 |     if (results.summary.totalRun > 0) {
+        at /home/user/Archipelago-CC/tests/e2e/app.spec.js:143:41
+
+    Error Context: test-results/app-Application-End-to-End-a086e-app-tests-and-check-results/error-context.md
+
+  1 failed
+    tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results ─
