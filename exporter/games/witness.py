@@ -9,6 +9,30 @@ logger = logging.getLogger(__name__)
 class WitnessGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'The Witness'
 
+    # Mapping of laser activation locations to the regions containing their panels
+    LASER_ACTIVATION_TO_REGION = {
+        'Bunker Laser Activated': 'Bunker Laser Platform',
+        'Swamp Laser Activated': 'Swamp Laser Area',
+        'Town Laser Activated': 'Town Tower Top',
+        'Treehouse Laser Activated': 'Treehouse Laser Room',
+        'Quarry Laser Activated': 'Outside Quarry',
+        'Symmetry Island Laser Activated': 'Symmetry Island Upper',
+        'Jungle Laser Activated': 'Jungle',
+        'Monastery Laser Activated': 'Outside Monastery',
+        'Shadows Laser Activated': 'Shadows Laser Room',
+        'Desert Laser Activated': 'Desert Outside',
+        # Keep has two panels (Hedges or Pressure Plates), both in Keep Tower
+        'Keep Laser Activated': 'Keep Tower',
+    }
+
+    def __init__(self):
+        super().__init__()
+        self._current_location_name = None
+
+    def set_context(self, location_name: str):
+        """Store the current location name for context-aware processing."""
+        self._current_location_name = location_name
+
     def _is_region_reachability_pattern(self, rule: Optional[Dict[str, Any]]) -> bool:
         """
         Check if a rule matches the region.can_reach pattern:
@@ -158,16 +182,71 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         # For other rule types, return as-is
         return rule
 
+    def _convert_region_reach_to_helper(self, rule: Optional[Dict[str, Any]], region_name: str = None) -> Optional[Dict[str, Any]]:
+        """
+        Convert region.can_reach patterns to can_reach helper calls.
+
+        The pattern checks region reachability using a conditional that tests state.stale
+        and state.reachable_regions. We convert this to a simpler can_reach helper call
+        that takes the region name as a parameter.
+
+        To extract the region name, we need to track which region object the method is
+        bound to. For now, we look for the region name in the surrounding context or
+        accept it as a parameter.
+        """
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        # Check if this is a region reachability pattern
+        if self._is_region_reachability_pattern(rule):
+            # For now, we can't extract the region name from the pattern itself
+            # because it's a bound method. We would need analyzer-level changes.
+            # As a workaround, we return the pattern as-is and let the frontend
+            # handle it, OR we could try to extract context from the calling location.
+
+            # TODO: Implement proper region name extraction
+            # For now, just log that we found the pattern
+            logger.debug(f"Found region reachability pattern but cannot extract region name")
+            return rule
+
+        # Recursively process compound rules
+        rule_type = rule.get('type')
+
+        if rule_type in ('and', 'or'):
+            conditions = rule.get('conditions', [])
+            simplified_conditions = [
+                self._convert_region_reach_to_helper(cond, region_name)
+                for cond in conditions
+            ]
+            return {**rule, 'conditions': simplified_conditions}
+
+        elif rule_type == 'not':
+            condition = rule.get('condition')
+            simplified = self._convert_region_reach_to_helper(condition, region_name)
+            return {**rule, 'condition': simplified}
+
+        return rule
+
     def postprocess_rule(self, rule: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
         """
-        Post-process location access rules to simplify region reachability patterns.
+        Post-process location access rules to handle region reachability patterns.
 
-        TEMPORARY WORKAROUND: Simplifying all region checks to true for now.
-        TODO: Properly convert region.can_reach patterns to can_reach rules with
-        the correct region name. This requires analyzer-level changes to track
-        which region object a bound method is attached to.
+        For laser activation locations, convert region.can_reach patterns to
+        can_reach_region helper calls with the specific region name.
         """
-        return self._simplify_region_reachability_pattern(rule)
+        # Check if this is a laser activation location
+        if self._current_location_name and self._current_location_name in self.LASER_ACTIVATION_TO_REGION:
+            # Check if the rule is a region reachability pattern
+            if self._is_region_reachability_pattern(rule):
+                region_name = self.LASER_ACTIVATION_TO_REGION[self._current_location_name]
+                logger.info(f"Converting {self._current_location_name} to can_reach_region('{region_name}')")
+                return {
+                    'type': 'helper',
+                    'name': 'can_reach_region',
+                    'args': [{'type': 'constant', 'value': region_name}]
+                }
+
+        return rule
 
     def handle_complex_exit_rule(self, exit_name: str, rule_func) -> Optional[Dict[str, Any]]:
         """
