@@ -72,6 +72,9 @@ export const stardewValleyStateModule = {
     const itemDef = sm.itemData[itemName];
     if (!itemDef || !itemDef.advancement || itemDef.event) {
       // Not an advancement item, or it's an event item (which shouldn't count)
+      sm._logDebug(
+        `[Stardew Valley Logic] afterItemAdded: Skipping "${itemName}" (advancement=${itemDef?.advancement}, event=${itemDef?.event})`
+      );
       return;
     }
 
@@ -86,9 +89,14 @@ export const stardewValleyStateModule = {
       const newPercent = Math.floor((sm.inventory['Received Progression Item'] * 100) / totalProgItems);
       sm.inventory['Received Progression Percent'] = newPercent;
 
+      console.log(
+        `[Stardew Valley Logic] Updated progression after adding "${itemName}": items=${sm.inventory['Received Progression Item']}, percent=${newPercent} (total=${totalProgItems})`
+      );
       sm._logDebug(
         `[Stardew Valley Logic] Updated progression: items=${sm.inventory['Received Progression Item']}, percent=${newPercent} (total=${totalProgItems})`
       );
+    } else {
+      console.warn(`[Stardew Valley Logic] totalProgressionItems not set! Cannot calculate percent for "${itemName}"`);
     }
   },
 

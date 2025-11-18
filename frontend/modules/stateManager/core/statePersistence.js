@@ -992,9 +992,21 @@ export function clearEventItems(sm, options = { recomputeAndSendUpdate: true }) 
     return;
   }
 
+  // Virtual items that should NOT be cleared (they're computed from other items)
+  const virtualItemsToPreserve = [
+    'Received Progression Item',
+    'Received Progression Percent'
+  ];
+
   // Remove all event items from inventory and uncheck their locations
   for (const itemName in sm.itemData) {
     if (sm.itemData[itemName]?.event || sm.itemData[itemName]?.id === 0 || sm.itemData[itemName]?.id === null) {
+      // Skip virtual progression tracking items
+      if (virtualItemsToPreserve.includes(itemName)) {
+        sm._logDebug(`[StateManager] Preserving virtual item: ${itemName} (value: ${sm.inventory[itemName]})`);
+        continue;
+      }
+
       if (sm.inventory[itemName] > 0) {
         sm._logDebug(`[StateManager] Clearing event item: ${itemName}`);
         sm.inventory[itemName] = 0;
