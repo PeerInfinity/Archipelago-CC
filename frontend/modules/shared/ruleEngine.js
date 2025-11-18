@@ -600,6 +600,23 @@ export const evaluateRule = (rule, context, depth = 0) => {
         break;
       }
 
+      case 'tuple': {
+        // Handle tuple types (used for door arguments in Lingo and similar games)
+        // Evaluate each element and return as an array
+        if (!rule.elements || !Array.isArray(rule.elements)) {
+          result = [];
+          break;
+        }
+        const elements = rule.elements.map((elem) => evaluateRule(elem, context, depth + 1));
+        // If any element is undefined, the tuple is undefined
+        if (elements.some((elem) => elem === undefined)) {
+          result = undefined;
+        } else {
+          result = elements;
+        }
+        break;
+      }
+
       case 'attribute': {
         const baseObject = evaluateRule(rule.object, context, depth + 1);
 
