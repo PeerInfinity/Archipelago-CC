@@ -4,20 +4,20 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-17 22:48:59
+**Generated:** 2025-11-18 02:03:58
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 48 (61.5%)
-- **Failed:** 30 (38.5%)
+- **Passed:** 49 (62.8%)
+- **Failed:** 29 (37.2%)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Client 1 Status | C1 Checked | C1 Checkable | Client 2 Status | C2 Received | C2 Total | Custom Exporter | Custom GameLogic |
 |-----------|-------------|------------|-----------------|------------|--------------|-----------------|-------------|----------|-----------------|------------------|
 | A Hat in Time | ✅ Passed | 0 | ✅ | 232 | 223 | ✅ | 232 | 232 | ✅ | ✅ |
-| A Link to the Past | ❌ Failed | 0 | ❌ | 219 | 249 | ❌ | 0 | 268 | ✅ | ✅ |
+| A Link to the Past | ✅ Passed | 0 | ✅ | 268 | 249 | ✅ | 268 | 268 | ✅ | ✅ |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131 | 131 | ✅ | 131 | 131 | ✅ | ⚫ |
 | Adventure | ✅ Passed | 0 | ✅ | 25 | 24 | ✅ | 25 | 25 | ✅ | ⚫ |
 | Aquaria | ✅ Passed | 0 | ✅ | 237 | 218 | ✅ | 237 | 237 | ✅ | ✅ |
@@ -48,7 +48,7 @@
 | Kirby's Dream Land 3 | ❌ Failed | 0 | ❌ | 27 | 65 | ❌ | 0 | 567 | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ❌ Failed | 49 | ✅ | 298 | 291 | ✅ | 298 | 298 | ✅ | ✅ |
 | Lingo | ❌ Failed | 155 | ❌ | 110 | 155 | ❌ | 0 | 156 | ✅ | ✅ |
-| Links Awakening DX | ❌ Failed | 327 | ✅ | 226 | 220 | ✅ | 226 | 226 | ✅ | ✅ |
+| Links Awakening DX | ❌ Failed | 349 | ✅ | 226 | 220 | ✅ | 226 | 226 | ✅ | ✅ |
 | Lufia II Ancient Cave | ❌ Failed | 0 | ❌ | 11 | 35 | ❌ | 0 | 40 | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557 | 556 | ✅ | 557 | 557 | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | ✅ | 11 | 10 | ✅ | 11 | 11 | ⚫ | ⚫ |
@@ -63,7 +63,7 @@
 | Overcooked! 2 | ❌ Failed | 0 | ❌ | 7 | 43 | ❌ | 0 | 215 | ✅ | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130 | 130 | ✅ | 130 | 130 | ✅ | ✅ |
 | Pokemon Emerald | ❌ Failed | 0 | ❌ | 359 | 203 | ❌ | 0 | 1061 | ✅ | ✅ |
-| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 212 | 161 | ❌ | 0 | 1010 | ✅ | ✅ |
+| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 211 | 161 | ❌ | 0 | 1010 | ✅ | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155 | 154 | ✅ | 155 | 155 | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223 | 221 | ✅ | 223 | 223 | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed | 0 | ❌ | 145 | 316 | ❌ | 0 | 316 | ✅ | ✅ |
