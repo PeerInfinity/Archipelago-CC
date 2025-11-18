@@ -281,7 +281,8 @@ import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
 import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
 import { helperFunctions as smHelperFunctions } from './sm/smLogic.js';
-import * as stardewValleyHelpers from './stardew_valley/helpers.js';
+import * as stardewValleyLogic from './stardew_valley/stardewValleyLogic.js';
+import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js';
 import * as terrariaLogic from './terraria/terrariaLogic.js';
 import * as timespinnerLogic from './timespinner/timespinnerLogic.js';
 import * as twwLogic from './tww/twwLogic.js';
@@ -531,8 +532,8 @@ const GAME_REGISTRY = {
     aliases: ['Secret of Evermore', 'SOE', 'soe']
   },
   'Stardew Valley': {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: stardewValleyHelpers,
+    logicModule: stardewValleyStateModule,
+    helperFunctions: stardewValleyLogic.helperFunctions,
     worldClasses: ['StardewValleyWorld'],
     aliases: ['Stardew Valley', 'SDV', 'stardew_valley']
   },
