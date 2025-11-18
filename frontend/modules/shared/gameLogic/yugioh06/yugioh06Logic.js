@@ -643,6 +643,7 @@ export const helperFunctions = {
   count,
   has_from_list,
   has_from_list_unique,
+  count_from_list_unique,
 
   // Yu-Gi-Oh! 2006 specific helpers
   yugioh06_difficulty,
