@@ -475,6 +475,11 @@ def extract_multitemplate_chart_data(results: Dict[str, Any]) -> Dict[str, List[
 
         game_templates = []
         for template_name, template_data in templates.items():
+            # Skip if template_data is not a dictionary (malformed data from combine script)
+            if not isinstance(template_data, dict):
+                print(f"Warning: Skipping malformed template data for {game_name}/{template_name}")
+                continue
+
             # Handle single seed results
             world_info = template_data.get('world_info', {})
 
