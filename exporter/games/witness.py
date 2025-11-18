@@ -162,12 +162,15 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         """
         Post-process location access rules to simplify region reachability patterns.
 
-        TEMPORARY WORKAROUND: Simplifying all region checks to true for now.
-        TODO: Properly convert region.can_reach patterns to can_reach rules with
-        the correct region name. This requires analyzer-level changes to track
-        which region object a bound method is attached to.
+        DISABLED: Region simplification was causing laser activation locations to have
+        incorrect access rules. These locations are in the "Entry" region but depend
+        on laser panels in other regions. Simplifying the region checks broke this.
+
+        TODO: Implement proper can_reach rule conversion that preserves cross-region
+        dependencies while still simplifying same-region checks.
         """
-        return self._simplify_region_reachability_pattern(rule)
+        # return self._simplify_region_reachability_pattern(rule)
+        return rule
 
     def handle_complex_exit_rule(self, exit_name: str, rule_func) -> Optional[Dict[str, Any]]:
         """
