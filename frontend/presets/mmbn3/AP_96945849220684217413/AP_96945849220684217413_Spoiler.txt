@@ -1,0 +1,348 @@
+﻿Archipelago Version 0.6.4  -  Seed: 5
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            MegaMan Battle Network 3
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Extra Undernet Ranks:            0
+Include Jobs:                    Yes
+Include Secret Area:             No
+Trade Quest Hinting:             Full
+
+
+Locations:
+
+ACDC SonicWav W Trade: Guardian O
+ACDC Bubbler C Trade: Punk P
+ACDC Recov120 S Trade: 30000z
+ACDC School Desk: 600z
+ACDC Class 5B Bookshelf: Progressive Undernet Rank
+School 1 Entrance BMD: RegUP2
+School 1 North Central BMD: Progressive Undernet Rank
+School 1 Far West BMD 2: StepSwrd N
+School 1 KeyDataA BMD: AntiSword Y
+School 1 KeyDataB BMD: Unlocker
+School 1 KeyDataC BMD: HPMemory
+School 2 South BMD: Recov300 R
+School 2 Entrance BMD: Spreader N
+School 2 Mainframe BMD: MiniEnrg
+School 2 CodeA BMD: HPMemory
+School 2 CodeB BMD: RegUP2
+School 2 CodeC BMD: Prism Q
+ACDC Dog House BMD: Airshoes
+ACDC Lan's Security Panel BMD: Unlocker
+ACDC Yai's Phone BMD: RegUP3
+ACDC NumberMan Display BMD: PlantMan V3 P
+ACDC Tank BMD 1: FlamMan V2 F
+ACDC Tank BMD 2: RegUP2
+ACDC School Server BMD 1: Bubbler C
+ACDC School Server BMD 2: Barrier L
+ACDC School Blackboard BMD: HPMemory
+Numberman Code 01: GrabBack K
+Numberman Code 02: HPMemory
+Numberman Code 03: Spreader P
+Numberman Code 04: Unlocker
+Numberman Code 05: FireRat H
+Numberman Code 06: GutImpact H
+Numberman Code 07: IceStage *
+Numberman Code 08: Fire+30 *
+Numberman Code 09: Hole *
+Numberman Code 10: SpinPurple
+Numberman Code 11: Needle
+Numberman Code 12: AirShoes *
+Numberman Code 13: BambooSword N
+Numberman Code 14: HPMemory
+Numberman Code 15: RegUP1
+Numberman Code 16: AntiNavi M
+Numberman Code 17: BowlMan V3 B
+Numberman Code 18: Unlocker
+Numberman Code 19: FlamMan F
+Numberman Code 20: Bass+ X
+Numberman Code 21: SubMem
+Numberman Code 22: FstGauge *
+Numberman Code 23: Mr Famous' Wristband
+Numberman Code 24: RegUP2
+Numberman Code 25: Jungle
+Numberman Code 26: ElecSwrd P
+Numberman Code 27: 1 BugFrag
+Numberman Code 28: GutsMan V3 G
+Numberman Code 29: 1 BugFrag
+Numberman Code 30: StepCross Q
+Numberman Code 31: HPMemory
+Mayl's HP BMD: Press
+Yai's HP BMD 1: ProtoMan V2 B
+Yai's HP BMD 2: GutImpct J
+Dex's HP BMD 1: CopyDmg *
+Dex's HP BMD 2: Repair A
+Mayl's HP PMD: QuickGge
+ACDC 1 Southwest BMD: HPMemory
+ACDC 1 Northeast BMD: LongSwrd E
+ACDC 1 PMD: Navi+40 *
+ACDC 2 Center BMD: WpnLV+1 (Pink)
+ACDC 2 North BMD: DeltaRay Z
+ACDC 3 Southwest BMD: PETCase
+ACDC 3 Northeast BMD: Poltergeist G
+SciLab Shake1 S Trade: BlkBomb2 S
+SciLab Garbage Can: Recov120 O
+SciLab Vending Machine BMD: Rockcube *
+SciLab Virus Lab Door BMD 1: RegUP2
+SciLab Virus Lab Door BMD 2: SetSand
+SciLab Dad's Computer BMD: Collect
+SciLab Dad's Computer PMD: SpinOrange
+Job: Please deliver this: KingMan V3 K
+Job: My Navi is sick: HPMemory
+Job: Help me with my son!: HPMemory
+Job: Transmission error: WideSwrd C
+Job: Chip Prices: SneakRun
+Job: I'm broke?!: Barr200 E
+Job: Rare chips for cheap!: Roll V3 R
+Job: Be my boyfriend: OrderSys
+Job: Will you deliver?: CYokaPas
+Job: Somebody, please help!: Snake D
+Job: Looking for condor: Jealousy J
+Job: Help with rehab: RegUP2
+Job: Help with rehab bonus: StepCross R
+Job: Old Master: HPMemory
+Job: Catching gang members: SandStage C
+Job: Please adopt a virus!: MetalMan V3 M
+Job: Legendary Tomes: ZeusHammer Z
+Job: Legendary Tomes - Treasure: Recov30 *
+Job: Hide and seek! First Child: Charge+1 (White)
+Job: Hide and seek! Second Child: GaiaBlde *
+Job: Hide and seek! Third Child: BlkBomb1 P
+Job: Hide and seek! Fourth Child: SpinPink
+Job: Hide and seek! Completion: RegUP2
+Job: Finding the blue Navi: WpnLV+1 (White)
+Job: Give your support: BubblMan V3 B
+Job: Stamp collecting: 1200z
+Job: Help with a will: 10000z
+SciLab 1 East BMD: Progressive Undernet Rank
+SciLab 1 WWW BMD: CopyDmg *
+SciLab 2 South BMD: ExpMem
+SciLab 2 West BMD: UnderSht
+Yoka Mr Quiz: Unlocker
+Yoka Quiz Master: Team2 *
+Yoka FireSwrd P Trade: CACDCPas
+Yoka Inn Jars: Unlocker
+Yoka Zoo Garbage: HPMemory
+Zoo Panda PMD: RegUP2
+Zoo 1 East BMD: Shadow J
+Zoo 1 North BMD: Hammer
+Zoo 1 Central BMD: Hammer T
+Zoo 2 East BMD: 800z
+Zoo 2 Central BMD: Rook F
+Zoo 2 West BMD: Slasher B
+Zoo 3 North BMD: Humor
+Zoo 3 Central BMD: DesertMan V3 D
+Zoo 3 Path BMD: 10 BugFrags
+Zoo 3 Northwest BMD: CustSwrd Z
+Zoo 4 West BMD: SpinGrn
+Zoo 4 Northwest BMD: Progressive Undernet Rank
+Zoo 4 Southeast BMD: HPMemory
+Yoka TV BMD: SubPET
+Yoka Armor BMD: 1000z
+Yoka Hot Spring BMD: Roll V2 R
+Yoka Ticket Machine BMD: StpCross S
+Yoka Giraffe BMD: FlamMan V3 F
+Yoka Panda BMD: BeastMan B
+Tamako's HP BMD: Charge+1 (Pink)
+Tamako's HP PMD: HPMemory
+Comedian: Aqua+30 *
+Chocolate Shop 01: Charge+1 (Pink)
+Chocolate Shop 02: HPMemory
+Chocolate Shop 03: Geddon3 U
+Chocolate Shop 04: Lance S
+Chocolate Shop 05: BeastMan V2 B
+Chocolate Shop 06: SpinYllw
+Chocolate Shop 07: WideSwrd E
+Chocolate Shop 08: Roll R
+Chocolate Shop 09: Progressive Undernet Rank
+Chocolate Shop 10: Untrap
+Chocolate Shop 11: Progressive Undernet Rank
+Chocolate Shop 12: MiniEnrg
+Chocolate Shop 13: ExpMem
+Chocolate Shop 14: CBeacPas
+Chocolate Shop 15: SpinBlue
+Chocolate Shop 16: StepSwrd O
+Chocolate Shop 17: HubBatc
+Chocolate Shop 18: 600z
+Chocolate Shop 19: HeroSwrd P
+Chocolate Shop 20: HPMemory
+Chocolate Shop 21: RegUP3
+Chocolate Shop 22: Panic C
+Chocolate Shop 23: HPMemory
+Chocolate Shop 24: BrkChrg
+Chocolate Shop 25: HPMemory
+Chocolate Shop 26: ProtoMan B
+Chocolate Shop 27: RegUP2
+Chocolate Shop 28: SonicWav W
+Chocolate Shop 29: Untrap
+Chocolate Shop 30: HPMemory
+Chocolate Shop 31: 1 BugFrag
+Chocolate Shop 32: GrabRvng Y
+Yoka 1 North BMD: Aura F
+Yoka 1 WWW BMD: Unlocker
+Yoka 1 PMD: FlashMan V2 F
+Yoka 2 Lower BMD: BeastMan V3 B
+Yoka 2 Upper BMD: Recov120 *
+Hospital Quiz Queen: Thndrblt *
+Hades Quiz King: MiniEnrg
+Hospital DynaWav V Trade: HPMemory
+Beach DNN WideSwrd C Trade: SpinDark
+Beach DNN HoleMetr H Trade: Shake1 S
+Beach DNN Shadow J Trade: 1 BugFrag
+Hades GrabBack K Trade: RegUP2
+Beach Department Store: Cannon C
+Beach Hospital Plaque: Sword E
+Beach Hospital Pink Door: Unlocker
+Beach Hospital Tree: ModTools
+Beach Hospital Hidden Conversation: DrillMan V3 D
+Beach Hospital Girl: FullEnrg
+Beach DNN Kiosk: Unlocker
+Beach DNN Boxes: RegUP3
+Beach DNN Poster: WWW ID
+Hades Boat Dock: Geyser B
+Hades South BMD: Progressive Undernet Rank
+Hades Gargoyle BMD: Magnum1 A
+Hospital 1 North BMD: ProtoMan V3 B
+Hospital 1 West BMD: Barrier E
+Hospital 1 Center BMD: 1 BugFrag
+Hospital 2 Island BMD: Salamndr *
+Hospital 2 Central BMD: Barr100 E
+Hospital 2 Southwest BMD: AlphaArmΩ V
+Hospital 3 West BMD: HP+200 (Yellow)
+Hospital 3 Central BMD: GutsMan V2 G
+Hospital 3 Northwest BMD: Spreader *
+Hospital 4 North BMD: FlashMan V3 F
+Hospital 4 Central BMD: HPMemory
+Hospital 4 Southeast BMD: 900z
+Hospital 5 Island BMD: FlashMan F
+Hospital 5 Northeast BMD: 10 BugFrags
+Hospital 5 Southwest BMD: BlckMnd
+Beach Hospital Bed BMD: Progressive Undernet Rank
+Beach TV BMD: Muramasa M
+Beach Vending Machine BMD: GtStrght S
+Beach News Van BMD: 3000z
+Beach Battle Console BMD: DynaWave V
+Beach Security System BMD: Snctuary C
+Beach Broadcast Computer BMD: BubblMan B
+Beach DNN Security Panel PMD: Recov50 G
+Beach DNN Main Console PMD: RegUP3
+Undernet 6 TV BMD: HPMemory
+Beach 1 BMD: GutStrgt Q
+Beach 1 PMD: AirShot3 *
+Beach 2 East BMD: Team1 *
+Beach 2 West BMD: FireSwrd P
+Villain: RegUP2
+Undernet 1 South BMD: HiCannon *
+Undernet 1 WWW BMD: HoleMetr H
+Undernet 2 Lower BMD: GutPunch B
+Undernet 2 Upper BMD: CSciPass
+Undernet 3 South BMD: DarkAura A
+Undernet 3 Central BMD: Invis *
+Undernet 4 Pillar Prog: RegUP2
+Undernet 4 Top North BMD: GigFldr1
+Undernet 4 Bottom West BMD: CopyDmg *
+Undernet 4 Top Pillar BMD: VarSword B
+Undernet 5 Upper BMD: HP+500 (Yellow)
+Undernet 5 Lower BMD: Recov120 S
+Undernet 6 East BMD: 50000z
+Undernet 6 Central BMD: Unlocker
+Undernet 7 PMD: SpinRed
+Undernet 7 West BMD: VarSword F
+Undernet 7 Northeast BMD: OilBody
+Undernet 7 Northwest BMD: SloGauge *
+Undernet 7 Upper BMD: 1 BugFrag
+WWW Control Room 1 Screen: HPMemory
+WWW Wily's Desk: StepSwrd M
+WWW Wall BMD: HPMemory
+WWW 1 East BMD: 1 BugFrag
+WWW 1 West BMD: SneakRun
+WWW 1 Central BMD: SideGun S
+WWW 2 East BMD: Geddon1 D
+WWW 2 Northwest BMD: BowlMan B
+WWW 3 East BMD: Fountain *
+WWW 3 North BMD: RegUP2
+WWW 4 Central BMD: PlantMan V2 P
+WWW 4 Northwest BMD: SpinWht
+Alpha Defeated: Victory
+Secret 1 South BMD: 1600z
+Secret 1 Northeast BMD: AntiRecv B
+Secret 1 Northwest BMD: PlantMan P
+Secret 2 Island BMD: Charge+1 (White)
+Secret 2 Lower BMD: 500z
+Secret 2 Upper BMD: HP+100 (Pink)
+Secret 3 Island BMD: 1000z
+Secret 3 South BMD: KingMan V2 K
+Secret 3 BugFrag BMD: 1800z
+Serenade: GutsMan G
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  ACDC 3 Southwest BMD: PETCase
+  ACDC Class 5B Bookshelf: Progressive Undernet Rank
+  ACDC Lan's Security Panel BMD: Unlocker
+  ACDC School Server BMD 1: Bubbler C
+  Mayl's HP BMD: Press
+  Numberman Code 01: GrabBack K
+  Numberman Code 04: Unlocker
+  School 1 KeyDataB BMD: Unlocker
+  School 1 North Central BMD: Progressive Undernet Rank
+}
+2: {
+  Beach Battle Console BMD: DynaWave V
+  Beach DNN Kiosk: Unlocker
+  Beach DNN Poster: WWW ID
+  Beach Hospital Bed BMD: Progressive Undernet Rank
+  Beach Hospital Pink Door: Unlocker
+  Hades Gargoyle BMD: Magnum1 A
+  Hades South BMD: Progressive Undernet Rank
+  Hospital 5 Southwest BMD: BlckMnd
+  Numberman Code 11: Needle
+}
+3: {
+  Chocolate Shop 09: Progressive Undernet Rank
+  Chocolate Shop 11: Progressive Undernet Rank
+  Chocolate Shop 14: CBeacPas
+  Chocolate Shop 28: SonicWav W
+  Numberman Code 18: Unlocker
+  Yoka Inn Jars: Unlocker
+  Yoka Mr Quiz: Unlocker
+  Yoka TV BMD: SubPET
+  Zoo 1 East BMD: Shadow J
+  Zoo 1 North BMD: Hammer
+  Zoo 3 North BMD: Humor
+  Zoo 4 Northwest BMD: Progressive Undernet Rank
+}
+4: {
+  Beach 2 West BMD: FireSwrd P
+  Job: Legendary Tomes - Treasure: Recov30 *
+  Job: Transmission error: WideSwrd C
+  Job: Will you deliver?: CYokaPas
+  SciLab 1 East BMD: Progressive Undernet Rank
+  Undernet 1 WWW BMD: HoleMetr H
+  Undernet 2 Upper BMD: CSciPass
+  Undernet 5 Lower BMD: Recov120 S
+  Undernet 6 Central BMD: Unlocker
+  Yoka 1 WWW BMD: Unlocker
+}
+5: {
+  Alpha Defeated: Victory
+  Beach DNN HoleMetr H Trade: Shake1 S
+  Yoka FireSwrd P Trade: CACDCPas
+}
