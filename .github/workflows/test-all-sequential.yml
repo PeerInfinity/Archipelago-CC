@@ -116,6 +116,7 @@ jobs:
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
+              --retest-from-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
               --retest-continue-after-failure \
               --seed 1 \
               --every-nth ${{ matrix.split_total }} \
@@ -144,6 +145,7 @@ jobs:
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
+              --retest-from-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
               --retest-continue-after-failure \
               --seed ${{ matrix.split_num }} \
               --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
