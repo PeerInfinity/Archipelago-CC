@@ -63,8 +63,18 @@ The location is not accessible, suggesting the rule evaluation is failing.
 3. The `item_check` with `{"type": "name", "name": "technology"}` may not be evaluating correctly in the bound context
 4. The `createBoundContext` function may not be working correctly for this case
 
-**Next Steps:**
-1. Add debug logging to see what `resolveName` returns for "required_technologies"
-2. Check if the iterator is being evaluated correctly
-3. Verify that the bound context properly resolves "technology" to each item in the list
-4. Test the `item_check` with the bound variable
+**Work Done:**
+1. Created Factorio gameLogic module with helper functions (has, count, location_item_name)
+2. Registered Factorio in gameLogicRegistry
+3. Added progressive item resolution to has() helper to check both direct items and resolved progressive items
+4. Tests still fail - progressive resolution didn't fix the issue
+
+**Current Hypothesis:**
+The issue may be that the test eventProcessor is expected to add resolved_items to the inventory, but something is preventing this from happening. Or there's an issue with how the `all_of` rule evaluates the iterator.
+
+**Next Steps for Investigation:**
+1. Add debug logging to the eventProcessor to see what's actually added to inventory at sphere 1.8
+2. Check if `required_technologies` is being resolved correctly from game_info.variables
+3. Verify the iterator evaluation returns the expected array ["logistic-science-pack"]
+4. Check if the bound context is properly created and the element_rule is evaluated with it
+5. Consider adding detailed logging to ruleEngine.js for all_of evaluation
