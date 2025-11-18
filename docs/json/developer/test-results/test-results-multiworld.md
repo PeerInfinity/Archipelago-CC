@@ -4,7 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-17 22:48:59
+**Generated:** 2025-11-18 02:10:28
 
 ## Summary
 
@@ -35,62 +35,62 @@
 | DLCQuest | ⚫ Skipped | 2 | N/A | N/A | N/A | ✅ | ✅ |
 | DOOM 1993 | ⚫ Skipped | 1 | N/A | N/A | N/A | ✅ | ⚫ |
 | DOOM II | ⚫ Skipped | 1 | N/A | N/A | N/A | ✅ | ⚫ |
-| Dark Souls III | ✅ Passed | 2 | 2 | 1 | 0 | ✅ | ⚫ |
+| Dark Souls III | ⚫ Skipped | 2 | N/A | N/A | N/A | ✅ | ⚫ |
 | Donkey Kong Country 3 | ❌ Failed | 2 | 2 | 0 | 1 | ✅ | ⚫ |
 | Factorio | ⚫ Skipped | 3 | N/A | N/A | N/A | ✅ | ⚫ |
 | Faxanadu | ✅ Passed | 2 | 2 | 1 | 0 | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ⚫ Skipped | 3 | N/A | N/A | N/A | ✅ | ⚫ |
-| Heretic | ⚫ Skipped | 3 | N/A | N/A | N/A | ⚫ | ⚫ |
+| Heretic | ✅ Passed | 3 | 3 | 1 | 0 | ⚫ | ⚫ |
 | Hylics 2 | ✅ Passed | 3 | 3 | 1 | 0 | ✅ | ✅ |
 | Inscryption | ✅ Passed | 2 | 2 | 1 | 0 | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 1 | 1 | 1 | 0 | ✅ | ✅ |
-| Kingdom Hearts | ⚫ Skipped | 3 | N/A | N/A | N/A | ✅ | ✅ |
+| Kingdom Hearts | ⚫ Skipped | 2 | N/A | N/A | N/A | ✅ | ✅ |
 | Kingdom Hearts 2 | ⚫ Skipped | 1 | N/A | N/A | N/A | ✅ | ✅ |
 | Kirby's Dream Land 3 | ⚫ Skipped | 2 | N/A | N/A | N/A | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ⚫ Skipped | 3 | N/A | N/A | N/A | ✅ | ✅ |
 | Lingo | ⚫ Skipped | 3 | N/A | N/A | N/A | ✅ | ✅ |
 | Links Awakening DX | ⚫ Skipped | 3 | N/A | N/A | N/A | ✅ | ✅ |
-| Lufia II Ancient Cave | ⚫ Skipped | 3 | N/A | N/A | N/A | ⚫ | ⚫ |
+| Lufia II Ancient Cave | ⚫ Skipped | 4 | N/A | N/A | N/A | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ⚫ Skipped | 4 | N/A | N/A | N/A | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed | 3 | 3 | 1 | 0 | ⚫ | ⚫ |
 | Mega Man 2 | ⚫ Skipped | 2 | N/A | N/A | N/A | ✅ | ✅ |
 | MegaMan Battle Network 3 | ⚫ Skipped | 1 | N/A | N/A | N/A | ✅ | ✅ |
-| Meritous | ✅ Passed | 3 | 3 | 1 | 0 | ⚫ | ⚫ |
+| Meritous | ✅ Passed | 2 | 2 | 1 | 0 | ⚫ | ⚫ |
 | Metamath | ❌ Failed | 2 | 2 | 0 | 1 | ✅ | ⚫ |
 | Muse Dash | ✅ Passed | 3 | 3 | 1 | 0 | ⚫ | ⚫ |
 | Noita | ✅ Passed | 3 | 3 | 1 | 0 | ⚫ | ⚫ |
 | Ocarina of Time | ⚫ Skipped | 3 | N/A | N/A | N/A | ✅ | ✅ |
-| Old School Runescape | ❌ Failed | 3 | 3 | 0 | 1 | ✅ | ✅ |
+| Old School Runescape | ❌ Failed | 4 | 4 | 0 | 1 | ✅ | ✅ |
 | Overcooked! 2 | ⚫ Skipped | 4 | N/A | N/A | N/A | ✅ | ✅ |
 | Paint | ❌ Failed | 4 | 4 | 0 | 1 | ✅ | ✅ |
 | Pokemon Emerald | ⚫ Skipped | 2 | N/A | N/A | N/A | ✅ | ✅ |
 | Pokemon Red and Blue | ⚫ Skipped | 1 | N/A | N/A | N/A | ✅ | ✅ |
-| Raft | ✅ Passed | 4 | 4 | 1 | 0 | ✅ | ✅ |
+| Raft | ✅ Passed | 3 | 3 | 1 | 0 | ✅ | ✅ |
 | Risk of Rain 2 | ❌ Failed | 2 | 2 | 0 | 1 | ⚫ | ⚫ |
 | SMZ3 | ⚫ Skipped | 4 | N/A | N/A | N/A | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 4 | 4 | 1 | 0 | ✅ | ⚫ |
 | Secret of Evermore | ⚫ Skipped | 3 | N/A | N/A | N/A | ✅ | ✅ |
-| Shivers | ⚫ Skipped | 3 | N/A | N/A | N/A | ✅ | ✅ |
+| Shivers | ⚫ Skipped | 4 | N/A | N/A | N/A | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ❌ Failed | 4 | 4 | 0 | 1 | ✅ | ⚫ |
 | Starcraft 2 | ⚫ Skipped | 4 | N/A | N/A | N/A | ✅ | ✅ |
 | Stardew Valley | ⚫ Skipped | 2 | N/A | N/A | N/A | ✅ | ⚫ |
 | Subnautica | ⚫ Skipped | 1 | N/A | N/A | N/A | ✅ | ✅ |
-| Super Mario 64 | ❌ Failed | 5 | 5 | 0 | 1 | ✅ | ✅ |
+| Super Mario 64 | ❌ Failed | 4 | 4 | 0 | 1 | ✅ | ✅ |
 | Super Mario Land 2 | ⚫ Skipped | 2 | N/A | N/A | N/A | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 4 | 4 | 1 | 0 | ✅ | ⚫ |
 | Super Metroid | ⚫ Skipped | 5 | N/A | N/A | N/A | ✅ | ✅ |
 | TUNIC | ✅ Passed | 3 | 3 | 1 | 0 | ✅ | ⚫ |
-| Terraria | ✅ Passed | 3 | 3 | 1 | 0 | ✅ | ✅ |
+| Terraria | ✅ Passed | 4 | 4 | 1 | 0 | ✅ | ✅ |
 | The Legend of Zelda | ❌ Failed | 4 | 4 | 0 | 1 | ✅ | ✅ |
 | The Messenger | ❌ Failed | 4 | 4 | 0 | 1 | ✅ | ✅ |
 | The Wind Waker | ❌ Failed | 2 | 2 | 0 | 1 | ✅ | ✅ |
 | The Witness | ⚫ Skipped | 1 | N/A | N/A | N/A | ✅ | ⚫ |
-| Timespinner | ❌ Failed | 5 | 5 | 0 | 1 | ✅ | ✅ |
+| Timespinner | ❌ Failed | 4 | 4 | 0 | 1 | ✅ | ✅ |
 | Undertale | ❌ Failed | 2 | 2 | 0 | 1 | ✅ | ⚫ |
 | VVVVVV | ⚫ Skipped | 5 | N/A | N/A | N/A | ✅ | ✅ |
 | Wargroove | ✅ Passed | 5 | 5 | 1 | 0 | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | 4 | 4 | 1 | 0 | ⚫ | ⚫ |
-| Yacht Dice | ❌ Failed | 4 | 4 | 0 | 1 | ✅ | ✅ |
+| Yacht Dice | ❌ Failed | 5 | 5 | 0 | 1 | ✅ | ✅ |
 | Yoshi's Island | ⚫ Skipped | 4 | N/A | N/A | N/A | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ⚫ Skipped | 4 | N/A | N/A | N/A | ✅ | ✅ |
 | Zillion | ⚫ Skipped | 2 | N/A | N/A | N/A | ✅ | ⚫ |

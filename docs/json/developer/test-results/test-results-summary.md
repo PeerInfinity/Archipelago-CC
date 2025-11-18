@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-17 22:48:59
+**Generated:** 2025-11-18 02:10:28
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,9 +12,9 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 60/78 passed (76.9%)
-- **Full Test:** 56/78 passed (71.8%)
-- **Multiplayer Test:** 48/78 passed (61.5%)
+- **Minimal Test:** 62/78 passed (79.5%)
+- **Full Test:** 54/78 passed (69.2%)
+- **Multiplayer Test:** 49/78 passed (62.8%)
 - **Multiworld Test:** 29/78 passed (37.2%)
 
 ### Combined Test Results
@@ -22,15 +22,15 @@ This summary combines results from four types of tests:
 - **Templates passing all 4 tests:** 28/79 (35.4%)
 - **Templates passing 3 tests:** 13/79 (16.5%)
 - **Templates passing 2 tests:** 19/79 (24.1%)
-- **Templates passing 1 test:** 4/79 (5.1%)
-- **Templates passing 0 tests:** 15/79 (19.0%)
+- **Templates passing 1 test:** 5/79 (6.3%)
+- **Templates passing 0 tests:** 14/79 (17.7%)
 
 ## Test Results
 
 | Game Name | Minimal Test | Full Test | Multiplayer Test | Multiworld Test | Custom Exporter | Custom GameLogic |
 |-----------|--------------|-----------|------------------|-----------------|-----------------|------------------|
 | A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
-| A Link to the Past | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| A Link to the Past | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
@@ -47,19 +47,19 @@ This summary combines results from four types of tests:
 | DLCQuest | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | DOOM 1993 | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | DOOM II | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
-| Dark Souls III | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
+| Dark Souls III | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ⚫ |
 | Factorio | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Faxanadu | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| Heretic | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
+| Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Jak and Daxter The Precursor Legacy | ✅ Passed | ✅ Passed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
 | Jak and Daxter: The Precursor Legacy | ❓ N/A | ❓ N/A | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Kingdom Hearts | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Kingdom Hearts 2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| Kirby's Dream Land 3 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Kirby's Dream Land 3 | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Lingo | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Links Awakening DX | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
@@ -76,8 +76,8 @@ This summary combines results from four types of tests:
 | Old School Runescape | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ⚫ |
 | Overcooked! 2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Paint | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ⚫ |
-| Pokemon Emerald | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| Pokemon Red and Blue | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Pokemon Emerald | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
+| Pokemon Red and Blue | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
@@ -108,14 +108,6 @@ This summary combines results from four types of tests:
 | Yu-Gi-Oh! 2006 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Zillion | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
-
-## Multi-Template Test Results
-
-These tests check multiple template configurations for the same game.
-
-| Game Name | Minimal Link (Templates Passed) | Full Link (Templates Passed) |
-|-----------|----------------------------------|-------------------------------|
-| A Link to the Past | [138/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [123/174 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
 
 ## Excluded Games
 
