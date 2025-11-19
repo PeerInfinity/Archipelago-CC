@@ -829,15 +829,20 @@ export class EventProcessor {
     // Step 3: Add virtual/event items from resolved_items that aren't in base_items
     // These are items like "Received Progression Percent" that are computed automatically
     // Note: resolved_items contains DELTAS (new items in this sphere), not cumulative totals
+    this.logCallback('info', `[DEBUG] Step 3: Processing resolved_items for sphere ${context.sphere_number}, count: ${Object.keys(resolvedItems).length}, items: ${Object.keys(resolvedItems).join(', ')}`);
     if (Object.keys(resolvedItems).length > 0) {
       for (const [itemName, deltaCount] of Object.entries(resolvedItems)) {
+        this.logCallback('info', `[DEBUG] Checking resolved_item: ${itemName}, delta: ${deltaCount}, in newItems: ${itemName in newItems}`);
+
         // Skip if this item is already in base_items (we've already processed it)
         if (itemName in newItems) {
+          this.logCallback('info', `[DEBUG] Skipping ${itemName} - already in base_items`);
           continue;
         }
 
         // Check if this is an event item (virtual item computed by hooks)
         const itemDef = staticData.items.get(itemName);
+        this.logCallback('info', `[DEBUG] Item def for ${itemName}: event=${itemDef?.event}, exists=${!!itemDef}`);
         if (itemDef && itemDef.event) {
           // Skip event items - they should be computed by game-specific hooks
           // (e.g., Stardew Valley's "Received Progression Percent")
@@ -847,6 +852,7 @@ export class EventProcessor {
 
         // deltaCount is the number of this item added in this sphere
         if (deltaCount > 0) {
+          this.logCallback('info', `[DEBUG] Adding ${deltaCount}x "${itemName}" to inventory`);
           this.logCallback('info', `  [Player ${this.playerId}] Adding ${deltaCount}x virtual/event item: "${itemName}" (from resolved_items)`);
           for (let i = 0; i < deltaCount; i++) {
             await stateManager.addItemToInventory(itemName, 1);

@@ -699,15 +699,29 @@ export const helperFunctions = {
     const settings = staticData?.settings || {};
     const fightLogic = settings.FightLogic ?? 1; // Default: normal
 
+    console.log('[KH2] get_cor_first_fight_movement_rules called', {
+      fightLogic,
+      quickRun: snapshot?.inventory?.['Quick Run'],
+      aerialDodge: snapshot?.inventory?.['Aerial Dodge'],
+      wisdomForm: snapshot?.inventory?.['Wisdom Form']
+    });
+
     if (fightLogic === 0) { // easy: quick run 3 or wisdom 5
-      return (snapshot?.inventory?.['Quick Run'] >= 3) ||
+      const result = (snapshot?.inventory?.['Quick Run'] >= 3) ||
         helperFunctions.form_list_unlock(snapshot, staticData, 'Wisdom Form', 3, true);
+      console.log('[KH2] get_cor_first_fight_movement_rules result (easy):', result);
+      return result;
     } else if (fightLogic === 1) { // normal: (quick run 2 and aerial dodge 1) or wisdom 5
-      return helperFunctions.kh2_dict_count({'Quick Run': 2, 'Aerial Dodge': 1}, snapshot) ||
-        helperFunctions.form_list_unlock(snapshot, staticData, 'Wisdom Form', 3, true);
+      const dictResult = helperFunctions.kh2_dict_count({'Quick Run': 2, 'Aerial Dodge': 1}, snapshot);
+      const formResult = helperFunctions.form_list_unlock(snapshot, staticData, 'Wisdom Form', 3, true);
+      const result = dictResult || formResult;
+      console.log('[KH2] get_cor_first_fight_movement_rules result (normal):', { dictResult, formResult, result });
+      return result;
     } else { // hard: (quick run 1, aerial dodge 1) or (wisdom form and aerial dodge 1)
-      return helperFunctions.kh2_has_all(snapshot, staticData, ['Aerial Dodge', 'Quick Run']) ||
+      const result = helperFunctions.kh2_has_all(snapshot, staticData, ['Aerial Dodge', 'Quick Run']) ||
         helperFunctions.kh2_has_all(snapshot, staticData, ['Aerial Dodge', 'Wisdom Form']);
+      console.log('[KH2] get_cor_first_fight_movement_rules result (hard):', result);
+      return result;
     }
   },
 
@@ -735,16 +749,36 @@ export const helperFunctions = {
 
     const toolCount = helperFunctions.kh2_dict_one_count(notHardCorToolsDict, snapshot);
 
+    console.log('[KH2] get_cor_first_fight_rules called', {
+      fightLogic,
+      toolCount,
+      inventory: {
+        reflectElement: snapshot?.inventory?.['Reflect Element'],
+        stitch: snapshot?.inventory?.['Stitch'],
+        chickenLittle: snapshot?.inventory?.['Chicken Little'],
+        magnetElement: snapshot?.inventory?.['Magnet Element'],
+        explosion: snapshot?.inventory?.['Explosion'],
+        finishingLeap: snapshot?.inventory?.['Finishing Leap'],
+        thunderElement: snapshot?.inventory?.['Thunder Element']
+      }
+    });
+
     if (fightLogic === 0) { // easy: 5 tools or 4 tools + final form 1
-      return toolCount >= 5 ||
+      const result = toolCount >= 5 ||
         (toolCount >= 4 && helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 1, true));
+      console.log('[KH2] get_cor_first_fight_rules result (easy):', result);
+      return result;
     } else if (fightLogic === 1) { // normal: 3 tools or 2 tools + final form 1
-      return toolCount >= 3 ||
-        (toolCount >= 2 && helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 1, true));
+      const formCheck = helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 1, true);
+      const result = toolCount >= 3 || (toolCount >= 2 && formCheck);
+      console.log('[KH2] get_cor_first_fight_rules result (normal):', { toolCount, formCheck, result });
+      return result;
     } else { // hard: reflect + (stitch or chicken little) + final form
-      return (snapshot?.inventory?.['Reflect Element'] > 0) &&
+      const result = (snapshot?.inventory?.['Reflect Element'] > 0) &&
         helperFunctions.kh2_has_any(snapshot, staticData, ['Stitch', 'Chicken Little']) &&
         helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 1, true);
+      console.log('[KH2] get_cor_first_fight_rules result (hard):', result);
+      return result;
     }
   },
 
