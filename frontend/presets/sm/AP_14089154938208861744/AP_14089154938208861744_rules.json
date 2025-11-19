@@ -8397,39 +8397,8 @@
             "name": "Energy Tank, Terminator",
             "id": 82008,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Reserve Tank",
@@ -8595,39 +8564,8 @@
             "name": "Morphing Ball",
             "id": 82026,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Morph Ball",
@@ -8755,39 +8693,8 @@
             "name": "Energy Tank, Etecoons",
             "id": 82030,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Energy Tank",
@@ -10514,39 +10421,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "evalSMBool",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "SMBool",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": true
-                        }
-                      ]
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "subscript",
-                        "value": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "state"
-                          },
-                          "attr": "smbm"
-                        },
-                        "index": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      "attr": "maxDiff"
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 }
               ]
             },
@@ -11029,39 +10905,8 @@
             "name": "Energy Tank, Mama turtle",
             "id": 82138,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Gravity Suit",
@@ -11600,39 +11445,8 @@
             "name": "Draygon",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Draygon",
@@ -11700,39 +11514,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "evalSMBool",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "SMBool",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": true
-                        }
-                      ]
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "subscript",
-                        "value": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "state"
-                          },
-                          "attr": "smbm"
-                        },
-                        "index": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      "attr": "maxDiff"
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 }
               ]
             },
@@ -12336,39 +12119,8 @@
             "name": "Missile (Crateria moat)",
             "id": 82004,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Bomb",
@@ -12460,39 +12212,8 @@
             "name": "Missile (Crateria gauntlet right)",
             "id": 82009,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Wave Beam",
@@ -12511,39 +12232,8 @@
             "name": "Missile (Crateria gauntlet left)",
             "id": 82010,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Bomb",
@@ -13052,39 +12742,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "evalSMBool",
-                  "args": [
-                    {
-                      "type": "helper",
-                      "name": "SMBool",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": true
-                        }
-                      ]
-                    },
-                    {
-                      "type": "attribute",
-                      "object": {
-                        "type": "subscript",
-                        "value": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "state"
-                          },
-                          "attr": "smbm"
-                        },
-                        "index": {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      },
-                      "attr": "maxDiff"
-                    }
-                  ]
+                  "type": "constant",
+                  "value": false
                 }
               ]
             },
@@ -13375,39 +13034,8 @@
             "name": "Missile (pink Brinstar top)",
             "id": 82021,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Super Missile",
@@ -13426,39 +13054,8 @@
             "name": "Missile (pink Brinstar bottom)",
             "id": 82022,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Missile",
@@ -13590,39 +13187,8 @@
             "name": "Power Bomb (blue Brinstar)",
             "id": 82027,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Bomb",
@@ -13754,39 +13320,8 @@
             "name": "Super Missile (green Brinstar bottom)",
             "id": 82031,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Super Missile",
@@ -14220,39 +13755,8 @@
             "name": "Missile (below Ice Beam)",
             "id": 82051,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Bomb",
@@ -14271,39 +13775,8 @@
             "name": "Missile (above Crocomire)",
             "id": 82054,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Super Missile",
@@ -14447,39 +13920,8 @@
             "name": "Energy Tank (Hi-Jump Boots)",
             "id": 82056,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Missile",
@@ -15098,39 +14540,8 @@
             "name": "Missile (bubble Norfair)",
             "id": 82064,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Super Missile",
@@ -15230,39 +14641,8 @@
             "name": "Missile (Wave Beam)",
             "id": 82067,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Reserve Tank",
@@ -15489,39 +14869,8 @@
             "name": "Missile (lower Norfair above fire flea room)",
             "id": 82074,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Missile",
@@ -15540,39 +14889,8 @@
             "name": "Power Bomb (lower Norfair above fire flea room)",
             "id": 82075,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Missile",
@@ -15591,39 +14909,8 @@
             "name": "Power Bomb (Power Bombs of shame)",
             "id": 82076,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Bomb",
@@ -16128,39 +15415,8 @@
             "name": "Missile (green Maridia tatori)",
             "id": 82139,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Plasma Beam",
@@ -16179,39 +15435,8 @@
             "name": "Super Missile (yellow Maridia)",
             "id": 82140,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Missile",
@@ -16230,39 +15455,8 @@
             "name": "Missile (yellow Maridia super missile)",
             "id": 82141,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Energy Tank",
@@ -16281,39 +15475,8 @@
             "name": "Missile (yellow Maridia false wall)",
             "id": 82142,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Power Bomb",
@@ -16539,39 +15702,8 @@
             "name": "Missile (pink Maridia)",
             "id": 82148,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Missile",
@@ -16590,39 +15722,8 @@
             "name": "Super Missile (pink Maridia)",
             "id": 82149,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Super Missile",
@@ -16641,39 +15742,8 @@
             "name": "Missile (Draygon)",
             "id": 82151,
             "access_rule": {
-              "type": "helper",
-              "name": "evalSMBool",
-              "args": [
-                {
-                  "type": "helper",
-                  "name": "SMBool",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
-                  ]
-                },
-                {
-                  "type": "attribute",
-                  "object": {
-                    "type": "subscript",
-                    "value": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "state"
-                      },
-                      "attr": "smbm"
-                    },
-                    "index": {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  },
-                  "attr": "maxDiff"
-                }
-              ]
+              "type": "constant",
+              "value": false
             },
             "item": {
               "name": "Missile",
