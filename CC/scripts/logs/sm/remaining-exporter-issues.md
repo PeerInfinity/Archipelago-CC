@@ -69,8 +69,23 @@ The exporter is trying to combine these, but:
 - AccessFrom comprehensions hit recursion limits and can't be properly analyzed
 - Available rules use VARIA logic (sm.wor, sm.wand, sm.haveItem, etc.) which needs JavaScript implementation
 
+**Progress Update 2**:
+1. ✅ Implemented VARIA logic helpers in frontend (wor, wand, haveItem, etc.)
+2. ✅ Updated evalSMBool to properly check SMBool difficulty against maxDiff
+3. ✅ Added transformation in exporter to convert sm.methodName(...) to helper calls
+4. ✅ Rules file size reduced by 4048 lines (complex patterns converted to helpers)
+
+**Remaining Issue - Entrance Rules**:
+The entrance rules are being exported as constant True when they should have accessFrom logic.
+
+Example: Entrances to "Energy Tank, Terminator" region:
+- From Landing Site: constant True (should be canPassTerminatorBombWall)
+- From Gauntlet Top: constant True (should be haveItem('Morph'))
+- From Lower Mushrooms Left: constant True (should be canPassCrateriaGreenPirates)
+
+The accessFrom dict in the Python world defines these entrance requirements, but they're not being properly exported to the entrance objects.
+
 **Next Steps**:
-1. Implement basic VARIA logic helpers in the frontend (wor, wand, haveItem, etc.)
-2. Stop simplifying evalSMBool(SMBool(True), ...) to constant True
-3. Make evalSMBool actually evaluate the SMBool's difficulty against maxDiff
-4. Test with the complex VARIA logic rules
+1. Investigate how entrances are created and their access rules are exported
+2. Ensure accessFrom logic is applied to entrance rules, not just location rules
+3. May need to create custom entrance rule export logic for Super Metroid
