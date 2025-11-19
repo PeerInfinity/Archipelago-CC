@@ -796,8 +796,29 @@ export default {
             && terran_defense_rating(snapshot, staticData, true) >= 3
         );
     },
-    terran_survives_rip_field: () => false,
-    terran_sustainable_mech_heal: () => false,
+    terran_survives_rip_field: (snapshot, staticData) => {
+        const sustainableHeal = has(snapshot, 'Science Vessel')
+            || has_all(snapshot, ['Medic', 'Adaptive Medpacks (Medic)'])
+            || count(snapshot, 'Progressive Regenerative Bio-Steel') >= 3
+            || (isAdvancedTactics(staticData) && (
+                has_all(snapshot, ['Raven', 'Bio-Mechanical Repair Drone (Raven)'])
+                || count(snapshot, 'Progressive Regenerative Bio-Steel') >= 2
+            ));
+
+        return has(snapshot, 'Battlecruiser')
+            || (terran_air(snapshot, staticData)
+                && terran_competent_anti_air(snapshot, staticData)
+                && sustainableHeal);
+    },
+    terran_sustainable_mech_heal: (snapshot, staticData) => {
+        return has(snapshot, 'Science Vessel')
+            || has_all(snapshot, ['Medic', 'Adaptive Medpacks (Medic)'])
+            || count(snapshot, 'Progressive Regenerative Bio-Steel') >= 3
+            || (isAdvancedTactics(staticData) && (
+                has_all(snapshot, ['Raven', 'Bio-Mechanical Repair Drone (Raven)'])
+                || count(snapshot, 'Progressive Regenerative Bio-Steel') >= 2
+            ));
+    },
 
     protoss_common_unit,
     protoss_basic_anti_air,
@@ -895,9 +916,13 @@ export default {
     nova_ranged_weapon,
     nova_splash,
     nova_full_stealth,
-    nova_dash: () => false,
+    nova_dash: (snapshot, staticData) => {
+        return has_any(snapshot, ['Monomolecular Blade (Nova Weapon)', 'Blink (Nova Gadget)']);
+    },
     nova_heal,
-    nova_escape_assist: () => false,
+    nova_escape_assist: (snapshot, staticData) => {
+        return has_any(snapshot, ['Blink (Nova Gadget)', 'Holo Decoy (Nova Gadget)', 'Ionic Force Field (Nova Gadget)']);
+    },
 
     great_train_robbery_train_stopper: (snapshot, staticData) => {
         const advancedTactics = isAdvancedTactics(staticData);
@@ -978,7 +1003,36 @@ export default {
                 )
             );
     },
-    enemy_intelligence_third_stage_requirement: () => false,
+    enemy_intelligence_third_stage_requirement: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const storyTechGranted = settings?.story_tech_granted || false;
+
+        const secondStage = enemy_intelligence_first_stage_requirement(snapshot, staticData)
+            && enemy_intelligence_cliff_garrison(snapshot, staticData)
+            && (
+                storyTechGranted
+                || (
+                    nova_any_weapon(snapshot, staticData)
+                    && (
+                        nova_full_stealth(snapshot, staticData)
+                        || (
+                            nova_heal(snapshot, staticData)
+                            && nova_splash(snapshot, staticData)
+                            && nova_ranged_weapon(snapshot, staticData)
+                        )
+                    )
+                )
+            );
+
+        return secondStage && (
+            storyTechGranted
+            || (
+                has(snapshot, 'Progressive Stealth Suit Module (Nova Suit Module)')
+                && has_any(snapshot, ['Monomolecular Blade (Nova Weapon)', 'Blink (Nova Gadget)'])
+            )
+        );
+    },
     the_escape_first_stage_requirement: (snapshot, staticData) => {
         // First stage of The Escape requires basic Nova suit module (not Jump Suit)
         // Check for Armored, Energy, or Progressive Stealth suit modules
