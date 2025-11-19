@@ -547,9 +547,6 @@ def main():
     # Initialize retest_seed_info (used in test loop)
     retest_seed_info = {}
 
-    # Initialize intermittent failures tracking (for --retest mode)
-    intermittent_failures = []
-
     # Handle --retest mode: load existing results and filter to only failed tests
     if args.retest:
         # Determine the correct results file path based on mode
@@ -583,6 +580,13 @@ def main():
             print(f"Error: Cannot use --retest because results file is empty: {retest_results_file}")
             print("Please run a full test first to generate results.")
             sys.exit(1)
+
+        # Load existing intermittent failures (if any) to preserve them across retest iterations
+        existing_intermittent = existing_results.get('metadata', {}).get('intermittent_tracking', {}).get('failures', [])
+        print(f"Loaded {len(existing_intermittent)} existing intermittent failure(s) from previous retest iteration(s)")
+
+        # Initialize intermittent failures with existing ones (will be extended during retest)
+        intermittent_failures = existing_intermittent.copy()
 
         # Get list of failed templates and their failing seed info
         # If --retest-seed-specific is used, only get templates that failed on the specific seed
@@ -731,7 +735,11 @@ def main():
             sys.exit(1)
         
         filter_description = f"skip list ({len(args.skip_list)} excluded)"
-    
+
+    # Initialize intermittent failures if not already done (non-retest mode)
+    if not args.retest:
+        intermittent_failures = []
+
     yaml_files.sort()
 
     # Apply --every-nth and --skip-first filtering if specified

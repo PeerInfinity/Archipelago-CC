@@ -235,14 +235,25 @@ def _process_template_results(template_results: Dict[str, List], combined_result
             min_seed = min(seeds)
             max_seed = max(seeds)
 
+            # Build individual_results dict to preserve all seed results
+            individual_results = {}
+            for seed, result in seed_results:
+                individual_results[str(seed)] = result
+
             # Check if all seeds passed
             all_passed = True
             first_failure_seed = None
+            first_failure_reason = None
             consecutive_passes = 0
             seeds_passed = 0
             seeds_failed = 0
 
-            for seed, result in seed_results:
+            # Sort seeds numerically for consistent processing
+            sorted_seeds = sorted(seeds)
+
+            for seed_num in sorted_seeds:
+                result = individual_results[str(seed_num)]
+
                 # Check if this seed passed
                 seed_passed = False
                 if 'spoiler_test' in result:
@@ -257,28 +268,45 @@ def _process_template_results(template_results: Dict[str, List], combined_result
 
                 if seed_passed:
                     seeds_passed += 1
-                    if all_passed:
+                    if first_failure_seed is None:
                         consecutive_passes += 1
                 else:
                     seeds_failed += 1
-                    if all_passed:
-                        all_passed = False
-                        first_failure_seed = int(seed)
+                    if first_failure_seed is None:
+                        first_failure_seed = seed_num
+                        # Get failure reason from the seed result
+                        if 'spoiler_test' in result:
+                            spoiler_result = result.get('spoiler_test', {})
+                            if spoiler_result.get('first_error_line'):
+                                first_failure_reason = f"Test error: {spoiler_result['first_error_line']}"
+                            else:
+                                first_failure_reason = f"Test failed at sphere {spoiler_result.get('sphere_reached', 0)}"
+                        else:
+                            gen_result = result.get('generation', {})
+                            if gen_result.get('first_error_line'):
+                                first_failure_reason = f"Generation error: {gen_result['first_error_line']}"
+                            else:
+                                first_failure_reason = f"Generation failed with return code {gen_result.get('return_code')}"
 
             # Use the result from the first seed as the base
             base_result = seed_results[0][1].copy()
 
+            # Add individual_results to preserve all seed data
+            base_result['individual_results'] = individual_results
+
             # Update with seed range information
-            base_result['seed_range'] = f"{min_seed}-{max_seed}" if min_seed != max_seed else str(min_seed)
-            base_result['seeds_tested'] = len(seed_results)
+            base_result['seed_range'] = f"{sorted_seeds[0]}-{sorted_seeds[-1]}" if sorted_seeds[0] != sorted_seeds[-1] else str(sorted_seeds[0])
+            base_result['total_seeds_tested'] = len(seed_results)
             base_result['seeds_passed'] = seeds_passed
             base_result['seeds_failed'] = seeds_failed
             base_result['consecutive_passes_before_failure'] = consecutive_passes
 
             if first_failure_seed:
                 base_result['first_failure_seed'] = first_failure_seed
+                base_result['first_failure_reason'] = first_failure_reason
             else:
                 base_result['first_failure_seed'] = None
+                base_result['first_failure_reason'] = None
 
             # Add summary field for compatibility with is_test_passing
             base_result['summary'] = {
