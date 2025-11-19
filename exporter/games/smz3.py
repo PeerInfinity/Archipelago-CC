@@ -22,6 +22,59 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         with open('/tmp/smz3_debug.log', 'a') as f:
             f.write("SMZ3 exporter __init__ called\n")
 
+    def get_settings_data(self, world, multiworld, player: int) -> Dict[str, Any]:
+        """
+        Override to add SMZ3-specific reward data to settings.
+
+        This exports which reward (pendant/crystal) is assigned to which dungeon,
+        which is necessary for evaluating CanAcquire() rules.
+        """
+        # Get base settings from parent class
+        settings = super().get_settings_data(world, multiworld, player)
+
+        logger.info(f"Getting settings data for SMZ3 world")
+        logger.info(f"World type: {type(world)}")
+        logger.info(f"World attributes: {dir(world)[:10]}")  # First 10 attributes
+
+        try:
+            # Import RewardType to check for IReward regions
+            from worlds.smz3.TotalSMZ3.Region import IReward
+
+            # Get the TotalSMZ3 world (not the Archipelago wrapper)
+            if not hasattr(world, 'smz3World'):
+                logger.warning(f"SMZ3 world does not have smz3World attribute, cannot export rewards. Available attrs: {[a for a in dir(world) if not a.startswith('_')][:20]}")
+                return settings
+
+            smz3_world = world.smz3World
+            logger.info(f"Found smz3World: {type(smz3_world)}")
+
+            # Get all regions that have rewards
+            reward_regions = {}
+            for region in smz3_world.Regions:
+                # Check if this region implements IReward (has a Reward attribute)
+                if hasattr(region, 'Reward') and isinstance(region, IReward):
+                    reward = region.Reward
+                    # Get the reward value (enum int value)
+                    reward_value = reward.value if hasattr(reward, 'value') else 0
+
+                    if reward_value != 0:  # Skip Null rewards
+                        region_name = region.Name if hasattr(region, 'Name') else str(region)
+                        reward_regions[region_name] = {
+                            'reward_type': reward_value,
+                            'reward_name': reward.name if hasattr(reward, 'name') else str(reward)
+                        }
+                        logger.info(f"Region '{region_name}' has reward: {reward.name} (value={reward_value})")
+
+            if reward_regions:
+                logger.info(f"Exported {len(reward_regions)} reward regions for SMZ3")
+                settings['reward_regions'] = reward_regions
+
+        except Exception as e:
+            logger.error(f"Error exporting SMZ3 reward data: {e}")
+            logger.exception(e)
+
+        return settings
+
     def _handle_medallion_entrance(self, region_object, entrance_name: str) -> Optional[Dict[str, Any]]:
         """
         Handle entrances to dungeons that require medallions (Misery Mire, Turtle Rock).
@@ -362,6 +415,38 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                     'value': 0
                 }
 
+            # Handle RewardType.AttributeName - convert enum values to constants
+            if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'RewardType':
+                # RewardType enum values (bit flags)
+                reward_type_values = {
+                    'Null': 0,
+                    'Agahnim': 1,
+                    'PendantGreen': 2,
+                    'PendantNonGreen': 4,
+                    'CrystalBlue': 8,
+                    'CrystalRed': 16,
+                    'BossTokenKraid': 32,
+                    'BossTokenPhantoon': 64,
+                    'BossTokenDraygon': 128,
+                    'BossTokenRidley': 256,
+                    'AnyPendant': 6,  # PendantGreen | PendantNonGreen
+                    'AnyCrystal': 24,  # CrystalBlue | CrystalRed
+                    'AnyBossToken': 480  # All boss tokens
+                }
+
+                if attr in reward_type_values:
+                    logger.debug(f"Converting RewardType.{attr} to constant value {reward_type_values[attr]}")
+                    return {
+                        'type': 'constant',
+                        'value': reward_type_values[attr]
+                    }
+                else:
+                    logger.warning(f"Unknown RewardType attribute: {attr}, defaulting to 0")
+                    return {
+                        'type': 'constant',
+                        'value': 0
+                    }
+
             # Recursively process the object part of attribute access
             rule['object'] = self.postprocess_rule(obj)
 
@@ -485,6 +570,23 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                         'name': f'smz3_{method_name}',
                         'args': [self.postprocess_rule(arg) for arg in filtered_args]
                     }
+
+                # Handle self.world.CanAcquire(reward_type) - convert to helper
+                if (isinstance(obj, dict) and obj.get('type') == 'attribute' and
+                    obj.get('attr') == 'world' and
+                    isinstance(obj.get('object'), dict) and
+                    obj['object'].get('type') == 'name' and
+                    obj['object'].get('name') == 'self' and
+                    method_name == 'CanAcquire'):
+
+                    if filtered_args and len(filtered_args) > 0:
+                        reward_type_arg = self.postprocess_rule(filtered_args[0])
+                        logger.debug(f"Converting self.world.CanAcquire() to helper")
+                        return {
+                            'type': 'helper',
+                            'name': 'smz3_CanAcquire',
+                            'args': [reward_type_arg]
+                        }
 
                 # Handle self.world.CanEnter(region_name, items) - convert to region_accessible
                 if (isinstance(obj, dict) and obj.get('type') == 'attribute' and
