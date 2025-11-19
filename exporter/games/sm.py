@@ -215,6 +215,35 @@ class SMGameExportHandler(GenericGameExportHandler):
         depth = count_depth(rule)
         return depth >= max_depth
 
+    def _is_simple_accessFrom(self, rule: Dict[str, Any]) -> bool:
+        """Check if an accessFrom pattern has only SMBool(True) requirements.
+
+        A simple accessFrom is: any(state.can_reach(region) and evalSMBool(SMBool(True), ...))
+        This means the location is accessible from the region with no item requirements.
+        """
+        if not rule or rule.get('type') != 'any_of':
+            return False
+
+        # Check the element_rule
+        element_rule = rule.get('element_rule')
+        if not element_rule:
+            return False
+
+        # Should be an AND of: state.can_reach(...) and evalSMBool(SMBool(True), ...)
+        if element_rule.get('type') != 'and':
+            return False
+
+        conditions = element_rule.get('conditions', [])
+        if len(conditions) != 2:
+            return False
+
+        # Second condition should be evalSMBool(SMBool(True), ...)
+        second = conditions[1]
+        if self._is_always_true_smbool(second):
+            return True
+
+        return False
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand and transform Super Metroid rules.
 
@@ -245,14 +274,32 @@ class SMGameExportHandler(GenericGameExportHandler):
                     logger.info("SM: Found AND rule with accessFrom, checking Available part")
                     print("[SM] Found AND rule with accessFrom pattern")
 
-                    # Use the Available part
-                    # Note: For some locations, Available is SMBool(True) meaning region access is sufficient
-                    # For others, Available has actual item requirements
-                    # We preserve the evalSMBool structure so the frontend can evaluate it
-                    logger.info("SM: Using Available part (preserving evalSMBool structure)")
-                    print("[SM] Using Available rule, preserving evalSMBool (region access provides restriction)")
-                    # Recursively expand the second condition
+                    # Check if this is a simple accessFrom (no item requirements)
+                    # Note: Currently all accessFrom patterns appear complex due to recursion
+                    # so this check always returns False. Kept for future improvement.
+                    is_simple = self._is_simple_accessFrom(first)
+
+                    # Recursively expand the second condition (the Available part)
                     expanded = self.expand_rule(second)
+
+                    # Check if the Available part is just evalSMBool(SMBool(True), ...)
+                    if self._is_always_true_smbool(expanded):
+                        if is_simple:
+                            # Both accessFrom and Available are SMBool(True)
+                            # Location is accessible from the region with no requirements
+                            logger.info("SM: Simple accessFrom with SMBool(True) Available, preserving as True")
+                            print("[SM] Simple accessFrom + SMBool(True) Available, location is accessible")
+                            return expanded
+                        else:
+                            # AccessFrom has requirements but we can't export them
+                            # Export as False to prevent incorrect accessibility
+                            logger.info("SM: Complex accessFrom with SMBool(True) Available, exporting as False")
+                            print("[SM] Available is SMBool(True) but accessFrom has requirements, exporting as False")
+                            return {'type': 'constant', 'value': False}
+
+                    # If Available has actual requirements, use it
+                    logger.info("SM: Using Available part with actual requirements")
+                    print("[SM] Using Available rule with requirements")
                     return expanded
 
         # Check for accessFrom patterns that hit recursion limits
