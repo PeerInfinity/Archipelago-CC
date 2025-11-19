@@ -4,7 +4,7 @@ This file tracks outstanding issues with the Blasphemous exporter (exporter/game
 
 ## Issue 1: Inconsistent item_check format in rules
 
-**Status**: Identified
+**Status**: FIXED
 
 **Description**:
 The exporter is generating inconsistent formats for `item_check` rules. Some have the item name directly as a string:
@@ -41,7 +41,7 @@ This inconsistency could be causing rule evaluation failures in the JavaScript f
 
 ## Issue 2: Access rule evaluation failures
 
-**Status**: Identified
+**Status**: May be resolved by Issue 1 fix - needs more investigation
 
 **Description**:
 7 access rules are failing to evaluate, causing regions to not be properly unlocked. This is likely related to Issue 1.
