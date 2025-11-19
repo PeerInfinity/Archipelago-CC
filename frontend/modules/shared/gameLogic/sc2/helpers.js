@@ -294,7 +294,7 @@ export function nova_heal(snapshot, staticData) {
  * Nova has dash capability (Monomolecular Blade or Blink)
  */
 export function nova_dash(snapshot, staticData) {
-    return has_any(snapshot, ['Monomolecular Blade (Nova Weapon)', 'Blink (Nova Gadget)']);
+    return has_any(snapshot, ['Monomolecular Blade (Nova Weapon)', 'Blink (Nova Ability)']);
 }
 
 /**
@@ -835,16 +835,16 @@ export default {
     },
     terran_beats_protoss_deathball: (snapshot, staticData) => {
         // Terran composition that can beat Protoss deathball
-        // Requires strong anti-armor units and detection
-        const advancedTactics = isAdvancedTactics(staticData);
-
+        // Ability to deal with Immortals, Colossi with some air support
         return (
-            has_any(snapshot, ['Battlecruiser', 'Banshee', 'Viking'])
+            (
+                has_any(snapshot, ['Banshee', 'Battlecruiser'])
+                || has_all(snapshot, ['Liberator', 'Raid Artillery (Liberator)'])
+            )
             && terran_competent_anti_air(snapshot, staticData)
         ) || (
-            advancedTactics
-            && has(snapshot, 'Siege Tank')
-            && terran_competent_comp(snapshot, staticData)
+            terran_competent_comp(snapshot, staticData)
+            && terran_air_anti_air(snapshot, staticData)
         );
     },
     terran_base_trasher: (snapshot, staticData) => {
@@ -1004,7 +1004,7 @@ export default {
     nova_dash,
     nova_heal,
     nova_escape_assist: (snapshot, staticData) => {
-        return has_any(snapshot, ['Blink (Nova Gadget)', 'Holo Decoy (Nova Gadget)', 'Ionic Force Field (Nova Gadget)']);
+        return has_any(snapshot, ['Blink (Nova Ability)', 'Holo Decoy (Nova Gadget)', 'Ionic Force Field (Nova Gadget)']);
     },
 
     great_train_robbery_train_stopper: (snapshot, staticData) => {
@@ -1036,7 +1036,12 @@ export default {
         // Engine of Destruction requires completing Cutthroat mission
         return has(snapshot, 'Beat Cutthroat');
     },
-    trouble_in_paradise_requirement: () => false,
+    trouble_in_paradise_requirement: (snapshot, staticData) => {
+        return nova_any_weapon(snapshot, staticData)
+            && nova_splash(snapshot, staticData)
+            && terran_beats_protoss_deathball(snapshot, staticData)
+            && terran_defense_rating(snapshot, staticData, true, true) >= 7;
+    },
     sudden_strike_requirement: (snapshot, staticData) => {
         // Sudden Strike requires completing The Escape mission
         return has(snapshot, 'Beat The Escape');
