@@ -1052,6 +1052,16 @@ export const evaluateRule = (rule, context, depth = 0) => {
         const list = evaluateRule(rule.value, context, depth + 1);
         const index = evaluateRule(rule.index, context, depth + 1);
 
+        // Debug logging for Factorio required_technologies
+        if (rule.value?.name === 'required_technologies') {
+          log('warn', '[evaluateRule] Subscript on required_technologies', {
+            index,
+            listType: typeof list,
+            listDefined: list !== undefined,
+            result: list?.[index]
+          });
+        }
+
         if (list === undefined || index === undefined) {
           result = undefined; // If array/object or index is unknown, result is unknown
         } else if (list && typeof list === 'object') {
@@ -1260,6 +1270,15 @@ export const evaluateRule = (rule, context, depth = 0) => {
           }
         } else if (typeof context.hasItem === 'function') {
           result = context.hasItem(itemName); // hasItem should return true/false/undefined
+
+          // Debug logging for Factorio technologies
+          if (itemName === 'logistic-science-pack') {
+            log('warn', '[evaluateRule] item_check for logistic-science-pack', {
+              itemName,
+              result,
+              inventory: context.snapshot?.inventory
+            });
+          }
         } else {
           log(
             'warn',
@@ -1576,6 +1595,16 @@ export const evaluateRule = (rule, context, depth = 0) => {
         if (rule.iterator_info && rule.iterator_info.iterator) {
           // Get the iterator from the iterator_info
           iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1);
+
+          // Debug logging for Factorio required_technologies
+          if (rule.iterator_info.iterator?.value?.name === 'required_technologies') {
+            log('warn', '[evaluateRule] all_of with required_technologies iterator', {
+              iterable,
+              isArray: Array.isArray(iterable),
+              length: iterable?.length,
+              targetVar: rule.iterator_info.target?.name
+            });
+          }
         } else if (rule.iterable) {
           // Fallback for direct iterable field
           iterable = evaluateRule(rule.iterable, context, depth + 1);
@@ -1596,7 +1625,25 @@ export const evaluateRule = (rule, context, depth = 0) => {
           // Create a new context with the iterator variable bound
           const boundContext = createBoundContext(context, rule.iterator_info, item);
 
+          // Debug logging for required_technologies items
+          if (rule.iterator_info?.iterator?.value?.name === 'required_technologies') {
+            log('warn', '[evaluateRule] all_of checking item from required_technologies', {
+              item,
+              itemType: typeof item,
+              targetVar: rule.iterator_info.target?.name
+            });
+          }
+
           const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
+
+          // Debug logging for required_technologies item results
+          if (rule.iterator_info?.iterator?.value?.name === 'required_technologies') {
+            log('warn', '[evaluateRule] all_of item result from required_technologies', {
+              item,
+              itemResult
+            });
+          }
+
           if (itemResult === false) {
             result = false;
             break;

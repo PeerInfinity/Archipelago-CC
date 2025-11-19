@@ -51,6 +51,18 @@ export const helperFunctions = {
    * @returns {boolean} True if player has the item
    */
   has(snapshot, staticData, itemName) {
+    // Debug logging for logistic-science-pack
+    if (itemName === 'logistic-science-pack') {
+      console.warn('[Factorio has] Checking for logistic-science-pack', {
+        itemName,
+        hasInventory: !!snapshot?.inventory,
+        inventoryKeys: snapshot?.inventory ? Object.keys(snapshot.inventory) : [],
+        directCheck: snapshot?.inventory?.[itemName],
+        playerSlot: snapshot?.player?.slot || staticData?.playerId || '1',
+        hasProgressionMapping: !!staticData?.progression_mapping
+      });
+    }
+
     if (!snapshot?.inventory) {
       return false;
     }
@@ -65,6 +77,17 @@ export const helperFunctions = {
     const playerSlot = snapshot?.player?.slot || staticData?.playerId || '1';
     const progressionMapping = staticData?.progression_mapping?.[playerSlot];
 
+    // Debug logging
+    if (itemName === 'logistic-science-pack') {
+      console.warn('[Factorio has] Progressive resolution for logistic-science-pack', {
+        playerSlot,
+        hasStaticData: !!staticData,
+        hasProgressionMapping: !!staticData?.progression_mapping,
+        hasPlayerMapping: !!progressionMapping,
+        mappingKeys: progressionMapping ? Object.keys(progressionMapping) : []
+      });
+    }
+
     if (progressionMapping) {
       // Check each progressive item in the mapping
       for (const [progressiveItemName, mapping] of Object.entries(progressionMapping)) {
@@ -77,6 +100,17 @@ export const helperFunctions = {
         if (matchingLevel) {
           // Found it! Now check if the player has enough of the progressive item
           const progressiveCount = snapshot.inventory[progressiveItemName] || 0;
+
+          // Debug logging
+          if (itemName === 'logistic-science-pack') {
+            console.warn('[Factorio has] Found progressive mapping for logistic-science-pack', {
+              progressiveItemName,
+              progressiveCount,
+              requiredLevel: matchingLevel.level,
+              hasEnough: progressiveCount >= matchingLevel.level
+            });
+          }
+
           if (progressiveCount >= matchingLevel.level) {
             return true;
           }

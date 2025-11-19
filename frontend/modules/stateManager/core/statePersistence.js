@@ -669,6 +669,7 @@ export function getStaticGameData(sm) {
     groupData: sm.groupData,
     item_groups: { [String(sm.playerSlot)]: sm.groupData },  // Provide item_groups for stateInterface.countGroup
     progressionMapping: sm.progressionMapping,
+    progression_mapping: sm.rules?.progression_mapping,  // Add snake_case version for compatibility with game helpers
     itempoolCounts: sm.itempoolCounts,
     startRegions: sm.startRegions,
     mode: sm.mode,
