@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-19 22:02:26
+**Generated:** 2025-11-19 22:16:45
 
 This summary combines results from three types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,7 +12,7 @@ This summary combines results from three types of tests:
 ### Individual Test Results
 
 - **Minimal Test:** 50/78 passed (64.1%)
-- **Full Test:** 0/0 passed (0.0%)
+- **Full Test:** 18/29 passed (62.1%)
 - **Multiplayer Test:** 0/0 passed (0.0%)
 
 ### Intermittent Failures
@@ -23,43 +23,43 @@ This summary combines results from three types of tests:
 ### Combined Test Results
 
 - **Templates passing all 3 tests:** 0/78 (0.0%)
-- **Templates passing 2 tests:** 0/78 (0.0%)
-- **Templates passing 1 test:** 50/78 (64.1%)
+- **Templates passing 2 tests:** 18/78 (23.1%)
+- **Templates passing 1 test:** 32/78 (41.0%)
 - **Templates passing 0 tests:** 28/78 (35.9%)
 
 ## Test Results
 
 | Game Name | Minimal Test | Full Test | Multiplayer Test | Custom Exporter | Custom GameLogic |
 |-----------|--------------|-----------|------------------|-----------------|------------------|
-| A Hat in Time | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| A Link to the Past | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| A Short Hike | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| Adventure | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| Aquaria | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| ArchipIDLE | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| Blasphemous | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| Bumper Stickers | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| Castlevania - Circle of the Moon | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| Castlevania 64 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| Celeste 64 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| ChecksFinder | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| ChocolateChipCookies | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| Civilization VI | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| DLCQuest | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| DOOM 1993 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| DOOM II | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| Dark Souls III | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| Donkey Kong Country 3 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| Factorio | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| Faxanadu | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| Final Fantasy Mystic Quest | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ⚫ |
-| Heretic | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ |
-| Hylics 2 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| Inscryption | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| Jak and Daxter: The Precursor Legacy | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| Kingdom Hearts | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
-| Kingdom Hearts 2 | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
+| A Hat in Time | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ |
+| A Link to the Past | ✅ Passed | ❌ Failed | ❓ N/A | ✅ | ✅ |
+| A Short Hike | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ⚫ |
+| Adventure | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ⚫ |
+| Aquaria | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ |
+| ArchipIDLE | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ |
+| Blasphemous | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ |
+| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ⚫ |
+| Bumper Stickers | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ⚫ |
+| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ |
+| Castlevania 64 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ |
+| Celeste 64 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ |
+| ChecksFinder | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ⚫ |
+| ChocolateChipCookies | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ⚫ |
+| Civilization VI | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ⚫ |
+| DLCQuest | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ |
+| DOOM 1993 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ⚫ |
+| DOOM II | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ⚫ |
+| Dark Souls III | ✅ Passed | ❌ Failed | ❓ N/A | ✅ | ⚫ |
+| Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ⚫ |
+| Factorio | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ |
+| Faxanadu | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ⚫ |
+| Final Fantasy Mystic Quest | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ⚫ |
+| Heretic | ❌ Failed | ❌ Failed | ❓ N/A | ⚫ | ⚫ |
+| Hylics 2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ |
+| Inscryption | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ |
+| Jak and Daxter: The Precursor Legacy | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ |
+| Kingdom Hearts | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ |
+| Kingdom Hearts 2 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ |
 | Lingo | ❌ Failed | ❓ N/A | ❓ N/A | ✅ | ✅ |
