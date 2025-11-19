@@ -190,6 +190,50 @@ export function enemy_intelligence_first_stage_requirement(snapshot, staticData)
 }
 
 /**
+ * Enemy Intelligence second stage requirement
+ */
+export function enemy_intelligence_second_stage_requirement(snapshot, staticData) {
+    const playerId = staticData?.player || '1';
+    const settings = staticData?.settings?.[playerId];
+    const storyTechGranted = settings?.story_tech_granted || false;
+
+    return enemy_intelligence_first_stage_requirement(snapshot, staticData)
+        && enemy_intelligence_cliff_garrison(snapshot, staticData)
+        && (
+            storyTechGranted
+            || (
+                nova_any_weapon(snapshot, staticData)
+                && (
+                    nova_full_stealth(snapshot, staticData)
+                    || (
+                        nova_heal(snapshot, staticData)
+                        && nova_splash(snapshot, staticData)
+                        && nova_ranged_weapon(snapshot, staticData)
+                    )
+                )
+            )
+        );
+}
+
+/**
+ * Enemy Intelligence third stage requirement
+ */
+export function enemy_intelligence_third_stage_requirement(snapshot, staticData) {
+    const playerId = staticData?.player || '1';
+    const settings = staticData?.settings?.[playerId];
+    const storyTechGranted = settings?.story_tech_granted || false;
+
+    return enemy_intelligence_second_stage_requirement(snapshot, staticData)
+        && (
+            storyTechGranted
+            || (
+                has(snapshot, 'Progressive Stealth Suit Module (Nova Suit Module)')
+                && nova_dash(snapshot, staticData)
+            )
+        );
+}
+
+/**
  * Nova has any weapon
  */
 export function nova_any_weapon(snapshot, staticData) {
@@ -247,6 +291,13 @@ export function nova_heal(snapshot, staticData) {
 }
 
 /**
+ * Nova has dash capability (Monomolecular Blade or Blink)
+ */
+export function nova_dash(snapshot, staticData) {
+    return has_any(snapshot, ['Monomolecular Blade (Nova Weapon)', 'Blink (Nova Gadget)']);
+}
+
+/**
  * Ability to deal with most hard missions
  */
 /**
@@ -259,10 +310,10 @@ export function terran_defense_rating(snapshot, staticData, zergEnemy, airEnemy 
         'Planetary Fortress': 3,
         'Perdition Turret': 2,
         'Vulture': 1,
-        'Liberator': 2,
-        'Bunker': 1,
-        'Missile Turret': 1,
-        'Battlecruiser': 1
+        'Banshee': 1,
+        'Battlecruiser': 1,
+        'Liberator': 4,
+        'Widow Mine': 1
     };
 
     let defenseScore = 0;
@@ -274,8 +325,12 @@ export function terran_defense_rating(snapshot, staticData, zergEnemy, airEnemy 
         }
     }
 
-    // Manned bunker bonus
+    // Manned bunker bonus - Marine or Marauder gives +3
     if (has(snapshot, 'Bunker') && (has(snapshot, 'Marine') || has(snapshot, 'Marauder'))) {
+        defenseScore += 3;
+    }
+    // Firebat bunker bonus for zerg enemies (else if - doesn't stack with above)
+    else if (zergEnemy && has(snapshot, 'Firebat') && has(snapshot, 'Bunker')) {
         defenseScore += 2;
     }
 
@@ -287,22 +342,52 @@ export function terran_defense_rating(snapshot, staticData, zergEnemy, airEnemy 
         defenseScore += 1;
     }
 
-    // Widow Mine bonus
+    // Widow Mine with Concealment upgrade
     if (has_all(snapshot, ['Widow Mine', 'Concealment (Widow Mine)'])) {
         defenseScore += 1;
     }
 
-    // Spider Mine bonus
-    if (has(snapshot, 'Spider Mine')) {
-        defenseScore += 1;
-    }
-
-    // Valkyrie bonus against zerg air
-    if (airEnemy && zergEnemy && has(snapshot, 'Valkyrie')) {
+    // Viking with Shredder Rounds upgrade
+    if (has_all(snapshot, ['Viking', 'Shredder Rounds (Viking)'])) {
         defenseScore += 2;
     }
 
-    // Advanced Tactics bumps defense rating down by 2
+    // Zerg-specific defense ratings
+    if (zergEnemy) {
+        const zergDefenseRatings = {
+            'Perdition Turret': 2,
+            'Liberator': -2,  // Penalty against zerg
+            'Hive Mind Emulator': 3,
+            'Psi Disrupter': 3
+        };
+
+        for (const [unit, rating] of Object.entries(zergDefenseRatings)) {
+            if (has(snapshot, unit)) {
+                defenseScore += rating;
+            }
+        }
+    }
+
+    // Air-specific defense ratings
+    if (airEnemy) {
+        const airDefenseRatings = {
+            'Missile Turret': 2
+        };
+
+        for (const [unit, rating] of Object.entries(airDefenseRatings)) {
+            if (has(snapshot, unit)) {
+                defenseScore += rating;
+            }
+        }
+
+        // Valkyrie bonus against zerg air (additional to air defense)
+        if (zergEnemy && has(snapshot, 'Valkyrie')) {
+            defenseScore += 2;
+        }
+    }
+
+    // Advanced Tactics bumps defense rating requirements down by 2
+    // (adds 2 to score, making it easier to meet requirements)
     if (isAdvancedTactics(staticData)) {
         defenseScore += 2;
     }
@@ -916,9 +1001,7 @@ export default {
     nova_ranged_weapon,
     nova_splash,
     nova_full_stealth,
-    nova_dash: (snapshot, staticData) => {
-        return has_any(snapshot, ['Monomolecular Blade (Nova Weapon)', 'Blink (Nova Gadget)']);
-    },
+    nova_dash,
     nova_heal,
     nova_escape_assist: (snapshot, staticData) => {
         return has_any(snapshot, ['Blink (Nova Gadget)', 'Holo Decoy (Nova Gadget)', 'Ionic Force Field (Nova Gadget)']);
@@ -981,58 +1064,8 @@ export default {
     enemy_intelligence_garrisonable_unit,
     enemy_intelligence_cliff_garrison,
     enemy_intelligence_first_stage_requirement,
-    enemy_intelligence_second_stage_requirement: (snapshot, staticData) => {
-        const playerId = staticData?.player || '1';
-        const settings = staticData?.settings?.[playerId];
-        const storyTechGranted = settings?.story_tech_granted || false;
-
-        return enemy_intelligence_first_stage_requirement(snapshot, staticData)
-            && enemy_intelligence_cliff_garrison(snapshot, staticData)
-            && (
-                storyTechGranted
-                || (
-                    nova_any_weapon(snapshot, staticData)
-                    && (
-                        nova_full_stealth(snapshot, staticData)
-                        || (
-                            nova_heal(snapshot, staticData)
-                            && nova_splash(snapshot, staticData)
-                            && nova_ranged_weapon(snapshot, staticData)
-                        )
-                    )
-                )
-            );
-    },
-    enemy_intelligence_third_stage_requirement: (snapshot, staticData) => {
-        const playerId = staticData?.player || '1';
-        const settings = staticData?.settings?.[playerId];
-        const storyTechGranted = settings?.story_tech_granted || false;
-
-        const secondStage = enemy_intelligence_first_stage_requirement(snapshot, staticData)
-            && enemy_intelligence_cliff_garrison(snapshot, staticData)
-            && (
-                storyTechGranted
-                || (
-                    nova_any_weapon(snapshot, staticData)
-                    && (
-                        nova_full_stealth(snapshot, staticData)
-                        || (
-                            nova_heal(snapshot, staticData)
-                            && nova_splash(snapshot, staticData)
-                            && nova_ranged_weapon(snapshot, staticData)
-                        )
-                    )
-                )
-            );
-
-        return secondStage && (
-            storyTechGranted
-            || (
-                has(snapshot, 'Progressive Stealth Suit Module (Nova Suit Module)')
-                && has_any(snapshot, ['Monomolecular Blade (Nova Weapon)', 'Blink (Nova Gadget)'])
-            )
-        );
-    },
+    enemy_intelligence_second_stage_requirement,
+    enemy_intelligence_third_stage_requirement,
     the_escape_first_stage_requirement: (snapshot, staticData) => {
         // First stage of The Escape requires basic Nova suit module (not Jump Suit)
         // Check for Armored, Energy, or Progressive Stealth suit modules
