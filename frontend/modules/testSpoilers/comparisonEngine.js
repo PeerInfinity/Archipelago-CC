@@ -346,19 +346,17 @@ export class ComparisonEngine {
       }
     }
 
-    // Filter regions for CvCotM to handle Menu region discrepancy
-    // Menu is a structural region added by the exporter but doesn't appear in Python sphere logs
+    // Filter regions to handle Menu region discrepancy
+    // Menu is a structural region that may have different semantics between Python and JavaScript
+    // Apply filtering universally for all games to avoid comparison issues
     const gameName = staticData?.game_name || staticData?.game_info?.[playerId]?.game || '';
-    const isCvCotM = gameName === 'Castlevania - Circle of the Moon';
 
-    let filteredStateAccessibleRegions = stateAccessibleRegions;
-    if (isCvCotM) {
-      // Remove Menu from state accessible regions for CvCotM
-      filteredStateAccessibleRegions = stateAccessibleRegions.filter(name => name !== 'Menu');
-    }
+    // Remove Menu from both state and log accessible regions for consistent comparison
+    let filteredStateAccessibleRegions = stateAccessibleRegions.filter(name => name !== 'Menu');
+    let filteredLogAccessibleRegions = logAccessibleRegionNames.filter(name => name !== 'Menu');
 
     const stateAccessibleSet = new Set(filteredStateAccessibleRegions);
-    const logAccessibleSet = new Set(logAccessibleRegionNames);
+    const logAccessibleSet = new Set(filteredLogAccessibleRegions);
 
     const missingFromState = [...logAccessibleSet].filter(
       (name) => !stateAccessibleSet.has(name)

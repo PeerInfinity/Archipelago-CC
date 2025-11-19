@@ -43,20 +43,33 @@ The test comparison logic may be incorrectly categorizing regions as locations, 
 4. ✅ eventProcessor.js calls the right comparison functions with the right data
 5. ✅ Exporter generates correct sphere log with regions in new_accessible_regions
 
-**Hypothesis Refined**:
-The Python sphere log shows Sphere 0 contains 400+ regions in `new_accessible_regions`. These regions ARE correctly in the log. The test error suggests these regions are accessible in the JavaScript STATE but somehow not being matched against the LOG.
+**Root Cause FOUND**:
+The Blasphemous sphere log includes 383 regions in Sphere 0's `new_accessible_regions`, including a "Menu" region.
 
-Possible causes:
-- StateManager may be initializing regions before Sphere 0 comparison
-- Region reachability calculation may be running during initialization
-- Test may be comparing against wrong sphere data
-- Regions may need to be excluded from Sphere 0 comparison (like "Menu" region for some games)
+Investigation revealed:
+1. ✅ Sphere log correctly lists 383 regions including "Menu"
+2. ✅ sphereState.js correctly parses and accumulates all regions for Sphere 0
+3. ✅ StateManager correctly adds starting items (Dash Ability, Wall Climb Ability)
+4. ✅ StateManager correctly computes region reachability
+
+**THE ISSUE**:
+The comparisonEngine.js (lines 351-358) has special handling to filter out the "Menu" region for CvCotM, but this filtering is NOT applied to Blasphemous. The "Menu" region is a structural region added by the exporter that appears in Python sphere logs but may be computed differently by the JavaScript StateManager.
+
+Looking at the code:
+```javascript
+const isCvCotM = gameName === 'Castlevania - Circle of the Moon';
+if (isCvCotM) {
+  filteredStateAccessibleRegions = stateAccessibleRegions.filter(name => name !== 'Menu');
+}
+```
+
+This special case needs to be extended to Blasphemous (and potentially other games that have a Menu region).
 
 **Next Steps**:
-1. Check if StateManager pre-populates regionReachability during initialization
-2. Verify that Sphere 0 comparison is using the right sphere data from the log
-3. Check if Blasphemous needs special region filtering like CvCotM (Menu region)
-4. Add debug logging to see what regions are in LOG vs STATE at Sphere 0
+1. ~~Check sphere log for Menu region~~ ✅ CONFIRMED: Menu is in Sphere 0
+2. Update comparisonEngine.js to filter Menu region for Blasphemous
+3. OR: Make Menu filtering game-agnostic (filter for all games)
+4. Re-run test to verify fix
 
 **Related Files**:
 - `frontend/modules/shared/stateManager.js` - Check initialization
