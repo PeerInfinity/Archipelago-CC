@@ -55,9 +55,17 @@ export const helperFunctions = {
     const isAutomatedItem = itemName && itemName.startsWith('Automated');
     if (isAutomatedItem) {
       console.log(`[Factorio has()] Checking for item: "${itemName}"`);
-      console.log(`[Factorio has()] snapshot.inventory:`, snapshot?.inventory);
-      console.log(`[Factorio has()] Item in inventory?`, itemName in (snapshot?.inventory || {}));
-      console.log(`[Factorio has()] Item count:`, snapshot?.inventory?.[itemName]);
+      // Show only Automated items to avoid log truncation
+      const automatedItems = {};
+      if (snapshot?.inventory) {
+        for (const [key, value] of Object.entries(snapshot.inventory)) {
+          if (key.startsWith('Automated')) {
+            automatedItems[key] = value;
+          }
+        }
+      }
+      console.log(`[Factorio has()] All Automated items in inventory:`, automatedItems);
+      console.log(`[Factorio has()] Item "${itemName}" count:`, snapshot?.inventory?.[itemName]);
     }
 
     if (!snapshot?.inventory) {
