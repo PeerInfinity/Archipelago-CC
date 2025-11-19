@@ -24,6 +24,47 @@ class SMGameExportHandler(GenericGameExportHandler):
         super().__init__()  # Base class doesn't take arguments
         self.world = world
 
+    def get_custom_location_access_rule(self, location, world):
+        """Custom handling for Super Metroid location access rules.
+
+        Super Metroid locations have complex accessFrom comprehensions that
+        hit recursion limits. These are combined with Available rules in an AND.
+        For now, we skip the accessFrom part and only export the Available rule.
+
+        Returns:
+            The custom rule to export, or None to use default handling
+        """
+        if not hasattr(location, 'access_rule') or not location.access_rule:
+            return None
+
+        # Try to analyze the rule to see if it's an AND with accessFrom
+        try:
+            from ..analyzer import analyze_rule
+            analyzed = analyze_rule(location.access_rule)
+
+            # Check if it's an AND rule with two conditions
+            if analyzed and analyzed.get('type') == 'and':
+                conditions = analyzed.get('conditions', [])
+                if len(conditions) == 2:
+                    # Check if first condition is accessFrom (any_of pattern)
+                    first = conditions[0]
+                    second = conditions[1]
+
+                    # If first is any_of (likely accessFrom), use only the second (Available)
+                    if first.get('type') == 'any_of':
+                        logger.info(f"SM: Extracting Available rule for location (skipping accessFrom)")
+                        print(f"[SM] Using only Available rule for location (skipping accessFrom comprehension)")
+                        # Return the second condition (the Available rule)
+                        # But we need to return the original lambda, not the analyzed form
+                        # So return None to skip custom handling for now
+                        # Instead, we'll handle this in expand_rule
+                        return None
+
+            return None
+        except Exception as e:
+            logger.debug(f"SM: Error analyzing location rule: {e}")
+            return None
+
     def _check_smbool_true_pattern(self, rule: Dict[str, Any]) -> bool:
         """Check if a rule represents SMBool(True) construction."""
         if not rule:
@@ -157,18 +198,35 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         rule_type = rule.get('type')
 
+        # Check for AND rules that combine accessFrom and Available
+        # We want to skip the accessFrom part and only use the Available part
+        if rule_type == 'and':
+            conditions = rule.get('conditions', [])
+            if len(conditions) == 2:
+                first = conditions[0]
+                second = conditions[1]
+                # If first condition is accessFrom pattern, skip it and use only second
+                if self._check_accessFrom_pattern(first) or self._check_deeply_nested_any_of(first):
+                    logger.info("SM: Found AND rule with accessFrom, using only Available part")
+                    print("[SM] Skipping accessFrom in AND rule, using only Available rule")
+                    # Recursively expand the second condition (Available rule)
+                    return self.expand_rule(second)
+
         # Check for accessFrom patterns that hit recursion limits
         # These create infinitely nested structures that can't be properly evaluated
+        # CHANGED: Export as False instead of True to prevent incorrect accessibility
+        # until VARIA logic helpers are properly implemented
         if self._check_accessFrom_pattern(rule):
-            logger.info("SM: Found accessFrom comprehension pattern at top level, simplifying to constant True")
-            print("[SM] Simplifying top-level accessFrom pattern to constant True")
-            return {'type': 'constant', 'value': True}
+            logger.info("SM: Found accessFrom comprehension pattern, exporting as constant False (VARIA logic not yet implemented)")
+            print("[SM] Exporting accessFrom pattern as constant False (needs VARIA logic implementation)")
+            return {'type': 'constant', 'value': False}
 
         # Also check for deeply nested any_of structures (result of recursion limits)
+        # CHANGED: Export as False instead of True
         if self._check_deeply_nested_any_of(rule):
-            logger.info("SM: Found deeply nested any_of pattern (recursion artifact), simplifying to constant True")
-            print("[SM] Simplifying deeply nested any_of pattern to constant True")
-            return {'type': 'constant', 'value': True}
+            logger.info("SM: Found deeply nested any_of pattern (recursion artifact), exporting as constant False")
+            print("[SM] Exporting deeply nested any_of pattern as constant False")
+            return {'type': 'constant', 'value': False}
 
         # Handle helper nodes with name='evalSMBool' (analyzer converts self.evalSMBool to helper)
         if rule_type == 'helper' and rule.get('name') == 'evalSMBool':
@@ -189,7 +247,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                 rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
             return rule
 
-        # Transform function_call nodes where function is an attribute access on 'self'
+        # Transform function_call nodes where function is an attribute access on 'self' or 'sm'
         # (This is kept for compatibility but may not be needed if analyzer converts to helper)
         if rule_type == 'function_call':
             function = rule.get('function', {})
@@ -207,6 +265,14 @@ class SMGameExportHandler(GenericGameExportHandler):
                         print("[SM] Simplifying evalSMBool(SMBool(True), ...) function_call to constant True")
                         return {'type': 'constant', 'value': True}
                     return {'type': 'helper', 'name': 'evalSMBool', 'args': expanded_args}
+
+                # Transform sm.methodName(...) into helper calls
+                # These are VARIA logic methods like sm.wor, sm.wand, sm.haveItem, etc.
+                if obj.get('type') == 'name' and obj.get('name') == 'sm':
+                    # Convert to helper call
+                    print(f"[SM] Converting sm.{attr}(...) to helper call")
+                    expanded_args = [self.expand_rule(arg) for arg in rule.get('args', [])]
+                    return {'type': 'helper', 'name': attr, 'args': expanded_args}
 
         # Recursively process nested structures
         if rule_type == 'and' or rule_type == 'or':
