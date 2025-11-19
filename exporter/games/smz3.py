@@ -278,7 +278,13 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             analyzed_rule = analyze_rule(can_access_func)
 
             if analyzed_rule:
-                logger.info(f"Successfully extracted location logic for '{rule_target_name}'")
+                # Log the analyzed rule to see what we got
+                logger.info(f"Analyzed rule for '{rule_target_name}' in region '{self._current_location_region}': {analyzed_rule}")
+                # Post-process the rule while _current_location_region is still set
+                # This allows us to inline region-specific logic like CanBeatBoss
+                analyzed_rule = self.postprocess_rule(analyzed_rule)
+                logger.info(f"Post-processed rule for '{rule_target_name}': {analyzed_rule}")
+                logger.info(f"Successfully extracted and post-processed location logic for '{rule_target_name}'")
                 return analyzed_rule
             else:
                 logger.warning(f"Failed to analyze canAccess for '{rule_target_name}', falling back to default")
@@ -508,6 +514,47 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         # Handle helper rules - add smz3_ prefix if not already present
         if rule.get('type') == 'helper':
             helper_name = rule.get('name', '')
+
+            # Special handling for CanBeatBoss - inline region-specific logic
+            if helper_name == 'CanBeatBoss':
+                region_name = getattr(self, '_current_location_region', None)
+                logger.debug(f"Inlining CanBeatBoss helper for region: {region_name}")
+
+                # Tower of Hera: Sword OR Hammer
+                if region_name == "Tower of Hera":
+                    return {
+                        'type': 'or',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'ProgressiveSword'},
+                            {'type': 'item_check', 'item': 'Hammer'}
+                        ]
+                    }
+
+                # Turtle Rock: Firerod AND Icerod
+                elif region_name == "Turtle Rock":
+                    return {
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'Firerod'},
+                            {'type': 'item_check', 'item': 'Icerod'}
+                        ]
+                    }
+
+                # Thieves' Town: Sword OR Hammer OR Somaria OR Byrna
+                elif region_name == "Thieves' Town":
+                    return {
+                        'type': 'or',
+                        'conditions': [
+                            {'type': 'item_check', 'item': 'ProgressiveSword'},
+                            {'type': 'item_check', 'item': 'Hammer'},
+                            {'type': 'item_check', 'item': 'Somaria'},
+                            {'type': 'item_check', 'item': 'Byrna'}
+                        ]
+                    }
+
+                # For other regions or if region is unknown, use generic helper
+                logger.debug(f"Using generic smz3_CanBeatBoss for region: {region_name}")
+
             if helper_name and not helper_name.startswith('smz3_'):
                 logger.debug(f"Adding smz3_ prefix to helper: {helper_name}")
                 rule = rule.copy()
