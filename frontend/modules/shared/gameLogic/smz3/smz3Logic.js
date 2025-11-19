@@ -503,64 +503,62 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
       }
 
       // Check if the boss location is accessible
-      // Use the evaluateRule function from the snapshot to check location accessibility
-      if (snapshot.evaluateRule) {
-        // staticData.regions is a Map with region names as keys, not player IDs
-        if (!staticData.regions) {
-          console.warn('[smz3_CanAcquire] No regions data in staticData');
-          return false;
+      // Find the boss location first (doesn't require evaluateRule)
+      if (!staticData.regions) {
+        console.warn('[smz3_CanAcquire] No regions data in staticData');
+        return false;
+      }
+
+      // Find the boss location by searching through all regions
+      let bossLocation = null;
+      const regionsToSearch = staticData.regions instanceof Map ?
+        Array.from(staticData.regions.values()) :
+        Object.values(staticData.regions);
+
+      for (const region of regionsToSearch) {
+        if (region.locations) {
+          bossLocation = region.locations.find(loc => loc.name === bossLocationName);
+          if (bossLocation) {
+            console.log(`[smz3_CanAcquire] Found boss location: ${bossLocationName} in region: ${region.name}`);
+            break;
+          }
         }
+      }
 
-        // Find the boss location by searching through all regions
-        let bossLocation = null;
-        const regionsToSearch = staticData.regions instanceof Map ?
-          Array.from(staticData.regions.values()) :
-          Object.values(staticData.regions);
+      if (!bossLocation) {
+        console.warn(`[smz3_CanAcquire] Boss location not found: ${bossLocationName}`);
+        return false;
+      }
 
-        for (const region of regionsToSearch) {
-          if (region.locations) {
-            bossLocation = region.locations.find(loc => loc.name === bossLocationName);
-            if (bossLocation) {
-              console.log(`[smz3_CanAcquire] Found boss location: ${bossLocationName} in region: ${region.name}`);
-              break;
-            }
+      // Check if the location is accessible
+      if (bossLocation.access_rule) {
+        // For simple rules (AND with item_check), evaluate manually to avoid recursive evaluateRule calls
+        // which can cause issues with the snapshot interface
+        const rule = bossLocation.access_rule;
+
+        // Handle simple AND rules with item_check conditions
+        if (rule.type === 'and' && rule.conditions) {
+          const allItemChecks = rule.conditions.every(cond => cond.type === 'item_check');
+          if (allItemChecks) {
+            // Log what items are being checked and what the player has
+            const itemChecks = rule.conditions.map(cond => ({
+              item: cond.item,
+              required: true,
+              has: hasItem(snapshot, cond.item),
+              count: getItemCount(snapshot, cond.item)
+            }));
+            console.log(`[smz3_CanAcquire] Checking items for ${bossLocationName}:`, JSON.stringify(itemChecks));
+
+            // Manually check all items
+            const result = rule.conditions.every(cond => hasItem(snapshot, cond.item));
+            console.log(`[smz3_CanAcquire] Manually evaluated boss location (${bossLocationName}):`, result);
+            console.log(`[smz3_CanAcquire] Returning ${result} for region '${regionName}'`);
+            return result;
           }
         }
 
-        if (!bossLocation) {
-          console.warn(`[smz3_CanAcquire] Boss location not found: ${bossLocationName}`);
-          return false;
-        }
-
-        // Check if the location is accessible
-        if (bossLocation.access_rule) {
-          // For simple rules (AND with item_check), evaluate manually to avoid recursive evaluateRule calls
-          // which can cause issues with the snapshot interface
-          const rule = bossLocation.access_rule;
-
-          // Handle simple AND rules with item_check conditions
-          if (rule.type === 'and' && rule.conditions) {
-            const allItemChecks = rule.conditions.every(cond => cond.type === 'item_check');
-            if (allItemChecks) {
-              // Log what items are being checked and what the player has
-              const itemChecks = rule.conditions.map(cond => ({
-                item: cond.item,
-                required: true,
-                has: hasItem(snapshot, cond.item),
-                count: getItemCount(snapshot, cond.item)
-              }));
-              console.log(`[smz3_CanAcquire] Checking items for ${bossLocationName}:`, JSON.stringify(itemChecks));
-
-              // Manually check all items
-              const result = rule.conditions.every(cond => hasItem(snapshot, cond.item));
-              console.log(`[smz3_CanAcquire] Manually evaluated boss location (${bossLocationName}):`, result);
-              console.log(`[smz3_CanAcquire] Returning ${result} for region '${regionName}'`);
-              return result;
-            }
-          }
-
-          // For other rule types, try using evaluateRule
-          // Note: This may cause issues with recursive evaluation
+        // For other rule types, try using evaluateRule if available
+        if (snapshot.evaluateRule) {
           try {
             const result = snapshot.evaluateRule(bossLocation.access_rule);
             console.log(`[smz3_CanAcquire] Evaluated boss location (${bossLocationName}) via evaluateRule:`, result);
@@ -572,14 +570,15 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
             return false;
           }
         } else {
-          // No access rule means always accessible
-          console.log(`[smz3_CanAcquire] No access rule for boss location, returning true for region '${regionName}'`);
-          return true;
+          // snapshot.evaluateRule not available and rule is complex
+          console.warn(`[smz3_CanAcquire] Cannot evaluate complex rule for ${bossLocationName}, snapshot.evaluateRule not available`);
+          return false;
         }
+      } else {
+        // No access rule means always accessible
+        console.log(`[smz3_CanAcquire] No access rule for boss location, returning true for region '${regionName}'`);
+        return true;
       }
-
-      console.log(`[smz3_CanAcquire] snapshot.evaluateRule not available, returning false`);
-      return false;
     }
   }
 
