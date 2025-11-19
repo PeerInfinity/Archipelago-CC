@@ -408,6 +408,23 @@ export function terran_competent_comp(snapshot, staticData) {
     );
 }
 
+/**
+ * Terran composition that can beat Protoss deathball
+ * Ability to deal with Immortals, Colossi with some air support
+ */
+export function terran_beats_protoss_deathball(snapshot, staticData) {
+    return (
+        (
+            has_any(snapshot, ['Banshee', 'Battlecruiser'])
+            || has_all(snapshot, ['Liberator', 'Raid Artillery (Liberator)'])
+        )
+        && terran_competent_anti_air(snapshot, staticData)
+    ) || (
+        terran_competent_comp(snapshot, staticData)
+        && terran_air_anti_air(snapshot, staticData)
+    );
+}
+
 // Protoss helpers
 
 /**
@@ -833,20 +850,7 @@ export default {
     terran_mobile_detector: (snapshot, staticData) => {
         return has_any(snapshot, ['Raven', 'Science Vessel', 'Progressive Orbital Command']);
     },
-    terran_beats_protoss_deathball: (snapshot, staticData) => {
-        // Terran composition that can beat Protoss deathball
-        // Ability to deal with Immortals, Colossi with some air support
-        return (
-            (
-                has_any(snapshot, ['Banshee', 'Battlecruiser'])
-                || has_all(snapshot, ['Liberator', 'Raid Artillery (Liberator)'])
-            )
-            && terran_competent_anti_air(snapshot, staticData)
-        ) || (
-            terran_competent_comp(snapshot, staticData)
-            && terran_air_anti_air(snapshot, staticData)
-        );
-    },
+    terran_beats_protoss_deathball,
     terran_base_trasher: (snapshot, staticData) => {
         const advancedTactics = isAdvancedTactics(staticData);
         const canNuke = advancedTactics && (
@@ -1031,7 +1035,31 @@ export default {
             && terran_air_anti_air(snapshot, staticData)
         );
     },
-    night_terrors_requirement: () => false,
+    night_terrors_requirement: (snapshot, staticData) => {
+        const advancedTactics = isAdvancedTactics(staticData);
+
+        return terran_common_unit(snapshot, staticData)
+            && terran_competent_anti_air(snapshot, staticData)
+            && (
+                // These can handle the waves of infested, even volatile ones
+                has(snapshot, 'Siege Tank')
+                || has_all(snapshot, ['Viking', 'Shredder Rounds (Viking)'])
+                || (
+                    // Regular infesteds
+                    (
+                        has(snapshot, 'Firebat')
+                        || has_all(snapshot, ['Hellion', 'Hellbat Aspect (Hellion)'])
+                        || (advancedTactics && has_any(snapshot, ['Perdition Turret', 'Planetary Fortress']))
+                    )
+                    && terran_bio_heal(snapshot, staticData)
+                    && (
+                        // Volatile infesteds
+                        has(snapshot, 'Liberator')
+                        || (advancedTactics && has_any(snapshot, ['HERC', 'Vulture']))
+                    )
+                )
+            );
+    },
     engine_of_destruction_requirement: (snapshot, staticData) => {
         // Engine of Destruction requires completing Cutthroat mission
         return has(snapshot, 'Beat Cutthroat');
