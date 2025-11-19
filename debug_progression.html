@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Progression Percent</title>
+</head>
+<body>
+    <h1>Debug Progression Percent Tracking</h1>
+    <div id="output"></div>
+
+    <script type="module">
+        // Load the rules file
+        const response = await fetch('/frontend/presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json');
+        const rulesData = await response.json();
+
+        const output = document.getElementById('output');
+
+        // Check if Received Progression Percent is in the items
+        const player1Items = rulesData.items?.['1'] || {};
+        const progressionPercent = player1Items['Received Progression Percent'];
+        const progressionItem = player1Items['Received Progression Item'];
+
+        output.innerHTML += `<h2>Item Definitions:</h2>`;
+        output.innerHTML += `<pre>${JSON.stringify({progressionPercent, progressionItem}, null, 2)}</pre>`;
+
+        // Check game info
+        const gameInfo = rulesData.game_info?.['1'] || {};
+        output.innerHTML += `<h2>Game Info:</h2>`;
+        output.innerHTML += `<pre>${JSON.stringify(gameInfo, null, 2)}</pre>`;
+
+        // Find and show the Museumsanity: 3 Artifacts location
+        const regions = rulesData.regions?.['1'] || {};
+        for (const [regionName, regionData] of Object.entries(regions)) {
+            const locations = regionData.locations || [];
+            for (const location of locations) {
+                if (location.name === 'Museumsanity: 3 Artifacts') {
+                    output.innerHTML += `<h2>Museumsanity: 3 Artifacts Rule:</h2>`;
+                    output.innerHTML += `<pre>${JSON.stringify(location.access_rule, null, 2)}</pre>`;
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
