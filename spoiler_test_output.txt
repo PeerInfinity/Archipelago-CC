@@ -1,0 +1,501 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js
+
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:20] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: zillion
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=zillion&seed=1
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/?mode=test-spoilers&game=zillion&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:23] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modes.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/presets/zillion/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/zillion/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [00:13:24.107] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/factorio/factorioLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/hylics2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/messenger/messengerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/raft/raftLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/oot/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/cv64/cv64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/dark_souls_3/darkSouls3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/paint/paintLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/soe/soeLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/shapez/shapezLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/shivers/shiversLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/smz3/smz3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/sc2/sc2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/sm/smLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/stardew_valley/stardewValleyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/terraria/terrariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/tww/twwLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/wargroove/wargrooveLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/yoshisisland/yoshisislandLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/osrs/osrsLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/witness/witnessLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/tloz/tlozLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/jakanddaxter/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/marioland2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/cv64/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/overcooked2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/paint/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/shapez/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/shivers/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/sc2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/subnautica/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/terraria/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/stardew_valley/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/tloz/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [00:13:24.616] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [00:13:24.618] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [00:13:24.704] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [00:13:24.704] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [00:13:24.705] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [00:13:24.706] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/zillion/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/zillion/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/zillion/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [00:13:24.712] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/presets/zillion/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:24] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:25] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:25] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:25] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:25] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:25] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:25] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:25] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [19/Nov/2025 00:13:25] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+BROWSER LOG (error): [00:13:26.803] [ERROR] [testSpoilerUI] STATE MISMATCH found for: {"type":"state_update","sphere_number":"0.1","player_id":"1"}
+BROWSER LOG (error): [00:13:26.805] [ERROR] [testSpoilerUI:ComparisonEngine] STATE MISMATCH found for: {"type":"state_update","sphere_number":"0.1","player_id":"1"}
+BROWSER LOG (error): [00:13:26.813] [ERROR] [testSpoilerUI]  > Locations accessible in STATE (and unchecked) but NOT in LOG: B-1 bottom left-center, B-1 top center, B-8 mid far right, A-6 top far left, A-6 mid left, A-6 top right, A-6 mid far left, A-8 bottom left-center, A-8 bottom right, C-3 mid far right, C-4 top far right, C-5 mid far left, C-6 top right-center, C-6 top right, D-2 mid left, D-2 top left-center, D-3 top far right, D-5 mid center, D-5 bottom far right, D-6 bottom far left, D-6 mid center, E-4 mid center, E-5 mid left, E-5 top far right, E-6 mid far left, E-6 bottom far left, E-6 bottom center, E-6 bottom right-center, E-6 bottom right, E-8 top right, E-8 top far right, F-4 mid center, F-5 bottom left-center, F-7 mid far right, F-8 bottom center, G-4 mid left-center, G-4 mid center, G-5 top far left, G-5 top far right, G-6 bottom far left, G-6 bottom left, G-7 top far left, G-7 mid center, H-4 bottom far left, H-4 top left-center, H-5 top left, H-5 bottom left, H-6 bottom far left, H-6 bottom left, H-7 top far left, H-7 bottom center, H-8 top right-center, I-4 bottom center, I-5 mid far right, I-6 mid right-center, I-8 top right, I-8 top far right, E-2 bottom left-center, F-2 top far left, G-2 mid left, I-2 bottom right, I-2 mid far right, I-2 bottom far right, J-2 bottom right-center, J-2 mid center, J-2 mid left, J-2 bottom center, J-3 mid far left, J-3 mid center, J-4 bottom left-center, J-4 top left, J-5 top left, J-5 mid left-center, J-6 bottom far left, K-2 bottom right-center, K-2 bottom far right, K-2 bottom right, K-2 mid far left, K-2 mid left, K-3 top left-center, K-3 mid right-center, K-4 mid left-center, K-4 bottom center, K-5 top center, K-5 top right-center, K-6 mid left-center, K-6 mid center, K-7 bottom left-center, K-7 bottom left, L-2 top far left, L-2 mid right, L-2 top left, L-2 top left-center, L-2 mid far right, L-3 top left, L-4 bottom right-center, L-4 bottom right, L-5 top left, L-5 bottom left-center, L-6 mid far right, L-6 mid right-center, L-7 mid left, M-2 mid right-center, M-2 bottom far left, M-3 bottom right-center, M-4 mid left, M-5 top left-center, M-6 bottom center, M-6 bottom right-center, M-7 mid far left, M-7 top far right, N-2 top center, N-2 top far left, N-2 bottom right, N-2 top left, N-2 bottom center, N-2 bottom left, N-3 mid right, N-4 bottom far left, N-4 mid left, N-5 bottom center, N-6 top far left, N-6 top right-center, N-7 top left-center, N-7 bottom far left, O-3 mid right, O-3 bottom center, O-4 mid center, O-4 mid far left, O-5 mid far left, O-6 mid right, O-7 bottom center, O-7 top right, P-3 bottom center, P-3 top far left
+BROWSER LOG (error): [00:13:26.813] [ERROR] [testSpoilerUI:ComparisonEngine]  > Locations accessible in STATE (and unchecked) but NOT in LOG: B-1 bottom left-center, B-1 top center, B-8 mid far right, A-6 top far left, A-6 mid left, A-6 top right, A-6 mid far left, A-8 bottom left-center, A-8 bottom right, C-3 mid far right, C-4 top far right, C-5 mid far left, C-6 top right-center, C-6 top right, D-2 mid left, D-2 top left-center, D-3 top far right, D-5 mid center, D-5 bottom far right, D-6 bottom far left, D-6 mid center, E-4 mid center, E-5 mid left, E-5 top far right, E-6 mid far left, E-6 bottom far left, E-6 bottom center, E-6 bottom right-center, E-6 bottom right, E-8 top right, E-8 top far right, F-4 mid center, F-5 bottom left-center, F-7 mid far right, F-8 bottom center, G-4 mid left-center, G-4 mid center, G-5 top far left, G-5 top far right, G-6 bottom far left, G-6 bottom left, G-7 top far left, G-7 mid center, H-4 bottom far left, H-4 top left-center, H-5 top left, H-5 bottom left, H-6 bottom far left, H-6 bottom left, H-7 top far left, H-7 bottom center, H-8 top right-center, I-4 bottom center, I-5 mid far right, I-6 mid right-center, I-8 top right, I-8 top far right, E-2 bottom left-center, F-2 top far left, G-2 mid left, I-2 bottom right, I-2 mid far right, I-2 bottom far right, J-2 bottom right-center, J-2 mid center, J-2 mid left, J-2 bottom center, J-3 mid far left, J-3 mid center, J-4 bottom left-center, J-4 top left, J-5 top left, J-5 mid left-center, J-6 bottom far left, K-2 bottom right-center, K-2 bottom far right, K-2 bottom right, K-2 mid far left, K-2 mid left, K-3 top left-center, K-3 mid right-center, K-4 mid left-center, K-4 bottom center, K-5 top center, K-5 top right-center, K-6 mid left-center, K-6 mid center, K-7 bottom left-center, K-7 bottom left, L-2 top far left, L-2 mid right, L-2 top left, L-2 top left-center, L-2 mid far right, L-3 top left, L-4 bottom right-center, L-4 bottom right, L-5 top left, L-5 bottom left-center, L-6 mid far right, L-6 mid right-center, L-7 mid left, M-2 mid right-center, M-2 bottom far left, M-3 bottom right-center, M-4 mid left, M-5 top left-center, M-6 bottom center, M-6 bottom right-center, M-7 mid far left, M-7 top far right, N-2 top center, N-2 top far left, N-2 bottom right, N-2 top left, N-2 bottom center, N-2 bottom left, N-3 mid right, N-4 bottom far left, N-4 mid left, N-5 bottom center, N-6 top far left, N-6 top right-center, N-7 top left-center, N-7 bottom far left, O-3 mid right, O-3 bottom center, O-4 mid center, O-4 mid far left, O-5 mid far left, O-6 mid right, O-7 bottom center, O-7 top right, P-3 bottom center, P-3 top far left
+BROWSER LOG (error): [MISMATCH DETAIL] Extra in state (135): [B-1 bottom left-center, B-1 top center, B-8 mid far right, A-6 top far left, A-6 mid left, A-6 top right, A-6 mid far left, A-8 bottom left-center, A-8 bottom right, C-3 mid far right, C-4 top far right, C-5 mid far left, C-6 top right-center, C-6 top right, D-2 mid left, D-2 top left-center, D-3 top far right, D-5 mid center, D-5 bottom far right, D-6 bottom far left, D-6 mid center, E-4 mid center, E-5 mid left, E-5 top far right, E-6 mid far left, E-6 bottom far left, E-6 bottom center, E-6 bottom right-center, E-6 bottom right, E-8 top right, E-8 top far right, F-4 mid center, F-5 bottom left-center, F-7 mid far right, F-8 bottom center, G-4 mid left-center, G-4 mid center, G-5 top far left, G-5 top far right, G-6 bottom far left, G-6 bottom left, G-7 top far left, G-7 mid center, H-4 bottom far left, H-4 top left-center, H-5 top left, H-5 bottom left, H-6 bottom far left, H-6 bottom left, H-7 top far left, H-7 bottom center, H-8 top right-center, I-4 bottom center, I-5 mid far right, I-6 mid right-center, I-8 top right, I-8 top far right, E-2 bottom left-center, F-2 top far left, G-2 mid left, I-2 bottom right, I-2 mid far right, I-2 bottom far right, J-2 bottom right-center, J-2 mid center, J-2 mid left, J-2 bottom center, J-3 mid far left, J-3 mid center, J-4 bottom left-center, J-4 top left, J-5 top left, J-5 mid left-center, J-6 bottom far left, K-2 bottom right-center, K-2 bottom far right, K-2 bottom right, K-2 mid far left, K-2 mid left, K-3 top left-center, K-3 mid right-center, K-4 mid left-center, K-4 bottom center, K-5 top center, K-5 top right-center, K-6 mid left-center, K-6 mid center, K-7 bottom left-center, K-7 bottom left, L-2 top far left, L-2 mid right, L-2 top left, L-2 top left-center, L-2 mid far right, L-3 top left, L-4 bottom right-center, L-4 bottom right, L-5 top left, L-5 bottom left-center, L-6 mid far right]
+BROWSER LOG (error): [00:13:41.182] [ERROR] [testSpoilerUI] Test failed at step 2: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [00:13:41.190] [ERROR] [testSpoilerUI] Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed
+BROWSER LOG (warning): [00:13:41.199] [WARN] [testSpoilerUI] Test run halted due to "Stop on first error" being enabled.
+BROWSER LOG (error): [00:13:41.219] [ERROR] [testSpoilerUI] Spoiler test completed with 1 mismatch(es). See logs above for details.
+BROWSER LOG (error): [00:13:41.271] [ERROR] [TestRunner/test_spoiler_full_run] [spoilers-full-run-1763511205136] Spoiler test failed. Mismatches found in log:
+BROWSER LOG (error): [00:13:41.271] [ERROR] [TestRunner/test_spoiler_full_run]   - Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed
+BROWSER LOG (error): [00:13:41.271] [ERROR] [TestRunner/test_spoiler_full_run]   - [12:13:26 AM] STATE MISMATCH found for: {"type":"state_update","sphere_number":"0.1","player_id":"1"}
+BROWSER LOG (error): [00:13:41.271] [ERROR] [TestRunner/test_spoiler_full_run]   - [12:13:26 AM] > Locations accessible in STATE (and unchecked) but NOT in LOG: B-1 bottom left-center, B-1 top center, B-8 mid far right, A-6 top far left, A-6 mid left, A-6 top right, A-6 mid far left, A-8 bottom left-center, A-8 bottom right, C-3 mid far right, C-4 top far right, C-5 mid far left, C-6 top right-center, C-6 top right, D-2 mid left, D-2 top left-center, D-3 top far right, D-5 mid center, D-5 bottom far right, D-6 bottom far left, D-6 mid center, E-4 mid center, E-5 mid left, E-5 top far right, E-6 mid far left, E-6 bottom far left, E-6 bottom center, E-6 bottom right-center, E-6 bottom right, E-8 top right, E-8 top far right, F-4 mid center, F-5 bottom left-center, F-7 mid far right, F-8 bottom center, G-4 mid left-center, G-4 mid center, G-5 top far left, G-5 top far right, G-6 bottom far left, G-6 bottom left, G-7 top far left, G-7 mid center, H-4 bottom far left, H-4 top left-center, H-5 top left, H-5 bottom left, H-6 bottom far left, H-6 bottom left, H-7 top far left, H-7 bottom center, H-8 top right-center, I-4 bottom center, I-5 mid far right, I-6 mid right-center, I-8 top right, I-8 top far right, E-2 bottom left-center, F-2 top far left, G-2 mid left, I-2 bottom right, I-2 mid far right, I-2 bottom far right, J-2 bottom right-center, J-2 mid center, J-2 mid left, J-2 bottom center, J-3 mid far left, J-3 mid center, J-4 bottom left-center, J-4 top left, J-5 top left, J-5 mid left-center, J-6 bottom far left, K-2 bottom right-center, K-2 bottom far right, K-2 bottom right, K-2 mid far left, K-2 mid left, K-3 top left-center, K-3 mid right-center, K-4 mid left-center, K-4 bottom center, K-5 top center, K-5 top right-center, K-6 mid left-center, K-6 mid center, K-7 bottom left-center, K-7 bottom left, L-2 top far left, L-2 mid right, L-2 top left, L-2 top left-center, L-2 mid far right, L-3 top left, L-4 bottom right-center, L-4 bottom right, L-5 top left, L-5 bottom left-center, L-6 mid far right, L-6 mid right-center, L-7 mid left, M-2 mid right-center, M-2 bottom far left, M-3 bottom right-center, M-4 mid left, M-5 top left-center, M-6 bottom center, M-6 bottom right-center, M-7 mid far left, M-7 top far right, N-2 top center, N-2 top far left, N-2 bottom right, N-2 top left, N-2 bottom center, N-2 bottom left, N-3 mid right, N-4 bottom far left, N-4 mid left, N-5 bottom center, N-6 top far left, N-6 top right-center, N-7 top left-center, N-7 bottom far left, O-3 mid right, O-3 bottom center, O-4 mid center, O-4 mid far left, O-5 mid far left, O-6 mid right, O-7 bottom center, O-7 top right, P-3 bottom center, P-3 top far left
+BROWSER LOG (error): [00:13:41.272] [ERROR] [TestRunner/test_spoiler_full_run]   - [12:13:41 AM] Test failed at step 2: Comparison failed for event type 'state_update'.
+BROWSER LOG (error): [00:13:41.272] [ERROR] [TestRunner/test_spoiler_full_run]   - [12:13:41 AM] Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed
+BROWSER LOG (error): [00:13:41.272] [ERROR] [TestRunner/test_spoiler_full_run]   - [12:13:41 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Full in-app test results: {
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 0,
+    "failedCount": 1
+  },
+  "testDetails": [
+    {
+      "id": "test_spoiler_full_run",
+      "name": "Test Spoilers Panel - Full Run",
+      "status": "failed",
+      "category": "Test Spoilers Panel",
+      "startTime": "2025-11-19T00:13:25.135Z",
+      "endTime": "2025-11-19T00:13:41.291Z",
+      "durationMs": 16156,
+      "conditions": [
+        {
+          "description": "Test started",
+          "status": "passed",
+          "timestamp": "2025-11-19T00:13:25.136Z"
+        },
+        {
+          "description": "Test Spoilers panel found in DOM",
+          "status": "passed",
+          "timestamp": "2025-11-19T00:13:25.646Z"
+        },
+        {
+          "description": "\"Load Suggested Log\" button found and enabled",
+          "status": "passed",
+          "timestamp": "2025-11-19T00:13:25.897Z"
+        },
+        {
+          "description": "\"Run Full Test\" button appeared",
+          "status": "passed",
+          "timestamp": "2025-11-19T00:13:26.652Z"
+        },
+        {
+          "description": "Full spoiler test completed",
+          "status": "passed",
+          "timestamp": "2025-11-19T00:13:41.265Z"
+        },
+        {
+          "description": "Spoiler test passed all checks",
+          "status": "failed",
+          "timestamp": "2025-11-19T00:13:41.271Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[spoilers-full-run-1763511205136] Starting testSpoilersPanelFullRun...",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.136Z"
+        },
+        {
+          "message": "Condition: \"Test started\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.136Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763511205136] Activating testSpoilersPanel panel...",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.136Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel initialization\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.144Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel initialization\".",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.395Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Test Spoilers panel DOM element\" (timeout: 5000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.395Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Test Spoilers panel DOM element\".",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.646Z"
+        },
+        {
+          "message": "Condition: \"Test Spoilers panel found in DOM\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.646Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Load Suggested Log\" button to be available\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.646Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Load Suggested Log\" button to be available\".",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.897Z"
+        },
+        {
+          "message": "Condition: \"\"Load Suggested Log\" button found and enabled\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.897Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763511205136] Clicking \"Load Suggested Log\" button...",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.897Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Spoiler log loading completion\" (timeout: 15000ms, interval: 500ms)...",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:25.900Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Spoiler log loading completion\".",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:26.401Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"\"Run Full Test\" button to appear\" (timeout: 10000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:26.401Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"\"Run Full Test\" button to appear\".",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:26.652Z"
+        },
+        {
+          "message": "Condition: \"\"Run Full Test\" button appeared\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:26.652Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763511205136] Clicking \"Run Full Test\" button...",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:26.652Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test to start processing\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:26.655Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test to start processing\".",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:26.793Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763511205136] Waiting for full spoiler test to complete...",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:26.793Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Polling for condition: \"Full spoiler test completion with detailed results\" (timeout: 300000ms, interval: 1000ms)...",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:26.793Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763511205136] Polling: buttonReady=true, hasDetailedResults=true, processedEvents=1/47",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:41.265Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763511205136] DEBUG detailedResults: {\"passed\":false,\"totalEvents\":47,\"processedEvents\":1,\"errorCount\":1,\"sphereCount\":2,\"testLogPath\":\"presets/zillion/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl\"}",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:41.265Z"
+        },
+        {
+          "message": "[test_spoiler_full_run] Condition met for: \"Full spoiler test completion with detailed results\".",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:41.265Z"
+        },
+        {
+          "message": "Condition: \"Full spoiler test completed\" - PASSED",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:41.265Z"
+        },
+        {
+          "message": "Condition: \"Spoiler test passed all checks\" - FAILED",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:41.271Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763511205136] Spoiler test failed. Mismatches found in log:",
+          "type": "error",
+          "timestamp": "2025-11-19T00:13:41.271Z"
+        },
+        {
+          "message": "  - Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed",
+          "type": "error",
+          "timestamp": "2025-11-19T00:13:41.271Z"
+        },
+        {
+          "message": "  - [12:13:26 AM] STATE MISMATCH found for: {\"type\":\"state_update\",\"sphere_number\":\"0.1\",\"player_id\":\"1\"}",
+          "type": "error",
+          "timestamp": "2025-11-19T00:13:41.271Z"
+        },
+        {
+          "message": "  - [12:13:26 AM] > Locations accessible in STATE (and unchecked) but NOT in LOG: B-1 bottom left-center, B-1 top center, B-8 mid far right, A-6 top far left, A-6 mid left, A-6 top right, A-6 mid far left, A-8 bottom left-center, A-8 bottom right, C-3 mid far right, C-4 top far right, C-5 mid far left, C-6 top right-center, C-6 top right, D-2 mid left, D-2 top left-center, D-3 top far right, D-5 mid center, D-5 bottom far right, D-6 bottom far left, D-6 mid center, E-4 mid center, E-5 mid left, E-5 top far right, E-6 mid far left, E-6 bottom far left, E-6 bottom center, E-6 bottom right-center, E-6 bottom right, E-8 top right, E-8 top far right, F-4 mid center, F-5 bottom left-center, F-7 mid far right, F-8 bottom center, G-4 mid left-center, G-4 mid center, G-5 top far left, G-5 top far right, G-6 bottom far left, G-6 bottom left, G-7 top far left, G-7 mid center, H-4 bottom far left, H-4 top left-center, H-5 top left, H-5 bottom left, H-6 bottom far left, H-6 bottom left, H-7 top far left, H-7 bottom center, H-8 top right-center, I-4 bottom center, I-5 mid far right, I-6 mid right-center, I-8 top right, I-8 top far right, E-2 bottom left-center, F-2 top far left, G-2 mid left, I-2 bottom right, I-2 mid far right, I-2 bottom far right, J-2 bottom right-center, J-2 mid center, J-2 mid left, J-2 bottom center, J-3 mid far left, J-3 mid center, J-4 bottom left-center, J-4 top left, J-5 top left, J-5 mid left-center, J-6 bottom far left, K-2 bottom right-center, K-2 bottom far right, K-2 bottom right, K-2 mid far left, K-2 mid left, K-3 top left-center, K-3 mid right-center, K-4 mid left-center, K-4 bottom center, K-5 top center, K-5 top right-center, K-6 mid left-center, K-6 mid center, K-7 bottom left-center, K-7 bottom left, L-2 top far left, L-2 mid right, L-2 top left, L-2 top left-center, L-2 mid far right, L-3 top left, L-4 bottom right-center, L-4 bottom right, L-5 top left, L-5 bottom left-center, L-6 mid far right, L-6 mid right-center, L-7 mid left, M-2 mid right-center, M-2 bottom far left, M-3 bottom right-center, M-4 mid left, M-5 top left-center, M-6 bottom center, M-6 bottom right-center, M-7 mid far left, M-7 top far right, N-2 top center, N-2 top far left, N-2 bottom right, N-2 top left, N-2 bottom center, N-2 bottom left, N-3 mid right, N-4 bottom far left, N-4 mid left, N-5 bottom center, N-6 top far left, N-6 top right-center, N-7 top left-center, N-7 bottom far left, O-3 mid right, O-3 bottom center, O-4 mid center, O-4 mid far left, O-5 mid far left, O-6 mid right, O-7 bottom center, O-7 top right, P-3 bottom center, P-3 top far left",
+          "type": "error",
+          "timestamp": "2025-11-19T00:13:41.271Z"
+        },
+        {
+          "message": "  - [12:13:41 AM] Test failed at step 2: Comparison failed for event type 'state_update'.",
+          "type": "error",
+          "timestamp": "2025-11-19T00:13:41.272Z"
+        },
+        {
+          "message": "  - [12:13:41 AM] Mismatch for event 2 (Sphere 0.1): Comparison for state_update at step 2 Failed",
+          "type": "error",
+          "timestamp": "2025-11-19T00:13:41.272Z"
+        },
+        {
+          "message": "  - [12:13:41 AM] Spoiler test completed with 1 mismatch(es). See logs above for details.",
+          "type": "error",
+          "timestamp": "2025-11-19T00:13:41.272Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763511205136] Spoiler test results stored in window.__spoilerTestResults__",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:41.272Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763511205136] Spoiler test results stored in localStorage",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:41.290Z"
+        },
+        {
+          "message": "[spoilers-full-run-1763511205136] testSpoilersPanelFullRun finished. Overall Result: false.",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:41.290Z"
+        },
+        {
+          "message": "Test completion signal: FAILED",
+          "type": "info",
+          "timestamp": "2025-11-19T00:13:41.290Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-19T00:13:41.290Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-19T00:13:41.291Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2025-11-19T00:13:41.291Z"
+        }
+      ]
+    }
+  ],
+  "completedAt": "2025-11-19T00:13:41.392Z"
+}
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2025-11-19T00-13-41.json
+  ✘  1 tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results (19.2s)
+
+
+  1) tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m0[39m
+    Received: [31m1[39m
+
+      141 |
+      142 |     // The test system should complete successfully regardless of whether tests run
+    > 143 |     expect(results.summary.failedCount).toBe(0);
+          |                                         ^
+      144 |     
+      145 |     // If tests actually ran, they should pass
+      146 |     if (results.summary.totalRun > 0) {
+        at /home/user/Archipelago-CC/tests/e2e/app.spec.js:143:41
+
+    Error Context: test-results/app-Application-End-to-End-a086e-app-tests-and-check-results/error-context.md
+
+  1 failed
+    tests/e2e/app.spec.js:35:3 › Application End-to-End Tests › run in-app tests and check results ─
