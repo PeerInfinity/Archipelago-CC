@@ -351,6 +351,8 @@ export function smz3_CanAccessMaridiaPortal(snapshot, staticData) {
 export function smz3_CanAcquire(snapshot, staticData, rewardType) {
   console.log('[smz3_CanAcquire] Called with rewardType:', rewardType);
   console.log('[smz3_CanAcquire] snapshot.player:', snapshot.player);
+  console.log('[smz3_CanAcquire] snapshot.inventory keys:', snapshot.inventory ? Object.keys(snapshot.inventory).length : 'undefined');
+  console.log('[smz3_CanAcquire] Sample inventory - Hammer:', snapshot.inventory?.['Hammer'], 'Hookshot:', snapshot.inventory?.['Hookshot'], 'KeySP:', snapshot.inventory?.['KeySP']);
 
   // Get player slot - snapshot.player can be either a number or an object with slot property
   const playerSlot = String(typeof snapshot.player === 'object' ? snapshot.player.slot : snapshot.player);
@@ -384,16 +386,72 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
   };
 
   // Find the region that has the specified reward
+  console.log(`[smz3_CanAcquire] Searching for reward type ${rewardType} in ${Object.keys(rewardRegions).length} regions`);
+
   for (const [regionName, rewardInfo] of Object.entries(rewardRegions)) {
     if (rewardInfo.reward_type === rewardType) {
       // Found the region with this reward
+      console.log(`[smz3_CanAcquire] Found region '${regionName}' with reward type ${rewardType}`);
       const bossLocationName = bossLocations[regionName];
 
       if (!bossLocationName) {
-        console.warn(`[smz3_CanAcquire] Region ${regionName} has no boss location (completion based on CanEnter + items), returning true for now`);
-        // TODO: Implement proper CanComplete logic for regions without boss locations
-        // For now, assume these regions are completable (conservative assumption)
-        return true;
+        console.log(`[smz3_CanAcquire] Region ${regionName} has no boss location, checking CanComplete logic`);
+
+        // Implement CanComplete logic for regions without boss locations
+        if (regionName === 'Castle Tower') {
+          // Castle Tower (Agahnim) CanComplete requirements:
+          // CanEnter: CanKillManyEnemies() && (Cape || MasterSword)
+          // And: Lamp && KeyCT >= 2 && Sword
+
+          const canKillManyEnemies = smz3_CanKillManyEnemies(snapshot, staticData);
+          const hasCapeOrMasterSword = hasItem(snapshot, 'Cape') || getItemCount(snapshot, 'ProgressiveSword') >= 2;
+          const canEnter = canKillManyEnemies && hasCapeOrMasterSword;
+
+          const hasLamp = hasItem(snapshot, 'Lamp');
+          const hasEnoughKeys = getItemCount(snapshot, 'KeyCT') >= 2;
+          const hasSword = hasItem(snapshot, 'ProgressiveSword');
+
+          const canComplete = canEnter && hasLamp && hasEnoughKeys && hasSword;
+
+          console.log(`[smz3_CanAcquire] Castle Tower CanComplete:`, {
+            canKillManyEnemies,
+            hasCapeOrMasterSword,
+            canEnter,
+            hasLamp,
+            hasEnoughKeys,
+            hasSword,
+            canComplete
+          });
+
+          console.log(`[smz3_CanAcquire] Returning ${canComplete} for Castle Tower`);
+          return canComplete;
+        } else if (regionName === 'Wrecked Ship') {
+          // Wrecked Ship CanComplete: CanEnter && CanUnlockShip
+          // CanUnlockShip: CardWreckedShipBoss && CanPassBombPassages
+          // For now, we'll implement a simplified version
+          // TODO: Implement full CanEnter logic for Wrecked Ship
+          const hasCard = hasItem(snapshot, 'CardWreckedShipBoss');
+          const canPassBomb = smz3_CanPassBombPassages(snapshot, staticData);
+          const canUnlockShip = hasCard && canPassBomb;
+
+          // Simplified CanEnter check - requires Super at minimum
+          const hasSuper = hasItem(snapshot, 'Super');
+
+          const canComplete = hasSuper && canUnlockShip;
+
+          console.log(`[smz3_CanAcquire] Wrecked Ship CanComplete:`, {
+            hasCard,
+            canPassBomb,
+            canUnlockShip,
+            hasSuper,
+            canComplete
+          });
+
+          return canComplete;
+        }
+
+        console.warn(`[smz3_CanAcquire] Region ${regionName} has no boss location and no CanComplete implementation, returning false`);
+        return false;
       }
 
       // Check if the boss location is accessible
@@ -428,15 +486,51 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
 
         // Check if the location is accessible
         if (bossLocation.access_rule) {
-          // snapshot.evaluateRule is provided by createStateSnapshotInterface
-          // and takes (rule, contextName) parameters
-          return snapshot.evaluateRule(bossLocation.access_rule);
+          // For simple rules (AND with item_check), evaluate manually to avoid recursive evaluateRule calls
+          // which can cause issues with the snapshot interface
+          const rule = bossLocation.access_rule;
+
+          // Handle simple AND rules with item_check conditions
+          if (rule.type === 'and' && rule.conditions) {
+            const allItemChecks = rule.conditions.every(cond => cond.type === 'item_check');
+            if (allItemChecks) {
+              // Log what items are being checked and what the player has
+              const itemChecks = rule.conditions.map(cond => ({
+                item: cond.item,
+                required: true,
+                has: hasItem(snapshot, cond.item),
+                count: getItemCount(snapshot, cond.item)
+              }));
+              console.log(`[smz3_CanAcquire] Checking items for ${bossLocationName}:`, JSON.stringify(itemChecks));
+
+              // Manually check all items
+              const result = rule.conditions.every(cond => hasItem(snapshot, cond.item));
+              console.log(`[smz3_CanAcquire] Manually evaluated boss location (${bossLocationName}):`, result);
+              console.log(`[smz3_CanAcquire] Returning ${result} for region '${regionName}'`);
+              return result;
+            }
+          }
+
+          // For other rule types, try using evaluateRule
+          // Note: This may cause issues with recursive evaluation
+          try {
+            const result = snapshot.evaluateRule(bossLocation.access_rule);
+            console.log(`[smz3_CanAcquire] Evaluated boss location (${bossLocationName}) via evaluateRule:`, result);
+            console.log(`[smz3_CanAcquire] Returning ${result} for region '${regionName}'`);
+            return result;
+          } catch (error) {
+            console.error(`[smz3_CanAcquire] Error evaluating boss location (${bossLocationName}):`, error);
+            console.log(`[smz3_CanAcquire] Returning false for region '${regionName}' due to error`);
+            return false;
+          }
         } else {
           // No access rule means always accessible
+          console.log(`[smz3_CanAcquire] No access rule for boss location, returning true for region '${regionName}'`);
           return true;
         }
       }
 
+      console.log(`[smz3_CanAcquire] snapshot.evaluateRule not available, returning false`);
       return false;
     }
   }
