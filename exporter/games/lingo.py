@@ -152,6 +152,27 @@ class LingoGameExportHandler(GenericGameExportHandler):
         # Get base settings from parent class
         settings = super().get_settings_data(world, multiworld, player)
 
+        # Export world-specific options
+        if hasattr(world, 'options'):
+            # List of Lingo-specific options to export
+            lingo_options = [
+                'shuffle_colors',
+                'shuffle_doors',
+                'shuffle_panels',
+                'shuffle_paintings',
+                'shuffle_sunwarps',
+                'shuffle_postgame',
+                'group_doors',
+                'mastery_achievements',
+            ]
+
+            for option_name in lingo_options:
+                if hasattr(world.options, option_name):
+                    option_value = getattr(world.options, option_name)
+                    # Get the actual value (options are often Option objects)
+                    settings[option_name] = getattr(option_value, 'value', option_value)
+                    logger.debug(f"Exported option {option_name}={settings[option_name]}")
+
         if hasattr(world, 'player_logic'):
             # Export item_by_door: which doors require which items
             if hasattr(world.player_logic, 'item_by_door'):
