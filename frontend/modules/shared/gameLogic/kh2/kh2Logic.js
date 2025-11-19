@@ -1851,8 +1851,8 @@ export const helperFunctions = {
     const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
 
     // Check if player can reach Limit Form Level 5 location
-    const locationReachability = snapshot?.locationReachability || {};
-    const canReachLimitLvl5 = locationReachability['Limit level 5'] === 'reachable';
+    // The location requires form_list_unlock("Limit Form", 3), which means Limit Form level 3 (4 total forms)
+    const canReachLimitLvl5 = helperFunctions.form_list_unlock(snapshot, staticData, 'Limit Form', 3);
 
     if (fightLogic === 0) { // easy
       const hasTools = helperFunctions.kh2_dict_count(easyDataRoxasTools, snapshot);
@@ -1970,8 +1970,8 @@ export const helperFunctions = {
     const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
 
     // Check if player can reach Limit Form Level 5 location
-    const locationReachability = snapshot?.locationReachability || {};
-    const canReachLimitLvl5 = locationReachability['Limit level 5'] === 'reachable';
+    // The location requires form_list_unlock("Limit Form", 3), which means Limit Form level 3 (4 total forms)
+    const canReachLimitLvl5 = helperFunctions.form_list_unlock(snapshot, staticData, 'Limit Form', 3);
 
     if (fightLogic === 0) { // easy: tools + can reach Limit Form Level 5
       const hasTools = helperFunctions.kh2_dict_count(easySephirothTools, snapshot);
@@ -1984,6 +1984,51 @@ export const helperFunctions = {
       const hasTools = helperFunctions.kh2_dict_count(hardSephirothTools, snapshot);
       const count = helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher], snapshot);
       return hasTools && count >= 2;
+    }
+  },
+
+  /**
+   * Check if Grim Reaper 1 fight is accessible.
+   * Based on worlds/kh2/Rules.py:646-648
+   * This is a free fight with no requirements.
+   *
+   * @returns {boolean} Always returns true
+   */
+  get_grim_reaper1_rules() {
+    return true;
+  },
+
+  /**
+   * Check if Data Luxord fight is accessible.
+   * Based on worlds/kh2/Rules.py:661-674
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Data Luxord fight
+   */
+  get_data_luxord_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const easyDataLuxordTools = {
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Aerial Dodge': 2,
+      'Glide': 2,
+      'Reflect Element': 3,
+      'Guard': 1
+    };
+
+    const defensiveTool = ['Reflect Element', 'Guard'];
+
+    if (fightLogic === 0) { // easy: gap closers + reflega + aerial dodge 2 + glide 2 + guard
+      return helperFunctions.kh2_dict_count(easyDataLuxordTools, snapshot);
+    } else if (fightLogic === 1) { // normal: 1 gap closer + reflect + aerial dodge 1 + glide 1 + guard
+      const hasRequired = helperFunctions.kh2_has_all(snapshot, staticData, ['Reflect Element', 'Aerial Dodge', 'Glide', 'Guard']);
+      const hasDefensive = helperFunctions.kh2_has_any(snapshot, staticData, defensiveTool);
+      return hasRequired && hasDefensive;
+    } else { // hard: quick run OR defensive option
+      return (snapshot?.inventory?.['Quick Run'] > 0) || helperFunctions.kh2_has_any(snapshot, staticData, defensiveTool);
     }
   },
 
