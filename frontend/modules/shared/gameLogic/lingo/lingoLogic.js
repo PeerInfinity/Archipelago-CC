@@ -209,10 +209,69 @@ function _lingo_can_open_door(snapshot, staticData, room, door) {
 }
 
 /**
+ * Check if player can access the LEVEL 2 location
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data including rules
+ * @returns {boolean} True if LEVEL 2 can be accessed
+ */
+export function lingo_can_use_level_2_location(snapshot, staticData) {
+  const playerId = snapshot?.playerId || '1';
+  const settings = staticData?.settings?.[playerId];
+
+  if (!settings) {
+    console.error('[lingo_can_use_level_2_location] No settings found');
+    return false;
+  }
+
+  // Get the level 2 requirement from settings
+  const level2Requirement = settings.level_2_requirement;
+  if (!level2Requirement || level2Requirement <= 1) {
+    // Panel hunt is disabled
+    return true;
+  }
+
+  // Count panels that satisfy requirements across all reachable regions
+  let countedPanels = 0;
+  const regionReachability = snapshot?.regionReachability || {};
+  const countingPanelReqs = settings.counting_panel_reqs || {};
+
+  // Iterate through all regions in the regionReachability map
+  for (const [regionName, reachability] of Object.entries(regionReachability)) {
+    // Only count panels in reachable regions
+    if (reachability !== 'reachable') {
+      continue;
+    }
+
+    // Get the counting panel requirements for this region
+    const regionPanelReqs = countingPanelReqs[regionName];
+    if (!regionPanelReqs || !Array.isArray(regionPanelReqs)) {
+      continue;
+    }
+
+    // Each entry in regionPanelReqs is [access_req, panel_count]
+    for (const [accessReq, panelCount] of regionPanelReqs) {
+      if (_lingo_can_satisfy_requirements(snapshot, staticData, accessReq)) {
+        countedPanels += panelCount;
+      }
+    }
+
+    // Early exit if we've met the requirement
+    // Note: Python code checks >= level_2_requirement - 1
+    if (countedPanels >= level2Requirement - 1) {
+      return true;
+    }
+  }
+
+  // Check if we've met the requirement
+  return countedPanels >= level2Requirement - 1;
+}
+
+/**
  * Generic helper functions module export
  */
 export const helperFunctions = {
   lingo_can_use_entrance,
   lingo_can_use_location,
+  lingo_can_use_level_2_location,
   _lingo_can_satisfy_requirements,
 };
