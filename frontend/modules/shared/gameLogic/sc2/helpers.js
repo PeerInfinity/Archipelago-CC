@@ -1235,7 +1235,30 @@ export default {
     essence_of_eternity_requirement: () => false,
     amons_fall_requirement: () => false,
     the_reckoning_requirement: () => false,
-    all_in_requirement: () => false,
+    all_in_requirement: (snapshot, staticData) => {
+        const advancedTactics = isAdvancedTactics(staticData);
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const allInMap = settings?.all_in_map; // 0 = ground, 1 = air
+
+        const beatsKerrigan = has_any(snapshot, ['Marine', 'Banshee', 'Ghost']) || advancedTactics;
+
+        if (allInMap === 0) {
+            // Ground
+            let defenseRating = terran_defense_rating(snapshot, staticData, true, false);
+            if (has_any(snapshot, ['Battlecruiser', 'Banshee'])) {
+                defenseRating += 2;
+            }
+            return defenseRating >= 13 && beatsKerrigan;
+        } else {
+            // Air
+            const defenseRating = terran_defense_rating(snapshot, staticData, true, true);
+            return defenseRating >= 9
+                && beatsKerrigan
+                && has_any(snapshot, ['Viking', 'Battlecruiser', 'Valkyrie'])
+                && has_any(snapshot, ['Hive Mind Emulator', 'Psi Disrupter', 'Missile Turret']);
+        }
+    },
     flashpoint_far_requirement: () => false,
     lock_any_item: (snapshot, staticData, items) => {
         // During item placement (which we always are in spoiler tests), return true
