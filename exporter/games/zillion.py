@@ -1,162 +1,92 @@
 """Zillion game-specific export handler."""
 
-from typing import Dict, Any, Optional, List, Set
+from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
 
-# Import zilliandomizer components
-try:
-    from zilliandomizer.logic_components.locations import Req
-    from zilliandomizer.logic_components.items import items as zz_items
-except ImportError:
-    logger.error("Failed to import zilliandomizer. Is zilliandomizer installed?")
-    Req = None
-    zz_items = []
-
 class ZillionGameExportHandler(GenericGameExportHandler):
     """Export handler for Zillion.
 
-    Zillion uses the zilliandomizer library for its logic system.
-    This exporter queries the zilliandomizer directly to determine actual accessibility.
+    Zillion uses the zilliandomizer library for its logic system, which is too complex
+    for static analysis. We use empirical testing to determine what items are needed
+    for each location.
     """
     GAME_NAME = 'Zillion'
 
-    def __init__(self):
-        super().__init__()
-        # Zillion doesn't use helper functions - logic is in zilliandomizer library
-        self.known_helpers = set()
-        # Cache accessibility results
-        self.accessibility_cache = {}
-
     def expand_helper(self, helper_name: str):
-        """Zillion does not use helper functions."""
+        """Zillion does not use helper functions in its access rules."""
         if helper_name:
             logger.warning(f"Unexpected helper in Zillion: {helper_name}")
         return None
 
-
-
-    def _convert_req_to_rule(self, req) -> Dict[str, Any]:
-        """
-        Convert a zilliandomizer Req object to an access rule.
-
-        The Req object has these fields:
-        - gun: number of Zillion guns needed (item: "Zillion")
-        - jump: jump level needed (item: "Opa-Opa")
-        - char: character requirement (items: "JJ", "Apple", "Champ")
-        - hp: HP requirement (not used in standard logic)
-        - door: door requirement (not used, red ID cards use 'red' field)
-        - skill: skill requirement (not used in standard logic)
-        - union: tuple of alternative Req objects (for OR conditions)
-        - red: Red ID Card count (item: "Red ID Card")
-        - floppy: Floppy Disk count (item: "Floppy Disk")
-        """
-        conditions = []
-
-        # Handle union (OR condition) first
-        if hasattr(req, 'union') and req.union:
-            # Union means any of the requirements can be satisfied
-            union_conditions = []
-            for sub_req in req.union:
-                union_conditions.append(self._convert_req_to_rule(sub_req))
-            return {
-                'type': 'or',
-                'conditions': union_conditions
-            }
-
-        # Gun requirement (Zillion)
-        if hasattr(req, 'gun') and req.gun > 0:
-            conditions.append({
-                'type': 'item_check',
-                'item': 'Zillion',
-                'count': {'type': 'constant', 'value': req.gun}
-            })
-
-        # Jump requirement (Opa-Opa)
-        if hasattr(req, 'jump') and req.jump > 0:
-            conditions.append({
-                'type': 'item_check',
-                'item': 'Opa-Opa',
-                'count': {'type': 'constant', 'value': req.jump}
-            })
-
-        # Red ID Card requirement
-        if hasattr(req, 'red') and req.red > 0:
-            conditions.append({
-                'type': 'item_check',
-                'item': 'Red ID Card',
-                'count': {'type': 'constant', 'value': req.red}
-            })
-
-        # Floppy Disk requirement
-        if hasattr(req, 'floppy') and req.floppy > 0:
-            conditions.append({
-                'type': 'item_check',
-                'item': 'Floppy Disk',
-                'count': {'type': 'constant', 'value': req.floppy}
-            })
-
-        # Character requirement (rescue characters: JJ, Apple, Champ)
-        # In Zillion, the player always has a character (one of JJ, Apple, or Champ)
-        # starting the game. The char field in Req indicates which characters can
-        # access the location. If all three characters can access it, there's no
-        # restriction. If only specific characters can access it, we need to check.
-        # However, since the player ALWAYS has a character, we treat "any character
-        # can access" as no restriction, and ignore character-specific restrictions
-        # for now (as they're handled by the game logic, not item collection).
-        # Character restrictions are primarily used for rescue missions where you
-        # need to have rescued a specific character to use them.
-
-        # If no conditions, location is always accessible
-        if len(conditions) == 0:
-            return {'type': 'constant', 'value': True}
-
-        # If only one condition, return it directly
-        if len(conditions) == 1:
-            return conditions[0]
-
-        # Multiple conditions means AND
-        return {
-            'type': 'and',
-            'conditions': conditions
-        }
-
     def get_custom_location_access_rule(self, location, world) -> Optional[Dict[str, Any]]:
         """
-        Determine access rule by converting the zilliandomizer Req object directly.
+        Determine access rules by empirically testing the location with different items.
 
-        This avoids testing with CollectionStates which can be contaminated by
-        actual item placements in the generated world. Instead, we use the
-        source of truth: the Req object that's attached to each zilliandomizer location.
+        Since zilliandomizer's logic is too complex for static analysis, we test
+        what items are actually needed by checking accessibility with different
+        item combinations.
         """
-        # Check if this is a Zillion location with zilliandomizer data
-        if not hasattr(location, 'zz_loc'):
+        from BaseClasses import CollectionState
+
+        if not hasattr(location, 'access_rule') or not location.access_rule:
             return None
 
-        zz_loc = location.zz_loc
-        loc_name = location.name if hasattr(location, 'name') else 'unknown'
+        # Get the items available in this game
+        item_pool = ["Zillion", "Opa-Opa", "Floppy Disk", "Red ID Card", "Scope",
+                     "JJ", "Apple", "Champ"]
 
-        # Check cache first
-        cache_key = zz_loc.name
-        if cache_key in self.accessibility_cache:
-            return self.accessibility_cache[cache_key]
-
-        # Check if the location has a Req object
-        if not hasattr(zz_loc, 'req') or zz_loc.req is None:
-            logger.warning(f"Location {loc_name} has no req object")
+        # Test with no items first
+        empty_state = CollectionState(world.multiworld)
+        if location.access_rule(empty_state):
+            # Location is accessible with no items
             return {'type': 'constant', 'value': True}
 
-        # Debug logging for specific locations
-        if loc_name in ['B-1 mid far left', 'A-3 top left-center', 'A-4 bottom far left']:
-            logger.info(f"[DEBUG] {loc_name}: gun={zz_loc.req.gun}, jump={zz_loc.req.jump}, char={zz_loc.req.char}, red={zz_loc.req.red}, floppy={zz_loc.req.floppy}")
+        # Find minimum items needed
+        # Test common combinations
+        for item_name in item_pool:
+            test_state = CollectionState(world.multiworld)
+            if item_name in world.item_name_to_id:
+                test_state.prog_items[location.player][item_name] = 1
+                if location.access_rule(test_state):
+                    # This single item makes it accessible
+                    return {
+                        'type': 'item_check',
+                        'item': item_name
+                    }
 
-        # Convert the Req object directly to a rule
-        rule = self._convert_req_to_rule(zz_loc.req)
+        # Try two-item combinations
+        for i, item1 in enumerate(item_pool):
+            for item2 in item_pool[i:]:
+                if item1 == item2:
+                    # Try multiple of same item
+                    test_state = CollectionState(world.multiworld)
+                    if item1 in world.item_name_to_id:
+                        test_state.prog_items[location.player][item1] = 2
+                        if location.access_rule(test_state):
+                            return {
+                                'type': 'item_check',
+                                'item': item1,
+                                'count': {'type': 'constant', 'value': 2}
+                            }
+                else:
+                    # Try combination of two different items
+                    test_state = CollectionState(world.multiworld)
+                    if item1 in world.item_name_to_id and item2 in world.item_name_to_id:
+                        test_state.prog_items[location.player][item1] = 1
+                        test_state.prog_items[location.player][item2] = 1
+                        if location.access_rule(test_state):
+                            return {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'item_check', 'item': item1},
+                                    {'type': 'item_check', 'item': item2}
+                                ]
+                            }
 
-        # Cache the result
-        self.accessibility_cache[cache_key] = rule
-
-        return rule
+        # If we can't figure it out with simple tests, return None to use default analysis
+        logger.warning(f"Could not determine access rule for {location.name} through testing")
+        return None
 
