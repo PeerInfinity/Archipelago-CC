@@ -1999,6 +1999,30 @@ export const helperFunctions = {
   },
 
   /**
+   * Check if Grim Reaper 2 fight is accessible.
+   * Based on worlds/kh2/Rules.py:650-659
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Grim Reaper 2 fight
+   */
+  get_grim_reaper2_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const defensiveTool = ['Reflect Element', 'Guard'];
+    const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
+
+    if (fightLogic === 0) { // easy: master form + thunder + defensive option (2 of 2)
+      return helperFunctions.kh2_list_any_sum([defensiveTool, ['Master Form', 'Thunder Element']], snapshot) >= 2;
+    } else if (fightLogic === 1) { // normal: (master form OR stitch) + thunder + defensive option (3 of 3)
+      return helperFunctions.kh2_list_any_sum([defensiveTool, ['Master Form', 'Stitch'], ['Thunder Element']], snapshot) >= 3;
+    } else { // hard: any black magic + defensive option (2 of 2)
+      return helperFunctions.kh2_list_any_sum([blackMagic, defensiveTool], snapshot) >= 2;
+    }
+  },
+
+  /**
    * Check if Data Luxord fight is accessible.
    * Based on worlds/kh2/Rules.py:661-674
    *
