@@ -247,7 +247,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                 rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
             return rule
 
-        # Transform function_call nodes where function is an attribute access on 'self'
+        # Transform function_call nodes where function is an attribute access on 'self' or 'sm'
         # (This is kept for compatibility but may not be needed if analyzer converts to helper)
         if rule_type == 'function_call':
             function = rule.get('function', {})
@@ -265,6 +265,14 @@ class SMGameExportHandler(GenericGameExportHandler):
                         print("[SM] Simplifying evalSMBool(SMBool(True), ...) function_call to constant True")
                         return {'type': 'constant', 'value': True}
                     return {'type': 'helper', 'name': 'evalSMBool', 'args': expanded_args}
+
+                # Transform sm.methodName(...) into helper calls
+                # These are VARIA logic methods like sm.wor, sm.wand, sm.haveItem, etc.
+                if obj.get('type') == 'name' and obj.get('name') == 'sm':
+                    # Convert to helper call
+                    print(f"[SM] Converting sm.{attr}(...) to helper call")
+                    expanded_args = [self.expand_rule(arg) for arg in rule.get('args', [])]
+                    return {'type': 'helper', 'name': attr, 'args': expanded_args}
 
         # Recursively process nested structures
         if rule_type == 'and' or rule_type == 'or':
