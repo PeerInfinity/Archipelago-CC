@@ -1,51 +1,58 @@
 # Remaining Exporter Issues for The Witness
 
-## Issue 1: Region reachability patterns not fully converted in laser activation locations
+## Issue 1: Keep Laser Activated has bound method strings in iterator
 
 **Status**: Active
 **Priority**: High
 **Category**: Exporter
 
 **Description**:
-Some laser activation locations (Desert, Keep, Shadows) have access rules containing region reachability patterns that are not being converted to `can_reach_region` helper calls. These patterns appear nested inside `and` rules and cause "Access rule evaluation failed" errors.
+Keep Laser Activated has an `all_of` comprehension with an iterator containing string representations of bound methods (e.g., `"<bound method Region.can_reach of Keep>"`) instead of properly converted rules. This causes "Access rule evaluation failed" errors.
 
 **Affected Locations**:
-- Desert Laser Activated
-- Desert Laser Panel
 - Keep Laser Activated
-- Keep Laser Panel Hedges
-- Shadows Laser Activated
-- Shadows Laser Panel
-- Shadows Intro 8
-- Shadows Near 5
-- Shadows Far 8
-- Orchard Apple Tree 5
 
-**Example Access Rule** (Desert Laser Activated):
+**Example Access Rule** (Keep Laser Activated):
 ```json
 {
-  "type": "and",
+  "type": "or",
   "conditions": [
     {
-      "type": "conditional",
-      "test": { "type": "subscript", "value": { "type": "attribute", "object": { "type": "name", "name": "state" }, "attr": "stale" }, ... },
-      "if_true": { "type": "state_method", "method": "update_reachable_regions", ... },
-      "if_false": { "type": "compare", "left": { "type": "name", "name": "self" }, "op": "in", ... }
-    },
-    { ... same pattern repeated ... }
+      "type": "all_of",
+      "element_rule": {
+        "type": "helper",
+        "name": "condition",
+        "args": []
+      },
+      "iterator_info": {
+        "type": "comprehension_details",
+        "target": {
+          "type": "name",
+          "name": "condition"
+        },
+        "iterator": {
+          "type": "constant",
+          "value": [
+            "<bound method Region.can_reach of Keep>",
+            "<bound method Region.can_reach of Keep 2nd Pressure Plate>",
+            ...
+          ]
+        }
+      }
+    }
   ]
 }
 ```
 
 **Root Cause**:
-The `postprocess_rule()` method in `exporter/games/witness.py` only checks if the top-level rule matches the region reachability pattern. When the pattern is nested inside compound rules (like `and`), it's not detected and converted.
+The analyzer is capturing bound methods as string representations instead of analyzing them. When the Python code uses list comprehensions with callable conditions, the analyzer should recursively analyze each element.
 
 **Expected Behavior**:
-The exporter should recursively process compound rules to find and simplify region reachability patterns, then convert them to `can_reach_region` helper calls.
+The iterator should contain a list of actual rule objects (like `can_reach_region` helper calls) instead of string representations.
 
-**Fix Location**: `exporter/games/witness.py:230` (postprocess_rule method)
+**Fix Location**: `exporter/analyzer.py` - comprehension handling
 
 **Fix Approach**:
-1. Update `postprocess_rule` to first call `_simplify_region_reachability_pattern` to recursively simplify the rule
-2. After simplification, check if the result is a single region reachability pattern that can be converted to a helper call
-3. This will handle both direct patterns and patterns nested in compound rules
+1. When analyzing list/generator comprehensions, check if iterator elements are callable
+2. For each callable in the iterator, analyze it to convert it to a proper rule
+3. Convert Region.can_reach bound methods to can_reach_region helper calls
