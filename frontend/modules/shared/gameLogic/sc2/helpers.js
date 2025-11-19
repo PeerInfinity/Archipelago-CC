@@ -1259,7 +1259,11 @@ export default {
                 && has_any(snapshot, ['Hive Mind Emulator', 'Psi Disrupter', 'Missile Turret']);
         }
     },
-    flashpoint_far_requirement: () => false,
+    flashpoint_far_requirement: (snapshot, staticData) => {
+        return terran_competent_comp(snapshot, staticData)
+            && has_any(snapshot, ['Raven', 'Science Vessel', 'Progressive Orbital Command']) // terran_mobile_detector
+            && terran_defense_rating(snapshot, staticData, true, false) >= 6;
+    },
     lock_any_item: (snapshot, staticData, items) => {
         // During item placement (which we always are in spoiler tests), return true
         // During pool filtering, check if player has any of the items
