@@ -821,9 +821,26 @@ export class EventProcessor {
             for (let i = 0; i < itemsToAdd; i++) {
               await stateManager.addItemToInventory(itemName, 1);
             }
+          } else {
+            this.logCallback('debug', `  [Player ${this.playerId}] Item "${itemName}" came from own location, should already be in inventory`);
           }
         }
       }
+    }
+
+    // DEBUG: Log inventory after processing sphere
+    if (context.sphere_number === '2.1') {
+      const afterSnapshot = await stateManager.getFullSnapshot();
+      console.error('[FACTORIO DEBUG] Inventory after sphere 2.1:', JSON.stringify(afterSnapshot.inventory));
+
+      // Check specific items
+      const hasAutomatedAuto = afterSnapshot.inventory['Automated automation-science-pack'] || 0;
+      const hasAutomatedLogistic = afterSnapshot.inventory['Automated logistic-science-pack'] || 0;
+      console.error('[FACTORIO DEBUG] Automated automation-science-pack:', hasAutomatedAuto);
+      console.error('[FACTORIO DEBUG] Automated logistic-science-pack:', hasAutomatedLogistic);
+
+      // Also log via callback
+      this.logCallback('error', `  [FACTORIO DEBUG] Inventory keys: ${Object.keys(afterSnapshot.inventory).join(', ')}`);
     }
 
     // Step 3: Add virtual/event items from resolved_items that aren't in base_items
