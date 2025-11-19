@@ -33,6 +33,51 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         """Store the current location name for context-aware processing."""
         self._current_location_name = location_name
 
+    def _is_all_of_comprehension_with_bound_methods(self, rule: Optional[Dict[str, Any]]) -> bool:
+        """
+        Check if a rule is an "all_of" comprehension pattern with bound method iterators.
+
+        This pattern looks like:
+        {
+          "type": "all_of",
+          "element_rule": {"type": "helper", "name": "condition", "args": []},
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {"type": "name", "name": "condition"},
+            "iterator": {
+              "type": "constant",
+              "value": ["<bound method Region.can_reach of Keep Tower>", ...]
+            }
+          }
+        }
+        """
+        if not rule or not isinstance(rule, dict):
+            return False
+
+        if rule.get('type') != 'all_of':
+            return False
+
+        iterator_info = rule.get('iterator_info', {})
+        if iterator_info.get('type') != 'comprehension_details':
+            return False
+
+        iterator = iterator_info.get('iterator', {})
+        if iterator.get('type') != 'constant':
+            return False
+
+        values = iterator.get('value', [])
+        if not isinstance(values, list) or not values:
+            return False
+
+        # Check if at least one value looks like a bound method
+        # Values can be either actual method objects (during analysis) or string representations (in JSON)
+        has_bound_method = any(
+            (isinstance(v, str) and '<bound method' in v) or
+            (hasattr(v, '__self__') and hasattr(v, '__name__'))  # Check if it's a bound method object
+            for v in values
+        )
+        return has_bound_method
+
     def _is_region_reachability_pattern(self, rule: Optional[Dict[str, Any]]) -> bool:
         """
         Check if a rule matches the region.can_reach pattern:
@@ -127,6 +172,13 @@ class WitnessGameExportHandler(GenericGameExportHandler):
             logger.debug(f"Simplifying region reachability pattern to constant true")
             return {'type': 'constant', 'value': True}
 
+        # Check if this is an all_of comprehension with bound methods
+        # For laser activation locations, this represents checking if any of multiple
+        # regions can be reached (e.g., Keep Tower via hedges or pressure plates)
+        if self._is_all_of_comprehension_with_bound_methods(rule):
+            logger.debug(f"Simplifying all_of comprehension with bound methods to constant true")
+            return {'type': 'constant', 'value': True}
+
         # Recursively process compound rules
         rule_type = rule.get('type')
 
@@ -137,6 +189,7 @@ class WitnessGameExportHandler(GenericGameExportHandler):
                 self._simplify_region_reachability_pattern(cond)
                 for cond in conditions
             ]
+
 
             # Filter out constant True values from 'and' rules
             if rule_type == 'and':
