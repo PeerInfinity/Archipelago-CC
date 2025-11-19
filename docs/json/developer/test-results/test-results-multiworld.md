@@ -4,7 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-18 05:41:36
+**Generated:** 2025-11-18 18:00:28
 
 ## Summary
 
@@ -37,7 +37,7 @@
 | DOOM II | ⚫ Skipped | 1 | N/A | N/A | N/A | ✅ | ⚫ |
 | Dark Souls III | ⚫ Skipped | 2 | N/A | N/A | N/A | ✅ | ⚫ |
 | Donkey Kong Country 3 | ❌ Failed | 2 | 2 | 0 | 1 | ✅ | ⚫ |
-| Factorio | ⚫ Skipped | 3 | N/A | N/A | N/A | ✅ | ⚫ |
+| Factorio | ⚫ Skipped | 3 | N/A | N/A | N/A | ✅ | ✅ |
 | Faxanadu | ✅ Passed | 2 | 2 | 1 | 0 | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ⚫ Skipped | 3 | N/A | N/A | N/A | ✅ | ⚫ |
 | Heretic | ⚫ Skipped | 3 | N/A | N/A | N/A | ⚫ | ⚫ |
@@ -84,7 +84,7 @@
 | The Legend of Zelda | ❌ Failed | 4 | 4 | 0 | 1 | ✅ | ✅ |
 | The Messenger | ❌ Failed | 4 | 4 | 0 | 1 | ✅ | ✅ |
 | The Wind Waker | ❌ Failed | 2 | 2 | 0 | 1 | ✅ | ✅ |
-| The Witness | ⚫ Skipped | 1 | N/A | N/A | N/A | ✅ | ⚫ |
+| The Witness | ⚫ Skipped | 1 | N/A | N/A | N/A | ✅ | ✅ |
 | Timespinner | ❌ Failed | 4 | 4 | 0 | 1 | ✅ | ✅ |
 | Undertale | ❌ Failed | 2 | 2 | 0 | 1 | ✅ | ⚫ |
 | VVVVVV | ⚫ Skipped | 5 | N/A | N/A | N/A | ✅ | ✅ |

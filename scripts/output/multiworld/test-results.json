@@ -2,17 +2,18 @@
   "metadata": {
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
-    "created": "2025-11-18T04:44:16.544253",
-    "last_updated": "2025-11-18T04:44:16.544259",
+    "created": "2025-11-19T00:39:49.080444",
+    "last_updated": "2025-11-19T00:39:49.080451",
     "script_version": "1.0.0"
   },
   "results": {
     "A Hat in Time.yaml": {
-      "game_name": "ahit",
+      "game_name_from_filename": "ahit",
+      "game_name_from_yaml": "A Hat in Time",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.74,
+        "processing_time_seconds": 3.84,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -34,7 +35,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 6.29,
+        "processing_time_seconds": 6.31,
         "success": true,
         "total_players_tested": 1
       },
@@ -46,20 +47,21 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "A Hat in Time.yaml",
-      "timestamp": "2025-11-18T04:39:39.998300",
+      "template_filename": "A Hat in Time.yaml",
+      "timestamp": "2025-11-19T00:35:07.436736",
       "world_info": {
         "exporter_path": "exporter/games/ahit.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/ahit/ahitLogic.js",
+        "game_name_from_filename": "ahit",
         "game_name_from_yaml": "A Hat in Time",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "ahit",
         "world_directory": "ahit"
       }
     },
     "A Link to the Past.yaml": {
-      "game_name": "alttp",
+      "game_name_from_filename": "alttp",
+      "game_name_from_yaml": "A Link to the Past",
       "multiworld_test": {
         "first_failure_player": null,
         "player_number": 1,
@@ -79,24 +81,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "A Link to the Past.yaml",
-      "timestamp": "2025-11-18T04:39:46.225169",
+      "template_filename": "A Link to the Past.yaml",
+      "timestamp": "2025-11-19T00:35:12.032359",
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
+        "game_name_from_filename": "alttp",
         "game_name_from_yaml": "A Link to the Past",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "alttp",
         "world_directory": "alttp"
       }
     },
     "A Short Hike.yaml": {
-      "game_name": "shorthike",
+      "game_name_from_filename": "shorthike",
+      "game_name_from_yaml": "A Short Hike",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.7,
+        "processing_time_seconds": 2.58,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -118,7 +121,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 6.95,
+        "processing_time_seconds": 7.12,
         "success": true,
         "total_players_tested": 1
       },
@@ -130,24 +133,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "A Short Hike.yaml",
-      "timestamp": "2025-11-18T04:39:41.902631",
+      "template_filename": "A Short Hike.yaml",
+      "timestamp": "2025-11-19T00:35:12.998872",
       "world_info": {
         "exporter_path": "exporter/games/shorthike.py",
         "game_logic_path": null,
+        "game_name_from_filename": "shorthike",
         "game_name_from_yaml": "A Short Hike",
         "has_custom_exporter": true,
         "has_custom_game_logic": false,
-        "normalized_name": "shorthike",
         "world_directory": "shorthike"
       }
     },
     "Adventure.yaml": {
-      "game_name": "adventure",
+      "game_name_from_filename": "adventure",
+      "game_name_from_yaml": "Adventure",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.71,
+        "processing_time_seconds": 2.5,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -169,7 +173,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 7.1,
+        "processing_time_seconds": 6.31,
         "success": true,
         "total_players_tested": 1
       },
@@ -181,24 +185,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Adventure.yaml",
-      "timestamp": "2025-11-18T04:39:37.545491",
+      "template_filename": "Adventure.yaml",
+      "timestamp": "2025-11-19T00:35:07.918534",
       "world_info": {
         "exporter_path": "exporter/games/adventure.py",
         "game_logic_path": null,
+        "game_name_from_filename": "adventure",
         "game_name_from_yaml": "Adventure",
         "has_custom_exporter": true,
         "has_custom_game_logic": false,
-        "normalized_name": "adventure",
         "world_directory": "adventure"
       }
     },
     "Aquaria.yaml": {
-      "game_name": "aquaria",
+      "game_name_from_filename": "aquaria",
+      "game_name_from_yaml": "Aquaria",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.09,
+        "processing_time_seconds": 6.01,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -220,7 +225,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 7.31,
+        "processing_time_seconds": 6.25,
         "success": true,
         "total_players_tested": 1
       },
@@ -232,24 +237,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Aquaria.yaml",
-      "timestamp": "2025-11-18T04:39:28.317240",
+      "template_filename": "Aquaria.yaml",
+      "timestamp": "2025-11-19T00:35:00.635488",
       "world_info": {
         "exporter_path": "exporter/games/aquaria.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js",
+        "game_name_from_filename": "aquaria",
         "game_name_from_yaml": "Aquaria",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "aquaria",
         "world_directory": "aquaria"
       }
     },
     "ArchipIDLE.yaml": {
-      "game_name": "archipidle",
+      "game_name_from_filename": "archipidle",
+      "game_name_from_yaml": "ArchipIDLE",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.86,
+        "processing_time_seconds": 2.62,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -271,7 +277,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 6.99,
+        "processing_time_seconds": 7.07,
         "success": true,
         "total_players_tested": 1
       },
@@ -283,20 +289,21 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "ArchipIDLE.yaml",
-      "timestamp": "2025-11-18T04:39:38.597335",
+      "template_filename": "ArchipIDLE.yaml",
+      "timestamp": "2025-11-19T00:35:17.259242",
       "world_info": {
         "exporter_path": "exporter/games/archipidle.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js",
+        "game_name_from_filename": "archipidle",
         "game_name_from_yaml": "ArchipIDLE",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "archipidle",
         "world_directory": "archipidle"
       }
     },
     "Blasphemous.yaml": {
-      "game_name": "blasphemous",
+      "game_name_from_filename": "blasphemous",
+      "game_name_from_yaml": "Blasphemous",
       "multiworld_test": {
         "first_failure_player": null,
         "player_number": 1,
@@ -316,20 +323,21 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Blasphemous.yaml",
-      "timestamp": "2025-11-18T04:39:30.691684",
+      "template_filename": "Blasphemous.yaml",
+      "timestamp": "2025-11-19T00:35:01.642550",
       "world_info": {
         "exporter_path": "exporter/games/blasphemous.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
+        "game_name_from_filename": "blasphemous",
         "game_name_from_yaml": "Blasphemous",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "blasphemous",
         "world_directory": "blasphemous"
       }
     },
     "Bomb Rush Cyberfunk.yaml": {
-      "game_name": "bomb_rush_cyberfunk",
+      "game_name_from_filename": "bomb_rush_cyberfunk",
+      "game_name_from_yaml": "Bomb Rush Cyberfunk",
       "multiworld_test": {
         "first_failure_player": null,
         "player_number": 1,
@@ -344,29 +352,30 @@
       "prerequisite_check": {
         "all_prerequisites_passed": false,
         "multiplayer_passed": false,
-        "spoiler_full_passed": false,
+        "spoiler_full_passed": true,
         "spoiler_minimal_passed": true
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Bomb Rush Cyberfunk.yaml",
-      "timestamp": "2025-11-18T04:39:36.810301",
+      "template_filename": "Bomb Rush Cyberfunk.yaml",
+      "timestamp": "2025-11-19T00:35:22.124479",
       "world_info": {
         "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
         "game_logic_path": null,
+        "game_name_from_filename": "bomb_rush_cyberfunk",
         "game_name_from_yaml": "Bomb Rush Cyberfunk",
         "has_custom_exporter": true,
         "has_custom_game_logic": false,
-        "normalized_name": "bomb_rush_cyberfunk",
         "world_directory": "bomb_rush_cyberfunk"
       }
     },
     "Bumper Stickers.yaml": {
-      "game_name": "bumpstik",
+      "game_name_from_filename": "bumpstik",
+      "game_name_from_yaml": "Bumper Stickers",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.68,
+        "processing_time_seconds": 2.56,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -388,7 +397,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 6.52,
+        "processing_time_seconds": 6.3,
         "success": true,
         "total_players_tested": 1
       },
@@ -400,765 +409,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Bumper Stickers.yaml",
-      "timestamp": "2025-11-18T04:39:36.153774",
+      "template_filename": "Bumper Stickers.yaml",
+      "timestamp": "2025-11-19T00:35:06.082135",
       "world_info": {
         "exporter_path": "exporter/games/bumpstik.py",
         "game_logic_path": null,
+        "game_name_from_filename": "bumpstik",
         "game_name_from_yaml": "Bumper Stickers",
         "has_custom_exporter": true,
         "has_custom_game_logic": false,
-        "normalized_name": "bumpstik",
         "world_directory": "bumpstik"
       }
     },
     "Castlevania - Circle of the Moon.yaml": {
-      "game_name": "cvcotm",
+      "game_name_from_filename": "cvcotm",
+      "game_name_from_yaml": "Castlevania - Circle of the Moon",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.66,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 1,
-        "player_results": {
-          "player_1": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 1,
-            "return_code": 0,
-            "sphere_reached": 3.1,
-            "total_spheres": 3.1,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 7.01,
-        "success": true,
-        "total_players_tested": 1
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Castlevania - Circle of the Moon.yaml",
-      "timestamp": "2025-11-18T04:39:34.877371",
-      "world_info": {
-        "exporter_path": "exporter/games/cvcotm.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js",
-        "game_name_from_yaml": "Castlevania - Circle of the Moon",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "cvcotm",
-        "world_directory": "cvcotm"
-      }
-    },
-    "Castlevania 64.yaml": {
-      "game_name": "cv64",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 3.88,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {
-          "player_2": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 2,
-            "return_code": 0,
-            "sphere_reached": 7.1,
-            "total_spheres": 7.1,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 7.46,
-        "success": true,
-        "total_players_tested": 2
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Castlevania 64.yaml",
-      "timestamp": "2025-11-18T04:39:50.174608",
-      "world_info": {
-        "exporter_path": "exporter/games/cv64.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/cv64/cv64Logic.js",
-        "game_name_from_yaml": "Castlevania 64",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "cv64",
-        "world_directory": "cv64"
-      }
-    },
-    "Celeste 64.yaml": {
-      "game_name": "celeste64",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.9,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 1,
-        "player_results": {
-          "player_1": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 1,
-            "return_code": 0,
-            "sphere_reached": 3.1,
-            "total_spheres": 3.1,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 7.26,
-        "success": true,
-        "total_players_tested": 1
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Celeste 64.yaml",
-      "timestamp": "2025-11-18T04:39:46.360333",
-      "world_info": {
-        "exporter_path": "exporter/games/celeste64.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js",
-        "game_name_from_yaml": "Celeste 64",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "celeste64",
-        "world_directory": "celeste64"
-      }
-    },
-    "ChecksFinder.yaml": {
-      "game_name": "checksfinder",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.61,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {
-          "player_2": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 2,
-            "return_code": 0,
-            "sphere_reached": 2.13,
-            "total_spheres": 2.13,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 6.02,
-        "success": true,
-        "total_players_tested": 2
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "ChecksFinder.yaml",
-      "timestamp": "2025-11-18T04:39:51.664802",
-      "world_info": {
-        "exporter_path": "exporter/games/checksfinder.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "ChecksFinder",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "checksfinder",
-        "world_directory": "checksfinder"
-      }
-    },
-    "ChocolateChipCookies.yaml": {
-      "game_name": "bakingadventure",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.57,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {
-          "player_2": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 2,
-            "return_code": 0,
-            "sphere_reached": 8.1,
-            "total_spheres": 8.1,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 5.99,
-        "success": true,
-        "total_players_tested": 2
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "ChocolateChipCookies.yaml",
-      "timestamp": "2025-11-18T04:39:47.478772",
-      "world_info": {
-        "exporter_path": "exporter/games/bakingadventure.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "ChocolateChipCookies",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "bakingadventure",
-        "world_directory": "bakingadventure"
-      }
-    },
-    "Civilization VI.yaml": {
-      "game_name": "civ_6",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 6.15,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {
-          "player_2": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 2,
-            "return_code": 0,
-            "sphere_reached": 11.2,
-            "total_spheres": 11.2,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 6.0,
-        "success": true,
-        "total_players_tested": 2
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Civilization VI.yaml",
-      "timestamp": "2025-11-18T04:39:41.837325",
-      "world_info": {
-        "exporter_path": "exporter/games/civ_6.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "Civilization VI",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "civ_6",
-        "world_directory": "civ_6"
-      }
-    },
-    "DLCQuest.yaml": {
-      "game_name": "dlcquest",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "DLCQuest.yaml",
-      "timestamp": "2025-11-18T04:39:48.567934",
-      "world_info": {
-        "exporter_path": "exporter/games/dlcquest.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js",
-        "game_name_from_yaml": "DLCQuest",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "dlcquest",
-        "world_directory": "dlcquest"
-      }
-    },
-    "DOOM 1993.yaml": {
-      "game_name": "doom_1993",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 1,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "DOOM 1993.yaml",
-      "timestamp": "2025-11-18T04:39:30.822286",
-      "world_info": {
-        "exporter_path": "exporter/games/doom_1993.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "DOOM 1993",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "doom_1993",
-        "world_directory": "doom_1993"
-      }
-    },
-    "DOOM II.yaml": {
-      "game_name": "doom_ii",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 1,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "DOOM II.yaml",
-      "timestamp": "2025-11-18T04:39:36.942043",
-      "world_info": {
-        "exporter_path": "exporter/games/doom_ii.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "DOOM II",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "doom_ii",
-        "world_directory": "doom_ii"
-      }
-    },
-    "Dark Souls III.yaml": {
-      "game_name": "dark_souls_3",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Dark Souls III.yaml",
-      "timestamp": "2025-11-18T04:39:45.484139",
-      "world_info": {
-        "exporter_path": "exporter/games/dark_souls_3.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "Dark Souls III",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "dark_souls_3",
-        "world_directory": "dark_souls_3"
-      }
-    },
-    "Donkey Kong Country 3.yaml": {
-      "game_name": "donkey_kong_country_3",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.71,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 2
-      },
-      "multiworld_test": {
-        "first_failure_player": 2,
-        "player_number": 2,
-        "player_results": {
-          "player_2": {
-            "error_count": 699,
-            "pass_fail": "failed",
-            "passed": false,
-            "player_number": 2,
-            "return_code": 1,
-            "sphere_reached": 0.0,
-            "total_spheres": 4.1,
-            "warning_count": 3
-          }
-        },
-        "players_failed": 1,
-        "players_passed": 0,
-        "processing_time_seconds": 15.13,
-        "success": false,
-        "total_players_tested": 2
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Donkey Kong Country 3.yaml",
-      "timestamp": "2025-11-18T04:39:44.679711",
-      "world_info": {
-        "exporter_path": "exporter/games/dkc3.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "Donkey Kong Country 3",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "donkey_kong_country_3",
-        "world_directory": "dkc3"
-      }
-    },
-    "Factorio.yaml": {
-      "game_name": "factorio",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": false
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Factorio.yaml",
-      "timestamp": "2025-11-18T04:40:01.658008",
-      "world_info": {
-        "exporter_path": "exporter/games/factorio.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "Factorio",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "factorio",
-        "world_directory": "factorio"
-      }
-    },
-    "Faxanadu.yaml": {
-      "game_name": "faxanadu",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.93,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {
-          "player_2": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 2,
-            "return_code": 0,
-            "sphere_reached": 8.6,
-            "total_spheres": 8.6,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 6.32,
-        "success": true,
-        "total_players_tested": 2
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Faxanadu.yaml",
-      "timestamp": "2025-11-18T04:39:56.651332",
-      "world_info": {
-        "exporter_path": "exporter/games/faxanadu.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "Faxanadu",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "faxanadu",
-        "world_directory": "faxanadu"
-      }
-    },
-    "Final Fantasy Mystic Quest.yaml": {
-      "game_name": "ffmq",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Final Fantasy Mystic Quest.yaml",
-      "timestamp": "2025-11-18T04:40:00.425156",
-      "world_info": {
-        "exporter_path": "exporter/games/ffmq.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "Final Fantasy Mystic Quest",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "ffmq",
-        "world_directory": "ffmq"
-      }
-    },
-    "Heretic.yaml": {
-      "game_name": "heretic",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Heretic.yaml",
-      "timestamp": "2025-11-18T04:39:56.162499",
-      "world_info": {
-        "exporter_path": null,
-        "game_logic_path": null,
-        "game_name_from_yaml": "Heretic",
-        "has_custom_exporter": false,
-        "has_custom_game_logic": false,
-        "normalized_name": "heretic",
-        "world_directory": "heretic"
-      }
-    },
-    "Hylics 2.yaml": {
-      "game_name": "hylics_2",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 7.28,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {
-          "player_3": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 3,
-            "return_code": 0,
-            "sphere_reached": 9.1,
-            "total_spheres": 9.1,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 6.09,
-        "success": true,
-        "total_players_tested": 3
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Hylics 2.yaml",
-      "timestamp": "2025-11-18T04:39:54.120619",
-      "world_info": {
-        "exporter_path": "exporter/games/hylics2.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/hylics2/hylics2Logic.js",
-        "game_name_from_yaml": "Hylics 2",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "hylics_2",
-        "world_directory": "hylics2"
-      }
-    },
-    "Inscryption.yaml": {
-      "game_name": "inscryption",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.84,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {
-          "player_2": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 2,
-            "return_code": 0,
-            "sphere_reached": 9.2,
-            "total_spheres": 9.2,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 6.06,
-        "success": true,
-        "total_players_tested": 2
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Inscryption.yaml",
-      "timestamp": "2025-11-18T04:39:48.685453",
-      "world_info": {
-        "exporter_path": "exporter/games/inscryption.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js",
-        "game_name_from_yaml": "Inscryption",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "inscryption",
-        "world_directory": "inscryption"
-      }
-    },
-    "Jak and Daxter The Precursor Legacy.yaml": {
-      "game_name": "jak_and_daxter_the_precursor_legacy",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 3.1,
+        "processing_time_seconds": 2.7,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1192,405 +461,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Jak and Daxter The Precursor Legacy.yaml",
-      "timestamp": "2025-11-18T04:39:30.951495",
+      "template_filename": "Castlevania - Circle of the Moon.yaml",
+      "timestamp": "2025-11-19T00:35:02.986601",
       "world_info": {
-        "exporter_path": "exporter/games/jakanddaxter.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
-        "game_name_from_yaml": "Jak and Daxter: The Precursor Legacy",
+        "exporter_path": "exporter/games/cvcotm.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js",
+        "game_name_from_filename": "cvcotm",
+        "game_name_from_yaml": "Castlevania - Circle of the Moon",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "jak_and_daxter_the_precursor_legacy",
-        "world_directory": "jakanddaxter"
+        "world_directory": "cvcotm"
       }
     },
-    "Kingdom Hearts 2.yaml": {
-      "game_name": "kh2",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 1,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": false
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-11-18T04:39:37.075378",
-      "world_info": {
-        "exporter_path": "exporter/games/kh2.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
-        "game_name_from_yaml": "Kingdom Hearts 2",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "kh2",
-        "world_directory": "kh2"
-      }
-    },
-    "Kingdom Hearts.yaml": {
-      "game_name": "kh1",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Kingdom Hearts.yaml",
-      "timestamp": "2025-11-18T04:39:45.611846",
-      "world_info": {
-        "exporter_path": "exporter/games/kh1.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
-        "game_name_from_yaml": "Kingdom Hearts",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "kh1",
-        "world_directory": "kh1"
-      }
-    },
-    "Kirby's Dream Land 3.yaml": {
-      "game_name": "kdl3",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": false
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Kirby's Dream Land 3.yaml",
-      "timestamp": "2025-11-18T04:40:02.653225",
-      "world_info": {
-        "exporter_path": "exporter/games/kdl3.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
-        "game_name_from_yaml": "Kirby's Dream Land 3",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "kdl3",
-        "world_directory": "kdl3"
-      }
-    },
-    "Landstalker - The Treasures of King Nole.yaml": {
-      "game_name": "landstalker",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Landstalker - The Treasures of King Nole.yaml",
-      "timestamp": "2025-11-18T04:40:01.788670",
-      "world_info": {
-        "exporter_path": "exporter/games/landstalker.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js",
-        "game_name_from_yaml": "Landstalker - The Treasures of King Nole",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "landstalker",
-        "world_directory": "landstalker"
-      }
-    },
-    "Lingo.yaml": {
-      "game_name": "lingo",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": false
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Lingo.yaml",
-      "timestamp": "2025-11-18T04:40:06.026999",
-      "world_info": {
-        "exporter_path": "exporter/games/lingo.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
-        "game_name_from_yaml": "Lingo",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "lingo",
-        "world_directory": "lingo"
-      }
-    },
-    "Links Awakening DX.yaml": {
-      "game_name": "links_awakening_dx",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Links Awakening DX.yaml",
-      "timestamp": "2025-11-18T04:40:00.562143",
-      "world_info": {
-        "exporter_path": "exporter/games/ladx.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
-        "game_name_from_yaml": "Links Awakening DX",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "links_awakening_dx",
-        "world_directory": "ladx"
-      }
-    },
-    "Lufia II Ancient Cave.yaml": {
-      "game_name": "lufia2ac",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Lufia II Ancient Cave.yaml",
-      "timestamp": "2025-11-18T04:39:56.296351",
-      "world_info": {
-        "exporter_path": null,
-        "game_logic_path": null,
-        "game_name_from_yaml": "Lufia II Ancient Cave",
-        "has_custom_exporter": false,
-        "has_custom_game_logic": false,
-        "normalized_name": "lufia2ac",
-        "world_directory": "lufia2ac"
-      }
-    },
-    "Mario & Luigi Superstar Saga.yaml": {
-      "game_name": "mlss",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 4,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Mario & Luigi Superstar Saga.yaml",
-      "timestamp": "2025-11-18T04:40:07.620915",
-      "world_info": {
-        "exporter_path": "exporter/games/mlss.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
-        "game_name_from_yaml": "Mario & Luigi Superstar Saga",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "mlss",
-        "world_directory": "mlss"
-      }
-    },
-    "MathProof2p2e4.yaml": {
-      "game_name": "mathadventure",
+    "Castlevania 64.yaml": {
+      "game_name_from_filename": "cv64",
+      "game_name_from_yaml": "Castlevania 64",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.08,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {
-          "player_3": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 3,
-            "return_code": 0,
-            "sphere_reached": 4.2,
-            "total_spheres": 4.2,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 6.23,
-        "success": true,
-        "total_players_tested": 3
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "MathProof2p2e4.yaml",
-      "timestamp": "2025-11-18T04:39:57.707787",
-      "world_info": {
-        "exporter_path": null,
-        "game_logic_path": null,
-        "game_name_from_yaml": "MathProof2p2e4",
-        "has_custom_exporter": false,
-        "has_custom_game_logic": false,
-        "normalized_name": "mathadventure",
-        "world_directory": "mathadventure"
-      }
-    },
-    "Mega Man 2.yaml": {
-      "game_name": "mm2",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Mega Man 2.yaml",
-      "timestamp": "2025-11-18T04:39:40.994713",
-      "world_info": {
-        "exporter_path": "exporter/games/mm2.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/mm2/mm2Logic.js",
-        "game_name_from_yaml": "Mega Man 2",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "mm2",
-        "world_directory": "mm2"
-      }
-    },
-    "MegaMan Battle Network 3.yaml": {
-      "game_name": "mmbn3",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 1,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": false
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "MegaMan Battle Network 3.yaml",
-      "timestamp": "2025-11-18T04:39:37.199270",
-      "world_info": {
-        "exporter_path": "exporter/games/mmbn3.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js",
-        "game_name_from_yaml": "MegaMan Battle Network 3",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "mmbn3",
-        "world_directory": "mmbn3"
-      }
-    },
-    "Meritous.yaml": {
-      "game_name": "meritous",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.6,
+        "processing_time_seconds": 3.89,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1605,8 +494,490 @@
             "passed": true,
             "player_number": 2,
             "return_code": 0,
-            "sphere_reached": 7.2,
-            "total_spheres": 7.2,
+            "sphere_reached": 7.1,
+            "total_spheres": 7.1,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 7.09,
+        "success": true,
+        "total_players_tested": 2
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Castlevania 64.yaml",
+      "timestamp": "2025-11-19T00:35:17.729216",
+      "world_info": {
+        "exporter_path": "exporter/games/cv64.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/cv64/cv64Logic.js",
+        "game_name_from_filename": "cv64",
+        "game_name_from_yaml": "Castlevania 64",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "cv64"
+      }
+    },
+    "Celeste 64.yaml": {
+      "game_name_from_filename": "celeste64",
+      "game_name_from_yaml": "Celeste 64",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.58,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 1,
+        "player_results": {
+          "player_1": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 1,
+            "return_code": 0,
+            "sphere_reached": 3.1,
+            "total_spheres": 3.1,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 7.03,
+        "success": true,
+        "total_players_tested": 1
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Celeste 64.yaml",
+      "timestamp": "2025-11-19T00:35:12.156146",
+      "world_info": {
+        "exporter_path": "exporter/games/celeste64.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js",
+        "game_name_from_filename": "celeste64",
+        "game_name_from_yaml": "Celeste 64",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "celeste64"
+      }
+    },
+    "ChecksFinder.yaml": {
+      "game_name_from_filename": "checksfinder",
+      "game_name_from_yaml": "ChecksFinder",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.55,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {
+          "player_2": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 2,
+            "return_code": 0,
+            "sphere_reached": 2.13,
+            "total_spheres": 2.13,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 5.98,
+        "success": true,
+        "total_players_tested": 2
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "ChecksFinder.yaml",
+      "timestamp": "2025-11-19T00:35:22.818675",
+      "world_info": {
+        "exporter_path": "exporter/games/checksfinder.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "checksfinder",
+        "game_name_from_yaml": "ChecksFinder",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "checksfinder"
+      }
+    },
+    "ChocolateChipCookies.yaml": {
+      "game_name_from_filename": "bakingadventure",
+      "game_name_from_yaml": "ChocolateChipCookies",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.43,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {
+          "player_2": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 2,
+            "return_code": 0,
+            "sphere_reached": 8.1,
+            "total_spheres": 8.1,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 5.93,
+        "success": true,
+        "total_players_tested": 2
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "ChocolateChipCookies.yaml",
+      "timestamp": "2025-11-19T00:35:16.847431",
+      "world_info": {
+        "exporter_path": "exporter/games/bakingadventure.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "bakingadventure",
+        "game_name_from_yaml": "ChocolateChipCookies",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "bakingadventure"
+      }
+    },
+    "Civilization VI.yaml": {
+      "game_name_from_filename": "civ_6",
+      "game_name_from_yaml": "Civilization VI",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 6.11,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {
+          "player_2": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 2,
+            "return_code": 0,
+            "sphere_reached": 11.2,
+            "total_spheres": 11.2,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 5.96,
+        "success": true,
+        "total_players_tested": 2
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Civilization VI.yaml",
+      "timestamp": "2025-11-19T00:35:13.021602",
+      "world_info": {
+        "exporter_path": "exporter/games/civ_6.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "civ_6",
+        "game_name_from_yaml": "Civilization VI",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "civ_6"
+      }
+    },
+    "DLCQuest.yaml": {
+      "game_name_from_filename": "dlcquest",
+      "game_name_from_yaml": "DLCQuest",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "DLCQuest.yaml",
+      "timestamp": "2025-11-19T00:35:27.078240",
+      "world_info": {
+        "exporter_path": "exporter/games/dlcquest.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js",
+        "game_name_from_filename": "dlcquest",
+        "game_name_from_yaml": "DLCQuest",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "dlcquest"
+      }
+    },
+    "DOOM 1993.yaml": {
+      "game_name_from_filename": "doom_1993",
+      "game_name_from_yaml": "DOOM 1993",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 1,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "DOOM 1993.yaml",
+      "timestamp": "2025-11-19T00:35:01.773316",
+      "world_info": {
+        "exporter_path": "exporter/games/doom_1993.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "doom_1993",
+        "game_name_from_yaml": "DOOM 1993",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "doom_1993"
+      }
+    },
+    "DOOM II.yaml": {
+      "game_name_from_filename": "doom_ii",
+      "game_name_from_yaml": "DOOM II",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 1,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "DOOM II.yaml",
+      "timestamp": "2025-11-19T00:35:22.250705",
+      "world_info": {
+        "exporter_path": "exporter/games/doom_ii.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "doom_ii",
+        "game_name_from_yaml": "DOOM II",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "doom_ii"
+      }
+    },
+    "Dark Souls III.yaml": {
+      "game_name_from_filename": "dark_souls_3",
+      "game_name_from_yaml": "Dark Souls III",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Dark Souls III.yaml",
+      "timestamp": "2025-11-19T00:35:15.077621",
+      "world_info": {
+        "exporter_path": "exporter/games/dark_souls_3.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "dark_souls_3",
+        "game_name_from_yaml": "Dark Souls III",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "dark_souls_3"
+      }
+    },
+    "Donkey Kong Country 3.yaml": {
+      "game_name_from_filename": "donkey_kong_country_3",
+      "game_name_from_yaml": "Donkey Kong Country 3",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.75,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 2
+      },
+      "multiworld_test": {
+        "first_failure_player": 2,
+        "player_number": 2,
+        "player_results": {
+          "player_2": {
+            "error_count": 699,
+            "pass_fail": "failed",
+            "passed": false,
+            "player_number": 2,
+            "return_code": 1,
+            "sphere_reached": 0.0,
+            "total_spheres": 4.1,
+            "warning_count": 3
+          }
+        },
+        "players_failed": 1,
+        "players_passed": 0,
+        "processing_time_seconds": 14.92,
+        "success": false,
+        "total_players_tested": 2
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Donkey Kong Country 3.yaml",
+      "timestamp": "2025-11-19T00:35:12.636543",
+      "world_info": {
+        "exporter_path": "exporter/games/dkc3.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "donkey_kong_country_3",
+        "game_name_from_yaml": "Donkey Kong Country 3",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "dkc3"
+      }
+    },
+    "Factorio.yaml": {
+      "game_name_from_filename": "factorio",
+      "game_name_from_yaml": "Factorio",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": false
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Factorio.yaml",
+      "timestamp": "2025-11-19T00:35:28.840211",
+      "world_info": {
+        "exporter_path": "exporter/games/factorio.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/factorio/factorioLogic.js",
+        "game_name_from_filename": "factorio",
+        "game_name_from_yaml": "Factorio",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "factorio"
+      }
+    },
+    "Faxanadu.yaml": {
+      "game_name_from_filename": "faxanadu",
+      "game_name_from_yaml": "Faxanadu",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.67,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {
+          "player_2": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 2,
+            "return_code": 0,
+            "sphere_reached": 8.6,
+            "total_spheres": 8.6,
             "warning_count": 0
           }
         },
@@ -1624,1032 +995,93 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Meritous.yaml",
-      "timestamp": "2025-11-18T04:39:45.738134",
+      "template_filename": "Faxanadu.yaml",
+      "timestamp": "2025-11-19T00:35:21.891522",
+      "world_info": {
+        "exporter_path": "exporter/games/faxanadu.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "faxanadu",
+        "game_name_from_yaml": "Faxanadu",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "faxanadu"
+      }
+    },
+    "Final Fantasy Mystic Quest.yaml": {
+      "game_name_from_filename": "ffmq",
+      "game_name_from_yaml": "Final Fantasy Mystic Quest",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Final Fantasy Mystic Quest.yaml",
+      "timestamp": "2025-11-19T00:35:31.515701",
+      "world_info": {
+        "exporter_path": "exporter/games/ffmq.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "ffmq",
+        "game_name_from_yaml": "Final Fantasy Mystic Quest",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "ffmq"
+      }
+    },
+    "Heretic.yaml": {
+      "game_name_from_filename": "heretic",
+      "game_name_from_yaml": "Heretic",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Heretic.yaml",
+      "timestamp": "2025-11-19T00:35:25.331172",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
-        "game_name_from_yaml": "Meritous",
+        "game_name_from_filename": "heretic",
+        "game_name_from_yaml": "Heretic",
         "has_custom_exporter": false,
         "has_custom_game_logic": false,
-        "normalized_name": "meritous",
-        "world_directory": "meritous"
+        "world_directory": "heretic"
       }
     },
-    "Metamath.yaml": {
-      "game_name": "metamath",
+    "Hylics 2.yaml": {
+      "game_name_from_filename": "hylics_2",
+      "game_name_from_yaml": "Hylics 2",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 9.77,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": 2,
-        "player_number": 2,
-        "player_results": {
-          "player_2": {
-            "error_count": 195,
-            "pass_fail": "failed",
-            "passed": false,
-            "player_number": 2,
-            "return_code": 1,
-            "sphere_reached": 0.0,
-            "total_spheres": 3.2,
-            "warning_count": 3
-          }
-        },
-        "players_failed": 1,
-        "players_passed": 0,
-        "processing_time_seconds": 14.85,
-        "success": false,
-        "total_players_tested": 2
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Metamath.yaml",
-      "timestamp": "2025-11-18T04:40:02.778335",
-      "world_info": {
-        "exporter_path": "exporter/games/metamath.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "Metamath",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "metamath",
-        "world_directory": "metamath"
-      }
-    },
-    "Muse Dash.yaml": {
-      "game_name": "musedash",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 4.11,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {
-          "player_3": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 3,
-            "return_code": 0,
-            "sphere_reached": 8.3,
-            "total_spheres": 8.3,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 6.02,
-        "success": true,
-        "total_players_tested": 3
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Muse Dash.yaml",
-      "timestamp": "2025-11-18T04:40:01.995033",
-      "world_info": {
-        "exporter_path": null,
-        "game_logic_path": null,
-        "game_name_from_yaml": "Muse Dash",
-        "has_custom_exporter": false,
-        "has_custom_game_logic": false,
-        "normalized_name": "musedash",
-        "world_directory": "musedash"
-      }
-    },
-    "Noita.yaml": {
-      "game_name": "noita",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 3.13,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {
-          "player_3": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 3,
-            "return_code": 0,
-            "sphere_reached": 9.3,
-            "total_spheres": 9.3,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 6.1,
-        "success": true,
-        "total_players_tested": 3
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Noita.yaml",
-      "timestamp": "2025-11-18T04:40:06.162123",
-      "world_info": {
-        "exporter_path": null,
-        "game_logic_path": null,
-        "game_name_from_yaml": "Noita",
-        "has_custom_exporter": false,
-        "has_custom_game_logic": false,
-        "normalized_name": "noita",
-        "world_directory": "noita"
-      }
-    },
-    "Ocarina of Time.yaml": {
-      "game_name": "ocarina_of_time",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": false
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Ocarina of Time.yaml",
-      "timestamp": "2025-11-18T04:40:00.771648",
-      "world_info": {
-        "exporter_path": "exporter/games/oot.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/oot/ootLogic.js",
-        "game_name_from_yaml": "Ocarina of Time",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "ocarina_of_time",
-        "world_directory": "oot"
-      }
-    },
-    "Old School Runescape.yaml": {
-      "game_name": "osrs",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 4.06,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": 3,
-        "player_number": 3,
-        "player_results": {
-          "player_3": {
-            "error_count": 132,
-            "pass_fail": "failed",
-            "passed": false,
-            "player_number": 3,
-            "return_code": 1,
-            "sphere_reached": 0.16,
-            "total_spheres": 12.4,
-            "warning_count": 15
-          }
-        },
-        "players_failed": 1,
-        "players_passed": 0,
-        "processing_time_seconds": 15.49,
-        "success": false,
-        "total_players_tested": 3
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Old School Runescape.yaml",
-      "timestamp": "2025-11-18T04:39:56.432878",
-      "world_info": {
-        "exporter_path": "exporter/games/osrs.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/osrs/osrsLogic.js",
-        "game_name_from_yaml": "Old School Runescape",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "osrs",
-        "world_directory": "osrs"
-      }
-    },
-    "Overcooked! 2.yaml": {
-      "game_name": "overcooked2",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 4,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Overcooked! 2.yaml",
-      "timestamp": "2025-11-18T04:40:07.750957",
-      "world_info": {
-        "exporter_path": "exporter/games/overcooked2.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
-        "game_name_from_yaml": "Overcooked! 2",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "overcooked2",
-        "world_directory": "overcooked2"
-      }
-    },
-    "Paint.yaml": {
-      "game_name": "paint",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 3.11,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": 4,
-        "player_number": 4,
-        "player_results": {
-          "player_4": {
-            "error_count": 78,
-            "pass_fail": "failed",
-            "passed": false,
-            "player_number": 4,
-            "return_code": 1,
-            "sphere_reached": 0.0,
-            "total_spheres": 6.1,
-            "warning_count": 3
-          }
-        },
-        "players_failed": 1,
-        "players_passed": 0,
-        "processing_time_seconds": 15.04,
-        "success": false,
-        "total_players_tested": 4
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Paint.yaml",
-      "timestamp": "2025-11-18T04:40:07.147975",
-      "world_info": {
-        "exporter_path": "exporter/games/paint.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/paint/paintLogic.js",
-        "game_name_from_yaml": "Paint",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "paint",
-        "world_directory": "paint"
-      }
-    },
-    "Pokemon Emerald.yaml": {
-      "game_name": "pokemon_emerald",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Pokemon Emerald.yaml",
-      "timestamp": "2025-11-18T04:39:41.143596",
-      "world_info": {
-        "exporter_path": "exporter/games/pokemon_emerald.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js",
-        "game_name_from_yaml": "Pokemon Emerald",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "pokemon_emerald",
-        "world_directory": "pokemon_emerald"
-      }
-    },
-    "Pokemon Red and Blue.yaml": {
-      "game_name": "pokemon_rb",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 1,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Pokemon Red and Blue.yaml",
-      "timestamp": "2025-11-18T04:39:37.349482",
-      "world_info": {
-        "exporter_path": "exporter/games/pokemon_rb.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js",
-        "game_name_from_yaml": "Pokemon Red and Blue",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "pokemon_rb",
-        "world_directory": "pokemon_rb"
-      }
-    },
-    "Raft.yaml": {
-      "game_name": "raft",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.8,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {
-          "player_3": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 3,
-            "return_code": 0,
-            "sphere_reached": 10.4,
-            "total_spheres": 10.4,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 7.07,
-        "success": true,
-        "total_players_tested": 3
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Raft.yaml",
-      "timestamp": "2025-11-18T04:39:54.584988",
-      "world_info": {
-        "exporter_path": "exporter/games/raft.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/raft/raftLogic.js",
-        "game_name_from_yaml": "Raft",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "raft",
-        "world_directory": "raft"
-      }
-    },
-    "Risk of Rain 2.yaml": {
-      "game_name": "ror2",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.64,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": 2,
-        "player_number": 2,
-        "player_results": {
-          "player_2": {
-            "error_count": 330,
-            "pass_fail": "failed",
-            "passed": false,
-            "player_number": 2,
-            "return_code": 1,
-            "sphere_reached": 0.0,
-            "total_spheres": 9.1,
-            "warning_count": 3
-          }
-        },
-        "players_failed": 1,
-        "players_passed": 0,
-        "processing_time_seconds": 14.81,
-        "success": false,
-        "total_players_tested": 2
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Risk of Rain 2.yaml",
-      "timestamp": "2025-11-18T04:40:27.528218",
-      "world_info": {
-        "exporter_path": null,
-        "game_logic_path": null,
-        "game_name_from_yaml": "Risk of Rain 2",
-        "has_custom_exporter": false,
-        "has_custom_game_logic": false,
-        "normalized_name": "ror2",
-        "world_directory": "ror2"
-      }
-    },
-    "SMZ3.yaml": {
-      "game_name": "smz3",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 4,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": false
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "SMZ3.yaml",
-      "timestamp": "2025-11-18T04:40:12.245615",
-      "world_info": {
-        "exporter_path": "exporter/games/smz3.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
-        "game_name_from_yaml": "SMZ3",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "smz3",
-        "world_directory": "smz3"
-      }
-    },
-    "Saving Princess.yaml": {
-      "game_name": "saving_princess",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 3.2,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 4,
-        "player_results": {
-          "player_4": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 4,
-            "return_code": 0,
-            "sphere_reached": 9.3,
-            "total_spheres": 9.3,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 6.09,
-        "success": true,
-        "total_players_tested": 4
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Saving Princess.yaml",
-      "timestamp": "2025-11-18T04:40:15.524685",
-      "world_info": {
-        "exporter_path": "exporter/games/saving_princess.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "Saving Princess",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "saving_princess",
-        "world_directory": "saving_princess"
-      }
-    },
-    "Secret of Evermore.yaml": {
-      "game_name": "secret_of_evermore",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Secret of Evermore.yaml",
-      "timestamp": "2025-11-18T04:40:00.908960",
-      "world_info": {
-        "exporter_path": "exporter/games/soe.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/soe/soeLogic.js",
-        "game_name_from_yaml": "Secret of Evermore",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "secret_of_evermore",
-        "world_directory": "soe"
-      }
-    },
-    "Shivers.yaml": {
-      "game_name": "shivers",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Shivers.yaml",
-      "timestamp": "2025-11-18T04:40:16.110946",
-      "world_info": {
-        "exporter_path": "exporter/games/shivers.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/shivers/shiversLogic.js",
-        "game_name_from_yaml": "Shivers",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "shivers",
-        "world_directory": "shivers"
-      }
-    },
-    "Sonic Adventure 2 Battle.yaml": {
-      "game_name": "sonic_adventure_2_battle",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 8.2,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": 4,
-        "player_number": 4,
-        "player_results": {
-          "player_4": {
-            "error_count": 375,
-            "pass_fail": "failed",
-            "passed": false,
-            "player_number": 4,
-            "return_code": 1,
-            "sphere_reached": 1.21,
-            "total_spheres": 9.12,
-            "warning_count": 33
-          }
-        },
-        "players_failed": 1,
-        "players_passed": 0,
-        "processing_time_seconds": 15.72,
-        "success": false,
-        "total_players_tested": 4
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Sonic Adventure 2 Battle.yaml",
-      "timestamp": "2025-11-18T04:40:07.913729",
-      "world_info": {
-        "exporter_path": "exporter/games/sa2b.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "Sonic Adventure 2 Battle",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "sonic_adventure_2_battle",
-        "world_directory": "sa2b"
-      }
-    },
-    "Starcraft 2.yaml": {
-      "game_name": "sc2",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 4,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": false
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Starcraft 2.yaml",
-      "timestamp": "2025-11-18T04:40:25.454411",
-      "world_info": {
-        "exporter_path": "exporter/games/sc2.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
-        "game_name_from_yaml": "Starcraft 2",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "sc2",
-        "world_directory": "sc2"
-      }
-    },
-    "Stardew Valley.yaml": {
-      "game_name": "stardew_valley",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": false
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Stardew Valley.yaml",
-      "timestamp": "2025-11-18T04:39:41.291124",
-      "world_info": {
-        "exporter_path": "exporter/games/stardew_valley.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "Stardew Valley",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "stardew_valley",
-        "world_directory": "stardew_valley"
-      }
-    },
-    "Subnautica.yaml": {
-      "game_name": "subnautica",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 1,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Subnautica.yaml",
-      "timestamp": "2025-11-18T04:39:37.473628",
-      "world_info": {
-        "exporter_path": "exporter/games/subnautica.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js",
-        "game_name_from_yaml": "Subnautica",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "subnautica",
-        "world_directory": "subnautica"
-      }
-    },
-    "Super Mario 64.yaml": {
-      "game_name": "super_mario_64",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 3.13,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": 4,
-        "player_number": 4,
-        "player_results": {
-          "player_4": {
-            "error_count": 159,
-            "pass_fail": "failed",
-            "passed": false,
-            "player_number": 4,
-            "return_code": 1,
-            "sphere_reached": 2.11,
-            "total_spheres": 11.3,
-            "warning_count": 6
-          }
-        },
-        "players_failed": 1,
-        "players_passed": 0,
-        "processing_time_seconds": 15.25,
-        "success": false,
-        "total_players_tested": 4
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Super Mario 64.yaml",
-      "timestamp": "2025-11-18T04:40:04.589416",
-      "world_info": {
-        "exporter_path": "exporter/games/sm64ex.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js",
-        "game_name_from_yaml": "Super Mario 64",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "super_mario_64",
-        "world_directory": "sm64ex"
-      }
-    },
-    "Super Mario Land 2.yaml": {
-      "game_name": "marioland2",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 2,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Super Mario Land 2.yaml",
-      "timestamp": "2025-11-18T04:40:45.099485",
-      "world_info": {
-        "exporter_path": "exporter/games/marioland2.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js",
-        "game_name_from_yaml": "Super Mario Land 2",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "marioland2",
-        "world_directory": "marioland2"
-      }
-    },
-    "Super Mario World.yaml": {
-      "game_name": "super_mario_world",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 5.6,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 2
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 4,
-        "player_results": {
-          "player_4": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 4,
-            "return_code": 0,
-            "sphere_reached": 6.9,
-            "total_spheres": 6.9,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 7.05,
-        "success": true,
-        "total_players_tested": 4
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Super Mario World.yaml",
-      "timestamp": "2025-11-18T04:40:12.380930",
-      "world_info": {
-        "exporter_path": "exporter/games/smw.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "Super Mario World",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "super_mario_world",
-        "world_directory": "smw"
-      }
-    },
-    "Super Metroid.yaml": {
-      "game_name": "sm",
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 5,
-        "player_results": {},
-        "players_failed": 0,
-        "players_passed": 0,
-        "processing_time_seconds": 0,
-        "skip_reason": "Prerequisites not met",
-        "success": false,
-        "total_players_tested": 0
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": false,
-        "multiplayer_passed": false,
-        "spoiler_full_passed": false,
-        "spoiler_minimal_passed": false
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "Super Metroid.yaml",
-      "timestamp": "2025-11-18T04:40:24.960841",
-      "world_info": {
-        "exporter_path": "exporter/games/sm.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
-        "game_name_from_yaml": "Super Metroid",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
-        "normalized_name": "sm",
-        "world_directory": "sm"
-      }
-    },
-    "TUNIC.yaml": {
-      "game_name": "tunic",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 3.62,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 0
-      },
-      "multiworld_test": {
-        "first_failure_player": null,
-        "player_number": 3,
-        "player_results": {
-          "player_3": {
-            "error_count": 3,
-            "pass_fail": "passed",
-            "passed": true,
-            "player_number": 3,
-            "return_code": 0,
-            "sphere_reached": 5.17,
-            "total_spheres": 5.17,
-            "warning_count": 0
-          }
-        },
-        "players_failed": 0,
-        "players_passed": 1,
-        "processing_time_seconds": 7.06,
-        "success": true,
-        "total_players_tested": 3
-      },
-      "prerequisite_check": {
-        "all_prerequisites_passed": true,
-        "multiplayer_passed": true,
-        "spoiler_full_passed": true,
-        "spoiler_minimal_passed": true
-      },
-      "seed": "1",
-      "seed_id": "AP_14089154938208861744",
-      "template_name": "TUNIC.yaml",
-      "timestamp": "2025-11-18T04:40:01.032067",
-      "world_info": {
-        "exporter_path": "exporter/games/tunic.py",
-        "game_logic_path": null,
-        "game_name_from_yaml": "TUNIC",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "tunic",
-        "world_directory": "tunic"
-      }
-    },
-    "Terraria.yaml": {
-      "game_name": "terraria",
-      "generation": {
-        "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 2.79,
+        "processing_time_seconds": 7.19,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2671,7 +1103,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 10.23,
+        "processing_time_seconds": 5.96,
         "success": true,
         "total_players_tested": 3
       },
@@ -2683,24 +1115,1657 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Terraria.yaml",
-      "timestamp": "2025-11-18T04:40:16.241259",
+      "template_filename": "Hylics 2.yaml",
+      "timestamp": "2025-11-19T00:35:25.268645",
+      "world_info": {
+        "exporter_path": "exporter/games/hylics2.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/hylics2/hylics2Logic.js",
+        "game_name_from_filename": "hylics_2",
+        "game_name_from_yaml": "Hylics 2",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "hylics2"
+      }
+    },
+    "Inscryption.yaml": {
+      "game_name_from_filename": "inscryption",
+      "game_name_from_yaml": "Inscryption",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.71,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {
+          "player_2": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 2,
+            "return_code": 0,
+            "sphere_reached": 9.2,
+            "total_spheres": 9.2,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 5.98,
+        "success": true,
+        "total_players_tested": 2
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Inscryption.yaml",
+      "timestamp": "2025-11-19T00:35:27.196555",
+      "world_info": {
+        "exporter_path": "exporter/games/inscryption.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js",
+        "game_name_from_filename": "inscryption",
+        "game_name_from_yaml": "Inscryption",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "inscryption"
+      }
+    },
+    "Jak and Daxter The Precursor Legacy.yaml": {
+      "game_name_from_filename": "jak_and_daxter_the_precursor_legacy",
+      "game_name_from_yaml": "Jak and Daxter: The Precursor Legacy",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.09,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 1,
+        "player_results": {
+          "player_1": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 1,
+            "return_code": 0,
+            "sphere_reached": 3.1,
+            "total_spheres": 3.1,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 6.61,
+        "success": true,
+        "total_players_tested": 1
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Jak and Daxter The Precursor Legacy.yaml",
+      "timestamp": "2025-11-19T00:35:01.902241",
+      "world_info": {
+        "exporter_path": "exporter/games/jakanddaxter.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
+        "game_name_from_filename": "jak_and_daxter_the_precursor_legacy",
+        "game_name_from_yaml": "Jak and Daxter: The Precursor Legacy",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "jakanddaxter"
+      }
+    },
+    "Kingdom Hearts 2.yaml": {
+      "game_name_from_filename": "kh2",
+      "game_name_from_yaml": "Kingdom Hearts 2",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 1,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": false
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Kingdom Hearts 2.yaml",
+      "timestamp": "2025-11-19T00:35:22.381229",
+      "world_info": {
+        "exporter_path": "exporter/games/kh2.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
+        "game_name_from_filename": "kh2",
+        "game_name_from_yaml": "Kingdom Hearts 2",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "kh2"
+      }
+    },
+    "Kingdom Hearts.yaml": {
+      "game_name_from_filename": "kh1",
+      "game_name_from_yaml": "Kingdom Hearts",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Kingdom Hearts.yaml",
+      "timestamp": "2025-11-19T00:35:15.204331",
+      "world_info": {
+        "exporter_path": "exporter/games/kh1.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
+        "game_name_from_filename": "kh1",
+        "game_name_from_yaml": "Kingdom Hearts",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "kh1"
+      }
+    },
+    "Kirby's Dream Land 3.yaml": {
+      "game_name_from_filename": "kdl3",
+      "game_name_from_yaml": "Kirby's Dream Land 3",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Kirby's Dream Land 3.yaml",
+      "timestamp": "2025-11-19T00:35:30.443595",
+      "world_info": {
+        "exporter_path": "exporter/games/kdl3.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
+        "game_name_from_filename": "kdl3",
+        "game_name_from_yaml": "Kirby's Dream Land 3",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "kdl3"
+      }
+    },
+    "Landstalker - The Treasures of King Nole.yaml": {
+      "game_name_from_filename": "landstalker",
+      "game_name_from_yaml": "Landstalker - The Treasures of King Nole",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Landstalker - The Treasures of King Nole.yaml",
+      "timestamp": "2025-11-19T00:35:28.971292",
+      "world_info": {
+        "exporter_path": "exporter/games/landstalker.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js",
+        "game_name_from_filename": "landstalker",
+        "game_name_from_yaml": "Landstalker - The Treasures of King Nole",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "landstalker"
+      }
+    },
+    "Lingo.yaml": {
+      "game_name_from_filename": "lingo",
+      "game_name_from_yaml": "Lingo",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": false
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Lingo.yaml",
+      "timestamp": "2025-11-19T00:35:30.902552",
+      "world_info": {
+        "exporter_path": "exporter/games/lingo.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
+        "game_name_from_filename": "lingo",
+        "game_name_from_yaml": "Lingo",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "lingo"
+      }
+    },
+    "Links Awakening DX.yaml": {
+      "game_name_from_filename": "links_awakening_dx",
+      "game_name_from_yaml": "Links Awakening DX",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Links Awakening DX.yaml",
+      "timestamp": "2025-11-19T00:35:31.734073",
+      "world_info": {
+        "exporter_path": "exporter/games/ladx.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
+        "game_name_from_filename": "links_awakening_dx",
+        "game_name_from_yaml": "Links Awakening DX",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "ladx"
+      }
+    },
+    "Lufia II Ancient Cave.yaml": {
+      "game_name_from_filename": "lufia2ac",
+      "game_name_from_yaml": "Lufia II Ancient Cave",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Lufia II Ancient Cave.yaml",
+      "timestamp": "2025-11-19T00:35:25.465829",
+      "world_info": {
+        "exporter_path": null,
+        "game_logic_path": null,
+        "game_name_from_filename": "lufia2ac",
+        "game_name_from_yaml": "Lufia II Ancient Cave",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "lufia2ac"
+      }
+    },
+    "Mario & Luigi Superstar Saga.yaml": {
+      "game_name_from_filename": "mlss",
+      "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 4,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Mario & Luigi Superstar Saga.yaml",
+      "timestamp": "2025-11-19T00:35:38.545899",
+      "world_info": {
+        "exporter_path": "exporter/games/mlss.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
+        "game_name_from_filename": "mlss",
+        "game_name_from_yaml": "Mario & Luigi Superstar Saga",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "mlss"
+      }
+    },
+    "MathProof2p2e4.yaml": {
+      "game_name_from_filename": "mathadventure",
+      "game_name_from_yaml": "MathProof2p2e4",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.76,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {
+          "player_3": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 3,
+            "return_code": 0,
+            "sphere_reached": 4.2,
+            "total_spheres": 4.2,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 6.0,
+        "success": true,
+        "total_players_tested": 3
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "MathProof2p2e4.yaml",
+      "timestamp": "2025-11-19T00:35:36.005947",
+      "world_info": {
+        "exporter_path": null,
+        "game_logic_path": null,
+        "game_name_from_filename": "mathadventure",
+        "game_name_from_yaml": "MathProof2p2e4",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "mathadventure"
+      }
+    },
+    "Mega Man 2.yaml": {
+      "game_name_from_filename": "mm2",
+      "game_name_from_yaml": "Mega Man 2",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Mega Man 2.yaml",
+      "timestamp": "2025-11-19T00:35:11.725529",
+      "world_info": {
+        "exporter_path": "exporter/games/mm2.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/mm2/mm2Logic.js",
+        "game_name_from_filename": "mm2",
+        "game_name_from_yaml": "Mega Man 2",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "mm2"
+      }
+    },
+    "MegaMan Battle Network 3.yaml": {
+      "game_name_from_filename": "mmbn3",
+      "game_name_from_yaml": "MegaMan Battle Network 3",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 1,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "MegaMan Battle Network 3.yaml",
+      "timestamp": "2025-11-19T00:35:22.503050",
+      "world_info": {
+        "exporter_path": "exporter/games/mmbn3.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js",
+        "game_name_from_filename": "mmbn3",
+        "game_name_from_yaml": "MegaMan Battle Network 3",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "mmbn3"
+      }
+    },
+    "Meritous.yaml": {
+      "game_name_from_filename": "meritous",
+      "game_name_from_yaml": "Meritous",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.58,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {
+          "player_2": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 2,
+            "return_code": 0,
+            "sphere_reached": 7.2,
+            "total_spheres": 7.2,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 6.12,
+        "success": true,
+        "total_players_tested": 2
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Meritous.yaml",
+      "timestamp": "2025-11-19T00:35:15.329034",
+      "world_info": {
+        "exporter_path": null,
+        "game_logic_path": null,
+        "game_name_from_filename": "meritous",
+        "game_name_from_yaml": "Meritous",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "meritous"
+      }
+    },
+    "Metamath.yaml": {
+      "game_name_from_filename": "metamath",
+      "game_name_from_yaml": "Metamath",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 9.54,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": 2,
+        "player_number": 2,
+        "player_results": {
+          "player_2": {
+            "error_count": 195,
+            "pass_fail": "failed",
+            "passed": false,
+            "player_number": 2,
+            "return_code": 1,
+            "sphere_reached": 0.0,
+            "total_spheres": 3.2,
+            "warning_count": 3
+          }
+        },
+        "players_failed": 1,
+        "players_passed": 0,
+        "processing_time_seconds": 14.86,
+        "success": false,
+        "total_players_tested": 2
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Metamath.yaml",
+      "timestamp": "2025-11-19T00:35:30.569723",
+      "world_info": {
+        "exporter_path": "exporter/games/metamath.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "metamath",
+        "game_name_from_yaml": "Metamath",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "metamath"
+      }
+    },
+    "Muse Dash.yaml": {
+      "game_name_from_filename": "musedash",
+      "game_name_from_yaml": "Muse Dash",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 4.32,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {
+          "player_3": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 3,
+            "return_code": 0,
+            "sphere_reached": 8.3,
+            "total_spheres": 8.3,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 6.22,
+        "success": true,
+        "total_players_tested": 3
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Muse Dash.yaml",
+      "timestamp": "2025-11-19T00:35:29.116747",
+      "world_info": {
+        "exporter_path": null,
+        "game_logic_path": null,
+        "game_name_from_filename": "musedash",
+        "game_name_from_yaml": "Muse Dash",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "musedash"
+      }
+    },
+    "Noita.yaml": {
+      "game_name_from_filename": "noita",
+      "game_name_from_yaml": "Noita",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.74,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {
+          "player_3": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 3,
+            "return_code": 0,
+            "sphere_reached": 9.3,
+            "total_spheres": 9.3,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 6.0,
+        "success": true,
+        "total_players_tested": 3
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Noita.yaml",
+      "timestamp": "2025-11-19T00:35:31.026520",
+      "world_info": {
+        "exporter_path": null,
+        "game_logic_path": null,
+        "game_name_from_filename": "noita",
+        "game_name_from_yaml": "Noita",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "noita"
+      }
+    },
+    "Ocarina of Time.yaml": {
+      "game_name_from_filename": "ocarina_of_time",
+      "game_name_from_yaml": "Ocarina of Time",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": false
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Ocarina of Time.yaml",
+      "timestamp": "2025-11-19T00:35:32.110324",
+      "world_info": {
+        "exporter_path": "exporter/games/oot.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/oot/ootLogic.js",
+        "game_name_from_filename": "ocarina_of_time",
+        "game_name_from_yaml": "Ocarina of Time",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "oot"
+      }
+    },
+    "Old School Runescape.yaml": {
+      "game_name_from_filename": "osrs",
+      "game_name_from_yaml": "Old School Runescape",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 4.22,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": 3,
+        "player_number": 3,
+        "player_results": {
+          "player_3": {
+            "error_count": 132,
+            "pass_fail": "failed",
+            "passed": false,
+            "player_number": 3,
+            "return_code": 1,
+            "sphere_reached": 0.16,
+            "total_spheres": 12.4,
+            "warning_count": 15
+          }
+        },
+        "players_failed": 1,
+        "players_passed": 0,
+        "processing_time_seconds": 14.98,
+        "success": false,
+        "total_players_tested": 3
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Old School Runescape.yaml",
+      "timestamp": "2025-11-19T00:35:25.598811",
+      "world_info": {
+        "exporter_path": "exporter/games/osrs.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/osrs/osrsLogic.js",
+        "game_name_from_filename": "osrs",
+        "game_name_from_yaml": "Old School Runescape",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "osrs"
+      }
+    },
+    "Overcooked! 2.yaml": {
+      "game_name_from_filename": "overcooked2",
+      "game_name_from_yaml": "Overcooked! 2",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 4,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Overcooked! 2.yaml",
+      "timestamp": "2025-11-19T00:35:38.669735",
+      "world_info": {
+        "exporter_path": "exporter/games/overcooked2.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
+        "game_name_from_filename": "overcooked2",
+        "game_name_from_yaml": "Overcooked! 2",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "overcooked2"
+      }
+    },
+    "Paint.yaml": {
+      "game_name_from_filename": "paint",
+      "game_name_from_yaml": "Paint",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.8,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": 4,
+        "player_number": 4,
+        "player_results": {
+          "player_4": {
+            "error_count": 78,
+            "pass_fail": "failed",
+            "passed": false,
+            "player_number": 4,
+            "return_code": 1,
+            "sphere_reached": 0.0,
+            "total_spheres": 6.1,
+            "warning_count": 3
+          }
+        },
+        "players_failed": 1,
+        "players_passed": 0,
+        "processing_time_seconds": 14.89,
+        "success": false,
+        "total_players_tested": 4
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Paint.yaml",
+      "timestamp": "2025-11-19T00:35:44.877160",
+      "world_info": {
+        "exporter_path": "exporter/games/paint.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/paint/paintLogic.js",
+        "game_name_from_filename": "paint",
+        "game_name_from_yaml": "Paint",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "paint"
+      }
+    },
+    "Pokemon Emerald.yaml": {
+      "game_name_from_filename": "pokemon_emerald",
+      "game_name_from_yaml": "Pokemon Emerald",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Pokemon Emerald.yaml",
+      "timestamp": "2025-11-19T00:35:11.868722",
+      "world_info": {
+        "exporter_path": "exporter/games/pokemon_emerald.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js",
+        "game_name_from_filename": "pokemon_emerald",
+        "game_name_from_yaml": "Pokemon Emerald",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "pokemon_emerald"
+      }
+    },
+    "Pokemon Red and Blue.yaml": {
+      "game_name_from_filename": "pokemon_rb",
+      "game_name_from_yaml": "Pokemon Red and Blue",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 1,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Pokemon Red and Blue.yaml",
+      "timestamp": "2025-11-19T00:35:22.647943",
+      "world_info": {
+        "exporter_path": "exporter/games/pokemon_rb.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js",
+        "game_name_from_filename": "pokemon_rb",
+        "game_name_from_yaml": "Pokemon Red and Blue",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "pokemon_rb"
+      }
+    },
+    "Raft.yaml": {
+      "game_name_from_filename": "raft",
+      "game_name_from_yaml": "Raft",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.74,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {
+          "player_3": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 3,
+            "return_code": 0,
+            "sphere_reached": 10.4,
+            "total_spheres": 10.4,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 7.06,
+        "success": true,
+        "total_players_tested": 3
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Raft.yaml",
+      "timestamp": "2025-11-19T00:35:24.156909",
+      "world_info": {
+        "exporter_path": "exporter/games/raft.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/raft/raftLogic.js",
+        "game_name_from_filename": "raft",
+        "game_name_from_yaml": "Raft",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "raft"
+      }
+    },
+    "Risk of Rain 2.yaml": {
+      "game_name_from_filename": "ror2",
+      "game_name_from_yaml": "Risk of Rain 2",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.68,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": 2,
+        "player_number": 2,
+        "player_results": {
+          "player_2": {
+            "error_count": 330,
+            "pass_fail": "failed",
+            "passed": false,
+            "player_number": 2,
+            "return_code": 1,
+            "sphere_reached": 0.0,
+            "total_spheres": 9.1,
+            "warning_count": 3
+          }
+        },
+        "players_failed": 1,
+        "players_passed": 0,
+        "processing_time_seconds": 15.01,
+        "success": false,
+        "total_players_tested": 2
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Risk of Rain 2.yaml",
+      "timestamp": "2025-11-19T00:35:55.106596",
+      "world_info": {
+        "exporter_path": null,
+        "game_logic_path": null,
+        "game_name_from_filename": "ror2",
+        "game_name_from_yaml": "Risk of Rain 2",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "ror2"
+      }
+    },
+    "SMZ3.yaml": {
+      "game_name_from_filename": "smz3",
+      "game_name_from_yaml": "SMZ3",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 4,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": false
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "SMZ3.yaml",
+      "timestamp": "2025-11-19T00:35:39.775026",
+      "world_info": {
+        "exporter_path": "exporter/games/smz3.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
+        "game_name_from_filename": "smz3",
+        "game_name_from_yaml": "SMZ3",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "smz3"
+      }
+    },
+    "Saving Princess.yaml": {
+      "game_name_from_filename": "saving_princess",
+      "game_name_from_yaml": "Saving Princess",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.89,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 4,
+        "player_results": {
+          "player_4": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 4,
+            "return_code": 0,
+            "sphere_reached": 9.3,
+            "total_spheres": 9.3,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 5.99,
+        "success": true,
+        "total_players_tested": 4
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Saving Princess.yaml",
+      "timestamp": "2025-11-19T00:35:39.896411",
+      "world_info": {
+        "exporter_path": "exporter/games/saving_princess.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "saving_princess",
+        "game_name_from_yaml": "Saving Princess",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "saving_princess"
+      }
+    },
+    "Secret of Evermore.yaml": {
+      "game_name_from_filename": "secret_of_evermore",
+      "game_name_from_yaml": "Secret of Evermore",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Secret of Evermore.yaml",
+      "timestamp": "2025-11-19T00:35:32.383423",
+      "world_info": {
+        "exporter_path": "exporter/games/soe.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/soe/soeLogic.js",
+        "game_name_from_filename": "secret_of_evermore",
+        "game_name_from_yaml": "Secret of Evermore",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "soe"
+      }
+    },
+    "Shivers.yaml": {
+      "game_name_from_filename": "shivers",
+      "game_name_from_yaml": "Shivers",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Shivers.yaml",
+      "timestamp": "2025-11-19T00:35:44.932283",
+      "world_info": {
+        "exporter_path": "exporter/games/shivers.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/shivers/shiversLogic.js",
+        "game_name_from_filename": "shivers",
+        "game_name_from_yaml": "Shivers",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "shivers"
+      }
+    },
+    "Sonic Adventure 2 Battle.yaml": {
+      "game_name_from_filename": "sonic_adventure_2_battle",
+      "game_name_from_yaml": "Sonic Adventure 2 Battle",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 7.93,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": 4,
+        "player_number": 4,
+        "player_results": {
+          "player_4": {
+            "error_count": 375,
+            "pass_fail": "failed",
+            "passed": false,
+            "player_number": 4,
+            "return_code": 1,
+            "sphere_reached": 1.21,
+            "total_spheres": 9.12,
+            "warning_count": 33
+          }
+        },
+        "players_failed": 1,
+        "players_passed": 0,
+        "processing_time_seconds": 15.34,
+        "success": false,
+        "total_players_tested": 4
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Sonic Adventure 2 Battle.yaml",
+      "timestamp": "2025-11-19T00:35:38.830718",
+      "world_info": {
+        "exporter_path": "exporter/games/sa2b.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "sonic_adventure_2_battle",
+        "game_name_from_yaml": "Sonic Adventure 2 Battle",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "sa2b"
+      }
+    },
+    "Starcraft 2.yaml": {
+      "game_name_from_filename": "sc2",
+      "game_name_from_yaml": "Starcraft 2",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 4,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": false
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Starcraft 2.yaml",
+      "timestamp": "2025-11-19T00:36:02.718970",
+      "world_info": {
+        "exporter_path": "exporter/games/sc2.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
+        "game_name_from_filename": "sc2",
+        "game_name_from_yaml": "Starcraft 2",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "sc2"
+      }
+    },
+    "Stardew Valley.yaml": {
+      "game_name_from_filename": "stardew_valley",
+      "game_name_from_yaml": "Stardew Valley",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": false
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Stardew Valley.yaml",
+      "timestamp": "2025-11-19T00:35:12.019251",
+      "world_info": {
+        "exporter_path": "exporter/games/stardew_valley.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "stardew_valley",
+        "game_name_from_yaml": "Stardew Valley",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "stardew_valley"
+      }
+    },
+    "Subnautica.yaml": {
+      "game_name_from_filename": "subnautica",
+      "game_name_from_yaml": "Subnautica",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 1,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Subnautica.yaml",
+      "timestamp": "2025-11-19T00:35:22.775335",
+      "world_info": {
+        "exporter_path": "exporter/games/subnautica.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js",
+        "game_name_from_filename": "subnautica",
+        "game_name_from_yaml": "Subnautica",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "subnautica"
+      }
+    },
+    "Super Mario 64.yaml": {
+      "game_name_from_filename": "super_mario_64",
+      "game_name_from_yaml": "Super Mario 64",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.12,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": 4,
+        "player_number": 4,
+        "player_results": {
+          "player_4": {
+            "error_count": 159,
+            "pass_fail": "failed",
+            "passed": false,
+            "player_number": 4,
+            "return_code": 1,
+            "sphere_reached": 2.11,
+            "total_spheres": 11.3,
+            "warning_count": 6
+          }
+        },
+        "players_failed": 1,
+        "players_passed": 0,
+        "processing_time_seconds": 15.15,
+        "success": false,
+        "total_players_tested": 4
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Super Mario 64.yaml",
+      "timestamp": "2025-11-19T00:35:34.082795",
+      "world_info": {
+        "exporter_path": "exporter/games/sm64ex.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js",
+        "game_name_from_filename": "super_mario_64",
+        "game_name_from_yaml": "Super Mario 64",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "sm64ex"
+      }
+    },
+    "Super Mario Land 2.yaml": {
+      "game_name_from_filename": "marioland2",
+      "game_name_from_yaml": "Super Mario Land 2",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 2,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Super Mario Land 2.yaml",
+      "timestamp": "2025-11-19T00:36:12.936982",
+      "world_info": {
+        "exporter_path": "exporter/games/marioland2.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js",
+        "game_name_from_filename": "marioland2",
+        "game_name_from_yaml": "Super Mario Land 2",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "marioland2"
+      }
+    },
+    "Super Mario World.yaml": {
+      "game_name_from_filename": "super_mario_world",
+      "game_name_from_yaml": "Super Mario World",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 5.82,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 2
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 4,
+        "player_results": {
+          "player_4": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 4,
+            "return_code": 0,
+            "sphere_reached": 6.9,
+            "total_spheres": 6.9,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 7.07,
+        "success": true,
+        "total_players_tested": 4
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Super Mario World.yaml",
+      "timestamp": "2025-11-19T00:35:39.912878",
+      "world_info": {
+        "exporter_path": "exporter/games/smw.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "super_mario_world",
+        "game_name_from_yaml": "Super Mario World",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "smw"
+      }
+    },
+    "Super Metroid.yaml": {
+      "game_name_from_filename": "sm",
+      "game_name_from_yaml": "Super Metroid",
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 5,
+        "player_results": {},
+        "players_failed": 0,
+        "players_passed": 0,
+        "processing_time_seconds": 0,
+        "skip_reason": "Prerequisites not met",
+        "success": false,
+        "total_players_tested": 0
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": false,
+        "multiplayer_passed": false,
+        "spoiler_full_passed": false,
+        "spoiler_minimal_passed": false
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Super Metroid.yaml",
+      "timestamp": "2025-11-19T00:35:48.917994",
+      "world_info": {
+        "exporter_path": "exporter/games/sm.py",
+        "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
+        "game_name_from_filename": "sm",
+        "game_name_from_yaml": "Super Metroid",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": true,
+        "world_directory": "sm"
+      }
+    },
+    "TUNIC.yaml": {
+      "game_name_from_filename": "tunic",
+      "game_name_from_yaml": "TUNIC",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.44,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {
+          "player_3": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 3,
+            "return_code": 0,
+            "sphere_reached": 5.17,
+            "total_spheres": 5.17,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 7.02,
+        "success": true,
+        "total_players_tested": 3
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "TUNIC.yaml",
+      "timestamp": "2025-11-19T00:35:32.612806",
+      "world_info": {
+        "exporter_path": "exporter/games/tunic.py",
+        "game_logic_path": null,
+        "game_name_from_filename": "tunic",
+        "game_name_from_yaml": "TUNIC",
+        "has_custom_exporter": true,
+        "has_custom_game_logic": false,
+        "world_directory": "tunic"
+      }
+    },
+    "Terraria.yaml": {
+      "game_name_from_filename": "terraria",
+      "game_name_from_yaml": "Terraria",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 2.66,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "multiworld_test": {
+        "first_failure_player": null,
+        "player_number": 3,
+        "player_results": {
+          "player_3": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 3,
+            "return_code": 0,
+            "sphere_reached": 9.1,
+            "total_spheres": 9.1,
+            "warning_count": 0
+          }
+        },
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 10.16,
+        "success": true,
+        "total_players_tested": 3
+      },
+      "prerequisite_check": {
+        "all_prerequisites_passed": true,
+        "multiplayer_passed": true,
+        "spoiler_full_passed": true,
+        "spoiler_minimal_passed": true
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "template_filename": "Terraria.yaml",
+      "timestamp": "2025-11-19T00:35:45.060634",
       "world_info": {
         "exporter_path": "exporter/games/terraria.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/terraria/terrariaLogic.js",
+        "game_name_from_filename": "terraria",
         "game_name_from_yaml": "Terraria",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "terraria",
         "world_directory": "terraria"
       }
     },
     "The Legend of Zelda.yaml": {
-      "game_name": "tloz",
+      "game_name_from_filename": "tloz",
+      "game_name_from_yaml": "The Legend of Zelda",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 8.89,
+        "processing_time_seconds": 8.7,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2722,7 +2787,7 @@
         },
         "players_failed": 1,
         "players_passed": 0,
-        "processing_time_seconds": 15.14,
+        "processing_time_seconds": 15.02,
         "success": false,
         "total_players_tested": 4
       },
@@ -2734,24 +2799,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "The Legend of Zelda.yaml",
-      "timestamp": "2025-11-18T04:40:31.957255",
+      "template_filename": "The Legend of Zelda.yaml",
+      "timestamp": "2025-11-19T00:36:02.222917",
       "world_info": {
         "exporter_path": "exporter/games/tloz.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
+        "game_name_from_filename": "tloz",
         "game_name_from_yaml": "The Legend of Zelda",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "tloz",
         "world_directory": "tloz"
       }
     },
     "The Messenger.yaml": {
-      "game_name": "messenger",
+      "game_name_from_filename": "messenger",
+      "game_name_from_yaml": "The Messenger",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.31,
+        "processing_time_seconds": 3.11,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2768,12 +2834,12 @@
             "return_code": 1,
             "sphere_reached": 0.12,
             "total_spheres": 8.1,
-            "warning_count": 2419
+            "warning_count": 2415
           }
         },
         "players_failed": 1,
         "players_passed": 0,
-        "processing_time_seconds": 201.25,
+        "processing_time_seconds": 203.08,
         "success": false,
         "total_players_tested": 4
       },
@@ -2785,24 +2851,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "The Messenger.yaml",
-      "timestamp": "2025-11-18T04:40:25.581426",
+      "template_filename": "The Messenger.yaml",
+      "timestamp": "2025-11-19T00:36:02.840219",
       "world_info": {
         "exporter_path": "exporter/games/messenger.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/messenger/messengerLogic.js",
+        "game_name_from_filename": "messenger",
         "game_name_from_yaml": "The Messenger",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "messenger",
         "world_directory": "messenger"
       }
     },
     "The Wind Waker.yaml": {
-      "game_name": "tww",
+      "game_name_from_filename": "tww",
+      "game_name_from_yaml": "The Wind Waker",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.28,
+        "processing_time_seconds": 4.21,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2824,7 +2891,7 @@
         },
         "players_failed": 1,
         "players_passed": 0,
-        "processing_time_seconds": 15.34,
+        "processing_time_seconds": 14.89,
         "success": false,
         "total_players_tested": 2
       },
@@ -2836,20 +2903,21 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "The Wind Waker.yaml",
-      "timestamp": "2025-11-18T04:39:41.418038",
+      "template_filename": "The Wind Waker.yaml",
+      "timestamp": "2025-11-19T00:35:12.144732",
       "world_info": {
         "exporter_path": "exporter/games/tww.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/tww/twwLogic.js",
+        "game_name_from_filename": "tww",
         "game_name_from_yaml": "The Wind Waker",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "tww",
         "world_directory": "tww"
       }
     },
     "The Witness.yaml": {
-      "game_name": "witness",
+      "game_name_from_filename": "witness",
+      "game_name_from_yaml": "The Witness",
       "multiworld_test": {
         "first_failure_player": null,
         "player_number": 1,
@@ -2869,24 +2937,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "The Witness.yaml",
-      "timestamp": "2025-11-18T04:39:37.606373",
+      "template_filename": "The Witness.yaml",
+      "timestamp": "2025-11-19T00:35:22.908938",
       "world_info": {
         "exporter_path": "exporter/games/witness.py",
-        "game_logic_path": null,
+        "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
+        "game_name_from_filename": "witness",
         "game_name_from_yaml": "The Witness",
         "has_custom_exporter": true,
-        "has_custom_game_logic": false,
-        "normalized_name": "witness",
+        "has_custom_game_logic": true,
         "world_directory": "witness"
       }
     },
     "Timespinner.yaml": {
-      "game_name": "timespinner",
+      "game_name_from_filename": "timespinner",
+      "game_name_from_yaml": "Timespinner",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.34,
+        "processing_time_seconds": 3.32,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2908,7 +2977,7 @@
         },
         "players_failed": 1,
         "players_passed": 0,
-        "processing_time_seconds": 15.21,
+        "processing_time_seconds": 15.11,
         "success": false,
         "total_players_tested": 4
       },
@@ -2920,24 +2989,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Timespinner.yaml",
-      "timestamp": "2025-11-18T04:40:23.116413",
+      "template_filename": "Timespinner.yaml",
+      "timestamp": "2025-11-19T00:35:52.488725",
       "world_info": {
         "exporter_path": "exporter/games/timespinner.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js",
+        "game_name_from_filename": "timespinner",
         "game_name_from_yaml": "Timespinner",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "timespinner",
         "world_directory": "timespinner"
       }
     },
     "Undertale.yaml": {
-      "game_name": "undertale",
+      "game_name_from_filename": "undertale",
+      "game_name_from_yaml": "Undertale",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.62,
+        "processing_time_seconds": 2.7,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2959,7 +3029,7 @@
         },
         "players_failed": 1,
         "players_passed": 0,
-        "processing_time_seconds": 14.82,
+        "processing_time_seconds": 14.89,
         "success": false,
         "total_players_tested": 2
       },
@@ -2971,20 +3041,21 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Undertale.yaml",
-      "timestamp": "2025-11-18T04:40:45.221101",
+      "template_filename": "Undertale.yaml",
+      "timestamp": "2025-11-19T00:36:13.061518",
       "world_info": {
         "exporter_path": "exporter/games/undertale.py",
         "game_logic_path": null,
+        "game_name_from_filename": "undertale",
         "game_name_from_yaml": "Undertale",
         "has_custom_exporter": true,
         "has_custom_game_logic": false,
-        "normalized_name": "undertale",
         "world_directory": "undertale"
       }
     },
     "VVVVVV.yaml": {
-      "game_name": "vvvvvv",
+      "game_name_from_filename": "vvvvvv",
+      "game_name_from_yaml": "VVVVVV",
       "multiworld_test": {
         "first_failure_player": null,
         "player_number": 5,
@@ -3004,24 +3075,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "VVVVVV.yaml",
-      "timestamp": "2025-11-18T04:40:25.156825",
+      "template_filename": "VVVVVV.yaml",
+      "timestamp": "2025-11-19T00:35:52.928758",
       "world_info": {
         "exporter_path": "exporter/games/v6.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/v6/v6Logic.js",
+        "game_name_from_filename": "vvvvvv",
         "game_name_from_yaml": "VVVVVV",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "vvvvvv",
         "world_directory": "v6"
       }
     },
     "Wargroove.yaml": {
-      "game_name": "wargroove",
+      "game_name_from_filename": "wargroove",
+      "game_name_from_yaml": "Wargroove",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.31,
+        "processing_time_seconds": 3.01,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3043,7 +3115,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 6.14,
+        "processing_time_seconds": 5.97,
         "success": true,
         "total_players_tested": 5
       },
@@ -3055,20 +3127,21 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Wargroove.yaml",
-      "timestamp": "2025-11-18T04:40:25.079569",
+      "template_filename": "Wargroove.yaml",
+      "timestamp": "2025-11-19T00:35:49.033389",
       "world_info": {
         "exporter_path": "exporter/games/wargroove.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/wargroove/wargrooveLogic.js",
+        "game_name_from_filename": "wargroove",
         "game_name_from_yaml": "Wargroove",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "wargroove",
         "world_directory": "wargroove"
       }
     },
     "WebDevJourney.yaml": {
-      "game_name": "codingadventure",
+      "game_name_from_filename": "codingadventure",
+      "game_name_from_yaml": "WebDevJourney",
       "generation": {
         "error_count": 0,
         "error_type": null,
@@ -3094,7 +3167,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 6.08,
+        "processing_time_seconds": 6.06,
         "success": true,
         "total_players_tested": 4
       },
@@ -3106,24 +3179,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "WebDevJourney.yaml",
-      "timestamp": "2025-11-18T04:40:11.837067",
+      "template_filename": "WebDevJourney.yaml",
+      "timestamp": "2025-11-19T00:35:43.200923",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
+        "game_name_from_filename": "codingadventure",
         "game_name_from_yaml": "WebDevJourney",
         "has_custom_exporter": false,
         "has_custom_game_logic": false,
-        "normalized_name": "codingadventure",
         "world_directory": "codingadventure"
       }
     },
     "Yacht Dice.yaml": {
-      "game_name": "yacht_dice",
+      "game_name_from_filename": "yacht_dice",
+      "game_name_from_yaml": "Yacht Dice",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.5,
+        "processing_time_seconds": 3.43,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3145,7 +3219,7 @@
         },
         "players_failed": 1,
         "players_passed": 0,
-        "processing_time_seconds": 15.03,
+        "processing_time_seconds": 14.91,
         "success": false,
         "total_players_tested": 4
       },
@@ -3157,20 +3231,21 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Yacht Dice.yaml",
-      "timestamp": "2025-11-18T04:40:29.397224",
+      "template_filename": "Yacht Dice.yaml",
+      "timestamp": "2025-11-19T00:35:58.017799",
       "world_info": {
         "exporter_path": "exporter/games/yachtdice.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js",
+        "game_name_from_filename": "yacht_dice",
         "game_name_from_yaml": "Yacht Dice",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "yacht_dice",
         "world_directory": "yachtdice"
       }
     },
     "Yoshi's Island.yaml": {
-      "game_name": "yoshisisland",
+      "game_name_from_filename": "yoshisisland",
+      "game_name_from_yaml": "Yoshi's Island",
       "multiworld_test": {
         "first_failure_player": null,
         "player_number": 4,
@@ -3190,20 +3265,21 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Yoshi's Island.yaml",
-      "timestamp": "2025-11-18T04:40:56.120026",
+      "template_filename": "Yoshi's Island.yaml",
+      "timestamp": "2025-11-19T00:36:26.075008",
       "world_info": {
         "exporter_path": "exporter/games/yoshisisland.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/yoshisisland/yoshisislandLogic.js",
+        "game_name_from_filename": "yoshisisland",
         "game_name_from_yaml": "Yoshi's Island",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "yoshisisland",
         "world_directory": "yoshisisland"
       }
     },
     "Yu-Gi-Oh! 2006.yaml": {
-      "game_name": "yugioh06",
+      "game_name_from_filename": "yugioh06",
+      "game_name_from_yaml": "Yu-Gi-Oh! 2006",
       "multiworld_test": {
         "first_failure_player": null,
         "player_number": 4,
@@ -3223,20 +3299,21 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Yu-Gi-Oh! 2006.yaml",
-      "timestamp": "2025-11-18T04:43:50.273669",
+      "template_filename": "Yu-Gi-Oh! 2006.yaml",
+      "timestamp": "2025-11-19T00:39:29.156226",
       "world_info": {
         "exporter_path": "exporter/games/yugioh06.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js",
+        "game_name_from_filename": "yugioh06",
         "game_name_from_yaml": "Yu-Gi-Oh! 2006",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "yugioh06",
         "world_directory": "yugioh06"
       }
     },
     "Zillion.yaml": {
-      "game_name": "zillion",
+      "game_name_from_filename": "zillion",
+      "game_name_from_yaml": "Zillion",
       "multiworld_test": {
         "first_failure_player": null,
         "player_number": 2,
@@ -3256,24 +3333,25 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "Zillion.yaml",
-      "timestamp": "2025-11-18T04:40:01.155377",
+      "template_filename": "Zillion.yaml",
+      "timestamp": "2025-11-19T00:35:31.370728",
       "world_info": {
         "exporter_path": "exporter/games/zillion.py",
         "game_logic_path": null,
+        "game_name_from_filename": "zillion",
         "game_name_from_yaml": "Zillion",
         "has_custom_exporter": true,
         "has_custom_game_logic": false,
-        "normalized_name": "zillion",
         "world_directory": "zillion"
       }
     },
     "shapez.yaml": {
-      "game_name": "shapez",
+      "game_name_from_filename": "shapez",
+      "game_name_from_yaml": "shapez",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.19,
+        "processing_time_seconds": 3.08,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3295,7 +3373,7 @@
         },
         "players_failed": 0,
         "players_passed": 1,
-        "processing_time_seconds": 6.9,
+        "processing_time_seconds": 8.58,
         "success": true,
         "total_players_tested": 1
       },
@@ -3307,15 +3385,15 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "template_name": "shapez.yaml",
-      "timestamp": "2025-11-18T04:39:37.740644",
+      "template_filename": "shapez.yaml",
+      "timestamp": "2025-11-19T00:35:23.047863",
       "world_info": {
         "exporter_path": "exporter/games/shapez.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/shapez/shapezLogic.js",
+        "game_name_from_filename": "shapez",
         "game_name_from_yaml": "shapez",
         "has_custom_exporter": true,
         "has_custom_game_logic": true,
-        "normalized_name": "shapez",
         "world_directory": "shapez"
       }
     }
