@@ -483,15 +483,14 @@ function processStartingItems(sm, jsonData, selectedPlayerId) {
     sm.beginBatchUpdate(true);
 
     startingItems.forEach((itemName) => {
-      // itemData is indexed by item ID, not name, so we need to look up the ID first
-      const itemId = sm.itemNameToId?.[itemName];
-      if (itemId !== undefined && sm.itemData?.[itemId]) {
+      // itemData is indexed by item name
+      if (sm.itemData?.[itemName]) {
         sm.addItemToInventory(itemName);
         sm.logger.info('StateManager', `Added starting item: ${itemName}`);
       } else {
         sm.logger.warn(
           'StateManager',
-          `Starting item '${itemName}' not found in itemData (itemId: ${itemId})`
+          `Starting item '${itemName}' not found in itemData`
         );
       }
     });
