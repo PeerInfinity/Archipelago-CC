@@ -4,19 +4,19 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-18 18:00:28
+**Generated:** 2025-11-19 02:58:46
 
-**Source Data Created:** 2025-11-18T23:40:31.173841
+**Source Data Created:** 2025-11-19T02:58:31.020212
 
-**Source Data Last Updated:** 2025-11-18T23:40:31.173846
+**Source Data Last Updated:** 2025-11-19T02:58:31.020219
 
 ## Summary
 
 - **Total Games:** 78
 - **Passed:** 66 (84.6%)
 - **Failed:** 12 (15.4%)
-- **Games with Intermittent Failures:** 5
-- **Total Intermittent Failures:** 20
+- **Games with Intermittent Failures:** 4
+- **Total Intermittent Failures:** 16
 
 ## Test Results
 
@@ -42,7 +42,7 @@
 | DOOM II | ✅ Passed seeds 1-10 | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
-| Factorio | ❌ Failed seed 1 | 0 | 1.8 | 12.1 | 🟡 14.9% | ✅ | ✅ |
+| Factorio | ❌ Failed seed 1 | 0 | 2.1 | 12.1 | 🟡 17.4% | ✅ | ✅ |
 | Faxanadu | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ⚫ |
 | Heretic | ✅ Passed seeds 1-10 | 0 | 24.1 | 24.1 | 🟢 Complete | ⚫ | ⚫ |
@@ -50,11 +50,11 @@
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 9.2 | 9.2 | 🟢 Complete | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed seeds 1-10 | 157 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
-| Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 10.9 | 15.1 | 🟡 72.2% | ✅ | ✅ |
-| Kirby's Dream Land 3 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
+| Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 11.19 | 15.1 | 🟡 74.1% | ✅ | ✅ |
+| Kirby's Dream Land 3 | ✅ Passed seeds 1-9 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 49 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Lingo | ❌ Failed seed 1 | 155 | 0 | 5.1 | 🔴 0.0% | ✅ | ✅ |
-| Links Awakening DX | ✅ Passed seeds 1-10 | 538 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
+| Links Awakening DX | ✅ Passed seeds 1-10 | 564 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed seeds 1-10 | 0 | 4.11 | 4.11 | 🟢 Complete | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ✅ Passed seeds 1-10 | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ⚫ | ⚫ |
@@ -64,7 +64,7 @@
 | Metamath | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
 | Muse Dash | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ⚫ | ⚫ |
 | Noita | ✅ Passed seeds 1-10 | 0 | 0.15 | 0.15 | 🟢 Complete | ⚫ | ⚫ |
-| Ocarina of Time | ❌ Failed seed 1 | 3 | 0 | 0 | 🔴 0.0% | ✅ | ✅ |
+| Ocarina of Time | ❌ Failed seed 1 | 3 | 0 | 0 | 🔴 0.0% | ✅ | ⚫ |
 | Old School Runescape | ✅ Passed seeds 1-10 | 0 | 7.5 | 7.5 | 🟢 Complete | ✅ | ✅ |
 | Overcooked! 2 | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
 | Paint | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | ✅ | ✅ |
@@ -72,12 +72,12 @@
 | Pokemon Red and Blue | ✅ Passed seeds 1-10 | 0 | 10.2 | 10.2 | 🟢 Complete | ✅ | ✅ |
 | Raft | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 8.3 | 8.3 | 🟢 Complete | ⚫ | ⚫ |
-| SMZ3 | ❌ Failed seed 1 | 0 | 3.4 | 16.2 | 🟡 21.0% | ✅ | ✅ |
+| SMZ3 | ❌ Failed seed 1 | 0 | 5.8 | 16.2 | 🟡 35.8% | ✅ | ✅ |
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ⚫ |
 | Secret of Evermore | ✅ Passed seeds 1-10 | 339 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ⚫ |
-| Starcraft 2 | ❌ Failed seed 1 | 0 | 16.4 | 32.2 | 🟡 50.9% | ✅ | ✅ |
+| Starcraft 2 | ❌ Failed seed 1 | 0 | 17.8 | 32.2 | 🟡 55.3% | ✅ | ✅ |
 | Stardew Valley | ❌ Failed seed 1 | 0 | 0.11 | 44.1 | 🟠 0.2% | ✅ | ⚫ |
 | Subnautica | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 5.4 | 5.4 | 🟢 Complete | ✅ | ✅ |
@@ -98,7 +98,7 @@
 | Yacht Dice | ✅ Passed seeds 1-10 | 0 | 21.1 | 21.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed seeds 1-10 | 0 | 12.4 | 12.4 | 🟢 Complete | ✅ | ✅ |
 | Yu-Gi-Oh! 2006 | ❌ Failed seed 1 | 0 | 21.23 | 21.23 | 🟡 100.0% | ✅ | ✅ |
-| Zillion | ❌ Failed seed 1 | 0 | 0.1 | 4.1 | 🟠 2.4% | ✅ | ⚫ |
+| Zillion | ❌ Failed seed 1 | 0 | 0 | 4.1 | 🔴 0.0% | ✅ | ⚫ |
 | shapez | ✅ Passed seeds 1-10 | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
 
 ## Intermittent Failures
@@ -107,26 +107,22 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| Kirby's Dream Land 3 | N/A | 2025-11-18 23:28 | Previously failed, now passing |
-| Kirby's Dream Land 3 | N/A | 2025-11-18 23:28 | Previously failed, now passing |
-| MegaMan Battle Network 3 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
-| MegaMan Battle Network 3 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
-| MegaMan Battle Network 3 | N/A | 2025-11-18 23:29 | Previously failed, now passing |
-| MegaMan Battle Network 3 | N/A | 2025-11-18 23:29 | Previously failed, now passing |
-| Pokemon Emerald | N/A | 2025-11-18 23:33 | Previously failed, now passing |
-| Pokemon Emerald | N/A | 2025-11-18 23:33 | Previously failed, now passing |
-| Pokemon Red and Blue | N/A | 2025-11-18 23:30 | Previously failed, now passing |
-| Pokemon Red and Blue | N/A | 2025-11-18 23:30 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:37 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:37 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:32 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:32 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:34 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:34 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:35 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:35 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
+| Kirby's Dream Land 3 | 10 | 2025-11-19 02:44 | Previously failed, now passing |
+| Kirby's Dream Land 3 | 10 | 2025-11-19 02:44 | Previously failed, now passing |
+| MegaMan Battle Network 3 | 5 | 2025-11-19 02:45 | Previously failed, now passing |
+| MegaMan Battle Network 3 | 5 | 2025-11-19 02:45 | Previously failed, now passing |
+| MegaMan Battle Network 3 | 9 | 2025-11-19 02:46 | Previously failed, now passing |
+| MegaMan Battle Network 3 | 9 | 2025-11-19 02:46 | Previously failed, now passing |
+| Pokemon Emerald | 3 | 2025-11-19 02:48 | Previously failed, now passing |
+| Pokemon Emerald | 3 | 2025-11-19 02:48 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | 2 | 2025-11-19 02:50 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | 2 | 2025-11-19 02:50 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | 3 | 2025-11-19 02:51 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | 3 | 2025-11-19 02:51 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | 5 | 2025-11-19 02:50 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | 5 | 2025-11-19 02:50 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | 8 | 2025-11-19 02:48 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | 8 | 2025-11-19 02:48 | Previously failed, now passing |
 
 
 ## Notes
