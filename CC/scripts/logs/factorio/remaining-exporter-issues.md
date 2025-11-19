@@ -1,55 +1,63 @@
 # Remaining Exporter Issues
 
-## Current Status
+## TRUE ROOT CAUSE IDENTIFIED
 
-Spoiler test fails at Sphere 2.1 with 34 locations not being unlocked.
+The "Automate logistic-science-pack" location is NOT accessible when it should be, preventing its event item from being collected.
 
-### ROOT CAUSE IDENTIFIED
+### Key Findings
 
-Event items are NOT being added to the inventory when their locations are checked during spoiler tests.
+1. ✓ "Automate automation-science-pack" IS checked successfully (Sphere 0.1)
+2. ✗ "Automate logistic-science-pack" is NEVER checked (should be accessible in Sphere 1.8)
+3. ✓ Event items ARE added to inventory when locations are checked
+4. ✗ The problem is that "Automate logistic-science-pack" doesn't become accessible
 
-**Debug Evidence:**
-- `"Automated automation-science-pack"` correctly has count=1 (from Sphere 0.1)
-- `"Automated logistic-science-pack"` has count=0 even after its location is checked (should be 1)
-- All other Automated event items also have count=0
+### The Problematic Access Rule
 
-### Issue Details
-
-- **Affected Sphere**: 2.1
-- **Number of Failing Locations**: 34
-- **Error**: "Access rule evaluation failed" for each location
-- **Pattern**: All failing locations require both:
-  - "Automated automation-science-pack" (event item from Sphere 0.1) ✓ Present with count=1
-  - "Automated logistic-science-pack" (event item from Sphere 2.1) ✗ Count stays at 0
-
-### Example Location
-
-Location: AP-2-179
-Access Rule:
+Location: `Automate logistic-science-pack`
+Access Rule Type: `all_of` comprehension
 ```json
 {
-  "type": "and",
-  "conditions": [
-    {"type": "item_check", "item": {"type": "constant", "value": "Automated automation-science-pack"}},
-    {"type": "item_check", "item": {"type": "constant", "value": "Automated logistic-science-pack"}}
-  ]
+  "type": "all_of",
+  "element_rule": {
+    "type": "item_check",
+    "item": {"type": "name", "name": "technology"}
+  },
+  "iterator_info": {
+    "type": "comprehension_details",
+    "target": {"type": "name", "name": "technology"},
+    "iterator": {
+      "type": "subscript",
+      "value": {"type": "name", "name": "required_technologies"},
+      "index": {"type": "constant", "value": "logistic-science-pack"}
+    }
+  }
 }
 ```
 
-### Investigation Trail
+This rule checks: "For all technologies in `required_technologies['logistic-science-pack']`, check if player has each technology"
 
-1. ✓ Event items are correctly marked in rules.json with `event: True`
-2. ✓ Event items are correctly placed at "Automate" locations with `advancement: True`
-3. ✓ The exporter's `_simplify_technology_name_access` method is working (6 successful simplifications logged)
-4. ✓ Access rules are structured correctly
-5. ✓ The Factorio has() helper is being called and checks inventory correctly
-6. ✓ Event items ARE present in the inventory object (initialized to 0)
-7. ✗ Event items are NOT being incremented when their locations are checked
+### The Issue
+
+The rule references `required_technologies` which should be:
+1. Exported by the exporter to rules.json (NOT FOUND in rules.json)
+2. OR provided in the evaluation context (needs verification)
+3. OR the comprehension rule needs to be simplified/resolved by the exporter
+
+### Evidence from Generation Log
+
+```
+[Factorio Exporter] _simplify_technology_name_access called with iterator_var=technology, rule type=item_check
+[Factorio Exporter] item_check found, item type=attribute
+[Factorio Exporter] Simplifying attribute access pattern!
+[Factorio Exporter] Simplified technology.name access in all_of rule
+```
+
+This was logged 6 times, suggesting the simplification is working for SOME locations but NOT ALL.
 
 ### Next Steps
 
-Investigate the location checking code to determine why event items with `advancement: True` are not being added to the inventory during spoiler tests. The issue is likely in:
-- frontend/modules/stateManager/core/locationChecking.js (lines 132-146)
-- OR the spoiler test's location checking mechanism
-- OR event items are being added but then reset/cleared
+1. Check if `required_technologies` should be in rules.json (game_data or elsewhere)
+2. If missing, fix the exporter to include it
+3. OR fix the exporter to fully resolve/simplify these comprehension rules before export
+4. Verify the exporter's `_simplify_technology_name_access` method is being applied to ALL "Automate" locations
 
