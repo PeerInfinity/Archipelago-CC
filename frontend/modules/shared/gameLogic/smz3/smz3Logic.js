@@ -349,13 +349,24 @@ export function smz3_CanAccessMaridiaPortal(snapshot, staticData) {
  * @param {number} rewardType - The reward type value to check for
  */
 export function smz3_CanAcquire(snapshot, staticData, rewardType) {
+  console.log('[smz3_CanAcquire] Called with rewardType:', rewardType);
+  console.log('[smz3_CanAcquire] snapshot.player:', snapshot.player);
+
+  // Get player slot - snapshot.player can be either a number or an object with slot property
+  const playerSlot = String(typeof snapshot.player === 'object' ? snapshot.player.slot : snapshot.player);
+  console.log('[smz3_CanAcquire] playerSlot:', playerSlot);
+
   // Get the reward_regions mapping from settings
-  const settings = staticData.settings?.[snapshot.player] || {};
+  const settings = staticData.settings?.[playerSlot] || {};
   const rewardRegions = settings.reward_regions || {};
 
+  console.log('[smz3_CanAcquire] rewardRegions:', rewardRegions);
+
   // Boss location mapping: maps region name to boss location name
+  // Note: Some regions (like Castle Tower) don't have a specific boss location
+  // and use Can Complete based on other requirements
   const bossLocations = {
-    'Castle Tower': 'Castle Tower - Agahnim',
+    'Castle Tower': null,  // No boss location - completion based on CanEnter + items
     'Eastern Palace': 'Eastern Palace - Armos Knights',
     'Desert Palace': 'Desert Palace - Lanmolas',
     'Tower of Hera': 'Tower of Hera - Moldorm',
@@ -366,10 +377,10 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
     'Ice Palace': 'Ice Palace - Kholdstare',
     'Misery Mire': 'Misery Mire - Vitreous',
     'Turtle Rock': 'Turtle Rock - Trinexx',
-    'Brinstar Kraid': 'Kraid',
-    'Wrecked Ship': 'Phantoon',
-    'Maridia Inner': 'Draygon',
-    'Norfair Lower East': 'Ridley'
+    'Brinstar Kraid': 'Energy Tank, Kraid',
+    'Wrecked Ship': null,  // No specific Phantoon location - completion based on other requirements
+    'Maridia Inner': 'Missile (Draygon)',
+    'Norfair Lower East': 'Energy Tank, Ridley'
   };
 
   // Find the region that has the specified reward
@@ -379,26 +390,34 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
       const bossLocationName = bossLocations[regionName];
 
       if (!bossLocationName) {
-        console.warn(`[smz3_CanAcquire] No boss location mapping for region: ${regionName}`);
-        return false;
+        console.warn(`[smz3_CanAcquire] Region ${regionName} has no boss location (completion based on CanEnter + items), returning true for now`);
+        // TODO: Implement proper CanComplete logic for regions without boss locations
+        // For now, assume these regions are completable (conservative assumption)
+        return true;
       }
 
       // Check if the boss location is accessible
       // Use the evaluateRule function from the snapshot to check location accessibility
       if (snapshot.evaluateRule) {
-        // Get the regions from staticData
-        const regions = staticData.regions?.[snapshot.player];
-        if (!regions) {
-          console.warn(`[smz3_CanAcquire] No regions data for player ${snapshot.player}`);
+        // staticData.regions is a Map with region names as keys, not player IDs
+        if (!staticData.regions) {
+          console.warn('[smz3_CanAcquire] No regions data in staticData');
           return false;
         }
 
         // Find the boss location by searching through all regions
         let bossLocation = null;
-        for (const region of Object.values(regions)) {
+        const regionsToSearch = staticData.regions instanceof Map ?
+          Array.from(staticData.regions.values()) :
+          Object.values(staticData.regions);
+
+        for (const region of regionsToSearch) {
           if (region.locations) {
             bossLocation = region.locations.find(loc => loc.name === bossLocationName);
-            if (bossLocation) break;
+            if (bossLocation) {
+              console.log(`[smz3_CanAcquire] Found boss location: ${bossLocationName} in region: ${region.name}`);
+              break;
+            }
           }
         }
 
@@ -409,7 +428,9 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
 
         // Check if the location is accessible
         if (bossLocation.access_rule) {
-          return snapshot.evaluateRule(bossLocation.access_rule, snapshot, staticData);
+          // snapshot.evaluateRule is provided by createStateSnapshotInterface
+          // and takes (rule, contextName) parameters
+          return snapshot.evaluateRule(bossLocation.access_rule);
         } else {
           // No access rule means always accessible
           return true;
