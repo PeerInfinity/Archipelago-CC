@@ -389,7 +389,16 @@
           {
             "name": "KF Bean Platform Green Rupee 1",
             "id": 67759,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "is_adult and (here(can_plant_bean) or Hover_Boots)"
+                }
+              ]
+            },
             "item": {
               "name": "Rupee (1)",
               "player": 1,
@@ -400,7 +409,16 @@
           {
             "name": "KF Bean Platform Green Rupee 2",
             "id": 67760,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "is_adult and (here(can_plant_bean) or Hover_Boots)"
+                }
+              ]
+            },
             "item": {
               "name": "Rupee (1)",
               "player": 1,
@@ -411,7 +429,16 @@
           {
             "name": "KF Bean Platform Green Rupee 3",
             "id": 67761,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "is_adult and (here(can_plant_bean) or Hover_Boots)"
+                }
+              ]
+            },
             "item": {
               "name": "Rupee (1)",
               "player": 1,
@@ -422,7 +449,16 @@
           {
             "name": "KF Bean Platform Green Rupee 4",
             "id": 67762,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "is_adult and (here(can_plant_bean) or Hover_Boots)"
+                }
+              ]
+            },
             "item": {
               "name": "Rupee (1)",
               "player": 1,
@@ -433,7 +469,16 @@
           {
             "name": "KF Bean Platform Green Rupee 5",
             "id": 67763,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "is_adult and (here(can_plant_bean) or Hover_Boots)"
+                }
+              ]
+            },
             "item": {
               "name": "Rupee (1)",
               "player": 1,
@@ -444,7 +489,16 @@
           {
             "name": "KF Bean Platform Green Rupee 6",
             "id": 67764,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "is_adult and (here(can_plant_bean) or Hover_Boots)"
+                }
+              ]
+            },
             "item": {
               "name": "Rupee (1)",
               "player": 1,
@@ -455,7 +509,16 @@
           {
             "name": "KF Bean Platform Red Rupee",
             "id": 67765,
-            "access_rule": null,
+            "access_rule": {
+              "type": "helper",
+              "name": "parse_oot_rule",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "is_adult and (here(can_plant_bean) or Hover_Boots)"
+                }
+              ]
+            },
             "item": {
               "name": "Rupees (20)",
               "player": 1,
