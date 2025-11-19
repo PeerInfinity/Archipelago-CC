@@ -118,9 +118,9 @@
           "timestamp": "2025-11-19T05:11:57.807697"
         }
       ],
-      "last_updated": "2025-11-19T05:17:07.962486"
+      "last_updated": "2025-11-19T21:12:31.710142"
     },
-    "last_updated": "2025-11-19T05:17:07.962484",
+    "last_updated": "2025-11-19T21:14:14.716077",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3209,7 +3209,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 39.01,
+            "processing_time_seconds": 38.11,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -3224,7 +3224,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 116.66,
+            "processing_time_seconds": 61.77,
             "return_code": 1,
             "sphere_reached": 0.0,
             "success": false,
@@ -3232,7 +3232,7 @@
             "warning_count": 0
           },
           "template_filename": "Blasphemous.yaml",
-          "timestamp": "2025-11-19T04:59:12.729885",
+          "timestamp": "2025-11-19T21:10:51.378881",
           "world_info": {
             "exporter_path": "exporter/games/blasphemous.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
@@ -3252,7 +3252,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1",
-      "seeds_failed": 10,
+      "seeds_failed": 1,
       "seeds_passed": 0,
       "spoiler_test": {
         "error_count": 8,
@@ -3270,8 +3270,8 @@
         "failure_rate": 1.0
       },
       "template_filename": "Blasphemous.yaml",
-      "timestamp": "2025-11-19T05:07:51.908071",
-      "total_seeds_tested": 10,
+      "timestamp": "2025-11-19T21:10:51.364204",
+      "total_seeds_tested": 1,
       "world_info": {
         "exporter_path": "exporter/games/blasphemous.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
@@ -14694,9 +14694,9 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 0,
-      "first_failure_reason": "Test failed at sphere 0.0",
-      "first_failure_seed": 1,
+      "consecutive_passes_before_failure": 5,
+      "first_failure_reason": null,
+      "first_failure_seed": null,
       "game_name_from_filename": "lingo",
       "game_name_from_yaml": "Lingo",
       "generation": {
@@ -14717,32 +14717,212 @@
           "game_name_from_filename": "lingo",
           "game_name_from_yaml": "Lingo",
           "generation": {
-            "error_count": 155,
+            "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.99,
+            "processing_time_seconds": 5.92,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/lingo/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 633075,
-            "size_mb": 0.6
+            "size_bytes": 742296,
+            "size_mb": 0.71
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 62.26,
-            "return_code": 1,
-            "sphere_reached": 0.0,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.07,
+            "return_code": 0,
+            "sphere_reached": 5.1,
+            "success": true,
             "total_spheres": 5.1,
             "warning_count": 0
           },
           "template_filename": "Lingo.yaml",
-          "timestamp": "2025-11-19T05:02:51.996270",
+          "timestamp": "2025-11-19T21:12:58.607537",
+          "world_info": {
+            "exporter_path": "exporter/games/lingo.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
+            "game_name_from_filename": "lingo",
+            "game_name_from_yaml": "Lingo",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "lingo"
+          }
+        },
+        "2": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "lingo",
+          "game_name_from_yaml": "Lingo",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.35,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/lingo/AP_01043188731678011336/AP_01043188731678011336_rules.json",
+            "size_bytes": 742304,
+            "size_mb": 0.71
+          },
+          "seed": "2",
+          "seed_id": "AP_01043188731678011336",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.09,
+            "return_code": 0,
+            "sphere_reached": 3.4,
+            "success": true,
+            "total_spheres": 3.4,
+            "warning_count": 0
+          },
+          "template_filename": "Lingo.yaml",
+          "timestamp": "2025-11-19T21:13:14.045948",
+          "world_info": {
+            "exporter_path": "exporter/games/lingo.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
+            "game_name_from_filename": "lingo",
+            "game_name_from_yaml": "Lingo",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "lingo"
+          }
+        },
+        "3": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "lingo",
+          "game_name_from_yaml": "Lingo",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.54,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/lingo/AP_84719271504320872445/AP_84719271504320872445_rules.json",
+            "size_bytes": 742323,
+            "size_mb": 0.71
+          },
+          "seed": "3",
+          "seed_id": "AP_84719271504320872445",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.95,
+            "return_code": 0,
+            "sphere_reached": 5.2,
+            "success": true,
+            "total_spheres": 5.2,
+            "warning_count": 0
+          },
+          "template_filename": "Lingo.yaml",
+          "timestamp": "2025-11-19T21:13:28.994039",
+          "world_info": {
+            "exporter_path": "exporter/games/lingo.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
+            "game_name_from_filename": "lingo",
+            "game_name_from_yaml": "Lingo",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "lingo"
+          }
+        },
+        "4": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "lingo",
+          "game_name_from_yaml": "Lingo",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.87,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/lingo/AP_05594871498841892311/AP_05594871498841892311_rules.json",
+            "size_bytes": 742407,
+            "size_mb": 0.71
+          },
+          "seed": "4",
+          "seed_id": "AP_05594871498841892311",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.06,
+            "return_code": 0,
+            "sphere_reached": 4.2,
+            "success": true,
+            "total_spheres": 4.2,
+            "warning_count": 0
+          },
+          "template_filename": "Lingo.yaml",
+          "timestamp": "2025-11-19T21:13:43.937552",
+          "world_info": {
+            "exporter_path": "exporter/games/lingo.py",
+            "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
+            "game_name_from_filename": "lingo",
+            "game_name_from_yaml": "Lingo",
+            "has_custom_exporter": true,
+            "has_custom_game_logic": true,
+            "world_directory": "lingo"
+          }
+        },
+        "5": {
+          "analysis": {
+            "error_count": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "game_name_from_filename": "lingo",
+          "game_name_from_yaml": "Lingo",
+          "generation": {
+            "error_count": 0,
+            "error_type": null,
+            "processing_time_seconds": 5.63,
+            "return_code": 0,
+            "success": true,
+            "warning_count": 0
+          },
+          "rules_file": {
+            "path": "frontend/presets/lingo/AP_96945849220684217413/AP_96945849220684217413_rules.json",
+            "size_bytes": 742378,
+            "size_mb": 0.71
+          },
+          "seed": "5",
+          "seed_id": "AP_96945849220684217413",
+          "spoiler_test": {
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 9.03,
+            "return_code": 0,
+            "sphere_reached": 7.1,
+            "success": true,
+            "total_spheres": 7.1,
+            "warning_count": 0
+          },
+          "template_filename": "Lingo.yaml",
+          "timestamp": "2025-11-19T21:13:59.346758",
           "world_info": {
             "exporter_path": "exporter/games/lingo.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
@@ -14761,9 +14941,9 @@
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
-      "seed_range": "1",
-      "seeds_failed": 10,
-      "seeds_passed": 0,
+      "seed_range": "1-5",
+      "seeds_failed": 0,
+      "seeds_passed": 5,
       "spoiler_test": {
         "error_count": 8,
         "pass_fail": "failed",
@@ -14775,13 +14955,13 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": false,
-        "any_failed": true,
-        "failure_rate": 1.0
+        "all_passed": true,
+        "any_failed": false,
+        "failure_rate": 0.0
       },
       "template_filename": "Lingo.yaml",
-      "timestamp": "2025-11-19T05:11:33.248396",
-      "total_seeds_tested": 10,
+      "timestamp": "2025-11-19T21:12:58.555087",
+      "total_seeds_tested": 5,
       "world_info": {
         "exporter_path": "exporter/games/lingo.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",

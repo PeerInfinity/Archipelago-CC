@@ -206,6 +206,22 @@ class LingoGameExportHandler(GenericGameExportHandler):
                     settings['item_by_door'][room] = dict(doors)
                 logger.debug(f"Exported item_by_door with {len(settings['item_by_door'])} rooms")
 
+            # Export mastery_reqs: AccessRequirements for mastery achievements
+            if hasattr(world.player_logic, 'mastery_reqs'):
+                settings['mastery_reqs'] = []
+                for access_req in world.player_logic.mastery_reqs:
+                    serialized_req = {
+                        'rooms': sorted(list(access_req.rooms)) if hasattr(access_req, 'rooms') else [],
+                        'doors': [{'room': d.room, 'door': d.door} for d in sorted(access_req.doors, key=lambda d: (d.room or '', d.door))] if hasattr(access_req, 'doors') else [],
+                        'colors': sorted(list(access_req.colors)) if hasattr(access_req, 'colors') else [],
+                        'items': sorted(list(access_req.items)) if hasattr(access_req, 'items') else [],
+                        'progression': dict(access_req.progression) if hasattr(access_req, 'progression') else {},
+                        'the_master': access_req.the_master if hasattr(access_req, 'the_master') else False,
+                        'postgame': access_req.postgame if hasattr(access_req, 'postgame') else False
+                    }
+                    settings['mastery_reqs'].append(serialized_req)
+                logger.debug(f"Exported mastery_reqs with {len(settings['mastery_reqs'])} requirements")
+
             # Export door_reqs: AccessRequirements for doors without items
             if hasattr(world.player_logic, 'door_reqs'):
                 settings['door_reqs'] = {}

@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-19 17:12:55
+**Generated:** 2025-11-19 21:14:14
 
 **Source Data Created:** 2025-11-19T05:17:07.962474
 
-**Source Data Last Updated:** 2025-11-19T05:17:07.962484
+**Source Data Last Updated:** 2025-11-19T21:14:14.419658
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 68 (87.2%)
-- **Failed:** 10 (12.8%)
+- **Passed:** 69 (88.5%)
+- **Failed:** 9 (11.5%)
 - **Games with Intermittent Failures:** 4
 - **Total Intermittent Failures:** 16
 
@@ -53,7 +53,7 @@
 | Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 12.3 | 15.1 | 🟡 81.5% | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 49 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| Lingo | ❌ Failed seed 1 | 155 | 0 | 5.1 | 🔴 0.0% | ✅ | ✅ |
+| Lingo | ✅ Passed seeds 1-5 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | Links Awakening DX | ✅ Passed seeds 1-10 | 516 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed seeds 1-10 | 0 | 4.11 | 4.11 | 🟢 Complete | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ✅ Passed seeds 1-10 | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |

@@ -73,6 +73,47 @@ export function lingo_can_use_location(snapshot, staticData, location) {
 }
 
 /**
+ * Check if player has achieved enough mastery requirements
+ * @param {Object} snapshot - Canonical state snapshot
+ * @param {Object} staticData - Static game data including rules
+ * @returns {boolean} True if player has achieved mastery
+ */
+export function lingo_can_use_mastery_location(snapshot, staticData) {
+  const playerId = snapshot?.playerId || '1';
+  const settings = staticData?.settings?.[playerId];
+
+  if (!settings) {
+    console.error('[lingo_can_use_mastery_location] No settings found');
+    return false;
+  }
+
+  // Get the mastery requirements from settings
+  const masteryReqs = settings.mastery_reqs;
+  if (!masteryReqs || !Array.isArray(masteryReqs)) {
+    console.warn('[lingo_can_use_mastery_location] No mastery_reqs in settings');
+    return false;
+  }
+
+  // Get the mastery achievements requirement from settings
+  const masteryAchievements = settings.mastery_achievements;
+  if (!masteryAchievements || masteryAchievements <= 0) {
+    // Mastery is disabled
+    return true;
+  }
+
+  // Count how many mastery requirements are satisfied
+  let satisfiedCount = 0;
+  for (const accessReq of masteryReqs) {
+    if (_lingo_can_satisfy_requirements(snapshot, staticData, accessReq)) {
+      satisfiedCount++;
+    }
+  }
+
+  // Return true if we've satisfied enough requirements
+  return satisfiedCount >= masteryAchievements;
+}
+
+/**
  * Check if player can satisfy access requirements
  * @param {Object} snapshot - Canonical state snapshot
  * @param {Object} staticData - Static game data including rules
@@ -155,10 +196,10 @@ export function _lingo_can_satisfy_requirements(snapshot, staticData, access) {
 
   // Check mastery requirement
   if (access.the_master) {
-    // This would require checking lingo_can_use_mastery_location
-    // For now, we'll skip this as it requires more complex logic
-    // TODO: Implement mastery checking
-    console.warn('[_lingo_can_satisfy_requirements] Mastery requirement not yet implemented');
+    // Check if player has achieved enough mastery requirements
+    if (!lingo_can_use_mastery_location(snapshot, staticData)) {
+      return false;
+    }
   }
 
   // Check postgame requirement - if postgame is false and player has "Prevent Victory", deny access
@@ -272,6 +313,7 @@ export function lingo_can_use_level_2_location(snapshot, staticData) {
 export const helperFunctions = {
   lingo_can_use_entrance,
   lingo_can_use_location,
+  lingo_can_use_mastery_location,
   lingo_can_use_level_2_location,
   _lingo_can_satisfy_requirements,
 };

@@ -1,0 +1,325 @@
+﻿Archipelago Version 0.6.4  -  Seed: 5
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Lingo
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Shuffle Doors:                   None
+Group Doors:                     No
+Progressive Orange Tower:        Yes
+Progressive Colorful:            Yes
+Location Checks:                 Normal
+Shuffle Colors:                  Yes
+Shuffle Panels:                  None
+Shuffle Paintings:               No
+Enable Pilgrimage:               No
+Allow Roof Access for Pilgrimage:Yes
+Allow Paintings for Pilgrimage:  Yes
+Sunwarp Access:                  Normal
+Shuffle Sunwarps:                No
+Victory Condition:               The End
+Mastery Achievements:            21
+Level 2 Requirement:             223
+Early Color Hallways:            No
+Shuffle Postgame:                No
+Trap Percentage:                 20
+Trap Weights:                    Atbash Trap: 1, Iceland Trap: 1, Slowness Trap: 1
+Speed Boost Mode:                No
+Puzzle Skip Percentage:          20
+Death Link:                      No
+Start Inventory from Pool:       
+
+
+Locations:
+
+Starting Room - HI: :)
+Starting Room - HIDDEN: Wanderlust
+Hidden Room - DEAD END: Wanderlust
+Hidden Room - OPEN: The Feeling of Being Lost
+The Seeker - Achievement: Iceland Trap
+Second Room - LEVEL 2: Puzzle Skip
+Second Room - Good Luck: Atbash Trap
+Hub Room - ORDER: Red
+Hub Room - SLAUGHTER: Atbash Trap
+Hub Room - TRACE: Iceland Trap
+Hub Room - RAT: Wanderlust
+Hub Room - OPEN: Wanderlust
+Hub Room - LOST: :)
+Pilgrim Antechamber - PILGRIM: Wanderlust
+Pilgrim Room - HOT CRUST: Empty White Hallways
+Pilgrim Room - THIS: :)
+Crossroads - DECAY: Empty White Hallways
+Crossroads - NOPE: Puzzle Skip
+Crossroads - WE ROT: :)
+Crossroads - BEND HI: Empty White Hallways
+Crossroads - THE EYES: Slowness Trap
+Crossroads - TURN/RUNT: Empty White Hallways
+Crossroads - WORDS, SWORD: :)
+Crossroads - LOST Pair: :)
+Amen Name Area - AMEN, NAME: Slowness Trap
+The Tenacious - Achievement: Puzzle Skip
+The Tenacious - Palindromes: Blue
+The Tenacious - White Palindromes: The Feeling of Being Lost
+Symmetry Room - NEAR, FAR: Slowness Trap
+Symmetry Room - WARTS, STRAW: Wanderlust
+Symmetry Room - LEAF, FEEL: The Feeling of Being Lost
+Outside The Agreeable - MASSACRED: Puzzle Skip
+Outside The Agreeable - BLACK: The Feeling of Being Lost
+Outside The Agreeable - CLOSE: The Feeling of Being Lost
+Outside The Agreeable - RIGHT: Empty White Hallways
+Outside The Agreeable - Lookout Panels: The Feeling of Being Lost
+Dread Hallway - DREAD: :)
+The Agreeable - Achievement: Wanderlust
+The Agreeable - BYE: Empty White Hallways
+Hedge Maze - DOWN: Puzzle Skip
+Hedge Maze - Hide and Seek: Wanderlust
+The Perceptive - Achievement: Puzzle Skip
+The Perceptive - GAZE: Iceland Trap
+The Fearless - First Floor Puzzles: Wanderlust
+The Fearless - Second Floor Puzzles: Puzzle Skip
+The Fearless - Achievement: Empty White Hallways
+The Observant - Achievement: :)
+The Observant - SIX: Brown
+The Observant - FOUR (1), FOUR (2): :)
+The Incomparable - Achievement: The Feeling of Being Lost
+Giant Sevens: Atbash Trap
+Orange Tower First Floor - SECRET: :)
+Orange Tower First Floor - DADS + ALE: Empty White Hallways
+Orange Tower First Floor - Salt Pepper Door: The Feeling of Being Lost
+Orange Tower Third Floor - DEER + WREN: Puzzle Skip
+Color Barriers - RED and YELLOW: Puzzle Skip
+Orange Tower Fourth Floor - LEARNS + UNSEW: :)
+Orange Tower Fourth Floor - HOT CRUSTS: Wanderlust
+Orange Tower Fourth Floor - IRK HORN: Slowness Trap
+Orange Tower Fifth Floor - DRAWL + RUNS: :)
+Orange Tower Fifth Floor - SIZE (Small), SIZE (Big): Iceland Trap
+The End (Solved): Victory
+Courtyard - FIRST, SECOND, THIRD, FOURTH: Puzzle Skip
+The Colorful - White: Wanderlust
+The Colorful - Black: The Feeling of Being Lost
+The Colorful - Red: :)
+The Colorful - Yellow: Wanderlust
+The Colorful - Blue: Empty White Hallways
+The Colorful - Purple: Wanderlust
+The Colorful - Orange: Empty White Hallways
+The Colorful - Green: Wanderlust
+The Colorful - Brown: Wanderlust
+The Colorful - Gray: The Feeling of Being Lost
+The Colorful - Achievement: Wanderlust
+Welcome Back Area - WELCOME BACK: :)
+Welcome Back Area - CLOCKWISE: :)
+Owl Hallway - STRAYS: Puzzle Skip
+Owl Hallway - READS + RUST: Wanderlust
+Outside The Initiated - UNCOVER: Wanderlust
+Outside The Initiated - OXEN: Puzzle Skip
+Color Barriers - BLUE and YELLOW: The Feeling of Being Lost
+Color Barriers - RED and BLUE: Puzzle Skip
+Color Barriers - GREEN, ORANGE and PURPLE: Yellow
+The Initiated - Achievement: Empty White Hallways
+The Optimistic - Achievement: Slowness Trap
+The Traveled - Achievement: Empty White Hallways
+The Traveled - HELLO: Iceland Trap
+Outside The Bold - UNOPEN: Atbash Trap
+Outside The Bold - BEGIN: Slowness Trap
+The Bold - Achievement: Empty White Hallways
+Outside The Undeterred - ART + ART: Puzzle Skip
+Outside The Undeterred - PEN: Iceland Trap
+Outside The Undeterred - RAINY: Wanderlust
+Outside The Undeterred - ZERO: Puzzle Skip
+Outside The Undeterred - ONE: The Feeling of Being Lost
+Twos: The Feeling of Being Lost
+Threes: Puzzle Skip
+Fours: :)
+The Undeterred - Achievement: Purple
+Fives: Orange
+Sixes: Iceland Trap
+Sevens: :)
+Eights: The Feeling of Being Lost
+Nines: :)
+Directional Gallery - 834283054: Wanderlust
+Directional Gallery - PARANOID: Puzzle Skip
+Directional Gallery - WADED + WEE: Slowness Trap
+Directional Gallery - TURN, LEARN: Puzzle Skip
+Color Hunt - EXIT: Pilgrim Room - Sun Painting
+Color Hunt - RED: Empty White Hallways
+Color Hunt - BLUE: The Feeling of Being Lost
+Color Hunt - YELLOW: Puzzle Skip
+Color Hunt - GREEN: Iceland Trap
+Color Hunt - PURPLE: Atbash Trap
+Color Hunt - ORANGE: Slowness Trap
+Champion's Rest - YOU: Empty White Hallways
+The Bearer - Achievement: Wanderlust
+The Bearer - MIDDLE: :)
+The Bearer - FARTHER: The Feeling of Being Lost
+The Bearer - SHORTCUT: Empty White Hallways
+The Steady - Achievement: Empty White Hallways
+Knight Night Room - TRUSTED: Puzzle Skip
+The Artistic - Achievement: Atbash Trap
+The Artistic - Smiley and Panda: Puzzle Skip
+The Artistic - Panda and Lattice: The Feeling of Being Lost
+The Artistic - Lattice and Apple: Green
+The Artistic - Apple and Smiley: Slowness Trap
+The Discerning - Achievement: Wanderlust
+The Eyes They See - NEAR: Iceland Trap
+Outside The Wondrous - SHRINK: Black
+The Wondrous - Achievement: Iceland Trap
+Hallway Room (1) - OUT: :)
+Hallway Room - First Room: The Feeling of Being Lost
+Hallway Room - Second Room: Wanderlust
+Hallway Room - Third Room: The Feeling of Being Lost
+Hallway Room - Fourth Room: Empty White Hallways
+Elements Area - UNDISTRACTED: The Feeling of Being Lost
+Outside The Wanderer - WANDERLUST: Wanderlust
+The Wanderer - Achievement: Wanderlust
+Art Gallery - ORDER: :)
+Art Gallery - First Floor Puzzles: Empty White Hallways
+Art Gallery - Second Floor Puzzles: Puzzle Skip
+Art Gallery - Third Floor Puzzles: The Feeling of Being Lost
+Art Gallery - Fourth Floor Puzzles: :)
+Rhyme Room (Smiley) - Puzzles Toward Target: Atbash Trap
+Rhyme Room (Cross) - Exit Puzzles: Atbash Trap
+Rhyme Room - Circle/Smiley Wall: The Feeling of Being Lost
+Rhyme Room - Circle/Looped Square Wall: Empty White Hallways
+Rhyme Room - Cross/Looped Square Wall: Wanderlust
+Rhyme Room - Target/Looped Square Wall: Gray
+Rhyme Room (Target) - Puzzles Toward Cross: Wanderlust
+Room Room - BASE: Puzzle Skip
+Outside The Wise - KITTEN, CAT: Atbash Trap
+The Wise - Achievement: Empty White Hallways
+Challenge Room - WELCOME: Wanderlust
+Challenge Room - Achievement: Slowness Trap
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Outside The Wondrous - SHRINK: Black
+}
+2: {
+  Hub Room - ORDER: Red
+}
+3: {
+  The Tenacious - Palindromes: Blue
+}
+4: {
+  The Undeterred - Achievement: Purple
+}
+5: {
+  Fives: Orange
+  Rhyme Room - Target/Looped Square Wall: Gray
+}
+6: {
+  Color Barriers - GREEN, ORANGE and PURPLE: Yellow
+  Color Hunt - EXIT: Pilgrim Room - Sun Painting
+  The End (Solved): Victory
+}
+7: {
+  The Artistic - Lattice and Apple: Green
+}
+8: {
+  The Observant - SIX: Brown
+}
+
+Paths:
+
+Color Barriers - GREEN, ORANGE and PURPLE
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Outside The Initiated (through Knight Night (Final) - Exit)
+   =>   Outside The Initiated
+Color Hunt - EXIT
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Color Hunt (through Sunwarps - 5 Sunwarp)
+   =>   Color Hunt
+Fives
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred -> Outside The Undeterred to Number Hunt (through Outside The Undeterred - Number Hunt)
+   =>   Number Hunt
+Hub Room - ORDER
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room
+Outside The Wondrous - SHRINK
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Directional Gallery (through Sunwarps - 6 Sunwarp)
+   =>   Directional Gallery -> Directional Gallery to Wondrous Lobby
+   =>   Wondrous Lobby -> Wondrous Lobby to Outside The Wondrous
+   =>   Outside The Wondrous
+Rhyme Room - Target/Looped Square Wall
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Rhyme Room (Looped Square) (through Starting Room - Rhyme Room Entrance)
+   =>   Rhyme Room (Looped Square)
+The Artistic - Lattice and Apple
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to Directional Gallery (through Sunwarps - 6 Sunwarp)
+   =>   Directional Gallery -> Directional Gallery to The Artistic (Lattice)
+   =>   The Artistic (Lattice)
+The End (Solved)
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Hidden Room (through Starting Room - Back Right Door)
+   =>   Hidden Room -> Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)
+   =>   Knight Night (Outer Ring) -> Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)
+   =>   Knight Night Exit -> Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)
+   =>   Orange Tower Third Floor -> Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)
+   =>   Orange Tower Fourth Floor -> Orange Tower Fourth Floor to Orange Tower Fifth Floor (through Orange Tower - Fifth Floor)
+   =>   Orange Tower Fifth Floor -> Orange Tower Fifth Floor to Orange Tower Sixth Floor (through Orange Tower - Sixth Floor)
+   =>   Orange Tower Sixth Floor -> Orange Tower Sixth Floor to Ending Area (through Orange Tower - Seventh Floor)
+   =>   Ending Area
+The Observant - SIX
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Hedge Maze (through Hub Room - Shortcut to Hedge Maze)
+   =>   Hedge Maze -> Hedge Maze to The Observant (through Hedge Maze - Observant Entrance)
+   =>   The Observant
+The Tenacious - Palindromes
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Crossroads (through Sunwarps - 1 Sunwarp)
+   =>   Crossroads -> Crossroads to Outside The Agreeable
+   =>   Outside The Agreeable -> Outside The Agreeable to The Tenacious (through Outside The Agreeable - Tenacious Entrance)
+   =>   The Tenacious
+The Undeterred - Achievement
+        Menu -> Menu to Starting Room
+   =>   Starting Room -> Starting Room to Second Room (through Starting Room - Main Door)
+   =>   Second Room -> Second Room to Hub Room (through Second Room - Exit Door)
+   =>   Hub Room -> Hub Room to Dead End Area (through Hub Room - Near RAT Door)
+   =>   Dead End Area -> Dead End Area to The Artistic (Smiley)
+   =>   The Artistic (Smiley) -> The Artistic (Smiley) to Outside The Undeterred
+   =>   Outside The Undeterred -> Outside The Undeterred to The Undeterred (through Outside The Undeterred - Undeterred Entrance)
+   =>   The Undeterred
