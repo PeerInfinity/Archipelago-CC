@@ -993,8 +993,20 @@ export function clearEventItems(sm, options = { recomputeAndSendUpdate: true }) 
     return;
   }
 
+  // Items that should never be cleared (managed by game-specific hooks)
+  const preservedItems = new Set([
+    'Received Progression Item',    // Stardew Valley - cumulative progression count
+    'Received Progression Percent',  // Stardew Valley - computed from progression count
+  ]);
+
   // Remove all event items from inventory and uncheck their locations
   for (const itemName in sm.itemData) {
+    // Skip preserved items that are managed by game-specific hooks
+    if (preservedItems.has(itemName)) {
+      sm._logDebug(`[StateManager] Preserving hook-managed event item: ${itemName}`);
+      continue;
+    }
+
     if (sm.itemData[itemName]?.event || sm.itemData[itemName]?.id === 0 || sm.itemData[itemName]?.id === null) {
       if (sm.inventory[itemName] > 0) {
         sm._logDebug(`[StateManager] Clearing event item: ${itemName}`);

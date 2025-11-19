@@ -836,6 +836,15 @@ export class EventProcessor {
           continue;
         }
 
+        // Check if this is an event item (virtual item computed by hooks)
+        const itemDef = staticData.items.get(itemName);
+        if (itemDef && itemDef.event) {
+          // Skip event items - they should be computed by game-specific hooks
+          // (e.g., Stardew Valley's "Received Progression Percent")
+          this.logCallback('debug', `  [Player ${this.playerId}] Skipping event item "${itemName}" (computed by hooks, not added directly)`);
+          continue;
+        }
+
         // deltaCount is the number of this item added in this sphere
         if (deltaCount > 0) {
           this.logCallback('info', `  [Player ${this.playerId}] Adding ${deltaCount}x virtual/event item: "${itemName}" (from resolved_items)`);
