@@ -321,6 +321,54 @@ export function smz3_CanAccessMaridiaPortal(snapshot, staticData) {
           smz3_CanLiftHeavy(snapshot, staticData));
 }
 
+/**
+ * Check if player can exit Norfair Lower East region.
+ * This is specific to the Norfair Lower East region and determines if the player
+ * can escape back to upper areas.
+ *
+ * Python (from TotalSMZ3/Regions/SuperMetroid/NorfairLower/East.py):
+ * def CanExit(self, items:Progression):
+ *     if self.Logic == SMLogic.Normal:
+ *         # Bubble Mountain route
+ *         return items.Morph and (items.CardNorfairL2 or (
+ *             # Volcano Room and Blue Gate
+ *             items.Gravity) and items.Wave and (
+ *             # Spikey Acid Snakes and Croc Escape
+ *             items.Grapple or items.SpaceJump))
+ *     else:
+ *         # Vanilla LN Escape (Hard mode has more options)
+ *         return (items.Morph and (items.CardNorfairL2 or
+ *                 (items.Missile or items.Super or items.Wave) and
+ *                 (items.SpeedBooster or items.CanFly() or items.Grapple or items.HiJump and
+ *                 (items.CanSpringBallJump() or items.Ice))) or
+ *             # Reverse Amphitheater
+ *             items.HasEnergyReserves(5))
+ *
+ * Note: Using Normal logic for now (simplified implementation)
+ */
+export function smz3_CanExit(snapshot, staticData) {
+  // Normal mode logic for exiting Norfair Lower East
+  const hasMorph = hasItem(snapshot, 'Morph');
+  const hasCardNorfairL2 = hasItem(snapshot, 'CardNorfairL2');
+
+  // Bubble Mountain route (simple exit with card)
+  if (hasMorph && hasCardNorfairL2) {
+    return true;
+  }
+
+  // Alternative route: Volcano Room and Blue Gate
+  const hasGravity = hasItem(snapshot, 'Gravity');
+  const hasWave = hasItem(snapshot, 'Wave');
+  const hasGrapple = hasItem(snapshot, 'Grapple');
+  const hasSpaceJump = hasItem(snapshot, 'SpaceJump');
+
+  // Morph + Gravity + Wave + (Grapple OR SpaceJump)
+  return hasMorph &&
+         hasGravity &&
+         hasWave &&
+         (hasGrapple || hasSpaceJump);
+}
+
 // ====================
 // Reward/Dungeon Completion Functions
 // ====================

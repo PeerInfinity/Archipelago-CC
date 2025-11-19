@@ -22,6 +22,35 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         with open('/tmp/smz3_debug.log', 'a') as f:
             f.write("SMZ3 exporter __init__ called\n")
 
+    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
+        """
+        Override to fix Card item classifications.
+
+        Card items (security cards) are marked as filler when precollected,
+        but they're used in access rules and should be marked as advancement
+        so the frontend can properly track them.
+        """
+        # Get base item data from parent class
+        item_data = super().get_item_data(world)
+
+        # List of Super Metroid security card items that should be advancement
+        card_items = [
+            'CardCrateriaL1', 'CardCrateriaL2', 'CardCrateriaBoss',
+            'CardBrinstarL1', 'CardBrinstarL2', 'CardBrinstarBoss',
+            'CardNorfairL1', 'CardNorfairL2', 'CardNorfairBoss',
+            'CardMaridiaL1', 'CardMaridiaL2', 'CardMaridiaBoss',
+            'CardWreckedShipL1', 'CardWreckedShipBoss',
+            'CardLowerNorfairL1', 'CardLowerNorfairBoss'
+        ]
+
+        # Mark Card items as advancement (they gate access to locations)
+        for card_name in card_items:
+            if card_name in item_data:
+                item_data[card_name]['advancement'] = True
+                logger.info(f"Marked {card_name} as advancement item")
+
+        return item_data
+
     def get_settings_data(self, world, multiworld, player: int) -> Dict[str, Any]:
         """
         Override to add SMZ3-specific reward data to settings.
