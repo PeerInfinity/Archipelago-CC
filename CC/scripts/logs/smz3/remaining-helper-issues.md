@@ -4,28 +4,55 @@ This file tracks unresolved issues in the SMZ3 helper functions (`frontend/modul
 
 ## Issue 1: Sahasrahla location not accessible at Sphere 5.8
 
-**Status**: FIXED
+**Status**: FIXED (moved to solved-helper-issues.md)
+
+---
+
+## Issue 2: Palace of Darkness locations not accessible at Sphere 7.7
+
+**Status**: Investigating
 
 **Description**:
-- Location: Sahasrahla
-- Expected: Should be accessible at Sphere 5.8 (when KeySP is obtained)
+- Locations: Palace of Darkness - Compass Chest, Dark Basement - Left, Dark Basement - Right, Harmless Hellway
+- Expected: Should be accessible at Sphere 7.7 (when KeyPD is obtained)
 - Actual: Not accessible in JavaScript state evaluation
-- Access rule: `smz3_CanAcquire(2)` where 2 = PendantGreen
+- Error: "Access rule evaluation failed"
 
 **Analysis**:
-- Sahasrahla requires the player to be able to acquire PendantGreen (value=2)
-- PendantGreen is the reward for Swamp Palace
-- Swamp Palace boss (Arrghus) access rule requires: KeySP + Hammer + Hookshot
-- At Sphere 5.8, player has KeySP but the `smz3_CanAcquire` helper was returning false
+- At Sphere 7.7, player gets KeyPD (Palace of Darkness Key)
+- These 4 locations should become accessible with the key
+- Access rules use complex `compare` and `conditional` rule types
 
-**Root Cause Confirmed**:
-- The `smz3_CanAcquire` function was checking `if (snapshot.evaluateRule)` at the beginning (line 507)
-- If evaluateRule was not available, it immediately returned false without attempting boss location lookup
-- During Sphere 5.8 evaluation in the test harness, snapshot.evaluateRule is not available
-- The player DOES have all required items: KeySP=1, Hammer=1, Hookshot=1
+**Example Access Rule (Compass Chest)**:
+```json
+{
+  "type": "compare",
+  "left": {"type": "item_check", "item": "KeyPD"},
+  "op": ">=",
+  "right": {
+    "type": "conditional",
+    "test": {
+      "type": "or",
+      "conditions": [
+        {"type": "and", "conditions": [
+          {"type": "item_check", "item": "Hammer"},
+          {"type": "item_check", "item": "Bow"},
+          {"type": "item_check", "item": "Lamp"}
+        ]},
+        {"type": "constant", "value": false}
+      ]
+    },
+    "if_true": {"type": "constant", "value": 4},
+    "if_false": {...}
+  }
+}
+```
 
-**Fix Applied**:
-- Restructured the code to find the boss location first (doesn't require evaluateRule)
-- Manual evaluation of simple AND rules with item_check conditions now happens before checking for evaluateRule
-- Only complex rules require snapshot.evaluateRule as a fallback
-- Changes: Lines 505-581 in smz3Logic.js
+**Note**: This appears to be a rule engine issue, not a helper function issue. The rule engine needs to properly support:
+1. `compare` rule type with >= operator and dynamic right side
+2. `conditional` rule type (ternary operator)
+3. Using the result of conditional as the comparison value
+
+**Next Steps**:
+- Check if rule engine properly handles conditional rule types
+- May need to move this to remaining-general-issues.md if it's a core rule engine issue
