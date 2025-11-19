@@ -386,15 +386,22 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
       // Check if the boss location is accessible
       // Use the evaluateRule function from the snapshot to check location accessibility
       if (snapshot.evaluateRule) {
-        // Get the location from staticData
-        const locations = staticData.locations?.[snapshot.player];
-        if (!locations) {
-          console.warn(`[smz3_CanAcquire] No locations data for player ${snapshot.player}`);
+        // Get the regions from staticData
+        const regions = staticData.regions?.[snapshot.player];
+        if (!regions) {
+          console.warn(`[smz3_CanAcquire] No regions data for player ${snapshot.player}`);
           return false;
         }
 
-        // Find the boss location
-        const bossLocation = Object.values(locations).find(loc => loc.name === bossLocationName);
+        // Find the boss location by searching through all regions
+        let bossLocation = null;
+        for (const region of Object.values(regions)) {
+          if (region.locations) {
+            bossLocation = region.locations.find(loc => loc.name === bossLocationName);
+            if (bossLocation) break;
+          }
+        }
+
         if (!bossLocation) {
           console.warn(`[smz3_CanAcquire] Boss location not found: ${bossLocationName}`);
           return false;
