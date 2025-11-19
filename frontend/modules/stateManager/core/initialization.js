@@ -483,7 +483,8 @@ function processStartingItems(sm, jsonData, selectedPlayerId) {
     sm.beginBatchUpdate(true);
 
     startingItems.forEach((itemName) => {
-      if (sm.itemData && sm.itemData[itemName]) {
+      // itemData is indexed by item name
+      if (sm.itemData?.[itemName]) {
         sm.addItemToInventory(itemName);
       } else {
         sm.logger.warn(
