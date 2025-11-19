@@ -214,20 +214,18 @@ class FactorioGameExportHandler(BaseGameExportHandler):
                         item_name not in item_data and
                         hasattr(location.item, 'classification')):
 
-                        # For Factorio, "Automated" items are not true event items -
-                        # they need to be added to inventory and checked normally
-                        # Only mark as event=False for Automated items
-                        is_automated_item = item_name.startswith('Automated ')
-
+                        # All items with no code (event items) should be marked as event=True
+                        # This includes "Automated" items in Factorio which are event items
+                        # placed with place_locked_item() and used in access rules
                         item_data[item_name] = {
                             'name': item_name,
                             'id': None,
-                            'groups': [] if is_automated_item else ['Event'],
+                            'groups': ['Event'],
                             'advancement': location.item.classification == ItemClassification.progression,
                             'useful': location.item.classification == ItemClassification.useful,
                             'trap': location.item.classification == ItemClassification.trap,
-                            'event': not is_automated_item,  # False for Automated items, True for others
-                            'type': None if is_automated_item else 'Event',
+                            'event': True,
+                            'type': 'Event',
                             'max_count': 1
                         }
 

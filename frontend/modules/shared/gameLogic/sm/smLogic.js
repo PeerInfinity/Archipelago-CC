@@ -264,5 +264,19 @@ export const smStateModule = {
    */
   removeItem(gameState, itemName) {
     return gameState; // Generic handling by StateManager
+  },
+
+  /**
+   * Extracts state for snapshot
+   * Returns all game-specific state fields including smbm
+   */
+  getStateForSnapshot(gameState) {
+    return {
+      flags: gameState.flags || [],
+      events: gameState.events || [],
+      smbm: gameState.smbm || {
+        1: { maxDiff: 999 }
+      }
+    };
   }
 };

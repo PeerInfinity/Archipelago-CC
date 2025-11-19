@@ -716,19 +716,27 @@ class ASTVisitorMixin:
                     first_arg = filtered_args[0]
                     item_value = first_arg
                     if isinstance(first_arg, dict):
-                        # Try to resolve the expression (e.g., ItemName.MasterForm -> "Master Form")
-                        resolved_item = self.expression_resolver.resolve_expression(first_arg)
-                        if resolved_item is not None and isinstance(resolved_item, str):
-                            # Successfully resolved to a string value - use the string directly
-                            logging.debug(f"Resolved item name: {first_arg} -> {resolved_item}")
-                            item_value = resolved_item
-                        elif first_arg.get('type') == 'constant' and isinstance(first_arg.get('value'), str):
-                            # Already a constant string - extract the value
-                            item_value = first_arg.get('value')
+                        # First, check if it's already a constant - unwrap it immediately
+                        if first_arg.get('type') == 'constant':
+                            if isinstance(first_arg.get('value'), str):
+                                # Constant string - extract the value
+                                item_value = first_arg.get('value')
+                                logging.debug(f"Unwrapped constant item name: {first_arg} -> {item_value}")
+                            else:
+                                # Constant but not a string - keep as-is for further evaluation
+                                item_value = first_arg
+                                logging.debug(f"Non-string constant in item_check: {first_arg}")
                         else:
-                            # Could not resolve to a constant value, keep as-is (rule object)
-                            logging.debug(f"Could not resolve item name: {first_arg}")
-                            item_value = first_arg
+                            # Try to resolve the expression (e.g., ItemName.MasterForm -> "Master Form")
+                            resolved_item = self.expression_resolver.resolve_expression(first_arg)
+                            if resolved_item is not None and isinstance(resolved_item, str):
+                                # Successfully resolved to a string value - use the string directly
+                                logging.debug(f"Resolved item name: {first_arg} -> {resolved_item}")
+                                item_value = resolved_item
+                            else:
+                                # Could not resolve to a constant value, keep as-is (rule object)
+                                logging.debug(f"Could not resolve item name: {first_arg}")
+                                item_value = first_arg
 
                     result = {'type': 'item_check', 'item': item_value}
                     # Check for count parameter (now in position 1 after filtering)

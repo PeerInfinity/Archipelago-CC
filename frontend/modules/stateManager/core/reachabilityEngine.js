@@ -474,7 +474,11 @@ export function getStartRegions(sm) {
  * @returns {boolean} Whether the region is reachable
  */
 export function isRegionReachable(sm, regionName) {
-  const reachableRegions = computeReachableRegions(sm);
+  // Recursion protection: if we're already computing reachable regions,
+  // use the current state instead of triggering another computation
+  const reachableRegions = sm._computing
+    ? sm.knownReachableRegions
+    : computeReachableRegions(sm);
   return reachableRegions.has(regionName);
 }
 

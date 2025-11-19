@@ -294,7 +294,7 @@ export function nova_heal(snapshot, staticData) {
  * Nova has dash capability (Monomolecular Blade or Blink)
  */
 export function nova_dash(snapshot, staticData) {
-    return has_any(snapshot, ['Monomolecular Blade (Nova Weapon)', 'Blink (Nova Gadget)']);
+    return has_any(snapshot, ['Monomolecular Blade (Nova Weapon)', 'Blink (Nova Ability)']);
 }
 
 /**
@@ -405,6 +405,23 @@ export function terran_competent_comp(snapshot, staticData) {
         && terran_competent_anti_air(snapshot, staticData)
     ) || (
         has(snapshot, 'Battlecruiser') && terran_common_unit(snapshot, staticData)
+    );
+}
+
+/**
+ * Terran composition that can beat Protoss deathball
+ * Ability to deal with Immortals, Colossi with some air support
+ */
+export function terran_beats_protoss_deathball(snapshot, staticData) {
+    return (
+        (
+            has_any(snapshot, ['Banshee', 'Battlecruiser'])
+            || has_all(snapshot, ['Liberator', 'Raid Artillery (Liberator)'])
+        )
+        && terran_competent_anti_air(snapshot, staticData)
+    ) || (
+        terran_competent_comp(snapshot, staticData)
+        && terran_air_anti_air(snapshot, staticData)
     );
 }
 
@@ -833,20 +850,7 @@ export default {
     terran_mobile_detector: (snapshot, staticData) => {
         return has_any(snapshot, ['Raven', 'Science Vessel', 'Progressive Orbital Command']);
     },
-    terran_beats_protoss_deathball: (snapshot, staticData) => {
-        // Terran composition that can beat Protoss deathball
-        // Requires strong anti-armor units and detection
-        const advancedTactics = isAdvancedTactics(staticData);
-
-        return (
-            has_any(snapshot, ['Battlecruiser', 'Banshee', 'Viking'])
-            && terran_competent_anti_air(snapshot, staticData)
-        ) || (
-            advancedTactics
-            && has(snapshot, 'Siege Tank')
-            && terran_competent_comp(snapshot, staticData)
-        );
-    },
+    terran_beats_protoss_deathball,
     terran_base_trasher: (snapshot, staticData) => {
         const advancedTactics = isAdvancedTactics(staticData);
         const canNuke = advancedTactics && (
@@ -1004,7 +1008,7 @@ export default {
     nova_dash,
     nova_heal,
     nova_escape_assist: (snapshot, staticData) => {
-        return has_any(snapshot, ['Blink (Nova Gadget)', 'Holo Decoy (Nova Gadget)', 'Ionic Force Field (Nova Gadget)']);
+        return has_any(snapshot, ['Blink (Nova Ability)', 'Holo Decoy (Nova Gadget)', 'Ionic Force Field (Nova Gadget)']);
     },
 
     great_train_robbery_train_stopper: (snapshot, staticData) => {
@@ -1031,12 +1035,41 @@ export default {
             && terran_air_anti_air(snapshot, staticData)
         );
     },
-    night_terrors_requirement: () => false,
+    night_terrors_requirement: (snapshot, staticData) => {
+        const advancedTactics = isAdvancedTactics(staticData);
+
+        return terran_common_unit(snapshot, staticData)
+            && terran_competent_anti_air(snapshot, staticData)
+            && (
+                // These can handle the waves of infested, even volatile ones
+                has(snapshot, 'Siege Tank')
+                || has_all(snapshot, ['Viking', 'Shredder Rounds (Viking)'])
+                || (
+                    // Regular infesteds
+                    (
+                        has(snapshot, 'Firebat')
+                        || has_all(snapshot, ['Hellion', 'Hellbat Aspect (Hellion)'])
+                        || (advancedTactics && has_any(snapshot, ['Perdition Turret', 'Planetary Fortress']))
+                    )
+                    && terran_bio_heal(snapshot, staticData)
+                    && (
+                        // Volatile infesteds
+                        has(snapshot, 'Liberator')
+                        || (advancedTactics && has_any(snapshot, ['HERC', 'Vulture']))
+                    )
+                )
+            );
+    },
     engine_of_destruction_requirement: (snapshot, staticData) => {
         // Engine of Destruction requires completing Cutthroat mission
         return has(snapshot, 'Beat Cutthroat');
     },
-    trouble_in_paradise_requirement: () => false,
+    trouble_in_paradise_requirement: (snapshot, staticData) => {
+        return nova_any_weapon(snapshot, staticData)
+            && nova_splash(snapshot, staticData)
+            && terran_beats_protoss_deathball(snapshot, staticData)
+            && terran_defense_rating(snapshot, staticData, true, true) >= 7;
+    },
     sudden_strike_requirement: (snapshot, staticData) => {
         // Sudden Strike requires completing The Escape mission
         return has(snapshot, 'Beat The Escape');
@@ -1202,8 +1235,35 @@ export default {
     essence_of_eternity_requirement: () => false,
     amons_fall_requirement: () => false,
     the_reckoning_requirement: () => false,
-    all_in_requirement: () => false,
-    flashpoint_far_requirement: () => false,
+    all_in_requirement: (snapshot, staticData) => {
+        const advancedTactics = isAdvancedTactics(staticData);
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const allInMap = settings?.all_in_map; // 0 = ground, 1 = air
+
+        const beatsKerrigan = has_any(snapshot, ['Marine', 'Banshee', 'Ghost']) || advancedTactics;
+
+        if (allInMap === 0) {
+            // Ground
+            let defenseRating = terran_defense_rating(snapshot, staticData, true, false);
+            if (has_any(snapshot, ['Battlecruiser', 'Banshee'])) {
+                defenseRating += 2;
+            }
+            return defenseRating >= 13 && beatsKerrigan;
+        } else {
+            // Air
+            const defenseRating = terran_defense_rating(snapshot, staticData, true, true);
+            return defenseRating >= 9
+                && beatsKerrigan
+                && has_any(snapshot, ['Viking', 'Battlecruiser', 'Valkyrie'])
+                && has_any(snapshot, ['Hive Mind Emulator', 'Psi Disrupter', 'Missile Turret']);
+        }
+    },
+    flashpoint_far_requirement: (snapshot, staticData) => {
+        return terran_competent_comp(snapshot, staticData)
+            && has_any(snapshot, ['Raven', 'Science Vessel', 'Progressive Orbital Command']) // terran_mobile_detector
+            && terran_defense_rating(snapshot, staticData, true, false) >= 6;
+    },
     lock_any_item: (snapshot, staticData, items) => {
         // During item placement (which we always are in spoiler tests), return true
         // During pool filtering, check if player has any of the items

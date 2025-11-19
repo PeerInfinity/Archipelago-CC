@@ -234,7 +234,7 @@ class SMGameExportHandler(GenericGameExportHandler):
         # Check for AND rules that combine accessFrom and Available
         # The accessFrom comprehension can't be properly exported, so we skip it
         # However, if Available is SMBool(True), we need to export as False instead
-        # of constant True, since the actual requirements are in accessFrom
+        # of preserving it, since the actual requirements are in accessFrom
         if rule_type == 'and':
             conditions = rule.get('conditions', [])
             if len(conditions) == 2:
@@ -245,14 +245,14 @@ class SMGameExportHandler(GenericGameExportHandler):
                     logger.info("SM: Found AND rule with accessFrom, checking Available part")
                     print("[SM] Found AND rule with accessFrom pattern")
 
-                    # Use the Available part, but DON'T simplify evalSMBool(SMBool(True), ...) to constant True
-                    # because that would make the location always accessible even if the region isn't accessible
-                    # Instead, preserve the evalSMBool call so the frontend can evaluate it properly
+                    # Use the Available part
+                    # Note: For some locations, Available is SMBool(True) meaning region access is sufficient
+                    # For others, Available has actual item requirements
+                    # We preserve the evalSMBool structure so the frontend can evaluate it
                     logger.info("SM: Using Available part (preserving evalSMBool structure)")
                     print("[SM] Using Available rule, preserving evalSMBool (region access provides restriction)")
-                    # Recursively expand the second condition but mark that we shouldn't simplify SMBool(True)
+                    # Recursively expand the second condition
                     expanded = self.expand_rule(second)
-                    # Don't simplify to constant True - return the rule as-is
                     return expanded
 
         # Check for accessFrom patterns that hit recursion limits
