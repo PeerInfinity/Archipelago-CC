@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-19 00:39:49
+**Generated:** 2025-11-19 01:06:29
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -112,6 +112,14 @@ This summary combines results from four types of tests:
 | Yu-Gi-Oh! 2006 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Zillion | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ⚫ |
 | shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
+
+## Multi-Template Test Results
+
+These tests check multiple template configurations for the same game.
+
+| Game Name | Minimal Link (Templates Passed) | Full Link (Templates Passed) |
+|-----------|----------------------------------|-------------------------------|
+| A Link to the Past | [136/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | ❓ N/A |
 
 ## Excluded Games
 
