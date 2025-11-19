@@ -118,9 +118,9 @@
           "timestamp": "2025-11-19T05:11:57.807697"
         }
       ],
-      "last_updated": "2025-11-19T05:17:07.962486"
+      "last_updated": "2025-11-19T17:06:32.561428"
     },
-    "last_updated": "2025-11-19T05:17:07.962484",
+    "last_updated": "2025-11-19T17:06:32.561554",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3209,7 +3209,7 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 39.01,
+            "processing_time_seconds": 37.12,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -3224,7 +3224,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 116.66,
+            "processing_time_seconds": 55.8,
             "return_code": 1,
             "sphere_reached": 0.0,
             "success": false,
@@ -3232,7 +3232,7 @@
             "warning_count": 0
           },
           "template_filename": "Blasphemous.yaml",
-          "timestamp": "2025-11-19T04:59:12.729885",
+          "timestamp": "2025-11-19T17:04:59.185634",
           "world_info": {
             "exporter_path": "exporter/games/blasphemous.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
@@ -3252,7 +3252,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1",
-      "seeds_failed": 10,
+      "seeds_failed": 1,
       "seeds_passed": 0,
       "spoiler_test": {
         "error_count": 8,
@@ -3265,13 +3265,13 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 1.0
       },
       "template_filename": "Blasphemous.yaml",
-      "timestamp": "2025-11-19T05:07:51.908071",
-      "total_seeds_tested": 10,
+      "timestamp": "2025-11-19T17:04:59.135491",
+      "total_seeds_tested": 1,
       "world_info": {
         "exporter_path": "exporter/games/blasphemous.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
