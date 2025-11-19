@@ -320,3 +320,99 @@ export function smz3_CanAccessMaridiaPortal(snapshot, staticData) {
          (hasItem(snapshot, 'Hammer') && smz3_CanLiftLight(snapshot, staticData) ||
           smz3_CanLiftHeavy(snapshot, staticData));
 }
+
+// ====================
+// Reward/Dungeon Completion Functions
+// ====================
+
+/**
+ * Check if player can acquire a specific reward (pendant/crystal/boss token).
+ * Python: def CanAcquire(self, items: Item.Progression, reward: Region.RewardType):
+ *     return next(iter([region for region in self.Regions if isinstance(region, Region.IReward) and region.Reward == reward])).CanComplete(items)
+ *
+ * This function finds the dungeon/region that has the specified reward and checks if
+ * that region can be completed (boss defeated).
+ *
+ * Reward types (bit flags):
+ * - Agahnim = 1
+ * - PendantGreen = 2
+ * - PendantNonGreen = 4
+ * - CrystalBlue = 8
+ * - CrystalRed = 16
+ * - BossTokenKraid = 32
+ * - BossTokenPhantoon = 64
+ * - BossTokenDraygon = 128
+ * - BossTokenRidley = 256
+ *
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data (contains settings with reward_regions)
+ * @param {number} rewardType - The reward type value to check for
+ */
+export function smz3_CanAcquire(snapshot, staticData, rewardType) {
+  // Get the reward_regions mapping from settings
+  const settings = staticData.settings?.[snapshot.player] || {};
+  const rewardRegions = settings.reward_regions || {};
+
+  // Boss location mapping: maps region name to boss location name
+  const bossLocations = {
+    'Castle Tower': 'Castle Tower - Agahnim',
+    'Eastern Palace': 'Eastern Palace - Armos Knights',
+    'Desert Palace': 'Desert Palace - Lanmolas',
+    'Tower of Hera': 'Tower of Hera - Moldorm',
+    'Palace of Darkness': 'Palace of Darkness - Helmasaur King',
+    'Swamp Palace': 'Swamp Palace - Arrghus',
+    'Skull Woods': 'Skull Woods - Mothula',
+    'Thieves\' Town': 'Thieves\' Town - Blind',
+    'Ice Palace': 'Ice Palace - Kholdstare',
+    'Misery Mire': 'Misery Mire - Vitreous',
+    'Turtle Rock': 'Turtle Rock - Trinexx',
+    'Brinstar Kraid': 'Kraid',
+    'Wrecked Ship': 'Phantoon',
+    'Maridia Inner': 'Draygon',
+    'Norfair Lower East': 'Ridley'
+  };
+
+  // Find the region that has the specified reward
+  for (const [regionName, rewardInfo] of Object.entries(rewardRegions)) {
+    if (rewardInfo.reward_type === rewardType) {
+      // Found the region with this reward
+      const bossLocationName = bossLocations[regionName];
+
+      if (!bossLocationName) {
+        console.warn(`[smz3_CanAcquire] No boss location mapping for region: ${regionName}`);
+        return false;
+      }
+
+      // Check if the boss location is accessible
+      // Use the evaluateRule function from the snapshot to check location accessibility
+      if (snapshot.evaluateRule) {
+        // Get the location from staticData
+        const locations = staticData.locations?.[snapshot.player];
+        if (!locations) {
+          console.warn(`[smz3_CanAcquire] No locations data for player ${snapshot.player}`);
+          return false;
+        }
+
+        // Find the boss location
+        const bossLocation = Object.values(locations).find(loc => loc.name === bossLocationName);
+        if (!bossLocation) {
+          console.warn(`[smz3_CanAcquire] Boss location not found: ${bossLocationName}`);
+          return false;
+        }
+
+        // Check if the location is accessible
+        if (bossLocation.access_rule) {
+          return snapshot.evaluateRule(bossLocation.access_rule, snapshot, staticData);
+        } else {
+          // No access rule means always accessible
+          return true;
+        }
+      }
+
+      return false;
+    }
+  }
+
+  console.warn(`[smz3_CanAcquire] No region found with reward type: ${rewardType}`);
+  return false;
+}
