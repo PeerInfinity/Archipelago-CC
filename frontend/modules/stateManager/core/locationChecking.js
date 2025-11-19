@@ -119,6 +119,12 @@ export function checkLocation(sm, locationName, addItems = true) {
             `[StateManager Class] Location ${locationName} contains item: ${location.item.name}`
           );
 
+          // Debug logging for Automated items
+          if (location.item.name && location.item.name.startsWith('Automated')) {
+            console.log(`[LocationChecking] Checking location "${locationName}" with item "${location.item.name}"`);
+            console.log(`[LocationChecking] spoilerTestMode=${sm.spoilerTestMode}, advancement=${location.item.advancement}`);
+          }
+
           // Check if item is for a different player (multiworld)
           const itemPlayerId = location.item.player;
           const currentPlayerId = sm.playerSlot;
@@ -134,15 +140,25 @@ export function checkLocation(sm, locationName, addItems = true) {
             // In normal gameplay, add all items
             const shouldAddItem = !sm.spoilerTestMode || location.item.advancement !== false;
 
+            if (location.item.name && location.item.name.startsWith('Automated')) {
+              console.log(`[LocationChecking] shouldAddItem=${shouldAddItem} (calculated from: !${sm.spoilerTestMode} || ${location.item.advancement} !== false)`);
+            }
+
             if (shouldAddItem) {
               sm._addItemToInventory(location.item.name, 1);
               sm._logDebug(
                 `[StateManager Class] Added ${location.item.name} to inventory.`
               );
+              if (location.item.name && location.item.name.startsWith('Automated')) {
+                console.log(`[LocationChecking] ✓ Called _addItemToInventory for "${location.item.name}"`);
+              }
             } else {
               sm._logDebug(
                 `[StateManager Class] Skipping ${location.item.name} - non-advancement item in spoiler test mode (advancement=${location.item.advancement}).`
               );
+              if (location.item.name && location.item.name.startsWith('Automated')) {
+                console.log(`[LocationChecking] ✗ SKIPPING "${location.item.name}" - non-advancement item`);
+              }
             }
           }
           // Potentially trigger an event for item acquisition if needed by other systems
