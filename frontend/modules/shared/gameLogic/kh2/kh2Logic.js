@@ -1771,6 +1771,223 @@ export const helperFunctions = {
   },
 
   /**
+   * Check if Thousand Heartless fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_thousand_heartless_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Thousand Heartless fight
+   */
+  get_thousand_heartless_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const easyThousandHeartlessTools = {
+      'Second Chance': 1,
+      'Once More': 1,
+      'Guard': 1,
+      'Magnet Element': 2
+    };
+
+    const normalThousandHeartlessTools = {
+      'Limit Form': 1,
+      'Guard': 1
+    };
+
+    if (fightLogic === 0) { // easy
+      return helperFunctions.kh2_dict_count(easyThousandHeartlessTools, snapshot);
+    } else if (fightLogic === 1) { // normal
+      return helperFunctions.kh2_dict_count(normalThousandHeartlessTools, snapshot);
+    } else { // hard
+      return (snapshot?.inventory?.['Guard'] || 0) > 0;
+    }
+  },
+
+  /**
+   * Check if Data Roxas fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_data_roxas_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Data Roxas fight
+   */
+  get_data_roxas_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const easyDataRoxasTools = {
+      'Guard': 1,
+      'Reflect Element': 3,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Guard Break': 1,
+      'Explosion': 1,
+      'Dodge Roll': 3,
+      'Finishing Plus': 1,
+      'Second Chance': 1,
+      'Once More': 1
+    };
+
+    const normalDataRoxasTools = {
+      'Guard': 1,
+      'Reflect Element': 2,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Guard Break': 1,
+      'Explosion': 1,
+      'Dodge Roll': 3,
+      'Finishing Plus': 1
+    };
+
+    const hardDataRoxasTools = {
+      'Guard': 1,
+      'Reflect Element': 1,
+      'Dodge Roll': 2,
+      'Finishing Plus': 1
+    };
+
+    const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+
+    // Check if player can reach Limit Form Level 5 location
+    const locationReachability = snapshot?.locationReachability || {};
+    const canReachLimitLvl5 = locationReachability['Limit level 5'] === 'reachable';
+
+    if (fightLogic === 0) { // easy
+      const hasTools = helperFunctions.kh2_dict_count(easyDataRoxasTools, snapshot);
+      const hasDonaldLimit = helperFunctions.kh2_list_any_sum([donaldLimit], snapshot) >= 1;
+      return hasTools && canReachLimitLvl5 && hasDonaldLimit;
+    } else if (fightLogic === 1) { // normal
+      const hasTools = helperFunctions.kh2_dict_count(normalDataRoxasTools, snapshot);
+      const count = helperFunctions.kh2_list_any_sum([donaldLimit, gapCloser], snapshot);
+      return hasTools && canReachLimitLvl5 && count >= 2;
+    } else { // hard
+      const hasTools = helperFunctions.kh2_dict_count(hardDataRoxasTools, snapshot);
+      const count = helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher], snapshot);
+      return hasTools && count >= 2;
+    }
+  },
+
+  /**
+   * Check if Data Demyx fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_data_demyx_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Data Demyx fight
+   */
+  get_data_demyx_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const easyDataDemyxTools = {
+      'Form Boost': 1,
+      'Reflect Element': 2,
+      'Fire Element': 3,
+      'Donald Flare Force': 1,
+      'Guard': 1,
+      'Second Chance': 1,
+      'Once More': 1,
+      'Finishing Plus': 1
+    };
+
+    const normalDataDemyxTools = {
+      'Reflect Element': 2,
+      'Fire Element': 3,
+      'Donald Flare Force': 1,
+      'Guard': 1,
+      'Finishing Plus': 1
+    };
+
+    const hardDataDemyxTools = {
+      'Reflect Element': 1,
+      'Fire Element': 2,
+      'Donald Flare Force': 1,
+      'Guard': 1,
+      'Finishing Plus': 1
+    };
+
+    if (fightLogic === 0) { // easy: tools + Wisdom Form level 5 (6 total forms)
+      const hasTools = helperFunctions.kh2_dict_count(easyDataDemyxTools, snapshot);
+      const hasWisdomLevel = helperFunctions.form_list_unlock(snapshot, staticData, 'Wisdom Form', 5, true);
+      return hasTools && hasWisdomLevel;
+    } else if (fightLogic === 1) { // normal: tools + Wisdom Form level 5 (6 total forms)
+      const hasTools = helperFunctions.kh2_dict_count(normalDataDemyxTools, snapshot);
+      const hasWisdomLevel = helperFunctions.form_list_unlock(snapshot, staticData, 'Wisdom Form', 5, true);
+      return hasTools && hasWisdomLevel;
+    } else { // hard: tools + Wisdom Form level 4 (5 total forms)
+      const hasTools = helperFunctions.kh2_dict_count(hardDataDemyxTools, snapshot);
+      const hasWisdomLevel = helperFunctions.form_list_unlock(snapshot, staticData, 'Wisdom Form', 4, true);
+      return hasTools && hasWisdomLevel;
+    }
+  },
+
+  /**
+   * Check if Sephiroth fight is accessible.
+   * Based on worlds/kh2/Rules.py:get_sephiroth_rules
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Sephiroth fight
+   */
+  get_sephiroth_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const easySephirothTools = {
+      'Guard': 1,
+      'Reflect Element': 3,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Guard Break': 1,
+      'Explosion': 1,
+      'Dodge Roll': 3,
+      'Finishing Plus': 1,
+      'Second Chance': 1,
+      'Once More': 1
+    };
+
+    const normalSephirothTools = {
+      'Guard': 1,
+      'Reflect Element': 2,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Guard Break': 1,
+      'Explosion': 1,
+      'Dodge Roll': 3,
+      'Finishing Plus': 1
+    };
+
+    const hardSephirothTools = {
+      'Guard': 1,
+      'Reflect Element': 1,
+      'Dodge Roll': 2,
+      'Finishing Plus': 1
+    };
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+
+    // Check if player can reach Limit Form Level 5 location
+    const locationReachability = snapshot?.locationReachability || {};
+    const canReachLimitLvl5 = locationReachability['Limit level 5'] === 'reachable';
+
+    if (fightLogic === 0) { // easy: tools + can reach Limit Form Level 5
+      const hasTools = helperFunctions.kh2_dict_count(easySephirothTools, snapshot);
+      return hasTools && canReachLimitLvl5;
+    } else if (fightLogic === 1) { // normal: tools + can reach Limit Form Level 5 + has gap closer
+      const hasTools = helperFunctions.kh2_dict_count(normalSephirothTools, snapshot);
+      const hasGapCloser = helperFunctions.kh2_list_any_sum([gapCloser], snapshot) >= 1;
+      return hasTools && canReachLimitLvl5 && hasGapCloser;
+    } else { // hard: tools + has at least 2 of (gap closer or ground finisher)
+      const hasTools = helperFunctions.kh2_dict_count(hardSephirothTools, snapshot);
+      const count = helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher], snapshot);
+      return hasTools && count >= 2;
+    }
+  },
+
+  /**
    * Utility: Sum up the count of all items in a list.
    * Based on worlds/kh2/Rules.py:93-100
    *
