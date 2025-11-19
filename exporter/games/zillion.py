@@ -9,9 +9,10 @@ logger = logging.getLogger(__name__)
 class ZillionGameExportHandler(GenericGameExportHandler):
     """Export handler for Zillion.
 
-    Zillion uses the zilliandomizer library for its logic system. We need to
-    properly interpret the `req` attributes on locations, accounting for region
-    connectivity which is handled separately.
+    Zillion uses the zilliandomizer library for its logic system. Access rules are
+    implemented as functools.partial objects that call the zilliandomizer logic cache,
+    making them difficult to analyze statically. We use runtime testing to determine
+    which items are required for each location.
     """
     GAME_NAME = 'Zillion'
 
@@ -23,102 +24,64 @@ class ZillionGameExportHandler(GenericGameExportHandler):
 
     def get_custom_location_access_rule(self, location, world) -> Optional[Dict[str, Any]]:
         """
-        Extract access rules from the zz_loc.req object.
+        Test the location's access rule with different item combinations to determine
+        which items are required.
 
-        In Zillion, the `req` attribute specifies the abilities needed to access
-        a location, ASSUMING you're already in the region. Region connectivity is
-        handled separately by region exit access rules.
-
-        The `req` attribute has these fields:
-        - gun: gun power level (1 is starting, 2+ requires Zillion items)
-        - jump: jump power level (1 is starting, 2+ requires Opa-Opa items)
-        - floppy: number of Floppy Disk items needed
-        - red: number of Red ID Card items needed
-        - hp: minimum HP required (not used for access, only for exclusions)
-        - skill: skill level required (not used for access, only for exclusions)
-        - char: starting character (not an access requirement)
-        - door: door requirement (not yet implemented)
+        This works by calling the access_rule function with different CollectionStates
+        and seeing which items make the location accessible.
         """
-        if not hasattr(location, 'zz_loc'):
-            # Not a Zillion location
+        # Import here to avoid circular dependencies
+        from BaseClasses import CollectionState
+
+        if not hasattr(location, 'access_rule') or location.access_rule is None:
             return None
 
-        zz_loc = location.zz_loc
-        if not hasattr(zz_loc, 'req'):
-            logger.warning(f"Location {location.name} has zz_loc but no req attribute")
+        try:
+            # Create a minimal collection state with no items
+            # Don't sweep for advancements - we want to test the RAW access without item collection
+            empty_state = world.multiworld.get_all_state(False)
+
+            # Debug: Check specific locations
+            if location.name in ["C-3 mid far right", "A-4 bottom far left"]:
+                is_accessible = location.access_rule(empty_state)
+                logger.info(f"[RUNTIME DEBUG] {location.name}: accessible with empty state = {is_accessible}")
+
+            # If accessible with no items, return True
+            if location.access_rule(empty_state):
+                return {'type': 'constant', 'value': True}
+
+            # Test each item type to see if it enables access
+            required_items = []
+            item_names = ['Zillion', 'Opa-Opa', 'Floppy Disk', 'Red ID Card', 'Scope', 'Bread', 'Apple']
+
+            for item_name in item_names:
+                # Skip if this item doesn't exist in the world
+                if item_name not in world.item_name_to_id:
+                    continue
+
+                # Test with 1 of this item - don't sweep to avoid collecting other items
+                test_state = empty_state.copy()
+                test_state.collect(world.create_item(item_name), prevent_sweep=True)
+
+                if location.access_rule(test_state):
+                    required_items.append(item_name)
+
+            if not required_items:
+                # Location is not accessible even with items - might need multiple items
+                # or region connectivity. Return None to let the generic analyzer handle it.
+                return None
+
+            # Build the access rule from the required items
+            if len(required_items) == 1:
+                return {'type': 'item_check', 'item': required_items[0]}
+            else:
+                # Multiple items might be needed - test combinations
+                # For now, return OR of all items (one is sufficient)
+                return {
+                    'type': 'or',
+                    'conditions': [{'type': 'item_check', 'item': item} for item in required_items]
+                }
+
+        except Exception as e:
+            logger.warning(f"Runtime test failed for location {location.name}: {e}")
             return None
-
-        req = zz_loc.req
-
-        # Build list of required conditions
-        conditions: List[Dict[str, Any]] = []
-
-        # gun -> Zillion
-        # Starting gun level is 1, so gun=2 means you need 1 Zillion, gun=3 means 2 Zillion, etc.
-        if hasattr(req, 'gun') and req.gun > 1:
-            count = req.gun - 1
-            if count == 1:
-                conditions.append({'type': 'item_check', 'item': 'Zillion'})
-            else:
-                conditions.append({
-                    'type': 'item_check',
-                    'item': 'Zillion',
-                    'count': {'type': 'constant', 'value': count}
-                })
-
-        # jump -> Opa-Opa
-        # Starting jump level is 1, so jump=2 means you need 1 Opa-Opa, jump=3 means 2 Opa-Opa, etc.
-        if hasattr(req, 'jump') and req.jump > 1:
-            count = req.jump - 1
-            if count == 1:
-                conditions.append({'type': 'item_check', 'item': 'Opa-Opa'})
-            else:
-                conditions.append({
-                    'type': 'item_check',
-                    'item': 'Opa-Opa',
-                    'count': {'type': 'constant', 'value': count}
-                })
-
-        # floppy -> Floppy Disk
-        # floppy=0 is starting (no disks), floppy=1 means you need 1 disk, etc.
-        if hasattr(req, 'floppy') and req.floppy > 0:
-            if req.floppy == 1:
-                conditions.append({'type': 'item_check', 'item': 'Floppy Disk'})
-            else:
-                conditions.append({
-                    'type': 'item_check',
-                    'item': 'Floppy Disk',
-                    'count': {'type': 'constant', 'value': req.floppy}
-                })
-
-        # red -> Red ID Card
-        # red=0 is starting (no cards), red=1 means you need 1 card, etc.
-        if hasattr(req, 'red') and req.red > 0:
-            if req.red == 1:
-                conditions.append({'type': 'item_check', 'item': 'Red ID Card'})
-            else:
-                conditions.append({
-                    'type': 'item_check',
-                    'item': 'Red ID Card',
-                    'count': {'type': 'constant', 'value': req.red}
-                })
-
-        # Note: char, hp, skill, and door fields are not used for access logic export
-        # - char: starting character (always available, not collected)
-        # - hp/skill: used only for location exclusions, not access
-        # - door: not yet implemented in the logic
-
-        # If no conditions, location is accessible with no item requirements
-        # (region access is handled separately)
-        if not conditions:
-            return {'type': 'constant', 'value': True}
-
-        # If only one condition, return it directly
-        if len(conditions) == 1:
-            return conditions[0]
-
-        # Multiple conditions - combine with AND
-        return {
-            'type': 'and',
-            'conditions': conditions
-        }
