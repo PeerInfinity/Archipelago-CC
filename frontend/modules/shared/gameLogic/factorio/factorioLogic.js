@@ -51,12 +51,27 @@ export const helperFunctions = {
    * @returns {boolean} True if player has the item
    */
   has(snapshot, staticData, itemName) {
+    // Debug logging for Automated items
+    const isAutomatedItem = itemName && itemName.startsWith('Automated');
+    if (isAutomatedItem) {
+      console.log(`[Factorio has()] Checking for item: "${itemName}"`);
+      console.log(`[Factorio has()] snapshot.inventory:`, snapshot?.inventory);
+      console.log(`[Factorio has()] Item in inventory?`, itemName in (snapshot?.inventory || {}));
+      console.log(`[Factorio has()] Item count:`, snapshot?.inventory?.[itemName]);
+    }
+
     if (!snapshot?.inventory) {
+      if (isAutomatedItem) {
+        console.log(`[Factorio has()] No inventory in snapshot, returning false`);
+      }
       return false;
     }
 
     // Direct check: does the inventory have this exact item?
     if (snapshot.inventory[itemName] > 0) {
+      if (isAutomatedItem) {
+        console.log(`[Factorio has()] Found item in inventory with count > 0, returning true`);
+      }
       return true;
     }
 
@@ -84,6 +99,9 @@ export const helperFunctions = {
       }
     }
 
+    if (isAutomatedItem) {
+      console.log(`[Factorio has()] Item not found in inventory or progressive mapping, returning false`);
+    }
     return false;
   },
 
