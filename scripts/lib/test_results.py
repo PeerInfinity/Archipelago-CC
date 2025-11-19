@@ -35,16 +35,16 @@ def is_test_passing(template_file: str, test_results: Dict, multiplayer: bool = 
     if not isinstance(result, dict):
         return result if isinstance(result, bool) else False
 
-    # Check if this is a seed range result
-    if 'summary' in result and 'all_passed' in result['summary']:
-        return result['summary']['all_passed']
-
-    # Check if this is a seed range result without summary (check for failures)
+    # Check for failures first (more reliable than summary field)
     if 'first_failure_seed' in result and result['first_failure_seed'] is not None:
         return False  # Has a failing seed
 
     if 'seeds_failed' in result and result['seeds_failed'] > 0:
         return False  # Has failed seeds
+
+    # Check if this is a seed range result
+    if 'summary' in result and 'all_passed' in result['summary']:
+        return result['summary']['all_passed']
 
     # Check individual test result
     if multiplayer:
