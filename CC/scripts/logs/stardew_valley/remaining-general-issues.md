@@ -2,44 +2,34 @@
 
 This document tracks general issues that need to be fixed.
 
-## Issue 1: Access rule evaluation failures in initial sphere
+## Issue 1: Museumsanity locations failing to evaluate in Sphere 2.1
 
 **Status:** Investigating
-**Priority:** Critical
+**Priority:** High
 
 ### Problem
-The spoiler test is failing in Sphere 0 (initial state) with the following errors:
+Three Museumsanity locations are not being recognized as accessible in Sphere 2.1:
+- Museumsanity: 3 Artifacts
+- Museumsanity: 5 Donations
+- Museumsanity: 6 Artifacts
 
-1. **Missing regions from state:**
-   - Egg Festival
-   - Flower Dance
-   - Spring Farming
-
-2. **Missing locations from state:**
-   - Dance with someone (in Flower Dance)
-   - Egg Hunt Victory (in Egg Festival)
-   - Granny's Gift
-   - Level 1 Foraging
-   - Pot Of Gold
-   - Robin's Lost Axe
-
-3. **Error messages:**
-   - "Access rule evaluation failed" (multiple occurrences)
-   - Regions are marked as "not reachable" even though requirements are met
+Error: "Access rule evaluation failed" (no details provided in logs)
 
 ### Analysis
-- The "Spring" item is correctly present in starting_items
-- Access rules for seasonal regions correctly check for "Spring" item
-- Rules are properly exported with `{"type": "item_check", "item": "Spring"}`
-- Starting inventory should include Spring with count 1
+- These locations use complex `count_true` rules with many nested conditions
+- The `count_true` rules contain multiple `region_check` conditions
+- The rule engine supports both `count_true` and `region_check` types
+- Added recursion protection to `isRegionReachable` (similar to `isLocationAccessible`)
+- Test still fails at the same point after the recursion fix
 
-### Root Cause
-The issue appears to be in the rule evaluation logic in the frontend. The rule engine is failing to properly evaluate item_check rules, possibly because:
-1. Starting items are not being added to inventory correctly
-2. Rule engine has a bug in item_check evaluation
-3. There's an initialization order issue
+### Current Test Status
+- Test processes 37/322 events successfully
+- Fails at Sphere 2.1 (step 38)
+- Sphere 0 now passes completely (was failing before due to starting items bug)
 
 ### Next Steps
-1. Check if starting items are being added to the inventory during initialization
-2. Verify that item_check rules are being evaluated correctly by the rule engine
-3. Add debug logging to trace rule evaluation
+1. Get more detailed error messages from the rule evaluator to identify the exact failure
+2. Analyze the complex count_true rules to find what condition is causing evaluation to fail
+3. Test with simpler Museumsanity rules to isolate the issue
+4. Check if there are any undefined values or errors being passed to the rule engine
+5. Verify that the `count_true` rule type is working correctly with nested conditions
