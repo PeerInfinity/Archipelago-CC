@@ -261,7 +261,6 @@ def _process_template_results(template_results: Dict[str, List], combined_result
                 individual_results[str(seed)] = result
 
             # Check if all seeds passed
-            all_passed = True
             first_failure_seed = None
             first_failure_reason = None
             consecutive_passes = 0
@@ -307,6 +306,9 @@ def _process_template_results(template_results: Dict[str, List], combined_result
                                 first_failure_reason = f"Generation error: {gen_result['first_error_line']}"
                             else:
                                 first_failure_reason = f"Generation failed with return code {gen_result.get('return_code')}"
+
+            # Calculate all_passed based on actual results
+            all_passed = seeds_failed == 0
 
             # Use the result from the first seed as the base
             base_result = seed_results[0][1].copy()

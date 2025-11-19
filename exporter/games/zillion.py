@@ -1,6 +1,6 @@
 """Zillion game-specific export handler."""
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from .generic import GenericGameExportHandler
 import logging
 
@@ -9,9 +9,8 @@ logger = logging.getLogger(__name__)
 class ZillionGameExportHandler(GenericGameExportHandler):
     """Export handler for Zillion.
 
-    Zillion uses the zilliandomizer library for its logic system, which is too complex
-    for static analysis. We use empirical testing to determine what items are needed
-    for each location.
+    Zillion uses the zilliandomizer library for its logic system. Instead of static
+    analysis, we extract requirements directly from the zz_loc.req object.
     """
     GAME_NAME = 'Zillion'
 
@@ -23,70 +22,78 @@ class ZillionGameExportHandler(GenericGameExportHandler):
 
     def get_custom_location_access_rule(self, location, world) -> Optional[Dict[str, Any]]:
         """
-        Determine access rules by empirically testing the location with different items.
+        Extract access rules directly from the zz_loc.req object.
 
-        Since zilliandomizer's logic is too complex for static analysis, we test
-        what items are actually needed by checking accessibility with different
-        item combinations.
+        The zilliandomizer library stores exact requirements in the location's
+        zz_loc.req attribute, which includes:
+        - gun: number of Zillion items needed
+        - jump: number of Opa-Opa items needed
+        - floppy: number of Floppy Disk items needed
+        - red: number of Red ID Card items needed
+        - char: starting characters (always available, not a requirement)
+        - skill, hp: skill and health requirements (not yet implemented)
         """
-        from BaseClasses import CollectionState
-
-        if not hasattr(location, 'access_rule') or not location.access_rule:
+        if not hasattr(location, 'zz_loc'):
+            # Not a Zillion location
             return None
 
-        # Get the items available in this game
-        item_pool = ["Zillion", "Opa-Opa", "Floppy Disk", "Red ID Card", "Scope",
-                     "JJ", "Apple", "Champ"]
+        zz_loc = location.zz_loc
+        if not hasattr(zz_loc, 'req'):
+            return None
 
-        # Test with no items first
-        empty_state = CollectionState(world.multiworld)
-        if location.access_rule(empty_state):
-            # Location is accessible with no items
+        req = zz_loc.req
+
+        # Build list of required conditions
+        conditions: List[Dict[str, Any]] = []
+
+        # Map zilliandomizer requirements to Archipelago item names
+        # In Zillion, gun=1 and jump=1 are the starting state (no items needed)
+        # gun=2 means you need 1 Zillion, gun=3 means you need 2 Zillion, etc.
+        # jump=2 means you need 1 Opa-Opa, jump=3 means you need 2 Opa-Opa, etc.
+
+        # gun -> Zillion
+        if hasattr(req, 'gun') and req.gun > 1:
+            rule = {'type': 'item_check', 'item': 'Zillion'}
+            if req.gun > 2:
+                rule['count'] = {'type': 'constant', 'value': req.gun - 1}
+            conditions.append(rule)
+
+        # jump -> Opa-Opa
+        if hasattr(req, 'jump') and req.jump > 1:
+            rule = {'type': 'item_check', 'item': 'Opa-Opa'}
+            if req.jump > 2:
+                rule['count'] = {'type': 'constant', 'value': req.jump - 1}
+            conditions.append(rule)
+
+        # floppy -> Floppy Disk
+        if hasattr(req, 'floppy') and req.floppy > 0:
+            rule = {'type': 'item_check', 'item': 'Floppy Disk'}
+            if req.floppy > 1:
+                rule['count'] = {'type': 'constant', 'value': req.floppy}
+            conditions.append(rule)
+
+        # red -> Red ID Card
+        if hasattr(req, 'red') and req.red > 0:
+            rule = {'type': 'item_check', 'item': 'Red ID Card'}
+            if req.red > 1:
+                rule['count'] = {'type': 'constant', 'value': req.red}
+            conditions.append(rule)
+
+        # Note: char field represents starting characters (JJ, Apple, Champ)
+        # These are always available from the start, not items to collect
+        # So we don't add them as requirements
+
+        # If no conditions, location is accessible with no requirements
+        if not conditions:
             return {'type': 'constant', 'value': True}
 
-        # Find minimum items needed
-        # Test common combinations
-        for item_name in item_pool:
-            test_state = CollectionState(world.multiworld)
-            if item_name in world.item_name_to_id:
-                test_state.prog_items[location.player][item_name] = 1
-                if location.access_rule(test_state):
-                    # This single item makes it accessible
-                    return {
-                        'type': 'item_check',
-                        'item': item_name
-                    }
+        # If only one condition, return it directly
+        if len(conditions) == 1:
+            return conditions[0]
 
-        # Try two-item combinations
-        for i, item1 in enumerate(item_pool):
-            for item2 in item_pool[i:]:
-                if item1 == item2:
-                    # Try multiple of same item
-                    test_state = CollectionState(world.multiworld)
-                    if item1 in world.item_name_to_id:
-                        test_state.prog_items[location.player][item1] = 2
-                        if location.access_rule(test_state):
-                            return {
-                                'type': 'item_check',
-                                'item': item1,
-                                'count': {'type': 'constant', 'value': 2}
-                            }
-                else:
-                    # Try combination of two different items
-                    test_state = CollectionState(world.multiworld)
-                    if item1 in world.item_name_to_id and item2 in world.item_name_to_id:
-                        test_state.prog_items[location.player][item1] = 1
-                        test_state.prog_items[location.player][item2] = 1
-                        if location.access_rule(test_state):
-                            return {
-                                'type': 'and',
-                                'conditions': [
-                                    {'type': 'item_check', 'item': item1},
-                                    {'type': 'item_check', 'item': item2}
-                                ]
-                            }
-
-        # If we can't figure it out with simple tests, return None to use default analysis
-        logger.warning(f"Could not determine access rule for {location.name} through testing")
-        return None
+        # Multiple conditions - combine with AND
+        return {
+            'type': 'and',
+            'conditions': conditions
+        }
 

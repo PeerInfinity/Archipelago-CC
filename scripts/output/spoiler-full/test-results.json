@@ -3269,8 +3269,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 1.0
       },
       "template_filename": "Blasphemous.yaml",
@@ -9810,8 +9810,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 1.0
       },
       "template_filename": "Factorio.yaml",
@@ -11292,8 +11292,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 0.2
       },
       "template_filename": "Heretic.yaml",
@@ -12923,8 +12923,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 1.0
       },
       "template_filename": "Kingdom Hearts 2.yaml",
@@ -13851,8 +13851,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 0.2
       },
       "template_filename": "Kirby's Dream Land 3.yaml",
@@ -14464,8 +14464,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 1.0
       },
       "template_filename": "Lingo.yaml",
@@ -15901,8 +15901,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 0.3
       },
       "template_filename": "Mario & Luigi Superstar Saga.yaml",
@@ -19478,8 +19478,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 1.0
       },
       "template_filename": "Ocarina of Time.yaml",
@@ -23055,8 +23055,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 1.0
       },
       "template_filename": "SMZ3.yaml",
@@ -25195,8 +25195,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 1.0
       },
       "template_filename": "Starcraft 2.yaml",
@@ -25299,8 +25299,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 1.0
       },
       "template_filename": "Stardew Valley.yaml",
@@ -27439,8 +27439,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 1.0
       },
       "template_filename": "Super Metroid.yaml",
@@ -34025,8 +34025,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 0.6
       },
       "template_filename": "Yu-Gi-Oh! 2006.yaml",
@@ -34129,8 +34129,8 @@
         "warning_count": 0
       },
       "summary": {
-        "all_passed": true,
-        "any_failed": false,
+        "all_passed": false,
+        "any_failed": true,
         "failure_rate": 1.0
       },
       "template_filename": "Zillion.yaml",

@@ -2501,13 +2501,17 @@ export const helperFunctions = {
     };
 
     if (fightLogic === 0) { // easy
+      // Limit level 5 requires form_list_unlock('Limit Form', 3)
+      // We inline this check to avoid circular dependency issues during reachability computation
       return helperFunctions.kh2_dict_count(easyDataXemnas, snapshot) &&
         helperFunctions.kh2_list_count_sum(groundFinisher, snapshot) >= 2 &&
-        helperFunctions.kh2_can_reach(snapshot, staticData, 'Limit level 5');
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Limit Form', 3);
     } else if (fightLogic === 1) { // normal
+      // Limit level 5 requires form_list_unlock('Limit Form', 3)
+      // We inline this check to avoid circular dependency issues during reachability computation
       return helperFunctions.kh2_dict_count(normalDataXemnas, snapshot) &&
         helperFunctions.kh2_list_count_sum(groundFinisher, snapshot) >= 2 &&
-        helperFunctions.kh2_can_reach(snapshot, staticData, 'Limit level 5');
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Limit Form', 3);
     } else { // hard
       return helperFunctions.kh2_dict_count(hardDataXemnas, snapshot) &&
         helperFunctions.kh2_list_any_sum([groundFinisher, gapCloser], snapshot) >= 2;
@@ -2680,10 +2684,10 @@ export const helperFunctions = {
    * @returns {boolean} True if the location is reachable
    */
   kh2_can_reach(snapshot, staticData, locationName) {
-    // Check if location is in accessible locations or has been checked
-    const accessibleLocations = snapshot?.accessibleLocations || {};
-    const checkedLocations = snapshot?.checkedLocations || {};
+    // Check if location is reachable or has been checked
+    // locationReachability tracks: 'reachable', 'unreachable', or 'checked'
+    const locationStatus = snapshot?.locationReachability?.[locationName];
 
-    return accessibleLocations[locationName] === true || checkedLocations[locationName] === true;
+    return locationStatus === 'reachable' || locationStatus === 'checked';
   }
 };

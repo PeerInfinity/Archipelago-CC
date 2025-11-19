@@ -210,20 +210,25 @@ class FactorioGameExportHandler(BaseGameExportHandler):
                 if location.item and location.item.player == world.player:
                     item_name = location.item.name
                     # Check if this is an event item (no code/ID) that we haven't seen
-                    if (location.item.code is None and 
+                    if (location.item.code is None and
                         item_name not in item_data and
                         hasattr(location.item, 'classification')):
-                        
+
+                        # For Factorio, "Automated" items are not true event items -
+                        # they need to be added to inventory and checked normally
+                        # Only mark as event=False for Automated items
+                        is_automated_item = item_name.startswith('Automated ')
+
                         item_data[item_name] = {
                             'name': item_name,
                             'id': None,
-                            'groups': ['Event'],
+                            'groups': [] if is_automated_item else ['Event'],
                             'advancement': location.item.classification == ItemClassification.progression,
                             'useful': location.item.classification == ItemClassification.useful,
                             'trap': location.item.classification == ItemClassification.trap,
-                            'event': True,
-                            'type': 'Event',
+                            'event': not is_automated_item,  # False for Automated items, True for others
+                            'type': None if is_automated_item else 'Event',
                             'max_count': 1
                         }
-        
+
         return item_data

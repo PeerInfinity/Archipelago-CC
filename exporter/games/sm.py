@@ -103,6 +103,39 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return False
 
+    def _is_always_true_smbool(self, rule: Dict[str, Any]) -> bool:
+        """Check if a rule is evalSMBool(SMBool(True), ...) which would simplify to True.
+
+        This indicates the location has no item requirements once in the region,
+        and the actual requirements are in accessFrom (which we can't export).
+        """
+        if not rule:
+            return False
+
+        rule_type = rule.get('type')
+
+        # Check for evalSMBool(SMBool(True), ...)
+        if rule_type == 'helper' and rule.get('name') == 'evalSMBool':
+            args = rule.get('args', [])
+            if len(args) >= 1:
+                first_arg = args[0]
+                return self._check_smbool_true_pattern(first_arg)
+
+        # Check for function_call pattern
+        if rule_type == 'function_call':
+            function = rule.get('function', {})
+            if function.get('type') == 'attribute':
+                obj = function.get('object', {})
+                attr = function.get('attr')
+                if (obj.get('type') == 'name' and
+                    obj.get('name') == 'self' and
+                    attr == 'evalSMBool'):
+                    args = rule.get('args', [])
+                    if len(args) >= 1:
+                        return self._check_smbool_true_pattern(args[0])
+
+        return False
+
     def _try_simplify_evalSMBool(self, args: list) -> Optional[Dict[str, Any]]:
         """Try to simplify evalSMBool calls if possible.
 
@@ -199,7 +232,9 @@ class SMGameExportHandler(GenericGameExportHandler):
         rule_type = rule.get('type')
 
         # Check for AND rules that combine accessFrom and Available
-        # We want to skip the accessFrom part and only use the Available part
+        # The accessFrom comprehension can't be properly exported, so we skip it
+        # However, if Available is SMBool(True), we need to export as False instead
+        # of constant True, since the actual requirements are in accessFrom
         if rule_type == 'and':
             conditions = rule.get('conditions', [])
             if len(conditions) == 2:
@@ -207,10 +242,18 @@ class SMGameExportHandler(GenericGameExportHandler):
                 second = conditions[1]
                 # If first condition is accessFrom pattern, skip it and use only second
                 if self._check_accessFrom_pattern(first) or self._check_deeply_nested_any_of(first):
-                    logger.info("SM: Found AND rule with accessFrom, using only Available part")
-                    print("[SM] Skipping accessFrom in AND rule, using only Available rule")
-                    # Recursively expand the second condition (Available rule)
-                    return self.expand_rule(second)
+                    logger.info("SM: Found AND rule with accessFrom, checking Available part")
+                    print("[SM] Found AND rule with accessFrom pattern")
+
+                    # Use the Available part, but DON'T simplify evalSMBool(SMBool(True), ...) to constant True
+                    # because that would make the location always accessible even if the region isn't accessible
+                    # Instead, preserve the evalSMBool call so the frontend can evaluate it properly
+                    logger.info("SM: Using Available part (preserving evalSMBool structure)")
+                    print("[SM] Using Available rule, preserving evalSMBool (region access provides restriction)")
+                    # Recursively expand the second condition but mark that we shouldn't simplify SMBool(True)
+                    expanded = self.expand_rule(second)
+                    # Don't simplify to constant True - return the rule as-is
+                    return expanded
 
         # Check for accessFrom patterns that hit recursion limits
         # These create infinitely nested structures that can't be properly evaluated
@@ -230,19 +273,14 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         # Handle helper nodes with name='evalSMBool' (analyzer converts self.evalSMBool to helper)
         if rule_type == 'helper' and rule.get('name') == 'evalSMBool':
-            # Check if this is evalSMBool(SMBool(true), ...) pattern
-            args = rule.get('args', [])
-            if len(args) >= 1:
-                first_arg = args[0]
-                # Check if first arg is SMBool(true)
-                if self._check_smbool_true_pattern(first_arg):
-                    # SMBool(True) with default difficulty 0 always passes evalSMBool
-                    # regardless of maxDiff, so simplify to constant True
-                    print("[SM] Simplifying evalSMBool(SMBool(True), ...) to constant True")
-                    return {'type': 'constant', 'value': True}
+            # DON'T simplify evalSMBool(SMBool(True), ...) to constant True
+            # even though mathematically it's always true, because:
+            # 1. For locations with accessFrom, the region access provides the restriction
+            # 2. Preserving the structure allows proper frontend evaluation
+            # 3. It makes the exported rules more consistent and debuggable
 
-            # Otherwise preserve the evalSMBool helper call but expand its arguments
-            print("[SM] Preserving evalSMBool helper (will need state.smbm)")
+            # Preserve the evalSMBool helper call and expand its arguments
+            print("[SM] Preserving evalSMBool helper (will be evaluated by frontend)")
             if 'args' in rule:
                 rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
             return rule
@@ -258,12 +296,9 @@ class SMGameExportHandler(GenericGameExportHandler):
                 # Transform self.evalSMBool(...) into helper call
                 if obj.get('type') == 'name' and obj.get('name') == 'self' and attr == 'evalSMBool':
                     # Convert to helper call and expand arguments
-                    print("[SM] Converting evalSMBool function_call to helper")
+                    # Don't simplify SMBool(True) - preserve the structure
+                    print("[SM] Converting evalSMBool function_call to helper (preserving structure)")
                     expanded_args = [self.expand_rule(arg) for arg in rule.get('args', [])]
-                    # Check if this is SMBool(true) pattern
-                    if len(expanded_args) >= 1 and self._check_smbool_true_pattern(expanded_args[0]):
-                        print("[SM] Simplifying evalSMBool(SMBool(True), ...) function_call to constant True")
-                        return {'type': 'constant', 'value': True}
                     return {'type': 'helper', 'name': 'evalSMBool', 'args': expanded_args}
 
                 # Transform sm.methodName(...) into helper calls
