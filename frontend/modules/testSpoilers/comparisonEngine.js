@@ -346,17 +346,9 @@ export class ComparisonEngine {
       }
     }
 
-    // Filter regions to handle Menu region discrepancy
-    // Menu is a structural region that may have different semantics between Python and JavaScript
-    // Apply filtering universally for all games to avoid comparison issues
-    const gameName = staticData?.game_name || staticData?.game_info?.[playerId]?.game || '';
-
-    // Remove Menu from both state and log accessible regions for consistent comparison
-    let filteredStateAccessibleRegions = stateAccessibleRegions.filter(name => name !== 'Menu');
-    let filteredLogAccessibleRegions = logAccessibleRegionNames.filter(name => name !== 'Menu');
-
-    const stateAccessibleSet = new Set(filteredStateAccessibleRegions);
-    const logAccessibleSet = new Set(filteredLogAccessibleRegions);
+    // No filtering - compare Menu region directly
+    const stateAccessibleSet = new Set(stateAccessibleRegions);
+    const logAccessibleSet = new Set(logAccessibleRegionNames);
 
     const missingFromState = [...logAccessibleSet].filter(
       (name) => !stateAccessibleSet.has(name)
