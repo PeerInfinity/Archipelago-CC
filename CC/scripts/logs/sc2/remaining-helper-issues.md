@@ -1,31 +1,44 @@
 # SC2 Remaining Helper Issues
 
-## Issue 1: Trouble In Paradise Requirements - Access Rule Evaluation Failed
+## Status: Active - In Progress
+
+Current test status: **Sphere 22.3** (started at 18.23)
+
+## Issue 1: Enemy Shadow Mission Helpers - NOT IMPLEMENTED
 
 ### Symptom
-- **Test failure at:** Sphere 19.3
-- **Locations affected:** All "Trouble In Paradise" mission locations (11 locations total)
-- **Error:** "Access rule evaluation failed"
-- **Status:** Locations accessible in LOG but NOT in STATE
+- **Test failure at:** Sphere 22.3
+- **Locations affected:** All "In the Enemy's Shadow" mission locations
+- **Status:** Helpers are stubs returning `false`
 
-### Details
-All locations in Trouble In Paradise mission use the `trouble_in_paradise_requirement` helper function. The Python backend considers these locations accessible at Sphere 19.3 (after "Beat Enemy Intelligence" is collected), but the JavaScript helper is not evaluating to true.
+### Helpers Needed
+- `enemy_shadow_first_stage`
+- `enemy_shadow_second_stage`
+- `enemy_shadow_victory`
+- `enemy_shadow_door_controls`
+- `enemy_shadow_door_unlocks_tool`
+- `enemy_shadow_tripwires_tool`
+- `enemy_shadow_domination`
 
-### Requirements
-The helper requires:
-1. `nova_any_weapon` - Player has a Nova weapon
-2. `nova_splash` - Player has Nova splash capability
-3. `terran_beats_protoss_deathball` - Can beat Protoss deathball
-4. `terran_defense_rating(..., true, true) >= 7` - Defense rating >= 7
+### Next Steps
+1. Implement each helper based on Python `worlds/sc2/Rules.py`
+2. Test progression through Enemy Shadow mission
+3. Continue to next failing mission
 
-### Investigation Status
-- Player inventory at Sphere 19.3 includes: C20A Canister Rifle, Hellfire Shotgun, Plasma Rifle, Banshee, Battlecruiser, Wraith with Advanced Laser Technology, Marine, Medic, Siege Tank with Maelstrom Rounds, etc.
-- All requirements appear to be satisfied in manual evaluation
-- Need to debug why JavaScript evaluation is returning false
+---
 
-### Recent Fixes
-- Implemented `trouble_in_paradise_requirement` (was returning `false` stub)
-- Fixed `terran_beats_protoss_deathball` to match Python implementation
+## Other Stub Helpers (Not Yet Blocking Tests)
+
+The following helpers are still stubs and may need implementation later:
+- `dark_skies_requirement`
+- `last_stand_requirement` (implemented in JS but may need verification)
+- `end_game_requirement`
+- `supreme_requirement`
+- `into_the_void_requirement`
+- `essence_of_eternity_requirement`
+- `amons_fall_requirement`
+- `the_reckoning_requirement`
 
 ---
 Last updated: 2025-11-19
+Test progress: Sphere 18.23 → 22.3 (7 issues fixed)
