@@ -2057,6 +2057,528 @@ export const helperFunctions = {
   },
 
   /**
+   * Check if Xemnas fight is accessible.
+   * Based on worlds/kh2/Rules.py:1130-1140
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Xemnas fight
+   */
+  get_xemnas_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+
+    const easyXemnasTools = {
+      'Aerial Dodge': 1,
+      'Glide': 1,
+      'Quick Run': 2,
+      'Guard': 1,
+      'Reflect Element': 2,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Limit Form': 1
+    };
+
+    const normalXemnasTools = {
+      'Aerial Dodge': 1,
+      'Glide': 1,
+      'Quick Run': 2,
+      'Guard': 1,
+      'Reflect Element': 2
+    };
+
+    if (fightLogic === 0) { // easy
+      return helperFunctions.kh2_dict_count(easyXemnasTools, snapshot) &&
+        helperFunctions.kh2_has_any(snapshot, staticData, groundFinisher);
+    } else if (fightLogic === 1) { // normal
+      return helperFunctions.kh2_dict_count(normalXemnasTools, snapshot) &&
+        helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher], snapshot) >= 2;
+    } else { // hard
+      return snapshot?.inventory?.['Guard'] > 0;
+    }
+  },
+
+  /**
+   * Check if Armored Xemnas (first fight) is accessible.
+   * Based on worlds/kh2/Rules.py:1142-1151
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Armored Xemnas fight
+   */
+  get_armored_xemnas_one_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+
+    if (fightLogic === 0) { // easy: donald limit + reflect + gap closer + ground finisher
+      return helperFunctions.kh2_list_any_sum([donaldLimit, gapCloser, groundFinisher, ['Reflect Element']], snapshot) >= 4;
+    } else if (fightLogic === 1) { // normal: reflect + gap closer + ground finisher
+      return helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher, ['Reflect Element']], snapshot) >= 3;
+    } else { // hard: reflect
+      return snapshot?.inventory?.['Reflect Element'] > 0;
+    }
+  },
+
+  /**
+   * Check if Armored Xemnas 2 (second fight) is accessible.
+   * Based on worlds/kh2/Rules.py:1153-1162
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Armored Xemnas 2 fight
+   */
+  get_armored_xemnas_two_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+
+    if (fightLogic === 0) { // easy: gap closer + ground finisher + reflect + thunder
+      return helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher, ['Reflect Element'], ['Thunder Element']], snapshot) >= 4;
+    } else if (fightLogic === 1) { // normal: gap closer + ground finisher + reflect
+      return helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher, ['Reflect Element']], snapshot) >= 3;
+    } else { // hard: reflect
+      return snapshot?.inventory?.['Reflect Element'] > 0;
+    }
+  },
+
+  /**
+   * Check if Final Xemnas fight is accessible.
+   * Based on worlds/kh2/Rules.py:1164-1173
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Final Xemnas fight
+   */
+  get_final_xemnas_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+
+    if (fightLogic === 0) { // easy: limit form + finishing plus + guard + reflera (2) + gap closer
+      return helperFunctions.kh2_has_all(snapshot, staticData, ['Limit Form', 'Finishing Plus', 'Guard']) &&
+        (snapshot?.inventory?.['Reflect Element'] || 0) >= 2 &&
+        helperFunctions.kh2_has_any(snapshot, staticData, gapCloser);
+    } else if (fightLogic === 1) { // normal: reflect + finishing plus + guard
+      return helperFunctions.kh2_has_all(snapshot, staticData, ['Reflect Element', 'Finishing Plus', 'Guard']);
+    } else { // hard: guard
+      return snapshot?.inventory?.['Guard'] > 0;
+    }
+  },
+
+  /**
+   * Check if Data Xigbar fight is accessible.
+   * Based on worlds/kh2/Rules.py:538-548
+   */
+  get_data_xigbar_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
+    const defensiveTool = ['Reflect Element', 'Guard'];
+
+    const easyDataXigbarTools = {
+      'Finishing Plus': 1,
+      'Guard': 1,
+      'Aerial Dive': 1,
+      'Horizontal Slash': 1,
+      'Air Combo Plus': 2,
+      'Fire Element': 3,
+      'Reflect Element': 3
+    };
+
+    const normalDataXigbarTools = {
+      'Finishing Plus': 1,
+      'Guard': 1,
+      'Horizontal Slash': 1,
+      'Fire Element': 3,
+      'Reflect Element': 3
+    };
+
+    if (fightLogic === 0) { // easy
+      return helperFunctions.kh2_dict_count(easyDataXigbarTools, snapshot) &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, true) &&
+        helperFunctions.kh2_has_any(snapshot, staticData, donaldLimit);
+    } else if (fightLogic === 1) { // normal
+      return helperFunctions.kh2_dict_count(normalDataXigbarTools, snapshot) &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, true) &&
+        helperFunctions.kh2_has_any(snapshot, staticData, donaldLimit);
+    } else { // hard
+      return ((helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 3, true) &&
+        (snapshot?.inventory?.['Fire Element'] || 0) >= 2) ||
+        helperFunctions.kh2_has_any(snapshot, staticData, donaldLimit)) &&
+        (snapshot?.inventory?.['Finishing Plus'] > 0) &&
+        helperFunctions.kh2_has_any(snapshot, staticData, defensiveTool);
+    }
+  },
+
+  /**
+   * Check if Data Zexion fight is accessible.
+   * Based on worlds/kh2/Rules.py:756-765
+   */
+  get_data_zexion_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+
+    const easyDataZexion = {
+      'Fire Element': 3,
+      'Second Chance': 1,
+      'Once More': 1,
+      'Donald Fantasia': 1,
+      'Donald Flare Force': 1,
+      'Reflect Element': 3,
+      'Guard': 1,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Quick Run': 3
+    };
+
+    const normalDataZexion = {
+      'Fire Element': 3,
+      'Reflect Element': 3,
+      'Guard': 1,
+      'Quick Run': 3
+    };
+
+    const hardDataZexion = {
+      'Fire Element': 2,
+      'Reflect Element': 1,
+      'Quick Run': 2
+    };
+
+    if (fightLogic === 0) { // easy
+      return helperFunctions.kh2_dict_count(easyDataZexion, snapshot) &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, true);
+    } else if (fightLogic === 1) { // normal
+      return helperFunctions.kh2_dict_count(normalDataZexion, snapshot) &&
+        helperFunctions.kh2_list_any_sum([donaldLimit, gapCloser], snapshot) >= 2 &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, true);
+    } else { // hard
+      return helperFunctions.kh2_dict_count(hardDataZexion, snapshot) &&
+        helperFunctions.kh2_list_any_sum([donaldLimit, gapCloser], snapshot) >= 2 &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 3, true);
+    }
+  },
+
+  /**
+   * Check if Data Larxene fight is accessible.
+   * Based on worlds/kh2/Rules.py:838-847
+   */
+  get_data_larxene_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+    const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
+
+    const easyDataLarxene = {
+      'Fire Element': 3,
+      'Second Chance': 1,
+      'Once More': 1,
+      'Donald Fantasia': 1,
+      'Donald Flare Force': 1,
+      'Reflect Element': 3,
+      'Guard': 1,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Aerial Dodge': 3,
+      'Glide': 3,
+      'Guard Break': 1,
+      'Explosion': 1
+    };
+
+    const normalDataLarxene = {
+      'Fire Element': 3,
+      'Reflect Element': 3,
+      'Guard': 1,
+      'Aerial Dodge': 3,
+      'Glide': 3
+    };
+
+    const hardDataLarxene = {
+      'Fire Element': 2,
+      'Reflect Element': 1,
+      'Guard': 1,
+      'Aerial Dodge': 2,
+      'Glide': 2
+    };
+
+    if (fightLogic === 0) { // easy
+      return helperFunctions.kh2_dict_count(easyDataLarxene, snapshot) &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, true);
+    } else if (fightLogic === 1) { // normal
+      return helperFunctions.kh2_dict_count(normalDataLarxene, snapshot) &&
+        helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher, donaldLimit], snapshot) >= 3 &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, true);
+    } else { // hard
+      return helperFunctions.kh2_dict_count(hardDataLarxene, snapshot) &&
+        helperFunctions.kh2_list_any_sum([gapCloser, donaldLimit], snapshot) >= 2 &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 3, true);
+    }
+  },
+
+  /**
+   * Check if Data Vexen fight is accessible.
+   * Based on worlds/kh2/Rules.py:876-885
+   */
+  get_data_vexen_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+    const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
+
+    const easyDataVexen = {
+      'Fire Element': 3,
+      'Second Chance': 1,
+      'Once More': 1,
+      'Donald Fantasia': 1,
+      'Donald Flare Force': 1,
+      'Reflect Element': 3,
+      'Guard': 1,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Aerial Dodge': 3,
+      'Glide': 3,
+      'Guard Break': 1,
+      'Explosion': 1,
+      'Dodge Roll': 3,
+      'Quick Run': 3
+    };
+
+    const normalDataVexen = {
+      'Fire Element': 3,
+      'Reflect Element': 3,
+      'Guard': 1,
+      'Aerial Dodge': 3,
+      'Glide': 3,
+      'Dodge Roll': 3,
+      'Quick Run': 3
+    };
+
+    const hardDataVexen = {
+      'Fire Element': 2,
+      'Reflect Element': 1,
+      'Guard': 1,
+      'Aerial Dodge': 2,
+      'Glide': 2,
+      'Dodge Roll': 3,
+      'Quick Run': 3
+    };
+
+    if (fightLogic === 0) { // easy
+      return helperFunctions.kh2_dict_count(easyDataVexen, snapshot) &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, true);
+    } else if (fightLogic === 1) { // normal
+      return helperFunctions.kh2_dict_count(normalDataVexen, snapshot) &&
+        helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher, donaldLimit], snapshot) >= 3 &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, true);
+    } else { // hard
+      return helperFunctions.kh2_dict_count(hardDataVexen, snapshot) &&
+        helperFunctions.kh2_list_any_sum([gapCloser, donaldLimit], snapshot) >= 2 &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 3, true);
+    }
+  },
+
+  /**
+   * Check if Data Saix fight is accessible.
+   * Based on worlds/kh2/Rules.py:1040-1049
+   */
+  get_data_saix_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+    const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
+
+    const easyDataSaix = {
+      'Guard': 1,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Thunder Element': 1,
+      'Blizzard Element': 1,
+      'Donald Flare Force': 1,
+      'Donald Fantasia': 1,
+      'Fire Element': 3,
+      'Reflect Element': 3,
+      'Guard Break': 1,
+      'Explosion': 1,
+      'Aerial Dodge': 3,
+      'Glide': 3,
+      'Second Chance': 1,
+      'Once More': 1
+    };
+
+    const normalDataSaix = {
+      'Guard': 1,
+      'Thunder Element': 1,
+      'Blizzard Element': 1,
+      'Fire Element': 3,
+      'Reflect Element': 3,
+      'Aerial Dodge': 3,
+      'Glide': 3
+    };
+
+    const hardDataSaix = {
+      'Guard': 1,
+      'Blizzard Element': 1,
+      'Reflect Element': 1,
+      'Aerial Dodge': 3,
+      'Glide': 3
+    };
+
+    if (fightLogic === 0) { // easy
+      return helperFunctions.kh2_dict_count(easyDataSaix, snapshot) &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, false);
+    } else if (fightLogic === 1) { // normal
+      return helperFunctions.kh2_dict_count(normalDataSaix, snapshot) &&
+        helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher, donaldLimit], snapshot) >= 3 &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, false);
+    } else { // hard
+      return helperFunctions.kh2_dict_count(hardDataSaix, snapshot) &&
+        helperFunctions.kh2_list_any_sum([gapCloser, groundFinisher], snapshot) >= 2;
+    }
+  },
+
+  /**
+   * Check if Data Xemnas fight is accessible.
+   * Based on worlds/kh2/Rules.py:1174-1183
+   */
+  get_data_xemnas_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const groundFinisher = ['Guard Break', 'Explosion', 'Finishing Leap'];
+
+    const easyDataXemnas = {
+      'Combo Master': 1,
+      'Slapshot': 1,
+      'Reflect Element': 3,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Finishing Plus': 1,
+      'Guard': 1,
+      'Trinity Limit': 1,
+      'Second Chance': 1,
+      'Once More': 1,
+      'Limit Form': 1
+    };
+
+    const normalDataXemnas = {
+      'Combo Master': 1,
+      'Slapshot': 1,
+      'Reflect Element': 3,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Finishing Plus': 1,
+      'Guard': 1,
+      'Limit Form': 1
+    };
+
+    const hardDataXemnas = {
+      'Combo Master': 1,
+      'Slapshot': 1,
+      'Reflect Element': 2,
+      'Finishing Plus': 1,
+      'Guard': 1,
+      'Limit Form': 1
+    };
+
+    if (fightLogic === 0) { // easy
+      return helperFunctions.kh2_dict_count(easyDataXemnas, snapshot) &&
+        helperFunctions.kh2_list_count_sum(groundFinisher, snapshot) >= 2 &&
+        helperFunctions.kh2_can_reach(snapshot, staticData, 'Limit level 5');
+    } else if (fightLogic === 1) { // normal
+      return helperFunctions.kh2_dict_count(normalDataXemnas, snapshot) &&
+        helperFunctions.kh2_list_count_sum(groundFinisher, snapshot) >= 2 &&
+        helperFunctions.kh2_can_reach(snapshot, staticData, 'Limit level 5');
+    } else { // hard
+      return helperFunctions.kh2_dict_count(hardDataXemnas, snapshot) &&
+        helperFunctions.kh2_list_any_sum([groundFinisher, gapCloser], snapshot) >= 2;
+    }
+  },
+
+  /**
+   * Check if Terra (Lingering Will) fight is accessible.
+   * Based on worlds/kh2/Rules.py:1175-1183
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Terra fight
+   */
+  get_terra_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    const gapCloser = ['Slide Dash', 'Flash Step'];
+    const donaldLimit = ['Donald Fantasia', 'Donald Flare Force'];
+
+    const easyTerraTools = {
+      'Second Chance': 1,
+      'Once More': 1,
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Explosion': 1,
+      'Combo Plus': 2,
+      'Fire Element': 3,
+      'Donald Fantasia': 1,
+      'Donald Flare Force': 1,
+      'Reflect Element': 1,
+      'Guard': 1,
+      'Dodge Roll': 3,
+      'Aerial Dodge': 3,
+      'Glide': 3
+    };
+
+    const normalTerraTools = {
+      'Slide Dash': 1,
+      'Flash Step': 1,
+      'Explosion': 1,
+      'Combo Plus': 2,
+      'Guard': 1,
+      'Dodge Roll': 2,
+      'Aerial Dodge': 2,
+      'Glide': 2
+    };
+
+    const hardTerraTools = {
+      'Explosion': 1,
+      'Combo Plus': 2,
+      'Dodge Roll': 2,
+      'Aerial Dodge': 2,
+      'Glide': 2,
+      'Guard': 1
+    };
+
+    if (fightLogic === 0) { // easy
+      return helperFunctions.kh2_dict_count(easyTerraTools, snapshot) &&
+        helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, true);
+    } else if (fightLogic === 1) { // normal
+      return helperFunctions.kh2_dict_count(normalTerraTools, snapshot) &&
+        helperFunctions.kh2_list_any_sum([donaldLimit], snapshot) >= 1;
+    } else { // hard
+      return helperFunctions.kh2_dict_count(hardTerraTools, snapshot) &&
+        helperFunctions.kh2_list_any_sum([gapCloser], snapshot) >= 1;
+    }
+  },
+
+  /**
    * Utility: Sum up the count of all items in a list.
    * Based on worlds/kh2/Rules.py:93-100
    *
@@ -2146,5 +2668,22 @@ export const helperFunctions = {
    */
   kh2_has_any(snapshot, staticData, items) {
     return items.some(item => snapshot?.inventory?.[item] > 0);
+  },
+
+  /**
+   * Utility: Check if a location can be reached.
+   * Based on worlds/kh2/Rules.py:183-189
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data
+   * @param {string} locationName - Name of the location to check
+   * @returns {boolean} True if the location is reachable
+   */
+  kh2_can_reach(snapshot, staticData, locationName) {
+    // Check if location is in accessible locations or has been checked
+    const accessibleLocations = snapshot?.accessibleLocations || {};
+    const checkedLocations = snapshot?.checkedLocations || {};
+
+    return accessibleLocations[locationName] === true || checkedLocations[locationName] === true;
   }
 };

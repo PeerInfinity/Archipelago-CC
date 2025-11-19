@@ -120,12 +120,22 @@ def combine_standard_results(all_results: List[Dict[str, Any]]) -> Dict[str, Any
     _process_template_results(template_results, combined_results)
 
     # Merge intermittent_tracking metadata from all input files
-    merged_intermittent_failures = []
+    # Use a dict to deduplicate by (template, seed, timestamp)
+    intermittent_failures_dict = {}
     for result_data in all_results:
         metadata = result_data.get('metadata', {})
         tracking = metadata.get('intermittent_tracking', {})
         failures = tracking.get('failures', [])
-        merged_intermittent_failures.extend(failures)
+        for failure in failures:
+            # Create unique key from template, seed, and timestamp
+            key = (failure.get('template'), failure.get('seed'), failure.get('timestamp'))
+            intermittent_failures_dict[key] = failure
+
+    # Convert back to list, sorted by template then seed
+    merged_intermittent_failures = sorted(
+        intermittent_failures_dict.values(),
+        key=lambda f: (f.get('template', ''), f.get('seed') if f.get('seed') is not None else float('inf'))
+    )
 
     # Create combined output structure
     combined = {
@@ -190,12 +200,22 @@ def combine_multitemplate_results(all_results: List[Dict[str, Any]]) -> Dict[str
         combined_results[game_name] = combined_game_results
 
     # Merge intermittent_tracking metadata from all input files
-    merged_intermittent_failures = []
+    # Use a dict to deduplicate by (template, seed, timestamp)
+    intermittent_failures_dict = {}
     for result_data in all_results:
         metadata = result_data.get('metadata', {})
         tracking = metadata.get('intermittent_tracking', {})
         failures = tracking.get('failures', [])
-        merged_intermittent_failures.extend(failures)
+        for failure in failures:
+            # Create unique key from template, seed, and timestamp
+            key = (failure.get('template'), failure.get('seed'), failure.get('timestamp'))
+            intermittent_failures_dict[key] = failure
+
+    # Convert back to list, sorted by template then seed
+    merged_intermittent_failures = sorted(
+        intermittent_failures_dict.values(),
+        key=lambda f: (f.get('template', ''), f.get('seed') if f.get('seed') is not None else float('inf'))
+    )
 
     # Create combined output structure
     combined = {

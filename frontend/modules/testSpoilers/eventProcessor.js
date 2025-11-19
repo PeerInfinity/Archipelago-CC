@@ -285,7 +285,7 @@ export class EventProcessor {
           // Ping worker to ensure all commands are processed and state is stable.
           await stateManager.pingWorker(
             `spoiler_sphere_${context.sphere_number}_locations_checked`,
-            60000  // Increased timeout to 60 seconds to handle complex rule evaluation
+            180000  // Increased timeout to 180 seconds to handle very complex games like Yu-Gi-Oh! 2006
           );
           if (this.verboseMode) {
             this.logCallback(
@@ -833,6 +833,15 @@ export class EventProcessor {
       for (const [itemName, deltaCount] of Object.entries(resolvedItems)) {
         // Skip if this item is already in base_items (we've already processed it)
         if (itemName in newItems) {
+          continue;
+        }
+
+        // Check if this is an event item (virtual item computed by hooks)
+        const itemDef = staticData.items.get(itemName);
+        if (itemDef && itemDef.event) {
+          // Skip event items - they should be computed by game-specific hooks
+          // (e.g., Stardew Valley's "Received Progression Percent")
+          this.logCallback('debug', `  [Player ${this.playerId}] Skipping event item "${itemName}" (computed by hooks, not added directly)`);
           continue;
         }
 
