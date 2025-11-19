@@ -211,19 +211,23 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         passed = sum(1 for _, pf, _, _, _, _, _ in chart_data if 'passed' in pf.lower())
         failed = sum(1 for _, pf, _, _, _, _, _ in chart_data if 'failed' in pf.lower())
 
-        # Get intermittent failures count (count unique templates, not individual seeds)
-        intermittent_count = 0
+        # Get intermittent failures counts
+        intermittent_games_count = 0
+        intermittent_total_count = 0
         if metadata and 'intermittent_tracking' in metadata:
             intermittent_failures = metadata['intermittent_tracking'].get('failures', [])
-            # Count unique templates
+            # Count unique templates (games)
             unique_templates = set(failure.get('template') for failure in intermittent_failures)
-            intermittent_count = len(unique_templates)
+            intermittent_games_count = len(unique_templates)
+            # Count total intermittent failures
+            intermittent_total_count = len(intermittent_failures)
 
         md_content += "## Summary\n\n"
         md_content += f"- **Total Games:** {total_games}\n"
         md_content += f"- **Passed:** {passed} ({passed/total_games*100:.1f}%)\n"
         md_content += f"- **Failed:** {failed} ({failed/total_games*100:.1f}%)\n"
-        md_content += f"- **Intermittent Failures:** {intermittent_count}\n\n"
+        md_content += f"- **Games with Intermittent Failures:** {intermittent_games_count}\n"
+        md_content += f"- **Total Intermittent Failures:** {intermittent_total_count}\n\n"
 
     md_content += "## Test Results\n\n"
     md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Custom Exporter | Custom GameLogic |\n"
@@ -262,12 +266,18 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
     if metadata and 'intermittent_tracking' in metadata:
         intermittent_failures = metadata['intermittent_tracking'].get('failures', [])
         if intermittent_failures:
+            # Sort by template name first, then by seed number
+            sorted_failures = sorted(intermittent_failures, key=lambda f: (
+                f.get('template', 'Unknown'),
+                f.get('seed') if f.get('seed') is not None else float('inf')
+            ))
+
             md_content += "\n## Intermittent Failures\n\n"
             md_content += "These seeds were previously failing but passed during a retest run:\n\n"
             md_content += "| Template | Seed | Timestamp | Notes |\n"
             md_content += "|----------|------|-----------|-------|\n"
 
-            for failure in intermittent_failures:
+            for failure in sorted_failures:
                 template_name = failure.get('template', 'Unknown').replace('.yaml', '')
                 seed = failure.get('seed', 'N/A')
                 timestamp = failure.get('timestamp', 'Unknown')
@@ -727,23 +737,29 @@ def generate_summary_chart(minimal_data, full_data, multiplayer_data, multiworld
     # Add intermittent failures subsection
     md_content += "\n### Intermittent Failures\n\n"
 
-    minimal_intermittent_count = 0
-    full_intermittent_count = 0
+    minimal_games_count = 0
+    minimal_total_count = 0
+    full_games_count = 0
+    full_total_count = 0
 
     if minimal_metadata and 'intermittent_tracking' in minimal_metadata:
         failures = minimal_metadata['intermittent_tracking'].get('failures', [])
-        # Count unique templates
+        # Count unique templates (games)
         unique_templates = set(failure.get('template') for failure in failures)
-        minimal_intermittent_count = len(unique_templates)
+        minimal_games_count = len(unique_templates)
+        # Count total failures
+        minimal_total_count = len(failures)
 
     if full_metadata and 'intermittent_tracking' in full_metadata:
         failures = full_metadata['intermittent_tracking'].get('failures', [])
-        # Count unique templates
+        # Count unique templates (games)
         unique_templates = set(failure.get('template') for failure in failures)
-        full_intermittent_count = len(unique_templates)
+        full_games_count = len(unique_templates)
+        # Count total failures
+        full_total_count = len(failures)
 
-    md_content += f"- **Minimal Spoilers Test:** {minimal_intermittent_count} intermittent failure(s)\n"
-    md_content += f"- **Full Spoilers Test:** {full_intermittent_count} intermittent failure(s)\n"
+    md_content += f"- **Minimal Spoilers Test:** {minimal_games_count} game(s), {minimal_total_count} total failure(s)\n"
+    md_content += f"- **Full Spoilers Test:** {full_games_count} game(s), {full_total_count} total failure(s)\n"
 
     md_content += "\n### Combined Test Results\n\n"
     md_content += f"- **Templates passing all {num_tests} tests:** {passed_all}/{total_templates} ({passed_all/total_templates*100:.1f}%)\n"

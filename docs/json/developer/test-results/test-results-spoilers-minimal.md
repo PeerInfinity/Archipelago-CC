@@ -4,7 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-18 23:40:46
+**Generated:** 2025-11-18 15:58:55
 
 **Source Data Created:** 2025-11-18T23:40:31.173841
 
@@ -15,7 +15,8 @@
 - **Total Games:** 78
 - **Passed:** 66 (84.6%)
 - **Failed:** 12 (15.4%)
-- **Intermittent Failures:** 5
+- **Games with Intermittent Failures:** 5
+- **Total Intermittent Failures:** 20
 
 ## Test Results
 
@@ -106,26 +107,26 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
+| Kirby's Dream Land 3 | N/A | 2025-11-18 23:28 | Previously failed, now passing |
+| Kirby's Dream Land 3 | N/A | 2025-11-18 23:28 | Previously failed, now passing |
+| MegaMan Battle Network 3 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
+| MegaMan Battle Network 3 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
+| MegaMan Battle Network 3 | N/A | 2025-11-18 23:29 | Previously failed, now passing |
+| MegaMan Battle Network 3 | N/A | 2025-11-18 23:29 | Previously failed, now passing |
 | Pokemon Emerald | N/A | 2025-11-18 23:33 | Previously failed, now passing |
+| Pokemon Emerald | N/A | 2025-11-18 23:33 | Previously failed, now passing |
+| Pokemon Red and Blue | N/A | 2025-11-18 23:30 | Previously failed, now passing |
+| Pokemon Red and Blue | N/A | 2025-11-18 23:30 | Previously failed, now passing |
 | Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:37 | Previously failed, now passing |
-| Pokemon Emerald | N/A | 2025-11-18 23:33 | Previously failed, now passing |
 | Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:37 | Previously failed, now passing |
 | Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:32 | Previously failed, now passing |
 | Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:32 | Previously failed, now passing |
 | Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:34 | Previously failed, now passing |
 | Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:34 | Previously failed, now passing |
-| MegaMan Battle Network 3 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
 | Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:35 | Previously failed, now passing |
-| MegaMan Battle Network 3 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
 | Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:35 | Previously failed, now passing |
-| Pokemon Red and Blue | N/A | 2025-11-18 23:30 | Previously failed, now passing |
-| Pokemon Red and Blue | N/A | 2025-11-18 23:30 | Previously failed, now passing |
 | Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
 | Yu-Gi-Oh! 2006 | N/A | 2025-11-18 23:31 | Previously failed, now passing |
-| Kirby's Dream Land 3 | N/A | 2025-11-18 23:28 | Previously failed, now passing |
-| MegaMan Battle Network 3 | N/A | 2025-11-18 23:29 | Previously failed, now passing |
-| Kirby's Dream Land 3 | N/A | 2025-11-18 23:28 | Previously failed, now passing |
-| MegaMan Battle Network 3 | N/A | 2025-11-18 23:29 | Previously failed, now passing |
 
 
 ## Notes
