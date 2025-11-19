@@ -1093,7 +1093,18 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                                     # Post-process the exit rule if the game handler supports it
                                     if expanded_rule and game_handler and hasattr(game_handler, 'postprocess_entrance_rule'):
-                                        expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name)
+                                        # Check if the handler supports the connected_region parameter
+                                        import inspect
+                                        sig = inspect.signature(game_handler.postprocess_entrance_rule)
+                                        params = list(sig.parameters.keys())
+
+                                        if 'connected_region' in params:
+                                            # Pass connected_region for games that need it (e.g., Lingo)
+                                            connected_region_name = getattr(exit.connected_region, 'name', None) if hasattr(exit, 'connected_region') else None
+                                            expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name, connected_region_name)
+                                        else:
+                                            # Use old signature for games that don't need connected_region
+                                            expanded_rule = game_handler.postprocess_entrance_rule(expanded_rule, exit_name)
                                     # Also call general postprocess_rule if available
                                     elif expanded_rule and game_handler and hasattr(game_handler, 'postprocess_rule'):
                                         expanded_rule = game_handler.postprocess_rule(expanded_rule)

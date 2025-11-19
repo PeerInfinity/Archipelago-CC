@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-19 01:38:08
+**Generated:** 2025-11-18 18:00:28
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -19,8 +19,8 @@ This summary combines results from four types of tests:
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 5 intermittent failure(s)
-- **Full Spoilers Test:** 0 intermittent failure(s)
+- **Minimal Spoilers Test:** 5 game(s), 20 total failure(s)
+- **Full Spoilers Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
 

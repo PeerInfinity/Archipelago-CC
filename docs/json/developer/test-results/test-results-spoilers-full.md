@@ -4,7 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-19 01:38:08
+**Generated:** 2025-11-18 18:00:28
 
 **Source Data Created:** 2025-11-19T00:18:29.665138
 
@@ -15,7 +15,8 @@
 - **Total Games:** 78
 - **Passed:** 55 (70.5%)
 - **Failed:** 23 (29.5%)
-- **Intermittent Failures:** 0
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ## Test Results
 

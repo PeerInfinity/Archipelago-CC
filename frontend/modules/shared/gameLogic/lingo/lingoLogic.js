@@ -98,9 +98,9 @@ export function _lingo_can_satisfy_requirements(snapshot, staticData, access) {
 
   // Check room requirements - all required rooms must be reachable
   if (access.rooms && access.rooms.length > 0) {
-    const reachableRegions = snapshot?.reachableRegions || new Set();
+    const regionReachability = snapshot?.regionReachability || {};
     for (const roomName of access.rooms) {
-      if (!reachableRegions.has(roomName)) {
+      if (regionReachability[roomName] !== 'reachable') {
         return false;
       }
     }

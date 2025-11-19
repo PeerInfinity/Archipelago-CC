@@ -234,10 +234,13 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         For laser activation locations, convert region.can_reach patterns to
         can_reach_region helper calls with the specific region name.
         """
+        # First, recursively simplify any region reachability patterns
+        simplified_rule = self._simplify_region_reachability_pattern(rule)
+
         # Check if this is a laser activation location
         if self._current_location_name and self._current_location_name in self.LASER_ACTIVATION_TO_REGION:
-            # Check if the rule is a region reachability pattern
-            if self._is_region_reachability_pattern(rule):
+            # Check if the simplified rule is a region reachability pattern
+            if self._is_region_reachability_pattern(simplified_rule):
                 region_name = self.LASER_ACTIVATION_TO_REGION[self._current_location_name]
                 logger.info(f"Converting {self._current_location_name} to can_reach_region('{region_name}')")
                 return {
@@ -245,8 +248,18 @@ class WitnessGameExportHandler(GenericGameExportHandler):
                     'name': 'can_reach_region',
                     'args': [{'type': 'constant', 'value': region_name}]
                 }
+            # Check if the simplified rule is a constant True (all region checks removed)
+            elif simplified_rule and simplified_rule.get('type') == 'constant' and simplified_rule.get('value') is True:
+                # If all conditions simplified to True, we can convert directly to the helper call
+                region_name = self.LASER_ACTIVATION_TO_REGION[self._current_location_name]
+                logger.info(f"Converting {self._current_location_name} (simplified to True) to can_reach_region('{region_name}')")
+                return {
+                    'type': 'helper',
+                    'name': 'can_reach_region',
+                    'args': [{'type': 'constant', 'value': region_name}]
+                }
 
-        return rule
+        return simplified_rule
 
     def handle_complex_exit_rule(self, exit_name: str, rule_func) -> Optional[Dict[str, Any]]:
         """

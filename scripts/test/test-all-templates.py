@@ -1098,6 +1098,17 @@ def main():
                     seed_info = retest_seed_info.get(yaml_file, {})
                     failing_seed = seed_info.get('failing_seed')
 
+                    # If using seed-specific retest, use the actual seed being tested
+                    if args.retest_seed_specific and len(seed_list) == 1:
+                        failing_seed = seed_list[0]
+
+                    # If we still don't have a seed, try to get it from the template result
+                    if failing_seed is None and 'seed' in template_result:
+                        try:
+                            failing_seed = int(template_result['seed'])
+                        except (ValueError, TypeError):
+                            failing_seed = template_result['seed']
+
                     intermittent_entry = {
                         'template': yaml_file,
                         'seed': failing_seed,
