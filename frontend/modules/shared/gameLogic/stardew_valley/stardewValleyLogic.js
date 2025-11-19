@@ -21,6 +21,7 @@ export const stardewValleyStateModule = {
    * @returns {Object} Initial game state
    */
   initializeState() {
+    console.log('[Stardew Valley] initializeState called');
     return {
       flags: [],
       events: [],
@@ -44,16 +45,25 @@ export const stardewValleyStateModule = {
    * @param {Object} sm - StateManager instance
    */
   initializeVirtualItems(sm) {
+    console.log('[Stardew Valley initializeVirtualItems] Called');
+    console.log(`[Stardew Valley] totalProgressionItems: ${sm.totalProgressionItems}`);
+    console.log(`[Stardew Valley] Current inventory:`, Object.keys(sm.inventory).length, 'items');
+
     // Ensure virtual items exist (they should already have been set by hooks)
     if (!('Received Progression Item' in sm.inventory)) {
       sm.inventory['Received Progression Item'] = 0;
+      console.log('[Stardew Valley Logic] Created Received Progression Item (was missing)');
       sm._logDebug('[Stardew Valley Logic] Created Received Progression Item (was missing)');
     }
     if (!('Received Progression Percent' in sm.inventory)) {
       sm.inventory['Received Progression Percent'] = 0;
+      console.log('[Stardew Valley Logic] Created Received Progression Percent (was missing)');
       sm._logDebug('[Stardew Valley Logic] Created Received Progression Percent (was missing)');
     }
 
+    console.log(
+      `[Stardew Valley Logic] Virtual items initialized: Progression Item=${sm.inventory['Received Progression Item']}, Progression Percent=${sm.inventory['Received Progression Percent']}, total=${sm.totalProgressionItems || 0}`
+    );
     sm._logDebug(
       `[Stardew Valley Logic] Virtual items initialized: Progression Item=${sm.inventory['Received Progression Item']}, Progression Percent=${sm.inventory['Received Progression Percent']}, total=${sm.totalProgressionItems || 0}`
     );
@@ -68,15 +78,49 @@ export const stardewValleyStateModule = {
    * @param {number} count - How many were added
    */
   afterItemAdded(sm, itemName, count) {
+    console.log(`[Stardew Valley afterItemAdded] Called for: ${itemName}, count: ${count}`);
+
+    // Special handling for virtual progression items
+    // These are added directly from sphere logs with their delta values
+    // We need to ensure they stay in sync
+    if (itemName === 'Received Progression Item') {
+      console.log(`[Stardew Valley afterItemAdded] Received Progression Item added with count=${count}, current=${sm.inventory['Received Progression Item'] || 0}`);
+      // Recalculate Received Progression Percent based on the new value
+      const totalProgItems = sm.totalProgressionItems || 0;
+      if (totalProgItems > 0) {
+        const currentProgItemCount = sm.inventory['Received Progression Item'] || 0;
+        const newPercent = Math.floor((currentProgItemCount * 100) / totalProgItems);
+        sm.inventory['Received Progression Percent'] = newPercent;
+        console.log(`[Stardew Valley Logic] Synced progression percent: ${newPercent} based on items=${currentProgItemCount}`);
+      }
+      return;
+    }
+
+    if (itemName === 'Received Progression Percent') {
+      console.log(`[Stardew Valley afterItemAdded] Received Progression Percent set to ${sm.inventory['Received Progression Percent']}`);
+      return;
+    }
+
     // Check if this is an advancement item
     const itemDef = sm.itemData[itemName];
-    if (!itemDef || !itemDef.advancement || itemDef.event) {
+    if (!itemDef) {
+      console.log(`[Stardew Valley afterItemAdded] No itemDef for ${itemName}`);
+      return;
+    }
+
+    console.log(`[Stardew Valley afterItemAdded] ${itemName}: advancement=${itemDef.advancement}, event=${itemDef.event}`);
+
+    if (!itemDef.advancement || itemDef.event) {
       // Not an advancement item, or it's an event item (which shouldn't count)
+      console.log(`[Stardew Valley afterItemAdded] Skipping ${itemName} (not advancement or is event)`);
       return;
     }
 
     // Update "Received Progression Item"
     const currentProgItemCount = sm.inventory['Received Progression Item'] || 0;
+    console.log(`[Stardew Valley Logic] BEFORE update: Received Progression Item = ${currentProgItemCount}, adding ${count} for ${itemName}`);
+    console.log(`[Stardew Valley Logic] Inventory keys:`, Object.keys(sm.inventory).filter(k => k.includes('Progression')));
+
     sm.inventory['Received Progression Item'] = currentProgItemCount + count;
 
     // Update "Received Progression Percent"
@@ -86,9 +130,14 @@ export const stardewValleyStateModule = {
       const newPercent = Math.floor((sm.inventory['Received Progression Item'] * 100) / totalProgItems);
       sm.inventory['Received Progression Percent'] = newPercent;
 
+      console.log(
+        `[Stardew Valley Logic] Updated progression: items=${sm.inventory['Received Progression Item']}, percent=${newPercent} (total=${totalProgItems})`
+      );
       sm._logDebug(
         `[Stardew Valley Logic] Updated progression: items=${sm.inventory['Received Progression Item']}, percent=${newPercent} (total=${totalProgItems})`
       );
+    } else {
+      console.log(`[Stardew Valley Logic] totalProgressionItems not set (${totalProgItems})`);
     }
   },
 

@@ -829,15 +829,19 @@ export class EventProcessor {
     // Step 3: Add virtual/event items from resolved_items that aren't in base_items
     // These are items like "Received Progression Percent" that are computed automatically
     // Note: resolved_items contains DELTAS (new items in this sphere), not cumulative totals
+    console.log(`[EventProcessor Step 3] Processing resolved_items:`, Object.keys(resolvedItems));
+    console.log(`[EventProcessor Step 3] base_items (newItems):`, Object.keys(newItems));
     if (Object.keys(resolvedItems).length > 0) {
       for (const [itemName, deltaCount] of Object.entries(resolvedItems)) {
         // Skip if this item is already in base_items (we've already processed it)
         if (itemName in newItems) {
+          console.log(`[EventProcessor Step 3] Skipping ${itemName} (already in base_items)`);
           continue;
         }
 
         // deltaCount is the number of this item added in this sphere
         if (deltaCount > 0) {
+          console.log(`[EventProcessor Step 3] Adding ${deltaCount}x virtual/event item: "${itemName}"`);
           this.logCallback('info', `  [Player ${this.playerId}] Adding ${deltaCount}x virtual/event item: "${itemName}" (from resolved_items)`);
           for (let i = 0; i < deltaCount; i++) {
             await stateManager.addItemToInventory(itemName, 1);
