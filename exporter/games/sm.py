@@ -106,6 +106,41 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return False
 
+    def _check_deeply_nested_any_of(self, rule: Dict[str, Any], max_depth: int = 5) -> bool:
+        """Check if a rule has deeply nested any_of structures (indicating recursion).
+
+        Args:
+            rule: The rule to check
+            max_depth: Maximum depth before considering it "deeply nested"
+
+        Returns:
+            True if the rule has nested any_of at or beyond max_depth
+        """
+        def count_depth(r, current_depth=0):
+            if not r or not isinstance(r, dict):
+                return current_depth
+
+            if r.get('type') == 'any_of':
+                # Check element_rule for further nesting
+                element_rule = r.get('element_rule')
+                if element_rule:
+                    # Look for nested any_of in the conditions
+                    if isinstance(element_rule, dict):
+                        if element_rule.get('type') == 'and':
+                            conditions = element_rule.get('conditions', [])
+                            for cond in conditions:
+                                if cond.get('type') == 'helper' and cond.get('name') == 'evalSMBool':
+                                    args = cond.get('args', [])
+                                    if args and args[0].get('type') == 'any_of':
+                                        # Found nested any_of
+                                        nested_depth = count_depth(args[0], current_depth + 1)
+                                        if nested_depth >= max_depth:
+                                            return nested_depth
+            return current_depth
+
+        depth = count_depth(rule)
+        return depth >= max_depth
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand and transform Super Metroid rules.
 
@@ -122,10 +157,17 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         rule_type = rule.get('type')
 
-        # Simplify accessFrom patterns that hit recursion limits
+        # Check for accessFrom patterns that hit recursion limits
+        # These create infinitely nested structures that can't be properly evaluated
         if self._check_accessFrom_pattern(rule):
-            logger.info("SM: Found accessFrom comprehension pattern, simplifying to constant True")
-            print("[SM] Simplifying accessFrom pattern to constant True")
+            logger.info("SM: Found accessFrom comprehension pattern at top level, simplifying to constant True")
+            print("[SM] Simplifying top-level accessFrom pattern to constant True")
+            return {'type': 'constant', 'value': True}
+
+        # Also check for deeply nested any_of structures (result of recursion limits)
+        if self._check_deeply_nested_any_of(rule):
+            logger.info("SM: Found deeply nested any_of pattern (recursion artifact), simplifying to constant True")
+            print("[SM] Simplifying deeply nested any_of pattern to constant True")
             return {'type': 'constant', 'value': True}
 
         # Handle helper nodes with name='evalSMBool' (analyzer converts self.evalSMBool to helper)
