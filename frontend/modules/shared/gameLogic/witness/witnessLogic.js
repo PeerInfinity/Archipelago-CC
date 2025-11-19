@@ -12,16 +12,16 @@
  * @returns {boolean} True if the region is reachable
  */
 function can_reach_region(snapshot, staticData, regionName) {
-  // Access reachable regions directly (it's already player-specific in the snapshot)
-  const reachableRegions = snapshot?.reachableRegions;
+  // Access region reachability from snapshot
+  // The snapshot uses regionReachability (an object mapping region names to 'reachable'/'unreachable')
+  const regionReachability = snapshot?.regionReachability;
 
-  if (!reachableRegions) {
+  if (!regionReachability) {
     return false;
   }
 
-  // Check if the region is in the reachable regions set
-  // The reachableRegions is a Set of region names
-  return reachableRegions.has(regionName);
+  // Check if the region is marked as reachable
+  return regionReachability[regionName] === 'reachable';
 }
 
 /**
