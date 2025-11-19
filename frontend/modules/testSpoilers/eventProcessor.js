@@ -163,10 +163,31 @@ export class EventProcessor {
         }
 
         // Use accumulated data from sphereState
-        const inventory_from_log = sphereData.inventoryDetails?.base_items || {};
+        // Merge both base_items and resolved_items to get the full inventory
+        // Starting items appear in resolved_items for sphere 0
+        const base_items = sphereData.inventoryDetails?.base_items || {};
+        const resolved_items = sphereData.inventoryDetails?.resolved_items || {};
+
+        // DEBUG: Log what we got from sphere data (use event.sphere_index since context isn't defined yet)
+        this.logCallback('info', `[Sphere ${event.sphere_index}] base_items: ${JSON.stringify(base_items)}`);
+        this.logCallback('info', `[Sphere ${event.sphere_index}] resolved_items: ${JSON.stringify(resolved_items)}`);
+        this.logCallback('info', `[Sphere ${event.sphere_index}] previousInventory: ${JSON.stringify(this.previousInventory)}`);
+
+        const inventory_from_log = { ...base_items };
+
+        // Add resolved_items that aren't already in base_items
+        for (const [itemName, count] of Object.entries(resolved_items)) {
+          if (!(itemName in inventory_from_log)) {
+            inventory_from_log[itemName] = count;
+          }
+        }
+
+        this.logCallback('info', `[Sphere ${event.sphere_index}] merged inventory_from_log: ${JSON.stringify(inventory_from_log)}`);
 
         // Find newly added items by comparing with previous inventory
         newlyAddedItems = this.findNewlyAddedItems(this.previousInventory, inventory_from_log);
+
+        this.logCallback('info', `[Sphere ${event.sphere_index}] newlyAddedItems: ${JSON.stringify(newlyAddedItems)}`);
 
         // Log newly added items before the status message
         if (newlyAddedItems.length > 0) {
@@ -210,6 +231,21 @@ export class EventProcessor {
             if (this.verboseMode) {
               this.logCallback('debug', `Keeping accumulated state for sphere ${context.sphere_number}.`);
             }
+          }
+
+          // Add newly discovered items from the sphere log to the state manager
+          // This is especially important for sphere 0 starting items which appear in resolved_items
+          // but aren't from checking any location
+          if (newlyAddedItems.length > 0) {
+            this.logCallback('info', `Adding ${newlyAddedItems.length} items from sphere log to inventory...`);
+            for (const itemName of newlyAddedItems) {
+              await stateManager.addItemToInventory(itemName, 1);
+              if (this.verboseMode) {
+                this.logCallback('debug', `  Added item: ${itemName}`);
+              }
+            }
+            // Wait for state to stabilize after adding items
+            await stateManager.pingWorker(`sphere_${context.sphere_number}_items_added`, 10000);
           }
 
           // Check locations from current sphere one-by-one, allowing natural item acquisition
