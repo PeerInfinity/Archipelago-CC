@@ -144,6 +144,109 @@ export function terran_basic_anti_air(snapshot, staticData) {
 }
 
 /**
+ * Units that can jump over cliffs
+ */
+export function terran_cliffjumper(snapshot, staticData) {
+    return has(snapshot, 'Reaper')
+        || has_all(snapshot, ['Goliath', 'Jump Jets (Goliath)'])
+        || has_all(snapshot, ['Siege Tank', 'Jump Jets (Siege Tank)']);
+}
+
+/**
+ * Units that can be garrisoned in Enemy Intelligence mission
+ */
+export function enemy_intelligence_garrisonable_unit(snapshot, staticData) {
+    return has_any(snapshot, [
+        'Marine', 'Reaper', 'Marauder', 'Ghost', 'Spectre',
+        'Hellion', 'Goliath', 'Warhound', 'Diamondback', 'Viking'
+    ]);
+}
+
+/**
+ * Units that can reach cliff garrisons in Enemy Intelligence
+ */
+export function enemy_intelligence_cliff_garrison(snapshot, staticData) {
+    const advancedTactics = isAdvancedTactics(staticData);
+
+    return has_any(snapshot, ['Reaper', 'Viking', 'Medivac', 'Hercules'])
+        || has_all(snapshot, ['Goliath', 'Jump Jets (Goliath)'])
+        || (advancedTactics && has_any(snapshot, ['Hel\'s Angels', 'Brynhilds']));
+}
+
+/**
+ * Enemy Intelligence first stage requirement
+ */
+export function enemy_intelligence_first_stage_requirement(snapshot, staticData) {
+    return enemy_intelligence_garrisonable_unit(snapshot, staticData)
+        && (
+            terran_competent_comp(snapshot, staticData)
+            || (
+                terran_common_unit(snapshot, staticData)
+                && terran_competent_anti_air(snapshot, staticData)
+                && has(snapshot, 'Tactical Nuke Strike (Nova Ability)')
+            )
+        )
+        && terran_defense_rating(snapshot, staticData, true, true) >= 5;
+}
+
+/**
+ * Nova has any weapon
+ */
+export function nova_any_weapon(snapshot, staticData) {
+    return has_any(snapshot, [
+        'C20A Canister Rifle (Nova Weapon)',
+        'Hellfire Shotgun (Nova Weapon)',
+        'Plasma Rifle (Nova Weapon)',
+        'Monomolecular Blade (Nova Weapon)',
+        'Blazefire Gunblade (Nova Weapon)'
+    ]);
+}
+
+/**
+ * Nova has a ranged weapon
+ */
+export function nova_ranged_weapon(snapshot, staticData) {
+    return has_any(snapshot, [
+        'C20A Canister Rifle (Nova Weapon)',
+        'Hellfire Shotgun (Nova Weapon)',
+        'Plasma Rifle (Nova Weapon)'
+    ]);
+}
+
+/**
+ * Nova has splash damage capability
+ */
+export function nova_splash(snapshot, staticData) {
+    const advancedTactics = isAdvancedTactics(staticData);
+
+    return has_any(snapshot, [
+        'Hellfire Shotgun (Nova Weapon)',
+        'Blazefire Gunblade (Nova Weapon)',
+        'Pulse Grenades (Nova Gadget)'
+    ]) || (advancedTactics && has_any(snapshot, [
+        'Plasma Rifle (Nova Weapon)',
+        'Monomolecular Blade (Nova Weapon)'
+    ]));
+}
+
+/**
+ * Nova has full stealth capability
+ */
+export function nova_full_stealth(snapshot, staticData) {
+    return count(snapshot, 'Progressive Stealth Suit Module (Nova Suit Module)') >= 2;
+}
+
+/**
+ * Nova has healing capability
+ */
+export function nova_heal(snapshot, staticData) {
+    return has_any(snapshot, [
+        'Armored Suit Module (Nova Suit Module)',
+        'Stim Infusion (Nova Gadget)'
+    ]);
+}
+
+/**
  * Ability to deal with most hard missions
  */
 /**
@@ -659,7 +762,7 @@ export default {
         // Any terran common unit should suffice
         return terran_common_unit(snapshot, staticData);
     },
-    terran_cliffjumper: () => false,
+    terran_cliffjumper,
     terran_able_to_snipe_defiler: () => false,
     terran_respond_to_colony_infestations: (snapshot, staticData) => {
         return (
@@ -746,12 +849,12 @@ export default {
     },
     can_nuke: () => false,
 
-    nova_any_weapon: () => false,
-    nova_ranged_weapon: () => false,
-    nova_splash: () => false,
-    nova_full_stealth: () => false,
+    nova_any_weapon,
+    nova_ranged_weapon,
+    nova_splash,
+    nova_full_stealth,
     nova_dash: () => false,
-    nova_heal: () => false,
+    nova_heal,
     nova_escape_assist: () => false,
 
     great_train_robbery_train_stopper: (snapshot, staticData) => {
@@ -777,12 +880,52 @@ export default {
         // Sudden Strike requires completing The Escape mission
         return has(snapshot, 'Beat The Escape');
     },
-    sudden_strike_can_reach_objectives: () => false,
-    enemy_intelligence_first_stage_requirement: () => false,
-    enemy_intelligence_second_stage_requirement: () => false,
+    sudden_strike_can_reach_objectives: (snapshot, staticData) => {
+        const advancedTactics = isAdvancedTactics(staticData);
+
+        // Can reach objectives with cliff jumpers
+        if (terran_cliffjumper(snapshot, staticData)) {
+            return true;
+        }
+
+        // Can reach with air units
+        if (has_any(snapshot, ['Banshee', 'Viking'])) {
+            return true;
+        }
+
+        // Advanced tactics: can reach with Medivac + ground units
+        if (advancedTactics && has(snapshot, 'Medivac') && has_any(snapshot, ['Marine', 'Marauder', 'Vulture', 'Hellion', 'Goliath'])) {
+            return true;
+        }
+
+        return false;
+    },
+    enemy_intelligence_garrisonable_unit,
+    enemy_intelligence_cliff_garrison,
+    enemy_intelligence_first_stage_requirement,
+    enemy_intelligence_second_stage_requirement: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const storyTechGranted = settings?.story_tech_granted || false;
+
+        return enemy_intelligence_first_stage_requirement(snapshot, staticData)
+            && enemy_intelligence_cliff_garrison(snapshot, staticData)
+            && (
+                storyTechGranted
+                || (
+                    nova_any_weapon(snapshot, staticData)
+                    && (
+                        nova_full_stealth(snapshot, staticData)
+                        || (
+                            nova_heal(snapshot, staticData)
+                            && nova_splash(snapshot, staticData)
+                            && nova_ranged_weapon(snapshot, staticData)
+                        )
+                    )
+                )
+            );
+    },
     enemy_intelligence_third_stage_requirement: () => false,
-    enemy_intelligence_cliff_garrison: () => false,
-    enemy_intelligence_garrisonable_unit: () => false,
     the_escape_first_stage_requirement: (snapshot, staticData) => {
         // First stage of The Escape requires basic Nova suit module (not Jump Suit)
         // Check for Armored, Energy, or Progressive Stealth suit modules
