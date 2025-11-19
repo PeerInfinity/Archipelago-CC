@@ -351,6 +351,8 @@ export function smz3_CanAccessMaridiaPortal(snapshot, staticData) {
 export function smz3_CanAcquire(snapshot, staticData, rewardType) {
   console.log('[smz3_CanAcquire] Called with rewardType:', rewardType);
   console.log('[smz3_CanAcquire] snapshot.player:', snapshot.player);
+  console.log('[smz3_CanAcquire] snapshot.inventory keys:', snapshot.inventory ? Object.keys(snapshot.inventory).length : 'undefined');
+  console.log('[smz3_CanAcquire] Sample inventory - Hammer:', snapshot.inventory?.['Hammer'], 'Hookshot:', snapshot.inventory?.['Hookshot'], 'KeySP:', snapshot.inventory?.['KeySP']);
 
   // Get player slot - snapshot.player can be either a number or an object with slot property
   const playerSlot = String(typeof snapshot.player === 'object' ? snapshot.player.slot : snapshot.player);
@@ -384,9 +386,12 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
   };
 
   // Find the region that has the specified reward
+  console.log(`[smz3_CanAcquire] Searching for reward type ${rewardType} in ${Object.keys(rewardRegions).length} regions`);
+
   for (const [regionName, rewardInfo] of Object.entries(rewardRegions)) {
     if (rewardInfo.reward_type === rewardType) {
       // Found the region with this reward
+      console.log(`[smz3_CanAcquire] Found region '${regionName}' with reward type ${rewardType}`);
       const bossLocationName = bossLocations[regionName];
 
       if (!bossLocationName) {
@@ -418,6 +423,7 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
             canComplete
           });
 
+          console.log(`[smz3_CanAcquire] Returning ${canComplete} for Castle Tower`);
           return canComplete;
         } else if (regionName === 'Wrecked Ship') {
           // Wrecked Ship CanComplete: CanEnter && CanUnlockShip
@@ -488,9 +494,19 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
           if (rule.type === 'and' && rule.conditions) {
             const allItemChecks = rule.conditions.every(cond => cond.type === 'item_check');
             if (allItemChecks) {
+              // Log what items are being checked and what the player has
+              const itemChecks = rule.conditions.map(cond => ({
+                item: cond.item,
+                required: true,
+                has: hasItem(snapshot, cond.item),
+                count: getItemCount(snapshot, cond.item)
+              }));
+              console.log(`[smz3_CanAcquire] Checking items for ${bossLocationName}:`, JSON.stringify(itemChecks));
+
               // Manually check all items
               const result = rule.conditions.every(cond => hasItem(snapshot, cond.item));
               console.log(`[smz3_CanAcquire] Manually evaluated boss location (${bossLocationName}):`, result);
+              console.log(`[smz3_CanAcquire] Returning ${result} for region '${regionName}'`);
               return result;
             }
           }
@@ -500,17 +516,21 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
           try {
             const result = snapshot.evaluateRule(bossLocation.access_rule);
             console.log(`[smz3_CanAcquire] Evaluated boss location (${bossLocationName}) via evaluateRule:`, result);
+            console.log(`[smz3_CanAcquire] Returning ${result} for region '${regionName}'`);
             return result;
           } catch (error) {
             console.error(`[smz3_CanAcquire] Error evaluating boss location (${bossLocationName}):`, error);
+            console.log(`[smz3_CanAcquire] Returning false for region '${regionName}' due to error`);
             return false;
           }
         } else {
           // No access rule means always accessible
+          console.log(`[smz3_CanAcquire] No access rule for boss location, returning true for region '${regionName}'`);
           return true;
         }
       }
 
+      console.log(`[smz3_CanAcquire] snapshot.evaluateRule not available, returning false`);
       return false;
     }
   }
