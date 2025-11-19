@@ -106,6 +106,65 @@ class OOTGameExportHandler(GenericGameExportHandler):
             logger.error(f"OOT: Failed to load LogicHelpers.json: {e}")
             return {}
 
+    def _load_world_json_files(self):
+        """Load region/entrance/location data from World JSON files."""
+        try:
+            import worlds.oot
+            import glob
+            oot_dir = os.path.dirname(worlds.oot.__file__)
+            world_dir = os.path.join(oot_dir, 'data', 'World')
+
+            if not os.path.exists(world_dir):
+                logger.warning(f"OOT: World directory not found at {world_dir}")
+                return {}
+
+            # Find all JSON files in the World directory
+            json_files = glob.glob(os.path.join(world_dir, '*.json'))
+
+            entrance_rules = {}
+            location_rules = {}
+
+            for json_file in json_files:
+                try:
+                    with open(json_file, 'r', encoding='utf-8') as f:
+                        # Read the file, stripping out comments
+                        content = []
+                        for line in f:
+                            # Remove comments (anything after # on each line)
+                            line = line.split('#', 1)[0]
+                            if line.strip():
+                                content.append(line)
+                        json_content = ''.join(content)
+
+                    regions = json.loads(json_content)
+
+                    # Extract exit and location rules from each region
+                    for region in regions:
+                        region_name = region.get('region_name', '')
+
+                        # Extract exit rules
+                        exits = region.get('exits', {})
+                        for exit_target, rule_string in exits.items():
+                            # The exit name format matches what Archipelago creates
+                            exit_name = f"{region_name} -> {exit_target}"
+                            entrance_rules[exit_name] = rule_string
+
+                        # Extract location rules
+                        locations = region.get('locations', {})
+                        for location_name, rule_string in locations.items():
+                            location_rules[location_name] = rule_string
+
+                except Exception as e:
+                    logger.debug(f"OOT: Error loading {os.path.basename(json_file)}: {e}")
+                    continue
+
+            logger.info(f"OOT: Loaded {len(entrance_rules)} entrance rules and {len(location_rules)} location rules from World JSON files")
+            return {'entrances': entrance_rules, 'locations': location_rules}
+
+        except Exception as e:
+            logger.error(f"OOT: Failed to load World JSON files: {e}")
+            return {}
+
     def build_rule_string_map(self, world):
         """Build a mapping of location/entrance names to their rule strings."""
         self.world = world
@@ -119,6 +178,22 @@ class OOTGameExportHandler(GenericGameExportHandler):
         for subrule_name, rule_string in logic_helpers.items():
             self.rule_string_map[subrule_name] = rule_string
             logger.debug(f"OOT: Loaded subrule '{subrule_name}' from LogicHelpers: {rule_string[:80]}")
+
+        # Load entrance and location rules from World JSON files
+        world_data = self._load_world_json_files()
+        entrance_rules = world_data.get('entrances', {})
+        location_rules = world_data.get('locations', {})
+
+        # Add entrance rules to the map
+        for exit_name, rule_string in entrance_rules.items():
+            self.rule_string_map[exit_name] = rule_string
+            logger.debug(f"OOT: Loaded entrance '{exit_name}' from World JSON: {rule_string[:80]}")
+
+        # Add location rules to the map (but don't overwrite subrules)
+        for location_name, rule_string in location_rules.items():
+            if location_name not in self.rule_string_map:
+                self.rule_string_map[location_name] = rule_string
+                logger.debug(f"OOT: Loaded location '{location_name}' from World JSON: {rule_string[:80]}")
 
         # Collect rule_string attributes from all locations and exits
         # Regular locations and exits have rule_string set from JSON data
