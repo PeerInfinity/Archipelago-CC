@@ -12,9 +12,12 @@
  * @returns {boolean} True if entrance can be used
  */
 export function lingo_can_use_entrance(snapshot, staticData, room, door) {
+  console.log(`[lingo_can_use_entrance] Called with room="${room}", door=${JSON.stringify(door)}`);
+
   // If door is null or undefined, the entrance is always accessible
   // This matches the Python logic: if door is None: return True
   if (door === null || door === undefined) {
+    console.log(`[lingo_can_use_entrance] door is null/undefined, returning true`);
     return true;
   }
 
@@ -30,18 +33,25 @@ export function lingo_can_use_entrance(snapshot, staticData, room, door) {
   const effectiveRoom = door[0] !== null ? door[0] : room;
   const doorName = door[1];
 
+  console.log(`[lingo_can_use_entrance] effectiveRoom="${effectiveRoom}", doorName="${doorName}"`);
+
   // Get player ID from snapshot (usually 1 for single-player)
   const playerId = snapshot?.playerId || '1';
   const settings = staticData?.settings?.[playerId];
+
+  console.log(`[lingo_can_use_entrance] playerId=${playerId}, hasSettings=${!!settings}`);
 
   // First, check if this door has access requirements
   const doorReqs = settings?.door_reqs?.[effectiveRoom]?.[doorName];
 
   if (doorReqs) {
+    console.log(`[lingo_can_use_entrance] Found door_reqs for ${effectiveRoom}/${doorName}:`, doorReqs);
     // This door has access requirements - check them first
     if (!_lingo_can_satisfy_requirements(snapshot, staticData, doorReqs)) {
+      console.log(`[lingo_can_use_entrance] Door requirements not satisfied, returning false`);
       return false;
     }
+    console.log(`[lingo_can_use_entrance] Door requirements satisfied`);
   }
 
   // Then, check if this door requires an item (listed in item_by_door)
@@ -50,10 +60,12 @@ export function lingo_can_use_entrance(snapshot, staticData, room, door) {
     // This door requires an item - check if player has it
     const doorItemName = itemByDoor[doorName];
     const hasItem = !!(snapshot?.inventory && snapshot.inventory[doorItemName] > 0);
+    console.log(`[lingo_can_use_entrance] Door requires item "${doorItemName}", hasItem=${hasItem}`);
     return hasItem;
   }
 
   // Door has no requirements or item requirement - it's accessible
+  console.log(`[lingo_can_use_entrance] No requirements found, returning true`);
   return true;
 }
 
@@ -99,8 +111,11 @@ export function _lingo_can_satisfy_requirements(snapshot, staticData, access) {
   // Check room requirements - all required rooms must be reachable
   if (access.rooms && access.rooms.length > 0) {
     const regionReachability = snapshot?.regionReachability || {};
+    console.log(`[_lingo_can_satisfy_requirements] Checking room requirements:`, access.rooms);
+    console.log(`[_lingo_can_satisfy_requirements] Current reachable regions:`, Object.keys(regionReachability).filter(r => regionReachability[r] === 'reachable'));
     for (const roomName of access.rooms) {
       if (regionReachability[roomName] !== 'reachable') {
+        console.log(`[_lingo_can_satisfy_requirements] Room "${roomName}" not reachable (status: ${regionReachability[roomName]})`);
         return false;
       }
     }
