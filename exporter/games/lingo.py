@@ -13,6 +13,30 @@ class LingoGameExportHandler(GenericGameExportHandler):
     """Export handler for Lingo that handles AccessRequirements string sorting, door variable resolution,
     and exporting door-related data structures for rule evaluation."""
 
+    def should_preserve_as_helper(self, func_name: str) -> bool:
+        """
+        Preserve Lingo helper functions as helper calls instead of inlining them.
+
+        This prevents the analyzer from recursively analyzing and inlining the function bodies,
+        which can cause issues when the functions contain complex logic like state.update_reachable_regions().
+
+        Args:
+            func_name: The name of the function being analyzed
+
+        Returns:
+            True if the function should be preserved as a helper, False otherwise
+        """
+        lingo_helpers = [
+            'lingo_can_use_entrance',
+            'lingo_can_do_pilgrimage',
+            # 'lingo_can_use_location' - intentionally not preserved, will be inlined to _lingo_can_satisfy_requirements
+            'lingo_can_use_mastery_location',
+            'lingo_can_use_level_2_location',
+            '_lingo_can_satisfy_requirements',
+            '_lingo_can_open_door',
+        ]
+        return func_name in lingo_helpers
+
     def expand_rule(self, analyzed_rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Expand analyzed rule, with special handling for AccessRequirements string representations
@@ -164,6 +188,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
                 'shuffle_postgame',
                 'group_doors',
                 'mastery_achievements',
+                'level_2_requirement',
             ]
 
             for option_name in lingo_options:
@@ -197,6 +222,24 @@ class LingoGameExportHandler(GenericGameExportHandler):
                             'postgame': access_req.postgame if hasattr(access_req, 'postgame') else False
                         }
                 logger.debug(f"Exported door_reqs with {len(settings['door_reqs'])} rooms")
+
+            # Export counting_panel_reqs: panel count requirements for LEVEL 2 location
+            if hasattr(world.player_logic, 'counting_panel_reqs'):
+                settings['counting_panel_reqs'] = {}
+                for room, panel_reqs in world.player_logic.counting_panel_reqs.items():
+                    settings['counting_panel_reqs'][room] = []
+                    for access_req, panel_count in panel_reqs:
+                        serialized_req = {
+                            'rooms': sorted(list(access_req.rooms)) if hasattr(access_req, 'rooms') else [],
+                            'doors': [{'room': d.room, 'door': d.door} for d in sorted(access_req.doors, key=lambda d: (d.room or '', d.door))] if hasattr(access_req, 'doors') else [],
+                            'colors': sorted(list(access_req.colors)) if hasattr(access_req, 'colors') else [],
+                            'items': sorted(list(access_req.items)) if hasattr(access_req, 'items') else [],
+                            'progression': dict(access_req.progression) if hasattr(access_req, 'progression') else {},
+                            'the_master': access_req.the_master if hasattr(access_req, 'the_master') else False,
+                            'postgame': access_req.postgame if hasattr(access_req, 'postgame') else False
+                        }
+                        settings['counting_panel_reqs'][room].append([serialized_req, panel_count])
+                logger.debug(f"Exported counting_panel_reqs with {len(settings['counting_panel_reqs'])} rooms")
 
         # Export PROGRESSIVE_ITEMS constant
         try:
