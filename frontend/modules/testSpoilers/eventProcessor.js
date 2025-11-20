@@ -875,32 +875,48 @@ export class EventProcessor {
       }
     }
 
-    // Step 3: Add virtual/event items from resolved_items that aren't in base_items
-    // These are items like "Received Progression Percent" that are computed automatically
-    // Note: resolved_items contains DELTAS (new items in this sphere), not cumulative totals
-    if (Object.keys(resolvedItems).length > 0) {
-      for (const [itemName, deltaCount] of Object.entries(resolvedItems)) {
-        // Skip if this item is already in base_items (we've already processed it)
-        if (itemName in newItems) {
-          continue;
-        }
+    // Step 3: Process resolved_items (behavior depends on game settings)
+    // Check if this game wants to use resolved_items
+    const useResolvedItems = staticData.settings?.use_resolved_items ?? false;
 
-        // Check if this is an event item (virtual item computed by hooks)
-        const itemDef = staticData.items.get(itemName);
-        if (itemDef && itemDef.event) {
-          // Skip event items - they should be computed by game-specific hooks
-          // (e.g., Stardew Valley's "Received Progression Percent")
-          this.logCallback('debug', `  [Player ${this.playerId}] Skipping event item "${itemName}" (computed by hooks, not added directly)`);
-          continue;
-        }
+    if (useResolvedItems) {
+      // Old logic: Process resolved_items for games that need them (e.g., Blasphemous)
+      // These are items like "Received Progression Percent" that are computed automatically
+      // Note: resolved_items contains DELTAS (new items in this sphere), not cumulative totals
+      if (Object.keys(resolvedItems).length > 0) {
+        for (const [itemName, deltaCount] of Object.entries(resolvedItems)) {
+          // Skip if this item is already in base_items (we've already processed it)
+          if (itemName in newItems) {
+            continue;
+          }
 
-        // deltaCount is the number of this item added in this sphere
-        if (deltaCount > 0) {
-          this.logCallback('info', `  [Player ${this.playerId}] Adding ${deltaCount}x virtual/event item: "${itemName}" (from resolved_items)`);
-          for (let i = 0; i < deltaCount; i++) {
-            await stateManager.addItemToInventory(itemName, 1);
+          // Check if this is an event item (virtual item computed by hooks)
+          // In multiworld, staticData.items is keyed by player, so use itemsByPlayer if available
+          const playerItems = staticData.itemsByPlayer?.[this.playerId] || staticData.items;
+          const itemDef = playerItems.get?.(itemName) || playerItems[itemName];
+          if (itemDef && itemDef.event) {
+            // Skip event items - they should be computed by game-specific hooks
+            // (e.g., Stardew Valley's "Received Progression Percent")
+            this.logCallback('debug', `  [Player ${this.playerId}] Skipping event item "${itemName}" (computed by hooks, not added directly)`);
+            continue;
+          }
+
+          // deltaCount is the number of this item added in this sphere
+          if (deltaCount > 0) {
+            this.logCallback('info', `  [Player ${this.playerId}] Adding ${deltaCount}x virtual/event item: "${itemName}" (from resolved_items)`);
+            for (let i = 0; i < deltaCount; i++) {
+              await stateManager.addItemToInventory(itemName, 1);
+            }
           }
         }
+      }
+    } else {
+      // New logic (default): Skip resolved_items processing
+      // For most games, resolved_items contains progressive item resolutions (e.g., "Titans Mitts")
+      // These should NOT be added manually - they're computed automatically by stateManager's progression system
+      // We skip processing resolved_items entirely to avoid conflicts with the automatic resolution
+      if (this.verboseMode && Object.keys(resolvedItems).length > 0) {
+        this.logCallback('debug', `  [Player ${this.playerId}] Skipping ${Object.keys(resolvedItems).length} resolved_items (handled by progression system): ${Object.keys(resolvedItems).join(', ')}`);
       }
     }
 

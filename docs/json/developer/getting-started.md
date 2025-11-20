@@ -7,7 +7,10 @@ This guide provides the necessary steps to set up a local development environmen
 ### Required Software
 
 - **Git**: For version control.
-- **Python 3.8+**: For running the backend rule exporter and a local web server.
+- **Python 3.11.9+**: For full functionality including the backend rule exporter, testing pipeline, and local web server.
+  - **Windows/macOS**: Requires Python 3.11.9 or newer
+  - **Linux**: Requires Python 3.11.0 or newer
+  - **Note**: Python 3.8+ may work for basic frontend development (HTTP server only), but 3.11.9+ is recommended
 - **A Modern Web Browser**: Chrome, Firefox, or Edge, with support for ES6 modules and Web Workers.
 
 ### Recommended Tools

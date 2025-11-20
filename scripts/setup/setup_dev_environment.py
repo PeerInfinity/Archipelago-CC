@@ -3,11 +3,43 @@
 Comprehensive setup script for Archipelago JSON Export Tools development environment.
 Runs all steps from the getting-started.md guide automatically.
 """
+#!/usr/bin/env python3
+"""
+Comprehensive setup script for Archipelago JSON Export Tools development environment.
+Runs all steps from the getting-started.md guide automatically.
+"""
 import os
 import sys
 import subprocess
 import shutil
 from pathlib import Path
+
+def safe_print(text):
+    """
+    Print text safely, falling back to ASCII if encoding fails.
+    Replaces common emojis with ASCII equivalents.
+    """
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        # Simple replacement map for common emojis used in the script
+        replacements = {
+            "🚀": "[START]",
+            "✅": "[OK]",
+            "❌": "[FAIL]",
+            "⚠️": "[WARN]",
+            "🎉": "[YAY]"
+        }
+        
+        clean_text = text
+        for emoji, ascii_rep in replacements.items():
+            clean_text = clean_text.replace(emoji, ascii_rep)
+            
+        # If still has non-ascii, replace with ?
+        try:
+            print(clean_text)
+        except UnicodeEncodeError:
+            print(clean_text.encode(sys.stdout.encoding, errors='replace').decode(sys.stdout.encoding))
 
 def print_step(step_num, step_name):
     """Print a formatted step header"""
@@ -32,14 +64,14 @@ def run_command(cmd, description, shell=False, check_exit=True, cwd=None):
             print("Error output:", result.stderr.strip())
             
         if check_exit and result.returncode != 0:
-            print(f"❌ Command failed with exit code {result.returncode}")
+            safe_print(f"❌ Command failed with exit code {result.returncode}")
             return False
         else:
-            print("✅ Command completed successfully")
+            safe_print("✅ Command completed successfully")
             return True
             
     except Exception as e:
-        print(f"❌ Error running command: {e}")
+        safe_print(f"❌ Error running command: {e}")
         return False
 
 def check_command_exists(cmd):
@@ -47,13 +79,17 @@ def check_command_exists(cmd):
     return shutil.which(cmd) is not None
 
 def main():
-    print("🚀 Archipelago JSON Export Tools - Development Environment Setup")
+    # Force UTF-8 output for Windows
+    if sys.platform == 'win32':
+        sys.stdout.reconfigure(encoding='utf-8')
+
+    safe_print("🚀 Archipelago JSON Export Tools - Development Environment Setup")
     print("This script will set up your development environment automatically.")
     print("Steps that are already completed will be skipped.")
     
     # Get the project root directory (parent of scripts directory)
     script_dir = Path(__file__).parent.absolute()
-    project_root = script_dir.parent
+    project_root = script_dir.parent.parent
     os.chdir(project_root)
     
     print(f"\nProject root: {project_root}")
@@ -63,7 +99,7 @@ def main():
     
     # Check Python
     if not check_command_exists("python") and not check_command_exists("python3"):
-        print("❌ Python not found. Please install Python 3.8+ first.")
+        safe_print("❌ Python not found. Please install Python 3.8+ first.")
         return False
     
     # On Windows, prefer 'python' over 'python3' as it's more reliable
@@ -71,14 +107,14 @@ def main():
         python_cmd = "python" if check_command_exists("python") else "python3"
     else:  # Unix-like
         python_cmd = "python3" if check_command_exists("python3") else "python"
-    print(f"✅ Python found: {python_cmd}")
+    safe_print(f"✅ Python found: {python_cmd}")
     
     # Check Node.js (optional but recommended)
     if check_command_exists("node") and check_command_exists("npm"):
-        print("✅ Node.js and npm found")
+        safe_print("✅ Node.js and npm found")
         node_available = True
     else:
-        print("⚠️  Node.js/npm not found - automated tests will not be available")
+        safe_print("⚠️  Node.js/npm not found - automated tests will not be available")
         node_available = False
     
     # Step 2: Set Up Python Virtual Environment
@@ -86,7 +122,7 @@ def main():
     
     venv_path = project_root / ".venv"
     if venv_path.exists():
-        print("✅ Virtual environment already exists")
+        safe_print("✅ Virtual environment already exists")
     else:
         print("Creating virtual environment...")
         if not run_command([python_cmd, "-m", "venv", ".venv"], "Create virtual environment"):
@@ -112,7 +148,7 @@ def main():
     
     print("Running ModuleUpdate.py to install game-specific dependencies...")
     if not run_command([python_venv, "ModuleUpdate.py", "--yes"], "Install additional dependencies"):
-        print("⚠️  Some additional dependencies may have failed to install")
+        safe_print("⚠️  Some additional dependencies may have failed to install")
         print("This is normal for some optional game modules")
     
     # Step 4: Generate Game Template Files
@@ -120,19 +156,19 @@ def main():
     
     templates_dir = project_root / "Players" / "Templates"
     if templates_dir.exists() and any(templates_dir.glob("*.yaml")):
-        print("✅ Template files already exist")
+        safe_print("✅ Template files already exist")
     else:
         print("Generating template YAML files...")
         cmd = [python_venv, "-c", "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"]
         if not run_command(cmd, "Generate template files"):
-            print("⚠️  Template generation may have failed, but this won't prevent basic development")
+            safe_print("⚠️  Template generation may have failed, but this won't prevent basic development")
     
     # Step 5: Set Up Host Configuration
     print_step(5, "Setting Up Host Configuration")
     
     host_yaml_path = project_root / "host.yaml"
     if host_yaml_path.exists():
-        print("✅ host.yaml already exists")
+        safe_print("✅ host.yaml already exists")
     else:
         print("Creating host.yaml...")
         if not run_command([python_venv, "Launcher.py", "--update_settings"], "Create host.yaml"):
@@ -140,9 +176,9 @@ def main():
     
     # Configure for testing
     print("Configuring host.yaml for minimal spoiler testing...")
-    update_script = project_root / "scripts" / "update_host_settings.py"
+    update_script = project_root / "scripts" / "setup" / "update_host_settings.py"
     if not run_command([python_venv, str(update_script), "minimal-spoilers"], "Configure testing settings"):
-        print("⚠️  Failed to configure testing settings - you may need to edit host.yaml manually")
+        safe_print("⚠️  Failed to configure testing settings - you may need to edit host.yaml manually")
     
     # Step 6: Install Node.js Dependencies (if available)
     if node_available:
@@ -152,11 +188,11 @@ def main():
         node_modules = project_root / "node_modules"
         
         if node_modules.exists():
-            print("✅ Node.js dependencies already installed")
+            safe_print("✅ Node.js dependencies already installed")
         else:
             print("Installing Node.js dependencies...")
             if not run_command(["npm", "install"], "Install Node.js dependencies"):
-                print("⚠️  npm install failed - automated tests may not work")
+                safe_print("⚠️  npm install failed - automated tests may not work")
     
     # Step 7: Verify Setup
     print_step(7, "Verifying Setup")
@@ -164,9 +200,9 @@ def main():
     print("Checking virtual environment...")
     result = subprocess.run([python_venv, "--version"], capture_output=True, text=True)
     if result.returncode == 0:
-        print(f"✅ Python in venv: {result.stdout.strip()}")
+        safe_print(f"✅ Python in venv: {result.stdout.strip()}")
     else:
-        print("❌ Virtual environment verification failed")
+        safe_print("❌ Virtual environment verification failed")
         return False
     
     print("Checking if key files exist...")
@@ -179,14 +215,14 @@ def main():
     
     for file_path, description in key_files:
         if (project_root / file_path).exists():
-            print(f"✅ {description}: {file_path}")
+            safe_print(f"✅ {description}: {file_path}")
         else:
-            print(f"❌ Missing: {file_path}")
+            safe_print(f"❌ Missing: {file_path}")
     
     # Final Instructions
     print_step("COMPLETE", "Setup Complete!")
     
-    print("🎉 Development environment setup is complete!")
+    safe_print("🎉 Development environment setup is complete!")
     print("\nNext steps:")
     print("1. Start the development server:")
     print("   source .venv/bin/activate  # (or .venv\\Scripts\\activate on Windows)")
@@ -212,8 +248,8 @@ if __name__ == "__main__":
         success = main()
         sys.exit(0 if success else 1)
     except KeyboardInterrupt:
-        print("\n\n⚠️  Setup interrupted by user")
+        safe_print("\n\n⚠️  Setup interrupted by user")
         sys.exit(1)
     except Exception as e:
-        print(f"\n\n❌ Unexpected error: {e}")
+        safe_print(f"\n\n❌ Unexpected error: {e}")
         sys.exit(1)
