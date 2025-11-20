@@ -63,6 +63,15 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
 
         settings_dict['difficulty'] = difficulty_value
 
+        # Blasphemous uses resolved_items instead of base_items for sphere inventory
+        # This is because Blasphemous has complex event items that are computed dynamically
+        settings_dict['use_resolved_items'] = True
+
+        # Blasphemous needs items from the sphere log to be added upfront to the inventory
+        # (especially starting items in sphere 0 that don't come from checking locations)
+        # Most other games should get items naturally from checking locations
+        settings_dict['add_sphere_items_upfront'] = True
+
         return settings_dict
 
     def override_rule_analysis(self, rule_func, rule_target_name: str = None) -> Optional[Dict[str, Any]]:

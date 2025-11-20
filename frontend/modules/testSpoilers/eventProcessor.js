@@ -163,10 +163,35 @@ export class EventProcessor {
         }
 
         // Use accumulated data from sphereState
-        const inventory_from_log = sphereData.inventoryDetails?.base_items || {};
+        // Check game settings to determine which items to use
+        const staticData = stateManager.getStaticData();
+        const useResolvedItems = staticData?.settings?.use_resolved_items || false;
+
+        const base_items = sphereData.inventoryDetails?.base_items || {};
+        const resolved_items = sphereData.inventoryDetails?.resolved_items || {};
+
+        // DEBUG: Log what we got from sphere data (use event.sphere_index since context isn't defined yet)
+        this.logCallback('info', `[Sphere ${event.sphere_index}] base_items: ${JSON.stringify(base_items)}`);
+        this.logCallback('info', `[Sphere ${event.sphere_index}] resolved_items: ${JSON.stringify(resolved_items)}`);
+        this.logCallback('info', `[Sphere ${event.sphere_index}] previousInventory: ${JSON.stringify(this.previousInventory)}`);
+        this.logCallback('info', `[Sphere ${event.sphere_index}] use_resolved_items: ${useResolvedItems}`);
+
+        let inventory_from_log;
+
+        if (useResolvedItems) {
+          // Blasphemous and similar games: use only resolved_items
+          inventory_from_log = { ...resolved_items };
+        } else {
+          // Most games (alttp, etc): use only base_items
+          inventory_from_log = { ...base_items };
+        }
+
+        this.logCallback('info', `[Sphere ${event.sphere_index}] inventory_from_log: ${JSON.stringify(inventory_from_log)}`)
 
         // Find newly added items by comparing with previous inventory
         newlyAddedItems = this.findNewlyAddedItems(this.previousInventory, inventory_from_log);
+
+        this.logCallback('info', `[Sphere ${event.sphere_index}] newlyAddedItems: ${JSON.stringify(newlyAddedItems)}`);
 
         // Log newly added items before the status message
         if (newlyAddedItems.length > 0) {
@@ -210,6 +235,23 @@ export class EventProcessor {
             if (this.verboseMode) {
               this.logCallback('debug', `Keeping accumulated state for sphere ${context.sphere_number}.`);
             }
+          }
+
+          // Add newly discovered items from the sphere log to the state manager
+          // This is only done for games that set add_sphere_items_upfront flag (like Blasphemous)
+          // Most games get items naturally from checking locations
+          const addItemsUpfront = staticData?.settings?.add_sphere_items_upfront || false;
+
+          if (addItemsUpfront && newlyAddedItems.length > 0) {
+            this.logCallback('info', `Adding ${newlyAddedItems.length} items from sphere log to inventory...`);
+            for (const itemName of newlyAddedItems) {
+              await stateManager.addItemToInventory(itemName, 1);
+              if (this.verboseMode) {
+                this.logCallback('debug', `  Added item: ${itemName}`);
+              }
+            }
+            // Wait for state to stabilize after adding items
+            await stateManager.pingWorker(`sphere_${context.sphere_number}_items_added`, 10000);
           }
 
           // Check locations from current sphere one-by-one, allowing natural item acquisition
@@ -560,7 +602,14 @@ export class EventProcessor {
     if (eventType === 'state_update') {
       const sphereData = this._getSphereDataFromSphereState(this.currentLogIndex);
       if (sphereData) {
-        this.previousInventory = JSON.parse(JSON.stringify(sphereData.inventoryDetails?.base_items || {}));
+        const staticData = stateManager.getStaticData();
+        const useResolvedItems = staticData?.settings?.use_resolved_items || false;
+
+        if (useResolvedItems) {
+          this.previousInventory = JSON.parse(JSON.stringify(sphereData.inventoryDetails?.resolved_items || {}));
+        } else {
+          this.previousInventory = JSON.parse(JSON.stringify(sphereData.inventoryDetails?.base_items || {}));
+        }
       }
     }
 
