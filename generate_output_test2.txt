@@ -1,0 +1,12 @@
+Archipelago (0.6.4) logging initialized on Linux-4.4.0-x86_64-with-glibc2.39 process 13563 running Python 3.11.14
+P1 Weights: oot_test.yaml >> Minimal OOT Test Template
+P2 Weights: oot_test2.yaml >> Minimal OOT Test Template v2
+Generating for 2 players, 63817042129706456211 Seed 100 with plando: connections, texts, bosses
+Traceback (most recent call last):
+  File "/home/user/Archipelago-CC/Generate.py", line 586, in <module>
+    erargs, seed = main()
+                   ^^^^^^
+  File "/home/user/Archipelago-CC/Generate.py", line 244, in main
+    raise Exception(f"Names have to be unique. Names: {Counter(name.lower() for name in erargs.name.values())}")
+Exception: Names have to be unique. Names: Counter({'player1': 2})
+Press enter to close.
