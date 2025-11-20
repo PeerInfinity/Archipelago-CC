@@ -118,9 +118,9 @@
           "timestamp": "2025-11-19T23:08:13.163188"
         }
       ],
-      "last_updated": "2025-11-19T23:19:41.001527"
+      "last_updated": "2025-11-20T00:57:53.045806"
     },
-    "last_updated": "2025-11-19T23:19:41.001525",
+    "last_updated": "2025-11-20T00:57:53.045903",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3209,14 +3209,14 @@
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 36.16,
+            "processing_time_seconds": 37.55,
             "return_code": 0,
             "success": true,
             "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 3106930,
+            "size_bytes": 3107004,
             "size_mb": 2.96
           },
           "seed": "1",
@@ -3224,7 +3224,7 @@
           "spoiler_test": {
             "error_count": 8,
             "pass_fail": "failed",
-            "processing_time_seconds": 127.37,
+            "processing_time_seconds": 60.88,
             "return_code": 1,
             "sphere_reached": 0.0,
             "success": false,
@@ -3232,7 +3232,7 @@
             "warning_count": 0
           },
           "template_filename": "Blasphemous.yaml",
-          "timestamp": "2025-11-19T23:00:36.323538",
+          "timestamp": "2025-11-20T00:56:14.199212",
           "world_info": {
             "exporter_path": "exporter/games/blasphemous.py",
             "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
@@ -3252,7 +3252,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1",
-      "seeds_failed": 10,
+      "seeds_failed": 1,
       "seeds_passed": 0,
       "spoiler_test": {
         "error_count": 8,
@@ -3270,8 +3270,8 @@
         "failure_rate": 1.0
       },
       "template_filename": "Blasphemous.yaml",
-      "timestamp": "2025-11-19T23:11:57.606763",
-      "total_seeds_tested": 10,
+      "timestamp": "2025-11-20T00:56:14.138022",
+      "total_seeds_tested": 1,
       "world_info": {
         "exporter_path": "exporter/games/blasphemous.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",

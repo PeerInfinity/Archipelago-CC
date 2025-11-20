@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-19 17:12:55
+**Generated:** 2025-11-20 00:57:53
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,14 +12,14 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 68/78 passed (87.2%)
+- **Minimal Test:** 69/78 passed (88.5%)
 - **Full Test:** 64/78 passed (82.1%)
 - **Multiplayer Test:** 48/78 passed (61.5%)
 - **Multiworld Test:** 42/78 passed (53.8%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 4 game(s), 16 total failure(s)
+- **Minimal Spoilers Test:** 5 game(s), 16 total failure(s)
 - **Full Spoilers Test:** 12 game(s), 23 total failure(s)
 
 ### Combined Test Results
@@ -27,8 +27,8 @@ This summary combines results from four types of tests:
 - **Templates passing all 4 tests:** 42/78 (53.8%)
 - **Templates passing 3 tests:** 3/78 (3.8%)
 - **Templates passing 2 tests:** 21/78 (26.9%)
-- **Templates passing 1 test:** 3/78 (3.8%)
-- **Templates passing 0 tests:** 9/78 (11.5%)
+- **Templates passing 1 test:** 4/78 (5.1%)
+- **Templates passing 0 tests:** 8/78 (10.3%)
 
 ## Test Results
 
@@ -65,7 +65,7 @@ This summary combines results from four types of tests:
 | Kingdom Hearts 2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
-| Lingo | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Lingo | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Links Awakening DX | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
