@@ -325,28 +325,15 @@ function createEvaluationContext(snapshot, staticData) {
     },
 
     // has_shield: (is_adult and Hylian_Shield) or (is_child and Deku_Shield)
+    // Note: Hylian_Shield and Deku_Shield are aliases that expand via evaluateRuleString
     has_shield: () => {
-      if (context.is_adult()) {
-        return context.hasItem('Hylian_Shield') || context.hasItem('Buy_Hylian_Shield');
-      }
-      if (context.is_child()) {
-        return context.hasItem('Deku_Shield') || context.hasItem('Buy_Deku_Shield') ||
-               context.hasItem('Deku_Shield_Drop');
-      }
-      return false;
+      return evaluateRuleString('(is_adult and Hylian_Shield) or (is_child and Deku_Shield)', context);
     },
 
     // can_shield: (is_adult and (Hylian_Shield or Mirror_Shield)) or (is_child and Deku_Shield)
+    // Note: Hylian_Shield and Deku_Shield are aliases that expand via evaluateRuleString
     can_shield: () => {
-      if (context.is_adult()) {
-        return context.hasItem('Hylian_Shield') || context.hasItem('Buy_Hylian_Shield') ||
-               context.hasItem('Mirror_Shield');
-      }
-      if (context.is_child()) {
-        return context.hasItem('Deku_Shield') || context.hasItem('Buy_Deku_Shield') ||
-               context.hasItem('Deku_Shield_Drop');
-      }
-      return false;
+      return evaluateRuleString('(is_adult and (Hylian_Shield or Mirror_Shield)) or (is_child and Deku_Shield)', context);
     },
 
     // deku_tree_shortcuts: 'Deku Tree' in dungeon_shortcuts
