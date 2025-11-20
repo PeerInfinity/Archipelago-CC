@@ -325,26 +325,29 @@ function createEvaluationContext(snapshot, staticData) {
     },
 
     // has_shield: (is_adult and Hylian_Shield) or (is_child and Deku_Shield)
+    // Where Hylian_Shield = Buy_Hylian_Shield and Deku_Shield = Buy_Deku_Shield or Deku_Shield_Drop
     has_shield: () => {
       if (context.is_adult()) {
-        return context.hasItem('Hylian_Shield') || context.hasItem('Buy_Hylian_Shield');
+        // Adult needs Hylian_Shield (alias for Buy_Hylian_Shield)
+        return context.hasItem('Buy_Hylian_Shield');
       }
       if (context.is_child()) {
-        return context.hasItem('Deku_Shield') || context.hasItem('Buy_Deku_Shield') ||
-               context.hasItem('Deku_Shield_Drop');
+        // Child needs Deku_Shield (alias for Buy_Deku_Shield or Deku_Shield_Drop)
+        return context.hasItem('Buy_Deku_Shield') || context.hasItem('Deku_Shield_Drop');
       }
       return false;
     },
 
     // can_shield: (is_adult and (Hylian_Shield or Mirror_Shield)) or (is_child and Deku_Shield)
+    // Where Hylian_Shield = Buy_Hylian_Shield and Deku_Shield = Buy_Deku_Shield or Deku_Shield_Drop
     can_shield: () => {
       if (context.is_adult()) {
-        return context.hasItem('Hylian_Shield') || context.hasItem('Buy_Hylian_Shield') ||
-               context.hasItem('Mirror_Shield');
+        // Adult needs Hylian_Shield (Buy_Hylian_Shield) OR Mirror_Shield
+        return context.hasItem('Buy_Hylian_Shield') || context.hasItem('Mirror_Shield');
       }
       if (context.is_child()) {
-        return context.hasItem('Deku_Shield') || context.hasItem('Buy_Deku_Shield') ||
-               context.hasItem('Deku_Shield_Drop');
+        // Child needs Deku_Shield (Buy_Deku_Shield or Deku_Shield_Drop)
+        return context.hasItem('Buy_Deku_Shield') || context.hasItem('Deku_Shield_Drop');
       }
       return false;
     },
