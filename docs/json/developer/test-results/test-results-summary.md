@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-19 17:12:55
+**Generated:** 2025-11-20 15:26:19
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,23 +12,23 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 68/78 passed (87.2%)
-- **Full Test:** 64/78 passed (82.1%)
-- **Multiplayer Test:** 48/78 passed (61.5%)
+- **Minimal Test:** 70/78 passed (89.7%)
+- **Full Test:** 70/78 passed (89.7%)
+- **Multiplayer Test:** 50/78 passed (64.1%)
 - **Multiworld Test:** 42/78 passed (53.8%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 4 game(s), 16 total failure(s)
-- **Full Spoilers Test:** 12 game(s), 23 total failure(s)
+- **Minimal Spoilers Test:** 6 game(s), 24 total failure(s)
+- **Full Spoilers Test:** 22 game(s), 46 total failure(s)
 
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 42/78 (53.8%)
-- **Templates passing 3 tests:** 3/78 (3.8%)
+- **Templates passing 3 tests:** 7/78 (9.0%)
 - **Templates passing 2 tests:** 21/78 (26.9%)
-- **Templates passing 1 test:** 3/78 (3.8%)
-- **Templates passing 0 tests:** 9/78 (11.5%)
+- **Templates passing 1 test:** 1/78 (1.3%)
+- **Templates passing 0 tests:** 7/78 (9.0%)
 
 ## Test Results
 
@@ -57,18 +57,18 @@ This summary combines results from four types of tests:
 | Factorio | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
-| Heretic | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
+| Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ⚫ | ⚫ |
 | Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Kingdom Hearts 2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
-| Kirby's Dream Land 3 | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
-| Lingo | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Links Awakening DX | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
-| Mario & Luigi Superstar Saga | ✅ Passed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
+| Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Mega Man 2 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
@@ -89,7 +89,7 @@ This summary combines results from four types of tests:
 | Secret of Evermore | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Shivers | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
-| Starcraft 2 | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
+| Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Stardew Valley | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
 | Subnautica | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
@@ -109,8 +109,8 @@ This summary combines results from four types of tests:
 | WebDevJourney | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Yacht Dice | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
-| Yu-Gi-Oh! 2006 | ✅ Passed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
-| Zillion | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ⚫ |
+| Yu-Gi-Oh! 2006 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Zillion | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ⚫ |
 | shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 
 ## Multi-Template Test Results
