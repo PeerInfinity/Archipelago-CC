@@ -9,10 +9,9 @@ logger = logging.getLogger(__name__)
 class ZillionGameExportHandler(GenericGameExportHandler):
     """Export handler for Zillion.
 
-    Zillion uses the zilliandomizer library for its logic system. Access rules are
-    implemented as functools.partial objects that call the zilliandomizer logic cache,
-    making them difficult to analyze statically. We use runtime testing to determine
-    which items are required for each location.
+    Zillion uses the zilliandomizer library for its logic system. Instead of runtime
+    testing (which doesn't work during export), we read the requirements directly from
+    the zilliandomizer location objects and convert them to our rules format.
     """
     GAME_NAME = 'Zillion'
 
@@ -24,64 +23,109 @@ class ZillionGameExportHandler(GenericGameExportHandler):
 
     def get_custom_location_access_rule(self, location, world) -> Optional[Dict[str, Any]]:
         """
-        Test the location's access rule with different item combinations to determine
-        which items are required.
+        Read requirements directly from the zilliandomizer location object.
 
-        This works by calling the access_rule function with different CollectionStates
-        and seeing which items make the location accessible.
+        The zilliandomizer library stores requirements in a Req object with attributes:
+        - gun: gun power level (0-3) -> requires "Zillion" item
+        - jump: jump level (0-3) -> requires "Opa-Opa" item
+        - floppy: number of floppy disks (0-126) -> requires "Floppy Disk" item
+        - red: red ID card (0-1) -> requires "Red ID Card" item
+        - char: character requirement (tuple of allowed chars)
+        - skill, hp: other requirements (might need helper functions)
+        - union: OR of multiple requirements
         """
-        # Import here to avoid circular dependencies
-        from BaseClasses import CollectionState
-
-        if not hasattr(location, 'access_rule') or location.access_rule is None:
+        # Check if this is a ZillionLocation with zilliandomizer data
+        if not hasattr(location, 'zz_loc'):
             return None
 
         try:
-            # Create a minimal collection state with no items
-            # Don't sweep for advancements - we want to test the RAW access without item collection
-            empty_state = world.multiworld.get_all_state(False)
+            req = location.zz_loc.req
+            conditions = []
 
-            # Debug: Check specific locations
-            if location.name in ["C-3 mid far right", "A-4 bottom far left"]:
-                is_accessible = location.access_rule(empty_state)
-                logger.info(f"[RUNTIME DEBUG] {location.name}: accessible with empty state = {is_accessible}")
+            # Gun requirement -> Zillion item
+            # Note: The player starts with gun=1, jump=1 as baseline capabilities
+            # gun=2 requires 1 "Zillion" item (upgrade from 1 to 2)
+            # gun=3 requires 2 "Zillion" items (upgrade from 1 to 3)
+            if req.gun > 1:
+                count_needed = req.gun - 1
+                if count_needed == 1:
+                    conditions.append({'type': 'item_check', 'item': 'Zillion'})
+                else:
+                    conditions.append({
+                        'type': 'item_check',
+                        'item': 'Zillion',
+                        'count': {'type': 'constant', 'value': count_needed}
+                    })
 
-            # If accessible with no items, return True
-            if location.access_rule(empty_state):
+            # Jump requirement -> Opa-Opa item
+            # Same logic as gun: player starts with jump=1
+            if req.jump > 1:
+                count_needed = req.jump - 1
+                if count_needed == 1:
+                    conditions.append({'type': 'item_check', 'item': 'Opa-Opa'})
+                else:
+                    conditions.append({
+                        'type': 'item_check',
+                        'item': 'Opa-Opa',
+                        'count': {'type': 'constant', 'value': count_needed}
+                    })
+
+            # Floppy disk requirement
+            if req.floppy > 0:
+                if req.floppy == 1:
+                    conditions.append({'type': 'item_check', 'item': 'Floppy Disk'})
+                else:
+                    conditions.append({
+                        'type': 'item_check',
+                        'item': 'Floppy Disk',
+                        'count': {'type': 'constant', 'value': req.floppy}
+                    })
+
+            # Red ID card requirement
+            if req.red > 0:
+                conditions.append({'type': 'item_check', 'item': 'Red ID Card'})
+
+            # Character requirement
+            # req.char is a tuple like ('JJ', 'Apple', 'Champ') for any character,
+            # or ('JJ',) for JJ only, etc.
+            if req.char and len(req.char) < 3:
+                # If not all characters are allowed, add character requirement
+                char_conditions = []
+                for char_name in req.char:
+                    char_conditions.append({'type': 'item_check', 'item': char_name})
+
+                if len(char_conditions) == 1:
+                    conditions.append(char_conditions[0])
+                else:
+                    conditions.append({
+                        'type': 'or',
+                        'conditions': char_conditions
+                    })
+
+            # Skill and HP requirements might need helper functions
+            # For now, we'll log if we see them
+            if req.skill > 0:
+                logger.debug(f"Location {location.name} has skill requirement: {req.skill}")
+            if req.hp > 0:
+                logger.debug(f"Location {location.name} has HP requirement: {req.hp}")
+
+            # Handle union (OR of requirements)
+            if req.union:
+                logger.warning(f"Location {location.name} has union requirement - not yet supported")
+
+            # Build the final access rule
+            if not conditions:
+                # No requirements - accessible from the start
                 return {'type': 'constant', 'value': True}
-
-            # Test each item type to see if it enables access
-            required_items = []
-            item_names = ['Zillion', 'Opa-Opa', 'Floppy Disk', 'Red ID Card', 'Scope', 'Bread', 'Apple']
-
-            for item_name in item_names:
-                # Skip if this item doesn't exist in the world
-                if item_name not in world.item_name_to_id:
-                    continue
-
-                # Test with 1 of this item - don't sweep to avoid collecting other items
-                test_state = empty_state.copy()
-                test_state.collect(world.create_item(item_name), prevent_sweep=True)
-
-                if location.access_rule(test_state):
-                    required_items.append(item_name)
-
-            if not required_items:
-                # Location is not accessible even with items - might need multiple items
-                # or region connectivity. Return None to let the generic analyzer handle it.
-                return None
-
-            # Build the access rule from the required items
-            if len(required_items) == 1:
-                return {'type': 'item_check', 'item': required_items[0]}
+            elif len(conditions) == 1:
+                return conditions[0]
             else:
-                # Multiple items might be needed - test combinations
-                # For now, return OR of all items (one is sufficient)
+                # Multiple requirements - all must be met (AND)
                 return {
-                    'type': 'or',
-                    'conditions': [{'type': 'item_check', 'item': item} for item in required_items]
+                    'type': 'and',
+                    'conditions': conditions
                 }
 
         except Exception as e:
-            logger.warning(f"Runtime test failed for location {location.name}: {e}")
+            logger.warning(f"Failed to read requirements for location {location.name}: {e}")
             return None
