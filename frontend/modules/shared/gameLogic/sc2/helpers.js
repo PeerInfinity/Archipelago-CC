@@ -873,7 +873,10 @@ export default {
         return terran_common_unit(snapshot, staticData);
     },
     terran_cliffjumper,
-    terran_able_to_snipe_defiler: () => false,
+    terran_able_to_snipe_defiler: (snapshot, staticData) => {
+        return has_all(snapshot, ['Jump Suit Module (Nova Suit Module)', 'C20A Canister Rifle (Nova Weapon)'])
+            || has_all(snapshot, ['Siege Tank', 'Maelstrom Rounds (Siege Tank)', 'Jump Jets (Siege Tank)']);
+    },
     terran_respond_to_colony_infestations: (snapshot, staticData) => {
         return (
             terran_common_unit(snapshot, staticData)
@@ -1100,13 +1103,16 @@ export default {
     enemy_intelligence_second_stage_requirement,
     enemy_intelligence_third_stage_requirement,
     the_escape_first_stage_requirement: (snapshot, staticData) => {
-        // First stage of The Escape requires basic Nova suit module (not Jump Suit)
-        // Check for Armored, Energy, or Progressive Stealth suit modules
-        return has_any(snapshot, [
-            'Armored Suit Module (Nova Suit Module)',
-            'Energy Suit Module (Nova Suit Module)',
-            'Progressive Stealth Suit Module (Nova Suit Module)'
-        ]);
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const storyTechGranted = settings?.story_tech_granted || false;
+        const missionOrder = settings?.mission_order;
+        const enabledCampaigns = settings?.enabled_campaigns;
+
+        const stuffGranted = storyTechGranted || (missionOrder === 0 && enabledCampaigns === 'NCO');
+
+        return stuffGranted
+            || (nova_ranged_weapon(snapshot, staticData) && (nova_full_stealth(snapshot, staticData) || nova_heal(snapshot, staticData)));
     },
     the_escape_requirement: (snapshot, staticData) => {
         // The Escape mission requires a Nova suit module AND at least 2 Nova weapons
@@ -1135,7 +1141,19 @@ export default {
 
         return hasSuitModule && weaponCount >= 2;
     },
-    the_escape_stuff_granted: () => false,
+    the_escape_stuff_granted: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const storyTechGranted = settings?.story_tech_granted || false;
+        const missionOrder = settings?.mission_order;
+        const enabledCampaigns = settings?.enabled_campaigns;
+
+        // The NCO first mission requires having too much stuff first before actually able to do anything
+        // MissionOrder.option_vanilla = 0
+        // SC2Campaign.NCO = enabled_campaigns containing only NCO
+        return storyTechGranted
+            || (missionOrder === 0 && enabledCampaigns === 'NCO');
+    },
     /**
      * Brothers in Arms mission requirement
      */
@@ -1168,7 +1186,11 @@ export default {
             )
         );
     },
-    dark_skies_requirement: () => false,
+    dark_skies_requirement: (snapshot, staticData) => {
+        return terran_common_unit(snapshot, staticData)
+            && terran_beats_protoss_deathball(snapshot, staticData)
+            && terran_defense_rating(snapshot, staticData, false, true) >= 8;
+    },
     last_stand_requirement: (snapshot, staticData) => {
         const advancedTactics = isAdvancedTactics(staticData);
 
@@ -1177,14 +1199,220 @@ export default {
             && protoss_static_defense(snapshot, staticData)
             && (advancedTactics || protoss_basic_splash(snapshot, staticData));
     },
-    end_game_requirement: () => false,
-    enemy_shadow_first_stage: () => false,
-    enemy_shadow_second_stage: () => false,
-    enemy_shadow_victory: () => false,
-    enemy_shadow_door_controls: () => false,
-    enemy_shadow_door_unlocks_tool: () => false,
-    enemy_shadow_tripwires_tool: () => false,
-    enemy_shadow_domination: () => false,
+    end_game_requirement: (snapshot, staticData) => {
+        const advancedTactics = isAdvancedTactics(staticData);
+
+        return terran_competent_comp(snapshot, staticData)
+            && has_any(snapshot, ['Raven', 'Science Vessel', 'Progressive Orbital Command']) // terran_mobile_detector
+            && (
+                has_any(snapshot, ['Battlecruiser', 'Liberator', 'Banshee'])
+                || has_all(snapshot, ['Wraith', 'Advanced Laser Technology (Wraith)'])
+            )
+            && (
+                has_any(snapshot, ['Battlecruiser', 'Viking', 'Liberator'])
+                || (advancedTactics
+                    && has_all(snapshot, ['Raven', 'Hunter-Seeker Weapon (Raven)'])
+                )
+            );
+    },
+    enemy_shadow_tripwires_tool: (snapshot, staticData) => {
+        return has_any(snapshot, [
+            'Flashbang Grenades (Nova Gadget)',
+            'Blink (Nova Ability)',
+            'Domination (Nova Ability)'
+        ]);
+    },
+    enemy_shadow_door_unlocks_tool: (snapshot, staticData) => {
+        return has_any(snapshot, [
+            'Domination (Nova Ability)',
+            'Blink (Nova Ability)',
+            'Jump Suit Module (Nova Suit Module)'
+        ]);
+    },
+    enemy_shadow_domination: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const storyTechGranted = settings?.story_tech_granted || false;
+
+        return storyTechGranted
+            || (nova_ranged_weapon(snapshot, staticData)
+                && (
+                    nova_full_stealth(snapshot, staticData)
+                    || has(snapshot, 'Jump Suit Module (Nova Suit Module)')
+                    || (nova_heal(snapshot, staticData) && nova_splash(snapshot, staticData))
+                )
+            );
+    },
+    enemy_shadow_first_stage: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const storyTechGranted = settings?.story_tech_granted || false;
+
+        // enemy_shadow_domination check
+        const domination = storyTechGranted
+            || (nova_ranged_weapon(snapshot, staticData)
+                && (
+                    nova_full_stealth(snapshot, staticData)
+                    || has(snapshot, 'Jump Suit Module (Nova Suit Module)')
+                    || (nova_heal(snapshot, staticData) && nova_splash(snapshot, staticData))
+                )
+            );
+
+        // enemy_shadow_tripwires_tool check
+        const tripwiresTool = has_any(snapshot, [
+            'Flashbang Grenades (Nova Gadget)',
+            'Blink (Nova Ability)',
+            'Domination (Nova Ability)'
+        ]);
+
+        return domination
+            && (storyTechGranted
+                || (
+                    (nova_full_stealth(snapshot, staticData) && tripwiresTool)
+                    || (nova_heal(snapshot, staticData) && nova_splash(snapshot, staticData))
+                )
+            );
+    },
+    enemy_shadow_second_stage: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const storyTechGranted = settings?.story_tech_granted || false;
+
+        // enemy_shadow_domination check
+        const domination = storyTechGranted
+            || (nova_ranged_weapon(snapshot, staticData)
+                && (
+                    nova_full_stealth(snapshot, staticData)
+                    || has(snapshot, 'Jump Suit Module (Nova Suit Module)')
+                    || (nova_heal(snapshot, staticData) && nova_splash(snapshot, staticData))
+                )
+            );
+
+        // enemy_shadow_tripwires_tool check
+        const tripwiresTool = has_any(snapshot, [
+            'Flashbang Grenades (Nova Gadget)',
+            'Blink (Nova Ability)',
+            'Domination (Nova Ability)'
+        ]);
+
+        // enemy_shadow_first_stage check
+        const firstStage = domination
+            && (storyTechGranted
+                || (
+                    (nova_full_stealth(snapshot, staticData) && tripwiresTool)
+                    || (nova_heal(snapshot, staticData) && nova_splash(snapshot, staticData))
+                )
+            );
+
+        return firstStage
+            && (storyTechGranted
+                || nova_splash(snapshot, staticData)
+                || nova_heal(snapshot, staticData)
+                || has_any(snapshot, ['Blink (Nova Ability)', 'Holo Decoy (Nova Gadget)', 'Ionic Force Field (Nova Gadget)']) // nova_escape_assist
+            );
+    },
+    enemy_shadow_door_controls: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const storyTechGranted = settings?.story_tech_granted || false;
+
+        // enemy_shadow_domination check
+        const domination = storyTechGranted
+            || (nova_ranged_weapon(snapshot, staticData)
+                && (
+                    nova_full_stealth(snapshot, staticData)
+                    || has(snapshot, 'Jump Suit Module (Nova Suit Module)')
+                    || (nova_heal(snapshot, staticData) && nova_splash(snapshot, staticData))
+                )
+            );
+
+        // enemy_shadow_tripwires_tool check
+        const tripwiresTool = has_any(snapshot, [
+            'Flashbang Grenades (Nova Gadget)',
+            'Blink (Nova Ability)',
+            'Domination (Nova Ability)'
+        ]);
+
+        // enemy_shadow_first_stage check
+        const firstStage = domination
+            && (storyTechGranted
+                || (
+                    (nova_full_stealth(snapshot, staticData) && tripwiresTool)
+                    || (nova_heal(snapshot, staticData) && nova_splash(snapshot, staticData))
+                )
+            );
+
+        // enemy_shadow_second_stage check
+        const secondStage = firstStage
+            && (storyTechGranted
+                || nova_splash(snapshot, staticData)
+                || nova_heal(snapshot, staticData)
+                || has_any(snapshot, ['Blink (Nova Ability)', 'Holo Decoy (Nova Gadget)', 'Ionic Force Field (Nova Gadget)']) // nova_escape_assist
+            );
+
+        // enemy_shadow_door_unlocks_tool check
+        const doorUnlocksTool = has_any(snapshot, [
+            'Domination (Nova Ability)',
+            'Blink (Nova Ability)',
+            'Jump Suit Module (Nova Suit Module)'
+        ]);
+
+        return secondStage
+            && (storyTechGranted || doorUnlocksTool);
+    },
+    enemy_shadow_victory: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const storyTechGranted = settings?.story_tech_granted || false;
+
+        // enemy_shadow_domination check
+        const domination = storyTechGranted
+            || (nova_ranged_weapon(snapshot, staticData)
+                && (
+                    nova_full_stealth(snapshot, staticData)
+                    || has(snapshot, 'Jump Suit Module (Nova Suit Module)')
+                    || (nova_heal(snapshot, staticData) && nova_splash(snapshot, staticData))
+                )
+            );
+
+        // enemy_shadow_tripwires_tool check
+        const tripwiresTool = has_any(snapshot, [
+            'Flashbang Grenades (Nova Gadget)',
+            'Blink (Nova Ability)',
+            'Domination (Nova Ability)'
+        ]);
+
+        // enemy_shadow_first_stage check
+        const firstStage = domination
+            && (storyTechGranted
+                || (
+                    (nova_full_stealth(snapshot, staticData) && tripwiresTool)
+                    || (nova_heal(snapshot, staticData) && nova_splash(snapshot, staticData))
+                )
+            );
+
+        // enemy_shadow_second_stage check
+        const secondStage = firstStage
+            && (storyTechGranted
+                || nova_splash(snapshot, staticData)
+                || nova_heal(snapshot, staticData)
+                || has_any(snapshot, ['Blink (Nova Ability)', 'Holo Decoy (Nova Gadget)', 'Ionic Force Field (Nova Gadget)']) // nova_escape_assist
+            );
+
+        // enemy_shadow_door_unlocks_tool check
+        const doorUnlocksTool = has_any(snapshot, [
+            'Domination (Nova Ability)',
+            'Blink (Nova Ability)',
+            'Jump Suit Module (Nova Suit Module)'
+        ]);
+
+        // enemy_shadow_door_controls check
+        const doorControls = secondStage
+            && (storyTechGranted || doorUnlocksTool);
+
+        return doorControls
+            && (storyTechGranted || nova_heal(snapshot, staticData));
+    },
     salvation_requirement: (snapshot, staticData) => {
         // Salvation requires completing The Host mission
         return has(snapshot, 'Beat The Host');
@@ -1226,15 +1454,112 @@ export default {
                 && protoss_hybrid_counter(snapshot, staticData))
         );
     },
-    supreme_requirement: () => false,
+    supreme_requirement: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId] || {};
+        const storyTechGranted = settings.story_tech_granted || false;
+        const kerriganUnitAvailable = settings.kerrigan_unit_available || false;
+
+        return storyTechGranted
+            || !kerriganUnitAvailable
+            || (
+                has_all(snapshot, ['Leaping Strike (Kerrigan Tier 1)', 'Mend (Kerrigan Tier 4)'])
+                && kerrigan_levels(snapshot, staticData, 35)
+            );
+    },
     the_host_requirement: (snapshot, staticData) => {
         // The Host requires completing Templar's Return mission
         return has(snapshot, "Beat Templar's Return");
     },
-    into_the_void_requirement: () => false,
-    essence_of_eternity_requirement: () => false,
-    amons_fall_requirement: () => false,
-    the_reckoning_requirement: () => false,
+    into_the_void_requirement: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const take_over_ai_allies = settings?.take_over_ai_allies || false;
+
+        return protoss_competent_comp(snapshot, staticData)
+            || (
+                take_over_ai_allies
+                && (
+                    has(snapshot, 'Battlecruiser')
+                    || (
+                        has(snapshot, 'Ultralisk')
+                        && protoss_competent_anti_air(snapshot, staticData)
+                    )
+                )
+            );
+    },
+    essence_of_eternity_requirement: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const take_over_ai_allies = settings?.take_over_ai_allies || false;
+
+        let defenseScore = terran_defense_rating(snapshot, staticData, false, true);
+        if (take_over_ai_allies && protoss_static_defense(snapshot, staticData)) {
+            defenseScore += 2;
+        }
+
+        return defenseScore >= 10
+            && (
+                terran_competent_anti_air(snapshot, staticData)
+                || (take_over_ai_allies && protoss_competent_anti_air(snapshot, staticData))
+            )
+            && (
+                has(snapshot, 'Battlecruiser')
+                || (has(snapshot, 'Banshee') && has_any(snapshot, ['Viking', 'Valkyrie']))
+                || (take_over_ai_allies && protoss_fleet(snapshot, staticData))
+            );
+    },
+    amons_fall_requirement: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const take_over_ai_allies = settings?.take_over_ai_allies || false;
+
+        if (take_over_ai_allies) {
+            return (
+                has_any(snapshot, ['Battlecruiser', 'Carrier'])
+                || (
+                    has(snapshot, 'Ultralisk')
+                    && protoss_competent_anti_air(snapshot, staticData)
+                    && (
+                        has_any(snapshot, ['Liberator', 'Banshee', 'Valkyrie', 'Viking'])
+                        || has_all(snapshot, ['Wraith', 'Advanced Laser Technology (Wraith)'])
+                        || protoss_fleet(snapshot, staticData)
+                    )
+                    && (
+                        has(snapshot, 'Science Vessel')
+                        || has_all(snapshot, ['Medic', 'Adaptive Medpacks (Medic)'])
+                        || count(snapshot, 'Progressive Regenerative Bio-Steel') >= 3
+                        || (isAdvancedTactics(staticData) && (
+                            has_all(snapshot, ['Raven', 'Bio-Mechanical Repair Drone (Raven)'])
+                            || count(snapshot, 'Progressive Regenerative Bio-Steel') >= 2
+                        ))
+                        || has(snapshot, 'Reconstruction Beam')
+                    )
+                )
+            );
+        } else {
+            return protoss_competent_comp(snapshot, staticData)
+                && protoss_fleet(snapshot, staticData)
+                && protoss_heal(snapshot, staticData);
+        }
+    },
+    the_reckoning_requirement: (snapshot, staticData) => {
+        const playerId = staticData?.player || '1';
+        const settings = staticData?.settings?.[playerId];
+        const take_over_ai_allies = settings?.take_over_ai_allies || false;
+
+        if (take_over_ai_allies) {
+            return terran_competent_comp(snapshot, staticData)
+                && zerg_competent_comp(snapshot, staticData)
+                && (
+                    zerg_competent_anti_air(snapshot, staticData)
+                    || terran_competent_anti_air(snapshot, staticData)
+                );
+        } else {
+            return zerg_competent_comp(snapshot, staticData)
+                && zerg_competent_anti_air(snapshot, staticData);
+        }
+    },
     all_in_requirement: (snapshot, staticData) => {
         const advancedTactics = isAdvancedTactics(staticData);
         const playerId = staticData?.player || '1';

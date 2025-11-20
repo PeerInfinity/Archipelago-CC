@@ -33,6 +33,60 @@ const VISIT_LOCKING_ITEMS = [
   "Namine Sketches"
 ];
 
+// Data Xaldin fight requirements (from worlds/kh2/Logic.py:204-245)
+const EASY_DATA_XALDIN = {
+  'Fire Element': 3,
+  'Air Combo Plus': 2,
+  'Finishing Plus': 1,
+  'Guard': 1,
+  'Reflect Element': 3,
+  'Flare Force': 1,
+  'Fantasia': 1,
+  'High Jump': 3,
+  'Aerial Dodge': 3,
+  'Glide': 3,
+  'Magnet Element': 1,
+  'Horizontal Slash': 1,
+  'Aerial Dive': 1,
+  'Aerial Spiral': 1,
+  'Berserk Charge': 1
+};
+
+const NORMAL_DATA_XALDIN = {
+  'Fire Element': 3,
+  'Finishing Plus': 1,
+  'Guard': 1,
+  'Reflect Element': 3,
+  'Flare Force': 1,
+  'Fantasia': 1,
+  'High Jump': 3,
+  'Aerial Dodge': 3,
+  'Glide': 3,
+  'Magnet Element': 1,
+  'Horizontal Slash': 1,
+  'Aerial Dive': 1,
+  'Aerial Spiral': 1
+};
+
+const HARD_DATA_XALDIN = {
+  'Fire Element': 2,
+  'Finishing Plus': 1,
+  'Guard': 1,
+  'High Jump': 2,
+  'Aerial Dodge': 2,
+  'Glide': 2,
+  'Magnet Element': 1,
+  'Aerial Dive': 1
+};
+
+// Party limit items (from worlds/kh2/Logic.py:35-40)
+const PARTY_LIMIT = [
+  'Fantasia',
+  'Flare Force',
+  'Teamwork',
+  'Tornado Fusion'
+];
+
 export const helperFunctions = {
   /**
    * Check if player has unlocked a specific form level.
@@ -1301,6 +1355,31 @@ export const helperFunctions = {
       return hasGuard && hasAerialMove;
     } else { // hard: Guard only
       return hasGuard;
+    }
+  },
+
+  /**
+   * Check if Data Xaldin fight is accessible.
+   * Based on worlds/kh2/Rules.py:805-814
+   *
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data (contains settings)
+   * @returns {boolean} True if player can access Data Xaldin fight
+   */
+  get_data_xaldin_rules(snapshot, staticData) {
+    const settings = staticData?.settings || {};
+    const fightLogic = settings.FightLogic ?? 1; // Default: normal
+
+    if (fightLogic === 0) { // easy
+      return helperFunctions.kh2_dict_count(EASY_DATA_XALDIN, snapshot) &&
+             helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, true);
+    } else if (fightLogic === 1) { // normal
+      return helperFunctions.kh2_dict_count(NORMAL_DATA_XALDIN, snapshot) &&
+             helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 5, true);
+    } else { // hard
+      return helperFunctions.kh2_dict_count(HARD_DATA_XALDIN, snapshot) &&
+             helperFunctions.form_list_unlock(snapshot, staticData, 'Final Form', 3, true) &&
+             helperFunctions.kh2_has_any(snapshot, staticData, PARTY_LIMIT);
     }
   },
 
