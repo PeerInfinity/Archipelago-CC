@@ -52,11 +52,22 @@ export const helperFunctions = {
    */
   has(snapshot, staticData, itemName) {
     if (!snapshot?.inventory) {
+      console.log(`[Factorio has] No inventory in snapshot, checking for: ${itemName}`);
       return false;
+    }
+
+    // Debug logging for "Automated" items
+    if (itemName && itemName.startsWith('Automated')) {
+      console.log(`[Factorio has] Checking for: "${itemName}"`);
+      console.log(`[Factorio has] Inventory keys:`, Object.keys(snapshot.inventory));
+      console.log(`[Factorio has] Item in inventory:`, snapshot.inventory[itemName]);
     }
 
     // Direct check: does the inventory have this exact item?
     if (snapshot.inventory[itemName] > 0) {
+      if (itemName && itemName.startsWith('Automated')) {
+        console.log(`[Factorio has] Found "${itemName}" in inventory: ${snapshot.inventory[itemName]}`);
+      }
       return true;
     }
 
