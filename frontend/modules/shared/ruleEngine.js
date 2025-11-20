@@ -1258,12 +1258,15 @@ export const evaluateRule = (rule, context, depth = 0) => {
             log('warn', '[evaluateRule SnapshotIF] context.countItem is not a function for item_check with count.');
             result = undefined;
           }
-        } else if (typeof context.hasItem === 'function') {
-          result = context.hasItem(itemName); // hasItem should return true/false/undefined
+        } else if (typeof context.countItem === 'function') {
+          // When item_check is used without a count field, return the actual count
+          // This allows it to be used in numeric expressions like comparisons
+          // E.g., items.KeyPD >= 3 becomes {type: 'item_check', item: 'KeyPD'} >= 3
+          result = context.countItem(itemName);
         } else {
           log(
             'warn',
-            '[evaluateRule SnapshotIF] context.hasItem is not a function for item_check.'
+            '[evaluateRule SnapshotIF] context.countItem is not a function for item_check.'
           );
           result = undefined;
         }
