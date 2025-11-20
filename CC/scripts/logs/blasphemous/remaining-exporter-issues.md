@@ -1,20 +1,31 @@
 # Remaining Exporter Issues
 
-## Issue 1: Sphere 0 - 221 regions accessible that shouldn't be
+## Issue 1: Sphere 0 - Regions not being marked as accessible
 
-**Test failure:** Sphere 0 has 221 regions accessible in JavaScript STATE but NOT in Python LOG
+**Test failure:** Sphere 0 has regions accessible in Python LOG but NOT in JavaScript STATE
 
 **Error details:**
-- Locations accessible in STATE but NOT in LOG (221 locations): BR01, BR05, CO16, CO24, CO29, CO33, D01BZ02S01, D01BZ04S01, D01BZ06S01, D01BZ08S01, D01Z01S03[W], D01Z01S04[E], ... (and many more)
+- "Regions accessible in LOG but NOT in STATE: CO01, CO05, CO11, CO25, CO29, CO33, D01BZ02S01..." (400+ regions)
+- "ISSUE: Region D01Z03S03 is not reachable" (repeated multiple times)
+- Starting regions (Menu, D17Z01S01) ARE accessible, but child regions are NOT
 
-**Root cause:** These appear to be regions that are being marked as accessible from the start when they should have access requirements.
+**Root cause:** The JavaScript state manager is NOT correctly marking regions as reachable even though they should be accessible with the starting abilities (Dash Ability + Wall Climb Ability).
 
-**Expected behavior:** In Sphere 0, only regions with no access requirements (or with starting abilities like Dash and Wall Climb) should be accessible.
+**Investigation findings:**
+1. ✓ Starting items (Dash Ability, Wall Climb Ability) exist in itemData
+2. ✓ Rules.json has correct access rules (e.g., D17Z01S01 -> D17Z01S01[E] has access_rule: true)
+3. ✓ Initialization code correctly adds starting items to inventory
+4. ✓ BFS reachability algorithm looks correct
+5. ✓ Helper functions (dash, wall_climb) exist in blasphemousLogic.js
+6. ? Spoiler test may be using different initialization path than normal gameplay
+7. ? Starting items may not be added correctly in spoiler test mode
 
-**Investigation needed:**
-1. Check if the exporter is correctly exporting access_rule for region exits
-2. Verify that the access rules are not being set to null/true when they should have requirements
-3. Check if the initial state is correctly set up
+**Hypothesis:** The spoiler test uses sphere log for initialization. Blasphemous has `add_sphere_items_upfront: true` which should add Sphere 0 resolved_items to inventory. This may not be working correctly in the spoiler test.
 
-**Status:** Investigating
+**Next steps:**
+1. Check how spoiler test handles `add_sphere_items_upfront` setting
+2. Verify that Sphere 0 items from sphere log are being added to inventory
+3. Add debug logging to confirm inventory state before reachability computation
+
+**Status:** Investigating - likely an issue with spoiler test initialization, not the core state manager
 
