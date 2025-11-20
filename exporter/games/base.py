@@ -198,6 +198,12 @@ class BaseGameExportHandler:
         # Add assume_bidirectional_exits setting with default false
         settings_dict['assume_bidirectional_exits'] = False
 
+        # Add use_resolved_items setting with default false
+        # When false (default), eventProcessor uses only base_items from sphere log
+        # When true, eventProcessor uses resolved_items (e.g., for games with complex event items)
+        # Games that need resolved_items should override get_settings_data and set this to True
+        settings_dict['use_resolved_items'] = False
+
         return settings_dict
         
     def get_game_info(self, world) -> Dict[str, Any]:
