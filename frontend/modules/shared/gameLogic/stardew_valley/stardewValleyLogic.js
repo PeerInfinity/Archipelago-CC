@@ -44,16 +44,23 @@ export const stardewValleyStateModule = {
    * @param {Object} sm - StateManager instance
    */
   initializeVirtualItems(sm) {
+    console.log(`[SDV] initializeVirtualItems called, totalProgressionItems=${sm.totalProgressionItems || 0}`);
+
     // Ensure virtual items exist (they should already have been set by hooks)
     if (!('Received Progression Item' in sm.inventory)) {
       sm.inventory['Received Progression Item'] = 0;
+      console.log('[SDV] Created Received Progression Item (was missing)');
       sm._logDebug('[Stardew Valley Logic] Created Received Progression Item (was missing)');
     }
     if (!('Received Progression Percent' in sm.inventory)) {
       sm.inventory['Received Progression Percent'] = 0;
+      console.log('[SDV] Created Received Progression Percent (was missing)');
       sm._logDebug('[Stardew Valley Logic] Created Received Progression Percent (was missing)');
     }
 
+    console.log(
+      `[SDV] Virtual items after init: Item=${sm.inventory['Received Progression Item']}, Percent=${sm.inventory['Received Progression Percent']}`
+    );
     sm._logDebug(
       `[Stardew Valley Logic] Virtual items initialized: Progression Item=${sm.inventory['Received Progression Item']}, Progression Percent=${sm.inventory['Received Progression Percent']}, total=${sm.totalProgressionItems || 0}`
     );
@@ -86,9 +93,14 @@ export const stardewValleyStateModule = {
       const newPercent = Math.floor((sm.inventory['Received Progression Item'] * 100) / totalProgItems);
       sm.inventory['Received Progression Percent'] = newPercent;
 
+      console.log(
+        `[SDV] afterItemAdded: "${itemName}" x${count} -> total=${sm.inventory['Received Progression Item']}, percent=${newPercent}% (of ${totalProgItems})`
+      );
       sm._logDebug(
         `[Stardew Valley Logic] Updated progression: items=${sm.inventory['Received Progression Item']}, percent=${newPercent} (total=${totalProgItems})`
       );
+    } else {
+      console.warn(`[SDV] afterItemAdded: totalProgressionItems=0! item="${itemName}"`);
     }
   },
 
