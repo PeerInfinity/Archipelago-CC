@@ -400,6 +400,121 @@ export function traverse(snapshot, staticData, doorName) {
   return { bool: true, difficulty: 0 };
 }
 
+// Boss requirement helpers - Conservative implementations
+// These calculate damage output vs boss HP in Python - we use simplified checks
+export function enoughStuffsKraid(snapshot, staticData) {
+  // Kraid boss - needs some offensive capability
+  // Conservative: require at least missiles or charge beam
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Charge'));
+}
+
+export function enoughStuffsPhantoon(snapshot, staticData) {
+  // Phantoon boss - needs missiles or charge beam
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Charge'));
+}
+
+export function enoughStuffsRidley(snapshot, staticData) {
+  // Ridley boss - tougher, needs Morph or Screw Attack + good weapons
+  return wand(snapshot, staticData,
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Morph'),
+      haveItem(snapshot, staticData, 'ScrewAttack')),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Super'),
+      haveItem(snapshot, staticData, 'Charge')));
+}
+
+export function enoughStuffCroc(snapshot, staticData) {
+  // Crocomire - needs weapons, conservative approach
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Super'),
+    haveItem(snapshot, staticData, 'Charge'));
+}
+
+export function enoughStuffSporeSpawn(snapshot, staticData) {
+  // Spore Spawn - relatively easy boss
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Super'),
+    haveItem(snapshot, staticData, 'Charge'));
+}
+
+export function enoughStuffTourian(snapshot, staticData) {
+  // Mother Brain/Tourian - needs significant equipment
+  // Conservative: require several key items
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Varia'),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Super'),
+      haveItem(snapshot, staticData, 'Charge')));
+}
+
+// Additional knowledge techniques
+export function knowsFirefleasWalljump(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsGetAroundWallJump(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsIceEscape(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsXrayDboost(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsXrayIce(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsReverseGateGlitch(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsReverseGateGlitchHiJumpLess(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsCrocPBsDBoost(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsCrocPBsIce(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsMaridiaWallJumps(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsOldMBWithSpeed(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsRonPopeilScrew(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsSpringBallJumpFromWall(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsKillPlasmaPiratesWithSpark(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsKillPlasmaPiratesWithCharge(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
 /**
  * Helper function registry
  * Export all helper functions that can be called from rules
@@ -440,6 +555,21 @@ export const helperFunctions = {
   knowsAlcatrazEscape,
   knowsGreenGateGlitch,
   knowsGravLessLevel3,
+  knowsFirefleasWalljump,
+  knowsGetAroundWallJump,
+  knowsIceEscape,
+  knowsXrayDboost,
+  knowsXrayIce,
+  knowsReverseGateGlitch,
+  knowsReverseGateGlitchHiJumpLess,
+  knowsCrocPBsDBoost,
+  knowsCrocPBsIce,
+  knowsMaridiaWallJumps,
+  knowsOldMBWithSpeed,
+  knowsRonPopeilScrew,
+  knowsSpringBallJumpFromWall,
+  knowsKillPlasmaPiratesWithSpark,
+  knowsKillPlasmaPiratesWithCharge,
   // Advanced movement
   canInfiniteBombJump,
   canFly,
@@ -457,7 +587,14 @@ export const helperFunctions = {
   // Combat
   canKillBeetoms,
   // Glitches
-  canGreenGateGlitch
+  canGreenGateGlitch,
+  // Boss requirements
+  enoughStuffsKraid,
+  enoughStuffsPhantoon,
+  enoughStuffsRidley,
+  enoughStuffCroc,
+  enoughStuffSporeSpawn,
+  enoughStuffTourian
 };
 
 /**
