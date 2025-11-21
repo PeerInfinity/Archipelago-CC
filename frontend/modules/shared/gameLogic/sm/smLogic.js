@@ -172,32 +172,157 @@ function normalizeSMBool(value) {
 }
 
 /**
- * VARIA ability checks - for now these are stubs that return False
- * These would need game knowledge to implement properly
+ * VARIA ability checks - implementing core Super Metroid logic
  */
-export function canFly(snapshot, staticData) {
-  // Can fly with Space Jump or similar
-  // For now, return False (requires implementation)
-  return { bool: false, difficulty: 0 };
-}
 
-export function knowsCeilingDBoost(snapshot, staticData) {
-  // Knowledge-based trick: ceiling damage boost
-  // This is a technique that doesn't require items, only knowledge
-  // Based on sphere log, this should be True from the start
-  return { bool: true, difficulty: 0 };
+// Basic item checks
+export function canUseBombs(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),
+    haveItem(snapshot, staticData, 'Bomb'));
 }
 
 export function canUsePowerBombs(snapshot, staticData) {
-  // Can use power bombs if player has Power Bomb item
-  const hasPowerBomb = has(snapshot, staticData, 'Power Bomb');
-  return { bool: hasPowerBomb, difficulty: 0 };
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),
+    haveItem(snapshot, staticData, 'Power Bomb'));
+}
+
+export function canUseSpringBall(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),
+    haveItem(snapshot, staticData, 'SpringBall'));
+}
+
+// Passage checks
+export function canPassBombPassages(snapshot, staticData) {
+  return wor(snapshot, staticData,
+    canUseBombs(snapshot, staticData),
+    canUsePowerBombs(snapshot, staticData));
+}
+
+// Knowledge-based techniques (assume player has knowledge)
+export function knowsCeilingDBoost(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsInfiniteBombJump(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsSimpleShortCharge(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsShortCharge(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsMockball(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsAlcatrazEscape(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+// Advanced movement abilities
+export function canInfiniteBombJump(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),
+    haveItem(snapshot, staticData, 'Bomb'),
+    knowsInfiniteBombJump(snapshot, staticData));
+}
+
+export function canFly(snapshot, staticData) {
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'SpaceJump'),
+    canInfiniteBombJump(snapshot, staticData));
 }
 
 export function canSimpleShortCharge(snapshot, staticData) {
-  // Speed booster short charge trick
-  // For now, return False (requires implementation)
-  return { bool: false, difficulty: 0 };
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'SpeedBooster'),
+    wor(snapshot, staticData,
+      knowsSimpleShortCharge(snapshot, staticData),
+      knowsShortCharge(snapshot, staticData)));
+}
+
+export function canMockball(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Morph'),
+    knowsMockball(snapshot, staticData));
+}
+
+export function canSpringBallJump(snapshot, staticData) {
+  return canUseSpringBall(snapshot, staticData);
+}
+
+export function canShortCharge(snapshot, staticData) {
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'SpeedBooster'),
+    knowsShortCharge(snapshot, staticData));
+}
+
+export function haveMissileOrSuper(snapshot, staticData) {
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Missile'),
+    haveItem(snapshot, staticData, 'Super'));
+}
+
+export function canOpenEyeDoors(snapshot, staticData) {
+  // Simplified: assume no ROM patches, just check for missiles/supers
+  return haveMissileOrSuper(snapshot, staticData);
+}
+
+export function canJumpUnderwater(snapshot, staticData) {
+  // Can jump underwater with Gravity Suit or HiJump
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    haveItem(snapshot, staticData, 'HiJump'));
+}
+
+// Complex helpers - conservative implementations
+export function canHellRun(snapshot, staticData, ...args) {
+  // Hell runs require significant energy reserves and heat resistance
+  // Conservative: require Varia or Gravity suit
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Varia'),
+    haveItem(snapshot, staticData, 'Gravity'));
+}
+
+export function canAccessSandPits(snapshot, staticData) {
+  // Sand pits in Maridia require Gravity Suit or specific techniques
+  return haveItem(snapshot, staticData, 'Gravity');
+}
+
+export function energyReserveCountOk(snapshot, staticData, ...args) {
+  // Energy reserve check - conservative: assume player has enough
+  // This should check energy tanks but would need complex calculations
+  return { bool: true, difficulty: 0 };
+}
+
+export function canPassBowling(snapshot, staticData) {
+  // Bowling alley passage - requires specific movement abilities
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    canSpringBallJump(snapshot, staticData));
+}
+
+export function enoughStuffGT(snapshot, staticData) {
+  // Golden Torizo requirements - needs strong equipment
+  // Conservative: require several major items
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Super'),
+    haveItem(snapshot, staticData, 'Varia'));
+}
+
+// Traverse - complex door transition logic
+export function traverse(snapshot, staticData, doorName) {
+  // Traverse checks door transitions which depend on complex graph logic
+  // For now, stub this as True (assume doors are passable)
+  // TODO: Implement proper door transition logic
+  return { bool: true, difficulty: 0 };
 }
 
 /**
@@ -205,6 +330,7 @@ export function canSimpleShortCharge(snapshot, staticData) {
  * Export all helper functions that can be called from rules
  */
 export const helperFunctions = {
+  // Core functions
   has,
   count,
   any,
@@ -214,10 +340,37 @@ export const helperFunctions = {
   wor,
   wand,
   haveItem,
-  canFly,
-  knowsCeilingDBoost,
+  // Basic item checks
+  canUseBombs,
   canUsePowerBombs,
-  canSimpleShortCharge
+  canUseSpringBall,
+  haveMissileOrSuper,
+  // Passage checks
+  canPassBombPassages,
+  canPassBowling,
+  // Door and room checks
+  canOpenEyeDoors,
+  traverse,
+  // Knowledge techniques
+  knowsCeilingDBoost,
+  knowsInfiniteBombJump,
+  knowsSimpleShortCharge,
+  knowsShortCharge,
+  knowsMockball,
+  knowsAlcatrazEscape,
+  // Advanced movement
+  canInfiniteBombJump,
+  canFly,
+  canSimpleShortCharge,
+  canShortCharge,
+  canMockball,
+  canSpringBallJump,
+  canJumpUnderwater,
+  // Environmental hazards
+  canHellRun,
+  canAccessSandPits,
+  energyReserveCountOk,
+  enoughStuffGT
 };
 
 /**
