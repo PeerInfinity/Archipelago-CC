@@ -135,6 +135,11 @@ class ZillionWorld(World):
         self.zz_system = System()
         self.finalized_gen_data = None
         self.item_locations_finalization_lock = threading.Lock()
+        self.location_accessibility_cache: dict[str, dict[str, int]] = {}
+        """
+        Cache of location accessibility requirements, populated during create_regions.
+        Maps location names to dicts like {'gun': 2, 'jump': 1, 'floppy': 0, 'red': 0}
+        """
 
     def _make_item_maps(self, start_char: Chars) -> None:
         _id_to_name, _id_to_zz_id, id_to_zz_item = make_id_to_others(start_char)
@@ -164,6 +169,67 @@ class ZillionWorld(World):
 
         self._make_item_maps(zz_op.start_char)
 
+    def _cache_location_accessibility(self) -> None:
+        """
+        Cache accessibility requirements for all locations by testing with zilliandomizer's
+        get_locations() method. This must be called before any items are placed.
+        """
+        assert self.zz_system.randomizer, "randomizer not initialized"
+
+        # Test baseline accessibility
+        baseline_accessible = self.zz_system.randomizer.get_locations(Req(gun=1, jump=1))
+
+        # For each location, determine minimum requirements
+        for zz_loc_name, zz_loc in self.zz_system.randomizer.locations.items():
+            # Skip 'main' location (goal location, doesn't need rules)
+            if zz_loc_name == 'main':
+                continue
+            loc_name = self.zz_system.randomizer.loc_name_2_pretty[zz_loc_name]
+
+            if zz_loc in baseline_accessible:
+                # Accessible from the start
+                self.location_accessibility_cache[loc_name] = {
+                    'gun': 1, 'jump': 1, 'floppy': 0, 'red': 0
+                }
+            else:
+                # Find minimum requirements by binary search
+                needs_gun = 1
+                needs_jump = 1
+                needs_floppy = 0
+                needs_red = 0
+
+                # Test gun levels
+                for gun_level in [2, 3]:
+                    test_req = Req(gun=gun_level, jump=3, floppy=126, red=1)
+                    if zz_loc in self.zz_system.randomizer.get_locations(test_req):
+                        needs_gun = gun_level
+                        break
+
+                # Test jump levels
+                for jump_level in [2, 3]:
+                    test_req = Req(gun=3, jump=jump_level, floppy=126, red=1)
+                    if zz_loc in self.zz_system.randomizer.get_locations(test_req):
+                        needs_jump = jump_level
+                        break
+
+                # Test floppy count
+                for floppy_count in [1, 5, 10, 20, 50, 100, 126]:
+                    test_req = Req(gun=3, jump=3, floppy=floppy_count, red=1)
+                    if zz_loc in self.zz_system.randomizer.get_locations(test_req):
+                        needs_floppy = floppy_count
+                        break
+
+                # Test red card
+                with_red = self.zz_system.randomizer.get_locations(Req(gun=3, jump=3, floppy=126, red=1))
+                without_red = self.zz_system.randomizer.get_locations(Req(gun=3, jump=3, floppy=126, red=0))
+                if zz_loc in with_red and zz_loc not in without_red:
+                    needs_red = 1
+
+                self.location_accessibility_cache[loc_name] = {
+                    'gun': needs_gun, 'jump': needs_jump,
+                    'floppy': needs_floppy, 'red': needs_red
+                }
+
     @override
     def create_regions(self) -> None:
         assert self.zz_system.randomizer, "generate_early hasn't been called"
@@ -186,6 +252,9 @@ class ZillionWorld(World):
             for zz_loc in self.zz_system.randomizer.regions["r03c5"].locations:
                 zz_loc.req.gun = 1
             assert len(self.zz_system.randomizer.get_locations(Req(gun=1, jump=1))) != 0
+
+        # Cache accessibility requirements for exporter (before items are placed)
+        self._cache_location_accessibility()
 
         start = self.zz_system.randomizer.regions["start"]
 

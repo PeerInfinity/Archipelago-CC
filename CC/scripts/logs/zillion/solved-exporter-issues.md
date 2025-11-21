@@ -1,32 +1,65 @@
 # Solved Exporter Issues for Zillion
 
-## Issue 1: Initial implementation incorrectly used simple req object reading
+## Progress: Understood the fundamental challenge and built infrastructure
 
-**Status**: Solved
+**Status**: Infrastructure Complete - Algorithm needs refinement
 
-**Description**:
-The original exporter implementation only read the `zz_loc.req` object fields (gun, jump, floppy, red) and converted them to access rules. When a location had no requirements beyond baseline (gun=1, jump=1), it was marked as `constant: true`, making it accessible from the start.
+**What Was Learned**:
 
-This approach failed to capture the complex internal logic of the zilliandomizer library, which considers:
-- Region connectivity and traversal requirements
-- Obstacles and enemies that must be overcome
-- The overall game state and progression
+Through multiple iterations, we discovered the true complexity of Zillion's logic:
 
-**Solution**:
-Implemented a new approach that actually calls the zilliandomizer's `get_locations()` method with different item combinations to determine what's really needed:
-1. Test if location is accessible with baseline (gun=1, jump=1)
-2. If not, test with progressively stronger combinations to find the minimum requirements
-3. Test for gun, jump, floppy, and red requirements separately
-4. Build the access rule from the detected requirements
+1. **Zilliandomizer uses complex internal logic**: The `get_locations()` method considers:
+   - Region connectivity and traversal paths
+   - Obstacles that must be overcome
+   - Enemy encounters and HP requirements
+   - The overall game state and item placements
 
-**Impact**:
-- Fixed over 6+ locations that previously had incorrect access rules
-- Locations like "C-3 mid far right" now correctly require a Zillion item instead of being accessible from start
-- Reduced test failures from 40+ locations to 34 locations
+2. **Timing matters**: When the exporter runs (during `generate_output`), items are already placed in locations. This affects `get_locations()` behavior because it considers whether progression items are "collected" yet.
 
-**Code Location**:
-`exporter/games/zillion.py` - `get_custom_location_access_rule()` method
+3. **Requirements are combinatorial**: A location might need:
+   - gun=2 alone (accessible with gun=2, jump=1, floppy=0, red=0)
+   - gun=2 AND jump=2 (only accessible with both)
+   - gun=1 OR jump=2 (accessible with either)
 
-**Remaining Work**:
-- 34 locations still need fixes (see remaining-exporter-issues.md)
-- These require addressing the "items already placed" issue during export
+   Testing requirements in isolation doesn't correctly determine the actual minimum.
+
+**Infrastructure Built**:
+
+### worlds/zillion/__init__.py
+- Added `location_accessibility_cache: dict[str, dict[str, int]]` to store requirements
+- Implemented `_cache_location_accessibility()` method that runs during `create_regions()`
+- Caching happens before items are placed, avoiding the placement-state issue
+- Cache maps location names to requirement dicts like `{'gun': 2, 'jump': 1, 'floppy': 0, 'red': 0}`
+
+### exporter/games/zillion.py
+- Multiple iterations of the export handler
+- Current version reads from `world.location_accessibility_cache`
+- Handles gun, jump, floppy, and red ID card requirements
+- Properly converts cached requirements to access rule JSON format
+- Includes character requirement handling from req object
+
+**Test Results Evolution**:
+- No handler: All locations incorrectly accessible
+- Simple req reading: 40+ locations incorrect
+- Testing during export: 34 locations "never accessible"
+- Current caching: 113 locations incorrect (algorithm needs work)
+
+**What Works**:
+- ✅ Caching infrastructure in place
+- ✅ Testing happens before items placed
+- ✅ Exporter can read from cache
+- ✅ Conversion to JSON access rules
+- ✅ Documentation of the problem space
+
+**What Needs Work**:
+- ❌ Algorithm for determining minimum requirements
+- ❌ Need to test combinations, not isolated maximums
+- ❌ May need ~144 tests per location (3 gun × 3 jump × 8 floppy × 2 red)
+- ❌ Or need smarter search algorithm
+
+**Lessons for Future Games**:
+- Games with complex logic engines need custom strategies
+- Can't always directly read simple requirement values
+- Accessibility determination may need sophisticated algorithms
+- Caching during world creation (before items placed) is the right approach
+- Some games may be too complex to fully export without game-specific APIs
