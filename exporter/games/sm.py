@@ -244,6 +244,63 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         return False
 
+    def _contains_complex_helpers(self, rule: Dict[str, Any]) -> bool:
+        """Recursively check if a rule contains complex helper calls.
+
+        Simple helpers: SMBool, evalSMBool
+        Complex helpers: any VARIA logic methods like canPassTerminatorBombWall, haveItem, etc.
+
+        Returns True if any complex helpers are found.
+        """
+        if not rule or not isinstance(rule, dict):
+            return False
+
+        rule_type = rule.get('type')
+
+        # Check if this is a complex helper call
+        if rule_type == 'helper':
+            helper_name = rule.get('name', '')
+            # These are simple helpers that don't indicate item requirements
+            # 'rule' is an artifact from analyzer recursion limits
+            simple_helpers = {'SMBool', 'evalSMBool', 'rule'}
+            if helper_name not in simple_helpers:
+                # Any other helper is complex (haveItem, canPass*, traverse, etc.)
+                print(f"[SM] Found complex helper: {helper_name}")
+                return True
+
+        # Check if this is a state_method call (also indicates requirements)
+        if rule_type == 'state_method':
+            method_name = rule.get('method', '')
+            # can_reach is fine, but other state methods indicate requirements
+            if method_name not in {'can_reach'}:
+                print(f"[SM] Found complex state method: {method_name}")
+                return True
+
+        # Recursively check nested structures
+        if rule_type in ['and', 'or']:
+            for cond in rule.get('conditions', []):
+                if self._contains_complex_helpers(cond):
+                    return True
+
+        if rule_type == 'not':
+            return self._contains_complex_helpers(rule.get('condition'))
+
+        if rule_type == 'helper':
+            for arg in rule.get('args', []):
+                if self._contains_complex_helpers(arg):
+                    return True
+
+        if rule_type == 'function_call':
+            for arg in rule.get('args', []):
+                if self._contains_complex_helpers(arg):
+                    return True
+
+        if rule_type == 'any_of' or rule_type == 'all_of':
+            if self._contains_complex_helpers(rule.get('element_rule')):
+                return True
+
+        return False
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand and transform Super Metroid rules.
 
@@ -274,21 +331,25 @@ class SMGameExportHandler(GenericGameExportHandler):
                     logger.info("SM: Found AND rule with accessFrom, checking Available part")
                     print("[SM] Found AND rule with accessFrom pattern")
 
-                    # Check if this is a simple accessFrom (no item requirements)
-                    # Note: Currently all accessFrom patterns appear complex due to recursion
-                    # so this check always returns False. Kept for future improvement.
-                    is_simple = self._is_simple_accessFrom(first)
-
                     # Recursively expand the second condition (the Available part)
                     expanded = self.expand_rule(second)
 
                     # Check if the Available part is just evalSMBool(SMBool(True), ...)
                     if self._is_always_true_smbool(expanded):
                         # The Available part has no requirements, so the actual requirements
-                        # are in the accessFrom comprehension, which we can't export properly.
-                        # Export as False to prevent incorrect accessibility until VARIA logic is implemented.
-                        logger.info("SM: Available is evalSMBool(SMBool(True), ...), but accessFrom has the real logic - exporting as False")
-                        print("[SM] Available is SMBool(True) with accessFrom - exporting as False (needs VARIA logic)")
+                        # are in the accessFrom comprehension, which we can't properly export.
+                        #
+                        # LIMITATION: We cannot reliably distinguish between simple accessFrom
+                        # (e.g., lambda sm: SMBool(True)) and complex accessFrom (e.g., lambda sm: sm.canPassBombWall())
+                        # because analyzer recursion limits corrupt the structure.
+                        #
+                        # Conservative approach: Export as False to prevent incorrect accessibility.
+                        # This means some locations like "Morphing Ball" won't be accessible
+                        # even though they should be in sphere 0.
+                        #
+                        # Proper fix: Implement VARIA logic helpers in frontend to evaluate accessFrom properly.
+                        logger.info("SM: Available is SMBool(True) with accessFrom - exporting as False (VARIA logic not implemented)")
+                        print("[SM] Available is SMBool(True) with accessFrom - exporting as False")
                         return {'type': 'constant', 'value': False}
 
                     # If Available has actual requirements, use it

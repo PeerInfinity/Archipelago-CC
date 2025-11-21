@@ -2,7 +2,7 @@
 
 ## Issue 1: Cannot distinguish simple vs complex accessFrom patterns
 
-**Status**: In Progress
+**Status**: Blocked - Requires VARIA Logic Implementation
 
 **Description**:
 Super Metroid locations have rules combining `accessFrom` (which regions can access the location) and `Available` (item requirements once in the region). Many locations have `Available = SMBool(True)` (no item requirements), but differ in their `accessFrom` requirements:
@@ -42,8 +42,15 @@ locationsDict["Energy Tank, Terminator"].Available = lambda sm: SMBool(True)
 1. ✓ Converted `self.evalSMBool` function calls to helper type (fixed in analyzer)
 2. ✓ Export complex accessFrom patterns as False instead of True
 3. ✗ Use `_is_simple_accessFrom()` to detect simple patterns - doesn't work due to recursion corruption
+4. ✗ Check for complex helpers in accessFrom - analyzer converts all helpers to generic "rule" helper during recursion, making detection impossible
 
-**Possible Solutions**:
+**Current Workaround**:
+Export all `SMBool(True) + accessFrom` locations as False (conservative approach). This prevents incorrect accessibility but means some locations like "Morphing Ball" that should be accessible in sphere 0 are marked as False.
+
+**Root Cause**:
+The analyzer hits Python recursion limits when processing accessFrom comprehensions and converts complex helper calls (like `sm.canPassTerminatorBombWall()`) into generic "rule" helpers, losing the information needed to distinguish simple from complex patterns.
+
+**Recommended Solution**:
 1. **Implement VARIA logic helpers**: Implement the full set of VARIA logic methods (sm.canPassTerminatorBombWall, etc.) in the frontend so accessFrom rules can be properly evaluated
 2. **Improve recursion handling**: Fix the analyzer to handle accessFrom comprehensions without hitting recursion limits
 3. **Pre-analysis detection**: Check the original Python lambda before analysis to determine if it's simple
