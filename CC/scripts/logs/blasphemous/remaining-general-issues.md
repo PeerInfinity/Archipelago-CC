@@ -82,8 +82,33 @@ This suggests the issue is earlier in the region graph - some parent region that
 2. Has an exit to D02Z02 with a failing access rule
 3. Missing the exit definition entirely
 
-**Next Steps**:
-1. Trace backwards from D02Z02 to find which regions should connect to it
-2. Check why those parent regions aren't accessible or their exits are failing
-3. May be a helper function bug (e.g., `dash()` or `wallClimb()` returning incorrect values)
-4. Verify access rules for exits leading to D02Z02 regions
+**ROOT CAUSE CORRECTION - Menu to D17Z01S01 Connection WORKS, But Many D17Z01 Sub-Regions Missing**:
+
+**Initial Investigation Result (CORRECTED)**:
+- Menu → D17Z01S01 connection IS WORKING ✓
+- D17Z01S01 IS accessible in frontend ✓
+- Problem: Only 8 of 28 expected D17Z01 regions are accessible
+
+**D17Z01 Regions Status**:
+Frontend HAS these 8 D17Z01 regions:
+- D17Z01S01, D17Z01S01[E]
+- D17Z01S02[E], D17Z01S02[W]
+- D17Z01S05[E], D17Z01S05[W]
+- D17Z01S11, D17Z01S11[W]
+
+Frontend MISSING these 20 D17Z01 regions:
+- D17Z01S03[E], D17Z01S03[W]
+- D17Z01S04 (and all 5 sub-regions)
+- D17Z01S05[S], D17Z01S06[E]
+- D17Z01S07 (all 5 sub-regions)
+- D17Z01S08, D17Z01S08[E]
+- D17Z01S09[E], D17Z01S11[E], D17Z01S12[E]
+
+**Actual Problem**:
+The missing D17Z01 regions prevent access to D01Z01 regions (since D17Z01S03[E] → D01Z01S07 connection can't be followed), which in turn blocks the entire region chain (D01Z02 → D01Z03 → D02Z01 → D02Z02 → CO regions).
+
+**Investigation Priority**:
+1. Why is D17Z01S03[E] not accessible? (It connects to D01Z01S07)
+2. Why is D17Z01S04 not accessible? (Critical hub region)
+3. Are there issues with directional sub-region accessibility?
+4. Check if specific access rules or helper functions are failing

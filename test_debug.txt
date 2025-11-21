@@ -1,0 +1,559 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js --mode=test-spoilers --game=blasphemous --seed=1
+
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:06] "GET / HTTP/1.1" 200 -
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - mode: test-spoilers
+  - game: blasphemous
+  - seed: 1
+PW DEBUG: URL: http://localhost:8000/frontend/?mode=test-spoilers&game=blasphemous&seed=1
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/?mode=test-spoilers&game=blasphemous&seed=1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/styles/index.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/styles/loading-screen.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/styles/mobile.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/libs/golden-layout/css/themes/goldenlayout-dark-theme.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/libs/golden-layout/css/goldenlayout-base.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/libs/json-editor/jsoneditor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/libs/vanilla-jsoneditor/themes/jse-theme-dark.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/init.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/core/loggerService.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/core/panelManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/core/eventBus.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/core/settingsManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/core/centralRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/core/eventDispatcher.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/libs/golden-layout/js/esm/golden-layout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/core/mobileLayoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/initialization/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/initialization/fileLoadingUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/mode/modeManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/mode/modeDataLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/mode/modeConfigResolver.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/initialization/moduleLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/initialization/moduleInitializer.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/initialization/layoutManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/initialization/apiFactory.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/layout/layoutLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/layout/layoutFilter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/utils/settingsMerger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/layout/desktopLayout.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/core/moduleMetadata.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modes.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/presets/preset_files.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules-test-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/playwright_tests_config-spoilers.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/layout_presets.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/settings.json HTTP/1.1" 200 -
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [20:18:09.429] [INFO] [INIT_STEP] Module import and registration phase started
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/stateManagerProxySingleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/stateManagerProxy.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/ruleEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/stateManagerCommands.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/alttp/alttpLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/generic/genericLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/stateManagerWorker.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/sphereState/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/sphereState/singleton.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/sphereState/sphereState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/stateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/app/core/universalLogger.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/core/commandQueue.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/testSpoilers/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/gameLogicRegistry.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/stateInterface.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/testSpoilers/testSpoilerUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/core/initialization.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/core/inventoryManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/core/reachabilityEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/core/statePersistence.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/core/locationChecking.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/core/ruleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/stateManager/core/batchUpdateManager.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/ahit/ahitLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/bomb_rush_cyberfunk/bombRushCyberfunkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/civ_6/civ6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/factorio/factorioLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/hylics2/hylics2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/hk/hkLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/kh1/kh1Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/kh2/kh2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/ladx/ladxLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/lingo/lingoLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/mlss/mlssLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/messenger/messengerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/commonUI/index.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/testSpoilers/testSpoilerRuleEvaluator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/testSpoilers/fileLoader.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/testSpoilers/comparisonEngine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/testSpoilers/analysisReporter.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/testSpoilers/eventProcessor.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/testSpoilers/testOrchestrator.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/mm2/mm2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/ocarina_of_time/ootLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/raft/raftLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/v6/v6Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/cv64/cv64Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/dark_souls_3/darkSouls3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/paint/paintLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/soe/soeLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/shapez/shapezLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/shivers/shiversLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/smz3/smz3Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/sc2/sc2Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/sm/smLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/stardew_valley/stardewValleyLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/terraria/terrariaLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/tww/twwLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/wargroove/wargrooveLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/yoshisisland/yoshisislandLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/osrs/osrsLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/tloz/tlozLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/witness/witnessLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/jakanddaxter/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/ladx/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/marioland2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/commonUI/commonUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/mmbn3/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/sm64ex/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/yachtdice/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/cv64/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/overcooked2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/paint/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/shapez/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:09] "GET /frontend/modules/shared/gameLogic/shivers/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/shared/gameLogic/sc2/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/shared/gameLogic/subnautica/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/shared/gameLogic/stardew_valley/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/shared/gameLogic/terraria/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/shared/gameLogic/tloz/helpers.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/shared/gameLogic/yachtdice/yacht_weights.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/index.js HTTP/1.1" 200 -
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testUI.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testLogic.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testState.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testController.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testDiscovery.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testRegistry.js HTTP/1.1" 200 -
+BROWSER LOG (info): [20:18:10.134] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [20:18:10.136] [INFO] [INIT_STEP] Golden Layout initialization started
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/coreTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/libs/golden-layout/img/lm_close_white.png HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/libs/golden-layout/img/lm_maximise_white.png HTTP/1.1" 200 -
+BROWSER LOG (info): [20:18:10.154] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [20:18:10.155] [INFO] [INIT_STEP] Module initialization phase started (4 modules)
+BROWSER LOG (info): [20:18:10.156] [INFO] [INIT_STEP] Module initialization phase completed (4 modules)
+BROWSER LOG (info): [20:18:10.156] [INFO] [INIT_STEP] Module post-initialization phase started (1 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: urlOverride)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [20:18:10.227] [INFO] [INIT_STEP] Module post-initialization phase completed (1 modules)
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/locationPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/exitPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/regionPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/regionGraphPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/loopsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/eventsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/pathAnalyzerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/settingsPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/JSONPanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/progressBarTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/metaGamePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/textAdventurePanelTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/textAdventure-iframeTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/textAdventure-windowTests.js HTTP/1.1" 200 -
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/presets/blasphemous/AP_14089154938208861744/AP_14089154938208861744_spheres_log.jsonl HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/iframe-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/window-baseTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/timerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/multiplayerTests.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [21/Nov/2025 20:18:10] "GET /frontend/modules/tests/testCases/testSpoilersPanelTests.js HTTP/1.1" 200 -
+PW DEBUG: Page navigation complete (network idle).
+PW DEBUG: Starting to wait for __playwrightTestsComplete__ flag on window...
+BROWSER LOG (error): [20:18:12.256] [ERROR] [testSpoilerUI] STATE MISMATCH found for: {"type":"state_update","sphere_number":0,"player_id":"1"}
+BROWSER LOG (error): [20:18:12.259] [ERROR] [testSpoilerUI:ComparisonEngine] STATE MISMATCH found for: {"type":"state_update","sphere_number":0,"player_id":"1"}
+BROWSER LOG (error): [20:18:12.263] [ERROR] [testSpoilerUI]  > Locations accessible in LOG but NOT in STATE (or checked): Albero: Child of Moonlight, Albero: Gate of Travel room, Albero: Graveyard, Albero: Mea Culpa altar, Albero: Outside Ossuary, Albero: Tirso's house, top floor, BotSS: Mea Culpa altar, BotSS: Platforming gauntlet, BotSS: Warden of the Silent Sorrow, CoOLotCV: Center enemy lineup, CoOLotCV: Center miasma room, CoOLotCV: First blue candle, CoOLotCV: Outside pathway, CoOLotCV: Snowy window ledge, EoS: Lantern jump near MotED, EoS: Lantern jump near elevator, GA: Miasma room Child of Moonlight, GA: Miasma room treasure, GotP: Center east shaft, GotP: Center shaft ledge, GotP: Confessor Dungeon room, GotP: Elevator shaft Child of Moonlight, GotP: Elevator shaft ledge, GotP: Lady of the Six Sorrows, GotP: Lower east shaft, GotP: Lower west shaft, GotP: Oil of the Pilgrims, GotP: Self sacrifice statue, GotP: Shop item 1, GotP: Shop item 2, GotP: Shop item 3, GotP: Upper west shaft, Jondo: Lower east bell trap, Jondo: Lower east under chargers, Jondo: Lower west bell alcove, Jondo: Lower west lift alcove, Jondo: Spike tunnel Child of Moonlight, Jondo: Spike tunnel cave, Jondo: Spike tunnel statue, Jondo: Upper east Child of Moonlight, Jondo: Upper east ledge, Jondo: Upper west Child of Moonlight, Jondo: Upper west bell puzzle, MD: First area hidden wall, MD: First red candle, MD: Second area Child of Moonlight, MD: Second area ledge, MD: Second area trapped chest, MD: Shop item 1, MD: Shop item 2, MD: Shop item 3, MD: Sliding challenge, MD: Third area hidden room, MotED: 1st meeting with Redento, MotED: Child of Moonlight, above chasm, MotED: Perpetva, MotED: Under entrance to DC, Skill 1, Tier 1, Skill 1, Tier 2, Skill 2, Tier 1, Skill 3, Tier 1, Skill 4, Tier 1, Skill 5, Tier 1, Skill 5, Tier 2, THL: Child of Moonlight, THL: Deogracias' gift, THL: Hanging skeleton, THL: Underground ledge, WOTW: Below Prie Dieu, WOTW: Death run, WOTW: Entrance to tomb, WOTW: Gemino's gift, WotBC: 3rd meeting with Redento, WotBC: Cliffside statue, WotBC: Hidden alcove, WotBC: Lower log path, WotBC: Outside Child of Moonlight, WotBC: Outside ledge
+BROWSER LOG (error): [20:18:12.263] [ERROR] [testSpoilerUI:ComparisonEngine]  > Locations accessible in LOG but NOT in STATE (or checked): Albero: Child of Moonlight, Albero: Gate of Travel room, Albero: Graveyard, Albero: Mea Culpa altar, Albero: Outside Ossuary, Albero: Tirso's house, top floor, BotSS: Mea Culpa altar, BotSS: Platforming gauntlet, BotSS: Warden of the Silent Sorrow, CoOLotCV: Center enemy lineup, CoOLotCV: Center miasma room, CoOLotCV: First blue candle, CoOLotCV: Outside pathway, CoOLotCV: Snowy window ledge, EoS: Lantern jump near MotED, EoS: Lantern jump near elevator, GA: Miasma room Child of Moonlight, GA: Miasma room treasure, GotP: Center east shaft, GotP: Center shaft ledge, GotP: Confessor Dungeon room, GotP: Elevator shaft Child of Moonlight, GotP: Elevator shaft ledge, GotP: Lady of the Six Sorrows, GotP: Lower east shaft, GotP: Lower west shaft, GotP: Oil of the Pilgrims, GotP: Self sacrifice statue, GotP: Shop item 1, GotP: Shop item 2, GotP: Shop item 3, GotP: Upper west shaft, Jondo: Lower east bell trap, Jondo: Lower east under chargers, Jondo: Lower west bell alcove, Jondo: Lower west lift alcove, Jondo: Spike tunnel Child of Moonlight, Jondo: Spike tunnel cave, Jondo: Spike tunnel statue, Jondo: Upper east Child of Moonlight, Jondo: Upper east ledge, Jondo: Upper west Child of Moonlight, Jondo: Upper west bell puzzle, MD: First area hidden wall, MD: First red candle, MD: Second area Child of Moonlight, MD: Second area ledge, MD: Second area trapped chest, MD: Shop item 1, MD: Shop item 2, MD: Shop item 3, MD: Sliding challenge, MD: Third area hidden room, MotED: 1st meeting with Redento, MotED: Child of Moonlight, above chasm, MotED: Perpetva, MotED: Under entrance to DC, Skill 1, Tier 1, Skill 1, Tier 2, Skill 2, Tier 1, Skill 3, Tier 1, Skill 4, Tier 1, Skill 5, Tier 1, Skill 5, Tier 2, THL: Child of Moonlight, THL: Deogracias' gift, THL: Hanging skeleton, THL: Underground ledge, WOTW: Below Prie Dieu, WOTW: Death run, WOTW: Entrance to tomb, WOTW: Gemino's gift, WotBC: 3rd meeting with Redento, WotBC: Cliffside statue, WotBC: Hidden alcove, WotBC: Lower log path, WotBC: Outside Child of Moonlight, WotBC: Outside ledge
+BROWSER LOG (error): [MISMATCH DETAIL] Missing from state (78): [Albero: Child of Moonlight, Albero: Gate of Travel room, Albero: Graveyard, Albero: Mea Culpa altar, Albero: Outside Ossuary, Albero: Tirso's house, top floor, BotSS: Mea Culpa altar, BotSS: Platforming gauntlet, BotSS: Warden of the Silent Sorrow, CoOLotCV: Center enemy lineup, CoOLotCV: Center miasma room, CoOLotCV: First blue candle, CoOLotCV: Outside pathway, CoOLotCV: Snowy window ledge, EoS: Lantern jump near MotED, EoS: Lantern jump near elevator, GA: Miasma room Child of Moonlight, GA: Miasma room treasure, GotP: Center east shaft, GotP: Center shaft ledge, GotP: Confessor Dungeon room, GotP: Elevator shaft Child of Moonlight, GotP: Elevator shaft ledge, GotP: Lady of the Six Sorrows, GotP: Lower east shaft, GotP: Lower west shaft, GotP: Oil of the Pilgrims, GotP: Self sacrifice statue, GotP: Shop item 1, GotP: Shop item 2, GotP: Shop item 3, GotP: Upper west shaft, Jondo: Lower east bell trap, Jondo: Lower east under chargers, Jondo: Lower west bell alcove, Jondo: Lower west lift alcove, Jondo: Spike tunnel Child of Moonlight, Jondo: Spike tunnel cave, Jondo: Spike tunnel statue, Jondo: Upper east Child of Moonlight, Jondo: Upper east ledge, Jondo: Upper west Child of Moonlight, Jondo: Upper west bell puzzle, MD: First area hidden wall, MD: First red candle, MD: Second area Child of Moonlight, MD: Second area ledge, MD: Second area trapped chest, MD: Shop item 1, MD: Shop item 2, MD: Shop item 3, MD: Sliding challenge, MD: Third area hidden room, MotED: 1st meeting with Redento, MotED: Child of Moonlight, above chasm, MotED: Perpetva, MotED: Under entrance to DC, Skill 1, Tier 1, Skill 1, Tier 2, Skill 2, Tier 1, Skill 3, Tier 1, Skill 4, Tier 1, Skill 5, Tier 1, Skill 5, Tier 2, THL: Child of Moonlight, THL: Deogracias' gift, THL: Hanging skeleton, THL: Underground ledge, WOTW: Below Prie Dieu, WOTW: Death run, WOTW: Entrance to tomb, WOTW: Gemino's gift, WotBC: 3rd meeting with Redento, WotBC: Cliffside statue, WotBC: Hidden alcove, WotBC: Lower log path, WotBC: Outside Child of Moonlight, WotBC: Outside ledge]
+BROWSER LOG (error): [20:18:12.266] [ERROR] [testSpoilerUI] REGION MISMATCH found for: {"type":"state_update","sphere_number":0,"player_id":"1"}
+BROWSER LOG (error): [20:18:12.266] [ERROR] [testSpoilerUI:ComparisonEngine] REGION MISMATCH found for: {"type":"state_update","sphere_number":0,"player_id":"1"}
+BROWSER LOG (error): [20:18:12.277] [ERROR] [testSpoilerUI]  > Regions accessible in LOG but NOT in STATE: CO01, CO05, CO11, CO25, CO29, CO33, D01BZ02S01, D01BZ02S01[C], D01BZ06S01, D01BZ06S01[Ossary], D01Z01S01[E], D01Z01S01[W], D01Z01S02, D01Z01S02[E], D01Z01S02[W], D01Z01S03, D01Z01S03[E], D01Z01S03[W], D01Z01S07, D01Z01S07[E], D01Z01S07[W], D01Z02S01, D01Z02S01[E], D01Z02S01[W], D01Z02S02, D01Z02S02[E], D01Z02S02[NE], D01Z02S02[SE], D01Z02S02[SW], D01Z02S02[W], D01Z02S03, D01Z02S03[E], D01Z02S03[NW], D01Z02S03[W], D01Z02S04, D01Z02S04[E], D01Z02S04[Ossary], D01Z02S04[W], D01Z02S05, D01Z02S05[E], D01Z02S05[W], D01Z02S06, D01Z02S06[E], D01Z02S06[W], D01Z02S07, D01Z02S07[E], D01Z03S01[E], D01Z03S01[SE], D01Z03S01[W], D01Z03S02, D01Z03S02[E], D01Z03S02[SW], D01Z03S02[W], D01Z03S03, D01Z03S03[E], D01Z03S03[W], D01Z03S04[E], D01Z03S04[NW], D01Z03S04[SE], D01Z03S04[SW], D01Z03S04[W], D01Z03S05, D01Z03S05[E], D01Z03S05[W], D01Z03S06, D01Z03S06[E], D01Z03S06[W], D01Z03S07, D01Z03S07[E], D01Z04S01[E], D01Z04S01[NE], D01Z04S01[NW], D01Z04S01[SE], D01Z04S01[S], D01Z04S01[W], D01Z04S02[W], D01Z04S03[E], D01Z04S05, D01Z04S05[NW], D01Z04S05[SW], D01Z04S06, D01Z04S06[E], D01Z04S06[NW], D01Z04S06[SW], D01Z04S07, D01Z04S07[W], D01Z04S08, D01Z04S08[E], D01Z04S09[C], D01Z04S09[E], D01Z04S10[NW], D01Z04S10[SE], D01Z04S10[SW], D01Z04S11, D01Z04S11[NE], D01Z04S12[NW], D01Z04S12[SE], D01Z04S12[W], D01Z04S13[NE], D01Z04S13[NW], D01Z04S13[SW], D01Z04S14, D01Z04S14[E], D01Z04S15[E], D01Z04S15[NE], D01Z04S15[N], D01Z04S15[SE], D01Z04S15[SW], D01Z04S15[W], D01Z04S17[W], D01Z04S18, D01Z04S18[E], D01Z05S01[N], D01Z05S01[S], D01Z05S01[W], D01Z05S02[N], D01Z05S02[W], D01Z05S27[E], D02BZ02S01, D02BZ02S01[C], D02Z01S01[SE], D02Z01S01[W], D02Z01S02[E], D02Z01S02[NW], D02Z01S02[W], D02Z01S03[SE], D02Z01S03[SW], D02Z01S03[W], D02Z01S04, D02Z01S04[E], D02Z01S05, D02Z01S05[E], D02Z02S01[E], D02Z02S01[NW], D02Z02S01[W], D02Z02S02[NE], D02Z02S02[NW], D02Z02S02[SE], D02Z02S03[NW], D02Z02S03[SW], D02Z02S04[E], D02Z02S04[NE], D02Z02S04[SE], D02Z02S04[W], D02Z02S05[E], D02Z02S05[NW], D02Z02S05[SE], D02Z02S05[SW], D02Z02S06, D02Z02S06[E], D02Z02S07[E], D02Z02S07[W], D02Z02S08[C], D02Z02S08[E], D02Z02S08[W], D02Z02S09[E], D02Z02S10, D02Z02S10[W], D02Z02S11, D02Z02S11[E], D02Z02S11[NE], D02Z02S11[NW], D02Z02S11[SE], D02Z02S11[W], D02Z02S12, D02Z02S12[W], D02Z02S13, D02Z02S13[W], D02Z03S01[E], D02Z03S01[W], D02Z03S02[S], D02Z03S02[W], D02Z03S03[E], D02Z03S03[NW], D02Z03S03[W], D02Z03S05[E], D02Z03S05[NE], D02Z03S05[S], D02Z03S06[S], D02Z03S06[W], D02Z03S07, D02Z03S07[E], D02Z03S07[NWW], D02Z03S07[NW], D02Z03S07[N], D02Z03S07[W], D02Z03S08[E], D02Z03S08[NE], D02Z03S08[SE], D02Z03S08[SW], D02Z03S08[W], D02Z03S09, D02Z03S09[E], D02Z03S09[W], D02Z03S12, D02Z03S12[E], D02Z03S14[E], D02Z03S14[W], D02Z03S16[N], D02Z03S16[W], D02Z03S17, D02Z03S17[E], D02Z03S18[NE], D02Z03S18[NW], D02Z03S18[SE], D02Z03S20, D02Z03S20[W], D02Z03S23, D02Z03S23[E], D02Z03S24[E], D03Z01S01, D03Z01S01[NE], D03Z01S01[S], D03Z01S01[W], D03Z01S02[E], D03Z01S02[W], D03Z01S03[E], D03Z01S03[SE], D03Z01S03[SW], D03Z01S03[W], D03Z01S04, D03Z01S04[E], D03Z01S04[NW], D03Z01S05[E], D03Z01S05[W], D03Z01S06, D03Z01S06[E], D03Z01S06[W], D03Z02S01, D03Z02S01[N], D03Z02S01[W], D03Z02S02[E], D03Z02S02[S], D03Z02S02[W], D03Z02S03[E], D03Z02S03[N], D03Z02S03[SE2], D03Z02S03[SE], D03Z02S03[SSC], D03Z02S03[SSL], D03Z02S03[SSR], D03Z02S03[SW], D03Z02S03[W], D03Z02S04[NE], D03Z02S04[NW], D03Z02S04[S], D03Z02S05[E], D03Z02S05[S], D03Z02S05[W], D03Z02S06, D03Z02S06[N], D03Z02S06[W], D03Z02S07, D03Z02S07[E], D03Z02S07[N], D03Z02S07[W], D03Z02S08[E], D03Z02S08[N], D03Z02S08[W], D03Z02S09[N], D03Z02S09[S], D03Z02S09[W], D03Z02S10, D03Z02S10[E], D03Z02S10[N], D03Z02S10[S], D03Z02S10[W], D03Z02S11[E], D03Z02S11[W], D03Z02S12, D03Z02S12[E], D03Z02S13, D03Z02S13[E], D03Z02S14[E], D03Z02S15, D03Z02S15[E], D03Z02S15[W], D03Z03S01[NL], D03Z03S01[NR], D03Z03S01[S], D03Z03S01[W], D03Z03S02, D03Z03S02[E], D03Z03S02[NE], D03Z03S02[W], D03Z03S03[NE], D03Z03S03[SE], D03Z03S03[W], D03Z03S04[E], D03Z03S04[NE], D03Z03S04[NW], D03Z03S04[SW], D03Z03S05[NE], D03Z03S05[NW], D03Z03S05[SE], D03Z03S05[SW], D03Z03S06, D03Z03S06[W], D03Z03S07[E], D03Z03S07[NE], D03Z03S07[NW], D03Z03S07[SW], D03Z03S07[S], D03Z03S08, D03Z03S08[W], D03Z03S09, D03Z03S09[N], D03Z03S09[SW], D03Z03S10, D03Z03S10[E], D03Z03S11, D03Z03S11[E], D03Z03S11[W], D03Z03S12[E], D03Z03S12[W], D03Z03S14[W], D03Z03S15, D03Z03S18[E], D03Z03S19[E], D08Z01S01, D08Z01S01[W], D17BZ02S01[FrontL], D17BZ02S01[FrontR], D17Z01S03[E], D17Z01S03[W], D17Z01S04, D17Z01S04[FrontL], D17Z01S04[FrontR], D17Z01S04[N], D17Z01S04[S], D17Z01S04[W], D17Z01S05[S], D17Z01S06[E], D17Z01S07[NW], D17Z01S07[N], D17Z01S07[SE], D17Z01S07[SW], D17Z01S07[W], D17Z01S08, D17Z01S08[E], D17Z01S09[E], D17Z01S11[E], D17Z01S12[E], D20Z01S01[E], D20Z01S01[S], D20Z01S01[W], D20Z01S02, D20Z01S02[E], D20Z01S02[W], D20Z01S03[N], D20Z01S03[W], D20Z01S04[N], D20Z01S04[W], D20Z01S05[E], D20Z01S05[W], D20Z01S06[NE], D20Z01S06[SE], D20Z01S07[NE], D20Z01S07[NW], D20Z01S07[SE], D20Z01S08[W], D20Z01S09[W], HE06, QI41, QI46, QI59, RB08, RB15, RB202, RB22, RESCUED_CHERUB_08, RESCUED_CHERUB_16, RESCUED_CHERUB_18, RESCUED_CHERUB_37
+BROWSER LOG (error): [20:18:12.278] [ERROR] [testSpoilerUI:ComparisonEngine]  > Regions accessible in LOG but NOT in STATE: CO01, CO05, CO11, CO25, CO29, CO33, D01BZ02S01, D01BZ02S01[C], D01BZ06S01, D01BZ06S01[Ossary], D01Z01S01[E], D01Z01S01[W], D01Z01S02, D01Z01S02[E], D01Z01S02[W], D01Z01S03, D01Z01S03[E], D01Z01S03[W], D01Z01S07, D01Z01S07[E], D01Z01S07[W], D01Z02S01, D01Z02S01[E], D01Z02S01[W], D01Z02S02, D01Z02S02[E], D01Z02S02[NE], D01Z02S02[SE], D01Z02S02[SW], D01Z02S02[W], D01Z02S03, D01Z02S03[E], D01Z02S03[NW], D01Z02S03[W], D01Z02S04, D01Z02S04[E], D01Z02S04[Ossary], D01Z02S04[W], D01Z02S05, D01Z02S05[E], D01Z02S05[W], D01Z02S06, D01Z02S06[E], D01Z02S06[W], D01Z02S07, D01Z02S07[E], D01Z03S01[E], D01Z03S01[SE], D01Z03S01[W], D01Z03S02, D01Z03S02[E], D01Z03S02[SW], D01Z03S02[W], D01Z03S03, D01Z03S03[E], D01Z03S03[W], D01Z03S04[E], D01Z03S04[NW], D01Z03S04[SE], D01Z03S04[SW], D01Z03S04[W], D01Z03S05, D01Z03S05[E], D01Z03S05[W], D01Z03S06, D01Z03S06[E], D01Z03S06[W], D01Z03S07, D01Z03S07[E], D01Z04S01[E], D01Z04S01[NE], D01Z04S01[NW], D01Z04S01[SE], D01Z04S01[S], D01Z04S01[W], D01Z04S02[W], D01Z04S03[E], D01Z04S05, D01Z04S05[NW], D01Z04S05[SW], D01Z04S06, D01Z04S06[E], D01Z04S06[NW], D01Z04S06[SW], D01Z04S07, D01Z04S07[W], D01Z04S08, D01Z04S08[E], D01Z04S09[C], D01Z04S09[E], D01Z04S10[NW], D01Z04S10[SE], D01Z04S10[SW], D01Z04S11, D01Z04S11[NE], D01Z04S12[NW], D01Z04S12[SE], D01Z04S12[W], D01Z04S13[NE], D01Z04S13[NW], D01Z04S13[SW], D01Z04S14, D01Z04S14[E], D01Z04S15[E], D01Z04S15[NE], D01Z04S15[N], D01Z04S15[SE], D01Z04S15[SW], D01Z04S15[W], D01Z04S17[W], D01Z04S18, D01Z04S18[E], D01Z05S01[N], D01Z05S01[S], D01Z05S01[W], D01Z05S02[N], D01Z05S02[W], D01Z05S27[E], D02BZ02S01, D02BZ02S01[C], D02Z01S01[SE], D02Z01S01[W], D02Z01S02[E], D02Z01S02[NW], D02Z01S02[W], D02Z01S03[SE], D02Z01S03[SW], D02Z01S03[W], D02Z01S04, D02Z01S04[E], D02Z01S05, D02Z01S05[E], D02Z02S01[E], D02Z02S01[NW], D02Z02S01[W], D02Z02S02[NE], D02Z02S02[NW], D02Z02S02[SE], D02Z02S03[NW], D02Z02S03[SW], D02Z02S04[E], D02Z02S04[NE], D02Z02S04[SE], D02Z02S04[W], D02Z02S05[E], D02Z02S05[NW], D02Z02S05[SE], D02Z02S05[SW], D02Z02S06, D02Z02S06[E], D02Z02S07[E], D02Z02S07[W], D02Z02S08[C], D02Z02S08[E], D02Z02S08[W], D02Z02S09[E], D02Z02S10, D02Z02S10[W], D02Z02S11, D02Z02S11[E], D02Z02S11[NE], D02Z02S11[NW], D02Z02S11[SE], D02Z02S11[W], D02Z02S12, D02Z02S12[W], D02Z02S13, D02Z02S13[W], D02Z03S01[E], D02Z03S01[W], D02Z03S02[S], D02Z03S02[W], D02Z03S03[E], D02Z03S03[NW], D02Z03S03[W], D02Z03S05[E], D02Z03S05[NE], D02Z03S05[S], D02Z03S06[S], D02Z03S06[W], D02Z03S07, D02Z03S07[E], D02Z03S07[NWW], D02Z03S07[NW], D02Z03S07[N], D02Z03S07[W], D02Z03S08[E], D02Z03S08[NE], D02Z03S08[SE], D02Z03S08[SW], D02Z03S08[W], D02Z03S09, D02Z03S09[E], D02Z03S09[W], D02Z03S12, D02Z03S12[E], D02Z03S14[E], D02Z03S14[W], D02Z03S16[N], D02Z03S16[W], D02Z03S17, D02Z03S17[E], D02Z03S18[NE], D02Z03S18[NW], D02Z03S18[SE], D02Z03S20, D02Z03S20[W], D02Z03S23, D02Z03S23[E], D02Z03S24[E], D03Z01S01, D03Z01S01[NE], D03Z01S01[S], D03Z01S01[W], D03Z01S02[E], D03Z01S02[W], D03Z01S03[E], D03Z01S03[SE], D03Z01S03[SW], D03Z01S03[W], D03Z01S04, D03Z01S04[E], D03Z01S04[NW], D03Z01S05[E], D03Z01S05[W], D03Z01S06, D03Z01S06[E], D03Z01S06[W], D03Z02S01, D03Z02S01[N], D03Z02S01[W], D03Z02S02[E], D03Z02S02[S], D03Z02S02[W], D03Z02S03[E], D03Z02S03[N], D03Z02S03[SE2], D03Z02S03[SE], D03Z02S03[SSC], D03Z02S03[SSL], D03Z02S03[SSR], D03Z02S03[SW], D03Z02S03[W], D03Z02S04[NE], D03Z02S04[NW], D03Z02S04[S], D03Z02S05[E], D03Z02S05[S], D03Z02S05[W], D03Z02S06, D03Z02S06[N], D03Z02S06[W], D03Z02S07, D03Z02S07[E], D03Z02S07[N], D03Z02S07[W], D03Z02S08[E], D03Z02S08[N], D03Z02S08[W], D03Z02S09[N], D03Z02S09[S], D03Z02S09[W], D03Z02S10, D03Z02S10[E], D03Z02S10[N], D03Z02S10[S], D03Z02S10[W], D03Z02S11[E], D03Z02S11[W], D03Z02S12, D03Z02S12[E], D03Z02S13, D03Z02S13[E], D03Z02S14[E], D03Z02S15, D03Z02S15[E], D03Z02S15[W], D03Z03S01[NL], D03Z03S01[NR], D03Z03S01[S], D03Z03S01[W], D03Z03S02, D03Z03S02[E], D03Z03S02[NE], D03Z03S02[W], D03Z03S03[NE], D03Z03S03[SE], D03Z03S03[W], D03Z03S04[E], D03Z03S04[NE], D03Z03S04[NW], D03Z03S04[SW], D03Z03S05[NE], D03Z03S05[NW], D03Z03S05[SE], D03Z03S05[SW], D03Z03S06, D03Z03S06[W], D03Z03S07[E], D03Z03S07[NE], D03Z03S07[NW], D03Z03S07[SW], D03Z03S07[S], D03Z03S08, D03Z03S08[W], D03Z03S09, D03Z03S09[N], D03Z03S09[SW], D03Z03S10, D03Z03S10[E], D03Z03S11, D03Z03S11[E], D03Z03S11[W], D03Z03S12[E], D03Z03S12[W], D03Z03S14[W], D03Z03S15, D03Z03S18[E], D03Z03S19[E], D08Z01S01, D08Z01S01[W], D17BZ02S01[FrontL], D17BZ02S01[FrontR], D17Z01S03[E], D17Z01S03[W], D17Z01S04, D17Z01S04[FrontL], D17Z01S04[FrontR], D17Z01S04[N], D17Z01S04[S], D17Z01S04[W], D17Z01S05[S], D17Z01S06[E], D17Z01S07[NW], D17Z01S07[N], D17Z01S07[SE], D17Z01S07[SW], D17Z01S07[W], D17Z01S08, D17Z01S08[E], D17Z01S09[E], D17Z01S11[E], D17Z01S12[E], D20Z01S01[E], D20Z01S01[S], D20Z01S01[W], D20Z01S02, D20Z01S02[E], D20Z01S02[W], D20Z01S03[N], D20Z01S03[W], D20Z01S04[N], D20Z01S04[W], D20Z01S05[E], D20Z01S05[W], D20Z01S06[NE], D20Z01S06[SE], D20Z01S07[NE], D20Z01S07[NW], D20Z01S07[SE], D20Z01S08[W], D20Z01S09[W], HE06, QI41, QI46, QI59, RB08, RB15, RB202, RB22, RESCUED_CHERUB_08, RESCUED_CHERUB_16, RESCUED_CHERUB_18, RESCUED_CHERUB_37
+BROWSER LOG (error): [REGION MISMATCH DETAIL] Missing from state (374): [CO01, CO05, CO11, CO25, CO29, CO33, D01BZ02S01, D01BZ02S01[C], D01BZ06S01, D01BZ06S01[Ossary], D01Z01S01[E], D01Z01S01[W], D01Z01S02, D01Z01S02[E], D01Z01S02[W], D01Z01S03, D01Z01S03[E], D01Z01S03[W], D01Z01S07, D01Z01S07[E], D01Z01S07[W], D01Z02S01, D01Z02S01[E], D01Z02S01[W], D01Z02S02, D01Z02S02[E], D01Z02S02[NE], D01Z02S02[SE], D01Z02S02[SW], D01Z02S02[W], D01Z02S03, D01Z02S03[E], D01Z02S03[NW], D01Z02S03[W], D01Z02S04, D01Z02S04[E], D01Z02S04[Ossary], D01Z02S04[W], D01Z02S05, D01Z02S05[E], D01Z02S05[W], D01Z02S06, D01Z02S06[E], D01Z02S06[W], D01Z02S07, D01Z02S07[E], D01Z03S01[E], D01Z03S01[SE], D01Z03S01[W], D01Z03S02, D01Z03S02[E], D01Z03S02[SW], D01Z03S02[W], D01Z03S03, D01Z03S03[E], D01Z03S03[W], D01Z03S04[E], D01Z03S04[NW], D01Z03S04[SE], D01Z03S04[SW], D01Z03S04[W], D01Z03S05, D01Z03S05[E], D01Z03S05[W], D01Z03S06, D01Z03S06[E], D01Z03S06[W], D01Z03S07, D01Z03S07[E], D01Z04S01[E], D01Z04S01[NE], D01Z04S01[NW], D01Z04S01[SE], D01Z04S01[S], D01Z04S01[W], D01Z04S02[W], D01Z04S03[E], D01Z04S05, D01Z04S05[NW], D01Z04S05[SW], D01Z04S06, D01Z04S06[E], D01Z04S06[NW], D01Z04S06[SW], D01Z04S07, D01Z04S07[W], D01Z04S08, D01Z04S08[E], D01Z04S09[C], D01Z04S09[E], D01Z04S10[NW], D01Z04S10[SE], D01Z04S10[SW], D01Z04S11, D01Z04S11[NE], D01Z04S12[NW], D01Z04S12[SE], D01Z04S12[W], D01Z04S13[NE], D01Z04S13[NW]]
+BROWSER LOG (warning): [20:18:12.287] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to CO01
+BROWSER LOG (warning): [20:18:12.294] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to CO05
+BROWSER LOG (warning): [20:18:12.299] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to CO11
+BROWSER LOG (warning): [20:18:12.306] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to CO25
+BROWSER LOG (warning): [20:18:12.312] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to CO29
+BROWSER LOG (warning): [20:18:12.320] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to CO33
+BROWSER LOG (warning): [20:18:12.329] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01BZ02S01
+BROWSER LOG (warning): [20:18:12.338] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01BZ02S01[C]
+BROWSER LOG (warning): [20:18:12.352] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01BZ06S01
+BROWSER LOG (warning): [20:18:12.362] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01BZ06S01[Ossary]
+BROWSER LOG (warning): [20:18:12.369] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z01S01[E]
+BROWSER LOG (warning): [20:18:12.381] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z01S01[W]
+BROWSER LOG (warning): [20:18:12.399] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z01S02
+BROWSER LOG (warning): [20:18:12.414] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z01S02[E]
+BROWSER LOG (warning): [20:18:12.423] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z01S02[W]
+BROWSER LOG (warning): [20:18:12.432] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z01S03
+BROWSER LOG (warning): [20:18:12.443] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z01S03[E]
+BROWSER LOG (warning): [20:18:12.453] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z01S03[W]
+BROWSER LOG (warning): [20:18:12.463] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z01S07
+BROWSER LOG (warning): [20:18:12.477] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z01S07[E]
+BROWSER LOG (warning): [20:18:12.487] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z01S07[W]
+BROWSER LOG (warning): [20:18:12.498] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S01
+BROWSER LOG (warning): [20:18:12.512] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S01[E]
+BROWSER LOG (warning): [20:18:12.524] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S01[W]
+BROWSER LOG (warning): [20:18:12.537] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S02
+BROWSER LOG (warning): [20:18:12.561] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S02[E]
+BROWSER LOG (warning): [20:18:12.574] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S02[NE]
+BROWSER LOG (warning): [20:18:12.587] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S02[SE]
+BROWSER LOG (warning): [20:18:12.603] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S02[SW]
+BROWSER LOG (warning): [20:18:12.617] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S02[W]
+BROWSER LOG (warning): [20:18:12.632] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S03
+BROWSER LOG (warning): [20:18:12.662] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S03[E]
+BROWSER LOG (warning): [20:18:12.678] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S03[NW]
+BROWSER LOG (warning): [20:18:12.713] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S03[W]
+BROWSER LOG (warning): [20:18:12.730] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S04
+BROWSER LOG (warning): [20:18:12.754] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S04[E]
+BROWSER LOG (warning): [20:18:12.772] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S04[Ossary]
+BROWSER LOG (warning): [20:18:12.790] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S04[W]
+BROWSER LOG (warning): [20:18:12.808] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S05
+BROWSER LOG (warning): [20:18:12.843] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S05[E]
+BROWSER LOG (warning): [20:18:12.858] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S05[W]
+BROWSER LOG (warning): [20:18:12.870] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S06
+BROWSER LOG (warning): [20:18:12.889] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S06[E]
+BROWSER LOG (warning): [20:18:12.905] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S06[W]
+BROWSER LOG (warning): [20:18:12.921] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S07
+BROWSER LOG (warning): [20:18:12.936] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z02S07[E]
+BROWSER LOG (warning): [20:18:12.953] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S01[E]
+BROWSER LOG (warning): [20:18:12.980] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S01[SE]
+BROWSER LOG (warning): [20:18:13.005] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S01[W]
+BROWSER LOG (warning): [20:18:13.030] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S02
+BROWSER LOG (warning): [20:18:13.062] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S02[E]
+BROWSER LOG (warning): [20:18:13.081] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S02[SW]
+BROWSER LOG (warning): [20:18:13.100] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S02[W]
+BROWSER LOG (warning): [20:18:13.119] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S03
+BROWSER LOG (warning): [20:18:13.148] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S03[E]
+BROWSER LOG (warning): [20:18:13.168] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S03[W]
+BROWSER LOG (warning): [20:18:13.191] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S04[E]
+BROWSER LOG (warning): [20:18:13.239] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S04[NW]
+BROWSER LOG (warning): [20:18:13.267] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S04[SE]
+BROWSER LOG (warning): [20:18:13.320] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S04[SW]
+BROWSER LOG (warning): [20:18:13.356] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S04[W]
+BROWSER LOG (warning): [20:18:13.393] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S05
+BROWSER LOG (warning): [20:18:13.419] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S05[E]
+BROWSER LOG (warning): [20:18:13.442] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S05[W]
+BROWSER LOG (warning): [20:18:13.464] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S06
+BROWSER LOG (warning): [20:18:13.488] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S06[E]
+BROWSER LOG (warning): [20:18:13.509] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S06[W]
+BROWSER LOG (warning): [20:18:13.530] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S07
+BROWSER LOG (warning): [20:18:13.554] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z03S07[E]
+BROWSER LOG (warning): [20:18:13.578] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S01[E]
+BROWSER LOG (warning): [20:18:13.636] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S01[NE]
+BROWSER LOG (warning): [20:18:13.668] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S01[NW]
+BROWSER LOG (warning): [20:18:13.738] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S01[SE]
+BROWSER LOG (warning): [20:18:13.778] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S01[S]
+BROWSER LOG (warning): [20:18:13.801] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S01[W]
+BROWSER LOG (warning): [20:18:13.826] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S02[W]
+BROWSER LOG (warning): [20:18:13.852] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S03[E]
+BROWSER LOG (warning): [20:18:13.897] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S05
+BROWSER LOG (warning): [20:18:13.928] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S05[NW]
+BROWSER LOG (warning): [20:18:13.956] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S05[SW]
+BROWSER LOG (warning): [20:18:13.983] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S06
+BROWSER LOG (warning): [20:18:14.023] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S06[E]
+BROWSER LOG (warning): [20:18:14.051] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S06[NW]
+BROWSER LOG (warning): [20:18:14.081] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S06[SW]
+BROWSER LOG (warning): [20:18:14.114] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S07
+BROWSER LOG (warning): [20:18:14.146] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S07[W]
+BROWSER LOG (warning): [20:18:14.188] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S08
+BROWSER LOG (warning): [20:18:14.220] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S08[E]
+BROWSER LOG (warning): [20:18:14.247] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S09[C]
+BROWSER LOG (warning): [20:18:14.289] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S09[E]
+BROWSER LOG (warning): [20:18:14.368] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S10[NW]
+BROWSER LOG (warning): [20:18:14.399] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S10[SE]
+BROWSER LOG (warning): [20:18:14.429] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S10[SW]
+BROWSER LOG (warning): [20:18:14.469] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S11
+BROWSER LOG (warning): [20:18:14.500] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S11[NE]
+BROWSER LOG (warning): [20:18:14.531] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S12[NW]
+BROWSER LOG (warning): [20:18:14.564] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S12[SE]
+BROWSER LOG (warning): [20:18:14.598] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S12[W]
+BROWSER LOG (warning): [20:18:14.650] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S13[NE]
+BROWSER LOG (warning): [20:18:14.682] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S13[NW]
+BROWSER LOG (warning): [20:18:14.713] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S13[SW]
+BROWSER LOG (warning): [20:18:14.759] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S14
+BROWSER LOG (warning): [20:18:14.790] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S14[E]
+BROWSER LOG (warning): [20:18:14.823] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S15[E]
+BROWSER LOG (warning): [20:18:14.874] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S15[NE]
+BROWSER LOG (warning): [20:18:14.943] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S15[N]
+BROWSER LOG (warning): [20:18:15.014] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S15[SE]
+BROWSER LOG (warning): [20:18:15.049] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S15[SW]
+BROWSER LOG (warning): [20:18:15.091] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S15[W]
+BROWSER LOG (warning): [20:18:15.154] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S17[W]
+BROWSER LOG (warning): [20:18:15.188] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S18
+BROWSER LOG (warning): [20:18:15.232] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z04S18[E]
+BROWSER LOG (warning): [20:18:15.267] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z05S01[N]
+BROWSER LOG (warning): [20:18:15.312] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z05S01[S]
+BROWSER LOG (warning): [20:18:15.351] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z05S01[W]
+BROWSER LOG (warning): [20:18:15.390] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z05S02[N]
+BROWSER LOG (warning): [20:18:15.463] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z05S02[W]
+BROWSER LOG (warning): [20:18:15.541] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D01Z05S27[E]
+BROWSER LOG (warning): [20:18:15.588] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02BZ02S01
+BROWSER LOG (warning): [20:18:15.643] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02BZ02S01[C]
+BROWSER LOG (warning): [20:18:15.684] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z01S01[SE]
+BROWSER LOG (warning): [20:18:15.792] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z01S01[W]
+BROWSER LOG (warning): [20:18:15.836] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z01S02[E]
+BROWSER LOG (warning): [20:18:15.946] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z01S02[NW]
+BROWSER LOG (warning): [20:18:15.990] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z01S02[W]
+BROWSER LOG (warning): [20:18:16.079] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z01S03[SE]
+BROWSER LOG (warning): [20:18:16.193] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z01S03[SW]
+BROWSER LOG (warning): [20:18:16.259] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z01S03[W]
+BROWSER LOG (warning): [20:18:16.303] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z01S04
+BROWSER LOG (warning): [20:18:16.349] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z01S04[E]
+BROWSER LOG (warning): [20:18:16.394] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z01S05
+BROWSER LOG (warning): [20:18:16.442] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z01S05[E]
+BROWSER LOG (warning): [20:18:16.501] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S01[E]
+BROWSER LOG (warning): [20:18:16.543] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S01[NW]
+BROWSER LOG (warning): [20:18:16.588] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S01[W]
+BROWSER LOG (warning): [20:18:16.632] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S02[NE]
+BROWSER LOG (warning): [20:18:16.682] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S02[NW]
+BROWSER LOG (warning): [20:18:16.737] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S02[SE]
+BROWSER LOG (warning): [20:18:16.864] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S03[NW]
+BROWSER LOG (warning): [20:18:16.942] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S03[SW]
+BROWSER LOG (warning): [20:18:17.068] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S04[E]
+BROWSER LOG (warning): [20:18:17.150] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S04[NE]
+BROWSER LOG (warning): [20:18:17.234] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S04[SE]
+BROWSER LOG (warning): [20:18:17.283] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S04[W]
+BROWSER LOG (warning): [20:18:17.344] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S05[E]
+BROWSER LOG (warning): [20:18:17.442] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S05[NW]
+BROWSER LOG (warning): [20:18:17.488] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S05[SE]
+BROWSER LOG (warning): [20:18:17.601] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S05[SW]
+BROWSER LOG (warning): [20:18:17.713] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S06
+BROWSER LOG (warning): [20:18:17.763] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S06[E]
+BROWSER LOG (warning): [20:18:17.816] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S07[E]
+BROWSER LOG (warning): [20:18:18.015] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S07[W]
+BROWSER LOG (warning): [20:18:18.068] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S08[C]
+BROWSER LOG (warning): [20:18:18.186] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S08[E]
+BROWSER LOG (warning): [20:18:18.313] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S08[W]
+BROWSER LOG (warning): [20:18:18.427] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S09[E]
+BROWSER LOG (warning): [20:18:18.510] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S10
+BROWSER LOG (warning): [20:18:18.583] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S10[W]
+BROWSER LOG (warning): [20:18:18.637] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S11
+BROWSER LOG (warning): [20:18:18.745] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S11[E]
+BROWSER LOG (warning): [20:18:18.855] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S11[NE]
+BROWSER LOG (warning): [20:18:18.928] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S11[NW]
+BROWSER LOG (warning): [20:18:18.985] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S11[SE]
+BROWSER LOG (warning): [20:18:19.057] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S11[W]
+BROWSER LOG (warning): [20:18:19.114] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S12
+BROWSER LOG (warning): [20:18:19.170] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S12[W]
+BROWSER LOG (warning): [20:18:19.228] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S13
+BROWSER LOG (warning): [20:18:19.290] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z02S13[W]
+BROWSER LOG (warning): [20:18:19.349] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S01[E]
+BROWSER LOG (warning): [20:18:19.406] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S01[W]
+BROWSER LOG (warning): [20:18:19.481] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S02[S]
+BROWSER LOG (warning): [20:18:19.551] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S02[W]
+BROWSER LOG (warning): [20:18:19.682] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S03[E]
+BROWSER LOG (warning): [20:18:19.744] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S03[NW]
+BROWSER LOG (warning): [20:18:19.806] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S03[W]
+BROWSER LOG (warning): [20:18:19.869] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S05[E]
+BROWSER LOG (warning): [20:18:19.930] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S05[NE]
+BROWSER LOG (warning): [20:18:20.023] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S05[S]
+BROWSER LOG (warning): [20:18:20.120] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S06[S]
+BROWSER LOG (warning): [20:18:20.198] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S06[W]
+BROWSER LOG (warning): [20:18:20.295] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S07
+BROWSER LOG (warning): [20:18:20.439] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S07[E]
+BROWSER LOG (warning): [20:18:20.508] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S07[NWW]
+BROWSER LOG (warning): [20:18:20.566] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S07[NW]
+BROWSER LOG (warning): [20:18:20.633] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S07[N]
+BROWSER LOG (warning): [20:18:20.698] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S07[W]
+BROWSER LOG (warning): [20:18:20.764] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S08[E]
+BROWSER LOG (warning): [20:18:20.829] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S08[NE]
+BROWSER LOG (warning): [20:18:20.899] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S08[SE]
+BROWSER LOG (warning): [20:18:20.978] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S08[SW]
+BROWSER LOG (warning): [20:18:21.077] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S08[W]
+BROWSER LOG (warning): [20:18:21.178] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S09
+BROWSER LOG (warning): [20:18:21.260] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S09[E]
+BROWSER LOG (warning): [20:18:21.331] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S09[W]
+BROWSER LOG (warning): [20:18:21.416] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S12
+BROWSER LOG (warning): [20:18:21.486] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S12[E]
+BROWSER LOG (warning): [20:18:21.558] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S14[E]
+BROWSER LOG (warning): [20:18:21.633] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S14[W]
+BROWSER LOG (warning): [20:18:21.705] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S16[N]
+BROWSER LOG (warning): [20:18:21.773] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S16[W]
+BROWSER LOG (warning): [20:18:21.844] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S17
+BROWSER LOG (warning): [20:18:21.932] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S17[E]
+BROWSER LOG (warning): [20:18:22.005] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S18[NE]
+BROWSER LOG (warning): [20:18:22.113] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S18[NW]
+BROWSER LOG (warning): [20:18:22.225] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S18[SE]
+BROWSER LOG (warning): [20:18:22.303] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S20
+BROWSER LOG (warning): [20:18:22.399] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S20[W]
+BROWSER LOG (warning): [20:18:22.518] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S23
+BROWSER LOG (warning): [20:18:22.585] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S23[E]
+BROWSER LOG (warning): [20:18:22.659] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D02Z03S24[E]
+BROWSER LOG (warning): [20:18:22.733] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S01
+BROWSER LOG (warning): [20:18:22.853] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S01[NE]
+BROWSER LOG (warning): [20:18:22.938] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S01[S]
+BROWSER LOG (warning): [20:18:23.041] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S01[W]
+BROWSER LOG (warning): [20:18:23.115] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S02[E]
+BROWSER LOG (warning): [20:18:23.210] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S02[W]
+BROWSER LOG (warning): [20:18:23.293] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S03[E]
+BROWSER LOG (warning): [20:18:23.435] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S03[SE]
+BROWSER LOG (warning): [20:18:23.596] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S03[SW]
+BROWSER LOG (warning): [20:18:23.729] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S03[W]
+BROWSER LOG (warning): [20:18:23.873] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S04
+BROWSER LOG (warning): [20:18:23.975] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S04[E]
+BROWSER LOG (warning): [20:18:24.063] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S04[NW]
+BROWSER LOG (warning): [20:18:24.179] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S05[E]
+BROWSER LOG (warning): [20:18:24.274] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S05[W]
+BROWSER LOG (warning): [20:18:24.355] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S06
+BROWSER LOG (warning): [20:18:24.458] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S06[E]
+BROWSER LOG (warning): [20:18:24.572] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z01S06[W]
+BROWSER LOG (warning): [20:18:24.668] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S01
+BROWSER LOG (warning): [20:18:24.808] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S01[N]
+BROWSER LOG (warning): [20:18:24.896] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S01[W]
+BROWSER LOG (warning): [20:18:24.987] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S02[E]
+BROWSER LOG (warning): [20:18:25.160] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S02[S]
+BROWSER LOG (warning): [20:18:25.251] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S02[W]
+BROWSER LOG (warning): [20:18:25.455] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S03[E]
+BROWSER LOG (warning): [20:18:25.548] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S03[N]
+BROWSER LOG (warning): [20:18:25.799] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S03[SE2]
+BROWSER LOG (warning): [20:18:25.888] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S03[SE]
+BROWSER LOG (warning): [20:18:26.092] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S03[SSC]
+BROWSER LOG (warning): [20:18:26.185] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S03[SSL]
+BROWSER LOG (warning): [20:18:26.279] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S03[SSR]
+BROWSER LOG (warning): [20:18:26.372] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S03[SW]
+BROWSER LOG (warning): [20:18:26.628] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S03[W]
+BROWSER LOG (warning): [20:18:26.749] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S04[NE]
+BROWSER LOG (warning): [20:18:26.923] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S04[NW]
+BROWSER LOG (warning): [20:18:27.013] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S04[S]
+BROWSER LOG (warning): [20:18:27.156] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S05[E]
+BROWSER LOG (warning): [20:18:27.264] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S05[S]
+BROWSER LOG (warning): [20:18:27.347] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S05[W]
+BROWSER LOG (warning): [20:18:27.484] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S06
+BROWSER LOG (warning): [20:18:27.620] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S06[N]
+BROWSER LOG (warning): [20:18:27.718] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S06[W]
+BROWSER LOG (warning): [20:18:27.818] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S07
+BROWSER LOG (warning): [20:18:27.979] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S07[E]
+BROWSER LOG (warning): [20:18:28.075] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S07[N]
+BROWSER LOG (warning): [20:18:28.173] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S07[W]
+BROWSER LOG (warning): [20:18:28.270] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S08[E]
+BROWSER LOG (warning): [20:18:28.401] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S08[N]
+BROWSER LOG (warning): [20:18:28.524] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S08[W]
+BROWSER LOG (warning): [20:18:28.625] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S09[N]
+BROWSER LOG (warning): [20:18:28.795] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S09[S]
+BROWSER LOG (warning): [20:18:28.991] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S09[W]
+BROWSER LOG (warning): [20:18:29.186] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S10
+BROWSER LOG (warning): [20:18:29.367] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S10[E]
+BROWSER LOG (warning): [20:18:29.499] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S10[N]
+BROWSER LOG (warning): [20:18:29.638] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S10[S]
+BROWSER LOG (warning): [20:18:29.775] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S10[W]
+BROWSER LOG (warning): [20:18:29.933] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S11[E]
+BROWSER LOG (warning): [20:18:30.083] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S11[W]
+BROWSER LOG (warning): [20:18:30.208] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S12
+BROWSER LOG (warning): [20:18:30.366] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S12[E]
+BROWSER LOG (warning): [20:18:30.497] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S13
+BROWSER LOG (warning): [20:18:30.648] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S13[E]
+BROWSER LOG (warning): [20:18:30.772] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S14[E]
+BROWSER LOG (warning): [20:18:30.902] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S15
+BROWSER LOG (warning): [20:18:31.055] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S15[E]
+BROWSER LOG (warning): [20:18:31.174] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z02S15[W]
+BROWSER LOG (warning): [20:18:31.322] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S01[NL]
+BROWSER LOG (warning): [20:18:31.610] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S01[NR]
+BROWSER LOG (warning): [20:18:31.732] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S01[S]
+BROWSER LOG (warning): [20:18:31.851] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S01[W]
+BROWSER LOG (warning): [20:18:31.999] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S02
+BROWSER LOG (warning): [20:18:32.187] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S02[E]
+BROWSER LOG (warning): [20:18:32.311] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S02[NE]
+BROWSER LOG (warning): [20:18:32.427] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S02[W]
+BROWSER LOG (warning): [20:18:32.544] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S03[NE]
+BROWSER LOG (warning): [20:18:32.699] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S03[SE]
+BROWSER LOG (warning): [20:18:32.899] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S03[W]
+BROWSER LOG (warning): [20:18:33.053] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S04[E]
+BROWSER LOG (warning): [20:18:33.174] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S04[NE]
+BROWSER LOG (warning): [20:18:33.292] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S04[NW]
+BROWSER LOG (warning): [20:18:33.558] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S04[SW]
+BROWSER LOG (warning): [20:18:33.783] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S05[NE]
+BROWSER LOG (warning): [20:18:33.933] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S05[NW]
+BROWSER LOG (warning): [20:18:34.195] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S05[SE]
+BROWSER LOG (warning): [20:18:34.313] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S05[SW]
+BROWSER LOG (warning): [20:18:34.713] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S06
+BROWSER LOG (warning): [20:18:34.837] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S06[W]
+BROWSER LOG (warning): [20:18:34.969] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S07[E]
+BROWSER LOG (warning): [20:18:35.254] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S07[NE]
+BROWSER LOG (warning): [20:18:35.532] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S07[NW]
+BROWSER LOG (warning): [20:18:35.648] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S07[SW]
+BROWSER LOG (warning): [20:18:35.766] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S07[S]
+BROWSER LOG (warning): [20:18:36.023] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S08
+BROWSER LOG (warning): [20:18:36.185] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S08[W]
+BROWSER LOG (warning): [20:18:36.315] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S09
+BROWSER LOG (warning): [20:18:36.482] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S09[N]
+BROWSER LOG (warning): [20:18:36.617] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S09[SW]
+BROWSER LOG (warning): [20:18:36.773] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S10
+BROWSER LOG (warning): [20:18:36.974] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S10[E]
+BROWSER LOG (warning): [20:18:37.104] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S11
+BROWSER LOG (warning): [20:18:37.348] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S11[E]
+BROWSER LOG (warning): [20:18:37.484] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S11[W]
+BROWSER LOG (warning): [20:18:37.644] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S12[E]
+BROWSER LOG (warning): [20:18:37.777] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S12[W]
+BROWSER LOG (warning): [20:18:37.963] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S14[W]
+BROWSER LOG (warning): [20:18:38.081] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S15
+BROWSER LOG (warning): [20:18:38.233] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S18[E]
+BROWSER LOG (warning): [20:18:38.396] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D03Z03S19[E]
+BROWSER LOG (warning): [20:18:38.607] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D08Z01S01
+BROWSER LOG (warning): [20:18:38.785] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D08Z01S01[W]
+BROWSER LOG (warning): [20:18:38.944] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17BZ02S01[FrontL]
+BROWSER LOG (warning): [20:18:39.140] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17BZ02S01[FrontR]
+BROWSER LOG (warning): [20:18:39.259] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S03[E]
+BROWSER LOG (warning): [20:18:39.448] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S03[W]
+BROWSER LOG (warning): [20:18:39.585] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S04
+BROWSER LOG (warning): [20:18:39.872] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S04[FrontL]
+BROWSER LOG (warning): [20:18:39.991] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S04[FrontR]
+BROWSER LOG (warning): [20:18:40.149] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S04[N]
+BROWSER LOG (warning): [20:18:40.324] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S04[S]
+BROWSER LOG (warning): [20:18:40.502] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S04[W]
+BROWSER LOG (warning): [20:18:40.856] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S06[E]
+BROWSER LOG (warning): [20:18:40.984] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S07[NW]
+BROWSER LOG (warning): [20:18:41.115] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S07[N]
+BROWSER LOG (warning): [20:18:41.332] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S07[SE]
+BROWSER LOG (warning): [20:18:41.525] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S07[SW]
+BROWSER LOG (warning): [20:18:41.727] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S07[W]
+BROWSER LOG (warning): [20:18:41.922] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S08
+BROWSER LOG (warning): [20:18:42.066] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S08[E]
+BROWSER LOG (warning): [20:18:42.218] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S09[E]
+BROWSER LOG (warning): [20:18:42.738] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D17Z01S12[E]
+BROWSER LOG (warning): [20:18:42.884] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D20Z01S01[E]
+BROWSER LOG (warning): [20:18:43.131] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D20Z01S01[S]
+BROWSER LOG (warning): [20:18:43.428] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D20Z01S01[W]
+BROWSER LOG (warning): [20:18:43.706] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D20Z01S02
+BROWSER LOG (warning): [20:18:43.873] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D20Z01S02[E]
+BROWSER LOG (warning): [20:18:44.005] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D20Z01S02[W]
+BROWSER LOG (warning): [20:18:44.151] [WARN] [testSpoilerUI]     No exits found from currently accessible regions to D20Z01S03[N]

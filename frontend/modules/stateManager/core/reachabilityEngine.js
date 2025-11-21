@@ -191,27 +191,41 @@ export function computeReachableRegions(sm) {
       throw new Error(`startRegions must be an array, got ${typeof startRegions}`);
     }
 
+    // DEBUG: Log start regions
+    sm.logger.info('ReachabilityEngine', `Start regions: ${JSON.stringify(startRegions)}`);
+
     // Initialize path tracking
     sm.path.clear();
     sm.blockedConnections.clear();
 
     // Initialize reachable regions with start regions
     sm.knownReachableRegions = new Set(startRegions);
+    sm.logger.info('ReachabilityEngine', `Initialized knownReachableRegions with ${sm.knownReachableRegions.size} regions: ${Array.from(sm.knownReachableRegions).join(', ')}`);
 
     // Add exits from start regions to blocked connections
+    sm.logger.info('ReachabilityEngine', `Total regions in Map: ${sm.regions.size}`);
+    sm.logger.info('ReachabilityEngine', `Sample region names: ${Array.from(sm.regions.keys()).slice(0, 10).join(', ')}`);
+
     for (const startRegion of startRegions) {
       // TODO PHASE 3: When regions becomes Map, use: sm.regions.get(startRegion)
       const region = sm.regions.get(startRegion);
+      sm.logger.info('ReachabilityEngine', `Processing start region "${startRegion}": region found = ${!!region}, exits = ${region?.exits?.length || 0}`);
       if (region && region.exits) {
         // Add all exits from this region to blocked connections
         for (const exit of region.exits) {
+          sm.logger.info('ReachabilityEngine', `  Adding exit "${exit.name}" -> "${exit.connected_region || exit.connectedRegion}" to blocked connections`);
           sm.blockedConnections.add({
             fromRegion: startRegion,
             exit: exit,
           });
         }
+      } else if (!region) {
+        sm.logger.error('ReachabilityEngine', `ERROR: Start region "${startRegion}" not found in regions Map!`);
+      } else if (!region.exits) {
+        sm.logger.error('ReachabilityEngine', `ERROR: Start region "${startRegion}" has no exits!`);
       }
     }
+    sm.logger.info('ReachabilityEngine', `Total blocked connections after start: ${sm.blockedConnections.size}`);
 
     // Start BFS process
     let continueSearching = true;
@@ -346,6 +360,14 @@ export function runBFSPass(sm) {
         : true; // No rule means true
 
       const canTraverse = !exit.access_rule || ruleEvaluationResult;
+
+      // DEBUG: Log evaluation for Menu exits specifically
+      if (fromRegion === 'Menu') {
+        sm.logger.info('ReachabilityEngine', `BFS: Evaluating Menu exit "${exit.name}" -> "${targetRegion}"`);
+        sm.logger.info('ReachabilityEngine', `  access_rule: ${JSON.stringify(exit.access_rule)}`);
+        sm.logger.info('ReachabilityEngine', `  ruleEvaluationResult: ${ruleEvaluationResult}`);
+        sm.logger.info('ReachabilityEngine', `  canTraverse: ${canTraverse}`);
+      }
 
       if (canTraverse) {
         // Region is now reachable
