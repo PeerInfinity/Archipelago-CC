@@ -732,6 +732,36 @@ export function knowsMockballWs(snapshot, staticData) {
   return { bool: true, difficulty: 0 };
 }
 
+export function knowsGravLessLevel1(snapshot, staticData) {
+  // Gravity-less technique level 1
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsGravLessLevel2(snapshot, staticData) {
+  // Gravity-less technique level 2
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsSpongeBathBombJump(snapshot, staticData) {
+  // Sponge Bath bomb jump technique
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsSpongeBathHiJump(snapshot, staticData) {
+  // Sponge Bath high jump technique
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsSpongeBathSpeed(snapshot, staticData) {
+  // Sponge Bath speed technique
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsWestSandHoleSuitlessWallJumps(snapshot, staticData) {
+  // West Sand Hole suitless wall jumps
+  return { bool: true, difficulty: 0 };
+}
+
 // Additional medium priority helpers
 export function canAccessBillyMays(snapshot, staticData) {
   // Billy Mays room access: needs Power Bombs and movement
@@ -808,6 +838,62 @@ export function canPassMoatReverse(snapshot, staticData) {
     haveItem(snapshot, staticData, 'SpaceJump'),
     haveItem(snapshot, staticData, 'Gravity'),
     canPassBombPassages(snapshot, staticData));
+}
+
+// Additional room-specific helpers
+export function canKillRedKiHunters(snapshot, staticData, n) {
+  // Kill Red Ki-Hunters in heated areas
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Plasma'),
+    haveItem(snapshot, staticData, 'ScrewAttack'),
+    wand(snapshot, staticData,
+      heatProof(snapshot, staticData),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Spazer'),
+        haveItem(snapshot, staticData, 'Ice'),
+        wand(snapshot, staticData,
+          haveItem(snapshot, staticData, 'Charge'),
+          haveItem(snapshot, staticData, 'Wave')))));
+}
+
+export function canDoSuitlessOuterMaridia(snapshot, staticData) {
+  // Navigate outer Maridia without Gravity suit
+  return wand(snapshot, staticData,
+    knowsGravLessLevel1(snapshot, staticData),
+    haveItem(snapshot, staticData, 'HiJump'),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Ice'),
+      canSpringBallJump(snapshot, staticData)));
+}
+
+export function canClimbWestSandHole(snapshot, staticData) {
+  // Climb West Sand Hole
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'HiJump'),
+      knowsGravLessLevel3(snapshot, staticData),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'SpaceJump'),
+        canSpringBallJump(snapshot, staticData),
+        knowsWestSandHoleSuitlessWallJumps(snapshot, staticData))));
+}
+
+export function canPassSpongeBath(snapshot, staticData) {
+  // Pass through Sponge Bath area
+  return wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      canPassBombPassages(snapshot, staticData),
+      knowsSpongeBathBombJump(snapshot, staticData)),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'HiJump'),
+      knowsSpongeBathHiJump(snapshot, staticData)),
+    haveItem(snapshot, staticData, 'Gravity'),
+    haveItem(snapshot, staticData, 'SpaceJump'),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'SpeedBooster'),
+      knowsSpongeBathSpeed(snapshot, staticData)),
+    canSpringBallJump(snapshot, staticData));
 }
 
 /**
@@ -922,11 +1008,21 @@ export const helperFunctions = {
   knowsContinuousWallJump,
   knowsDiagonalBombJump,
   knowsMockballWs,
+  knowsGravLessLevel1,
+  knowsGravLessLevel2,
+  knowsSpongeBathBombJump,
+  knowsSpongeBathHiJump,
+  knowsSpongeBathSpeed,
+  knowsWestSandHoleSuitlessWallJumps,
   canAccessBillyMays,
   canAccessItemsInWestSandHole,
   canPassMoat,
   canPassMoatFromMoat,
-  canPassMoatReverse
+  canPassMoatReverse,
+  canKillRedKiHunters,
+  canDoSuitlessOuterMaridia,
+  canClimbWestSandHole,
+  canPassSpongeBath
 };
 
 /**
