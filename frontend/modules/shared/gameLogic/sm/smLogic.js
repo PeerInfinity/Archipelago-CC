@@ -226,6 +226,14 @@ export function knowsAlcatrazEscape(snapshot, staticData) {
   return { bool: true, difficulty: 0 };
 }
 
+export function knowsGreenGateGlitch(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsGravLessLevel3(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
 // Advanced movement abilities
 export function canInfiniteBombJump(snapshot, staticData) {
   return wand(snapshot, staticData,
@@ -317,6 +325,73 @@ export function enoughStuffGT(snapshot, staticData) {
     haveItem(snapshot, staticData, 'Varia'));
 }
 
+// High priority helpers (3+ uses)
+export function canDestroyBombWalls(snapshot, staticData) {
+  // Can destroy bomb walls with Morph + (Bomb OR PowerBomb) OR ScrewAttack
+  return wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Morph'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Bomb'),
+        haveItem(snapshot, staticData, 'Power Bomb'))),
+    haveItem(snapshot, staticData, 'ScrewAttack'));
+}
+
+export function canDestroyBombWallsUnderwater(snapshot, staticData) {
+  // Underwater bomb walls need Gravity OR just Morph + bombs
+  return wor(snapshot, staticData,
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      canDestroyBombWalls(snapshot, staticData)),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Morph'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Bomb'),
+        haveItem(snapshot, staticData, 'Power Bomb'))));
+}
+
+export function itemCountOk(snapshot, staticData, itemName, requiredCount) {
+  // Check if player has enough of a specific item
+  const currentCount = count(snapshot, staticData, itemName);
+  return {
+    bool: currentCount >= requiredCount,
+    difficulty: 0
+  };
+}
+
+// Medium priority helpers (2 uses)
+export function canOpenGreenDoors(snapshot, staticData) {
+  // Green doors require Super Missiles
+  return haveItem(snapshot, staticData, 'Super');
+}
+
+export function heatProof(snapshot, staticData) {
+  // Heat immunity with Varia or Gravity suit (simplified - ignores ROM patches)
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Varia'),
+    haveItem(snapshot, staticData, 'Gravity'));
+}
+
+export function canKillBeetoms(snapshot, staticData) {
+  // Can kill Beetom enemies with missiles, power bombs, or screw attack
+  return wor(snapshot, staticData,
+    haveMissileOrSuper(snapshot, staticData),
+    canUsePowerBombs(snapshot, staticData),
+    haveItem(snapshot, staticData, 'ScrewAttack'));
+}
+
+export function canGreenGateGlitch(snapshot, staticData) {
+  // Green gate glitch requires Super + knowledge
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Super'),
+    knowsGreenGateGlitch(snapshot, staticData));
+}
+
+export function canFireChargedShots(snapshot, staticData) {
+  // Can fire charged shots with Charge Beam
+  return haveItem(snapshot, staticData, 'Charge');
+}
+
 // Traverse - complex door transition logic
 export function traverse(snapshot, staticData, doorName) {
   // Traverse checks door transitions which depend on complex graph logic
@@ -345,11 +420,16 @@ export const helperFunctions = {
   canUsePowerBombs,
   canUseSpringBall,
   haveMissileOrSuper,
+  itemCountOk,
   // Passage checks
   canPassBombPassages,
   canPassBowling,
+  canDestroyBombWalls,
+  canDestroyBombWallsUnderwater,
   // Door and room checks
   canOpenEyeDoors,
+  canOpenGreenDoors,
+  canFireChargedShots,
   traverse,
   // Knowledge techniques
   knowsCeilingDBoost,
@@ -358,6 +438,8 @@ export const helperFunctions = {
   knowsShortCharge,
   knowsMockball,
   knowsAlcatrazEscape,
+  knowsGreenGateGlitch,
+  knowsGravLessLevel3,
   // Advanced movement
   canInfiniteBombJump,
   canFly,
@@ -369,8 +451,13 @@ export const helperFunctions = {
   // Environmental hazards
   canHellRun,
   canAccessSandPits,
+  heatProof,
   energyReserveCountOk,
-  enoughStuffGT
+  enoughStuffGT,
+  // Combat
+  canKillBeetoms,
+  // Glitches
+  canGreenGateGlitch
 };
 
 /**
