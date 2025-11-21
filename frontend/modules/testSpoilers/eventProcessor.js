@@ -303,6 +303,11 @@ export class EventProcessor {
                   throw new Error(`Pre-check accessibility mismatch for "${locationName}" in sphere ${context.sphere_number}`);
                 }
 
+                // DEBUG: Log main thread state before checking location
+                this.logCallback('info', `[MAIN THREAD] About to check "${locationName}"`);
+                this.logCallback('info', `[MAIN THREAD] Inventory: ${JSON.stringify(currentSnapshot.inventory)}`);
+                this.logCallback('info', `[MAIN THREAD] Location is accessible: ${isAccessible}`);
+
                 // Check location WITH items via event dispatcher instead of direct call
                 // This naturally adds the item (e.g., "Progressive Sword") to inventory
                 // Use event-based flow to match how timer and UI modules interact with stateManager
@@ -566,6 +571,12 @@ export class EventProcessor {
             if (itemName) {
               this.logCallback('info', `Location "${locName}" contains item: "${itemName}"`);
             }
+
+            // DEBUG: Log main thread state before checking location
+            const mainThreadSnapshot = stateManager.getSnapshot();
+            const mainThreadInventory = mainThreadSnapshot?.inventory || {};
+            this.logCallback('info', `[MAIN THREAD] Inventory before check: ${JSON.stringify(mainThreadInventory)}`);
+            this.logCallback('info', `[MAIN THREAD] Location "${locName}" is accessible: ${stateManager.isLocationAccessible(locName)}`);
 
             // Mark location as checked via event dispatcher instead of direct call
             // This will automatically add the item to inventory (addItems=true by default)

@@ -72,9 +72,36 @@ The worker's state (inventory, reachability) is out of sync with the main thread
 - `frontend/modules/stateManager/stateManager.js`: Return result from checkLocation wrapper
 - `frontend/modules/testSpoilers/eventProcessor.js`: Direct call to stateManager.checkLocation with proper error handling
 
-**Next Steps** (State Sync Investigation):
-1. Add logging to compare inventory/state between main thread snapshot and worker state
-2. Check if progressive item resolution works differently in worker vs main thread
-3. Verify that all items added to inventory are properly synced to worker
-4. Test if the issue only affects event items or all items after a certain point
-5. Check if there's a command queue ordering issue causing state desync
+**Investigation Results** (Progressive Item Resolution Issue):
+
+✅ **Added diagnostic logging**:
+- `frontend/modules/stateManager/core/locationChecking.js`: Added console.log to show worker inventory when checking locations
+- `frontend/modules/stateManager/core/inventoryManager.js`: Added detailed logging for progressive item resolution
+- `frontend/modules/testSpoilers/eventProcessor.js`: Added main thread state logging before location checks
+
+✅ **Root Cause Identified**: Progressive item resolution in access rules
+
+The "Automate logistic-science-pack" location has this access rule:
+```
+all_of(technology in required_technologies["logistic-science-pack"]):
+  has(technology)
+```
+
+Which expands to: "Check if player has all technologies in the list ['logistic-science-pack']"
+
+**The Problem**:
+1. Worker inventory shows: `"progressive-science-pack": 2`
+2. Access rule checks for: `"logistic-science-pack"` (the resolved tech name)
+3. The `hasItem()` function in `inventoryManager.js` HAS progressive resolution logic (lines 437-461)
+4. It should check: "Do we have 'progressive-science-pack' >= level of 'logistic-science-pack'?"
+5. Level check: `progressiveCount (2) > itemLevel (0)` should return TRUE
+
+**Investigation needed**:
+- The progressive resolution logic exists and looks correct
+- Need to verify why `hasItem("logistic-science-pack")` returns false in the worker
+- Possible issues:
+  - `progressionMapping` not loaded in worker?
+  - Progressive item not in correct format?
+  - Variable binding issue in `all_of` comprehension context?
+
+**Debug logs added but not yet captured in test output** - need to investigate why console.log from inventoryManager.js isn't appearing

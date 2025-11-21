@@ -434,6 +434,16 @@ export function hasItem(sm, itemName) {
     return true;
   }
 
+  // DEBUG: Log for troubleshooting progressive item resolution
+  if (itemName === "logistic-science-pack") {
+    console.log(`[INVENTORY DEBUG] Checking for "${itemName}"`);
+    console.log(`[INVENTORY DEBUG] Direct inventory check: ${sm.inventory[itemName] || 0}`);
+    console.log(`[INVENTORY DEBUG] progressionMapping exists: ${!!sm.progressionMapping}`);
+    if (sm.progressionMapping) {
+      console.log(`[INVENTORY DEBUG] progressionMapping keys:`, Object.keys(sm.progressionMapping));
+    }
+  }
+
   // Check if this item is part of a progressive item sequence
   // For example, if checking for "logistic-science-pack" and player has "progressive-science-pack",
   // we need to check if they have enough progressive items to have reached this level
@@ -448,6 +458,14 @@ export function hasItem(sm, itemName) {
       if (mapping.items && Array.isArray(mapping.items)) {
         const itemLevel = mapping.items.findIndex(levelItem => levelItem.name === itemName);
         if (itemLevel !== -1) {
+          // DEBUG: Log progressive resolution details
+          if (itemName === "logistic-science-pack") {
+            console.log(`[INVENTORY DEBUG] Found in progression: ${progressiveItemName}`);
+            console.log(`[INVENTORY DEBUG] itemLevel (index): ${itemLevel}`);
+            console.log(`[INVENTORY DEBUG] progressiveCount: ${sm.inventory[progressiveItemName] || 0}`);
+            console.log(`[INVENTORY DEBUG] Check: ${sm.inventory[progressiveItemName] || 0} > ${itemLevel} = ${(sm.inventory[progressiveItemName] || 0) > itemLevel}`);
+          }
+
           // Found the item in this progressive sequence
           // Check if player has enough of the progressive item to have reached this level
           const progressiveCount = sm.inventory[progressiveItemName] || 0;
