@@ -235,7 +235,8 @@ function getStateMethods(gameName) {
 export function createStateSnapshotInterface(
   snapshot,
   staticData,
-  contextVariables = {}
+  contextVariables = {},
+  stateManager = null
 ) {
   // Legacy snapshotHelpersInstance removed - using agnostic helpers directly
   const gameName = staticData?.game_name || snapshot?.game; // Get game name from static data or snapshot
@@ -455,6 +456,14 @@ export function createStateSnapshotInterface(
       !!(snapshot?.flags && snapshot.flags.includes(flagName)),
     getSetting: (settingName) => snapshot?.settings?.[settingName],
     isRegionReachable: (regionName) => {
+      // During BFS (when stateManager is provided and _computing is true),
+      // check the LIVE knownReachableRegions being built, not the frozen snapshot.
+      // This allows circular dependencies to resolve as BFS progresses.
+      if (stateManager && stateManager._computing && stateManager.knownReachableRegions) {
+        return stateManager.knownReachableRegions.has(regionName);
+      }
+
+      // Otherwise, use the frozen snapshot data
       const status = snapshot?.regionReachability?.[regionName];
       if (status === 'reachable' || status === 'checked') return true;
       if (status === 'unreachable') return false;
