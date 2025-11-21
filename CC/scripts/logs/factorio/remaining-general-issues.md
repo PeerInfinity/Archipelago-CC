@@ -45,56 +45,36 @@ AP-2-072, AP-2-179, AP-2-255, AP-2-269, AP-2-270, AP-2-272, AP-2-328, AP-2-338, 
 ✅ Progressive item resolution working
 ✅ "Automated automation-science-pack" demonstrates event items CAN work
 
-**Root Cause Analysis**:
+**Root Cause Found**:
 
-CRITICAL FINDING: The location check appears to complete but the item is NOT actually being added to inventory.
+✅ **FIXED**: Silent failure bug in location checking
+- checkLocation() didn't return success/failure status
+- Worker always reported success even when location was rejected
+- Fixed by making checkLocation() return result object
+- Worker now sends error response when location check fails
 
-Evidence:
+❌ **NEW BUG DISCOVERED**: State synchronization issue between main thread and worker
+
+After fixing the silent failure bug, the test now fails with a clear error:
 ```
-Before checking "Automate logistic-science-pack": Fresh snapshot has 14 checked locations
-After checking "Automate logistic-science-pack": Fresh snapshot has 14 checked locations
+Location check rejected: not_accessible. Location was not checked.
 ```
 
-The checked location count doesn't increase from 14 to 15, indicating the location was NOT successfully checked despite:
-- Pre-check validation passing (location is accessible)
-- checkLocationViaEvent being called
-- No error messages or rejection events
+Evidence of state desync:
+1. Main thread pre-check: Location IS accessible ✅
+2. Worker check: Location NOT accessible ❌
 
-Comparison with working case:
-- Sphere 0.1: "Automate automation-science-pack" → count increases from 0 to 1 ✅
-- Sphere 2.1: "Automate logistic-science-pack" → count stays at 14 ❌
+The worker's state (inventory, reachability) is out of sync with the main thread's snapshot.
 
-This suggests a state-related bug in the web worker or location checking code that manifests after multiple locations have been checked.
+**Files Modified (Bug Fix)**:
+- `frontend/modules/stateManager/core/locationChecking.js`: Added return value with success/failure/reason
+- `frontend/modules/stateManager/stateManagerWorker.js`: Check result and send error response if rejected
+- `frontend/modules/stateManager/stateManager.js`: Return result from checkLocation wrapper
+- `frontend/modules/testSpoilers/eventProcessor.js`: Direct call to stateManager.checkLocation with proper error handling
 
-**Investigation Trail**:
-
-1. ✅ Fixed: Found bug in `eventProcessor.js` where `staticData.settings` was accessed without player ID
-   - Changed `staticData?.settings?.use_resolved_items` to `staticData?.settings?.[this.playerId]?.use_resolved_items`
-   - This was preventing game-specific settings from being read correctly
-
-2. ❌ Rejected: Attempted workaround using `add_sphere_items_upfront` setting
-   - Added items at START of sphere instead of AFTER checking locations
-   - Caused timing issues: locations accessible one sub-sphere too early
-   - Reverted this approach
-
-3. 🔍 Current Investigation: Location check silently failing
-   - checkLocation is called but location not added to checkedLocations Set
-   - No error logs, no rejection events
-   - Possible web worker issue or race condition
-   - May be related to event item handling after inventory has accumulated items
-
-**Files Modified**:
-- `frontend/modules/testSpoilers/eventProcessor.js`: Fixed settings access bug (3 locations)
-- `exporter/games/factorio.py`: Reverted add_sphere_items_upfront workaround
-
-**Next Steps**:
-1. Add debug logging to locationChecking.js to trace why location not being checked
-2. Check web worker command queue for race conditions
-3. Test if issue occurs with all event items collected after sphere 0, or only logistic-science-pack
-4. Consider if this is related to fractional sphere handling (2.1 vs integer spheres)
-
-**Potential Root Causes**:
-- Web worker not processing checkLocation command properly
-- Race condition between snapshot retrieval and location checking
-- Event item special handling interfering with normal location check flow
-- Checked locations Set not being properly updated in worker state
+**Next Steps** (State Sync Investigation):
+1. Add logging to compare inventory/state between main thread snapshot and worker state
+2. Check if progressive item resolution works differently in worker vs main thread
+3. Verify that all items added to inventory are properly synced to worker
+4. Test if the issue only affects event items or all items after a certain point
+5. Check if there's a command queue ordering issue causing state desync

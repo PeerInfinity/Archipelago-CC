@@ -76,10 +76,12 @@ export function isLocationChecked(sm, locationName) {
  */
 export function checkLocation(sm, locationName, addItems = true) {
   let locationWasActuallyChecked = false;
+  let rejectionReason = null;
 
   // First check if location is already checked
   if (sm.checkedLocations.has(locationName)) {
     sm._logDebug(`[StateManager Class] Location ${locationName} is already checked, ignoring.`);
+    rejectionReason = 'already_checked';
 
     // Publish event to notify UI that location check was rejected due to already being checked
     sm._publishEvent('locationCheckRejected', {
@@ -91,6 +93,7 @@ export function checkLocation(sm, locationName, addItems = true) {
     const location = sm.locations.get(locationName);
     if (!location) {
       sm._logDebug(`[StateManager Class] Location ${locationName} not found in locations data.`);
+      rejectionReason = 'location_not_found';
 
       // Publish event to notify UI that location check was rejected due to location not found
       sm._publishEvent('locationCheckRejected', {
@@ -101,6 +104,7 @@ export function checkLocation(sm, locationName, addItems = true) {
       // Validate that the location is accessible before checking
       if (!sm.isLocationAccessible(location)) {
         sm._logDebug(`[StateManager Class] Location ${locationName} is not accessible, cannot check.`);
+        rejectionReason = 'not_accessible';
 
         // Publish event to notify UI that location check was rejected due to inaccessibility
         sm._publishEvent('locationCheckRejected', {
@@ -171,6 +175,13 @@ export function checkLocation(sm, locationName, addItems = true) {
   // Always send a snapshot update so the UI knows the operation completed
   // This ensures pending states are cleared even if the location wasn't actually checked
   sm._sendSnapshotUpdate();
+
+  // Return result object indicating success/failure
+  return {
+    success: locationWasActuallyChecked,
+    locationName: locationName,
+    reason: rejectionReason
+  };
 }
 
 /**
