@@ -51,6 +51,9 @@ function getItemCount(snapshot, staticData, itemName) {
   return alttpCount(snapshot, staticData, itemName);
 }
 
+// Export generic has/count functions for use by snapshot interface
+export { hasItem as has, getItemCount as count };
+
 // ====================
 // ALTTP Helper Functions
 // ====================

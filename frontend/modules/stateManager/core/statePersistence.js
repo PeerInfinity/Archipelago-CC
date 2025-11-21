@@ -292,14 +292,31 @@ export function _createSelfSnapshotInterface(sm) {
             progressionMapping: sm.progressionMapping,
             items: sm.itemData
           };
-          return sm.helperFunctions.has(snapshot, staticData, itemName);
+
+          // Debug logging for MasterSword checks
+          if (itemName === 'MasterSword') {
+            console.log('[hasItem DEBUG] Checking MasterSword');
+            console.log('[hasItem DEBUG] ProgressiveSword count:', sm.inventory['ProgressiveSword'] || sm.inventory['Progressive Sword'] || 0);
+            console.log('[hasItem DEBUG] progressionMapping keys:', Object.keys(sm.progressionMapping || {}));
+            console.log('[hasItem DEBUG] playerSlot:', sm.playerSlot);
+          }
+
+          const result = sm.helperFunctions.has(snapshot, staticData, itemName);
+
+          if (itemName === 'MasterSword') {
+            console.log('[hasItem DEBUG] MasterSword check result:', result);
+          }
+
+          return result;
         } catch (e) {
           // Fallback to direct inventory check if helper fails
           sm.logger?.warn?.('StatePersistence', `Error using game-specific has helper for ${itemName}:`, e);
+          console.error('[hasItem DEBUG] Error:', e.message, e.stack);
           return sm._hasItem(itemName);
         }
       }
       // Fallback to direct inventory check if no helper available
+      console.log('[hasItem DEBUG] No helper function available for', itemName);
       return sm._hasItem(itemName);
     },
     countItem: (itemName) => {

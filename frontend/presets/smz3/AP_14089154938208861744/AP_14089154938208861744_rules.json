@@ -17823,8 +17823,8 @@
   },
   "progression_mapping": {
     "1": {
-      "Progressive Sword": {
-        "base_item": "Progressive Sword",
+      "ProgressiveSword": {
+        "base_item": "ProgressiveSword",
         "items": [
           {
             "name": "Fighter Sword",
@@ -17859,8 +17859,8 @@
           }
         ]
       },
-      "Progressive Glove": {
-        "base_item": "Progressive Glove",
+      "ProgressiveGlove": {
+        "base_item": "ProgressiveGlove",
         "items": [
           {
             "name": "Power Glove",
@@ -17880,8 +17880,8 @@
           }
         ]
       },
-      "Progressive Shield": {
-        "base_item": "Progressive Shield",
+      "ProgressiveShield": {
+        "base_item": "ProgressiveShield",
         "items": [
           {
             "name": "Fighter Shield",
@@ -17906,8 +17906,8 @@
           }
         ]
       },
-      "Progressive Bow": {
-        "base_item": "Progressive Bow",
+      "ProgressiveBow": {
+        "base_item": "ProgressiveBow",
         "items": [
           {
             "name": "Bow",
@@ -17926,8 +17926,8 @@
           }
         ]
       },
-      "Progressive Mail": {
-        "base_item": "Progressive Mail",
+      "ProgressiveTunic": {
+        "base_item": "ProgressiveTunic",
         "items": [
           {
             "name": "Blue Mail",
@@ -17947,7 +17947,7 @@
           }
         ]
       },
-      "Progressive Bow (Alt)": {
+      "ProgressiveBow (Alt)": {
         "items": [
           {
             "name": "Bow",
@@ -17965,7 +17965,7 @@
             ]
           }
         ],
-        "base_item": "Progressive Bow (Alt)"
+        "base_item": "ProgressiveBow (Alt)"
       }
     }
   },

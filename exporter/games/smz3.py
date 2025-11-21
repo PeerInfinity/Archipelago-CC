@@ -37,8 +37,8 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         # Define the progressive item mappings based on ALTTP
         # Format: { base_item: { items: [ { name, level }, ... ] } }
         mapping_data = {
-            'Progressive Sword': {
-                'base_item': 'Progressive Sword',
+            'ProgressiveSword': {
+                'base_item': 'ProgressiveSword',
                 'items': [
                     {'name': 'Fighter Sword', 'level': 1, 'provides': ['Fighter Sword']},
                     {'name': 'Master Sword', 'level': 2, 'provides': ['Master Sword', 'MasterSword']},
@@ -46,30 +46,30 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
                     {'name': 'Golden Sword', 'level': 4, 'provides': ['Golden Sword', 'GoldenSword']}
                 ]
             },
-            'Progressive Glove': {
-                'base_item': 'Progressive Glove',
+            'ProgressiveGlove': {
+                'base_item': 'ProgressiveGlove',
                 'items': [
                     {'name': 'Power Glove', 'level': 1, 'provides': ['Power Glove', 'PowerGlove']},
                     {'name': 'Titan\'s Mitt', 'level': 2, 'provides': ['Titan\'s Mitt', 'TitansMitt']}
                 ]
             },
-            'Progressive Shield': {
-                'base_item': 'Progressive Shield',
+            'ProgressiveShield': {
+                'base_item': 'ProgressiveShield',
                 'items': [
                     {'name': 'Fighter Shield', 'level': 1, 'provides': ['Fighter Shield']},
                     {'name': 'Fire Shield', 'level': 2, 'provides': ['Fire Shield']},
                     {'name': 'Mirror Shield', 'level': 3, 'provides': ['Mirror Shield']}
                 ]
             },
-            'Progressive Bow': {
-                'base_item': 'Progressive Bow',
+            'ProgressiveBow': {
+                'base_item': 'ProgressiveBow',
                 'items': [
                     {'name': 'Bow', 'level': 1, 'provides': ['Bow']},
                     {'name': 'Silver Bow', 'level': 2, 'provides': ['Silver Bow', 'Silver Arrows']}
                 ]
             },
-            'Progressive Mail': {
-                'base_item': 'Progressive Mail',
+            'ProgressiveTunic': {
+                'base_item': 'ProgressiveTunic',
                 'items': [
                     {'name': 'Blue Mail', 'level': 1, 'provides': ['Blue Mail', 'BlueMail']},
                     {'name': 'Red Mail', 'level': 2, 'provides': ['Red Mail', 'RedMail']}
@@ -77,12 +77,7 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             }
         }
 
-        # Add Progressive Bow (Alt) with same progression as Progressive Bow
-        # This handles the runtime conversion that happens in ALTTP ItemPool.py
-        mapping_data['Progressive Bow (Alt)'] = {
-            'items': [item.copy() for item in mapping_data['Progressive Bow']['items']],
-            'base_item': 'Progressive Bow (Alt)'
-        }
+        # Note: Progressive Bow (Alt) not needed for SMZ3
 
         logger.info(f"Exported {len(mapping_data)} progressive item types for SMZ3")
         return mapping_data
