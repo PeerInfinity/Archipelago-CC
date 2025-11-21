@@ -2,11 +2,11 @@
 
 ## Logic Issues
 
-### 1. Bombos/Ether Tablet access rule evaluation (ACTIVE)
+### 1. Bombos/Ether Tablet access rule evaluation (RESOLVED)
 
-**Issue**: Bombos Tablet and Ether Tablet are not accessible in STATE when they should be accessible at sphere 8.21.
+**Issue**: Bombos Tablet and Ether Tablet were not accessible in STATE when they should be accessible at sphere 8.21.
 
-**Error**: "Access rule evaluation failed" - access rules evaluate to non-true value
+**Error**: "Access rule evaluation failed" - access rules evaluated to non-true value
 
 **Affected Locations**:
 - Bombos Tablet (in "Light World South", requires: Book, MasterSword, Mirror, Dark World South region)
@@ -18,11 +18,28 @@
 - MasterSword (ProgressiveSword >= 2): ✓ (obtained sphere 5.1 + 8.21)
 - Dark World South: ✓ (accessible since sphere 4.3)
 
-**Investigation Findings**:
-- All item requirements are met in the spoiler log
-- Dark World South region should be accessible
-- Progressive item mapping (MasterSword → ProgressiveSword >= 2) is implemented
-- Access rules appear correct in rules.json
-- **Hypothesis**: Timing issue where ProgressiveSword count isn't updated before accessibility check, or region_check evaluation issue
+**Root Cause**:
+The snapshot object passed to helper functions when evaluating access rules was missing the `player: { slot: ... }` field. This prevented the ALTTP progressive item system from correctly determining the player context for looking up progressive item mappings.
 
-**Priority**: MEDIUM - Blocks late-game progression (sphere 8.21+)
+**Investigation & Fix**:
+1. **Compared ALTTP vs SMZ3 implementations** - Found both used the same helper signature and progression_mapping structure
+2. **Traced data flow** - Verified progression_mapping was correctly exported and loaded into staticData
+3. **Tested progressive item logic** - Created test scripts confirming MasterSword detection worked with proper snapshot
+4. **Identified missing field** - Found snapshot in statePersistence.js:428-433 lacked `player: { slot: sm.playerSlot }`
+5. **Applied fix** - Added player field to snapshot used by helpers called from access rules
+
+**Solution**:
+- Modified `frontend/modules/stateManager/core/statePersistence.js:433` to include `player: { slot: sm.playerSlot }` in snapshot
+- This ensures helpers called from within createSnapshotInterface() have the same player context as other helper invocations
+- The ALTTP helper's `has()` function can now properly look up progressive item mappings using the player slot
+
+**Files Modified**:
+- `exporter/games/smz3.py` - Added get_progression_mapping() to export progressive item data
+- `frontend/modules/shared/gameLogic/smz3/smz3Logic.js` - Imported ALTTP helpers for progressive item handling
+- `frontend/modules/stateManager/core/statePersistence.js` - Added player field to snapshot (line 433)
+
+**Commits**:
+- 93dc1144: Implement progression_mapping export and use ALTTP helpers
+- 31e26188: Fix SMZ3 progressive item handling for Bombos/Ether Tablets
+
+**Status**: RESOLVED - Bombos/Ether Tablets should now be accessible at sphere 8.21
