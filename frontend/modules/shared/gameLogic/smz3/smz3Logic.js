@@ -24,68 +24,31 @@
  * Output: Boolean, number, or structured data based on function purpose
  */
 
+// Import ALTTP helper functions for progressive item handling
+import { has as alttpHas, count as alttpCount } from '../alttp/alttpLogic.js';
+
 /**
  * Helper function to check if player has an item.
- * Handles special item mappings for ALTTP progressive items.
+ * Uses ALTTP's has() function which handles progressive items via progressionMapping.
  * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data with progressionMapping
  * @param {string} itemName - Name of the item
  * @returns {boolean} True if player has the item
  */
-function hasItem(snapshot, itemName) {
-  if (!snapshot.inventory) return false;
-
-  // Handle ALTTP progressive sword levels
-  if (itemName === 'MasterSword') {
-    return (snapshot.inventory['ProgressiveSword'] || 0) >= 2;
-  }
-  if (itemName === 'TemperedSword') {
-    return (snapshot.inventory['ProgressiveSword'] || 0) >= 3;
-  }
-  if (itemName === 'GoldenSword') {
-    return (snapshot.inventory['ProgressiveSword'] || 0) >= 4;
-  }
-
-  // Handle ALTTP progressive glove levels
-  if (itemName === 'PowerGlove') {
-    return (snapshot.inventory['ProgressiveGlove'] || 0) >= 1;
-  }
-  if (itemName === 'TitansMitt') {
-    return (snapshot.inventory['ProgressiveGlove'] || 0) >= 2;
-  }
-
-  return (snapshot.inventory[itemName] || 0) > 0;
+function hasItem(snapshot, staticData, itemName) {
+  return alttpHas(snapshot, staticData, itemName);
 }
 
 /**
  * Helper function to get item count.
- * Handles special item mappings for ALTTP progressive items.
+ * Uses ALTTP's count() function which handles progressive items via progressionMapping.
  * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data with progressionMapping
  * @param {string} itemName - Name of the item
  * @returns {number} Count of the item
  */
-function getItemCount(snapshot, itemName) {
-  if (!snapshot.inventory) return 0;
-
-  // Handle ALTTP progressive sword levels (return 1 if threshold met, 0 otherwise)
-  if (itemName === 'MasterSword') {
-    return (snapshot.inventory['ProgressiveSword'] || 0) >= 2 ? 1 : 0;
-  }
-  if (itemName === 'TemperedSword') {
-    return (snapshot.inventory['ProgressiveSword'] || 0) >= 3 ? 1 : 0;
-  }
-  if (itemName === 'GoldenSword') {
-    return (snapshot.inventory['ProgressiveSword'] || 0) >= 4 ? 1 : 0;
-  }
-
-  // Handle ALTTP progressive glove levels
-  if (itemName === 'PowerGlove') {
-    return (snapshot.inventory['ProgressiveGlove'] || 0) >= 1 ? 1 : 0;
-  }
-  if (itemName === 'TitansMitt') {
-    return (snapshot.inventory['ProgressiveGlove'] || 0) >= 2 ? 1 : 0;
-  }
-
-  return snapshot.inventory[itemName] || 0;
+function getItemCount(snapshot, staticData, itemName) {
+  return alttpCount(snapshot, staticData, itemName);
 }
 
 // ====================
@@ -98,7 +61,7 @@ function getItemCount(snapshot, itemName) {
  * Note: Uses ProgressiveGlove >= 1
  */
 export function smz3_CanLiftLight(snapshot, staticData) {
-  return hasItem(snapshot, 'ProgressiveGlove');
+  return hasItem(snapshot, staticData, 'ProgressiveGlove');
 }
 
 /**
@@ -107,7 +70,7 @@ export function smz3_CanLiftLight(snapshot, staticData) {
  * Note: Uses ProgressiveGlove >= 2
  */
 export function smz3_CanLiftHeavy(snapshot, staticData) {
-  return getItemCount(snapshot, 'ProgressiveGlove') >= 2;
+  return getItemCount(snapshot, staticData, 'ProgressiveGlove') >= 2;
 }
 
 /**
@@ -115,7 +78,7 @@ export function smz3_CanLiftHeavy(snapshot, staticData) {
  * Python: def CanLightTorches(self): return self.Firerod or self.Lamp
  */
 export function smz3_CanLightTorches(snapshot, staticData) {
-  return hasItem(snapshot, 'Firerod') || hasItem(snapshot, 'Lamp');
+  return hasItem(snapshot, staticData, 'Firerod') || hasItem(snapshot, staticData, 'Lamp');
 }
 
 /**
@@ -123,8 +86,8 @@ export function smz3_CanLightTorches(snapshot, staticData) {
  * Python: def CanMeltFreezors(self): return self.Firerod or self.Bombos and self.Sword
  */
 export function smz3_CanMeltFreezors(snapshot, staticData) {
-  return hasItem(snapshot, 'Firerod') ||
-         (hasItem(snapshot, 'Bombos') && hasItem(snapshot, 'ProgressiveSword'));
+  return hasItem(snapshot, staticData, 'Firerod') ||
+         (hasItem(snapshot, staticData, 'Bombos') && hasItem(snapshot, staticData, 'ProgressiveSword'));
 }
 
 /**
@@ -136,8 +99,8 @@ export function smz3_CanMeltFreezors(snapshot, staticData) {
  * @param {number} bars - Number of bars required (default 2)
  */
 export function smz3_CanExtendMagic(snapshot, staticData, bars = 2) {
-  const halfMagicMultiplier = hasItem(snapshot, 'HalfMagic') ? 2 : 1;
-  const bottleMultiplier = hasItem(snapshot, 'Bottle') ? 2 : 1;
+  const halfMagicMultiplier = hasItem(snapshot, staticData, 'HalfMagic') ? 2 : 1;
+  const bottleMultiplier = hasItem(snapshot, staticData, 'Bottle') ? 2 : 1;
   return halfMagicMultiplier * bottleMultiplier >= bars;
 }
 
@@ -148,12 +111,12 @@ export function smz3_CanExtendMagic(snapshot, staticData, bars = 2) {
  *            self.Somaria or self.Byrna and self.CanExtendMagic()
  */
 export function smz3_CanKillManyEnemies(snapshot, staticData) {
-  return hasItem(snapshot, 'ProgressiveSword') ||
-         hasItem(snapshot, 'Hammer') ||
-         hasItem(snapshot, 'Bow') ||
-         hasItem(snapshot, 'Firerod') ||
-         hasItem(snapshot, 'Somaria') ||
-         (hasItem(snapshot, 'Byrna') && smz3_CanExtendMagic(snapshot, staticData, 2));
+  return hasItem(snapshot, staticData, 'ProgressiveSword') ||
+         hasItem(snapshot, staticData, 'Hammer') ||
+         hasItem(snapshot, staticData, 'Bow') ||
+         hasItem(snapshot, staticData, 'Firerod') ||
+         hasItem(snapshot, staticData, 'Somaria') ||
+         (hasItem(snapshot, staticData, 'Byrna') && smz3_CanExtendMagic(snapshot, staticData, 2));
 }
 
 /**
@@ -166,13 +129,13 @@ export function smz3_CanKillManyEnemies(snapshot, staticData) {
  *            items.Byrna or items.Somaria
  */
 export function smz3_CanBeatBoss(snapshot, staticData) {
-  return hasItem(snapshot, 'ProgressiveSword') ||
-         hasItem(snapshot, 'Hammer') ||
-         hasItem(snapshot, 'Bow') ||
-         hasItem(snapshot, 'Firerod') ||
-         hasItem(snapshot, 'Icerod') ||
-         hasItem(snapshot, 'Byrna') ||
-         hasItem(snapshot, 'Somaria');
+  return hasItem(snapshot, staticData, 'ProgressiveSword') ||
+         hasItem(snapshot, staticData, 'Hammer') ||
+         hasItem(snapshot, staticData, 'Bow') ||
+         hasItem(snapshot, staticData, 'Firerod') ||
+         hasItem(snapshot, staticData, 'Icerod') ||
+         hasItem(snapshot, staticData, 'Byrna') ||
+         hasItem(snapshot, staticData, 'Somaria');
 }
 
 // ====================
@@ -184,7 +147,7 @@ export function smz3_CanBeatBoss(snapshot, staticData) {
  * Python: def CanIbj(self): return self.Morph and self.Bombs
  */
 export function smz3_CanIbj(snapshot, staticData) {
-  return hasItem(snapshot, 'Morph') && hasItem(snapshot, 'Bombs');
+  return hasItem(snapshot, staticData, 'Morph') && hasItem(snapshot, staticData, 'Bombs');
 }
 
 /**
@@ -192,7 +155,7 @@ export function smz3_CanIbj(snapshot, staticData) {
  * Python: def CanFly(self): return self.SpaceJump or self.CanIbj()
  */
 export function smz3_CanFly(snapshot, staticData) {
-  return hasItem(snapshot, 'SpaceJump') || smz3_CanIbj(snapshot, staticData);
+  return hasItem(snapshot, staticData, 'SpaceJump') || smz3_CanIbj(snapshot, staticData);
 }
 
 /**
@@ -200,7 +163,7 @@ export function smz3_CanFly(snapshot, staticData) {
  * Python: def CanUsePowerBombs(self): return self.Morph and self.PowerBomb
  */
 export function smz3_CanUsePowerBombs(snapshot, staticData) {
-  return hasItem(snapshot, 'Morph') && hasItem(snapshot, 'PowerBomb');
+  return hasItem(snapshot, staticData, 'Morph') && hasItem(snapshot, staticData, 'PowerBomb');
 }
 
 /**
@@ -208,8 +171,8 @@ export function smz3_CanUsePowerBombs(snapshot, staticData) {
  * Python: def CanPassBombPassages(self): return self.Morph and (self.Bombs or self.PowerBomb)
  */
 export function smz3_CanPassBombPassages(snapshot, staticData) {
-  return hasItem(snapshot, 'Morph') &&
-         (hasItem(snapshot, 'Bombs') || hasItem(snapshot, 'PowerBomb'));
+  return hasItem(snapshot, staticData, 'Morph') &&
+         (hasItem(snapshot, staticData, 'Bombs') || hasItem(snapshot, staticData, 'PowerBomb'));
 }
 
 /**
@@ -217,7 +180,7 @@ export function smz3_CanPassBombPassages(snapshot, staticData) {
  * Python: def CanDestroyBombWalls(self): return self.CanPassBombPassages() or self.ScrewAttack
  */
 export function smz3_CanDestroyBombWalls(snapshot, staticData) {
-  return smz3_CanPassBombPassages(snapshot, staticData) || hasItem(snapshot, 'ScrewAttack');
+  return smz3_CanPassBombPassages(snapshot, staticData) || hasItem(snapshot, staticData, 'ScrewAttack');
 }
 
 /**
@@ -225,7 +188,7 @@ export function smz3_CanDestroyBombWalls(snapshot, staticData) {
  * Python: def CanSpringBallJump(self): return self.Morph and self.SpringBall
  */
 export function smz3_CanSpringBallJump(snapshot, staticData) {
-  return hasItem(snapshot, 'Morph') && hasItem(snapshot, 'SpringBall');
+  return hasItem(snapshot, staticData, 'Morph') && hasItem(snapshot, staticData, 'SpringBall');
 }
 
 /**
@@ -233,7 +196,7 @@ export function smz3_CanSpringBallJump(snapshot, staticData) {
  * Python: def CanHellRun(self): return self.Varia or self.HasEnergyReserves(5)
  */
 export function smz3_CanHellRun(snapshot, staticData) {
-  return hasItem(snapshot, 'Varia') || smz3_HasEnergyReserves(snapshot, staticData, 5);
+  return hasItem(snapshot, staticData, 'Varia') || smz3_HasEnergyReserves(snapshot, staticData, 5);
 }
 
 /**
@@ -245,8 +208,8 @@ export function smz3_CanHellRun(snapshot, staticData) {
  * @param {number} amount - Required number of tanks
  */
 export function smz3_HasEnergyReserves(snapshot, staticData, amount) {
-  const eTanks = getItemCount(snapshot, 'ETank');
-  const reserveTanks = getItemCount(snapshot, 'ReserveTank');
+  const eTanks = getItemCount(snapshot, staticData, 'ETank');
+  const reserveTanks = getItemCount(snapshot, staticData, 'ReserveTank');
   return (eTanks + reserveTanks) >= amount;
 }
 
@@ -255,7 +218,7 @@ export function smz3_HasEnergyReserves(snapshot, staticData, amount) {
  * Python: def CanOpenRedDoors(self): return self.Missile or self.Super
  */
 export function smz3_CanOpenRedDoors(snapshot, staticData) {
-  return hasItem(snapshot, 'Missile') || hasItem(snapshot, 'Super');
+  return hasItem(snapshot, staticData, 'Missile') || hasItem(snapshot, staticData, 'Super');
 }
 
 /**
@@ -268,7 +231,7 @@ export function smz3_CanOpenRedDoors(snapshot, staticData) {
 export function smz3_CanAccessCrocomire(snapshot, staticData) {
   // TODO: Check keysanity setting from staticData.settings if needed
   // For now, assuming non-keysanity mode (standard SMZ3)
-  return hasItem(snapshot, 'Super');
+  return hasItem(snapshot, staticData, 'Super');
 }
 
 /**
@@ -276,7 +239,7 @@ export function smz3_CanAccessCrocomire(snapshot, staticData) {
  * Python: def CanUnlockShip(self): return self.CardWreckedShipBoss and self.CanPassBombPassages()
  */
 export function smz3_CanUnlockShip(snapshot, staticData) {
-  return hasItem(snapshot, 'CardWreckedShipBoss') && smz3_CanPassBombPassages(snapshot, staticData);
+  return hasItem(snapshot, staticData, 'CardWreckedShipBoss') && smz3_CanPassBombPassages(snapshot, staticData);
 }
 
 /**
@@ -291,16 +254,16 @@ export function smz3_CanUnlockShip(snapshot, staticData) {
  */
 export function smz3_CanEnterAndLeaveGauntlet(snapshot, staticData) {
   // Normal logic implementation
-  const hasCardCrateriaL1 = hasItem(snapshot, 'CardCrateriaL1');
-  const hasMorph = hasItem(snapshot, 'Morph');
-  const canFlyOrSpeed = smz3_CanFly(snapshot, staticData) || hasItem(snapshot, 'SpeedBooster');
+  const hasCardCrateriaL1 = hasItem(snapshot, staticData, 'CardCrateriaL1');
+  const hasMorph = hasItem(snapshot, staticData, 'Morph');
+  const canFlyOrSpeed = smz3_CanFly(snapshot, staticData) || hasItem(snapshot, staticData, 'SpeedBooster');
 
   // Check if player has at least 2 Power Bombs
-  const hasTwoPowerBombs = getItemCount(snapshot, 'PowerBomb') >= 2;
+  const hasTwoPowerBombs = getItemCount(snapshot, staticData, 'PowerBomb') >= 2;
 
   const canEscape = smz3_CanIbj(snapshot, staticData) ||
                     (smz3_CanUsePowerBombs(snapshot, staticData) && hasTwoPowerBombs) ||
-                    hasItem(snapshot, 'ScrewAttack');
+                    hasItem(snapshot, staticData, 'ScrewAttack');
 
   return hasCardCrateriaL1 && hasMorph && canFlyOrSpeed && canEscape;
 }
@@ -315,9 +278,9 @@ export function smz3_CanEnterAndLeaveGauntlet(snapshot, staticData) {
  *     return (self.CanDestroyBombWalls() or self.SpeedBooster) and self.Super and self.Morph
  */
 export function smz3_CanAccessDeathMountainPortal(snapshot, staticData) {
-  return (smz3_CanDestroyBombWalls(snapshot, staticData) || hasItem(snapshot, 'SpeedBooster')) &&
-         hasItem(snapshot, 'Super') &&
-         hasItem(snapshot, 'Morph');
+  return (smz3_CanDestroyBombWalls(snapshot, staticData) || hasItem(snapshot, staticData, 'SpeedBooster')) &&
+         hasItem(snapshot, staticData, 'Super') &&
+         hasItem(snapshot, staticData, 'Morph');
 }
 
 /**
@@ -335,12 +298,12 @@ export function smz3_CanAccessDeathMountainPortal(snapshot, staticData) {
  */
 export function smz3_CanAccessDarkWorldPortal(snapshot, staticData) {
   // Simplified implementation (Normal logic)
-  return hasItem(snapshot, 'CardMaridiaL1') &&
-         hasItem(snapshot, 'CardMaridiaL2') &&
+  return hasItem(snapshot, staticData, 'CardMaridiaL1') &&
+         hasItem(snapshot, staticData, 'CardMaridiaL2') &&
          smz3_CanUsePowerBombs(snapshot, staticData) &&
-         hasItem(snapshot, 'Super') &&
-         hasItem(snapshot, 'Gravity') &&
-         hasItem(snapshot, 'SpeedBooster');
+         hasItem(snapshot, staticData, 'Super') &&
+         hasItem(snapshot, staticData, 'Gravity') &&
+         hasItem(snapshot, staticData, 'SpeedBooster');
 }
 
 /**
@@ -357,12 +320,12 @@ export function smz3_CanAccessDarkWorldPortal(snapshot, staticData) {
  */
 export function smz3_CanAccessMiseryMirePortal(snapshot, staticData) {
   // Simplified implementation (Normal logic)
-  return (hasItem(snapshot, 'CardNorfairL2') ||
-          (hasItem(snapshot, 'SpeedBooster') && hasItem(snapshot, 'Wave'))) &&
-         hasItem(snapshot, 'Varia') &&
-         hasItem(snapshot, 'Super') &&
-         hasItem(snapshot, 'Gravity') &&
-         hasItem(snapshot, 'SpaceJump') &&
+  return (hasItem(snapshot, staticData, 'CardNorfairL2') ||
+          (hasItem(snapshot, staticData, 'SpeedBooster') && hasItem(snapshot, staticData, 'Wave'))) &&
+         hasItem(snapshot, staticData, 'Varia') &&
+         hasItem(snapshot, staticData, 'Super') &&
+         hasItem(snapshot, staticData, 'Gravity') &&
+         hasItem(snapshot, staticData, 'SpaceJump') &&
          smz3_CanUsePowerBombs(snapshot, staticData);
 }
 
@@ -372,8 +335,8 @@ export function smz3_CanAccessMiseryMirePortal(snapshot, staticData) {
  *     return self.Flute or self.CanLiftLight() and self.Lamp
  */
 export function smz3_CanAccessNorfairUpperPortal(snapshot, staticData) {
-  return hasItem(snapshot, 'Flute') ||
-         (smz3_CanLiftLight(snapshot, staticData) && hasItem(snapshot, 'Lamp'));
+  return hasItem(snapshot, staticData, 'Flute') ||
+         (smz3_CanLiftLight(snapshot, staticData) && hasItem(snapshot, staticData, 'Lamp'));
 }
 
 /**
@@ -382,7 +345,7 @@ export function smz3_CanAccessNorfairUpperPortal(snapshot, staticData) {
  *     return self.Flute and self.CanLiftHeavy()
  */
 export function smz3_CanAccessNorfairLowerPortal(snapshot, staticData) {
-  return hasItem(snapshot, 'Flute') && smz3_CanLiftHeavy(snapshot, staticData);
+  return hasItem(snapshot, staticData, 'Flute') && smz3_CanLiftHeavy(snapshot, staticData);
 }
 
 /**
@@ -402,11 +365,11 @@ export function smz3_CanAccessNorfairLowerPortal(snapshot, staticData) {
  */
 export function smz3_CanAccessMaridiaPortal(snapshot, staticData) {
   // Simplified implementation (Normal logic, without Agahnim event check for now)
-  return hasItem(snapshot, 'MoonPearl') &&
-         hasItem(snapshot, 'Flippers') &&
-         hasItem(snapshot, 'Gravity') &&
-         hasItem(snapshot, 'Morph') &&
-         (hasItem(snapshot, 'Hammer') && smz3_CanLiftLight(snapshot, staticData) ||
+  return hasItem(snapshot, staticData, 'MoonPearl') &&
+         hasItem(snapshot, staticData, 'Flippers') &&
+         hasItem(snapshot, staticData, 'Gravity') &&
+         hasItem(snapshot, staticData, 'Morph') &&
+         (hasItem(snapshot, staticData, 'Hammer') && smz3_CanLiftLight(snapshot, staticData) ||
           smz3_CanLiftHeavy(snapshot, staticData));
 }
 
@@ -421,13 +384,13 @@ export function smz3_CanAccessMaridiaPortal(snapshot, staticData) {
  */
 export function smz3_CanReachAqueduct(snapshot, staticData) {
   // Route 1: Through Maridia with L1 card and movement ability
-  const route1 = hasItem(snapshot, 'CardMaridiaL1') &&
+  const route1 = hasItem(snapshot, staticData, 'CardMaridiaL1') &&
                  (smz3_CanFly(snapshot, staticData) ||
-                  hasItem(snapshot, 'SpeedBooster') ||
-                  hasItem(snapshot, 'Grapple'));
+                  hasItem(snapshot, staticData, 'SpeedBooster') ||
+                  hasItem(snapshot, staticData, 'Grapple'));
 
   // Route 2: Through Maridia portal with L2 card
-  const route2 = hasItem(snapshot, 'CardMaridiaL2') &&
+  const route2 = hasItem(snapshot, staticData, 'CardMaridiaL2') &&
                  smz3_CanAccessMaridiaPortal(snapshot, staticData);
 
   return route1 || route2;
@@ -441,7 +404,7 @@ export function smz3_CanReachAqueduct(snapshot, staticData) {
  * Using Normal logic for now.
  */
 export function smz3_CanDefeatBotwoon(snapshot, staticData) {
-  return hasItem(snapshot, 'SpeedBooster') || smz3_CanAccessMaridiaPortal(snapshot, staticData);
+  return hasItem(snapshot, staticData, 'SpeedBooster') || smz3_CanAccessMaridiaPortal(snapshot, staticData);
 }
 
 /**
@@ -457,15 +420,15 @@ export function smz3_CanDefeatBotwoon(snapshot, staticData) {
  */
 export function smz3_CanDefeatDraygon(snapshot, staticData) {
   // Can reach Draygon either through Maridia (defeating Botwoon) or via portal
-  const canReachDraygon = (hasItem(snapshot, 'CardMaridiaL1') &&
-                           hasItem(snapshot, 'CardMaridiaL2') &&
+  const canReachDraygon = (hasItem(snapshot, staticData, 'CardMaridiaL1') &&
+                           hasItem(snapshot, staticData, 'CardMaridiaL2') &&
                            smz3_CanDefeatBotwoon(snapshot, staticData)) ||
                           smz3_CanAccessMaridiaPortal(snapshot, staticData);
 
   // Must have boss card, gravity, and movement capability
-  const canDefeatDraygon = hasItem(snapshot, 'CardMaridiaBoss') &&
-                           hasItem(snapshot, 'Gravity') &&
-                           ((hasItem(snapshot, 'SpeedBooster') && hasItem(snapshot, 'HiJump')) ||
+  const canDefeatDraygon = hasItem(snapshot, staticData, 'CardMaridiaBoss') &&
+                           hasItem(snapshot, staticData, 'Gravity') &&
+                           ((hasItem(snapshot, staticData, 'SpeedBooster') && hasItem(snapshot, staticData, 'HiJump')) ||
                             smz3_CanFly(snapshot, staticData));
 
   return canReachDraygon && canDefeatDraygon;
@@ -498,8 +461,8 @@ export function smz3_CanDefeatDraygon(snapshot, staticData) {
  */
 export function smz3_CanExit(snapshot, staticData) {
   // Normal mode logic for exiting Norfair Lower East
-  const hasMorph = hasItem(snapshot, 'Morph');
-  const hasCardNorfairL2 = hasItem(snapshot, 'CardNorfairL2');
+  const hasMorph = hasItem(snapshot, staticData, 'Morph');
+  const hasCardNorfairL2 = hasItem(snapshot, staticData, 'CardNorfairL2');
 
   // Bubble Mountain route (simple exit with card)
   if (hasMorph && hasCardNorfairL2) {
@@ -507,10 +470,10 @@ export function smz3_CanExit(snapshot, staticData) {
   }
 
   // Alternative route: Volcano Room and Blue Gate
-  const hasGravity = hasItem(snapshot, 'Gravity');
-  const hasWave = hasItem(snapshot, 'Wave');
-  const hasGrapple = hasItem(snapshot, 'Grapple');
-  const hasSpaceJump = hasItem(snapshot, 'SpaceJump');
+  const hasGravity = hasItem(snapshot, staticData, 'Gravity');
+  const hasWave = hasItem(snapshot, staticData, 'Wave');
+  const hasGrapple = hasItem(snapshot, staticData, 'Grapple');
+  const hasSpaceJump = hasItem(snapshot, staticData, 'SpaceJump');
 
   // Morph + Gravity + Wave + (Grapple OR SpaceJump)
   return hasMorph &&
@@ -642,12 +605,12 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
           // And: Lamp && KeyCT >= 2 && Sword
 
           const canKillManyEnemies = smz3_CanKillManyEnemies(snapshot, staticData);
-          const hasCapeOrMasterSword = hasItem(snapshot, 'Cape') || getItemCount(snapshot, 'ProgressiveSword') >= 2;
+          const hasCapeOrMasterSword = hasItem(snapshot, staticData, 'Cape') || getItemCount(snapshot, staticData, 'ProgressiveSword') >= 2;
           const canEnter = canKillManyEnemies && hasCapeOrMasterSword;
 
-          const hasLamp = hasItem(snapshot, 'Lamp');
-          const hasEnoughKeys = getItemCount(snapshot, 'KeyCT') >= 2;
-          const hasSword = hasItem(snapshot, 'ProgressiveSword');
+          const hasLamp = hasItem(snapshot, staticData, 'Lamp');
+          const hasEnoughKeys = getItemCount(snapshot, staticData, 'KeyCT') >= 2;
+          const hasSword = hasItem(snapshot, staticData, 'ProgressiveSword');
 
           const canComplete = canEnter && hasLamp && hasEnoughKeys && hasSword;
 
@@ -668,12 +631,12 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
           // CanUnlockShip: CardWreckedShipBoss && CanPassBombPassages
           // For now, we'll implement a simplified version
           // TODO: Implement full CanEnter logic for Wrecked Ship
-          const hasCard = hasItem(snapshot, 'CardWreckedShipBoss');
+          const hasCard = hasItem(snapshot, staticData, 'CardWreckedShipBoss');
           const canPassBomb = smz3_CanPassBombPassages(snapshot, staticData);
           const canUnlockShip = hasCard && canPassBomb;
 
           // Simplified CanEnter check - requires Super at minimum
-          const hasSuper = hasItem(snapshot, 'Super');
+          const hasSuper = hasItem(snapshot, staticData, 'Super');
 
           const canComplete = hasSuper && canUnlockShip;
 
@@ -734,13 +697,13 @@ export function smz3_CanAcquire(snapshot, staticData, rewardType) {
             const itemChecks = rule.conditions.map(cond => ({
               item: cond.item,
               required: true,
-              has: hasItem(snapshot, cond.item),
-              count: getItemCount(snapshot, cond.item)
+              has: hasItem(snapshot, staticData, cond.item),
+              count: getItemCount(snapshot, staticData, cond.item)
             }));
             console.log(`[smz3_CanAcquire] Checking items for ${bossLocationName}:`, JSON.stringify(itemChecks));
 
             // Manually check all items
-            const result = rule.conditions.every(cond => hasItem(snapshot, cond.item));
+            const result = rule.conditions.every(cond => hasItem(snapshot, staticData, cond.item));
             console.log(`[smz3_CanAcquire] Manually evaluated boss location (${bossLocationName}):`, result);
             console.log(`[smz3_CanAcquire] Returning ${result} for region '${regionName}'`);
             return result;
@@ -874,12 +837,12 @@ function checkRegionCompletion(snapshot, staticData, regionName) {
       // And: Lamp && KeyCT >= 2 && Sword
 
       const canKillManyEnemies = smz3_CanKillManyEnemies(snapshot, staticData);
-      const hasCapeOrMasterSword = hasItem(snapshot, 'Cape') || getItemCount(snapshot, 'ProgressiveSword') >= 2;
+      const hasCapeOrMasterSword = hasItem(snapshot, staticData, 'Cape') || getItemCount(snapshot, staticData, 'ProgressiveSword') >= 2;
       const canEnter = canKillManyEnemies && hasCapeOrMasterSword;
 
-      const hasLamp = hasItem(snapshot, 'Lamp');
-      const hasEnoughKeys = getItemCount(snapshot, 'KeyCT') >= 2;
-      const hasSword = hasItem(snapshot, 'ProgressiveSword');
+      const hasLamp = hasItem(snapshot, staticData, 'Lamp');
+      const hasEnoughKeys = getItemCount(snapshot, staticData, 'KeyCT') >= 2;
+      const hasSword = hasItem(snapshot, staticData, 'ProgressiveSword');
 
       const canComplete = canEnter && hasLamp && hasEnoughKeys && hasSword;
 
@@ -897,12 +860,12 @@ function checkRegionCompletion(snapshot, staticData, regionName) {
     } else if (regionName === 'Wrecked Ship') {
       // Wrecked Ship CanComplete: CanEnter && CanUnlockShip
       // CanUnlockShip: CardWreckedShipBoss && CanPassBombPassages
-      const hasCard = hasItem(snapshot, 'CardWreckedShipBoss');
+      const hasCard = hasItem(snapshot, staticData, 'CardWreckedShipBoss');
       const canPassBomb = smz3_CanPassBombPassages(snapshot, staticData);
       const canUnlockShip = hasCard && canPassBomb;
 
       // Simplified CanEnter check - requires Super at minimum
-      const hasSuper = hasItem(snapshot, 'Super');
+      const hasSuper = hasItem(snapshot, staticData, 'Super');
 
       const canComplete = hasSuper && canUnlockShip;
 
@@ -953,7 +916,7 @@ function checkRegionCompletion(snapshot, staticData, regionName) {
       const allItemChecks = rule.conditions.every(cond => cond.type === 'item_check');
       if (allItemChecks) {
         // Manually check all items
-        const result = rule.conditions.every(cond => hasItem(snapshot, cond.item));
+        const result = rule.conditions.every(cond => hasItem(snapshot, staticData, cond.item));
         console.log(`[checkRegionCompletion] Manually evaluated boss location (${bossLocationName}):`, result);
         return result;
       }

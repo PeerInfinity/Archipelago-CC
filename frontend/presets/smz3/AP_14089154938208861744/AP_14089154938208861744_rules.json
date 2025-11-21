@@ -17822,7 +17822,152 @@
     }
   },
   "progression_mapping": {
-    "1": {}
+    "1": {
+      "Progressive Sword": {
+        "base_item": "Progressive Sword",
+        "items": [
+          {
+            "name": "Fighter Sword",
+            "level": 1,
+            "provides": [
+              "Fighter Sword"
+            ]
+          },
+          {
+            "name": "Master Sword",
+            "level": 2,
+            "provides": [
+              "Master Sword",
+              "MasterSword"
+            ]
+          },
+          {
+            "name": "Tempered Sword",
+            "level": 3,
+            "provides": [
+              "Tempered Sword",
+              "TemperedSword"
+            ]
+          },
+          {
+            "name": "Golden Sword",
+            "level": 4,
+            "provides": [
+              "Golden Sword",
+              "GoldenSword"
+            ]
+          }
+        ]
+      },
+      "Progressive Glove": {
+        "base_item": "Progressive Glove",
+        "items": [
+          {
+            "name": "Power Glove",
+            "level": 1,
+            "provides": [
+              "Power Glove",
+              "PowerGlove"
+            ]
+          },
+          {
+            "name": "Titan's Mitt",
+            "level": 2,
+            "provides": [
+              "Titan's Mitt",
+              "TitansMitt"
+            ]
+          }
+        ]
+      },
+      "Progressive Shield": {
+        "base_item": "Progressive Shield",
+        "items": [
+          {
+            "name": "Fighter Shield",
+            "level": 1,
+            "provides": [
+              "Fighter Shield"
+            ]
+          },
+          {
+            "name": "Fire Shield",
+            "level": 2,
+            "provides": [
+              "Fire Shield"
+            ]
+          },
+          {
+            "name": "Mirror Shield",
+            "level": 3,
+            "provides": [
+              "Mirror Shield"
+            ]
+          }
+        ]
+      },
+      "Progressive Bow": {
+        "base_item": "Progressive Bow",
+        "items": [
+          {
+            "name": "Bow",
+            "level": 1,
+            "provides": [
+              "Bow"
+            ]
+          },
+          {
+            "name": "Silver Bow",
+            "level": 2,
+            "provides": [
+              "Silver Bow",
+              "Silver Arrows"
+            ]
+          }
+        ]
+      },
+      "Progressive Mail": {
+        "base_item": "Progressive Mail",
+        "items": [
+          {
+            "name": "Blue Mail",
+            "level": 1,
+            "provides": [
+              "Blue Mail",
+              "BlueMail"
+            ]
+          },
+          {
+            "name": "Red Mail",
+            "level": 2,
+            "provides": [
+              "Red Mail",
+              "RedMail"
+            ]
+          }
+        ]
+      },
+      "Progressive Bow (Alt)": {
+        "items": [
+          {
+            "name": "Bow",
+            "level": 1,
+            "provides": [
+              "Bow"
+            ]
+          },
+          {
+            "name": "Silver Bow",
+            "level": 2,
+            "provides": [
+              "Silver Bow",
+              "Silver Arrows"
+            ]
+          }
+        ],
+        "base_item": "Progressive Bow (Alt)"
+      }
+    }
   },
   "starting_items": {
     "1": [

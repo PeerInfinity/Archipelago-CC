@@ -22,6 +22,71 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
         with open('/tmp/smz3_debug.log', 'a') as f:
             f.write("SMZ3 exporter __init__ called\n")
 
+    def get_progression_mapping(self, world) -> Dict[str, Any]:
+        """
+        Export progressive item mappings for SMZ3.
+
+        SMZ3 includes ALTTP content, so we export the ALTTP progressive item mappings.
+        This allows the frontend to properly handle items like:
+        - Progressive Sword -> Fighter Sword, Master Sword, Tempered Sword, Golden Sword
+        - Progressive Glove -> Power Glove, Titan's Mitt
+        - Progressive Shield -> Fighter Shield, Fire Shield, Mirror Shield
+        - Progressive Bow -> Bow, Silver Bow
+        - Progressive Mail -> Blue Mail, Red Mail
+        """
+        # Define the progressive item mappings based on ALTTP
+        # Format: { base_item: { items: [ { name, level }, ... ] } }
+        mapping_data = {
+            'Progressive Sword': {
+                'base_item': 'Progressive Sword',
+                'items': [
+                    {'name': 'Fighter Sword', 'level': 1, 'provides': ['Fighter Sword']},
+                    {'name': 'Master Sword', 'level': 2, 'provides': ['Master Sword', 'MasterSword']},
+                    {'name': 'Tempered Sword', 'level': 3, 'provides': ['Tempered Sword', 'TemperedSword']},
+                    {'name': 'Golden Sword', 'level': 4, 'provides': ['Golden Sword', 'GoldenSword']}
+                ]
+            },
+            'Progressive Glove': {
+                'base_item': 'Progressive Glove',
+                'items': [
+                    {'name': 'Power Glove', 'level': 1, 'provides': ['Power Glove', 'PowerGlove']},
+                    {'name': 'Titan\'s Mitt', 'level': 2, 'provides': ['Titan\'s Mitt', 'TitansMitt']}
+                ]
+            },
+            'Progressive Shield': {
+                'base_item': 'Progressive Shield',
+                'items': [
+                    {'name': 'Fighter Shield', 'level': 1, 'provides': ['Fighter Shield']},
+                    {'name': 'Fire Shield', 'level': 2, 'provides': ['Fire Shield']},
+                    {'name': 'Mirror Shield', 'level': 3, 'provides': ['Mirror Shield']}
+                ]
+            },
+            'Progressive Bow': {
+                'base_item': 'Progressive Bow',
+                'items': [
+                    {'name': 'Bow', 'level': 1, 'provides': ['Bow']},
+                    {'name': 'Silver Bow', 'level': 2, 'provides': ['Silver Bow', 'Silver Arrows']}
+                ]
+            },
+            'Progressive Mail': {
+                'base_item': 'Progressive Mail',
+                'items': [
+                    {'name': 'Blue Mail', 'level': 1, 'provides': ['Blue Mail', 'BlueMail']},
+                    {'name': 'Red Mail', 'level': 2, 'provides': ['Red Mail', 'RedMail']}
+                ]
+            }
+        }
+
+        # Add Progressive Bow (Alt) with same progression as Progressive Bow
+        # This handles the runtime conversion that happens in ALTTP ItemPool.py
+        mapping_data['Progressive Bow (Alt)'] = {
+            'items': [item.copy() for item in mapping_data['Progressive Bow']['items']],
+            'base_item': 'Progressive Bow (Alt)'
+        }
+
+        logger.info(f"Exported {len(mapping_data)} progressive item types for SMZ3")
+        return mapping_data
+
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """
         Override to fix Card item classifications.
