@@ -70,8 +70,20 @@ Test times out during comparison phase. Region/location mismatches persist:
 - May indicate issues with Blasphemous helper functions or access rules
 - May indicate differences between Python and JavaScript rule evaluation
 
+**Investigation Update**:
+Analysis of missing regions reveals a specific pattern:
+- ALL D02Z02 regions (Wasteland of the Buried Saints) are NOT accessible according to frontend
+- D02Z02S05[W] should be accessible and has an exit to CO01 (Child of Moonlight cherub) with `access_rule: constant=true`
+- Since D02Z02 regions aren't accessible, CO (Cherub) regions also can't be reached
+- The frontend reports "No exits found from currently accessible regions" for these areas
+
+This suggests the issue is earlier in the region graph - some parent region that should connect to D02Z02 is either:
+1. Not accessible itself
+2. Has an exit to D02Z02 with a failing access rule
+3. Missing the exit definition entirely
+
 **Next Steps**:
-1. Investigate why test times out during comparison
-2. Compare specific failing regions between Python and JavaScript
-3. Check Blasphemous helper functions for bugs
-4. Verify access rules match between exporter and frontend
+1. Trace backwards from D02Z02 to find which regions should connect to it
+2. Check why those parent regions aren't accessible or their exits are failing
+3. May be a helper function bug (e.g., `dash()` or `wallClimb()` returning incorrect values)
+4. Verify access rules for exits leading to D02Z02 regions

@@ -257,6 +257,26 @@ export class EventProcessor {
             // Get fresh snapshot after reachability update
             const snapshot = await stateManager.getFullSnapshot();
 
+            // DEBUG: Log accessible regions to understand what frontend sees
+            if (snapshot.regionReachability) {
+              const accessibleRegions = [];
+              if (snapshot.regionReachability instanceof Map) {
+                for (const [region, isAccessible] of snapshot.regionReachability) {
+                  if (isAccessible) accessibleRegions.push(region);
+                }
+              } else {
+                for (const [region, isAccessible] of Object.entries(snapshot.regionReachability)) {
+                  if (isAccessible) accessibleRegions.push(region);
+                }
+              }
+              this.logCallback('info', `First 30 accessible regions: ${accessibleRegions.slice(0, 30).join(', ')}`);
+              this.logCallback('info', `Total accessible regions: ${accessibleRegions.length}`);
+
+              // Check if specific problem regions are accessible
+              const d02z02Regions = accessibleRegions.filter(r => r.startsWith('D02Z02'));
+              this.logCallback('info', `D02Z02 regions accessible (should include D02Z02S05[W]): ${d02z02Regions.slice(0, 20).join(', ')}`);
+            }
+
             // CRITICAL: For add_sphere_items_upfront mode, do the comparison NOW,
             // before checking any locations, because the sphere log shows what's
             // accessible with just the items added upfront
