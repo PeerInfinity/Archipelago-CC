@@ -4,13 +4,13 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-20 15:26:19
+**Generated:** 2025-11-21 09:58:49
 
 ## Summary
 
 - **Total Games:** 78
-- **Passed:** 50 (64.1%)
-- **Failed:** 28 (35.9%)
+- **Passed:** 56 (71.8%)
+- **Failed:** 22 (28.2%)
 
 ## Test Results
 
@@ -43,16 +43,16 @@
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134 | 133 | ✅ | 134 | 134 | ✅ | ✅ |
 | Inscryption | ✅ Passed | 0 | ✅ | 100 | 100 | ✅ | 100 | 100 | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | ✅ | 239 | 239 | ✅ | 239 | 239 | ✅ | ✅ |
-| Kingdom Hearts | ❌ Failed | 157 | ✅ | 440 | 440 | ✅ | 440 | 440 | ✅ | ✅ |
+| Kingdom Hearts | ✅ Passed | 0 | ✅ | 440 | 440 | ✅ | 440 | 440 | ✅ | ✅ |
 | Kingdom Hearts 2 | ❌ Failed | 0 | ❌ | 701 | 643 | ❌ | 0 | 705 | ✅ | ✅ |
 | Kirby's Dream Land 3 | ❌ Failed | 0 | ❌ | 27 | 65 | ❌ | 0 | 567 | ✅ | ✅ |
-| Landstalker - The Treasures of King Nole | ❌ Failed | 49 | ✅ | 298 | 291 | ✅ | 298 | 298 | ✅ | ✅ |
+| Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298 | 291 | ✅ | 298 | 298 | ✅ | ✅ |
 | Lingo | ✅ Passed | 0 | ✅ | 156 | 155 | ✅ | 156 | 156 | ✅ | ✅ |
-| Links Awakening DX | ❌ Failed | 536 | ✅ | 226 | 220 | ✅ | 226 | 226 | ✅ | ✅ |
+| Links Awakening DX | ✅ Passed | 0 | ✅ | 226 | 220 | ✅ | 226 | 226 | ✅ | ✅ |
 | Lufia II Ancient Cave | ❌ Failed | 0 | ❌ | 11 | 35 | ❌ | 0 | 40 | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557 | 556 | ✅ | 557 | 557 | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | ✅ | 11 | 10 | ✅ | 11 | 11 | ⚫ | ⚫ |
-| Mega Man 2 | ❌ Failed | 2 | ✅ | 50 | 44 | ✅ | 50 | 50 | ✅ | ✅ |
+| Mega Man 2 | ✅ Passed | 0 | ✅ | 50 | 44 | ✅ | 50 | 50 | ✅ | ✅ |
 | MegaMan Battle Network 3 | ❌ Failed | 0 | ❌ | 263 | 263 | ❌ | 0 | 264 | ✅ | ✅ |
 | Meritous | ✅ Passed | 0 | ✅ | 109 | 104 | ✅ | 109 | 109 | ⚫ | ⚫ |
 | Metamath | ✅ Passed | 0 | ✅ | 9 | 9 | ✅ | 9 | 9 | ✅ | ⚫ |
@@ -63,12 +63,12 @@
 | Overcooked! 2 | ❌ Failed | 0 | ❌ | 9 | 43 | ❌ | 0 | 215 | ✅ | ✅ |
 | Paint | ✅ Passed | 0 | ✅ | 130 | 130 | ✅ | 130 | 130 | ✅ | ✅ |
 | Pokemon Emerald | ❌ Failed | 0 | ❌ | 359 | 203 | ❌ | 0 | 1061 | ✅ | ✅ |
-| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 212 | 161 | ❌ | 0 | 1010 | ✅ | ✅ |
+| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 209 | 161 | ❌ | 0 | 1010 | ✅ | ✅ |
 | Raft | ✅ Passed | 0 | ✅ | 155 | 154 | ✅ | 155 | 155 | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223 | 221 | ✅ | 223 | 223 | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed | 0 | ❌ | 204 | 316 | ❌ | 0 | 316 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37 | 36 | ✅ | 37 | 37 | ✅ | ⚫ |
-| Secret of Evermore | ❌ Failed | 339 | ✅ | 340 | 339 | ✅ | 340 | 340 | ✅ | ✅ |
+| Secret of Evermore | ✅ Passed | 0 | ✅ | 340 | 339 | ✅ | 340 | 340 | ✅ | ✅ |
 | Shivers | ❌ Failed | 0 | ❌ | 112 | 76 | ❌ | 0 | 114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207 | 206 | ✅ | 207 | 207 | ✅ | ⚫ |
 | Starcraft 2 | ✅ Passed | 0 | ✅ | 130 | 130 | ✅ | 130 | 130 | ✅ | ✅ |
@@ -86,7 +86,7 @@
 | The Witness | ❌ Failed | 0 | ❌ | 121 | 132 | ❌ | 0 | 147 | ✅ | ✅ |
 | Timespinner | ✅ Passed | 0 | ✅ | 185 | 180 | ✅ | 185 | 185 | ✅ | ✅ |
 | Undertale | ✅ Passed | 0 | ✅ | 51 | 48 | ✅ | 51 | 51 | ✅ | ⚫ |
-| VVVVVV | ❌ Failed | 4 | ✅ | 20 | 20 | ✅ | 20 | 20 | ✅ | ✅ |
+| VVVVVV | ✅ Passed | 0 | ✅ | 20 | 20 | ✅ | 20 | 20 | ✅ | ✅ |
 | Wargroove | ✅ Passed | 0 | ✅ | 39 | 38 | ✅ | 39 | 39 | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | 0 | ✅ | 62 | 61 | ✅ | 62 | 62 | ⚫ | ⚫ |
 | Yacht Dice | ✅ Passed | 0 | ✅ | 90 | 90 | ✅ | 90 | 90 | ✅ | ✅ |

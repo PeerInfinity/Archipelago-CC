@@ -4,19 +4,19 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-11-20 15:26:19
+**Generated:** 2025-11-21 09:58:49
 
-**Source Data Created:** 2025-11-20T03:20:27.305528
+**Source Data Created:** 2025-11-21T06:15:33.443513
 
-**Source Data Last Updated:** 2025-11-20T03:20:27.305534
+**Source Data Last Updated:** 2025-11-21T06:15:33.443520
 
 ## Summary
 
 - **Total Games:** 78
 - **Passed:** 70 (89.7%)
 - **Failed:** 8 (10.3%)
-- **Games with Intermittent Failures:** 6
-- **Total Intermittent Failures:** 24
+- **Games with Intermittent Failures:** 7
+- **Total Intermittent Failures:** 23
 
 ## Test Results
 
@@ -48,17 +48,17 @@
 | Heretic | ✅ Passed seeds 1-10 | 0 | 24.1 | 24.1 | 🟢 Complete | ⚫ | ⚫ |
 | Hylics 2 | ✅ Passed seeds 1-10 | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 9.2 | 9.2 | 🟢 Complete | ✅ | ✅ |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
-| Kingdom Hearts | ✅ Passed seeds 1-10 | 157 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed seeds 1-9 | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
+| Kingdom Hearts | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts 2 | ❌ Failed seed 1 | 0 | 13.5 | 15.1 | 🟡 89.4% | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
-| Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 49 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
+| Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Lingo | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
-| Links Awakening DX | ✅ Passed seeds 1-10 | 523 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
+| Links Awakening DX | ✅ Passed seeds 1-10 | 0 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed seeds 1-10 | 0 | 4.11 | 4.11 | 🟢 Complete | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ✅ Passed seeds 1-10 | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ⚫ | ⚫ |
-| Mega Man 2 | ✅ Passed seeds 1-10 | 2 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
+| Mega Man 2 | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Meritous | ✅ Passed seeds 1-10 | 0 | 7.2 | 7.2 | 🟢 Complete | ⚫ | ⚫ |
 | Metamath | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
@@ -74,7 +74,7 @@
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 8.3 | 8.3 | 🟢 Complete | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed seed 1 | 0 | 7.7 | 16.2 | 🟡 47.5% | ✅ | ✅ |
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ⚫ |
-| Secret of Evermore | ✅ Passed seeds 1-10 | 339 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
+| Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ⚫ |
 | Starcraft 2 | ✅ Passed seeds 1 | 0 | 32.2 | 32.2 | 🟢 Complete | ✅ | ✅ |
@@ -92,7 +92,7 @@
 | The Witness | ✅ Passed seeds 1-7 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Timespinner | ✅ Passed seeds 1-10 | 0 | 8.6 | 8.6 | 🟢 Complete | ✅ | ✅ |
 | Undertale | ✅ Passed seeds 1-10 | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ⚫ |
-| VVVVVV | ✅ Passed seeds 1-10 | 4 | 2.4 | 2.4 | 🟢 Complete | ✅ | ✅ |
+| VVVVVV | ✅ Passed seeds 1-10 | 0 | 2.4 | 2.4 | 🟢 Complete | ✅ | ✅ |
 | Wargroove | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | WebDevJourney | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ⚫ | ⚫ |
 | Yacht Dice | ✅ Passed seeds 1-10 | 0 | 21.1 | 21.1 | 🟢 Complete | ✅ | ✅ |
@@ -107,30 +107,29 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| Jak and Daxter The Precursor Legacy | 1 | 2025-11-20 03:05 | Previously failed, now passing |
-| Jak and Daxter The Precursor Legacy | 2 | 2025-11-20 03:02 | Previously failed, now passing |
-| Kirby's Dream Land 3 | 1 | 2025-11-20 03:18 | Previously failed, now passing |
-| Kirby's Dream Land 3 | 6 | 2025-11-20 03:03 | Previously failed, now passing |
-| Kirby's Dream Land 3 | 7 | 2025-11-20 03:03 | Previously failed, now passing |
-| MegaMan Battle Network 3 | 5 | 2025-11-20 03:00 | Previously failed, now passing |
-| MegaMan Battle Network 3 | 9 | 2025-11-20 03:00 | Previously failed, now passing |
-| Starcraft 2 | 2 | 2025-11-20 03:05 | Previously failed, now passing |
-| Starcraft 2 | 3 | 2025-11-20 03:01 | Previously failed, now passing |
-| Starcraft 2 | 4 | 2025-11-20 03:03 | Previously failed, now passing |
-| Starcraft 2 | 5 | 2025-11-20 03:02 | Previously failed, now passing |
-| Starcraft 2 | 6 | 2025-11-20 03:05 | Previously failed, now passing |
-| Starcraft 2 | 7 | 2025-11-20 03:05 | Previously failed, now passing |
-| Starcraft 2 | 8 | 2025-11-20 02:57 | Previously failed, now passing |
-| Starcraft 2 | 9 | 2025-11-20 03:01 | Previously failed, now passing |
-| Starcraft 2 | 10 | 2025-11-20 03:02 | Previously failed, now passing |
-| The Witness | 2 | 2025-11-20 03:06 | Previously failed, now passing |
-| The Witness | 3 | 2025-11-20 03:02 | Previously failed, now passing |
-| The Witness | 5 | 2025-11-20 03:03 | Previously failed, now passing |
-| The Witness | 6 | 2025-11-20 03:06 | Previously failed, now passing |
-| The Witness | 8 | 2025-11-20 02:58 | Previously failed, now passing |
-| The Witness | 9 | 2025-11-20 03:02 | Previously failed, now passing |
-| The Witness | 10 | 2025-11-20 03:03 | Previously failed, now passing |
-| Yu-Gi-Oh! 2006 | 8 | 2025-11-20 03:03 | Previously failed, now passing |
+| Jak and Daxter The Precursor Legacy | 3 | 2025-11-21 06:07 | Previously failed, now passing |
+| Jak and Daxter The Precursor Legacy | 10 | 2025-11-21 06:05 | Previously failed, now passing |
+| Kingdom Hearts | 7 | 2025-11-21 06:05 | Previously failed, now passing |
+| MegaMan Battle Network 3 | 5 | 2025-11-21 05:59 | Previously failed, now passing |
+| MegaMan Battle Network 3 | 9 | 2025-11-21 06:03 | Previously failed, now passing |
+| Starcraft 2 | 2 | 2025-11-21 06:06 | Previously failed, now passing |
+| Starcraft 2 | 3 | 2025-11-21 06:10 | Previously failed, now passing |
+| Starcraft 2 | 4 | 2025-11-21 06:05 | Previously failed, now passing |
+| Starcraft 2 | 5 | 2025-11-21 06:01 | Previously failed, now passing |
+| Starcraft 2 | 6 | 2025-11-21 06:09 | Previously failed, now passing |
+| Starcraft 2 | 7 | 2025-11-21 06:07 | Previously failed, now passing |
+| Starcraft 2 | 8 | 2025-11-21 06:00 | Previously failed, now passing |
+| Starcraft 2 | 9 | 2025-11-21 06:04 | Previously failed, now passing |
+| Starcraft 2 | 10 | 2025-11-21 06:08 | Previously failed, now passing |
+| Terraria | 6 | 2025-11-21 06:10 | Previously failed, now passing |
+| The Witness | 2 | 2025-11-21 06:07 | Previously failed, now passing |
+| The Witness | 3 | 2025-11-21 06:11 | Previously failed, now passing |
+| The Witness | 5 | 2025-11-21 06:02 | Previously failed, now passing |
+| The Witness | 6 | 2025-11-21 06:10 | Previously failed, now passing |
+| The Witness | 8 | 2025-11-21 06:01 | Previously failed, now passing |
+| The Witness | 9 | 2025-11-21 06:05 | Previously failed, now passing |
+| The Witness | 10 | 2025-11-21 06:09 | Previously failed, now passing |
+| Yu-Gi-Oh! 2006 | 8 | 2025-11-21 06:06 | Previously failed, now passing |
 
 
 ## Notes

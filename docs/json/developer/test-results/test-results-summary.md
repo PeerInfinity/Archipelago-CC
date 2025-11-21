@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-20 15:26:19
+**Generated:** 2025-11-21 09:58:49
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -13,22 +13,22 @@ This summary combines results from four types of tests:
 ### Individual Test Results
 
 - **Minimal Test:** 70/78 passed (89.7%)
-- **Full Test:** 70/78 passed (89.7%)
-- **Multiplayer Test:** 50/78 passed (64.1%)
+- **Full Test:** 71/78 passed (91.0%)
+- **Multiplayer Test:** 56/78 passed (71.8%)
 - **Multiworld Test:** 42/78 passed (53.8%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 6 game(s), 24 total failure(s)
-- **Full Spoilers Test:** 22 game(s), 46 total failure(s)
+- **Minimal Spoilers Test:** 7 game(s), 23 total failure(s)
+- **Full Spoilers Test:** 17 game(s), 41 total failure(s)
 
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 42/78 (53.8%)
-- **Templates passing 3 tests:** 7/78 (9.0%)
-- **Templates passing 2 tests:** 21/78 (26.9%)
-- **Templates passing 1 test:** 1/78 (1.3%)
-- **Templates passing 0 tests:** 7/78 (9.0%)
+- **Templates passing 3 tests:** 13/78 (16.7%)
+- **Templates passing 2 tests:** 15/78 (19.2%)
+- **Templates passing 1 test:** 2/78 (2.6%)
+- **Templates passing 0 tests:** 6/78 (7.7%)
 
 ## Test Results
 
@@ -61,16 +61,16 @@ This summary combines results from four types of tests:
 | Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
-| Kingdom Hearts | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
-| Kingdom Hearts 2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
+| Kingdom Hearts 2 | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
-| Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
-| Links Awakening DX | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Links Awakening DX | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
-| Mega Man 2 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Mega Man 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Meritous | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Metamath | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
@@ -86,7 +86,7 @@ This summary combines results from four types of tests:
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
-| Secret of Evermore | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Shivers | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
@@ -104,7 +104,7 @@ This summary combines results from four types of tests:
 | The Witness | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ⚫ |
-| VVVVVV | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ Skipped | ✅ | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | WebDevJourney | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | Yacht Dice | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
@@ -119,7 +119,7 @@ These tests check multiple template configurations for the same game.
 
 | Game Name | Minimal Link (Templates Passed) | Full Link (Templates Passed) |
 |-----------|----------------------------------|-------------------------------|
-| A Link to the Past | [136/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [121/174 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
+| A Link to the Past | [136/174 passed](./test-results-multitemplate-minimal.md#a-link-to-the-past) | [132/174 passed](./test-results-multitemplate-full.md#a-link-to-the-past) |
 
 ## Excluded Games
 

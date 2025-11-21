@@ -2,8 +2,8 @@
   "metadata": {
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
-    "created": "2025-11-20T04:59:46.172071",
-    "last_updated": "2025-11-20T04:59:46.172076",
+    "created": "2025-11-21T07:49:33.699805",
+    "last_updated": "2025-11-21T07:49:33.699810",
     "script_version": "1.0.0"
   },
   "results": {
@@ -13,7 +13,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.5,
+        "processing_time_seconds": 3.59,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -27,21 +27,21 @@
         "client2_total_locations": 232,
         "error_count": 0,
         "locations_checked": 232,
-        "processing_time_seconds": 18.12,
+        "processing_time_seconds": 18.31,
         "return_code": 0,
         "success": true,
         "total_locations": 232,
-        "warning_count": 928
+        "warning_count": 1049
       },
       "rules_file": {
         "path": "frontend/presets/ahit/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 210258,
+        "size_bytes": 210293,
         "size_mb": 0.2
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Hat in Time.yaml",
-      "timestamp": "2025-11-20T04:46:39.655193",
+      "timestamp": "2025-11-21T07:35:59.922141",
       "world_info": {
         "exporter_path": "exporter/games/ahit.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/ahit/ahitLogic.js",
@@ -58,7 +58,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 8.44,
+        "processing_time_seconds": 8.45,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -72,7 +72,7 @@
         "client2_total_locations": 268,
         "error_count": 0,
         "locations_checked": 268,
-        "processing_time_seconds": 23.74,
+        "processing_time_seconds": 23.59,
         "return_code": 0,
         "success": true,
         "total_locations": 268,
@@ -86,7 +86,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-11-20T04:46:46.837723",
+      "timestamp": "2025-11-21T07:36:09.308417",
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
@@ -103,7 +103,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.89,
+        "processing_time_seconds": 2.62,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -117,21 +117,21 @@
         "client2_total_locations": 131,
         "error_count": 0,
         "locations_checked": 131,
-        "processing_time_seconds": 15.53,
+        "processing_time_seconds": 15.6,
         "return_code": 0,
         "success": true,
         "total_locations": 131,
-        "warning_count": 493
+        "warning_count": 503
       },
       "rules_file": {
         "path": "frontend/presets/shorthike/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 67099,
+        "size_bytes": 67134,
         "size_mb": 0.06
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Short Hike.yaml",
-      "timestamp": "2025-11-20T04:46:52.927280",
+      "timestamp": "2025-11-21T07:36:21.193385",
       "world_info": {
         "exporter_path": "exporter/games/shorthike.py",
         "game_logic_path": null,
@@ -148,7 +148,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.68,
+        "processing_time_seconds": 2.48,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -162,7 +162,7 @@
         "client2_total_locations": 25,
         "error_count": 0,
         "locations_checked": 25,
-        "processing_time_seconds": 13.45,
+        "processing_time_seconds": 12.8,
         "return_code": 0,
         "success": true,
         "total_locations": 25,
@@ -170,13 +170,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 21629,
+        "size_bytes": 21664,
         "size_mb": 0.02
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Adventure.yaml",
-      "timestamp": "2025-11-20T04:46:47.170274",
+      "timestamp": "2025-11-21T07:36:02.379039",
       "world_info": {
         "exporter_path": "exporter/games/adventure.py",
         "game_logic_path": null,
@@ -193,7 +193,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.99,
+        "processing_time_seconds": 6.25,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -207,21 +207,21 @@
         "client2_total_locations": 237,
         "error_count": 0,
         "locations_checked": 237,
-        "processing_time_seconds": 18.23,
+        "processing_time_seconds": 16.88,
         "return_code": 0,
         "success": true,
         "total_locations": 237,
-        "warning_count": 1039
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/aquaria/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 279799,
+        "size_bytes": 279834,
         "size_mb": 0.27
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Aquaria.yaml",
-      "timestamp": "2025-11-20T04:46:57.950378",
+      "timestamp": "2025-11-21T07:36:04.517982",
       "world_info": {
         "exporter_path": "exporter/games/aquaria.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/aquaria/aquariaLogic.js",
@@ -238,7 +238,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.54,
+        "processing_time_seconds": 2.64,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -252,7 +252,7 @@
         "client2_total_locations": 200,
         "error_count": 0,
         "locations_checked": 200,
-        "processing_time_seconds": 21.91,
+        "processing_time_seconds": 22.4,
         "return_code": 0,
         "success": true,
         "total_locations": 200,
@@ -260,13 +260,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/archipidle/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 175396,
+        "size_bytes": 175431,
         "size_mb": 0.17
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "ArchipIDLE.yaml",
-      "timestamp": "2025-11-20T04:46:50.426102",
+      "timestamp": "2025-11-21T07:36:20.087423",
       "world_info": {
         "exporter_path": "exporter/games/archipidle.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/archipidle/archipidleLogic.js",
@@ -283,7 +283,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 38.91,
+        "processing_time_seconds": 39.25,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -297,7 +297,7 @@
         "client2_total_locations": 305,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 79.66,
+        "processing_time_seconds": 80.24,
         "return_code": 1,
         "success": false,
         "total_locations": 305,
@@ -311,7 +311,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Blasphemous.yaml",
-      "timestamp": "2025-11-20T04:46:48.316905",
+      "timestamp": "2025-11-21T07:36:28.052346",
       "world_info": {
         "exporter_path": "exporter/games/blasphemous.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
@@ -328,7 +328,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.76,
+        "processing_time_seconds": 4.98,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -340,23 +340,23 @@
         "client2_locations_received": 0,
         "client2_passed": false,
         "client2_total_locations": 252,
-        "error_count": 64,
+        "error_count": 46,
         "locations_checked": 0,
-        "processing_time_seconds": 127.54,
+        "processing_time_seconds": 132.18,
         "return_code": 1,
         "success": false,
         "total_locations": 252,
-        "warning_count": 956
+        "warning_count": 621
       },
       "rules_file": {
         "path": "frontend/presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 228693,
+        "size_bytes": 228728,
         "size_mb": 0.22
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Bomb Rush Cyberfunk.yaml",
-      "timestamp": "2025-11-20T04:46:43.149589",
+      "timestamp": "2025-11-21T07:36:19.390099",
       "world_info": {
         "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
         "game_logic_path": null,
@@ -373,7 +373,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.53,
+        "processing_time_seconds": 2.46,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -387,7 +387,7 @@
         "client2_total_locations": 100,
         "error_count": 0,
         "locations_checked": 100,
-        "processing_time_seconds": 14.56,
+        "processing_time_seconds": 15.73,
         "return_code": 0,
         "success": true,
         "total_locations": 100,
@@ -395,13 +395,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/bumpstik/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 49064,
+        "size_bytes": 49099,
         "size_mb": 0.05
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Bumper Stickers.yaml",
-      "timestamp": "2025-11-20T04:46:43.677847",
+      "timestamp": "2025-11-21T07:36:12.412229",
       "world_info": {
         "exporter_path": "exporter/games/bumpstik.py",
         "game_logic_path": null,
@@ -418,7 +418,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.58,
+        "processing_time_seconds": 2.53,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -432,21 +432,21 @@
         "client2_total_locations": 125,
         "error_count": 0,
         "locations_checked": 125,
-        "processing_time_seconds": 15.57,
+        "processing_time_seconds": 14.56,
         "return_code": 0,
         "success": true,
         "total_locations": 125,
-        "warning_count": 162
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/cvcotm/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 87428,
+        "size_bytes": 87463,
         "size_mb": 0.08
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Castlevania - Circle of the Moon.yaml",
-      "timestamp": "2025-11-20T04:46:49.642316",
+      "timestamp": "2025-11-21T07:36:02.246166",
       "world_info": {
         "exporter_path": "exporter/games/cvcotm.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js",
@@ -463,7 +463,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.37,
+        "processing_time_seconds": 2.49,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -477,21 +477,21 @@
         "client2_total_locations": 215,
         "error_count": 0,
         "locations_checked": 215,
-        "processing_time_seconds": 21.48,
+        "processing_time_seconds": 22.12,
         "return_code": 0,
         "success": true,
         "total_locations": 215,
-        "warning_count": 1158
+        "warning_count": 1108
       },
       "rules_file": {
         "path": "frontend/presets/cv64/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 128519,
+        "size_bytes": 128554,
         "size_mb": 0.12
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Castlevania 64.yaml",
-      "timestamp": "2025-11-20T04:47:01.433170",
+      "timestamp": "2025-11-21T07:36:21.971941",
       "world_info": {
         "exporter_path": "exporter/games/cv64.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/cv64/cv64Logic.js",
@@ -508,7 +508,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.47,
+        "processing_time_seconds": 2.46,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -522,7 +522,7 @@
         "client2_total_locations": 40,
         "error_count": 0,
         "locations_checked": 40,
-        "processing_time_seconds": 12.54,
+        "processing_time_seconds": 12.53,
         "return_code": 0,
         "success": true,
         "total_locations": 40,
@@ -530,13 +530,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/celeste64/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 67623,
+        "size_bytes": 67658,
         "size_mb": 0.06
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Celeste 64.yaml",
-      "timestamp": "2025-11-20T04:47:19.156373",
+      "timestamp": "2025-11-21T07:36:41.489800",
       "world_info": {
         "exporter_path": "exporter/games/celeste64.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js",
@@ -553,7 +553,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.63,
+        "processing_time_seconds": 2.37,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -567,7 +567,7 @@
         "client2_total_locations": 25,
         "error_count": 0,
         "locations_checked": 25,
-        "processing_time_seconds": 12.68,
+        "processing_time_seconds": 12.52,
         "return_code": 0,
         "success": true,
         "total_locations": 25,
@@ -575,13 +575,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/checksfinder/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 18566,
+        "size_bytes": 18601,
         "size_mb": 0.02
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "ChecksFinder.yaml",
-      "timestamp": "2025-11-20T04:47:11.490209",
+      "timestamp": "2025-11-21T07:36:39.543351",
       "world_info": {
         "exporter_path": "exporter/games/checksfinder.py",
         "game_logic_path": null,
@@ -598,7 +598,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.45,
+        "processing_time_seconds": 2.29,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -612,7 +612,7 @@
         "client2_total_locations": 16,
         "error_count": 0,
         "locations_checked": 16,
-        "processing_time_seconds": 12.6,
+        "processing_time_seconds": 12.48,
         "return_code": 0,
         "success": true,
         "total_locations": 16,
@@ -620,13 +620,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/bakingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 17047,
+        "size_bytes": 17082,
         "size_mb": 0.02
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "ChocolateChipCookies.yaml",
-      "timestamp": "2025-11-20T04:47:03.440037",
+      "timestamp": "2025-11-21T07:36:17.780409",
       "world_info": {
         "exporter_path": "exporter/games/bakingadventure.py",
         "game_logic_path": null,
@@ -643,7 +643,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.48,
+        "processing_time_seconds": 2.64,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -657,7 +657,7 @@
         "client2_total_locations": 149,
         "error_count": 0,
         "locations_checked": 149,
-        "processing_time_seconds": 14.59,
+        "processing_time_seconds": 14.69,
         "return_code": 0,
         "success": true,
         "total_locations": 149,
@@ -665,13 +665,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/civ_6/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 126359,
+        "size_bytes": 126394,
         "size_mb": 0.12
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Civilization VI.yaml",
-      "timestamp": "2025-11-20T04:47:22.316510",
+      "timestamp": "2025-11-21T07:36:27.785085",
       "world_info": {
         "exporter_path": "exporter/games/civ_6.py",
         "game_logic_path": null,
@@ -688,7 +688,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.57,
+        "processing_time_seconds": 2.64,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -702,7 +702,7 @@
         "client2_total_locations": 42,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 57.88,
+        "processing_time_seconds": 58.01,
         "return_code": 1,
         "success": false,
         "total_locations": 42,
@@ -710,13 +710,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/dlcquest/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 54260,
+        "size_bytes": 54295,
         "size_mb": 0.05
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "DLCQuest.yaml",
-      "timestamp": "2025-11-20T04:47:15.019668",
+      "timestamp": "2025-11-21T07:36:45.277395",
       "world_info": {
         "exporter_path": "exporter/games/dlcquest.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js",
@@ -733,7 +733,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.58,
+        "processing_time_seconds": 2.64,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -747,7 +747,7 @@
         "client2_total_locations": 348,
         "error_count": 0,
         "locations_checked": 348,
-        "processing_time_seconds": 21.77,
+        "processing_time_seconds": 21.67,
         "return_code": 0,
         "success": true,
         "total_locations": 348,
@@ -755,13 +755,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/doom_1993/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 311726,
+        "size_bytes": 311761,
         "size_mb": 0.3
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "DOOM 1993.yaml",
-      "timestamp": "2025-11-20T04:48:47.034102",
+      "timestamp": "2025-11-21T07:38:27.692617",
       "world_info": {
         "exporter_path": "exporter/games/doom_1993.py",
         "game_logic_path": null,
@@ -778,7 +778,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.62,
+        "processing_time_seconds": 2.8,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -792,7 +792,7 @@
         "client2_total_locations": 453,
         "error_count": 0,
         "locations_checked": 453,
-        "processing_time_seconds": 22.68,
+        "processing_time_seconds": 23.97,
         "return_code": 0,
         "success": true,
         "total_locations": 453,
@@ -800,13 +800,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/doom_ii/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 374263,
+        "size_bytes": 374298,
         "size_mb": 0.36
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "DOOM II.yaml",
-      "timestamp": "2025-11-20T04:48:55.884140",
+      "timestamp": "2025-11-21T07:38:37.027229",
       "world_info": {
         "exporter_path": "exporter/games/doom_ii.py",
         "game_logic_path": null,
@@ -823,7 +823,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.27,
+        "processing_time_seconds": 4.2,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -837,7 +837,7 @@
         "client2_total_locations": 100,
         "error_count": 0,
         "locations_checked": 100,
-        "processing_time_seconds": 180.02,
+        "processing_time_seconds": 180.03,
         "return_code": -1,
         "success": true,
         "total_locations": 100,
@@ -845,13 +845,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/dark_souls_3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 947753,
+        "size_bytes": 947788,
         "size_mb": 0.9
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Dark Souls III.yaml",
-      "timestamp": "2025-11-20T04:47:00.908514",
+      "timestamp": "2025-11-21T07:36:30.750326",
       "world_info": {
         "exporter_path": "exporter/games/dark_souls_3.py",
         "game_logic_path": null,
@@ -868,7 +868,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.55,
+        "processing_time_seconds": 2.4,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -882,21 +882,21 @@
         "client2_total_locations": 180,
         "error_count": 0,
         "locations_checked": 180,
-        "processing_time_seconds": 14.69,
+        "processing_time_seconds": 14.53,
         "return_code": 0,
         "success": true,
         "total_locations": 180,
-        "warning_count": 656
+        "warning_count": 373
       },
       "rules_file": {
         "path": "frontend/presets/dkc3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 100012,
+        "size_bytes": 100047,
         "size_mb": 0.1
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Donkey Kong Country 3.yaml",
-      "timestamp": "2025-11-20T04:47:07.938947",
+      "timestamp": "2025-11-21T07:36:19.486330",
       "world_info": {
         "exporter_path": "exporter/games/dkc3.py",
         "game_logic_path": null,
@@ -913,7 +913,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.85,
+        "processing_time_seconds": 2.9,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -927,7 +927,7 @@
         "client2_total_locations": 186,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 64.08,
+        "processing_time_seconds": 64.17,
         "return_code": 1,
         "success": false,
         "total_locations": 186,
@@ -935,13 +935,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/factorio/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 297066,
+        "size_bytes": 297101,
         "size_mb": 0.28
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Factorio.yaml",
-      "timestamp": "2025-11-20T04:47:25.456531",
+      "timestamp": "2025-11-21T07:36:46.773121",
       "world_info": {
         "exporter_path": "exporter/games/factorio.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/factorio/factorioLogic.js",
@@ -958,7 +958,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.45,
+        "processing_time_seconds": 2.46,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -972,21 +972,21 @@
         "client2_total_locations": 114,
         "error_count": 0,
         "locations_checked": 114,
-        "processing_time_seconds": 13.48,
+        "processing_time_seconds": 13.49,
         "return_code": 0,
         "success": true,
         "total_locations": 114,
-        "warning_count": 0
+        "warning_count": 16
       },
       "rules_file": {
         "path": "frontend/presets/faxanadu/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 68297,
+        "size_bytes": 68332,
         "size_mb": 0.07
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Faxanadu.yaml",
-      "timestamp": "2025-11-20T04:47:34.306637",
+      "timestamp": "2025-11-21T07:36:56.621299",
       "world_info": {
         "exporter_path": "exporter/games/faxanadu.py",
         "game_logic_path": null,
@@ -1003,7 +1003,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.47,
+        "processing_time_seconds": 3.12,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1017,7 +1017,7 @@
         "client2_total_locations": 299,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 66.23,
+        "processing_time_seconds": 63.92,
         "return_code": 1,
         "success": false,
         "total_locations": 299,
@@ -1025,13 +1025,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/ffmq/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 434008,
+        "size_bytes": 434043,
         "size_mb": 0.41
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Final Fantasy Mystic Quest.yaml",
-      "timestamp": "2025-11-20T04:47:26.950181",
+      "timestamp": "2025-11-21T07:36:54.575738",
       "world_info": {
         "exporter_path": "exporter/games/ffmq.py",
         "game_logic_path": null,
@@ -1048,7 +1048,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.77,
+        "processing_time_seconds": 2.61,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1062,7 +1062,7 @@
         "client2_total_locations": 502,
         "error_count": 0,
         "locations_checked": 502,
-        "processing_time_seconds": 35.41,
+        "processing_time_seconds": 35.72,
         "return_code": 0,
         "success": true,
         "total_locations": 502,
@@ -1070,13 +1070,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/heretic/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 407533,
+        "size_bytes": 407568,
         "size_mb": 0.39
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Heretic.yaml",
-      "timestamp": "2025-11-20T04:47:18.636313",
+      "timestamp": "2025-11-21T07:36:32.685678",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -1093,7 +1093,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.25,
+        "processing_time_seconds": 3.37,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1107,7 +1107,7 @@
         "client2_total_locations": 134,
         "error_count": 0,
         "locations_checked": 134,
-        "processing_time_seconds": 13.57,
+        "processing_time_seconds": 13.65,
         "return_code": 0,
         "success": true,
         "total_locations": 134,
@@ -1115,13 +1115,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/hylics2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 102858,
+        "size_bytes": 102893,
         "size_mb": 0.1
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Hylics 2.yaml",
-      "timestamp": "2025-11-20T04:47:39.522545",
+      "timestamp": "2025-11-21T07:36:45.264579",
       "world_info": {
         "exporter_path": "exporter/games/hylics2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/hylics2/hylics2Logic.js",
@@ -1138,7 +1138,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.42,
+        "processing_time_seconds": 2.47,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1152,7 +1152,7 @@
         "client2_total_locations": 100,
         "error_count": 0,
         "locations_checked": 100,
-        "processing_time_seconds": 13.54,
+        "processing_time_seconds": 12.57,
         "return_code": 0,
         "success": true,
         "total_locations": 100,
@@ -1160,13 +1160,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/inscryption/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 81716,
+        "size_bytes": 81751,
         "size_mb": 0.08
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Inscryption.yaml",
-      "timestamp": "2025-11-20T04:48:15.602432",
+      "timestamp": "2025-11-21T07:37:46.062611",
       "world_info": {
         "exporter_path": "exporter/games/inscryption.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js",
@@ -1183,7 +1183,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.02,
+        "processing_time_seconds": 3.01,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1197,21 +1197,21 @@
         "client2_total_locations": 239,
         "error_count": 0,
         "locations_checked": 239,
-        "processing_time_seconds": 16.8,
+        "processing_time_seconds": 16.4,
         "return_code": 0,
         "success": true,
         "total_locations": 239,
-        "warning_count": 969
+        "warning_count": 958
       },
       "rules_file": {
         "path": "frontend/presets/jakanddaxter/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 288559,
+        "size_bytes": 288594,
         "size_mb": 0.28
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Jak and Daxter The Precursor Legacy.yaml",
-      "timestamp": "2025-11-20T04:49:11.522627",
+      "timestamp": "2025-11-21T07:38:52.161308",
       "world_info": {
         "exporter_path": "exporter/games/jakanddaxter.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
@@ -1228,7 +1228,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.6,
+        "processing_time_seconds": 3.91,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1242,7 +1242,7 @@
         "client2_total_locations": 705,
         "error_count": 2,
         "locations_checked": 0,
-        "processing_time_seconds": 180.04,
+        "processing_time_seconds": 180.05,
         "return_code": -1,
         "success": false,
         "total_locations": 705,
@@ -1250,13 +1250,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 444297,
+        "size_bytes": 444332,
         "size_mb": 0.42
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-11-20T04:49:21.327786",
+      "timestamp": "2025-11-21T07:39:03.948279",
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
@@ -1271,9 +1271,9 @@
       "game_name_from_filename": "kh1",
       "game_name_from_yaml": "Kingdom Hearts",
       "generation": {
-        "error_count": 157,
+        "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.78,
+        "processing_time_seconds": 5.79,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1287,7 +1287,7 @@
         "client2_total_locations": 440,
         "error_count": 0,
         "locations_checked": 440,
-        "processing_time_seconds": 47.16,
+        "processing_time_seconds": 45.89,
         "return_code": 0,
         "success": true,
         "total_locations": 440,
@@ -1295,13 +1295,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/kh1/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 566094,
+        "size_bytes": 566128,
         "size_mb": 0.54
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Kingdom Hearts.yaml",
-      "timestamp": "2025-11-20T04:50:05.433324",
+      "timestamp": "2025-11-21T07:39:35.146135",
       "world_info": {
         "exporter_path": "exporter/games/kh1.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
@@ -1318,7 +1318,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.64,
+        "processing_time_seconds": 3.51,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1332,7 +1332,7 @@
         "client2_total_locations": 567,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 64.08,
+        "processing_time_seconds": 63.7,
         "return_code": 1,
         "success": false,
         "total_locations": 567,
@@ -1340,13 +1340,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/kdl3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 533115,
+        "size_bytes": 533150,
         "size_mb": 0.51
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Kirby's Dream Land 3.yaml",
-      "timestamp": "2025-11-20T04:47:25.321185",
+      "timestamp": "2025-11-21T07:36:36.552067",
       "world_info": {
         "exporter_path": "exporter/games/kdl3.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
@@ -1361,9 +1361,9 @@
       "game_name_from_filename": "landstalker",
       "game_name_from_yaml": "Landstalker - The Treasures of King Nole",
       "generation": {
-        "error_count": 49,
+        "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.52,
+        "processing_time_seconds": 2.55,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1377,21 +1377,21 @@
         "client2_total_locations": 298,
         "error_count": 0,
         "locations_checked": 298,
-        "processing_time_seconds": 16.58,
+        "processing_time_seconds": 17.62,
         "return_code": 0,
         "success": true,
         "total_locations": 298,
-        "warning_count": 383
+        "warning_count": 473
       },
       "rules_file": {
         "path": "frontend/presets/landstalker/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 190793,
+        "size_bytes": 190827,
         "size_mb": 0.18
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Landstalker - The Treasures of King Nole.yaml",
-      "timestamp": "2025-11-20T04:48:32.530073",
+      "timestamp": "2025-11-21T07:37:53.992495",
       "world_info": {
         "exporter_path": "exporter/games/landstalker.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js",
@@ -1408,7 +1408,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.16,
+        "processing_time_seconds": 3.15,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1422,7 +1422,7 @@
         "client2_total_locations": 156,
         "error_count": 0,
         "locations_checked": 156,
-        "processing_time_seconds": 19.77,
+        "processing_time_seconds": 20.84,
         "return_code": 0,
         "success": true,
         "total_locations": 156,
@@ -1430,13 +1430,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/lingo/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 742296,
+        "size_bytes": 742331,
         "size_mb": 0.71
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Lingo.yaml",
-      "timestamp": "2025-11-20T04:47:50.369504",
+      "timestamp": "2025-11-21T07:37:12.705426",
       "world_info": {
         "exporter_path": "exporter/games/lingo.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
@@ -1451,9 +1451,9 @@
       "game_name_from_filename": "links_awakening_dx",
       "game_name_from_yaml": "Links Awakening DX",
       "generation": {
-        "error_count": 536,
+        "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 7.08,
+        "processing_time_seconds": 6.63,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1467,21 +1467,21 @@
         "client2_total_locations": 226,
         "error_count": 0,
         "locations_checked": 226,
-        "processing_time_seconds": 19.55,
+        "processing_time_seconds": 16.98,
         "return_code": 0,
         "success": true,
         "total_locations": 226,
-        "warning_count": 139
+        "warning_count": 97
       },
       "rules_file": {
         "path": "frontend/presets/ladx/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 662330,
+        "size_bytes": 662364,
         "size_mb": 0.63
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Links Awakening DX.yaml",
-      "timestamp": "2025-11-20T04:48:36.794494",
+      "timestamp": "2025-11-21T07:38:01.769240",
       "world_info": {
         "exporter_path": "exporter/games/ladx.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
@@ -1498,7 +1498,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.57,
+        "processing_time_seconds": 2.34,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -1512,7 +1512,7 @@
         "client2_total_locations": 40,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 62.9,
+        "processing_time_seconds": 62.61,
         "return_code": 1,
         "success": false,
         "total_locations": 40,
@@ -1520,13 +1520,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/lufia2ac/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 141949,
+        "size_bytes": 141984,
         "size_mb": 0.14
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Lufia II Ancient Cave.yaml",
-      "timestamp": "2025-11-20T04:47:56.973954",
+      "timestamp": "2025-11-21T07:37:11.159325",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -1543,7 +1543,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.0,
+        "processing_time_seconds": 3.13,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1555,23 +1555,23 @@
         "client2_locations_received": 557,
         "client2_passed": true,
         "client2_total_locations": 557,
-        "error_count": 66,
+        "error_count": 64,
         "locations_checked": 557,
-        "processing_time_seconds": 33.98,
+        "processing_time_seconds": 33.69,
         "return_code": 0,
         "success": true,
         "total_locations": 557,
-        "warning_count": 3932
+        "warning_count": 3928
       },
       "rules_file": {
         "path": "frontend/presets/mlss/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 365493,
+        "size_bytes": 365528,
         "size_mb": 0.35
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Mario & Luigi Superstar Saga.yaml",
-      "timestamp": "2025-11-20T04:47:56.484858",
+      "timestamp": "2025-11-21T07:37:02.422919",
       "world_info": {
         "exporter_path": "exporter/games/mlss.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
@@ -1588,7 +1588,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.3,
+        "processing_time_seconds": 2.38,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1602,7 +1602,7 @@
         "client2_total_locations": 11,
         "error_count": 0,
         "locations_checked": 11,
-        "processing_time_seconds": 12.41,
+        "processing_time_seconds": 12.42,
         "return_code": 0,
         "success": true,
         "total_locations": 11,
@@ -1610,13 +1610,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/mathadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 11621,
+        "size_bytes": 11656,
         "size_mb": 0.01
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "MathProof2p2e4.yaml",
-      "timestamp": "2025-11-20T04:48:31.692444",
+      "timestamp": "2025-11-21T07:38:01.234090",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -1631,9 +1631,9 @@
       "game_name_from_filename": "mm2",
       "game_name_from_yaml": "Mega Man 2",
       "generation": {
-        "error_count": 2,
+        "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.41,
+        "processing_time_seconds": 2.5,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1647,7 +1647,7 @@
         "client2_total_locations": 50,
         "error_count": 0,
         "locations_checked": 50,
-        "processing_time_seconds": 12.47,
+        "processing_time_seconds": 12.55,
         "return_code": 0,
         "success": true,
         "total_locations": 50,
@@ -1655,13 +1655,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/mm2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 42045,
+        "size_bytes": 42079,
         "size_mb": 0.04
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Mega Man 2.yaml",
-      "timestamp": "2025-11-20T04:49:31.478555",
+      "timestamp": "2025-11-21T07:39:11.718739",
       "world_info": {
         "exporter_path": "exporter/games/mm2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/mm2/mm2Logic.js",
@@ -1678,7 +1678,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.63,
+        "processing_time_seconds": 2.75,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -1692,7 +1692,7 @@
         "client2_total_locations": 264,
         "error_count": 15,
         "locations_checked": 0,
-        "processing_time_seconds": 92.39,
+        "processing_time_seconds": 92.84,
         "return_code": 1,
         "success": false,
         "total_locations": 264,
@@ -1700,13 +1700,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/mmbn3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 220085,
+        "size_bytes": 220120,
         "size_mb": 0.21
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "MegaMan Battle Network 3.yaml",
-      "timestamp": "2025-11-20T04:52:25.151413",
+      "timestamp": "2025-11-21T07:42:08.096216",
       "world_info": {
         "exporter_path": "exporter/games/mmbn3.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/mmbn3/mmbn3Logic.js",
@@ -1723,7 +1723,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.31,
+        "processing_time_seconds": 2.28,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1737,7 +1737,7 @@
         "client2_total_locations": 109,
         "error_count": 0,
         "locations_checked": 109,
-        "processing_time_seconds": 13.48,
+        "processing_time_seconds": 13.46,
         "return_code": 0,
         "success": true,
         "total_locations": 109,
@@ -1745,13 +1745,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/meritous/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 55611,
+        "size_bytes": 55646,
         "size_mb": 0.05
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Meritous.yaml",
-      "timestamp": "2025-11-20T04:50:58.509432",
+      "timestamp": "2025-11-21T07:40:26.974274",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -1768,7 +1768,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 9.61,
+        "processing_time_seconds": 9.07,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1782,7 +1782,7 @@
         "client2_total_locations": 9,
         "error_count": 0,
         "locations_checked": 9,
-        "processing_time_seconds": 12.55,
+        "processing_time_seconds": 12.42,
         "return_code": 0,
         "success": true,
         "total_locations": 9,
@@ -1790,13 +1790,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/metamath/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 58746,
+        "size_bytes": 58781,
         "size_mb": 0.06
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Metamath.yaml",
-      "timestamp": "2025-11-20T04:48:33.177061",
+      "timestamp": "2025-11-21T07:37:43.979287",
       "world_info": {
         "exporter_path": "exporter/games/metamath.py",
         "game_logic_path": null,
@@ -1813,7 +1813,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.47,
+        "processing_time_seconds": 2.49,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1827,21 +1827,21 @@
         "client2_total_locations": 90,
         "error_count": 0,
         "locations_checked": 90,
-        "processing_time_seconds": 30.07,
+        "processing_time_seconds": 30.21,
         "return_code": 0,
         "success": true,
         "total_locations": 90,
-        "warning_count": 24
+        "warning_count": 25
       },
       "rules_file": {
         "path": "frontend/presets/musedash/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 247533,
+        "size_bytes": 247568,
         "size_mb": 0.24
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Muse Dash.yaml",
-      "timestamp": "2025-11-20T04:48:51.771945",
+      "timestamp": "2025-11-21T07:38:14.300415",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -1858,7 +1858,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.32,
+        "processing_time_seconds": 2.4,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1872,21 +1872,21 @@
         "client2_total_locations": 117,
         "error_count": 0,
         "locations_checked": 117,
-        "processing_time_seconds": 13.49,
+        "processing_time_seconds": 13.48,
         "return_code": 0,
         "success": true,
         "total_locations": 117,
-        "warning_count": 119
+        "warning_count": 18
       },
       "rules_file": {
         "path": "frontend/presets/noita/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 74075,
+        "size_bytes": 74110,
         "size_mb": 0.07
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Noita.yaml",
-      "timestamp": "2025-11-20T04:48:13.449636",
+      "timestamp": "2025-11-21T07:37:36.847895",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -1903,7 +1903,7 @@
       "generation": {
         "error_count": 3,
         "error_type": "FillError",
-        "processing_time_seconds": 4.73,
+        "processing_time_seconds": 4.28,
         "return_code": 1,
         "success": false,
         "warning_count": 2
@@ -1926,7 +1926,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Ocarina of Time.yaml",
-      "timestamp": "2025-11-20T04:49:03.648473",
+      "timestamp": "2025-11-21T07:38:25.608606",
       "world_info": {
         "exporter_path": "exporter/games/oot.py",
         "game_logic_path": null,
@@ -1943,7 +1943,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.95,
+        "processing_time_seconds": 3.7,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1957,7 +1957,7 @@
         "client2_total_locations": 76,
         "error_count": 222,
         "locations_checked": 76,
-        "processing_time_seconds": 13.89,
+        "processing_time_seconds": 13.74,
         "return_code": 0,
         "success": true,
         "total_locations": 76,
@@ -1965,13 +1965,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/osrs/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 373049,
+        "size_bytes": 373084,
         "size_mb": 0.36
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Old School Runescape.yaml",
-      "timestamp": "2025-11-20T04:49:02.597943",
+      "timestamp": "2025-11-21T07:38:16.257669",
       "world_info": {
         "exporter_path": "exporter/games/osrs.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/osrs/osrsLogic.js",
@@ -1988,7 +1988,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.51,
+        "processing_time_seconds": 2.65,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2002,7 +2002,7 @@
         "client2_total_locations": 215,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 62.97,
+        "processing_time_seconds": 63.01,
         "return_code": 1,
         "success": false,
         "total_locations": 215,
@@ -2010,13 +2010,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/overcooked2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 256088,
+        "size_bytes": 256123,
         "size_mb": 0.24
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Overcooked! 2.yaml",
-      "timestamp": "2025-11-20T04:48:33.612686",
+      "timestamp": "2025-11-21T07:37:39.396798",
       "world_info": {
         "exporter_path": "exporter/games/overcooked2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/overcooked2/overcooked2Logic.js",
@@ -2033,7 +2033,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.24,
+        "processing_time_seconds": 2.26,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2047,21 +2047,21 @@
         "client2_total_locations": 130,
         "error_count": 0,
         "locations_checked": 130,
-        "processing_time_seconds": 14.59,
+        "processing_time_seconds": 14.65,
         "return_code": 0,
         "success": true,
         "total_locations": 130,
-        "warning_count": 224
+        "warning_count": 163
       },
       "rules_file": {
         "path": "frontend/presets/paint/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 91832,
+        "size_bytes": 91867,
         "size_mb": 0.09
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Paint.yaml",
-      "timestamp": "2025-11-20T04:48:46.527818",
+      "timestamp": "2025-11-21T07:38:16.171142",
       "world_info": {
         "exporter_path": "exporter/games/paint.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/paint/paintLogic.js",
@@ -2078,7 +2078,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.22,
+        "processing_time_seconds": 4.34,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2092,7 +2092,7 @@
         "client2_total_locations": 1061,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 140.79,
+        "processing_time_seconds": 140.99,
         "return_code": 1,
         "success": false,
         "total_locations": 1061,
@@ -2100,13 +2100,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/pokemon_emerald/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 1388390,
+        "size_bytes": 1388425,
         "size_mb": 1.32
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Pokemon Emerald.yaml",
-      "timestamp": "2025-11-20T04:49:46.526202",
+      "timestamp": "2025-11-21T07:39:26.924579",
       "world_info": {
         "exporter_path": "exporter/games/pokemon_emerald.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js",
@@ -2123,35 +2123,35 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 13.3,
+        "processing_time_seconds": 13.82,
         "return_code": 0,
         "success": true,
         "warning_count": 0
       },
       "multiplayer_test": {
-        "client1_locations_checked": 212,
+        "client1_locations_checked": 209,
         "client1_manually_checkable": 161,
         "client1_passed": false,
         "client2_locations_received": 0,
         "client2_passed": false,
         "client2_total_locations": 1010,
-        "error_count": 301,
+        "error_count": 314,
         "locations_checked": 0,
-        "processing_time_seconds": 142.27,
+        "processing_time_seconds": 144.79,
         "return_code": 1,
         "success": false,
         "total_locations": 1010,
-        "warning_count": 1207
+        "warning_count": 1253
       },
       "rules_file": {
         "path": "frontend/presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 1063265,
+        "size_bytes": 1063300,
         "size_mb": 1.01
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Pokemon Red and Blue.yaml",
-      "timestamp": "2025-11-20T04:54:00.343322",
+      "timestamp": "2025-11-21T07:43:43.855042",
       "world_info": {
         "exporter_path": "exporter/games/pokemon_rb.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js",
@@ -2168,7 +2168,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.34,
+        "processing_time_seconds": 2.33,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2182,7 +2182,7 @@
         "client2_total_locations": 155,
         "error_count": 0,
         "locations_checked": 155,
-        "processing_time_seconds": 18.73,
+        "processing_time_seconds": 18.72,
         "return_code": 0,
         "success": true,
         "total_locations": 155,
@@ -2190,13 +2190,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/raft/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 214661,
+        "size_bytes": 214696,
         "size_mb": 0.2
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Raft.yaml",
-      "timestamp": "2025-11-20T04:51:14.434348",
+      "timestamp": "2025-11-21T07:40:42.856213",
       "world_info": {
         "exporter_path": "exporter/games/raft.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/raft/raftLogic.js",
@@ -2213,7 +2213,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.54,
+        "processing_time_seconds": 2.39,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2227,21 +2227,21 @@
         "client2_total_locations": 223,
         "error_count": 0,
         "locations_checked": 223,
-        "processing_time_seconds": 16.76,
+        "processing_time_seconds": 15.62,
         "return_code": 0,
         "success": true,
         "total_locations": 223,
-        "warning_count": 32
+        "warning_count": 26
       },
       "rules_file": {
         "path": "frontend/presets/ror2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 126602,
+        "size_bytes": 126637,
         "size_mb": 0.12
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Risk of Rain 2.yaml",
-      "timestamp": "2025-11-20T04:48:55.485566",
+      "timestamp": "2025-11-21T07:38:05.613993",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -2258,7 +2258,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.98,
+        "processing_time_seconds": 4.05,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2276,17 +2276,17 @@
         "return_code": -1,
         "success": false,
         "total_locations": 316,
-        "warning_count": 6350
+        "warning_count": 6355
       },
       "rules_file": {
         "path": "frontend/presets/smz3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 531645,
+        "size_bytes": 531680,
         "size_mb": 0.51
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "SMZ3.yaml",
-      "timestamp": "2025-11-20T04:49:24.438277",
+      "timestamp": "2025-11-21T07:38:47.140182",
       "world_info": {
         "exporter_path": "exporter/games/smz3.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
@@ -2303,7 +2303,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.39,
+        "processing_time_seconds": 2.34,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2317,7 +2317,7 @@
         "client2_total_locations": 37,
         "error_count": 0,
         "locations_checked": 37,
-        "processing_time_seconds": 12.47,
+        "processing_time_seconds": 12.41,
         "return_code": 0,
         "success": true,
         "total_locations": 37,
@@ -2325,13 +2325,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/saving_princess/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 31589,
+        "size_bytes": 31624,
         "size_mb": 0.03
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Saving Princess.yaml",
-      "timestamp": "2025-11-20T04:48:29.409211",
+      "timestamp": "2025-11-21T07:37:52.864729",
       "world_info": {
         "exporter_path": "exporter/games/saving_princess.py",
         "game_logic_path": null,
@@ -2346,9 +2346,9 @@
       "game_name_from_filename": "secret_of_evermore",
       "game_name_from_yaml": "Secret of Evermore",
       "generation": {
-        "error_count": 339,
+        "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.95,
+        "processing_time_seconds": 4.06,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2360,23 +2360,23 @@
         "client2_locations_received": 340,
         "client2_passed": true,
         "client2_total_locations": 340,
-        "error_count": 592,
+        "error_count": 155,
         "locations_checked": 340,
-        "processing_time_seconds": 96.97,
+        "processing_time_seconds": 27.79,
         "return_code": 0,
         "success": true,
         "total_locations": 340,
-        "warning_count": 5664
+        "warning_count": 2331
       },
       "rules_file": {
         "path": "frontend/presets/soe/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 336423,
+        "size_bytes": 336457,
         "size_mb": 0.32
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Secret of Evermore.yaml",
-      "timestamp": "2025-11-20T04:49:08.519515",
+      "timestamp": "2025-11-21T07:38:30.034738",
       "world_info": {
         "exporter_path": "exporter/games/soe.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/soe/soeLogic.js",
@@ -2393,7 +2393,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.74,
+        "processing_time_seconds": 2.61,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2407,7 +2407,7 @@
         "client2_total_locations": 114,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 65.84,
+        "processing_time_seconds": 65.57,
         "return_code": 1,
         "success": false,
         "total_locations": 114,
@@ -2415,13 +2415,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/shivers/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 184633,
+        "size_bytes": 184668,
         "size_mb": 0.18
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Shivers.yaml",
-      "timestamp": "2025-11-20T04:49:20.584705",
+      "timestamp": "2025-11-21T07:38:33.834419",
       "world_info": {
         "exporter_path": "exporter/games/shivers.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/shivers/shiversLogic.js",
@@ -2438,7 +2438,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.86,
+        "processing_time_seconds": 3.07,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2452,7 +2452,7 @@
         "client2_total_locations": 207,
         "error_count": 0,
         "locations_checked": 207,
-        "processing_time_seconds": 16.77,
+        "processing_time_seconds": 16.84,
         "return_code": 0,
         "success": true,
         "total_locations": 207,
@@ -2460,13 +2460,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/sa2b/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 173574,
+        "size_bytes": 173609,
         "size_mb": 0.17
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Sonic Adventure 2 Battle.yaml",
-      "timestamp": "2025-11-20T04:49:39.274391",
+      "timestamp": "2025-11-21T07:38:45.239104",
       "world_info": {
         "exporter_path": "exporter/games/sa2b.py",
         "game_logic_path": null,
@@ -2483,7 +2483,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 7.07,
+        "processing_time_seconds": 7.1,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2497,7 +2497,7 @@
         "client2_total_locations": 130,
         "error_count": 6,
         "locations_checked": 130,
-        "processing_time_seconds": 180.03,
+        "processing_time_seconds": 180.04,
         "return_code": -1,
         "success": true,
         "total_locations": 130,
@@ -2505,13 +2505,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/sc2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 808994,
+        "size_bytes": 809029,
         "size_mb": 0.77
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Starcraft 2.yaml",
-      "timestamp": "2025-11-20T04:49:03.524532",
+      "timestamp": "2025-11-21T07:38:33.243772",
       "world_info": {
         "exporter_path": "exporter/games/sc2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
@@ -2528,7 +2528,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.99,
+        "processing_time_seconds": 5.13,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2542,7 +2542,7 @@
         "client2_total_locations": 500,
         "error_count": 2,
         "locations_checked": 0,
-        "processing_time_seconds": 180.02,
+        "processing_time_seconds": 180.03,
         "return_code": -1,
         "success": false,
         "total_locations": 500,
@@ -2550,13 +2550,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 5242405,
+        "size_bytes": 5242440,
         "size_mb": 5.0
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Stardew Valley.yaml",
-      "timestamp": "2025-11-20T04:52:11.702826",
+      "timestamp": "2025-11-21T07:41:52.418543",
       "world_info": {
         "exporter_path": "exporter/games/stardew_valley.py",
         "game_logic_path": null,
@@ -2587,7 +2587,7 @@
         "client2_total_locations": 135,
         "error_count": 24,
         "locations_checked": 0,
-        "processing_time_seconds": 66.91,
+        "processing_time_seconds": 66.08,
         "return_code": 1,
         "success": false,
         "total_locations": 135,
@@ -2595,13 +2595,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/subnautica/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 156440,
+        "size_bytes": 156475,
         "size_mb": 0.15
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Subnautica.yaml",
-      "timestamp": "2025-11-20T04:56:36.047726",
+      "timestamp": "2025-11-21T07:46:22.607905",
       "world_info": {
         "exporter_path": "exporter/games/subnautica.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js",
@@ -2618,7 +2618,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.44,
+        "processing_time_seconds": 2.42,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2640,13 +2640,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/sm64ex/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 92773,
+        "size_bytes": 92808,
         "size_mb": 0.09
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Super Mario 64.yaml",
-      "timestamp": "2025-11-20T04:51:35.652790",
+      "timestamp": "2025-11-21T07:41:04.046260",
       "world_info": {
         "exporter_path": "exporter/games/sm64ex.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js",
@@ -2663,7 +2663,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.89,
+        "processing_time_seconds": 2.75,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2685,13 +2685,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/marioland2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 838602,
+        "size_bytes": 838637,
         "size_mb": 0.8
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Super Mario Land 2.yaml",
-      "timestamp": "2025-11-20T04:49:14.922339",
+      "timestamp": "2025-11-21T07:38:23.762945",
       "world_info": {
         "exporter_path": "exporter/games/marioland2.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js",
@@ -2708,7 +2708,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.43,
+        "processing_time_seconds": 3.45,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2722,7 +2722,7 @@
         "client2_total_locations": 108,
         "error_count": 0,
         "locations_checked": 108,
-        "processing_time_seconds": 13.53,
+        "processing_time_seconds": 13.56,
         "return_code": 0,
         "success": true,
         "total_locations": 108,
@@ -2730,13 +2730,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/smw/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 180110,
+        "size_bytes": 180145,
         "size_mb": 0.17
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Super Mario World.yaml",
-      "timestamp": "2025-11-20T04:52:29.005678",
+      "timestamp": "2025-11-21T07:41:51.815107",
       "world_info": {
         "exporter_path": "exporter/games/smw.py",
         "game_logic_path": null,
@@ -2753,7 +2753,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 14.26,
+        "processing_time_seconds": 14.41,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2767,7 +2767,7 @@
         "client2_total_locations": 109,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 63.87,
+        "processing_time_seconds": 63.95,
         "return_code": 1,
         "success": false,
         "total_locations": 109,
@@ -2775,13 +2775,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/sm/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 526418,
+        "size_bytes": 526453,
         "size_mb": 0.5
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Super Metroid.yaml",
-      "timestamp": "2025-11-20T04:48:44.426587",
+      "timestamp": "2025-11-21T07:38:07.761115",
       "world_info": {
         "exporter_path": "exporter/games/sm.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
@@ -2798,7 +2798,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.51,
+        "processing_time_seconds": 3.28,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2812,7 +2812,7 @@
         "client2_total_locations": 303,
         "error_count": 0,
         "locations_checked": 303,
-        "processing_time_seconds": 19.75,
+        "processing_time_seconds": 19.05,
         "return_code": 0,
         "success": true,
         "total_locations": 303,
@@ -2820,13 +2820,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/tunic/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 323298,
+        "size_bytes": 323333,
         "size_mb": 0.31
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "TUNIC.yaml",
-      "timestamp": "2025-11-20T04:50:49.588988",
+      "timestamp": "2025-11-21T07:39:02.035129",
       "world_info": {
         "exporter_path": "exporter/games/tunic.py",
         "game_logic_path": null,
@@ -2843,7 +2843,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.81,
+        "processing_time_seconds": 2.43,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2857,21 +2857,21 @@
         "client2_total_locations": 244,
         "error_count": 0,
         "locations_checked": 244,
-        "processing_time_seconds": 23.26,
+        "processing_time_seconds": 22.49,
         "return_code": 0,
         "success": true,
         "total_locations": 244,
-        "warning_count": 42
+        "warning_count": 39
       },
       "rules_file": {
         "path": "frontend/presets/terraria/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 301332,
+        "size_bytes": 301367,
         "size_mb": 0.29
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Terraria.yaml",
-      "timestamp": "2025-11-20T04:50:29.313201",
+      "timestamp": "2025-11-21T07:39:42.155647",
       "world_info": {
         "exporter_path": "exporter/games/terraria.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/terraria/terrariaLogic.js",
@@ -2888,7 +2888,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.91,
+        "processing_time_seconds": 3.83,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -2902,21 +2902,21 @@
         "client2_total_locations": 165,
         "error_count": 0,
         "locations_checked": 165,
-        "processing_time_seconds": 14.41,
+        "processing_time_seconds": 15.55,
         "return_code": 0,
         "success": true,
         "total_locations": 165,
-        "warning_count": 225
+        "warning_count": 141
       },
       "rules_file": {
         "path": "frontend/presets/tloz/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 726143,
+        "size_bytes": 726178,
         "size_mb": 0.69
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "The Legend of Zelda.yaml",
-      "timestamp": "2025-11-20T04:49:59.040729",
+      "timestamp": "2025-11-21T07:39:05.286050",
       "world_info": {
         "exporter_path": "exporter/games/tloz.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
@@ -2933,7 +2933,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.54,
+        "processing_time_seconds": 2.62,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2947,7 +2947,7 @@
         "client2_total_locations": 113,
         "error_count": 0,
         "locations_checked": 113,
-        "processing_time_seconds": 13.62,
+        "processing_time_seconds": 14.66,
         "return_code": 0,
         "success": true,
         "total_locations": 113,
@@ -2955,13 +2955,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/messenger/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 233708,
+        "size_bytes": 233743,
         "size_mb": 0.22
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "The Messenger.yaml",
-      "timestamp": "2025-11-20T04:52:10.797168",
+      "timestamp": "2025-11-21T07:41:40.558975",
       "world_info": {
         "exporter_path": "exporter/games/messenger.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/messenger/messengerLogic.js",
@@ -2978,7 +2978,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.22,
+        "processing_time_seconds": 3.31,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2992,21 +2992,21 @@
         "client2_total_locations": 109,
         "error_count": 0,
         "locations_checked": 109,
-        "processing_time_seconds": 14.75,
+        "processing_time_seconds": 14.81,
         "return_code": 0,
         "success": true,
         "total_locations": 109,
-        "warning_count": 130
+        "warning_count": 132
       },
       "rules_file": {
         "path": "frontend/presets/tww/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 159925,
+        "size_bytes": 159960,
         "size_mb": 0.15
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "The Wind Waker.yaml",
-      "timestamp": "2025-11-20T04:55:16.896702",
+      "timestamp": "2025-11-21T07:44:57.746916",
       "world_info": {
         "exporter_path": "exporter/games/tww.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/tww/twwLogic.js",
@@ -3023,7 +3023,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 7.07,
+        "processing_time_seconds": 7.18,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3037,7 +3037,7 @@
         "client2_total_locations": 147,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 76.97,
+        "processing_time_seconds": 77.61,
         "return_code": 1,
         "success": false,
         "total_locations": 147,
@@ -3045,13 +3045,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/witness/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 275436,
+        "size_bytes": 275471,
         "size_mb": 0.26
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "The Witness.yaml",
-      "timestamp": "2025-11-20T04:57:45.764969",
+      "timestamp": "2025-11-21T07:47:31.495194",
       "world_info": {
         "exporter_path": "exporter/games/witness.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
@@ -3082,7 +3082,7 @@
         "client2_total_locations": 185,
         "error_count": 0,
         "locations_checked": 185,
-        "processing_time_seconds": 17.86,
+        "processing_time_seconds": 17.42,
         "return_code": 0,
         "success": true,
         "total_locations": 185,
@@ -3090,13 +3090,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/timespinner/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 223938,
+        "size_bytes": 223973,
         "size_mb": 0.21
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Timespinner.yaml",
-      "timestamp": "2025-11-20T04:51:55.877460",
+      "timestamp": "2025-11-21T07:41:24.243954",
       "world_info": {
         "exporter_path": "exporter/games/timespinner.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js",
@@ -3113,7 +3113,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.54,
+        "processing_time_seconds": 2.38,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3127,7 +3127,7 @@
         "client2_total_locations": 51,
         "error_count": 0,
         "locations_checked": 51,
-        "processing_time_seconds": 12.58,
+        "processing_time_seconds": 12.45,
         "return_code": 0,
         "success": true,
         "total_locations": 51,
@@ -3135,13 +3135,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/undertale/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 65206,
+        "size_bytes": 65241,
         "size_mb": 0.06
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Undertale.yaml",
-      "timestamp": "2025-11-20T04:52:18.018985",
+      "timestamp": "2025-11-21T07:41:26.698748",
       "world_info": {
         "exporter_path": "exporter/games/undertale.py",
         "game_logic_path": null,
@@ -3156,9 +3156,9 @@
       "game_name_from_filename": "vvvvvv",
       "game_name_from_yaml": "VVVVVV",
       "generation": {
-        "error_count": 4,
+        "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.26,
+        "processing_time_seconds": 2.29,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3172,7 +3172,7 @@
         "client2_total_locations": 20,
         "error_count": 0,
         "locations_checked": 20,
-        "processing_time_seconds": 12.4,
+        "processing_time_seconds": 12.44,
         "return_code": 0,
         "success": true,
         "total_locations": 20,
@@ -3180,13 +3180,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/v6/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 23569,
+        "size_bytes": 23604,
         "size_mb": 0.02
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "VVVVVV.yaml",
-      "timestamp": "2025-11-20T04:52:46.110023",
+      "timestamp": "2025-11-21T07:42:08.961037",
       "world_info": {
         "exporter_path": "exporter/games/v6.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/v6/v6Logic.js",
@@ -3203,7 +3203,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.37,
+        "processing_time_seconds": 2.44,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3217,7 +3217,7 @@
         "client2_total_locations": 39,
         "error_count": 0,
         "locations_checked": 39,
-        "processing_time_seconds": 12.49,
+        "processing_time_seconds": 12.47,
         "return_code": 0,
         "success": true,
         "total_locations": 39,
@@ -3225,13 +3225,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/wargroove/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 56736,
+        "size_bytes": 56771,
         "size_mb": 0.05
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Wargroove.yaml",
-      "timestamp": "2025-11-20T04:50:02.680193",
+      "timestamp": "2025-11-21T07:39:26.250589",
       "world_info": {
         "exporter_path": "exporter/games/wargroove.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/wargroove/wargrooveLogic.js",
@@ -3248,7 +3248,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.62,
+        "processing_time_seconds": 2.45,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3262,7 +3262,7 @@
         "client2_total_locations": 62,
         "error_count": 0,
         "locations_checked": 62,
-        "processing_time_seconds": 12.67,
+        "processing_time_seconds": 12.58,
         "return_code": 0,
         "success": true,
         "total_locations": 62,
@@ -3270,13 +3270,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/codingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 53474,
+        "size_bytes": 53509,
         "size_mb": 0.05
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "WebDevJourney.yaml",
-      "timestamp": "2025-11-20T04:51:12.981466",
+      "timestamp": "2025-11-21T07:39:24.514306",
       "world_info": {
         "exporter_path": null,
         "game_logic_path": null,
@@ -3293,7 +3293,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.09,
+        "processing_time_seconds": 2.72,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3307,7 +3307,7 @@
         "client2_total_locations": 90,
         "error_count": 0,
         "locations_checked": 90,
-        "processing_time_seconds": 16.87,
+        "processing_time_seconds": 15.57,
         "return_code": 0,
         "success": true,
         "total_locations": 90,
@@ -3315,13 +3315,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/yachtdice/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 180070,
+        "size_bytes": 180105,
         "size_mb": 0.17
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Yacht Dice.yaml",
-      "timestamp": "2025-11-20T04:50:55.543048",
+      "timestamp": "2025-11-21T07:40:07.222940",
       "world_info": {
         "exporter_path": "exporter/games/yachtdice.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js",
@@ -3338,7 +3338,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.73,
+        "processing_time_seconds": 2.88,
         "return_code": 0,
         "success": true,
         "warning_count": 2
@@ -3352,11 +3352,11 @@
         "client2_total_locations": 207,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 73.96,
+        "processing_time_seconds": 74.14,
         "return_code": 1,
         "success": false,
         "total_locations": 207,
-        "warning_count": 820
+        "warning_count": 633
       },
       "rules_file": {
         "path": "frontend/presets/yoshisisland/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -3366,7 +3366,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Yoshi's Island.yaml",
-      "timestamp": "2025-11-20T04:50:17.511315",
+      "timestamp": "2025-11-21T07:39:24.816100",
       "world_info": {
         "exporter_path": "exporter/games/yoshisisland.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/yoshisisland/yoshisislandLogic.js",
@@ -3383,7 +3383,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.65,
+        "processing_time_seconds": 3.72,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3397,7 +3397,7 @@
         "client2_total_locations": 978,
         "error_count": 9,
         "locations_checked": 0,
-        "processing_time_seconds": 94.7,
+        "processing_time_seconds": 94.49,
         "return_code": 1,
         "success": false,
         "total_locations": 978,
@@ -3405,13 +3405,13 @@
       },
       "rules_file": {
         "path": "frontend/presets/yugioh06/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 677057,
+        "size_bytes": 677092,
         "size_mb": 0.65
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Yu-Gi-Oh! 2006.yaml",
-      "timestamp": "2025-11-20T04:52:27.096810",
+      "timestamp": "2025-11-21T07:41:57.979093",
       "world_info": {
         "exporter_path": "exporter/games/yugioh06.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js",
@@ -3428,7 +3428,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.71,
+        "processing_time_seconds": 3.81,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3442,21 +3442,21 @@
         "client2_total_locations": 147,
         "error_count": 0,
         "locations_checked": 147,
-        "processing_time_seconds": 14.62,
+        "processing_time_seconds": 14.64,
         "return_code": 0,
         "success": true,
         "total_locations": 147,
-        "warning_count": 463
+        "warning_count": 691
       },
       "rules_file": {
         "path": "frontend/presets/zillion/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 118766,
+        "size_bytes": 118801,
         "size_mb": 0.11
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Zillion.yaml",
-      "timestamp": "2025-11-20T04:55:35.006574",
+      "timestamp": "2025-11-21T07:45:16.008357",
       "world_info": {
         "exporter_path": "exporter/games/zillion.py",
         "game_logic_path": null,
@@ -3473,7 +3473,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 2.94,
+        "processing_time_seconds": 3.06,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -3487,21 +3487,21 @@
         "client2_total_locations": 140,
         "error_count": 0,
         "locations_checked": 140,
-        "processing_time_seconds": 14.66,
+        "processing_time_seconds": 14.78,
         "return_code": 0,
         "success": true,
         "total_locations": 140,
-        "warning_count": 45
+        "warning_count": 222
       },
       "rules_file": {
         "path": "frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 113505,
+        "size_bytes": 113540,
         "size_mb": 0.11
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "shapez.yaml",
-      "timestamp": "2025-11-20T04:59:09.955971",
+      "timestamp": "2025-11-21T07:48:56.436307",
       "world_info": {
         "exporter_path": "exporter/games/shapez.py",
         "game_logic_path": "frontend/modules/shared/gameLogic/shapez/shapezLogic.js",
