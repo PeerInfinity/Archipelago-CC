@@ -103,8 +103,12 @@
             "name": "B-1 bottom left-center",
             "id": 8675409,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -117,8 +121,8 @@
             "name": "B-1 top center",
             "id": 8675396,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -196,25 +200,12 @@
             "name": "B-8 mid far right",
             "id": 8675427,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -358,8 +349,8 @@
             "name": "A-6 top far left",
             "id": 8675351,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Floppy Disk",
@@ -372,8 +363,12 @@
             "name": "A-6 mid left",
             "id": 8675359,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Zillion",
@@ -400,8 +395,8 @@
             "name": "A-6 top right",
             "id": 8675356,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Zillion",
@@ -414,8 +409,8 @@
             "name": "A-6 mid far left",
             "id": 8675358,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -471,25 +466,12 @@
             "name": "A-8 bottom left-center",
             "id": 8675388,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "ID Card",
@@ -502,21 +484,8 @@
             "name": "A-8 bottom right",
             "id": 8675391,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -560,21 +529,8 @@
             "name": "C-3 mid far right",
             "id": 8675448,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -610,25 +566,12 @@
             "name": "C-4 top far right",
             "id": 8675462,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -664,21 +607,8 @@
             "name": "C-5 mid far left",
             "id": 8675484,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -714,21 +644,8 @@
             "name": "C-6 top right-center",
             "id": 8675502,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -741,25 +658,12 @@
             "name": "C-6 top right",
             "id": 8675503,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -795,21 +699,8 @@
             "name": "D-2 mid left",
             "id": 8675527,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -822,21 +713,8 @@
             "name": "D-2 top left-center",
             "id": 8675521,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -880,21 +758,8 @@
             "name": "D-3 top far right",
             "id": 8675546,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -930,21 +795,8 @@
             "name": "D-5 mid center",
             "id": 8675571,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -957,25 +809,12 @@
             "name": "D-5 bottom far right",
             "id": 8675581,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "ID Card",
@@ -1011,21 +850,8 @@
             "name": "D-6 bottom far left",
             "id": 8675596,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -1038,21 +864,8 @@
             "name": "D-6 mid center",
             "id": 8675592,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -1155,8 +968,12 @@
             "name": "E-5 mid left",
             "id": 8675653,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Scope",
@@ -1226,10 +1043,6 @@
                     "type": "constant",
                     "value": 2
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
                 }
               ]
             },
@@ -1257,10 +1070,6 @@
                     "type": "constant",
                     "value": 2
                   }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
                 }
               ]
             },
@@ -1275,21 +1084,8 @@
             "name": "E-6 bottom center",
             "id": 8675683,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -1302,25 +1098,12 @@
             "name": "E-6 bottom right-center",
             "id": 8675684,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Zillion",
@@ -1333,21 +1116,8 @@
             "name": "E-6 bottom right",
             "id": 8675685,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -1383,21 +1153,8 @@
             "name": "E-8 top right",
             "id": 8675692,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Zillion",
@@ -1410,25 +1167,12 @@
             "name": "E-8 top far right",
             "id": 8675693,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Zillion",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Opa-Opa"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Floppy Disk"
-                }
-              ]
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "ID Card",
@@ -1472,8 +1216,8 @@
             "name": "F-4 mid center",
             "id": 8675739,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -1509,8 +1253,8 @@
             "name": "F-5 bottom left-center",
             "id": 8675766,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -1554,8 +1298,8 @@
             "name": "F-7 mid far right",
             "id": 8675784,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -1628,8 +1372,8 @@
             "name": "G-4 mid left-center",
             "id": 8675843,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -1679,8 +1423,8 @@
             "name": "G-5 top far left",
             "id": 8675855,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -1744,8 +1488,8 @@
             "name": "G-6 bottom left",
             "id": 8675891,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -1789,8 +1533,8 @@
             "name": "G-7 top far left",
             "id": 8675897,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -1870,8 +1614,8 @@
             "name": "H-4 bottom far left",
             "id": 8675953,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -1884,8 +1628,8 @@
             "name": "H-4 top left-center",
             "id": 8675941,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Zillion",
@@ -1921,8 +1665,8 @@
             "name": "H-5 top left",
             "id": 8675961,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -1950,8 +1694,8 @@
             "name": "H-5 bottom left",
             "id": 8675975,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -2001,8 +1745,8 @@
             "name": "H-6 bottom left",
             "id": 8675996,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -2052,8 +1796,8 @@
             "name": "H-7 bottom center",
             "id": 8676019,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -2089,8 +1833,12 @@
             "name": "H-8 top right-center",
             "id": 8676027,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Apple",
@@ -2126,8 +1874,12 @@
             "name": "I-4 bottom center",
             "id": 8676082,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Opa-Opa",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "ID Card",
@@ -2237,8 +1989,8 @@
             "name": "I-8 top right",
             "id": 8676133,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -2251,8 +2003,12 @@
             "name": "I-8 top far right",
             "id": 8676134,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Opa-Opa",
@@ -2363,8 +2119,12 @@
             "name": "F-2 top far left",
             "id": 8675708,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -2408,8 +2168,12 @@
             "name": "G-2 mid left",
             "id": 8675821,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Floppy Disk",
@@ -2437,8 +2201,12 @@
             "name": "I-2 bottom right",
             "id": 8676063,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Empty",
@@ -2451,8 +2219,8 @@
             "name": "I-2 mid far right",
             "id": 8676057,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -2465,8 +2233,12 @@
             "name": "I-2 bottom far right",
             "id": 8676064,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -2562,8 +2334,17 @@
             "name": "J-2 mid center",
             "id": 8676159,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Zillion"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Opa-Opa"
+                }
+              ]
             },
             "item": {
               "name": "Red ID Card",
@@ -2576,8 +2357,17 @@
             "name": "J-2 mid left",
             "id": 8676157,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Zillion"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Opa-Opa"
+                }
+              ]
             },
             "item": {
               "name": "ID Card",
@@ -2605,8 +2395,12 @@
             "name": "J-2 bottom center",
             "id": 8676166,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "ID Card",
@@ -2664,8 +2458,8 @@
             "name": "J-3 mid center",
             "id": 8676180,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -2730,8 +2524,8 @@
             "name": "J-4 top left",
             "id": 8676192,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -2824,8 +2618,21 @@
             "name": "J-6 bottom far left",
             "id": 8676863,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Floppy Disk",
+                  "count": {
+                    "type": "constant",
+                    "value": 5
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Red ID Card"
+                }
+              ]
             },
             "item": {
               "name": "Win",
@@ -2853,8 +2660,12 @@
             "name": "K-2 bottom right-center",
             "id": 8676251,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -2867,8 +2678,12 @@
             "name": "K-2 bottom far right",
             "id": 8676253,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Empty",
@@ -2977,8 +2792,12 @@
             "name": "K-3 top left-center",
             "id": 8676256,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -2991,8 +2810,8 @@
             "name": "K-3 mid right-center",
             "id": 8676265,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -3036,8 +2855,21 @@
             "name": "K-4 mid left-center",
             "id": 8676284,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Zillion"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Opa-Opa",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Bread",
@@ -3050,8 +2882,12 @@
             "name": "K-4 bottom center",
             "id": 8676292,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Opa-Opa",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "ID Card",
@@ -3095,8 +2931,12 @@
             "name": "K-5 top center",
             "id": 8676299,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Scope",
@@ -3109,8 +2949,8 @@
             "name": "K-5 top right-center",
             "id": 8676300,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -3160,8 +3000,8 @@
             "name": "K-6 mid left-center",
             "id": 8676326,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -3174,8 +3014,12 @@
             "name": "K-6 mid center",
             "id": 8676327,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Opa-Opa",
@@ -3225,8 +3069,12 @@
             "name": "K-7 bottom left-center",
             "id": 8676354,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "ID Card",
@@ -3239,8 +3087,12 @@
             "name": "K-7 bottom left",
             "id": 8676353,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -3268,8 +3120,12 @@
             "name": "L-2 top far left",
             "id": 8676359,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Floppy Disk",
@@ -3282,8 +3138,8 @@
             "name": "L-2 mid right",
             "id": 8676371,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -3296,8 +3152,12 @@
             "name": "L-2 top left",
             "id": 8676360,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -3361,8 +3221,25 @@
             "name": "L-3 top left",
             "id": 8676381,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Zillion",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Opa-Opa",
+                  "count": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Opa-Opa",
@@ -3406,8 +3283,12 @@
             "name": "L-4 bottom right-center",
             "id": 8676419,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -3420,8 +3301,12 @@
             "name": "L-4 bottom right",
             "id": 8676420,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -3457,8 +3342,12 @@
             "name": "L-5 top left",
             "id": 8676423,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "ID Card",
@@ -3471,8 +3360,8 @@
             "name": "L-5 bottom left-center",
             "id": 8676438,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -3508,8 +3397,8 @@
             "name": "L-6 mid far right",
             "id": 8676456,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Empty",
@@ -3522,8 +3411,8 @@
             "name": "L-6 mid right-center",
             "id": 8676454,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -3632,8 +3521,12 @@
             "name": "M-2 mid right-center",
             "id": 8676496,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -3661,8 +3554,8 @@
             "name": "M-2 bottom far left",
             "id": 8676499,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Opa-Opa"
             },
             "item": {
               "name": "Floppy Disk",
@@ -3735,8 +3628,12 @@
             "name": "M-4 mid left",
             "id": 8676535,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Opa-Opa",
@@ -3847,8 +3744,12 @@
             "name": "M-6 bottom center",
             "id": 8676586,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "ID Card",
@@ -3937,8 +3838,12 @@
             "name": "M-7 mid far left",
             "id": 8676597,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "ID Card",
@@ -3974,8 +3879,12 @@
             "name": "M-7 top far right",
             "id": 8676596,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "ID Card",
@@ -4025,8 +3934,8 @@
             "name": "N-2 top far left",
             "id": 8676611,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -4090,8 +3999,8 @@
             "name": "N-2 bottom center",
             "id": 8676628,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -4149,8 +4058,8 @@
             "name": "N-3 mid right",
             "id": 8676644,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -4202,8 +4111,8 @@
             "name": "N-4 bottom far left",
             "id": 8676667,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -4261,8 +4170,8 @@
             "name": "N-5 bottom center",
             "id": 8676691,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -4298,8 +4207,8 @@
             "name": "N-6 top far left",
             "id": 8676695,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Scope",
@@ -4312,8 +4221,8 @@
             "name": "N-6 top right-center",
             "id": 8676699,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Bread",
@@ -4341,8 +4250,8 @@
             "name": "N-7 top left-center",
             "id": 8676718,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",
@@ -4452,8 +4361,8 @@
             "name": "O-3 bottom center",
             "id": 8676754,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -4481,8 +4390,8 @@
             "name": "O-4 mid center",
             "id": 8676768,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -4518,8 +4427,12 @@
             "name": "O-4 mid far left",
             "id": 8676765,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -4592,8 +4505,12 @@
             "name": "O-6 mid right",
             "id": 8676812,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "ID Card",
@@ -4621,8 +4538,8 @@
             "name": "O-7 bottom center",
             "id": 8676838,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -4658,8 +4575,8 @@
             "name": "O-7 top right",
             "id": 8676826,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "ID Card",
@@ -4695,8 +4612,12 @@
             "name": "P-3 bottom center",
             "id": 8676859,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Bread",
@@ -4724,8 +4645,8 @@
             "name": "P-3 top far left",
             "id": 8676842,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Zillion"
             },
             "item": {
               "name": "Opa-Opa",

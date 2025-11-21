@@ -192,43 +192,53 @@ class ZillionWorld(World):
                     'gun': 1, 'jump': 1, 'floppy': 0, 'red': 0
                 }
             else:
-                # Find minimum requirements by binary search
-                needs_gun = 1
-                needs_jump = 1
-                needs_floppy = 0
-                needs_red = 0
+                # Start with the location's actual req values
+                # Then test combinations to find minimum needed
+                req = zz_loc.req
 
-                # Test gun levels
-                for gun_level in [2, 3]:
-                    test_req = Req(gun=gun_level, jump=3, floppy=126, red=1)
-                    if zz_loc in self.zz_system.randomizer.get_locations(test_req):
-                        needs_gun = gun_level
-                        break
+                # Test with the location's stated requirements first
+                test_req = Req(gun=max(1, req.gun), jump=max(1, req.jump),
+                              floppy=req.floppy, red=req.red)
+                if zz_loc in self.zz_system.randomizer.get_locations(test_req):
+                    # Location accessible with its stated requirements
+                    self.location_accessibility_cache[loc_name] = {
+                        'gun': max(1, req.gun),
+                        'jump': max(1, req.jump),
+                        'floppy': req.floppy,
+                        'red': req.red
+                    }
+                else:
+                    # Need more than stated - test combinations including floppy/red
+                    found = False
 
-                # Test jump levels
-                for jump_level in [2, 3]:
-                    test_req = Req(gun=3, jump=jump_level, floppy=126, red=1)
-                    if zz_loc in self.zz_system.randomizer.get_locations(test_req):
-                        needs_jump = jump_level
-                        break
+                    # Test progressively more powerful combinations
+                    for red in [req.red, 1]:
+                        for floppy in [req.floppy] + ([1] if req.floppy == 0 else []):
+                            for gun in range(max(1, req.gun), 4):
+                                for jump in range(max(1, req.jump), 4):
+                                    test_req = Req(gun=gun, jump=jump, floppy=floppy, red=red)
+                                    if zz_loc in self.zz_system.randomizer.get_locations(test_req):
+                                        self.location_accessibility_cache[loc_name] = {
+                                            'gun': gun, 'jump': jump,
+                                            'floppy': floppy, 'red': red
+                                        }
+                                        found = True
+                                        break
+                                if found:
+                                    break
+                            if found:
+                                break
+                        if found:
+                            break
 
-                # Test floppy count
-                for floppy_count in [1, 5, 10, 20, 50, 100, 126]:
-                    test_req = Req(gun=3, jump=3, floppy=floppy_count, red=1)
-                    if zz_loc in self.zz_system.randomizer.get_locations(test_req):
-                        needs_floppy = floppy_count
-                        break
-
-                # Test red card
-                with_red = self.zz_system.randomizer.get_locations(Req(gun=3, jump=3, floppy=126, red=1))
-                without_red = self.zz_system.randomizer.get_locations(Req(gun=3, jump=3, floppy=126, red=0))
-                if zz_loc in with_red and zz_loc not in without_red:
-                    needs_red = 1
-
-                self.location_accessibility_cache[loc_name] = {
-                    'gun': needs_gun, 'jump': needs_jump,
-                    'floppy': needs_floppy, 'red': needs_red
-                }
+                    if not found:
+                        # Fall back to req object values
+                        self.location_accessibility_cache[loc_name] = {
+                            'gun': max(1, req.gun),
+                            'jump': max(1, req.jump),
+                            'floppy': req.floppy,
+                            'red': req.red
+                        }
 
     @override
     def create_regions(self) -> None:
