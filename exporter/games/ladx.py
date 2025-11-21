@@ -369,3 +369,9 @@ class LADXGameExportHandler(GenericGameExportHandler):
                 rule['if_false'] = self._postprocess_rule_recursive(rule['if_false'])
 
         return rule
+
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Extracts LADX-specific game settings for export."""
+        settings_dict = super().get_settings_data(world, multiworld, player)
+        settings_dict['use_resolved_items'] = True
+        return settings_dict

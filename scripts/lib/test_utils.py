@@ -297,7 +297,8 @@ def count_errors_and_warnings(text: str) -> Tuple[int, int, Optional[str], Optio
         # Skip lines that are false positives
         if (line_stripped.startswith('[SKIP]') or
             'error logs:' in line_lower or
-            'no errors detected' in line_lower):
+            'no errors detected' in line_lower or
+            'analysis finished without errors but produced no result' in line_lower):
             continue
 
         if 'error' in line_lower:
