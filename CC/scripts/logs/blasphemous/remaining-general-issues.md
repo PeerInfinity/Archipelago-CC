@@ -48,15 +48,30 @@ Fixed bug in `frontend/modules/testSpoilers/eventProcessor.js:168, 243, 606` whe
 - Settings in rules.json are keyed by player ID ("1"), not directly on settings object
 - Player ID needs to be converted to string for proper object key access
 
-**Status After Fix**:
-Test still failing at sphere 0 with same symptoms. Additional investigation needed:
-1. Test logs don't show "Adding items from sphere log" message - code may not be reached
-2. "Access rule evaluation failed" errors appearing in test output
-3. May be related to Blasphemous helper functions or access rule evaluation
-4. Need to investigate why the fix didn't resolve the issue
+**Status After Settings Fix**:
+Test still failing at sphere 0. Investigation revealed a second critical bug.
+
+**Second Bug Found: Reachability Not Triggered After Adding Items**
+After adding items upfront, the state manager was not recalculating reachability.
+This caused 0 regions/locations to be accessible even though items were in inventory.
+
+**Fix Applied (Commit 3ee2822)**:
+1. Added call to `stateManager.recalculateAccessibility()` after adding items upfront
+2. Added wait for reachability update to complete
+3. Changed comparison timing to happen immediately after adding items (not after checking locations)
+4. Skip individual location checking when using add_sphere_items_upfront mode
+
+After this fix, 1031 regions and 305 locations became accessible (Python expects 500+ regions, 78 locations).
+
+**Current Status**:
+Test times out during comparison phase. Region/location mismatches persist:
+- 374 regions missing from state compared to Python backend
+- Frontend calculates different set of reachable regions than Python backend
+- May indicate issues with Blasphemous helper functions or access rules
+- May indicate differences between Python and JavaScript rule evaluation
 
 **Next Steps**:
-1. Add detailed logging to trace execution flow
-2. Investigate Blasphemous helper functions for bugs
-3. Check if access rules are correctly defined
-4. Verify sphere log format is being parsed correctly
+1. Investigate why test times out during comparison
+2. Compare specific failing regions between Python and JavaScript
+3. Check Blasphemous helper functions for bugs
+4. Verify access rules match between exporter and frontend
