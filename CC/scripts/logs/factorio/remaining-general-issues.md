@@ -4,15 +4,18 @@ This file tracks outstanding general issues that are not specific to the exporte
 
 ## Status
 
-Test failed at Sphere 2.1 with 34 locations inaccessible.
+✅ **ALL TESTS PASSING!** All 67 events pass including Victory at sphere 12.1.
 
-## Issue 1: Event Item Inventory Synchronization
+## ~~Issue 1: Event Item Inventory Synchronization~~ (SOLVED - see solved-general-issues.md)
 
 **Severity**: Critical
 **Type**: State Management / Test Infrastructure
+**Status**: ✅ SOLVED
 
 **Description**:
-The spoiler test fails at Sphere 2.1 because "Automated logistic-science-pack" is not properly added to the player's inventory after collecting it from the "Automate logistic-science-pack" location.
+~~The spoiler test fails at Sphere 2.1 because "Automated logistic-science-pack" is not properly added to the player's inventory after collecting it from the "Automate logistic-science-pack" location.~~
+
+**SOLUTION**: The issue was not about event items or inventory synchronization. It was about progressive item resolution in access rules. See `solved-general-issues.md` for details.
 
 **Details**:
 - Location "Automate logistic-science-pack" is correctly accessible in Sphere 1.8
