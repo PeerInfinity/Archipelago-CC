@@ -26,23 +26,65 @@
 
 /**
  * Helper function to check if player has an item.
+ * Handles special item mappings for ALTTP progressive items.
  * @param {Object} snapshot - State snapshot
  * @param {string} itemName - Name of the item
  * @returns {boolean} True if player has the item
  */
 function hasItem(snapshot, itemName) {
   if (!snapshot.inventory) return false;
+
+  // Handle ALTTP progressive sword levels
+  if (itemName === 'MasterSword') {
+    return (snapshot.inventory['ProgressiveSword'] || 0) >= 2;
+  }
+  if (itemName === 'TemperedSword') {
+    return (snapshot.inventory['ProgressiveSword'] || 0) >= 3;
+  }
+  if (itemName === 'GoldenSword') {
+    return (snapshot.inventory['ProgressiveSword'] || 0) >= 4;
+  }
+
+  // Handle ALTTP progressive glove levels
+  if (itemName === 'PowerGlove') {
+    return (snapshot.inventory['ProgressiveGlove'] || 0) >= 1;
+  }
+  if (itemName === 'TitansMitt') {
+    return (snapshot.inventory['ProgressiveGlove'] || 0) >= 2;
+  }
+
   return (snapshot.inventory[itemName] || 0) > 0;
 }
 
 /**
  * Helper function to get item count.
+ * Handles special item mappings for ALTTP progressive items.
  * @param {Object} snapshot - State snapshot
  * @param {string} itemName - Name of the item
  * @returns {number} Count of the item
  */
 function getItemCount(snapshot, itemName) {
   if (!snapshot.inventory) return 0;
+
+  // Handle ALTTP progressive sword levels (return 1 if threshold met, 0 otherwise)
+  if (itemName === 'MasterSword') {
+    return (snapshot.inventory['ProgressiveSword'] || 0) >= 2 ? 1 : 0;
+  }
+  if (itemName === 'TemperedSword') {
+    return (snapshot.inventory['ProgressiveSword'] || 0) >= 3 ? 1 : 0;
+  }
+  if (itemName === 'GoldenSword') {
+    return (snapshot.inventory['ProgressiveSword'] || 0) >= 4 ? 1 : 0;
+  }
+
+  // Handle ALTTP progressive glove levels
+  if (itemName === 'PowerGlove') {
+    return (snapshot.inventory['ProgressiveGlove'] || 0) >= 1 ? 1 : 0;
+  }
+  if (itemName === 'TitansMitt') {
+    return (snapshot.inventory['ProgressiveGlove'] || 0) >= 2 ? 1 : 0;
+  }
+
   return snapshot.inventory[itemName] || 0;
 }
 
