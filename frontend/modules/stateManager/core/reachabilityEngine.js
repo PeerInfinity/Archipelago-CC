@@ -304,10 +304,17 @@ export function runBFSPass(sm) {
   let newRegionsFound = false;
   const passStartRegions = new Set(sm.knownReachableRegions);
 
+  // DEBUG: Log current reachable D17Z01 regions
+  const d17z01Reachable = [...sm.knownReachableRegions].filter(r => r.startsWith('D17Z01'));
+  console.log(`[BFS Pass Start] D17Z01 regions reachable: ${d17z01Reachable.length}`, d17z01Reachable.sort());
+
   // Exactly match Python's nested loop structure
   let newConnection = true;
+  let iterationCount = 0;
   while (newConnection) {
     newConnection = false;
+    iterationCount++;
+    console.log(`[BFS] Starting iteration ${iterationCount}, blocked connections: ${sm.blockedConnections.size}`);
 
     let queue = [...sm.blockedConnections];
     while (queue.length > 0) {
@@ -344,6 +351,15 @@ export function runBFSPass(sm) {
           snapshotInterfaceContext
         )
         : true; // No rule means true
+
+      // DEBUG: Log D17Z01S05[S] evaluation
+      if (targetRegion === 'D17Z01S05[S]' || targetRegion === 'D17Z01S04' || targetRegion.includes('D17BZ02')) {
+        console.log(`[BFS Eval] ${fromRegion} -> ${targetRegion}:`);
+        console.log(`  Rule result: ${ruleEvaluationResult}`);
+        console.log(`  D17Z01S05[S] reachable: ${sm.knownReachableRegions.has('D17Z01S05[S]')}`);
+        console.log(`  D17Z01S04 reachable: ${sm.knownReachableRegions.has('D17Z01S04')}`);
+        console.log(`  D17BZ02S01[FrontR] reachable: ${sm.knownReachableRegions.has('D17BZ02S01[FrontR]')}`);
+      }
 
       const canTraverse = !exit.access_rule || ruleEvaluationResult;
 
