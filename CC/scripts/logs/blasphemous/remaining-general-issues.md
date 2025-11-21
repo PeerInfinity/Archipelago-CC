@@ -107,8 +107,32 @@ Frontend MISSING these 20 D17Z01 regions:
 **Actual Problem**:
 The missing D17Z01 regions prevent access to D01Z01 regions (since D17Z01S03[E] → D01Z01S07 connection can't be followed), which in turn blocks the entire region chain (D01Z02 → D01Z03 → D02Z01 → D02Z02 → CO regions).
 
-**Investigation Priority**:
-1. Why is D17Z01S03[E] not accessible? (It connects to D01Z01S07)
-2. Why is D17Z01S04 not accessible? (Critical hub region)
-3. Are there issues with directional sub-region accessibility?
-4. Check if specific access rules or helper functions are failing
+**Investigation Update - Circular Dependency Found**:
+
+The root cause is a circular dependency in region accessibility:
+
+**The Circular Dependency**:
+- D17Z01S11 (accessible) → D17Z01S11[E] (not accessible)
+- Access rule requires: `has_boss_strength('warden') AND can_reach_region('D17Z01S05[E]') AND can_reach_region('D17Z01S03[W]')`
+- `has_boss_strength('warden')` = TRUE ✓ (threshold -0.10, player strength 0)
+- `can_reach_region('D17Z01S05[E]')` = TRUE ✓ (D17Z01S05[E] is accessible)
+- `can_reach_region('D17Z01S03[W]')` = FALSE ✗ (D17Z01S03[W] not yet accessible)
+- D17Z01S11[E] → D17Z01S03[W] with `constant=true` (only path to D17Z01S03[W])
+
+**The Problem**:
+To reach D17Z01S11[E], you must already reach D17Z01S03[W].
+But to reach D17Z01S03[W], you must first reach D17Z01S11[E].
+This is an impossible circular dependency!
+
+**How Python Resolves It**:
+Python's sphere 0 includes both D17Z01S03[W] and D17Z01S11[E] as accessible, meaning Python somehow breaks this cycle.
+
+**Likely Frontend Bug**:
+When evaluating `can_reach_region('D17Z01S03[W]')` during BFS exit evaluation, the frontend might be:
+1. Recursively calling `computeReachableRegions()` which returns the current cached state (where D17Z01S03[W] is not yet reachable)
+2. Not properly using the indirect connections system to re-evaluate this exit after D17Z01S03[W] becomes reachable
+
+The indirect connections system (reachabilityEngine.js:406-423) SHOULD handle this, but it only works if D17Z01S03[W] can become reachable through some other path first. Since there is NO other path, the cycle is never broken.
+
+**Next Step**:
+Need to understand how Python's BFS handles `can_reach_region` calls during exit evaluation - does it use a "tentative reachability" approach or evaluate exits in a special order?
