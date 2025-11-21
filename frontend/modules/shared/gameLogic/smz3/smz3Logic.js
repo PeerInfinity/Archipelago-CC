@@ -216,6 +216,53 @@ export function smz3_CanOpenRedDoors(snapshot, staticData) {
   return hasItem(snapshot, 'Missile') || hasItem(snapshot, 'Super');
 }
 
+/**
+ * Check if player can access Crocomire area.
+ * Python: def CanAccessCrocomire(self): return self.CardNorfairBoss if self.Config.Keysanity else self.Super
+ *
+ * Note: For non-keysanity mode (default), just requires Super Missile.
+ * For keysanity mode, would require CardNorfairBoss instead.
+ */
+export function smz3_CanAccessCrocomire(snapshot, staticData) {
+  // TODO: Check keysanity setting from staticData.settings if needed
+  // For now, assuming non-keysanity mode (standard SMZ3)
+  return hasItem(snapshot, 'Super');
+}
+
+/**
+ * Check if player can unlock Wrecked Ship.
+ * Python: def CanUnlockShip(self): return self.CardWreckedShipBoss and self.CanPassBombPassages()
+ */
+export function smz3_CanUnlockShip(snapshot, staticData) {
+  return hasItem(snapshot, 'CardWreckedShipBoss') && smz3_CanPassBombPassages(snapshot, staticData);
+}
+
+/**
+ * Check if player can enter and leave the Gauntlet area.
+ * Python (Normal): items.CardCrateriaL1 and items.Morph and (items.CanFly() or items.SpeedBooster) and
+ *                  (items.CanIbj() or items.CanUsePowerBombs() and items.TwoPowerBombs or items.ScrewAttack)
+ * Python (Hard): items.CardCrateriaL1 and (items.Morph and (items.Bombs or items.TwoPowerBombs) or
+ *                items.ScrewAttack or items.SpeedBooster and items.CanUsePowerBombs() and items.HasEnergyReserves(2))
+ *
+ * Note: TwoPowerBombs means having at least 2 Power Bombs
+ * Using Normal logic for now.
+ */
+export function smz3_CanEnterAndLeaveGauntlet(snapshot, staticData) {
+  // Normal logic implementation
+  const hasCardCrateriaL1 = hasItem(snapshot, 'CardCrateriaL1');
+  const hasMorph = hasItem(snapshot, 'Morph');
+  const canFlyOrSpeed = smz3_CanFly(snapshot, staticData) || hasItem(snapshot, 'SpeedBooster');
+
+  // Check if player has at least 2 Power Bombs
+  const hasTwoPowerBombs = getItemCount(snapshot, 'PowerBomb') >= 2;
+
+  const canEscape = smz3_CanIbj(snapshot, staticData) ||
+                    (smz3_CanUsePowerBombs(snapshot, staticData) && hasTwoPowerBombs) ||
+                    hasItem(snapshot, 'ScrewAttack');
+
+  return hasCardCrateriaL1 && hasMorph && canFlyOrSpeed && canEscape;
+}
+
 // ====================
 // Portal Access Functions
 // ====================

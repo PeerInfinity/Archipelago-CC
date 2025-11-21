@@ -26,3 +26,19 @@
 - `exporter/games/smz3.py:540-590`
 
 **Result**: Palace of Darkness - Harmless Hellway (which has a KeyPD placed on it) now correctly evaluates its access requirements.
+
+### 3. Missing Super Metroid area-specific helpers (FIXED)
+
+**Issue**: Three helper functions for Super Metroid areas were not implemented, blocking progression at sphere 7.8.
+
+**Solution**: Implemented three helper functions based on TotalSMZ3 Python code:
+
+1. **smz3_CanAccessCrocomire**: Returns `hasItem('Super')` for non-keysanity mode. This allows access to Crocomire boss area in Upper Norfair.
+
+2. **smz3_CanUnlockShip**: Returns `hasItem('CardWreckedShipBoss') && CanPassBombPassages()`. This unlocks the Wrecked Ship after defeating Phantoon.
+
+3. **smz3_CanEnterAndLeaveGauntlet**: Implements Normal logic requiring CardCrateriaL1, Morph, ability to fly or speed boost, and ability to escape (IBJ, 2+ Power Bombs, or Screw Attack). This allows full traversal of the Gauntlet area.
+
+**File**: `frontend/modules/shared/gameLogic/smz3/smz3Logic.js:219-264`
+
+**Result**: All 15 locations at sphere 7.8 now correctly evaluate (6 Crocomire, 3 Gauntlet, 6 Wrecked Ship). Test progresses to sphere 8.16.
