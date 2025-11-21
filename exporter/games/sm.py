@@ -337,19 +337,24 @@ class SMGameExportHandler(GenericGameExportHandler):
                     # Check if the Available part is just evalSMBool(SMBool(True), ...)
                     if self._is_always_true_smbool(expanded):
                         # The Available part has no requirements, so the actual requirements
-                        # are in the accessFrom comprehension, which we can't properly export.
-                        #
-                        # LIMITATION: We cannot reliably distinguish between simple accessFrom
-                        # (e.g., lambda sm: SMBool(True)) and complex accessFrom (e.g., lambda sm: sm.canPassBombWall())
-                        # because analyzer recursion limits corrupt the structure.
+                        # are in the accessFrom comprehension.
+
+                        # Check if this is a simple accessFrom (just SMBool(True))
+                        if self._is_simple_accessFrom(first):
+                            # Simple case: accessFrom returns SMBool(True) for all regions
+                            # This means the location is accessible from the region with no item requirements
+                            logger.info("SM: Simple accessFrom detected (SMBool(True)) - exporting as True")
+                            print("[SM] Simple accessFrom (SMBool(True)) - exporting as True")
+                            return {'type': 'constant', 'value': True}
+
+                        # Complex accessFrom that we can't properly export
+                        # LIMITATION: We cannot reliably distinguish complex accessFrom requirements
+                        # (e.g., lambda sm: sm.canPassBombWall()) when analyzer recursion limits
+                        # corrupt the structure.
                         #
                         # Conservative approach: Export as False to prevent incorrect accessibility.
-                        # This means some locations like "Morphing Ball" won't be accessible
-                        # even though they should be in sphere 0.
-                        #
-                        # Proper fix: Implement VARIA logic helpers in frontend to evaluate accessFrom properly.
-                        logger.info("SM: Available is SMBool(True) with accessFrom - exporting as False (VARIA logic not implemented)")
-                        print("[SM] Available is SMBool(True) with accessFrom - exporting as False")
+                        logger.info("SM: Complex accessFrom with SMBool(True) Available - exporting as False (conservative)")
+                        print("[SM] Complex accessFrom - exporting as False (conservative)")
                         return {'type': 'constant', 'value': False}
 
                     # If Available has actual requirements, use it

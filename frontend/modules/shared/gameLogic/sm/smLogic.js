@@ -148,7 +148,28 @@ export function wand(snapshot, staticData, ...args) {
  * @returns {Object} SMBool object
  */
 export function haveItem(snapshot, staticData, itemName) {
-  const hasIt = has(snapshot, staticData, itemName);
+  // In Super Metroid, items can be referenced by their VARIA type name (e.g., "Morph")
+  // or their full Archipelago name (e.g., "Morph Ball").
+  // We need to check both the item name and the item type.
+
+  // First, try direct name match
+  let hasIt = has(snapshot, staticData, itemName);
+
+  // If not found by name, check if any item has this type
+  if (!hasIt && staticData && staticData.items) {
+    // Check player 1's items (assuming single player for now)
+    const playerItems = staticData.items['1'] || staticData.items[1];
+    if (playerItems) {
+      for (const [fullItemName, itemData] of Object.entries(playerItems)) {
+        if (itemData.type === itemName) {
+          // Found an item with matching type, check if we have it
+          hasIt = has(snapshot, staticData, fullItemName);
+          if (hasIt) break;
+        }
+      }
+    }
+  }
+
   return { bool: hasIt, difficulty: 0 };
 }
 
