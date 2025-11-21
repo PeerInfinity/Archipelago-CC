@@ -74,11 +74,14 @@ export const stardewValleyStateModule = {
     // Always log for debugging
     console.log(`[Stardew Valley afterItemAdded] Item: ${itemName}, count: ${count}, itemDef:`, itemDef);
 
-    if (!itemDef || !itemDef.advancement || itemDef.event) {
-      // Not an advancement item, or it's an event item (which shouldn't count)
-      console.log(`[Stardew Valley afterItemAdded] Skipping ${itemName}: advancement=${itemDef?.advancement}, event=${itemDef?.event}`);
+    if (!itemDef || !itemDef.advancement) {
+      // Not an advancement item
+      console.log(`[Stardew Valley afterItemAdded] Skipping ${itemName}: advancement=${itemDef?.advancement}`);
       return;
     }
+
+    // NOTE: We DO count event items if they have advancement=true
+    // Python's CollectionState counts all advancement items, including events like "Copper Ore (Logic event)"
 
     // Update "Received Progression Item"
     const currentProgItemCount = sm.inventory['Received Progression Item'] || 0;
@@ -114,10 +117,13 @@ export const stardewValleyStateModule = {
   afterItemRemoved(sm, itemName, count) {
     // Check if this is an advancement item
     const itemDef = sm.itemData[itemName];
-    if (!itemDef || !itemDef.advancement || itemDef.event) {
-      // Not an advancement item, or it's an event item (which shouldn't count)
+    if (!itemDef || !itemDef.advancement) {
+      // Not an advancement item
       return;
     }
+
+    // NOTE: We DO count event items if they have advancement=true
+    // Python's CollectionState counts all advancement items, including events
 
     // Update "Received Progression Item"
     const currentProgItemCount = sm.inventory['Received Progression Item'] || 0;
