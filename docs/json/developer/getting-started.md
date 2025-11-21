@@ -331,7 +331,7 @@ general_options:
 
 ## Next Steps
 
-You are now ready to start developing! Refer to the following documents for more detailed information:
+You are now ready to start developing. Refer to the following documents for more detailed information:
 
 -   **[System Architecture](./architecture.md)**: For a high-level understanding of how the project is structured.
 -   **[Creating Modules](./guides/creating-modules.md)**: For a practical guide on adding new features.

@@ -72,7 +72,7 @@ Generated: 2025-09-16T17:44:30.615Z
 
 The following modules do not have moduleInfo exported:
 
-None - all modules have moduleInfo!
+None - all modules have moduleInfo.
 
 ## Recommendations
 
