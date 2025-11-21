@@ -2,13 +2,13 @@
 
 ## Issue 1: Missing core VARIA logic helpers
 
-**Status**: ✓ Solved (Enhanced Implementation - 51% coverage)
+**Status**: ✓ Solved (Comprehensive Implementation - 68% coverage)
 
 **Description**:
 Super Metroid uses the VARIA Randomizer's SMBoolManager system with numerous helper functions for checking abilities, items, and techniques. The frontend initially had only stub implementations.
 
 **Solution**:
-Implemented 48 VARIA logic helper functions (51% coverage, up from 43%) covering:
+Implemented 64 VARIA logic helper functions (68% coverage, up from 51%) covering:
 
 1. **Basic Item Checks** (21 helpers)
    - Item possession checks (haveItem, canUseBombs, canUsePowerBombs, etc.)
@@ -27,7 +27,7 @@ Implemented 48 VARIA logic helper functions (51% coverage, up from 43%) covering
    - Door types (canOpenEyeDoors, canOpenGreenDoors) ✨NEW
    - Combat (canFireChargedShots) ✨NEW
 
-4. **Knowledge Techniques** (8 helpers)
+4. **Knowledge Techniques (23 helpers))
    - Assumed player knowledge (knowsCeilingDBoost, knowsInfiniteBombJump, etc.)
    - New: knowsGreenGateGlitch, knowsGravLessLevel3 ✨NEW
 
