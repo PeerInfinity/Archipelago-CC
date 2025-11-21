@@ -100,8 +100,14 @@ class ZillionGameExportHandler(GenericGameExportHandler):
 
             # Build the final access rule
             if not conditions:
-                # No requirements - accessible from the start
-                return {'type': 'constant', 'value': True}
+                # No requirements beyond baseline - check if actually baseline accessible
+                if cached_reqs.get('baseline', False):
+                    return {'type': 'constant', 'value': True}
+                else:
+                    # Has baseline req values but wasn't in baseline_accessible
+                    # This means region traversal prevents access
+                    # Return a conservative rule requiring Zillion (prevents false positives)
+                    return {'type': 'item_check', 'item': 'Zillion'}
             elif len(conditions) == 1:
                 return conditions[0]
             else:

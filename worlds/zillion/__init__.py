@@ -176,8 +176,18 @@ class ZillionWorld(World):
         """
         assert self.zz_system.randomizer, "randomizer not initialized"
 
-        # Test baseline accessibility
-        baseline_accessible = self.zz_system.randomizer.get_locations(Req(gun=1, jump=1))
+        # Test baseline accessibility using zilliandomizer's get_locations()
+        baseline_req = Req(gun=1, jump=1)
+        zz_baseline_accessible = self.zz_system.randomizer.get_locations(baseline_req)
+
+        self.logger.info(f"Zilliandomizer baseline: {len(zz_baseline_accessible)} locations with Req(gun=1, jump=1)")
+
+        # Note: We'll also check Archipelago's CollectionState later to get the full baseline set
+        # For now, use zilliandomizer's result
+        baseline_accessible = zz_baseline_accessible
+
+        baseline_names = [self.zz_system.randomizer.loc_name_2_pretty[loc.name] for loc in baseline_accessible if loc.name != 'main']
+        self.logger.info(f"Baseline accessible locations: {sorted(baseline_names)}")
 
         # For each location, determine minimum requirements
         for zz_loc_name, zz_loc in self.zz_system.randomizer.locations.items():
@@ -189,56 +199,22 @@ class ZillionWorld(World):
             if zz_loc in baseline_accessible:
                 # Accessible from the start
                 self.location_accessibility_cache[loc_name] = {
-                    'gun': 1, 'jump': 1, 'floppy': 0, 'red': 0
+                    'gun': 1, 'jump': 1, 'floppy': 0, 'red': 0, 'hp': 0, 'skill': 0,
+                    'baseline': True  # Mark as actually baseline accessible
                 }
             else:
                 # Start with the location's actual req values
-                # Then test combinations to find minimum needed
                 req = zz_loc.req
 
-                # Test with the location's stated requirements first
-                test_req = Req(gun=max(1, req.gun), jump=max(1, req.jump),
-                              floppy=req.floppy, red=req.red)
-                if zz_loc in self.zz_system.randomizer.get_locations(test_req):
-                    # Location accessible with its stated requirements
-                    self.location_accessibility_cache[loc_name] = {
-                        'gun': max(1, req.gun),
-                        'jump': max(1, req.jump),
-                        'floppy': req.floppy,
-                        'red': req.red
-                    }
-                else:
-                    # Need more than stated - test combinations including floppy/red
-                    found = False
-
-                    # Test progressively more powerful combinations
-                    for red in [req.red, 1]:
-                        for floppy in [req.floppy] + ([1] if req.floppy == 0 else []):
-                            for gun in range(max(1, req.gun), 4):
-                                for jump in range(max(1, req.jump), 4):
-                                    test_req = Req(gun=gun, jump=jump, floppy=floppy, red=red)
-                                    if zz_loc in self.zz_system.randomizer.get_locations(test_req):
-                                        self.location_accessibility_cache[loc_name] = {
-                                            'gun': gun, 'jump': jump,
-                                            'floppy': floppy, 'red': red
-                                        }
-                                        found = True
-                                        break
-                                if found:
-                                    break
-                            if found:
-                                break
-                        if found:
-                            break
-
-                    if not found:
-                        # Fall back to req object values
-                        self.location_accessibility_cache[loc_name] = {
-                            'gun': max(1, req.gun),
-                            'jump': max(1, req.jump),
-                            'floppy': req.floppy,
-                            'red': req.red
-                        }
+                # Use req object values (ensure at least baseline)
+                self.location_accessibility_cache[loc_name] = {
+                    'gun': max(1, req.gun),
+                    'jump': max(1, req.jump),
+                    'floppy': req.floppy,
+                    'red': req.red,
+                    'hp': req.hp,
+                    'skill': req.skill
+                }
 
     @override
     def create_regions(self) -> None:
