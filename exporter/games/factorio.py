@@ -19,6 +19,21 @@ class FactorioGameExportHandler(BaseGameExportHandler):
         """Expand Factorio-specific helper functions."""
         return None  # Will implement specific helpers as we discover them
 
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Get Factorio-specific settings including workaround for event item collection."""
+        # Get base settings
+        settings = super().get_settings_data(world, multiworld, player)
+
+        # WORKAROUND: Enable upfront item addition to work around a state manager issue
+        # where event items collected from locations in later spheres are not properly
+        # added to inventory during spoiler tests. This tells the test framework to add
+        # items from the sphere log directly to inventory before checking locations,
+        # rather than relying on the location checking code to add them.
+        # See: CC/scripts/logs/factorio/remaining-general-issues.md for details
+        settings['add_sphere_items_upfront'] = True
+
+        return settings
+
     def get_game_info(self, world) -> Dict[str, Any]:
         """Get Factorio game information including required variables."""
         from worlds.factorio.Technologies import required_technologies
