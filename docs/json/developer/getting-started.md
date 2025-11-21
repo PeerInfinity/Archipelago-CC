@@ -2,6 +2,8 @@
 
 This guide provides the necessary steps to set up a local development environment for the Archipelago JSON Export Tools project. It is intended for developers who want to contribute to the project, add new features, or debug existing functionality.
 
+**Windows Users:** See the **[Windows-specific setup guide](./getting-started-windows.md)** for streamlined instructions tailored to Windows development environments.
+
 ## Prerequisites
 
 ### Required Software

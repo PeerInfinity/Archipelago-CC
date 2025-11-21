@@ -27,8 +27,10 @@ This section is for developers who want to understand, modify, or contribute to 
 
 - **[Getting Started for Developers](./developer/getting-started.md)**: Your first stop for setting up a local development environment.
 - **[System Architecture](./developer/architecture.md)**: A high-level overview of the modular frontend and Python backend systems.
-- **[Developer Guides](./developer/guides/)**: In-depth guides on specific architectural components like the State Manager, Module System, and Event System.
-- **[Reference](./developer/reference/)**: Detailed reference material, such as the Logging System guide.
+- **[Developer Guides](./developer/guides/README.md)**: In-depth guides on specific architectural components like the State Manager, Module System, and Event System.
+- **[Reference](./developer/reference/README.md)**: Detailed reference material, such as the Logging System guide.
+- **[Diffs from Upstream](./developer/diffs/README.md)**: Line-by-line changes from the upstream Archipelago repository.
+- **[Project Roadmap](./project-roadmap.md)**: Development priorities and future plans for the project.
 - **[Test Results](./developer/test-results/)**: Automated test results for all game templates:
   - [Test Results Summary](./developer/test-results/test-results-summary.md): Combined overview of all test types
   - [Minimal Spoiler Test Results](./developer/test-results/test-results-spoilers-minimal.md): Tests with advancement items only
