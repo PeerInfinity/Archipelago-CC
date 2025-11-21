@@ -24,53 +24,20 @@ function hasEvent(snapshot, eventName) {
 
 // Helper function to check if player has any item from a group
 function hasGroup(snapshot, groupName, staticData) {
-    const debug = groupName === 'skates';
-
     if (!snapshot?.inventory || !staticData?.items) {
-        if (debug) {
-            console.log('[hasGroup] Missing data:', {
-                hasInventory: !!snapshot?.inventory,
-                hasStaticData: !!staticData,
-                hasItems: !!staticData?.items,
-                staticDataKeys: staticData ? Object.keys(staticData) : null,
-                itemsType: staticData?.items ? typeof staticData.items : null
-            });
-        }
         return false;
     }
 
     // Check if any item in inventory belongs to the specified group
-    let checkedCount = 0;
     for (const itemName in snapshot.inventory) {
         const count = snapshot.inventory[itemName];
         if (count > 0) {
-            checkedCount++;
             const itemDef = staticData.items[itemName];
             const matches = itemDef?.groups?.includes(groupName);
-            if (debug) {
-                if (itemName.includes('Inline')) {
-                    console.log(`[hasGroup] Checking ${itemName}, count=${count}`);
-                    console.log(`[hasGroup]   itemDef exists: ${!!itemDef}, matches: ${matches}`);
-                    if (itemDef) {
-                        console.log(`[hasGroup]   groups:`, itemDef.groups);
-                    } else {
-                        // Item not found - check what items are in staticData
-                        console.log(`[hasGroup]   staticData.items has ${Object.keys(staticData.items).length} items`);
-                        const sampleKeys = Object.keys(staticData.items).slice(0, 5);
-                        console.log(`[hasGroup]   Sample item keys:`, sampleKeys);
-                    }
-                }
-            }
             if (matches) {
-                if (debug) {
-                    console.log(`[hasGroup] RETURNING TRUE for ${itemName}`);
-                }
                 return true;
             }
         }
-    }
-    if (debug) {
-        console.log(`[hasGroup] No items found in skates group, RETURNING FALSE (checked ${checkedCount} items with count > 0)`);
     }
     return false;
 }
@@ -128,10 +95,6 @@ function skateboard(snapshot, staticData, movestyle) {
 function inline_skates(snapshot, staticData, movestyle) {
     const hasSkatesGroup = hasGroup(snapshot, 'skates', staticData);
     const result = movestyle === 3 || hasSkatesGroup;
-    const rep = snapshot?.inventory?.rep || 0;
-    if (rep >= 16 && rep <= 40) {
-        console.log(`[inline_skates] movestyle=${movestyle}, hasGroup('skates')=${hasSkatesGroup}, result=${result}, inventory keys:`, Object.keys(snapshot?.inventory || {}).filter(k => k.toLowerCase().includes('skate') || k.toLowerCase().includes('inline')));
-    }
     return result;
 }
 
@@ -157,12 +120,7 @@ function rep(snapshot, staticData, required) {
 
 // Progression functions
 function versum_hill_entrance(snapshot, staticData) {
-    const result = rep(snapshot, staticData, 20);
-    const currentRep = snapshot?.inventory?.rep || 0;
-    if (currentRep >= 16 && currentRep <= 32) {
-        console.log(`[versum_hill_entrance] REP=${currentRep}, required=20, result=${result}`);
-    }
-    return result;
+    return rep(snapshot, staticData, 20);
 }
 
 function versum_hill_ch1_roadblock(snapshot, staticData, limit) {
@@ -496,8 +454,9 @@ function mataan_faux(snapshot, staticData, limit, glitched) {
 }
 
 // Helper to get options from static data
-function getOptionsFromStaticData(staticData) {
-    const settings = staticData?.settings?.['1'];  // Player 1
+function getOptionsFromStaticData(snapshot, staticData) {
+    const playerSlot = snapshot?.player?.slot || '1';
+    const settings = staticData?.settings?.[playerSlot];
     if (!settings) {
         return {
             movestyle: 2,  // Default: skateboard
@@ -522,7 +481,7 @@ function spots_s_glitchless(snapshot, staticData, limit, accessCache) {
 
     // If accessCache is a name reference or undefined, build it
     if (!accessCache || (typeof accessCache === 'object' && accessCache?.type === 'name')) {
-        const options = getOptionsFromStaticData(staticData);
+        const options = getOptionsFromStaticData(snapshot, staticData);
         accessCache = build_access_cache(snapshot, staticData, options.movestyle, options.limit, options.glitched);
     }
 
@@ -590,7 +549,7 @@ function spots_s_glitched(snapshot, staticData, limit, accessCache) {
 
     // If accessCache is a name reference or undefined, build it
     if (!accessCache || (typeof accessCache === 'object' && accessCache?.type === 'name')) {
-        const options = getOptionsFromStaticData(staticData);
+        const options = getOptionsFromStaticData(snapshot, staticData);
         accessCache = build_access_cache(snapshot, staticData, options.movestyle, options.limit, options.glitched);
     }
 
@@ -1070,28 +1029,7 @@ function graffiti_spots(snapshot, staticData, movestyle, limit, glitched, spots)
         total = s_spots + m_spots + l_spots + xl_spots;
     }
 
-    // Debug logging for checking graffiti spots
-    if (spots === 25 || spots === 30) {
-        console.log(`[graffiti_spots] Checking for ${spots} spots: S=${s_spots}, M=${m_spots}, L=${l_spots}, XL=${xl_spots}, total=${total}, result=${total >= spots}`);
-        console.log(`[graffiti_spots] REP=${snapshot?.inventory?.rep || 0}, inline_skates=${accessCache.inline_skates}, versum_hill_entrance=${accessCache.versum_hill_entrance}`);
-        console.log(`[graffiti_spots] movestyle=${movestyle}, limit=${limit}, glitched=${glitched}`);
-    }
-
-    const result = total >= spots;
-
-    // Extra debug for problematic spot counts
-    if (spots === 30 && result) {
-        console.log(`[graffiti_spots] !!! Spot ${spots} is ACCESSIBLE: total=${total}, REP=${snapshot?.inventory?.rep || 0}`);
-        // Log all REP items in inventory
-        const repItems = Object.keys(snapshot?.inventory || {}).filter(k => k.includes('REP'));
-        console.log(`[graffiti_spots] REP items in inventory:`, repItems.map(k => `${k}=${snapshot.inventory[k]}`));
-        // Log all items with count > 0
-        const collectedItems = Object.keys(snapshot?.inventory || {}).filter(k => snapshot.inventory[k] > 0);
-        console.log(`[graffiti_spots] All collected items (${collectedItems.length}):`, collectedItems);
-        console.log(`[graffiti_spots] Specifically: rep=${snapshot.inventory.rep}, 16 REP=${snapshot.inventory['16 REP']}`);
-    }
-
-    return result;
+    return total >= spots;
 }
 
 // Export the helper functions in the expected format

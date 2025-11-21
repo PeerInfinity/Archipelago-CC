@@ -49,35 +49,47 @@ export const dlcquestStateModule = {
 export const helperFunctions = {
   /**
    * Check if the player has an item (generic implementation)
-   * @param {Object} state - Game state snapshot
-   * @param {number} player - Player ID
-   * @param {string} item - Item name
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data
+   * @param {string} itemName - Item name
    * @param {number} [count=1] - Required count
    * @returns {boolean} True if player has at least count of the item
    */
-  can_access(state, player, item, count = 1) {
-    const inventory = state.inventory || {};
-    return (inventory[item] || 0) >= count;
+  can_access(snapshot, staticData, itemName, count = 1) {
+    const inventory = snapshot.inventory || {};
+    return (inventory[itemName] || 0) >= count;
   },
 
   /**
    * Generic has method for item checking
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data
+   * @param {string} itemName - Item name
+   * @returns {boolean} True if player has the item
    */
-  has(state, player, item, count = 1) {
-    return this.can_access(state, player, item, count);
+  has(snapshot, staticData, itemName) {
+    return !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
   },
 
   /**
    * Check if player has visited/checked a location
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data
+   * @param {string} flag - Flag name
+   * @returns {boolean} True if flag is set
    */
-  has_flag(state, player, flag) {
-    return state.flags?.includes(flag) || false;
+  has_flag(snapshot, staticData, flag) {
+    return snapshot.flags?.includes(flag) || false;
   },
 
   /**
    * Check if player has an event
+   * @param {Object} snapshot - Game state snapshot
+   * @param {Object} staticData - Static game data
+   * @param {string} event - Event name
+   * @returns {boolean} True if event occurred
    */
-  has_event(state, player, event) {
-    return state.events?.includes(event) || false;
+  has_event(snapshot, staticData, event) {
+    return snapshot.events?.includes(event) || false;
   }
 };

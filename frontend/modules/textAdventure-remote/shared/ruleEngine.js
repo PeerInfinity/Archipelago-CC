@@ -125,6 +125,7 @@
  * - locations_checked: Checks total locations checked
  * - total_items_count: Checks total items collected
  * - can_reach: Checks region reachability
+ * - capability: Checks if player has a specific capability (calls can_* helper)
  * - and/or/not: Boolean logic operators
  * - compare: Comparison operators (>, <, ==, !=, in, etc.)
  * - attribute: Property access on objects
@@ -297,6 +298,39 @@ function isBossDefeatCheck(rule, stateSnapshotInterface) {
 }
 
 /**
+ * Creates a new context with bound iterator variables for all_of/any_of comprehensions.
+ * @param {object} context - The original context
+ * @param {object} iterator_info - Iterator information with target and iterator
+ * @param {any} value - The value to bind to the iterator variable
+ * @returns {object} - A new context with the variable binding
+ */
+function createBoundContext(context, iterator_info, value) {
+  if (!iterator_info || !iterator_info.target || !iterator_info.target.name) {
+    // No variable to bind, return original context
+    return context;
+  }
+
+  const varName = iterator_info.target.name;
+  const boundVariables = { [varName]: value };
+
+  // Create a wrapper context that intercepts resolveName calls
+  return {
+    ...context,
+    resolveName: function(name) {
+      // Check if this is the bound variable
+      if (name in boundVariables) {
+        return boundVariables[name];
+      }
+      // Otherwise delegate to the original context
+      if (context && typeof context.resolveName === 'function') {
+        return context.resolveName(name);
+      }
+      return undefined;
+    }
+  };
+}
+
+/**
  * Evaluates a rule against the provided state context (either StateManager or main thread snapshot).\n * @param {any} rule - The rule object (or primitive) to evaluate.\n * @param {object} context - Either the StateManager instance (or its interface) in the worker,\n *                           or the snapshot interface on the main thread.\n * @param {number} [depth=0] - Current recursion depth for debugging.\n * @returns {boolean|any} - The result of the rule evaluation.\n */
 export const evaluateRule = (rule, context, depth = 0) => {
   // Prevent infinite recursion by limiting depth
@@ -448,7 +482,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
         let hasUndefined = false;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
-          if (conditionResult === false) {
+          // Check for falsiness (but not undefined, which is handled separately)
+          if (!conditionResult && conditionResult !== undefined) {
             result = false;
             hasUndefined = false; // Definitively false
             break;
@@ -469,7 +504,8 @@ export const evaluateRule = (rule, context, depth = 0) => {
         let hasUndefined = false;
         for (const condition of rule.conditions || []) {
           const conditionResult = evaluateRule(condition, context, depth + 1);
-          if (conditionResult === true) {
+          // Check for truthiness (but not undefined, which is handled separately)
+          if (conditionResult && conditionResult !== undefined) {
             result = true;
             hasUndefined = false; // Definitively true
             break;
@@ -481,6 +517,57 @@ export const evaluateRule = (rule, context, depth = 0) => {
         // Only set to undefined if not definitively true and encountered an undefined condition
         if (result === false && hasUndefined) {
           result = undefined;
+        }
+        break;
+      }
+
+      case 'count_true': {
+        // Count how many conditions evaluate to true
+        // Returns true if at least rule.count conditions are true
+        const requiredCount = rule.count || 0;
+        const conditions = rule.conditions || [];
+
+        if (requiredCount === 0) {
+          // No conditions required, always true
+          result = true;
+          break;
+        }
+
+        if (conditions.length === 0) {
+          // No conditions to evaluate
+          result = requiredCount === 0;
+          break;
+        }
+
+        let trueCount = 0;
+        let undefinedCount = 0;
+
+        for (const condition of conditions) {
+          const conditionResult = evaluateRule(condition, context, depth + 1);
+          if (conditionResult === true) {
+            trueCount++;
+          } else if (conditionResult === undefined) {
+            undefinedCount++;
+          }
+          // Short-circuit if we already have enough true conditions
+          if (trueCount >= requiredCount) {
+            result = true;
+            break;
+          }
+        }
+
+        // If we didn't short-circuit with true, determine the result
+        if (result !== true) {
+          if (trueCount >= requiredCount) {
+            // We have enough true conditions
+            result = true;
+          } else if (trueCount + undefinedCount >= requiredCount) {
+            // We might have enough if some undefineds are true
+            result = undefined;
+          } else {
+            // Impossible to reach required count even if all undefineds were true
+            result = false;
+          }
         }
         break;
       }
@@ -514,6 +601,23 @@ export const evaluateRule = (rule, context, depth = 0) => {
         break;
       }
 
+      case 'tuple': {
+        // Handle tuple types (used for door arguments in Lingo and similar games)
+        // Evaluate each element and return as an array
+        if (!rule.elements || !Array.isArray(rule.elements)) {
+          result = [];
+          break;
+        }
+        const elements = rule.elements.map((elem) => evaluateRule(elem, context, depth + 1));
+        // If any element is undefined, the tuple is undefined
+        if (elements.some((elem) => elem === undefined)) {
+          result = undefined;
+        } else {
+          result = elements;
+        }
+        break;
+      }
+
       case 'attribute': {
         const baseObject = evaluateRule(rule.object, context, depth + 1);
 
@@ -521,12 +625,17 @@ export const evaluateRule = (rule, context, depth = 0) => {
         // try to resolve from game settings (self in Python rules = world/rules class instance with options)
         if (baseObject === undefined && rule.object && rule.object.type === 'name' && rule.object.name === 'self') {
           // Try to get the setting value from context
-          if (context.getStaticData) {
-            const staticData = context.getStaticData();
+          if (context.getStaticData || context.staticData) {
+            const staticData = context.getStaticData ? context.getStaticData() : context.staticData;
             const playerId = context.playerId || context.getPlayerSlot?.() || '1';
 
+            // Special case: if accessing self.options, return the settings object so nested attributes work
+            if (rule.attr === 'options' && staticData?.settings && staticData.settings[playerId]) {
+              return staticData.settings[playerId];
+            }
+
             // Check if the setting exists
-            if (staticData.settings && staticData.settings[playerId]) {
+            if (staticData?.settings && staticData.settings[playerId]) {
               const settingValue = staticData.settings[playerId][rule.attr];
               if (settingValue !== undefined) {
                 return settingValue;
@@ -794,6 +903,48 @@ export const evaluateRule = (rule, context, depth = 0) => {
           }
         }
 
+        // Special handling for self.method_name() calls (e.g., self.explore_score())
+        // These should be treated as helper function calls
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.object?.type === 'name' &&
+          rule.function.object.name === 'self'
+        ) {
+          const helperName = rule.function.attr;
+          const args = (rule.args || []).map(
+            (arg) => evaluateRule(arg, context, depth + 1)
+          );
+
+          // If any argument evaluation results in undefined, return undefined
+          if (args.some((arg) => arg === undefined)) {
+            result = undefined;
+            break;
+          }
+
+          // Call the helper function through context.executeHelper
+          if (context.executeHelper) {
+            try {
+              result = context.executeHelper(helperName, ...args);
+              break;
+            } catch (error) {
+              logError(
+                LOG_LEVEL.ERROR,
+                `[ruleEngine] [evaluateRule] Failed to execute helper '${helperName}':`,
+                error
+              );
+              result = undefined;
+              break;
+            }
+          } else {
+            logError(
+              LOG_LEVEL.ERROR,
+              `[ruleEngine] [evaluateRule] No executeHelper method in context for helper '${helperName}'`
+            );
+            result = undefined;
+            break;
+          }
+        }
+
         const func = evaluateRule(rule.function, context, depth + 1);
 
         if (typeof func === 'undefined') {
@@ -812,6 +963,16 @@ export const evaluateRule = (rule, context, depth = 0) => {
         ) {
           // Evaluate the rule object directly
           result = evaluateRule(func, context, depth + 1);
+          break;
+        }
+
+        // Special case: If func is a boolean, it means rule.function was a rule object
+        // that was already evaluated. In this case, the boolean is the result.
+        // This happens when the exporter creates function_call structures where
+        // the function field contains a complete rule (e.g., an 'and' rule) instead
+        // of a function reference.
+        if (typeof func === 'boolean') {
+          result = func;
           break;
         }
 
@@ -956,7 +1117,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
                 result = right.some(item => {
                   if (Array.isArray(item)) {
                     // Deep array comparison
-                    return item.length === left.length && 
+                    return item.length === left.length &&
                            item.every((val, index) => val === left[index]);
                   } else {
                     return item === left;
@@ -970,6 +1131,9 @@ export const evaluateRule = (rule, context, depth = 0) => {
             } else if (right instanceof Set) {
               // Handle Set
               result = right.has(left);
+            } else if (typeof right === 'object' && right !== null) {
+              // Handle object (dictionary) membership check
+              result = left in right;
             } else {
               log(
                 'warn',
@@ -978,6 +1142,49 @@ export const evaluateRule = (rule, context, depth = 0) => {
               );
               result = false; // Define behavior: false if right side isn't iterable
             }
+            break;
+          case 'not in':
+            // Same logic as 'in' but negated
+            if (Array.isArray(right)) {
+              // Handle array comparison with deep equality for nested arrays
+              if (Array.isArray(left)) {
+                result = !right.some(item => {
+                  if (Array.isArray(item)) {
+                    // Deep array comparison
+                    return item.length === left.length &&
+                           item.every((val, index) => val === left[index]);
+                  } else {
+                    return item === left;
+                  }
+                });
+              } else {
+                result = !right.includes(left);
+              }
+            } else if (typeof right === 'string') {
+              result = !right.includes(left);
+            } else if (right instanceof Set) {
+              // Handle Set
+              result = !right.has(left);
+            } else if (typeof right === 'object' && right !== null) {
+              // Handle object (dictionary) membership check
+              result = !(left in right);
+            } else {
+              log(
+                'warn',
+                '[evaluateRule] "not in" operator used with invalid right side type:',
+                { left, right }
+              );
+              result = true; // Define behavior: true if right side isn't iterable (consistent with 'not in' semantics)
+            }
+            break;
+          case 'is':
+            // Python 'is' operator - checks identity (same object)
+            // In JavaScript, use === for strict equality which is closest
+            result = left === right;
+            break;
+          case 'is not':
+            // Python 'is not' operator - checks non-identity
+            result = left !== right;
             break;
           default:
             log(
@@ -1081,6 +1288,23 @@ export const evaluateRule = (rule, context, depth = 0) => {
         break;
       }
 
+      case 'region_check': {
+        // Check if a region is accessible (can be reached)
+        const regionName = evaluateRule(rule.region, context, depth + 1);
+        if (regionName === undefined) {
+          result = undefined;
+        } else if (typeof context.isRegionAccessible === 'function') {
+          result = context.isRegionAccessible(regionName);
+          if (result === undefined) {
+            log('warn', `[evaluateRule] Region ${regionName} accessibility could not be determined`);
+          }
+        } else {
+          log('warn', '[evaluateRule] context.isRegionAccessible is not a function for region_check.');
+          result = undefined;
+        }
+        break;
+      }
+
       case 'count_check': {
         const itemName = evaluateRule(rule.item, context, depth + 1);
         // Default count to 1 if not specified
@@ -1150,6 +1374,42 @@ export const evaluateRule = (rule, context, depth = 0) => {
         break;
       }
 
+      case 'f_string': {
+        // Evaluate f-string formatting (e.g., "Automated {ingredient}")
+        if (!rule.parts || !Array.isArray(rule.parts)) {
+          log('warn', '[evaluateRule] f_string rule missing parts array', { rule });
+          result = undefined;
+          break;
+        }
+
+        // Build the string by evaluating each part
+        let resultStr = '';
+        for (const part of rule.parts) {
+          if (part.type === 'constant') {
+            resultStr += part.value;
+          } else if (part.type === 'formatted_value') {
+            // Evaluate the value and convert to string
+            const value = evaluateRule(part.value, context, depth + 1);
+            if (value === undefined) {
+              log('warn', '[evaluateRule] f_string formatted_value evaluated to undefined', { part });
+              result = undefined;
+              break;
+            }
+            resultStr += String(value);
+          } else {
+            log('warn', '[evaluateRule] Unknown f_string part type', { part });
+            result = undefined;
+            break;
+          }
+        }
+
+        // If we successfully built the string, return it
+        if (result !== undefined) {
+          result = resultStr;
+        }
+        break;
+      }
+
       case 'setting_check': {
         let settingName = evaluateRule(rule.setting, context, depth + 1);
         let expectedValue = evaluateRule(rule.value, context, depth + 1);
@@ -1202,10 +1462,10 @@ export const evaluateRule = (rule, context, depth = 0) => {
           } else if (testResult) {
             result = evaluateRule(rule.if_true, context, depth + 1);
           } else {
-            // Handle null if_false as true (no additional requirements)
+            // Handle null if_false as false (location not accessible)
             result =
               rule.if_false === null
-                ? true
+                ? false
                 : evaluateRule(rule.if_false, context, depth + 1);
           }
         }
@@ -1310,7 +1570,7 @@ export const evaluateRule = (rule, context, depth = 0) => {
           result = undefined;
           break;
         }
-        
+
         // Extract iterator information
         let iterable;
         if (rule.iterator_info && rule.iterator_info.iterator) {
@@ -1324,18 +1584,19 @@ export const evaluateRule = (rule, context, depth = 0) => {
           result = undefined;
           break;
         }
-        
+
         if (!Array.isArray(iterable)) {
           log('warn', '[evaluateRule] all_of iterator is not an array', { rule, iterable });
           result = false;
           break;
         }
-        
+
         result = true;
         for (const item of iterable) {
-          // For now, evaluate the element_rule directly
-          // TODO: In a full implementation, we'd need to bind the iterator variable
-          const itemResult = evaluateRule(rule.element_rule, context, depth + 1);
+          // Create a new context with the iterator variable bound
+          const boundContext = createBoundContext(context, rule.iterator_info, item);
+
+          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
           if (itemResult === false) {
             result = false;
             break;
@@ -1344,6 +1605,63 @@ export const evaluateRule = (rule, context, depth = 0) => {
             result = undefined;
             break;
           }
+        }
+        break;
+      }
+
+      case 'any_of': {
+        // any_of evaluates an element_rule against items from an iterator
+        // Returns true if ANY item satisfies the element_rule (OR logic)
+        if (!rule.element_rule) {
+          log('warn', '[evaluateRule] any_of rule missing element_rule', { rule });
+          result = undefined;
+          break;
+        }
+
+        // Extract iterator information
+        let iterable;
+        if (rule.iterator_info && rule.iterator_info.iterator) {
+          // Get the iterator from the iterator_info
+          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1);
+        } else if (rule.iterable) {
+          // Fallback for direct iterable field
+          iterable = evaluateRule(rule.iterable, context, depth + 1);
+        } else {
+          log('warn', '[evaluateRule] any_of rule missing iterator information', { rule });
+          result = undefined;
+          break;
+        }
+
+        if (!Array.isArray(iterable)) {
+          log('warn', '[evaluateRule] any_of iterator is not an array', { rule, iterable });
+          result = false;
+          break;
+        }
+
+        // If the iterable is empty, any_of should return false
+        if (iterable.length === 0) {
+          result = false;
+          break;
+        }
+
+        result = false;
+        let hasUndefined = false;
+        for (const item of iterable) {
+          // Create a new context with the iterator variable bound
+          const boundContext = createBoundContext(context, rule.iterator_info, item);
+
+          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
+          if (itemResult === true) {
+            result = true;
+            break;
+          }
+          if (itemResult === undefined) {
+            hasUndefined = true;
+          }
+        }
+        // If no item returned true but some returned undefined, result is undefined
+        if (result === false && hasUndefined) {
+          result = undefined;
         }
         break;
       }
@@ -1378,6 +1696,94 @@ export const evaluateRule = (rule, context, depth = 0) => {
           log('warn', '[evaluateRule] context.isRegionReachable is not a function for can_reach.');
           result = undefined;
         }
+        break;
+      }
+
+      case 'can_reach_entrance': {
+        // Check if an entrance is reachable
+        // An entrance is reachable if we can reach its source region AND satisfy its access rule
+        const entranceName = rule.entrance;
+        if (!entranceName) {
+          log('warn', '[evaluateRule] can_reach_entrance rule missing entrance name');
+          result = undefined;
+          break;
+        }
+
+        // Find the entrance in the regions data
+        let entrance = null;
+        let sourceRegion = null;
+
+        if (typeof context.getStaticData === 'function') {
+          const staticData = context.getStaticData();
+          const regionsData = staticData?.regions;
+
+          if (regionsData && regionsData instanceof Map) {
+            // staticData.regions is a Map of region name -> region data
+            // Search for the entrance in all regions
+            for (const [regionName, regionData] of regionsData.entries()) {
+              const exits = regionData.exits || [];
+              const foundExit = exits.find(exit => exit.name === entranceName);
+              if (foundExit) {
+                entrance = foundExit;
+                sourceRegion = regionName;
+                break;
+              }
+            }
+          }
+        }
+
+        if (!entrance || !sourceRegion) {
+          log('warn', `[evaluateRule] Entrance "${entranceName}" not found in regions data`);
+          result = undefined;
+          break;
+        }
+
+        // Check if source region is reachable
+        if (typeof context.isRegionReachable !== 'function') {
+          log('warn', '[evaluateRule] context.isRegionReachable is not a function for can_reach_entrance.');
+          result = undefined;
+          break;
+        }
+
+        const sourceReachable = context.isRegionReachable(sourceRegion);
+        if (!sourceReachable) {
+          result = false;
+          break;
+        }
+
+        // Evaluate the entrance's access rule
+        if (entrance.access_rule) {
+          result = evaluateRule(entrance.access_rule, context, depth + 1);
+        } else {
+          // No access rule means the entrance is accessible if the region is reachable
+          result = true;
+        }
+        break;
+      }
+
+      case 'capability': {
+        // Handle capability rules - inferred rules that check if player has a certain capability
+        // The capability name (e.g., "gain_lp_every_turn") corresponds to a helper function
+        // with "can_" prefix (e.g., "can_gain_lp_every_turn")
+        const capabilityName = rule.capability;
+        if (!capabilityName) {
+          log('warn', '[evaluateRule] Capability rule missing capability name', { rule });
+          result = undefined;
+          break;
+        }
+
+        // Convert capability name to helper function name
+        // e.g., "gain_lp_every_turn" -> "can_gain_lp_every_turn"
+        const helperName = `can_${capabilityName}`;
+
+        if (!isValidContext || typeof context.executeHelper !== 'function') {
+          log('warn', `[evaluateRule] Cannot execute capability helper '${helperName}' - invalid context`);
+          result = undefined;
+          break;
+        }
+
+        // Execute the helper function (capabilities typically don't have arguments)
+        result = context.executeHelper(helperName);
         break;
       }
 
@@ -1452,6 +1858,15 @@ export function debugRule(rule, indent = 0) {
       } else {
         log('info', `${prefix}Location (complex):`);
         debugRule(rule.location, indent + 2);
+      }
+      break;
+
+    case 'region_check':
+      if (typeof rule.region === 'string') {
+        log('info', `${prefix}Region: ${rule.region}`);
+      } else {
+        log('info', `${prefix}Region (complex):`);
+        debugRule(rule.region, indent + 2);
       }
       break;
 
@@ -1540,6 +1955,19 @@ export function debugRule(rule, indent = 0) {
         `${prefix}${rule.type.toUpperCase()} with ${
           rule.conditions.length
         } conditions:`
+      );
+      rule.conditions.forEach((cond, i) => {
+        log('info', `${prefix}  Condition ${i + 1}:`);
+        debugRule(cond, indent + 4);
+      });
+      break;
+
+    case 'count_true':
+      log(
+        'info',
+        `${prefix}COUNT_TRUE (at least ${rule.count} of ${
+          rule.conditions.length
+        } conditions):`
       );
       rule.conditions.forEach((cond, i) => {
         log('info', `${prefix}  Condition ${i + 1}:`);

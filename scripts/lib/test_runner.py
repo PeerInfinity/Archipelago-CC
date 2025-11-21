@@ -32,7 +32,7 @@ from .test_utils import (
 )
 
 
-def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False) -> Dict:
+def test_template_single_seed(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed: str = "1", export_only: bool = False, test_only: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False, player: int = None) -> Dict:
     """Test a single template file and return results."""
     template_filename = os.path.basename(template_file)
     game_name_from_filename = normalize_game_name(template_filename)
@@ -196,17 +196,38 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         # This preserves any existing generation error data from previous runs
         result['generation']['note'] = 'Skipped in test-only mode'
 
-    # Return early if export_only mode
-    if export_only:
-        print(f"Export completed for {template_filename} (export-only mode)")
-        return result
-
     # Check if rules file exists (files are actually in frontend/presets/)
     # Use world_directory from world_info if available (for multitemplate mode),
     # otherwise fall back to game_name_from_filename
     preset_dir = world_info.get('world_directory', game_name_from_filename) if world_info else game_name_from_filename
     rules_path = f"./presets/{preset_dir}/{seed_id}/{seed_id}_rules.json"
     full_rules_path = os.path.join(project_root, 'frontend', rules_path.lstrip('./'))
+
+    # If player parameter is specified and generation just completed, remap player IDs in the rules file
+    if player is not None and not test_only:
+        if os.path.exists(full_rules_path):
+            print(f"Remapping player IDs in rules file to player {player}...")
+            # Import the remapping function
+            import sys
+            import importlib.util
+            remap_script_path = os.path.join(project_root, 'scripts', 'lib', 'remap_player_ids.py')
+            spec = importlib.util.spec_from_file_location("remap_player_ids", remap_script_path)
+            remap_module = importlib.util.module_from_spec(spec)
+            sys.modules["remap_player_ids"] = remap_module
+            spec.loader.exec_module(remap_module)
+
+            # Remap the player IDs
+            success = remap_module.remap_player_ids(full_rules_path, player)
+            if success:
+                print(f"  Successfully remapped player IDs to player {player}")
+            else:
+                print(f"  Warning: Failed to remap player IDs")
+
+    # Return early if export_only mode (after remapping)
+    if export_only:
+        print(f"Export completed for {template_filename} (export-only mode)")
+        return result
+
     if not os.path.exists(full_rules_path):
         print(f"Rules file not found: {full_rules_path}")
         test_key = 'multiplayer_test' if multiplayer else 'spoiler_test'
@@ -333,6 +354,10 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         else:
             spoiler_cmd = ["npm", "test", "--mode=test-spoilers", f"--game={test_game}", f"--seed={seed}"]
 
+        # Add --player argument if specified
+        if player is not None:
+            spoiler_cmd.append(f"--player={player}")
+
         # Show the command being run
         print(f"  Command: {' '.join(spoiler_cmd)}")
 
@@ -433,7 +458,7 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
     return result
 
 
-def test_template_seed_range(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed_list: List[int], export_only: bool = False, test_only: bool = False, stop_on_failure: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False) -> Dict:
+def test_template_seed_range(template_file: str, templates_dir: str, project_root: str, world_mapping: Dict[str, Dict], seed_list: List[int], export_only: bool = False, test_only: bool = False, stop_on_failure: bool = False, multiplayer: bool = False, single_client: bool = False, headed: bool = False, include_error_details: bool = False, dry_run: bool = False, player: int = None) -> Dict:
     """Test a template file with multiple seeds and return aggregated results."""
     template_filename = os.path.basename(template_file)
 
@@ -477,7 +502,7 @@ def test_template_seed_range(template_file: str, templates_dir: str, project_roo
             result = test_template_single_seed(
                 template_file, templates_dir, project_root, world_mapping,
                 str(seed), export_only, test_only, multiplayer, single_client, headed,
-                include_error_details, dry_run
+                include_error_details, dry_run, player
             )
 
             seed_range_result['individual_results'][str(seed)] = result

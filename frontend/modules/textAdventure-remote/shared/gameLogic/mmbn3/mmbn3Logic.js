@@ -3,16 +3,12 @@
  */
 
 import { genericStateModule } from '../generic/genericLogic.js';
-import { has, count, explore_score } from './helpers.js';
+import * as helpers from './helpers.js';
 
 /**
  * Export helper functions for use by the rule engine
  */
-export const helperFunctions = {
-  has,
-  count,
-  explore_score
-};
+export const helperFunctions = helpers;
 
 /**
  * Use generic state module for now
