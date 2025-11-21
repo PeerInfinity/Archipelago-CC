@@ -374,6 +374,46 @@ export function smz3_CanExit(snapshot, staticData) {
 // ====================
 
 /**
+ * Get a location object by name to check properties like what item is placed there.
+ * Python: def GetLocation(location_name: str): return world.get_location(location_name)
+ *
+ * This returns an object with an ItemIs method that checks if a specific item type is placed at the location.
+ *
+ * @param {Object} snapshot - State snapshot
+ * @param {Object} staticData - Static data (contains locations)
+ * @param {string} locationName - The name of the location to get
+ * @returns {Object} An object with ItemIs method
+ */
+export function smz3_GetLocation(snapshot, staticData, locationName) {
+  // Find the location in staticData
+  let foundLocation = null;
+
+  if (staticData.regions) {
+    const regionsToSearch = staticData.regions instanceof Map ?
+      Array.from(staticData.regions.values()) :
+      Object.values(staticData.regions);
+
+    for (const region of regionsToSearch) {
+      if (region.locations) {
+        foundLocation = region.locations.find(loc => loc.name === locationName);
+        if (foundLocation) break;
+      }
+    }
+  }
+
+  // Return an object with ItemIs method
+  return {
+    ItemIs: (itemType, world) => {
+      if (!foundLocation || !foundLocation.item) {
+        return false;
+      }
+      // Check if the item at this location matches the requested type
+      return foundLocation.item.name === itemType;
+    }
+  };
+}
+
+/**
  * Check if player can acquire a specific reward (pendant/crystal/boss token).
  * Python: def CanAcquire(self, items: Item.Progression, reward: Region.RewardType):
  *     return next(iter([region for region in self.Regions if isinstance(region, Region.IReward) and region.Reward == reward])).CanComplete(items)

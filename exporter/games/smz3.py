@@ -350,9 +350,11 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
             logger.info(f"Analyzing canAccess function for '{rule_target_name}'")
 
-            # Store the region name in the rule target so postprocess_rule can use it
-            # to inline region-specific methods like CanBeatBoss
+            # Store the region name and location object so postprocess_rule can use them
+            # to inline region-specific methods like CanBeatBoss and resolve GetLocation().ItemIs()
             self._current_location_region = loc_object.Region.Name if hasattr(loc_object, 'Region') else None
+            self._current_location_object = loc_object
+            self._current_location_name = rule_target_name
 
             # Analyze the canAccess function
             # This function has signature: lambda items: <requirements>
@@ -378,6 +380,8 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             return None
         finally:
             self._current_location_region = None
+            self._current_location_object = None
+            self._current_location_name = None
 
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -532,6 +536,58 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
             if isinstance(func, dict) and func.get('type') == 'attribute':
                 obj = func.get('object')
                 method_name = func.get('attr')
+
+                # Handle GetLocation().ItemIs() pattern - convert to runtime helper call
+                # Pattern: GetLocation("location_name").ItemIs(ItemType.KeyPD, world)
+                # This checks if the item placed at a specific location matches a given type
+                # We can't resolve this at export time because items aren't placed yet,
+                # so we convert it to a helper call that will be evaluated at runtime
+                if (isinstance(obj, dict) and obj.get('type') == 'helper' and
+                    (obj.get('name') == 'GetLocation' or obj.get('name') == 'smz3_GetLocation') and
+                    method_name == 'ItemIs'):
+
+                    logger.debug("Converting GetLocation().ItemIs() to runtime helper call")
+
+                    # Extract the location name and item type being checked
+                    get_location_args = obj.get('args', [])
+                    location_name_rule = None
+                    if get_location_args and len(get_location_args) > 0:
+                        location_name_rule = self.postprocess_rule(get_location_args[0])
+
+                    # Process the ItemType argument
+                    item_type_rule = None
+                    if filtered_args and len(filtered_args) > 0:
+                        item_type_arg = filtered_args[0]
+                        # Handle ItemType.KeyPD pattern (attribute access) - extract just the attribute name
+                        if item_type_arg.get('type') == 'attribute':
+                            item_type_name = item_type_arg.get('attr')
+                            item_type_rule = {'type': 'constant', 'value': item_type_name}
+                        else:
+                            item_type_rule = self.postprocess_rule(item_type_arg)
+
+                    if location_name_rule and item_type_rule:
+                        # Convert to a helper call pattern that evaluates:
+                        # smz3_GetLocation(location_name).ItemIs(item_type)
+                        # We need to restructure this as a function call that can be evaluated
+                        return {
+                            'type': 'function_call',
+                            'function': {
+                                'type': 'attribute',
+                                'object': {
+                                    'type': 'helper',
+                                    'name': 'smz3_GetLocation',
+                                    'args': [location_name_rule]
+                                },
+                                'attr': 'ItemIs'
+                            },
+                            'args': [item_type_rule]
+                        }
+
+                    logger.warning("Could not fully process GetLocation().ItemIs() pattern")
+                    return {
+                        'type': 'constant',
+                        'value': False
+                    }
 
                 # Handle items.MethodName() - convert to helper call
                 if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'items':
