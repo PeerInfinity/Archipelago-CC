@@ -107,19 +107,26 @@ function getGameData(staticData, key) {
  */
 export function can_learn_hm(snapshot, staticData, move) {
   const local_poke_data = getGameData(staticData, 'local_poke_data');
-  if (!local_poke_data) return false;
+  if (!local_poke_data) {
+    return false;
+  }
 
   const moveIndex = ["Cut", "Fly", "Surf", "Strength", "Flash"].indexOf(move);
   if (moveIndex === -1) return false;
 
   for (const [pokemon, data] of Object.entries(local_poke_data)) {
-    if (has(snapshot, staticData, pokemon) && data.tms && data.tms[6]) {
+    // Check for both base Pokemon name and "Static {pokemon}" prefix
+    const hasPokemon = has(snapshot, staticData, pokemon) || has(snapshot, staticData, `Static ${pokemon}`);
+    if (hasPokemon && data.tms && data.tms[6]) {
       // Check if the Pokemon can learn this HM
-      if (data.tms[6] & (1 << (moveIndex + 2))) {
+      const bitMask = 1 << (moveIndex + 2);
+      const canLearn = (data.tms[6] & bitMask) !== 0;
+      if (canLearn) {
         return true;
       }
     }
   }
+
   return false;
 }
 
@@ -130,13 +137,13 @@ export function can_surf(snapshot, staticData) {
   const options = getOptions(staticData);
   const extra_badges = getGameData(staticData, 'extra_badges') || {};
 
-  return (
-    has(snapshot, staticData, "HM03 Surf") &&
-    can_learn_hm(snapshot, staticData, "Surf") &&
-    (has(snapshot, staticData, "Soul Badge") ||
-     has(snapshot, staticData, extra_badges["Surf"]) ||
-     options.badges_needed_for_hm_moves === 0)
-  );
+  const hasHM = has(snapshot, staticData, "HM03 Surf");
+  const canLearn = can_learn_hm(snapshot, staticData, "Surf");
+  const hasBadge = has(snapshot, staticData, "Soul Badge") ||
+                   has(snapshot, staticData, extra_badges["Surf"]) ||
+                   options.badges_needed_for_hm_moves === 0;
+
+  return hasHM && canLearn && hasBadge;
 }
 
 /**
@@ -217,7 +224,7 @@ export function can_get_hidden_items(snapshot, staticData) {
 /**
  * Check if player has a certain number of key items
  */
-export function has_key_items(snapshot, staticData, count) {
+export function has_key_items(snapshot, staticData, requiredCount) {
   const keyItemsList = [
     "Bicycle", "Silph Scope", "Item Finder", "Super Rod", "Good Rod",
     "Old Rod", "Lift Key", "Card Key", "Town Map", "Coin Case", "S.S. Ticket",
@@ -240,7 +247,7 @@ export function has_key_items(snapshot, staticData, count) {
   const progressiveCardKeys = Math.min(count(snapshot, staticData, "Progressive Card Key"), 10);
   keyItemCount += progressiveCardKeys;
 
-  return keyItemCount >= count;
+  return keyItemCount >= requiredCount;
 }
 
 /**

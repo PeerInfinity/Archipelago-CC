@@ -205,9 +205,23 @@ function getHelperFunctions(gameName) {
   if (!gameName) {
     return genericLogic; // Default to generic
   }
-  
+
   const gameLogic = getGameLogic(gameName);
   return gameLogic.helperFunctions || genericLogic;
+}
+
+/**
+ * Get state methods for a game
+ * @param {string} gameName - The name of the game
+ * @returns {Object} Object containing game-specific state methods, or empty object if none
+ */
+function getStateMethods(gameName) {
+  if (!gameName) {
+    return {}; // No state methods for generic
+  }
+
+  const gameLogic = getGameLogic(gameName);
+  return gameLogic.stateMethods || {};
 }
 
 /**
@@ -311,8 +325,9 @@ export function createStateSnapshotInterface(
             options: staticData?.settings?.[playerId] || staticData?.settings || {}
           };
         case 'logic':
+        case 'StateLogic':
           // Return game-specific helper functions as an object
-          // This allows code like logic.can_surf(...) to work
+          // This allows code like logic.can_surf(...) or StateLogic.hammers(...) to work
           const selectedHelpers = getHelperFunctions(gameName);
           if (selectedHelpers) {
             // Wrap each helper to accept the right parameters
@@ -326,16 +341,30 @@ export function createStateSnapshotInterface(
           }
           return undefined;
         default:
-          // Game-specific location variable extraction
+          // Check if this is a game-specific variable (e.g., required_technologies for Factorio)
+          const currentPlayerId = snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || '1';
+          if (staticData?.game_info?.[currentPlayerId]?.variables && staticData.game_info[currentPlayerId].variables[name]) {
+            return staticData.game_info[currentPlayerId].variables[name];
+          }
+
+          // Check if this is a game-specific constant (e.g., OPTIONS for shapez)
+          const gameLogic = getGameLogic(gameName);
+          if (gameLogic.constants && gameLogic.constants[name]) {
+            return gameLogic.constants[name];
+          }
+
+          // Game-specific location variable extraction hook
           // For variables not found in context, try to extract from location name
           if (contextVariables && contextVariables.location) {
             const locationName = contextVariables.location.name || '';
+            const selectedHelpers = getHelperFunctions(gameName);
 
-            // Kingdom Hearts: Extract puppies_required from "Return X Puppies" locations
-            if (name === 'puppies_required' && gameName === 'Kingdom Hearts') {
-              const match = locationName.match(/Return (\d+) Puppies/);
-              if (match) {
-                return parseInt(match[1], 10);
+            // Check if the game has a custom extractor for this variable
+            const extractorName = `extract${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+            if (selectedHelpers && typeof selectedHelpers[extractorName] === 'function') {
+              const extractedValue = selectedHelpers[extractorName](locationName);
+              if (extractedValue !== null && extractedValue !== undefined) {
+                return extractedValue;
               }
             }
           }
@@ -455,6 +484,10 @@ export function createStateSnapshotInterface(
       });
       return evaluateRule(locData.access_rule, locationContext);
     },
+    // Alias for isRegionReachable to match naming convention used in region_check rules
+    isRegionAccessible: function (regionName) {
+      return this.isRegionReachable(regionName);
+    },
     getPlayerSlot: () => snapshot?.player?.slot,
     getGameMode: () => snapshot?.gameMode,
     getDifficultyRequirements: () => snapshot?.difficultyRequirements,
@@ -471,6 +504,7 @@ export function createStateSnapshotInterface(
       locations: staticData.locationData || staticData.locations,
       regions: staticData.regions, // Use the main regions property for rule engine compatibility
       dungeons: staticData.dungeonData || staticData.dungeons,
+      game_info: staticData.game_info, // Include game_info for variable resolution
     }),
     getStateValue: (pathString) => {
       if (!snapshot) return undefined;
@@ -554,6 +588,7 @@ export function createStateSnapshotInterface(
     _isSnapshotInterface: true,
     inventory: snapshot?.inventory || {},
     events: snapshot?.events || {},
+    prog_items: snapshot?.prog_items || {},
     ...rawInterfaceForHelpers,
     // Add context variables to the interface (e.g., currentLocation for boss defeat rules)
     ...contextVariables,
@@ -593,6 +628,20 @@ export function createStateSnapshotInterface(
           return finalSnapshotInterface.isLocationAccessible(targetName);
       }
 
+      // Handle can_reach_region method (Python alias for can_reach with Region type)
+      if (methodName === 'can_reach_region' && args.length >= 1) {
+        const regionName = args[0];
+        // args[1] would be player_id in Python but we ignore it in single-player context
+        return finalSnapshotInterface.isRegionReachable(regionName);
+      }
+
+      // Handle can_reach_location method (Python alias for can_reach with Location type)
+      if (methodName === 'can_reach_location' && args.length >= 1) {
+        const locationName = args[0];
+        // args[1] would be player_id in Python but we ignore it in single-player context
+        return finalSnapshotInterface.isLocationAccessible(locationName);
+      }
+
       // Handle StateManager inventory methods
       if (methodName === 'has_any' && args.length >= 1) {
         const items = args[0];
@@ -629,6 +678,111 @@ export function createStateSnapshotInterface(
           itemsFound += (finalSnapshotInterface.countItem(itemName) || 0);
         }
         return itemsFound >= count;
+      }
+
+      // Handle has_from_list_unique - counts unique items from a list (ignores duplicates)
+      if (methodName === 'has_from_list_unique' && args.length >= 2) {
+        const items = args[0];
+        const count = args[1];
+        if (!Array.isArray(items)) return false;
+        if (typeof count !== 'number' || count < 0) return false;
+
+        // Count unique items from the list (items with count > 0)
+        let uniqueItemsFound = 0;
+        for (const itemName of items) {
+          if ((finalSnapshotInterface.countItem(itemName) || 0) > 0) {
+            uniqueItemsFound++;
+          }
+        }
+        return uniqueItemsFound >= count;
+      }
+
+      // Handle count_from_list_unique - returns the count of unique items from a list (ignores duplicates)
+      if (methodName === 'count_from_list_unique' && args.length >= 1) {
+        const items = args[0];
+        if (!Array.isArray(items)) return 0;
+
+        // Count unique items from the list (items with count > 0)
+        let uniqueItemsFound = 0;
+        for (const itemName of items) {
+          if ((finalSnapshotInterface.countItem(itemName) || 0) > 0) {
+            uniqueItemsFound++;
+          }
+        }
+        return uniqueItemsFound;
+      }
+
+      // Handle has_group_unique - counts unique items from a group (ignores duplicates)
+      if (methodName === 'has_group_unique' && args.length >= 2) {
+        const groupName = args[0];
+        const requiredCount = args[1];
+        if (typeof groupName !== 'string') return false;
+        if (typeof requiredCount !== 'number' || requiredCount < 0) return false;
+
+        const playerSlot = snapshot?.player?.slot || '1';
+        const playerItemGroups = staticData?.item_groups?.[playerSlot] || staticData?.item_groups;
+
+        let uniqueItemsFound = 0;
+
+        if (Array.isArray(playerItemGroups)) {
+          // ALTTP-style with group names as array
+          const playerItemsData = staticData.itemsByPlayer && staticData.itemsByPlayer[playerSlot];
+          if (playerItemsData) {
+            for (const itemName in playerItemsData) {
+              if (playerItemsData[itemName]?.groups?.includes(groupName)) {
+                const itemCount = snapshot.inventory[itemName] || 0;
+                if (itemCount > 0) {
+                  uniqueItemsFound++;
+                  if (uniqueItemsFound >= requiredCount) {
+                    return true;
+                  }
+                }
+              }
+            }
+          }
+        } else if (
+          typeof playerItemGroups === 'object' &&
+          playerItemGroups[groupName] &&
+          Array.isArray(playerItemGroups[groupName])
+        ) {
+          // Item_groups is an object { groupName: [itemNames...] }
+          for (const itemInGroup of playerItemGroups[groupName]) {
+            const itemCount = snapshot.inventory[itemInGroup] || 0;
+            if (itemCount > 0) {
+              uniqueItemsFound++;
+              if (uniqueItemsFound >= requiredCount) {
+                return true;
+              }
+            }
+          }
+        } else if (staticData?.groups) {
+          // Fallback to old groups structure if available
+          const playerGroups = staticData.groups[playerSlot] || staticData.groups;
+          if (
+            typeof playerGroups === 'object' &&
+            playerGroups[groupName] &&
+            Array.isArray(playerGroups[groupName])
+          ) {
+            for (const itemInGroup of playerGroups[groupName]) {
+              const itemCount = snapshot.inventory[itemInGroup] || 0;
+              if (itemCount > 0) {
+                uniqueItemsFound++;
+                if (uniqueItemsFound >= requiredCount) {
+                  return true;
+                }
+              }
+            }
+          }
+        }
+
+        return uniqueItemsFound >= requiredCount;
+      }
+
+      // Check for game-specific state methods first
+      const selectedStateMethods = getStateMethods(gameName);
+
+      if (selectedStateMethods && selectedStateMethods[methodName]) {
+        return selectedStateMethods[methodName](snapshot, staticData, ...args);
       }
 
       // Use game-specific agnostic helpers for all helper methods

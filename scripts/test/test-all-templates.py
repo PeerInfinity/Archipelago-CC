@@ -293,6 +293,11 @@ def main():
         default=0,
         help='Skip the first M templates before applying --every-nth filter (default: 0). Used to offset parallel jobs.'
     )
+    parser.add_argument(
+        '--player',
+        type=int,
+        help='Player ID to use for generation and testing (e.g., 2 for Player 2)'
+    )
 
     args = parser.parse_args()
 
@@ -952,7 +957,7 @@ def main():
                             stop_on_failure=True,  # Stop on first failure in retest mode
                             multiplayer=args.multiplayer, single_client=args.single_client,
                             headed=args.headed, include_error_details=args.include_error_details,
-                            dry_run=args.dry_run
+                            dry_run=args.dry_run, player=args.player
                         )
                     else:
                         # Failing seed is >= retest_continue, just test the failing seed
@@ -962,7 +967,7 @@ def main():
                             str(failing_seed), export_only=args.export_only, test_only=args.test_only,
                             multiplayer=args.multiplayer, single_client=args.single_client,
                             headed=args.headed, include_error_details=args.include_error_details,
-                            dry_run=args.dry_run
+                            dry_run=args.dry_run, player=args.player
                         )
                 elif failing_seed:
                     # Test just the failing seed
@@ -972,7 +977,7 @@ def main():
                         str(failing_seed), export_only=args.export_only, test_only=args.test_only,
                         multiplayer=args.multiplayer, single_client=args.single_client,
                         headed=args.headed, include_error_details=args.include_error_details,
-                        dry_run=args.dry_run
+                        dry_run=args.dry_run, player=args.player
                     )
                 elif args.retest_continue and seed_range_tested:
                     # No failing seed, but we have seed range data and --retest-continue
@@ -994,7 +999,7 @@ def main():
                                 stop_on_failure=True,  # Stop on first failure in retest mode
                                 multiplayer=args.multiplayer, single_client=args.single_client,
                                 headed=args.headed, include_error_details=args.include_error_details,
-                                dry_run=args.dry_run
+                                dry_run=args.dry_run, player=args.player
                             )
                         else:
                             # Already tested up to or past retest_continue, nothing to do
@@ -1008,7 +1013,7 @@ def main():
                             "1", export_only=args.export_only, test_only=args.test_only,
                             multiplayer=args.multiplayer, single_client=args.single_client,
                             headed=args.headed, include_error_details=args.include_error_details,
-                            dry_run=args.dry_run
+                            dry_run=args.dry_run, player=args.player
                         )
                 else:
                     # No seed-specific failure data, test seed 1
@@ -1018,7 +1023,7 @@ def main():
                         "1", export_only=args.export_only, test_only=args.test_only,
                         multiplayer=args.multiplayer, single_client=args.single_client,
                         headed=args.headed, include_error_details=args.include_error_details,
-                        dry_run=args.dry_run
+                        dry_run=args.dry_run, player=args.player
                     )
             elif args.multiworld:
                 # Multiworld mode - special handling
@@ -1065,7 +1070,7 @@ def main():
                     stop_on_failure=not args.seed_range_continue_on_failure,
                     multiplayer=args.multiplayer, single_client=args.single_client,
                     headed=args.headed, include_error_details=args.include_error_details,
-                    dry_run=args.dry_run
+                    dry_run=args.dry_run, player=args.player
                 )
             else:
                 # Test with single seed (normal mode)
@@ -1074,7 +1079,7 @@ def main():
                     str(seed_list[0]), export_only=args.export_only, test_only=args.test_only,
                     multiplayer=args.multiplayer, single_client=args.single_client,
                     headed=args.headed, include_error_details=args.include_error_details,
-                    dry_run=args.dry_run
+                    dry_run=args.dry_run, player=args.player
                 )
             
             # Store results - in multitemplate mode, nest by game name → template filename

@@ -66,9 +66,13 @@ export const helperFunctions = {
             return !!(snapshot?.inventory?.['Heavy Ring']);
         },
         'has_ice_or_stone': (snapshot, staticData) => {
-            // Need either Cockatrice or Serpent card
-            return !!(snapshot?.inventory?.['Cockatrice Card'] ||
-                     snapshot?.inventory?.['Serpent Card']);
+            // Valid DSS combo that allows freezing or petrifying enemies to use as platforms
+            // Requires (Serpent OR Cockatrice) AND (Mercury OR Mars)
+            const hasStoneOrSnake = !!(snapshot?.inventory?.['Cockatrice Card'] ||
+                                       snapshot?.inventory?.['Serpent Card']);
+            const hasMercuryOrMars = !!(snapshot?.inventory?.['Mercury Card'] ||
+                                        snapshot?.inventory?.['Mars Card']);
+            return hasStoneOrSnake && hasMercuryOrMars;
         },
         'broke_iron_maidens': (snapshot, staticData) => {
             // Check if iron maidens are broken (via detonator or start broken option)
