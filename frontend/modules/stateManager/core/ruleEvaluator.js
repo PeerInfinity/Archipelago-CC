@@ -458,6 +458,10 @@ export function debugRuleEvaluation(manager, rule, depth = 0) {
       if (rule.id === 'False') return false;
       if (rule.id === 'None') return null;
       if (rule.id === 'self') return manager;
+      if (rule.id === 'state') {
+        // Support for SM's state.smbm[player].maxDiff pattern
+        return manager.getSnapshot();
+      }
       if (manager.settings && manager.settings.hasOwnProperty(rule.id)) {
         return manager.settings[rule.id];
       }

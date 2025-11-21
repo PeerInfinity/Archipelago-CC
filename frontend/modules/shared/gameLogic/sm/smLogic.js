@@ -155,13 +155,25 @@ export function haveItem(snapshot, staticData, itemName) {
   // First, try direct name match
   let hasIt = has(snapshot, staticData, itemName);
 
+  // DEBUG logging removed
+
   // If not found by name, check if any item has this type
   if (!hasIt && staticData && staticData.items) {
     // Check player 1's items (assuming single player for now)
-    const playerItems = staticData.items['1'] || staticData.items[1];
+    // staticData.items might be a Map or an object
+    let playerItems;
+    if (staticData.items instanceof Map) {
+      playerItems = staticData.items.get('1') || staticData.items.get(1);
+    } else {
+      playerItems = staticData.items['1'] || staticData.items[1];
+    }
+
     if (playerItems) {
-      for (const [fullItemName, itemData] of Object.entries(playerItems)) {
-        if (itemData.type === itemName) {
+      // playerItems might also be a Map or object
+      const itemEntries = playerItems instanceof Map ? playerItems.entries() : Object.entries(playerItems);
+
+      for (const [fullItemName, itemData] of itemEntries) {
+        if (itemData && itemData.type === itemName) {
           // Found an item with matching type, check if we have it
           hasIt = has(snapshot, staticData, fullItemName);
           if (hasIt) break;

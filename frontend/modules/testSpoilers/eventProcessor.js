@@ -267,18 +267,27 @@ export class EventProcessor {
           } else {
             // Single-player processing: check locations normally
             const locationsToCheck = sphereData.locations || [];
+            console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: locationsToCheck =`, locationsToCheck);
+            console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: locationsToCheck.length =`, locationsToCheck.length);
             if (locationsToCheck.length > 0) {
+              console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: INSIDE if block, about to call logCallback`);
               this.logCallback('info', `Checking ${locationsToCheck.length} locations from sphere ${context.sphere_number}`);
+              console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: Called logCallback, getting snapshot...`);
 
               // Get initial snapshot and static data once (for logging)
               const initialSnapshot = await stateManager.getFullSnapshot();
+              console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: Got snapshot`);
+
               const staticData = stateManager.getStaticData();
 
+              console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: About to iterate locationsToCheck`);
               for (const locationName of locationsToCheck) {
+                console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: Checking location "${locationName}"`);
                 // Get location definition from static data to see what item we're about to receive (for logging)
                 // staticData.locations is always a Map after initialization
                 const locationDef = staticData.locations.get(locationName);
                 const itemName = locationDef?.item?.name;
+                console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: Location "${locationName}" contains item "${itemName}"`);
 
                 if (itemName) {
                   this.logCallback('debug', `  Checking "${locationName}" (contains: ${itemName})`);
@@ -287,9 +296,12 @@ export class EventProcessor {
                 }
 
                 // NEW: Check if location is accessible BEFORE attempting to check it
+                console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: Getting snapshot for pre-check...`);
                 const currentSnapshot = await stateManager.getFullSnapshot();
                 const snapshotInterface = createStateSnapshotInterface(currentSnapshot, stateManager.getStaticData());
+                console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: Checking if "${locationName}" is accessible...`);
                 const isAccessible = snapshotInterface.isLocationAccessible(locationName);
+                console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: Location "${locationName}" isAccessible = ${isAccessible}`);
 
                 if (!isAccessible) {
                   this.logCallback('error', `  ⚠️ PRE-CHECK FAILED: "${locationName}" is NOT accessible per snapshot before check attempt!`);
@@ -307,9 +319,12 @@ export class EventProcessor {
                 // This naturally adds the item (e.g., "Progressive Sword") to inventory
                 // Use event-based flow to match how timer and UI modules interact with stateManager
                 const locationRegion = locationDef?.parent_region_name || locationDef?.parent_region || locationDef?.region || null;
+                console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: About to checkLocationViaEvent for "${locationName}"...`);
                 await this.checkLocationViaEvent(locationName, locationRegion);
+                console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: Completed checkLocationViaEvent for "${locationName}"`);
               }
 
+              console.log(`[DEBUG eventProcessor] Sphere ${context.sphere_number}: Exited loop, about to log completion`);
               this.logCallback('info', `Completed checking ${locationsToCheck.length} locations for sphere ${context.sphere_number}`);
             }
           }

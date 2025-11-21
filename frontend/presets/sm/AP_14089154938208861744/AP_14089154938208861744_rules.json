@@ -8565,7 +8565,7 @@
             "id": 82026,
             "access_rule": {
               "type": "constant",
-              "value": false
+              "value": true
             },
             "item": {
               "name": "Morph Ball",
