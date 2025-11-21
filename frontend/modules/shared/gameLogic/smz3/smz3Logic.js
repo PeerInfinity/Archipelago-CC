@@ -778,14 +778,163 @@ export function smz3_CanAcquireAll(snapshot, staticData, rewardType) {
   }
 
   // Check if ALL matching regions can be completed
+  // NOTE: We need to check each unique region, not call CanAcquire with the reward type,
+  // because multiple regions may have the same reward type (e.g., two non-green pendants).
   for (const region of matchingRegions) {
-    const canAcquire = smz3_CanAcquire(snapshot, staticData, region.rewardType);
-    if (!canAcquire) {
-      console.log(`[smz3_CanAcquireAll] Cannot acquire reward from region '${region.name}', returning false`);
+    // Instead of calling CanAcquire (which finds the FIRST region with a reward type),
+    // we need to check THIS specific region's boss location directly.
+    const canCompleteRegion = checkRegionCompletion(snapshot, staticData, region.name);
+    if (!canCompleteRegion) {
+      console.log(`[smz3_CanAcquireAll] Cannot complete region '${region.name}', returning false`);
       return false;
     }
   }
 
   console.log(`[smz3_CanAcquireAll] All ${matchingRegions.length} regions can be completed, returning true`);
   return true;
+}
+
+/**
+ * Internal helper to check if a specific region can be completed.
+ * This is similar to CanAcquire but checks a specific region by name instead of finding by reward type.
+ */
+function checkRegionCompletion(snapshot, staticData, regionName) {
+  console.log(`[checkRegionCompletion] Checking region '${regionName}'`);
+
+  // Boss location mapping: maps region name to boss location name
+  const bossLocations = {
+    'Castle Tower': null,  // No boss location - completion based on CanEnter + items
+    'Eastern Palace': 'Eastern Palace - Armos Knights',
+    'Desert Palace': 'Desert Palace - Lanmolas',
+    'Tower of Hera': 'Tower of Hera - Moldorm',
+    'Palace of Darkness': 'Palace of Darkness - Helmasaur King',
+    'Swamp Palace': 'Swamp Palace - Arrghus',
+    'Skull Woods': 'Skull Woods - Mothula',
+    'Thieves\' Town': 'Thieves\' Town - Blind',
+    'Ice Palace': 'Ice Palace - Kholdstare',
+    'Misery Mire': 'Misery Mire - Vitreous',
+    'Turtle Rock': 'Turtle Rock - Trinexx',
+    'Brinstar Kraid': 'Energy Tank, Kraid',
+    'Wrecked Ship': null,  // No specific Phantoon location - completion based on other requirements
+    'Maridia Inner': 'Missile (Draygon)',
+    'Norfair Lower East': 'Energy Tank, Ridley'
+  };
+
+  const bossLocationName = bossLocations[regionName];
+
+  if (!bossLocationName) {
+    console.log(`[checkRegionCompletion] Region ${regionName} has no boss location, checking CanComplete logic`);
+
+    // Implement CanComplete logic for regions without boss locations
+    if (regionName === 'Castle Tower') {
+      // Castle Tower (Agahnim) CanComplete requirements:
+      // CanEnter: CanKillManyEnemies() && (Cape || MasterSword)
+      // And: Lamp && KeyCT >= 2 && Sword
+
+      const canKillManyEnemies = smz3_CanKillManyEnemies(snapshot, staticData);
+      const hasCapeOrMasterSword = hasItem(snapshot, 'Cape') || getItemCount(snapshot, 'ProgressiveSword') >= 2;
+      const canEnter = canKillManyEnemies && hasCapeOrMasterSword;
+
+      const hasLamp = hasItem(snapshot, 'Lamp');
+      const hasEnoughKeys = getItemCount(snapshot, 'KeyCT') >= 2;
+      const hasSword = hasItem(snapshot, 'ProgressiveSword');
+
+      const canComplete = canEnter && hasLamp && hasEnoughKeys && hasSword;
+
+      console.log(`[checkRegionCompletion] Castle Tower CanComplete:`, {
+        canKillManyEnemies,
+        hasCapeOrMasterSword,
+        canEnter,
+        hasLamp,
+        hasEnoughKeys,
+        hasSword,
+        canComplete
+      });
+
+      return canComplete;
+    } else if (regionName === 'Wrecked Ship') {
+      // Wrecked Ship CanComplete: CanEnter && CanUnlockShip
+      // CanUnlockShip: CardWreckedShipBoss && CanPassBombPassages
+      const hasCard = hasItem(snapshot, 'CardWreckedShipBoss');
+      const canPassBomb = smz3_CanPassBombPassages(snapshot, staticData);
+      const canUnlockShip = hasCard && canPassBomb;
+
+      // Simplified CanEnter check - requires Super at minimum
+      const hasSuper = hasItem(snapshot, 'Super');
+
+      const canComplete = hasSuper && canUnlockShip;
+
+      console.log(`[checkRegionCompletion] Wrecked Ship CanComplete:`, {
+        hasCard,
+        canPassBomb,
+        canUnlockShip,
+        hasSuper,
+        canComplete
+      });
+
+      return canComplete;
+    }
+
+    console.warn(`[checkRegionCompletion] Region ${regionName} has no boss location and no CanComplete implementation, returning false`);
+    return false;
+  }
+
+  // Find the boss location in staticData
+  let bossLocation = null;
+  const regionsToSearch = staticData.regions instanceof Map ?
+    Array.from(staticData.regions.values()) :
+    Object.values(staticData.regions);
+
+  for (const region of regionsToSearch) {
+    if (region.locations) {
+      bossLocation = region.locations.find(loc => loc.name === bossLocationName);
+      if (bossLocation) {
+        console.log(`[checkRegionCompletion] Found boss location: ${bossLocationName} in region: ${region.name}`);
+        break;
+      }
+    }
+  }
+
+  if (!bossLocation) {
+    console.error(`[checkRegionCompletion] Could not find boss location: ${bossLocationName}`);
+    return false;
+  }
+
+  // Check if the location is accessible
+  if (bossLocation.access_rule) {
+    // For simple rules (AND with item_check), evaluate manually to avoid recursive evaluateRule calls
+    // which can cause issues with the snapshot interface
+    const rule = bossLocation.access_rule;
+
+    // Handle simple AND rules with item_check conditions
+    if (rule.type === 'and' && rule.conditions) {
+      const allItemChecks = rule.conditions.every(cond => cond.type === 'item_check');
+      if (allItemChecks) {
+        // Manually check all items
+        const result = rule.conditions.every(cond => hasItem(snapshot, cond.item));
+        console.log(`[checkRegionCompletion] Manually evaluated boss location (${bossLocationName}):`, result);
+        return result;
+      }
+    }
+
+    // For other rule types, try using evaluateRule if available
+    if (snapshot.evaluateRule) {
+      try {
+        const result = snapshot.evaluateRule(bossLocation.access_rule);
+        console.log(`[checkRegionCompletion] Evaluated boss location (${bossLocationName}) via evaluateRule:`, result);
+        return result;
+      } catch (error) {
+        console.error(`[checkRegionCompletion] Error evaluating boss location (${bossLocationName}):`, error);
+        return false;
+      }
+    } else {
+      // snapshot.evaluateRule not available and rule is complex
+      console.warn(`[checkRegionCompletion] Cannot evaluate complex rule for ${bossLocationName}, snapshot.evaluateRule not available`);
+      return false;
+    }
+  } else {
+    // No access rule means always accessible
+    console.log(`[checkRegionCompletion] No access rule for boss location, returning true for region '${regionName}'`);
+    return true;
+  }
 }
