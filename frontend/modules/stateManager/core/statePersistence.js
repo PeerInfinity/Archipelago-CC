@@ -429,7 +429,8 @@ export function _createSelfSnapshotInterface(sm) {
                   inventory: { ...sm.inventory },
                   flags: sm.gameStateModule?.flags || [],
                   events: sm.gameStateModule?.events || [],
-                  checkedLocations: Array.from(sm.checkedLocations || [])
+                  checkedLocations: Array.from(sm.checkedLocations || []),
+                  player: { slot: sm.playerSlot }
                 };
                 const staticData = getStaticGameData(sm);
                 return helperFunction(snapshot, staticData, ...args);
