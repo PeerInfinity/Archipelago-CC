@@ -27,7 +27,22 @@
 
 **Result**: Palace of Darkness - Harmless Hellway (which has a KeyPD placed on it) now correctly evaluates its access requirements.
 
-### 3. Missing Super Metroid area-specific helpers (FIXED)
+### 3. CanAcquireAll checking duplicate regions instead of unique regions (FIXED)
+
+**Issue**: When CanAcquireAll had multiple regions with the same reward type (e.g., two non-green pendants with reward_type=4), calling CanAcquire(4) twice would check the FIRST matching region both times instead of checking each unique region. This caused Master Sword Pedestal to appear accessible too early (sphere 6.2).
+
+**Solution**:
+1. Created `checkRegionCompletion()` internal helper that checks specific regions by name instead of by reward type
+2. Updated CanAcquireAll to call checkRegionCompletion for each unique region in the matching list
+3. Fixed snapshot interface to pass full interface (with evaluateRule method) to helpers instead of raw snapshot
+
+**Files**:
+- `frontend/modules/shared/gameLogic/smz3/smz3Logic.js:780-940` (CanAcquireAll and checkRegionCompletion)
+- `frontend/modules/shared/stateInterface.js:592,598-606` (added player property and fixed executeHelper to pass 'this')
+
+**Result**: Master Sword Pedestal no longer accessible too early. Test progresses from sphere 6.2 to sphere 8.21. Pyramid Fairy locations at sphere 8.19 now correctly evaluate.
+
+### 4. Missing Super Metroid area-specific helpers (FIXED)
 
 **Issue**: Three helper functions for Super Metroid areas were not implemented, blocking progression at sphere 7.8.
 

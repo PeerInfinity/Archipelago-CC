@@ -2,13 +2,16 @@
 
 ## Logic Issues
 
-### 1. smz3_CanAcquireAll behavior with pendant mask (CRITICAL)
+### 1. Bombos/Ether Tablet access rule evaluation (ACTIVE)
 
-**Issue**: Master Sword Pedestal is accessible too early (sphere 6.2 instead of later). The CanAcquireAll(6) check for "both pendants" is not working correctly.
+**Issue**: Bombos Tablet and Ether Tablet are not accessible in STATE when they should be accessible at sphere 8.21.
+
+**Error**: "Access rule evaluation failed"
 
 **Affected Locations**:
-- Master Sword Pedestal (requires all pendants: PendantGreen | PendantNonGreen = 6)
+- Bombos Tablet
+- Ether Tablet
 
-**Investigation needed**: The implementation correctly finds 3 regions with pendant rewards and checks if they can be completed, but the logic may need refinement for how the bit mask is interpreted.
+**Status**: Under investigation. Master Sword Pedestal fix and snapshot interface fix completed - test now progresses to sphere 8.21 (was at 6.2 before fixes).
 
-**Priority**: HIGH - Causes incorrect early sphere accessibility
+**Priority**: MEDIUM - Blocks late-game progression

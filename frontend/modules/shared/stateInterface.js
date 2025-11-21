@@ -589,17 +589,19 @@ export function createStateSnapshotInterface(
     inventory: snapshot?.inventory || {},
     events: snapshot?.events || {},
     prog_items: snapshot?.prog_items || {},
+    player: snapshot?.player,
     ...rawInterfaceForHelpers,
     // Add context variables to the interface (e.g., currentLocation for boss defeat rules)
     ...contextVariables,
     // Map 'location' contextVariable to 'currentLocation' for rule engine compatibility
     currentLocation: contextVariables.location,
     // Legacy helpers property removed - use executeHelper method instead
-    executeHelper: (helperName, ...args) => {
+    executeHelper: function (helperName, ...args) {
       const selectedHelpers = getHelperFunctions(gameName);
 
       if (selectedHelpers && selectedHelpers[helperName]) {
-        return selectedHelpers[helperName](snapshot, staticData, ...args);
+        // Pass 'this' (finalSnapshotInterface) instead of raw snapshot so helpers have access to evaluateRule
+        return selectedHelpers[helperName](this, staticData, ...args);
       }
       return undefined; // Helper not found - all games should use agnostic helpers
     },
