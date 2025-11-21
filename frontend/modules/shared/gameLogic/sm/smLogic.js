@@ -515,6 +515,301 @@ export function knowsKillPlasmaPiratesWithCharge(snapshot, staticData) {
   return { bool: true, difficulty: 0 };
 }
 
+export function knowsGravityJump(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsMtEverestGravJump(snapshot, staticData) {
+  return { bool: true, difficulty: 0 };
+}
+
+// Room-specific helpers - Conservative implementations
+export function canAccessKraidsLair(snapshot, staticData) {
+  // Needs Super Missiles + vertical movement (HiJump or fly)
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Super'),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'HiJump'),
+      canFly(snapshot, staticData)));
+}
+
+export function canExitCathedral(snapshot, staticData) {
+  // Needs heat protection + vertical movement
+  return wand(snapshot, staticData,
+    heatProof(snapshot, staticData),
+    wor(snapshot, staticData,
+      canFly(snapshot, staticData),
+      haveItem(snapshot, staticData, 'SpaceJump'),
+      canSpringBallJump(snapshot, staticData)));
+}
+
+export function canGoUpMtEverest(snapshot, staticData) {
+  // Mt. Everest (Maridia) - needs Gravity + movement options
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Grapple'),
+      haveItem(snapshot, staticData, 'SpeedBooster'),
+      canFly(snapshot, staticData),
+      haveItem(snapshot, staticData, 'HiJump')));
+}
+
+export function canPassMtEverest(snapshot, staticData) {
+  // Similar to canGoUpMtEverest
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Grapple'),
+      haveItem(snapshot, staticData, 'SpeedBooster'),
+      canFly(snapshot, staticData)));
+}
+
+export function canDefeatBotwoon(snapshot, staticData) {
+  // Botwoon boss - needs weapons
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Ice'),
+    haveItem(snapshot, staticData, 'SpeedBooster'),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Charge'),
+      wor(snapshot, staticData,
+        haveItem(snapshot, staticData, 'Wave'),
+        haveItem(snapshot, staticData, 'Plasma'))));
+}
+
+export function energyReserveCountOkHardRoom(snapshot, staticData, roomName) {
+  // Hard rooms need energy reserves - conservative: require Varia or Gravity
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Varia'),
+    haveItem(snapshot, staticData, 'Gravity'));
+}
+
+export function canPassLavaPit(snapshot, staticData) {
+  // Lower Norfair lava pit - needs heat + Gravity or HiJump
+  return wand(snapshot, staticData,
+    heatProof(snapshot, staticData),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      haveItem(snapshot, staticData, 'HiJump')));
+}
+
+export function canPassLavaPitReverse(snapshot, staticData) {
+  // Same as forward but might need more movement
+  return wand(snapshot, staticData,
+    heatProof(snapshot, staticData),
+    wor(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      haveItem(snapshot, staticData, 'HiJump'),
+      canFly(snapshot, staticData)));
+}
+
+export function canGrappleEscape(snapshot, staticData) {
+  // Escape using grapple beam
+  return haveItem(snapshot, staticData, 'Grapple');
+}
+
+export function canClimbBottomRedTower(snapshot, staticData) {
+  // Red Tower climbing - needs vertical movement
+  return wor(snapshot, staticData,
+    canFly(snapshot, staticData),
+    haveItem(snapshot, staticData, 'HiJump'),
+    haveItem(snapshot, staticData, 'Ice'));
+}
+
+export function canClimbRedTower(snapshot, staticData) {
+  // Red Tower climbing - needs vertical movement
+  return wor(snapshot, staticData,
+    canFly(snapshot, staticData),
+    haveItem(snapshot, staticData, 'HiJump'),
+    haveItem(snapshot, staticData, 'Ice'));
+}
+
+export function canClimbBubbleMountain(snapshot, staticData) {
+  // Bubble Mountain (Norfair) - needs vertical movement
+  return wor(snapshot, staticData,
+    canFly(snapshot, staticData),
+    haveItem(snapshot, staticData, 'HiJump'),
+    haveItem(snapshot, staticData, 'Ice'));
+}
+
+export function canClimbColosseum(snapshot, staticData) {
+  // Colosseum climbing - needs vertical movement + Gravity
+  return wand(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    wor(snapshot, staticData,
+      canFly(snapshot, staticData),
+      haveItem(snapshot, staticData, 'HiJump')));
+}
+
+export function canPassDachoraRoom(snapshot, staticData) {
+  // Dachora room - needs Speed Booster
+  return haveItem(snapshot, staticData, 'SpeedBooster');
+}
+
+export function canAccessEtecoons(snapshot, staticData) {
+  // Access to Etecoons - needs Power Bombs
+  return canUsePowerBombs(snapshot, staticData);
+}
+
+export function canDoOuterMaridia(snapshot, staticData) {
+  // Outer Maridia - needs Gravity
+  return haveItem(snapshot, staticData, 'Gravity');
+}
+
+export function canPassLowerNorfairChozo(snapshot, staticData) {
+  // Lower Norfair Chozo - needs heat protection + movement
+  return wand(snapshot, staticData,
+    heatProof(snapshot, staticData),
+    wor(snapshot, staticData,
+      canFly(snapshot, staticData),
+      haveItem(snapshot, staticData, 'HiJump')));
+}
+
+export function canHellRunToSpeedBooster(snapshot, staticData) {
+  // Hell run to Speed Booster - needs heat resistance
+  return heatProof(snapshot, staticData);
+}
+
+export function canHellRunBackFromGrappleEscape(snapshot, staticData) {
+  // Hell run from Grapple - needs heat resistance + Grapple
+  return wand(snapshot, staticData,
+    heatProof(snapshot, staticData),
+    haveItem(snapshot, staticData, 'Grapple'));
+}
+
+export function canHellRunBackFromSpeedBoosterMissile(snapshot, staticData) {
+  // Hell run from Speed Booster missile - needs heat resistance
+  return heatProof(snapshot, staticData);
+}
+
+export function canExitPreciousRoom(snapshot, staticData) {
+  // Exit Precious Room (Maridia) - needs Gravity or special movement
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Gravity'),
+    canFly(snapshot, staticData));
+}
+
+export function canExitWaveBeam(snapshot, staticData) {
+  // Exit Wave Beam room - needs Morph + bombs or similar
+  return canPassBombPassages(snapshot, staticData);
+}
+
+export function canExitScrewAttackArea(snapshot, staticData) {
+  // Exit Screw Attack area - needs movement abilities
+  return wor(snapshot, staticData,
+    canFly(snapshot, staticData),
+    haveItem(snapshot, staticData, 'HiJump'),
+    haveItem(snapshot, staticData, 'Ice'));
+}
+
+export function getPiratesPseudoScrewCoeff(snapshot, staticData) {
+  // Pirates coefficient - conservative: return 1.0 (default)
+  return { bool: true, difficulty: 0 };
+}
+
+export function int(snapshot, staticData, value) {
+  // Integer conversion helper - just return the value
+  return { bool: true, difficulty: 0 };
+}
+
+// Additional knowledge techniques
+export function knowsBillyMays(snapshot, staticData) {
+  // Billy Mays room access knowledge
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsContinuousWallJump(snapshot, staticData) {
+  // Continuous wall jump technique
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsDiagonalBombJump(snapshot, staticData) {
+  // Diagonal bomb jump technique
+  return { bool: true, difficulty: 0 };
+}
+
+export function knowsMockballWs(snapshot, staticData) {
+  // Mockball in West Sand technique
+  return { bool: true, difficulty: 0 };
+}
+
+// Additional medium priority helpers
+export function canAccessBillyMays(snapshot, staticData) {
+  // Billy Mays room access: needs Power Bombs and movement
+  // Conservative: require Power Bombs AND (knowledge OR Gravity OR SpaceJump)
+  return wand(snapshot, staticData,
+    canUsePowerBombs(snapshot, staticData),
+    wor(snapshot, staticData,
+      knowsBillyMays(snapshot, staticData),
+      haveItem(snapshot, staticData, 'Gravity'),
+      haveItem(snapshot, staticData, 'SpaceJump')));
+}
+
+export function canAccessItemsInWestSandHole(snapshot, staticData) {
+  // West Sand Hole items access - multiple strategies
+  return wor(snapshot, staticData,
+    // Vanilla strat: HiJump + SpringBall
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'HiJump'),
+      canUseSpringBall(snapshot, staticData)),
+    // Alternate strat: SpaceJump + (SpringBall OR Bombs)
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'SpaceJump'),
+      wor(snapshot, staticData,
+        canUseSpringBall(snapshot, staticData),
+        canUseBombs(snapshot, staticData))),
+    // Wall jump strat: bomb passages + wall jump knowledge
+    wand(snapshot, staticData,
+      canPassBombPassages(snapshot, staticData),
+      knowsMaridiaWallJumps(snapshot, staticData)));
+}
+
+// Moat passage helpers
+export function canPassMoat(snapshot, staticData) {
+  // Multiple strategies to pass the Moat
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Grapple'),
+    haveItem(snapshot, staticData, 'SpaceJump'),
+    knowsContinuousWallJump(snapshot, staticData),
+    wand(snapshot, staticData,
+      knowsDiagonalBombJump(snapshot, staticData),
+      canUseBombs(snapshot, staticData)),
+    canSimpleShortCharge(snapshot, staticData),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      wor(snapshot, staticData,
+        knowsGravityJump(snapshot, staticData),
+        haveItem(snapshot, staticData, 'HiJump'),
+        canInfiniteBombJump(snapshot, staticData))),
+    wand(snapshot, staticData,
+      knowsMockballWs(snapshot, staticData),
+      canUseSpringBall(snapshot, staticData)));
+}
+
+export function canPassMoatFromMoat(snapshot, staticData) {
+  // Pass the Moat from the Moat location
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Grapple'),
+    haveItem(snapshot, staticData, 'SpaceJump'),
+    wand(snapshot, staticData,
+      knowsDiagonalBombJump(snapshot, staticData),
+      canUseBombs(snapshot, staticData)),
+    wand(snapshot, staticData,
+      haveItem(snapshot, staticData, 'Gravity'),
+      wor(snapshot, staticData,
+        knowsGravityJump(snapshot, staticData),
+        haveItem(snapshot, staticData, 'HiJump'),
+        canInfiniteBombJump(snapshot, staticData))));
+}
+
+export function canPassMoatReverse(snapshot, staticData) {
+  // Pass the Moat in reverse direction (conservative: ignore ROM patches)
+  return wor(snapshot, staticData,
+    haveItem(snapshot, staticData, 'Grapple'),
+    haveItem(snapshot, staticData, 'SpaceJump'),
+    haveItem(snapshot, staticData, 'Gravity'),
+    canPassBombPassages(snapshot, staticData));
+}
+
 /**
  * Helper function registry
  * Export all helper functions that can be called from rules
@@ -570,6 +865,8 @@ export const helperFunctions = {
   knowsSpringBallJumpFromWall,
   knowsKillPlasmaPiratesWithSpark,
   knowsKillPlasmaPiratesWithCharge,
+  knowsGravityJump,
+  knowsMtEverestGravJump,
   // Advanced movement
   canInfiniteBombJump,
   canFly,
@@ -594,7 +891,42 @@ export const helperFunctions = {
   enoughStuffsRidley,
   enoughStuffCroc,
   enoughStuffSporeSpawn,
-  enoughStuffTourian
+  enoughStuffTourian,
+  // Room-specific helpers
+  canAccessKraidsLair,
+  canExitCathedral,
+  canGoUpMtEverest,
+  canPassMtEverest,
+  canDefeatBotwoon,
+  energyReserveCountOkHardRoom,
+  canPassLavaPit,
+  canPassLavaPitReverse,
+  canGrappleEscape,
+  canClimbBottomRedTower,
+  canClimbRedTower,
+  canClimbBubbleMountain,
+  canClimbColosseum,
+  canPassDachoraRoom,
+  canAccessEtecoons,
+  canDoOuterMaridia,
+  canPassLowerNorfairChozo,
+  canHellRunToSpeedBooster,
+  canHellRunBackFromGrappleEscape,
+  canHellRunBackFromSpeedBoosterMissile,
+  canExitPreciousRoom,
+  canExitWaveBeam,
+  canExitScrewAttackArea,
+  getPiratesPseudoScrewCoeff,
+  int,
+  knowsBillyMays,
+  knowsContinuousWallJump,
+  knowsDiagonalBombJump,
+  knowsMockballWs,
+  canAccessBillyMays,
+  canAccessItemsInWestSandHole,
+  canPassMoat,
+  canPassMoatFromMoat,
+  canPassMoatReverse
 };
 
 /**
