@@ -40,6 +40,13 @@ The snapshot object passed to helper functions when evaluating access rules was 
 
 **Commits**:
 - 93dc1144: Implement progression_mapping export and use ALTTP helpers
-- 31e26188: Fix SMZ3 progressive item handling for Bombos/Ether Tablets
+- 31e26188: Fix SMZ3 progressive item handling for Bombos/Ether Tablets (added player field to snapshot)
+- ce447a72: Fix SMZ3 progressive item naming mismatch for Bombos/Ether Tablets (fixed key names, exported has/count)
 
-**Status**: RESOLVED - Bombos/Ether Tablets should now be accessible at sphere 8.21
+**Test Results**:
+- ✅ Bombos Tablet now accessible at sphere 8.21
+- ✅ Ether Tablet now accessible at sphere 8.21
+- ✅ MasterSword (ProgressiveSword >= 2) correctly detected
+- ✅ Spoiler test progresses beyond sphere 8.21 (previously blocked at this point)
+
+**Status**: FULLY RESOLVED - Bombos/Ether Tablets are now correctly accessible at sphere 8.21
