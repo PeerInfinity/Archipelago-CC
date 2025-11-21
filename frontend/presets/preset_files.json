@@ -2031,51 +2031,6 @@
       }
     }
   },
-  "ocarina_of_time": {
-    "name": "Ocarina of Time",
-    "folders": {
-      "AP_14089154938208861744": {
-        "seed": 1,
-        "games": [
-          {
-            "player": 1,
-            "name": "Player1",
-            "game": "Ocarina of Time"
-          }
-        ],
-        "files": [
-          "AP_14089154938208861744.archipelago",
-          "AP_14089154938208861744_Spoiler.txt",
-          "AP_14089154938208861744_rules.json",
-          "AP_14089154938208861744_spheres_log.jsonl"
-        ]
-      }
-    },
-    "test_result": {
-      "status": "failed",
-      "generation_errors": 2524,
-      "generation_warnings": 2,
-      "sphere_reached": 0.0,
-      "max_spheres": 22.1,
-      "progress_percent": 0.0,
-      "has_custom_exporter": false,
-      "has_custom_game_logic": false,
-      "timestamp": "2025-10-09T23:40:11.024850",
-      "processing_time": {
-        "generation_seconds": 17.26,
-        "spoiler_test_seconds": 72.11,
-        "total_seconds": 89.37
-      },
-      "seed_range_info": {
-        "seed_range": "1",
-        "seeds_passed": 0,
-        "seeds_failed": 1,
-        "consecutive_passes_before_failure": 0,
-        "first_failure_seed": 1,
-        "total_seeds_tested": 1
-      }
-    }
-  },
   "osrs": {
     "name": "Old School Runescape",
     "folders": {
@@ -3942,6 +3897,51 @@
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_spheres_log.jsonl"
         ]
+      }
+    }
+  },
+  "oot": {
+    "name": "Ocarina of Time",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Ocarina of Time"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_spheres_log.jsonl"
+        ]
+      }
+    },
+    "test_result": {
+      "status": "failed",
+      "generation_errors": 2524,
+      "generation_warnings": 2,
+      "sphere_reached": 0.0,
+      "max_spheres": 22.1,
+      "progress_percent": 0.0,
+      "has_custom_exporter": false,
+      "has_custom_game_logic": false,
+      "timestamp": "2025-10-09T23:40:11.024850",
+      "processing_time": {
+        "generation_seconds": 17.26,
+        "spoiler_test_seconds": 72.11,
+        "total_seconds": 89.37
+      },
+      "seed_range_info": {
+        "seed_range": "1",
+        "seeds_passed": 0,
+        "seeds_failed": 1,
+        "consecutive_passes_before_failure": 0,
+        "first_failure_seed": 1,
+        "total_seeds_tested": 1
       }
     }
   }

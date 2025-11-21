@@ -34,12 +34,31 @@ After web research and testing vanilla keys, discovered the issue persists acros
 - The error shows songs already placed but same locations also listed as unfilled
 - This suggests possible duplicate tracking or invalid song locations
 
+**Additional Testing** (2025-11-21):
+- ✗ Created "Song Dungeon" template (shuffle_song_items: dungeon)
+  - Result: Still fails with FillError during pre_fill
+  - Error shows duplicate location tracking: same locations appear in both "Already placed" and "Unfilled locations"
+  - Locations affected: Shadow Temple Bongo Bongo Heart, Gerudo Training Ground Maze Path Final Chest, Forest Temple Phantom Ganon Heart, Bottom of the Well Lens of Truth Chest, Spirit Temple Twinrova Heart
+  - Confirms bug in OOT world code where dungeon song locations are incorrectly tracked
+- ✗ Created "Song Any" template (shuffle_song_items: any)
+  - Result: Passes pre_fill phase but fails during main fill
+  - Error: 47 unfilled locations including song locations (Sheik in Ice Cavern, Song from Windmill, Song from Malon)
+  - Different error pattern but still cannot complete generation
+
+**Resolution**:
+✓ Existing preset files discovered at frontend/presets/ocarina_of_time/AP_14089154938208861744/
+  - AP_14089154938208861744_rules.json (674KB)
+  - AP_14089154938208861744_spheres_log.jsonl (56KB)
+  - AP_14089154938208861744_Spoiler.txt (86KB)
+  - AP_14089154938208861744.archipelago (29KB)
+These files can be used for testing the exporter and frontend logic without needing to generate new ones.
+
 **Next Steps**:
-1. Try modifying shuffle_song_items setting (dungeon or any instead of song)
-2. Contact user to get working template/seed combination for OOT
-3. Consider using a different game for initial exporter testing
-4. OR: Manually create minimal rules.json for testing (not ideal)
+1. ✓ Use existing preset files for exporter testing
+2. Run spoiler test: `npm test --mode=test-spoilers --game=oot --seed=1`
+3. If generation is needed in future: Contact user for working template/seed combination
+4. Consider reporting OOT generation bugs to Archipelago developers
 
 **Impact**:
-Cannot test OOT exporter or frontend logic without successfully generated rules.json and sphere log files.
+Generation blocker resolved by using existing preset files. Can proceed with exporter and frontend testing.
 
