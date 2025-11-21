@@ -414,6 +414,8 @@ export class TestSpoilerUI {
       this.currentSpoilerLogPath = result.logPath;
 
       // Infer playerId from spoiler log if not already set
+      // NOTE: In multiworld mode, playerId should already be set from the rules file (P{N}_rules.json)
+      // Only infer if truly null to avoid overriding the correct player ID in multiworld
       if (this.playerId === null && this.spoilerLogData && this.spoilerLogData.length > 0) {
         const firstEvent = this.spoilerLogData[0];
         if (firstEvent && firstEvent.player_data) {
@@ -421,9 +423,11 @@ export class TestSpoilerUI {
           if (playerIds.length > 0) {
             // Use the first player ID found (typically "1" for single-player)
             this.playerId = parseInt(playerIds[0], 10);
-            this.log('info', `Inferred playerId from spoiler log: ${this.playerId}`);
+            this.log('warning', `Inferred playerId from spoiler log: ${this.playerId}`);
           }
         }
+      } else if (this.playerId !== null) {
+        this.log('info', `playerId already set to ${this.playerId}, not overriding from spoiler log`);
       }
 
       await this.prepareSpoilerTest(true);
@@ -925,6 +929,8 @@ export class TestSpoilerUI {
       this.currentSpoilerLogPath = file.name;
 
       // Infer playerId from spoiler log if not already set
+      // NOTE: In multiworld mode, playerId should already be set from the rules file (P{N}_rules.json)
+      // Only infer if truly null to avoid overriding the correct player ID in multiworld
       if (this.playerId === null && this.spoilerLogData && this.spoilerLogData.length > 0) {
         const firstEvent = this.spoilerLogData[0];
         if (firstEvent && firstEvent.player_data) {
@@ -935,6 +941,8 @@ export class TestSpoilerUI {
             this.log('info', `Inferred playerId from spoiler log: ${this.playerId}`);
           }
         }
+      } else if (this.playerId !== null) {
+        this.log('warning', `playerId already set to ${this.playerId}, not overriding from spoiler log`);
       }
 
       return true; // Indicate success to caller

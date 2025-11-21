@@ -717,12 +717,14 @@ export function can_complete_gt_climb(snapshot, staticData) {
 // ============================================================================
 
 export function has_misery_mire_medallion(snapshot, staticData) {
-  const medallion = staticData.settings?.['1']?.misery_mire_medallion || 'Ether';
+  const playerSlot = snapshot?.player?.slot || '1';
+  const medallion = staticData.settings?.[playerSlot]?.misery_mire_medallion || 'Ether';
   return has(snapshot, staticData, medallion);
 }
 
 export function has_turtle_rock_medallion(snapshot, staticData) {
-  const medallion = staticData.settings?.['1']?.turtle_rock_medallion || 'Quake';
+  const playerSlot = snapshot?.player?.slot || '1';
+  const medallion = staticData.settings?.[playerSlot]?.turtle_rock_medallion || 'Quake';
   return has(snapshot, staticData, medallion);
 }
 

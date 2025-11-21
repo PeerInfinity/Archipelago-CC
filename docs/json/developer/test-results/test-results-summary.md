@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-11-21 03:40:28
+**Generated:** 2025-11-20 15:26:19
 
 This summary combines results from four types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -12,22 +12,22 @@ This summary combines results from four types of tests:
 
 ### Individual Test Results
 
-- **Minimal Test:** 69/78 passed (88.5%)
+- **Minimal Test:** 70/78 passed (89.7%)
 - **Full Test:** 70/78 passed (89.7%)
 - **Multiplayer Test:** 50/78 passed (64.1%)
 - **Multiworld Test:** 42/78 passed (53.8%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Minimal Spoilers Test:** 6 game(s), 24 total failure(s)
 - **Full Spoilers Test:** 22 game(s), 46 total failure(s)
 
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 42/78 (53.8%)
 - **Templates passing 3 tests:** 7/78 (9.0%)
-- **Templates passing 2 tests:** 20/78 (25.6%)
-- **Templates passing 1 test:** 2/78 (2.6%)
+- **Templates passing 2 tests:** 21/78 (26.9%)
+- **Templates passing 1 test:** 1/78 (1.3%)
 - **Templates passing 0 tests:** 7/78 (9.0%)
 
 ## Test Results
@@ -81,7 +81,7 @@ This summary combines results from four types of tests:
 | Overcooked! 2 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Pokemon Emerald | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
-| Pokemon Red and Blue | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
+| Pokemon Red and Blue | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ⚫ |
 | SMZ3 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ |
